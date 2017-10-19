@@ -1979,7 +1979,7 @@ namespace Grand.Services.Orders
             {
                 var orderItem = order.OrderItems.Where(x => x.Id == item.OrderItemId).FirstOrDefault();
                 var product = _productService.GetProductByIdIncludeArch(orderItem.ProductId);
-                _productService.BookReservedInventory(product, item.WarehouseId, -item.Quantity);
+                _productService.BookReservedInventory(product, item.AttributeXML, item.WarehouseId, -item.Quantity);
             }
 
             //check whether we have more items to ship

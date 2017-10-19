@@ -838,6 +838,10 @@ ul.info,
 ul.opc {
     padding-left: 0;
 }
+
+.message-error {
+    color: red;
+}
 ul.opc h5 {
     padding: 10px;
     background-color: #dddddd;

@@ -77,7 +77,7 @@
             $('#tab-inventory-product').show();
             $('#tab-attributes-product').show();
             $('#tab-purchased-product').show();
-            
+
         } else if (selectedProductTypeId == @(((int) ProductType.GroupedProduct).ToString())) {
             $('#group-required-other-products').hide();
             $('#group-giftcard').hide();
@@ -90,8 +90,8 @@
             $('#tab-price-product').hide();
             $('#tab-inventory-product').hide();
             $('#tab-attributes-product').hide();
-            $('#tab-purchased-product').hide(); 
-            
+            $('#tab-purchased-product').hide();
+
         }
     }
 
@@ -288,8 +288,11 @@
             }
             $('#pnlAllowAddingOnlyExistingAttributeCombinations').hide();
         } else {
-            $('#pnlUseMultipleWarehouses').hide();
-            $('#pnlWarehouse').show();
+            if ($('#@Html.FieldIdFor(model => model.UseMultipleWarehouses)').is(':checked')) {
+                $('#pnlWarehouse').hide();
+            } else {
+                $('#pnlWarehouse').show();
+            }
             $('#pnlMultipleWarehouses').hide();
             $('#pnlStockQuantity').hide();
             $('#pnlDisplayStockAvailability').show();

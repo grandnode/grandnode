@@ -1256,7 +1256,6 @@ namespace Grand.Services.Catalog
 
             if (quantityToChange == 0)
                 return;
-            //var prevStockQuantity = product.GetTotalStockQuantity();
 
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
             {
@@ -1332,10 +1331,7 @@ namespace Grand.Services.Catalog
                     {
                         switch (product.LowStockActivity)
                         {
-                            case LowStockActivity.DisableBuyButton:
-                                //product.DisableBuyButton = false;
-                                //product.DisableWishlistButton = false;
-                                //UpdateProduct(product);
+                            case LowStockActivity.DisableBuyButton:                                
                                 var filter = Builders<Product>.Filter.Eq("Id", product.Id);
                                 var update = Builders<Product>.Update
                                         .Set(x => x.DisableBuyButton, product.DisableBuyButton)
@@ -1380,10 +1376,23 @@ namespace Grand.Services.Catalog
                 var combination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
                 if (combination != null)
                 {
-                    combination.StockQuantity += quantityToChange;
-                    _productAttributeService.UpdateProductAttributeCombination(combination);
+                    combination.ProductId = product.Id;
+                    if (!product.UseMultipleWarehouses)
+                    {
+                        combination.StockQuantity += quantityToChange;
+                        _productAttributeService.UpdateProductAttributeCombination(combination);
+                    }
+                    else
+                    {
+                        if (quantityToChange < 0)
+                            ReserveInventoryCombination(product, combination, quantityToChange, warehouseId);
+                        else
+                            UnblockReservedInventoryCombination(product, combination, quantityToChange, warehouseId);
+                    }
+
                     product.StockQuantity += quantityToChange;
                     UpdateStockProduct(product);
+
                     //send email notification
                     if (quantityToChange < 0 && combination.StockQuantity < combination.NotifyAdminForQuantityBelow)
                     {
@@ -1466,7 +1475,72 @@ namespace Grand.Services.Catalog
 
             //event notification
             _eventPublisher.EntityUpdated(product);
-            //this.UpdateProduct(product);
+        }
+
+
+        /// <summary>
+        /// Reserve the given quantity in the warehouses.
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="combination">Combination</param>
+        /// <param name="quantity">Quantity, must be negative</param>
+        public virtual void ReserveInventoryCombination(Product product, ProductAttributeCombination combination, int quantity, string warehouseId)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            if (combination == null)
+                throw new ArgumentNullException("combination");
+
+            if (quantity >= 0)
+                throw new ArgumentException("Value must be negative.", "quantity");
+
+            var qty = -quantity;
+
+            var productInventory = combination.WarehouseInventory
+                .OrderByDescending(pwi => pwi.StockQuantity - pwi.ReservedQuantity)
+                .ToList();
+
+            if (productInventory.Count <= 0)
+                return;
+
+            Action pass = () =>
+            {
+                foreach (var item in productInventory.Where(x => x.WarehouseId == warehouseId || string.IsNullOrEmpty(warehouseId)))
+                {
+                    var selectQty = Math.Min(item.StockQuantity - item.ReservedQuantity, qty);
+                    item.ReservedQuantity += selectQty;
+                    qty -= selectQty;
+
+                    if (qty <= 0)
+                        break;
+                }
+            };
+
+            // 1st pass: Applying reserved
+            pass();
+
+            if (qty > 0)
+            {
+                // 2rd pass: Booking negative stock!
+                var pwi = productInventory[0];
+                pwi.ReservedQuantity += qty;
+            }
+            combination.StockQuantity = combination.WarehouseInventory.Sum(x => x.StockQuantity);
+            var builder = Builders<Product>.Filter;
+            var filter = builder.Eq(x => x.Id, combination.ProductId);
+            filter = filter & builder.ElemMatch(x => x.ProductAttributeCombinations, y => y.Id == combination.Id);
+            var update = Builders<Product>.Update
+                .Set("ProductAttributeCombinations.$.StockQuantity", combination.StockQuantity)
+                .Set("ProductAttributeCombinations.$.WarehouseInventory", combination.WarehouseInventory);
+
+            var result = _productRepository.Collection.UpdateManyAsync(filter, update).Result;
+
+            //cache
+            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
+
+            //event notification
+            _eventPublisher.EntityUpdated(product);
         }
 
         /// <summary>
@@ -1521,13 +1595,70 @@ namespace Grand.Services.Catalog
             _eventPublisher.EntityUpdated(product);
         }
 
+
+        /// <summary>
+        /// Unblocks the given quantity reserved items in the warehouses
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="quantity">Quantity, must be positive</param>
+        public virtual void UnblockReservedInventoryCombination(Product product, ProductAttributeCombination combination, int quantity, string warehouseId)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            if (quantity < 0)
+                throw new ArgumentException("Value must be positive.", "quantity");
+
+            var productInventory = combination.WarehouseInventory
+                .OrderByDescending(pwi => pwi.StockQuantity - pwi.ReservedQuantity)
+                .ToList();
+
+            if (productInventory.Count <= 0)
+                return;
+
+            var qty = quantity;
+
+            foreach (var item in productInventory.Where(x => x.WarehouseId == warehouseId || string.IsNullOrEmpty(warehouseId)))
+            {
+                var selectQty = Math.Min(item.ReservedQuantity, qty);
+                item.ReservedQuantity -= selectQty;
+                qty -= selectQty;
+
+                if (qty <= 0)
+                    break;
+            }
+
+            if (qty > 0)
+            {
+                var pwi = productInventory[0];
+                pwi.StockQuantity += qty;
+            }
+
+            combination.StockQuantity = combination.WarehouseInventory.Sum(x => x.StockQuantity);
+            var builder = Builders<Product>.Filter;
+            var filter = builder.Eq(x => x.Id, combination.ProductId);
+            filter = filter & builder.ElemMatch(x => x.ProductAttributeCombinations, y => y.Id == combination.Id);
+            var update = Builders<Product>.Update
+                .Set("ProductAttributeCombinations.$.StockQuantity", combination.StockQuantity)
+                .Set("ProductAttributeCombinations.$.WarehouseInventory", combination.WarehouseInventory);
+
+            var result = _productRepository.Collection.UpdateManyAsync(filter, update).Result;
+
+            //cache
+            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
+
+            //event notification
+            _eventPublisher.EntityUpdated(product);
+        }
+
         /// <summary>
         /// Book the reserved quantity
         /// </summary>
         /// <param name="product">Product</param>
+        /// <param name="attributeXML">AttributeXML</param>
         /// <param name="warehouseId">Warehouse identifier</param>
         /// <param name="quantity">Quantity, must be negative</param>
-        public virtual void BookReservedInventory(Product product, string warehouseId, int quantity)
+        public virtual void BookReservedInventory(Product product, string AttributeXML, string warehouseId, int quantity)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -1536,33 +1667,63 @@ namespace Grand.Services.Catalog
                 throw new ArgumentException("Value must be negative.", "quantity");
 
             //only products with "use multiple warehouses" are handled this way
-            if (product.ManageInventoryMethod != ManageInventoryMethod.ManageStock)
+            if (product.ManageInventoryMethod == ManageInventoryMethod.DontManageStock)
                 return;
             if (!product.UseMultipleWarehouses)
                 return;
 
-            var pwi = product.ProductWarehouseInventory.FirstOrDefault(pi => pi.WarehouseId == warehouseId);
-            if (pwi == null)
-                return;
+            if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
+            {
+                var pwi = product.ProductWarehouseInventory.FirstOrDefault(pi => pi.WarehouseId == warehouseId);
+                if (pwi == null)
+                    return;
 
-            pwi.ReservedQuantity = Math.Max(pwi.ReservedQuantity + quantity, 0);
-            pwi.StockQuantity += quantity;
+                pwi.ReservedQuantity = Math.Max(pwi.ReservedQuantity + quantity, 0);
+                pwi.StockQuantity += quantity;
 
-            var builder = Builders<Product>.Filter;
-            var filter = builder.Eq(x => x.Id, product.Id);
-            filter = filter & builder.Where(x => x.ProductWarehouseInventory.Any(y => y.WarehouseId == pwi.WarehouseId));
+                var builder = Builders<Product>.Filter;
+                var filter = builder.Eq(x => x.Id, product.Id);
+                filter = filter & builder.Where(x => x.ProductWarehouseInventory.Any(y => y.WarehouseId == pwi.WarehouseId));
 
-            var update = Builders<Product>.Update
-                    .Set(x => x.ProductWarehouseInventory.ElementAt(-1), pwi)
-                    .CurrentDate("UpdateDate");
-            _productRepository.Collection.UpdateOneAsync(filter, update);
+                var update = Builders<Product>.Update
+                        .Set(x => x.ProductWarehouseInventory.ElementAt(-1), pwi)
+                        .CurrentDate("UpdateDate");
+                _productRepository.Collection.UpdateOneAsync(filter, update);
+            }
+
+            if(product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
+            {
+                var combination = product.ProductAttributeCombinations.FirstOrDefault(x => x.AttributesXml == AttributeXML);
+                if (combination == null)
+                    return;
+                combination.ProductId = product.Id;
+
+                var pwi = combination.WarehouseInventory.FirstOrDefault(pi => pi.WarehouseId == warehouseId);
+                if (pwi == null)
+                    return;
+
+                pwi.ReservedQuantity = Math.Max(pwi.ReservedQuantity + quantity, 0);
+                pwi.StockQuantity += quantity;
+
+
+                combination.StockQuantity = combination.WarehouseInventory.Sum(x => x.StockQuantity);
+
+                var builder = Builders<Product>.Filter;
+                var filter = builder.Eq(x => x.Id, combination.ProductId);
+                filter = filter & builder.ElemMatch(x => x.ProductAttributeCombinations, y => y.Id == combination.Id);
+                var update = Builders<Product>.Update
+                    .Set("ProductAttributeCombinations.$.StockQuantity", combination.StockQuantity)
+                    .Set("ProductAttributeCombinations.$.WarehouseInventory", combination.WarehouseInventory);
+
+                var result = _productRepository.Collection.UpdateManyAsync(filter, update).Result;
+
+            }
 
             //cache
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
             //event notification
             _eventPublisher.EntityUpdated(product);
 
-            //TODO add support for bundled products (AttributesXml)
         }
 
         /// <summary>
@@ -1580,34 +1741,71 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("shipmentItem");
             
             //only products with "use multiple warehouses" are handled this way
-            if (product.ManageInventoryMethod != ManageInventoryMethod.ManageStock)
+            if (product.ManageInventoryMethod == ManageInventoryMethod.DontManageStock)
                 return 0;
             if (!product.UseMultipleWarehouses)
                 return 0;
 
-            var pwi = product.ProductWarehouseInventory.FirstOrDefault(x => x.WarehouseId == shipmentItem.WarehouseId);
-            if (pwi == null)
-                return 0;
-
             var shipment = EngineContext.Current.Resolve<IShipmentService>().GetShipmentById(shipmentItem.ShipmentId);
-
-            //not shipped yet? hence "BookReservedInventory" method was not invoked
-            if (!shipment.ShippedDateUtc.HasValue)
-                return 0;
-
             var qty = shipmentItem.Quantity;
 
-            pwi.StockQuantity += qty;
-            pwi.ReservedQuantity += qty;
+            if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
+            {
+                
+                var pwi = product.ProductWarehouseInventory.FirstOrDefault(x => x.WarehouseId == shipmentItem.WarehouseId);
+                if (pwi == null)
+                    return 0;
 
-            var builder = Builders<Product>.Filter;
-            var filter = builder.Eq(x => x.Id, product.Id);
-            filter = filter & builder.Where(x => x.ProductWarehouseInventory.Any(y => y.WarehouseId == pwi.WarehouseId));
+                //not shipped yet? hence "BookReservedInventory" method was not invoked
+                if (!shipment.ShippedDateUtc.HasValue)
+                    return 0;
 
-            var update = Builders<Product>.Update
-                    .Set(x => x.ProductWarehouseInventory.ElementAt(-1), pwi)
-                    .CurrentDate("UpdateDate");
-            _productRepository.Collection.UpdateOneAsync(filter, update);
+                pwi.StockQuantity += qty;
+                pwi.ReservedQuantity += qty;
+
+                var builder = Builders<Product>.Filter;
+                var filter = builder.Eq(x => x.Id, product.Id);
+                filter = filter & builder.Where(x => x.ProductWarehouseInventory.Any(y => y.WarehouseId == pwi.WarehouseId));
+
+                var update = Builders<Product>.Update
+                        .Set(x => x.ProductWarehouseInventory.ElementAt(-1), pwi)
+                        .CurrentDate("UpdateDate");
+                _productRepository.Collection.UpdateOneAsync(filter, update);
+
+            }
+
+            if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
+            {
+
+                var combination = product.ProductAttributeCombinations.FirstOrDefault(x => x.AttributesXml == shipmentItem.AttributeXML);
+                if (combination == null)
+                    return 0;
+
+                combination.ProductId = product.Id;
+
+                var pwi = combination.WarehouseInventory.FirstOrDefault(x => x.WarehouseId == shipmentItem.WarehouseId);
+                if (pwi == null)
+                    return 0;
+
+                //not shipped yet? hence "BookReservedInventory" method was not invoked
+                if (!shipment.ShippedDateUtc.HasValue)
+                    return 0;
+
+                pwi.StockQuantity += qty;
+                pwi.ReservedQuantity += qty;
+
+                combination.StockQuantity = combination.WarehouseInventory.Sum(x => x.StockQuantity);
+
+                var builder = Builders<Product>.Filter;
+                var filter = builder.Eq(x => x.Id, combination.ProductId);
+                filter = filter & builder.ElemMatch(x => x.ProductAttributeCombinations, y => y.Id == combination.Id);
+                var update = Builders<Product>.Update
+                    .Set("ProductAttributeCombinations.$.StockQuantity", combination.StockQuantity)
+                    .Set("ProductAttributeCombinations.$.WarehouseInventory", combination.WarehouseInventory);
+
+                var result = _productRepository.Collection.UpdateManyAsync(filter, update).Result;
+
+            }
 
             //cache
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));

@@ -3023,43 +3023,85 @@ namespace Grand.Web.Areas.Admin.Controllers
                         rentalStartDate, rentalEndDate);
                 }
 
-                if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
-                    product.UseMultipleWarehouses)
+                if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
                 {
-                    //multiple warehouses supported
-                    shipmentItemModel.AllowToChooseWarehouse = true;
-                    foreach (var pwi in product.ProductWarehouseInventory
-                        .OrderBy(w => w.WarehouseId).ToList())
+                    if (product.UseMultipleWarehouses)
                     {
-                        
-                        var warehouse = _shippingService.GetWarehouseById(pwi.WarehouseId);
+                        //multiple warehouses supported
+                        shipmentItemModel.AllowToChooseWarehouse = true;
+                        foreach (var pwi in product.ProductWarehouseInventory
+                            .OrderBy(w => w.WarehouseId).ToList())
+                        {
+
+                            var warehouse = _shippingService.GetWarehouseById(pwi.WarehouseId);
+                            if (warehouse != null)
+                            {
+                                shipmentItemModel.AvailableWarehouses.Add(new ShipmentModel.ShipmentItemModel.WarehouseInfo
+                                {
+                                    WarehouseId = warehouse.Id,
+                                    WarehouseName = warehouse.Name,
+                                    StockQuantity = pwi.StockQuantity,
+                                    ReservedQuantity = pwi.ReservedQuantity,
+                                    PlannedQuantity = _shipmentService.GetQuantityInShipments(product, orderItem.AttributesXml, warehouse.Id, true, true)
+                                });
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //multiple warehouses are not supported
+                        var warehouse = _shippingService.GetWarehouseById(product.WarehouseId);
                         if (warehouse != null)
                         {
                             shipmentItemModel.AvailableWarehouses.Add(new ShipmentModel.ShipmentItemModel.WarehouseInfo
                             {
                                 WarehouseId = warehouse.Id,
                                 WarehouseName = warehouse.Name,
-                                StockQuantity = pwi.StockQuantity,
-                                ReservedQuantity = pwi.ReservedQuantity,
-                                PlannedQuantity = _shipmentService.GetQuantityInShipments(product, warehouse.Id, true, true)
+                                StockQuantity = product.StockQuantity
                             });
                         }
                     }
                 }
-                else
+                if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
                 {
-                    //multiple warehouses are not supported
-                    var warehouse = _shippingService.GetWarehouseById(product.WarehouseId);
-                    if (warehouse != null)
+                    if (product.UseMultipleWarehouses)
                     {
-                        shipmentItemModel.AvailableWarehouses.Add(new ShipmentModel.ShipmentItemModel.WarehouseInfo
+                        //multiple warehouses supported
+                        shipmentItemModel.AllowToChooseWarehouse = true;
+                        foreach (var pwi in product.ProductAttributeCombinations.FirstOrDefault(x=>x.AttributesXml == orderItem.AttributesXml)?.WarehouseInventory
+                            .OrderBy(w => w.WarehouseId).ToList())
                         {
-                            WarehouseId = warehouse.Id,
-                            WarehouseName = warehouse.Name,
-                            StockQuantity = product.StockQuantity
-                        });
+
+                            var warehouse = _shippingService.GetWarehouseById(pwi.WarehouseId);
+                            if (warehouse != null)
+                            {
+                                shipmentItemModel.AvailableWarehouses.Add(new ShipmentModel.ShipmentItemModel.WarehouseInfo
+                                {
+                                    WarehouseId = warehouse.Id,
+                                    WarehouseName = warehouse.Name,
+                                    StockQuantity = pwi.StockQuantity,
+                                    ReservedQuantity = pwi.ReservedQuantity,
+                                    PlannedQuantity = _shipmentService.GetQuantityInShipments(product, orderItem.AttributesXml, warehouse.Id, true, true)
+                                });
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //multiple warehouses are not supported
+                        var warehouse = _shippingService.GetWarehouseById(product.WarehouseId);
+                        if (warehouse != null)
+                        {
+                            shipmentItemModel.AvailableWarehouses.Add(new ShipmentModel.ShipmentItemModel.WarehouseInfo
+                            {
+                                WarehouseId = warehouse.Id,
+                                WarehouseName = warehouse.Name,
+                                StockQuantity = product.StockQuantity
+                            });
+                        }
                     }
                 }
+               
                     
                 model.Items.Add(shipmentItemModel);
             }
@@ -3113,7 +3155,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     }
 
                 string warehouseId = "";
-                if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
+                if ((product.ManageInventoryMethod == ManageInventoryMethod.ManageStock || product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes) &&
                     product.UseMultipleWarehouses)
                 {
                     //multiple warehouses supported
@@ -3178,7 +3220,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                     ProductId = orderItem.ProductId,
                     OrderItemId = orderItem.Id,
                     Quantity = qtyToAdd,
-                    WarehouseId = warehouseId
+                    WarehouseId = warehouseId,
+                    AttributeXML = orderItem.AttributesXml
                 };
                 shipment.ShipmentItems.Add(shipmentItem);
             }

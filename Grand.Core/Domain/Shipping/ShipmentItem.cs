@@ -23,6 +23,11 @@ namespace Grand.Core.Domain.Shipping
         public string ProductId { get; set; }
 
         /// <summary>
+        /// Gets or sets the product attribute xml
+        /// </summary>
+        public string AttributeXML { get; set; }
+
+        /// <summary>
         /// Gets or sets the quantity
         /// </summary>
         public int Quantity { get; set; }

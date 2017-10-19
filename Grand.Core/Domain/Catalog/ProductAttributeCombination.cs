@@ -1,4 +1,6 @@
 
+using System.Collections.Generic;
+
 namespace Grand.Core.Domain.Catalog
 {
     /// <summary>
@@ -6,6 +8,8 @@ namespace Grand.Core.Domain.Catalog
     /// </summary>
     public partial class ProductAttributeCombination : SubBaseEntity
     {
+        private ICollection<ProductCombinationWarehouseInventory> _warehouseInventory;
+
         /// <summary>
         /// Gets or sets the product identifier
         /// </summary>
@@ -51,5 +55,13 @@ namespace Grand.Core.Domain.Catalog
         /// </summary>
         public int NotifyAdminForQuantityBelow { get; set; }
 
+        /// <summary>
+        /// Gets or sets the collection of "ProductCombinationWarehouseInventory" records. We use it only when "UseMultipleWarehouses" is set to "true"
+        /// </summary>
+        public virtual ICollection<ProductCombinationWarehouseInventory> WarehouseInventory
+        {
+            get { return _warehouseInventory ?? (_warehouseInventory = new List<ProductCombinationWarehouseInventory>()); }
+            protected set { _warehouseInventory = value; }
+        }
     }
 }

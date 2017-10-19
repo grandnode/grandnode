@@ -144,7 +144,7 @@ namespace Grand.Services.Catalog
                         if (combination != null)
                         {
                             //combination exists
-                            var stockQuantity = combination.StockQuantity;
+                            var stockQuantity = product.GetTotalStockQuantityForCombination(combination, warehouseId: storeContext.CurrentStore.DefaultWarehouseId);
                             if (stockQuantity > 0)
                             {
                                 stockMessage = product.DisplayStockQuantity ?
@@ -270,8 +270,71 @@ namespace Grand.Services.Catalog
                 }
                 return result;
             }
-            
-            return product.StockQuantity;
+            if (string.IsNullOrEmpty(warehouseId) || string.IsNullOrEmpty(product.WarehouseId))
+                return product.StockQuantity;
+            else
+            {
+                if (product.WarehouseId == warehouseId)
+                    return product.StockQuantity;
+                else
+                    return 0;
+            }
+        }
+
+
+        /// <summary>
+        /// Get total quantity
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="combination">Combination</param>
+        /// <param name="useReservedQuantity">
+        /// A value indicating whether we should consider "Reserved Quantity" property 
+        /// when "multiple warehouses" are used
+        /// </param>
+        /// <param name="warehouseId">
+        /// Warehouse identifier. Used to limit result to certain warehouse.
+        /// Used only with "multiple warehouses" enabled.
+        /// </param>
+        /// <returns>Result</returns>
+        public static int GetTotalStockQuantityForCombination(this Product product, ProductAttributeCombination combination,
+            bool useReservedQuantity = true, string warehouseId = "")
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            if (combination == null)
+                throw new ArgumentNullException("combination");
+
+            if (product.ManageInventoryMethod != ManageInventoryMethod.ManageStockByAttributes)
+            {
+                return 0;
+            }
+
+            if (product.UseMultipleWarehouses)
+            {
+                var pwi = combination.WarehouseInventory;
+                if (!String.IsNullOrEmpty(warehouseId))
+                {
+                    pwi = pwi.Where(x => x.WarehouseId == warehouseId).ToList();
+                }
+                var result = pwi.Sum(x => x.StockQuantity);
+                if (useReservedQuantity)
+                {
+                    result = result - pwi.Sum(x => x.ReservedQuantity);
+                }
+                return result;
+            }
+
+            if (string.IsNullOrEmpty(warehouseId) || string.IsNullOrEmpty(product.WarehouseId))
+                return combination.StockQuantity;
+            else
+            {
+                if (product.WarehouseId == warehouseId)
+                    return combination.StockQuantity;
+                else
+                    return 0;
+            }
+
         }
 
         /// <summary>

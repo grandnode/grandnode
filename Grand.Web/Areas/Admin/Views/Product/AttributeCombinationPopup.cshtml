@@ -79,17 +79,116 @@
                     </div>
                     <div class="form-horizontal">
                         <div class="form-body">
-                            <div class="form-group">
-                                @Html.GrandLabelFor(model => model.StockQuantity, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                            @if (!Model.UseMultipleWarehouses)
+                            {
+                                <div class="form-group">
+                                    @Html.GrandLabelFor(model => model.StockQuantity, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                    <div class="col-md-9 col-sm-9">
+                                        @Html.GrandEditorFor(model => model.StockQuantity)
+                                        @Html.ValidationMessageFor(model => model.StockQuantity)
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                            <div class="form-group" id="pnlMultipleWarehouses">
+                                
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.StockQuantity)
-                                    @Html.ValidationMessageFor(model => model.StockQuantity)
+                                    @if (Model.WarehouseInventoryModels.Count > 0)
+                                    {
+                                        <table style="width: 600px; border-collapse: collapse;">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.Warehouse")
+                                                    </th>
+                                                    <th align="center">
+                                                        @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.WarehouseUsed")
+                                                    </th>
+                                                    <th align="center">
+                                                        @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.StockQuantity")
+                                                    </th>
+                                                    <th align="center">
+                                                        @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.ReservedQuantity")
+                                                    </th>
+                                                    <th align="center">
+                                                        @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.PlannedQuantity")
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in Model.WarehouseInventoryModels)
+                                                {
+                                                    <tr style="height:40px;">
+                                                        <td style="width: 35%;">
+                                                            <div style="padding-left: 5px; padding-right: 5px;">
+                                                                @item.WarehouseName
+                                                            </div>
+                                                        </td>
+                                                        <td align="center" style="width: 10%;">
+                                                            <label class="mt-checkbox mt-checkbox-outline">
+                                                                <input type="checkbox" id="warehouse_used_@(item.WarehouseId)" name="warehouse_used_@(item.WarehouseId)" value="@item.WarehouseId" checked="@item.WarehouseUsed" />
+                                                                <span></span>
+                                                            </label>
+                                                            <script type="text/javascript">
+                                                                $(document).ready(function() {
+                                                                    $("#warehouse_used_@(item.WarehouseId)").change(toggleWarehouseUsed_@(item.WarehouseId));
+                                                                    $("#warehouse_qty_@(item.WarehouseId)").kendoNumericTextBox({
+                                                                        format: "#",
+                                                                        decimals: 0,
+                                                                        min:0,
+                                                                    });
+                                                                    $("#warehouse_reserved_@(item.WarehouseId)").kendoNumericTextBox({
+                                                                        format: "#",
+                                                                        decimals: 0,
+                                                                        min: 0,
+                                                                    });
+                                                                    toggleWarehouseUsed_@(item.WarehouseId)();
+                                                                });
+
+                                                                function toggleWarehouseUsed_@(item.WarehouseId)() {
+
+                                                                    var numerictextboxQty = $("#warehouse_qty_@(item.WarehouseId)").data("kendoNumericTextBox");
+                                                                    var numerictextboxRes = $("#warehouse_reserved_@(item.WarehouseId)").data("kendoNumericTextBox");
+
+                                                                    if ($('#warehouse_used_@(item.WarehouseId)').is(':checked')) {
+                                                                        numerictextboxQty.enable(true);
+                                                                        numerictextboxRes.enable(true);
+
+                                                                    } else {
+                                                                        numerictextboxQty.enable(false);
+                                                                        numerictextboxRes.enable(false);
+                                                                    }
+                                                                }
+                                                            </script>
+                                                        <td align="center" style="width: 20%;">
+                                                                <input id="warehouse_qty_@(item.WarehouseId)" name="warehouse_qty_@(item.WarehouseId)" type="number" value="@item.StockQuantity" style="width: 70px;"/>
+                                                        </td>
+                                                        <td align="center" style="width: 20%;">
+                                                            <input id="warehouse_reserved_@(item.WarehouseId)" name="warehouse_reserved_@(item.WarehouseId)" type="number" value="@item.ReservedQuantity" style="width: 70px;" />
+                                                        </td>
+                                                        <td align="center" style="width: 20%;">
+                                                            @item.PlannedQuantity
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>                                       
+                                    }
+                                    else
+                                    {
+                                        @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.Warehouse.NotDefined")
+                                    }
                                 </div>
                             </div>
+                            }
                             <div class="form-group">
                                 @Html.GrandLabelFor(model => model.AllowOutOfStockOrders, new Dictionary<string, object> { { "class", "col-sm-3" } })
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.EditorFor(model => model.AllowOutOfStockOrders)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.EditorFor(model => model.AllowOutOfStockOrders)
+                                        <span></span>
+                                    </label>
                                     @Html.ValidationMessageFor(model => model.AllowOutOfStockOrders)
                                 </div>
                             </div>

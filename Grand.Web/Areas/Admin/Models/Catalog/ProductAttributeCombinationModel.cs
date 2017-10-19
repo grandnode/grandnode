@@ -1,12 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Grand.Core.Domain.Catalog;
-using Grand.Framework;
-using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Models;
-
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Grand.Framework.Mvc.ModelBinding;
+
 namespace Grand.Web.Areas.Admin.Models.Catalog
 {
     public partial class ProductAttributeCombinationModel : BaseGrandModel
@@ -17,6 +14,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         {
             ProductAttributes = new List<ProductAttributeModel>();
             Warnings = new List<string>();
+            WarehouseInventoryModels = new List<WarehouseInventoryModel>();
         }
         
         [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.StockQuantity")]
@@ -48,6 +46,10 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         public string ProductId { get; set; }
         public string AttributesXML { get; set; }
 
+        public bool UseMultipleWarehouses { get; set; }
+
+        public IList<WarehouseInventoryModel> WarehouseInventoryModels { get; set; }
+
         #region Nested classes
 
         public partial class ProductAttributeModel : BaseGrandEntityModel
@@ -76,6 +78,26 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
 
             public bool IsPreSelected { get; set; }
         }
+
+        public partial class WarehouseInventoryModel : BaseGrandEntityModel
+        {
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombination.WarehouseInventory.Fields.Warehouse")]
+            public string WarehouseId { get; set; }
+            public string WarehouseName { get; set; }
+
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombination.WarehouseInventory.Fields.WarehouseUsed")]
+            public bool WarehouseUsed { get; set; }
+
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombination.WarehouseInventory.Fields.StockQuantity")]
+            public int StockQuantity { get; set; }
+
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombination.WarehouseInventory.Fields.ReservedQuantity")]
+            public int ReservedQuantity { get; set; }
+
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombination.WarehouseInventory.Fields.PlannedQuantity")]
+            public int PlannedQuantity { get; set; }
+        }
+
         #endregion
     }
 }

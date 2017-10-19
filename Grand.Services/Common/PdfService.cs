@@ -1137,7 +1137,7 @@ namespace Grand.Services.Common
                     productAttribTable.DefaultCell.Border = Rectangle.NO_BORDER;
 
                     //product name
-                    var orderItem = order.OrderItems.Where(x => x.Id == si.OrderItemId).FirstOrDefault(); //_orderService.GetOrderItemById(si.OrderItemId);
+                    var orderItem = order.OrderItems.Where(x => x.Id == si.OrderItemId).FirstOrDefault();
                     if (orderItem == null)
                         continue;
 

@@ -404,9 +404,10 @@ namespace Grand.Services.Orders
                             {
                                 //combination exists
                                 //let's check stock level
-                                if (!combination.AllowOutOfStockOrders && combination.StockQuantity < quantity)
+                                var stockquantity = product.GetTotalStockQuantityForCombination(combination, warehouseId: _storeContext.CurrentStore.DefaultWarehouseId);
+                                if (!combination.AllowOutOfStockOrders && stockquantity < quantity)
                                 {
-                                    int maximumQuantityCanBeAdded = combination.StockQuantity;
+                                    int maximumQuantityCanBeAdded = stockquantity;
                                     if (maximumQuantityCanBeAdded <= 0)
                                     {
                                         warnings.Add(_localizationService.GetResource("ShoppingCart.OutOfStock"));

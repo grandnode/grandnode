@@ -317,9 +317,10 @@ namespace Grand.Services.Catalog
         /// Book the reserved quantity
         /// </summary>
         /// <param name="product">Product</param>
+        /// <param name="attributeXML">AttributeXML</param>
         /// <param name="warehouseId">Warehouse identifier</param>
         /// <param name="quantity">Quantity, must be negative</param>
-        void BookReservedInventory(Product product, string warehouseId, int quantity);
+        void BookReservedInventory(Product product, string AttributeXML, string warehouseId, int quantity);
 
         /// <summary>
         /// Reverse booked inventory (if acceptable)

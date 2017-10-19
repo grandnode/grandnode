@@ -350,8 +350,11 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
 
             //product attributes combination
             CreateMap<ProductAttributeCombination, ProductAttributeCombinationModel>()
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
+                .ForMember(dest => dest.UseMultipleWarehouses, mo => mo.Ignore())
+                .ForMember(dest => dest.WarehouseInventoryModels, mo => mo.Ignore());
             CreateMap<ProductAttributeCombinationModel, ProductAttributeCombination>()
+                .ForMember(dest => dest.WarehouseInventory, mo => mo.Ignore())
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
 
             //logs

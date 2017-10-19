@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Extensions;
@@ -37,12 +35,10 @@ using Grand.Services.Shipping;
 using Grand.Services.Stores;
 using Grand.Services.Tax;
 using Grand.Services.Vendors;
-using Grand.Framework;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Core.Domain.Localization;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using Grand.Core.Data;
 using Grand.Core.Caching;
@@ -634,7 +630,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         pwiModel.WarehouseUsed = true;
                         pwiModel.StockQuantity = pwi.StockQuantity;
                         pwiModel.ReservedQuantity = pwi.ReservedQuantity;
-                        pwiModel.PlannedQuantity = _shipmentService.GetQuantityInShipments(product, pwi.WarehouseId, true, true);
+                        pwiModel.PlannedQuantity = _shipmentService.GetQuantityInShipments(product, null, pwi.WarehouseId, true, true);
                     }
                 }
                 model.ProductWarehouseInventoryModels.Add(pwiModel);
@@ -4642,7 +4638,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         Id = x.Id,
                         ProductId = product.Id,
                         AttributesXml = _productAttributeFormatter.FormatAttributes(_productService.GetProductById(product.Id), x.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false),
-                        StockQuantity = x.StockQuantity,
+                        StockQuantity = product.UseMultipleWarehouses ? x.WarehouseInventory.Sum(y=>y.StockQuantity-y.ReservedQuantity) : x.StockQuantity,
                         AllowOutOfStockOrders = x.AllowOutOfStockOrders,
                         Sku = x.Sku,
                         ManufacturerPartNumber = x.ManufacturerPartNumber,
@@ -4723,13 +4719,46 @@ namespace Grand.Web.Areas.Admin.Controllers
             ViewBag.btnId = btnId;
             ViewBag.formId = formId;
             var model = new ProductAttributeCombinationModel();
+            var wim = new List<ProductAttributeCombinationModel.WarehouseInventoryModel>();
+            foreach (var warehouse in _shippingService.GetAllWarehouses())
+            {
+                var pwiModel = new ProductAttributeCombinationModel.WarehouseInventoryModel
+                {
+                    WarehouseId = warehouse.Id,
+                    WarehouseName = warehouse.Name
+                };
+                wim.Add(pwiModel);
+            }
+            if (product.UseMultipleWarehouses)
+            {
+                model.UseMultipleWarehouses = product.UseMultipleWarehouses;
+                model.WarehouseInventoryModels = wim;
+            }
+
             if (!string.IsNullOrEmpty(Id))
             {
                 var combination = product.ProductAttributeCombinations.FirstOrDefault(x => x.Id == Id);
                 if (combination != null)
                 {
                     model = combination.ToModel();
+                    model.UseMultipleWarehouses = product.UseMultipleWarehouses;
+                    model.WarehouseInventoryModels = wim;
                     model.AttributesXML = _productAttributeFormatter.FormatAttributes(product, combination.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false);
+                    if(model.UseMultipleWarehouses)
+                    {
+                        foreach(var _winv in combination.WarehouseInventory)
+                        {
+                            var warehouseInventoryModel = model.WarehouseInventoryModels.FirstOrDefault(x => x.WarehouseId == _winv.WarehouseId);
+                            if(warehouseInventoryModel!=null)
+                            {
+                                warehouseInventoryModel.WarehouseUsed = true;
+                                warehouseInventoryModel.Id = _winv.Id;
+                                warehouseInventoryModel.StockQuantity = _winv.StockQuantity;
+                                warehouseInventoryModel.ReservedQuantity = _winv.ReservedQuantity;
+                                warehouseInventoryModel.PlannedQuantity = _shipmentService.GetQuantityInShipments(product, combination.AttributesXml, _winv.WarehouseId, true, true); ;
+                            }
+                        }
+                    }                   
                 }
             }
             PrepareAddProductAttributeCombinationModel(model, product);
@@ -4759,6 +4788,70 @@ namespace Grand.Web.Areas.Admin.Controllers
             //attributes
             string attributesXml = "";
             var warnings = new List<string>();
+
+            void PrepareCombinationWarehouseInventory(ProductAttributeCombination combination)
+            {
+                var warehouses = _shippingService.GetAllWarehouses();
+
+                foreach (var warehouse in warehouses)
+                {
+                    //parse stock quantity
+                    int stockQuantity = 0;
+                    foreach (string formKey in this.Request.Form.Keys)
+                        if (formKey.Equals(string.Format("warehouse_qty_{0}", warehouse.Id), StringComparison.OrdinalIgnoreCase))
+                        {
+                            int.TryParse(this.Request.Form[formKey], out stockQuantity);
+                            break;
+                        }
+                    //parse reserved quantity
+                    int reservedQuantity = 0;
+                    foreach (string formKey in this.Request.Form.Keys)
+                        if (formKey.Equals(string.Format("warehouse_reserved_{0}", warehouse.Id), StringComparison.OrdinalIgnoreCase))
+                        {
+                            int.TryParse(this.Request.Form[formKey], out reservedQuantity);
+                            break;
+                        }
+                    //parse "used" field
+                    bool used = false;
+                    foreach (string formKey in this.Request.Form.Keys)
+                        if (formKey.Equals(string.Format("warehouse_used_{0}", warehouse.Id), StringComparison.OrdinalIgnoreCase))
+                        {
+                            used = this.Request.Form[formKey] == warehouse.Id;
+                            break;
+                        }
+
+                    var existingPwI = combination.WarehouseInventory.FirstOrDefault(x => x.WarehouseId == warehouse.Id);
+
+                    if (existingPwI != null)
+                    {
+                        if (used)
+                        {
+                            //update 
+                            existingPwI.StockQuantity = stockQuantity;
+                            existingPwI.ReservedQuantity = reservedQuantity;
+                        }
+                        else
+                        {
+                            //delete 
+                            combination.WarehouseInventory.Remove(existingPwI);
+                        }
+                    }
+                    else
+                    {
+                        if (used)
+                        {
+                            //no need to insert a record for qty 0
+                            existingPwI = new ProductCombinationWarehouseInventory
+                            {
+                                WarehouseId = warehouse.Id,
+                                StockQuantity = stockQuantity,
+                                ReservedQuantity = reservedQuantity
+                            };
+                            combination.WarehouseInventory.Add(existingPwI);
+                        }
+                    }
+                }
+            }
 
             if (string.IsNullOrEmpty(model.Id))
             {
@@ -4896,6 +4989,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                         OverriddenPrice = model.OverriddenPrice,
                         NotifyAdminForQuantityBelow = model.NotifyAdminForQuantityBelow,
                     };
+
+                    if (product.UseMultipleWarehouses)
+                    {
+                        PrepareCombinationWarehouseInventory(combination);
+                        combination.StockQuantity = combination.WarehouseInventory.Sum(x => x.StockQuantity);
+                    }
                     _productAttributeService.InsertProductAttributeCombination(combination);
 
                     if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
@@ -4919,6 +5018,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                 combination.OverriddenPrice = model.OverriddenPrice;
                 combination.NotifyAdminForQuantityBelow = model.NotifyAdminForQuantityBelow;
                 combination.ProductId = product.Id;
+
+                if (product.UseMultipleWarehouses)
+                {
+                    PrepareCombinationWarehouseInventory(combination);
+                    combination.StockQuantity = combination.WarehouseInventory.Sum(x => x.StockQuantity);
+                }
                 _productAttributeService.UpdateProductAttributeCombination(combination);
 
                 if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)

@@ -523,7 +523,9 @@ namespace Grand.Services.Catalog
                 .Set("ProductAttributeCombinations.$.ManufacturerPartNumber", combination.ManufacturerPartNumber)
                 .Set("ProductAttributeCombinations.$.Gtin", combination.Gtin)
                 .Set("ProductAttributeCombinations.$.OverriddenPrice", combination.OverriddenPrice)
-                .Set("ProductAttributeCombinations.$.NotifyAdminForQuantityBelow", combination.NotifyAdminForQuantityBelow);
+                .Set("ProductAttributeCombinations.$.NotifyAdminForQuantityBelow", combination.NotifyAdminForQuantityBelow)
+                .Set("ProductAttributeCombinations.$.WarehouseInventory", combination.WarehouseInventory)
+                ;
 
             var result = _productRepository.Collection.UpdateManyAsync(filter, update).Result;
 

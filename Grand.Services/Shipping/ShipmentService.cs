@@ -187,14 +187,14 @@ namespace Grand.Services.Shipping
         /// <param name="ignoreShipped">Ignore already shipped shipments</param>
         /// <param name="ignoreDelivered">Ignore already delivered shipments</param>
         /// <returns>Quantity</returns>
-        public virtual int GetQuantityInShipments(Product product, string warehouseId,
+        public virtual int GetQuantityInShipments(Product product, string attributexml, string warehouseId,
             bool ignoreShipped, bool ignoreDelivered)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
 
             //only products with "use multiple warehouses" are handled this way
-            if (product.ManageInventoryMethod != ManageInventoryMethod.ManageStock)
+            if (product.ManageInventoryMethod == ManageInventoryMethod.DontManageStock)
                 return 0;
             if (!product.UseMultipleWarehouses)
                 return 0;
@@ -208,6 +208,9 @@ namespace Grand.Services.Shipping
                 query = query.Where(si => !si.DeliveryDateUtc.HasValue);
 
             query = query.Where(si => si.ShipmentItems.Any(x => x.ProductId == product.Id));
+            if(!string.IsNullOrEmpty(attributexml))
+                query = query.Where(si => si.ShipmentItems.Any(x => x.AttributeXML == attributexml));
+
             var result = query.SelectMany(x => x.ShipmentItems).Where(x => x.ProductId == product.Id).Sum(x => x.Quantity);
 
             return result;

@@ -76,7 +76,7 @@ namespace Grand.Services.Shipping
         /// <param name="ignoreShipped">Ignore already shipped shipments</param>
         /// <param name="ignoreDelivered">Ignore already delivered shipments</param>
         /// <returns>Quantity</returns>
-        int GetQuantityInShipments(Product product, string warehouseId,
+        int GetQuantityInShipments(Product product, string attributexml, string warehouseId,
             bool ignoreShipped, bool ignoreDelivered);
     }
 }
