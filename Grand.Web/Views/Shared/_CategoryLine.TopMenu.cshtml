@@ -18,18 +18,21 @@
         if (Model.Level == 0)
         {
             levelClass = "first-level";
-            <ul class="dropdown-menu @levelClass">
-                @foreach (var subCategory in subCategories)
-                {
-                    var categoryLineModel = new TopMenuModel.CategoryLineModel
+            if (subCategories.Any())
+            {
+                <ul class="dropdown-menu @levelClass">
+                    @foreach (var subCategory in subCategories)
                     {
-                        Category = subCategory,
-                        Level = Model.Level + 1,
-                        ResponsiveMobileMenu = Model.ResponsiveMobileMenu
-                    };
-                    @await Html.PartialAsync("_CategoryLine.TopMenu", categoryLineModel)
-                }
-            </ul>
+                        var categoryLineModel = new TopMenuModel.CategoryLineModel
+                        {
+                            Category = subCategory,
+                            Level = Model.Level + 1,
+                            ResponsiveMobileMenu = Model.ResponsiveMobileMenu
+                        };
+                        @await Html.PartialAsync("_CategoryLine.TopMenu", categoryLineModel)
+                    }
+                </ul>
+            }
         }
         if (Model.Level == 1 && subCategories.Any())
         {
