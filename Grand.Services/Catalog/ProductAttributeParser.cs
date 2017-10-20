@@ -110,7 +110,7 @@ namespace Grand.Services.Catalog
                     {
                             if (attribute.ProductAttributeValues.Where(x => x.Id == valueStr).Count() > 0)
                             {
-                                var value = attribute.ProductAttributeValues.Where(x => x.Id == valueStr).FirstOrDefault(); //_productAttributeService.GetProductAttributeValueById(id);
+                                var value = attribute.ProductAttributeValues.Where(x => x.Id == valueStr).FirstOrDefault(); 
                                 if (value != null)
                                 {
                                     value.ProductId = product.Id;
@@ -322,7 +322,6 @@ namespace Grand.Services.Catalog
                                 foreach (string str2 in values2Str)
                                 {
                                     //case insensitive? 
-                                    //if (str1.Trim().ToLower() == str2.Trim().ToLower())
                                     if (str1.Trim() == str2.Trim())
                                     {
                                         hasValue = true;
@@ -415,7 +414,7 @@ namespace Grand.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            var combinations = product.ProductAttributeCombinations; //_productAttributeService.GetAllProductAttributeCombinations(product.Id);
+            var combinations = product.ProductAttributeCombinations; 
             return combinations.FirstOrDefault(x => 
                 AreProductAttributesEqual(product, x.AttributesXml, attributesXml, ignoreNonCombinableAttributes));
         }
@@ -431,7 +430,7 @@ namespace Grand.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            var allProductAttributMappings = product.ProductAttributeMappings; //_productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+            var allProductAttributMappings = product.ProductAttributeMappings; 
             if (ignoreNonCombinableAttributes)
             {
                 allProductAttributMappings = allProductAttributMappings.Where(x => !x.IsNonCombinable()).ToList();
@@ -447,8 +446,8 @@ namespace Grand.Services.Catalog
                         combination.Add(allProductAttributMappings.ToArray()[i]);
                     }
                 }
-
-                allPossibleAttributeCombinations.Add(combination);
+                if(combination.Any())
+                    allPossibleAttributeCombinations.Add(combination);
             }
 
             var allAttributesXml = new List<string>();
@@ -460,7 +459,7 @@ namespace Grand.Services.Catalog
                     if (!pam.ShouldHaveValues())
                         continue;
 
-                    var attributeValues = product.ProductAttributeMappings.Where(x => x.Id == pam.Id).FirstOrDefault().ProductAttributeValues;  //_productAttributeService.GetProductAttributeValues(pam.Id);
+                    var attributeValues = product.ProductAttributeMappings.Where(x => x.Id == pam.Id).FirstOrDefault().ProductAttributeValues; 
                     if (!attributeValues.Any())
                         continue;
 
@@ -479,8 +478,8 @@ namespace Grand.Services.Catalog
                                     checkboxCombination.Add(attributeValues.ToArray()[i]);
                                 }
                             }
-
-                            allPossibleCheckboxCombinations.Add(checkboxCombination);
+                            if(checkboxCombination.Any())
+                                allPossibleCheckboxCombinations.Add(checkboxCombination);
                         }
                     }
 
