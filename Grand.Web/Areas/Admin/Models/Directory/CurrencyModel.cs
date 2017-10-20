@@ -56,6 +56,12 @@ namespace Grand.Web.Areas.Admin.Models.Directory
 
         public IList<CurrencyLocalizedModel> Locales { get; set; }
 
+        [GrandResourceDisplayName("Admin.Configuration.Currencies.Fields.RoundingType")]
+        public int RoundingTypeId { get; set; }
+
+        [GrandResourceDisplayName("Admin.Configuration.Currencies.Fields.MidpointRound")]
+        public int MidpointRoundId { get; set; }
+
         //Store mapping
         [GrandResourceDisplayName("Admin.Configuration.Currencies.Fields.LimitedToStores")]
         public bool LimitedToStores { get; set; }

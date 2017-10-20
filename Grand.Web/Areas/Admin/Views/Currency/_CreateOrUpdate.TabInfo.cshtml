@@ -1,6 +1,5 @@
 ﻿@model CurrencyModel
-
-
+@using Grand.Core.Domain.Directory
 
 @(Html.LocalizedEditor<CurrencyModel, CurrencyLocalizedModel>("currency-info-localized",
     @<div class="form-horizontal">
@@ -90,12 +89,27 @@
                 @Html.ValidationMessageFor(model => model.DisplayOrder)
             </div>
         </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.RoundingTypeId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.RoundingTypeId, ((RoundingType)Model.RoundingTypeId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.RoundingTypeId)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.MidpointRoundId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.MidpointRoundId, ((MidpointRounding)Model.MidpointRoundId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.MidpointRoundId)
+            </div>
+        </div>
+
         @if (!String.IsNullOrEmpty(Model.Id))
             {
             <div class="form-group">
                 @Html.GrandLabelFor(model => model.CreatedOn)
                 <div class="col-md-9 col-sm-9">
-                    @Html.DisplayFor(model => model.CreatedOn)
+                    <label class="control-label">@Html.DisplayFor(model => model.CreatedOn)</label> 
                 </div>
             </div>
         }

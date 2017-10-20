@@ -57,6 +57,42 @@ namespace Grand.Core.Domain.Directory
         public int DisplayOrder { get; set; }
 
         /// <summary>
+        /// Gets or sets the rounding type identifier
+        /// </summary>
+        public int RoundingTypeId { get; set; }
+        /// <summary>
+        /// Gets or sets the rounding type
+        /// </summary>
+        public RoundingType RoundingType
+        {
+            get
+            {
+                return (RoundingType) RoundingTypeId;
+            }
+            set
+            {
+                RoundingTypeId = (int) value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the Midpoint rounding identifier
+        /// </summary>
+        public int MidpointRoundId { get; set; }
+
+        public MidpointRounding MidpointRound
+        {
+            get
+            {
+                return (MidpointRounding)MidpointRoundId;
+            }
+            set
+            {
+                MidpointRoundId = (int)value;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
