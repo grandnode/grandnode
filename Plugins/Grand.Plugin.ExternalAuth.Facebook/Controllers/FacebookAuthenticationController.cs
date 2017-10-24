@@ -14,6 +14,7 @@ using Grand.Services.Stores;
 using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security;
+using System;
 
 namespace Grand.Plugin.ExternalAuth.Facebook.Controllers
 {
@@ -96,11 +97,18 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Controllers
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var settings = _settingService.LoadSetting<FacebookExternalAuthSettings>(storeScope);
 
-
-            //new
             settings.ClientKeyIdentifier = model.ClientId;
             settings.ClientSecret = model.ClientSecret;
-            _settingService.SaveSetting(settings);
+
+            if (model.ClientId_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(settings, x => x.ClientKeyIdentifier, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(settings, x => x.ClientKeyIdentifier, storeScope);
+
+            if (model.ClientSecret_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(settings, x => x.ClientSecret, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(settings, x => x.ClientSecret, storeScope);
 
             //now clear settings cache
             _settingService.ClearCache();
