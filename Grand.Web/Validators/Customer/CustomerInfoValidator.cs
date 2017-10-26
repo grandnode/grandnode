@@ -1,6 +1,5 @@
 ﻿using System;
 using FluentValidation;
-using FluentValidation.Results;
 using Grand.Core;
 using Grand.Core.Domain.Customers;
 using Grand.Services.Directory;

@@ -4,10 +4,6 @@ using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Web.Models.Customer;
 using Grand.Web.Validators.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Grand.Web.Validators.Customer
 {
