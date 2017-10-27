@@ -2,7 +2,7 @@
 @using Grand.Core.Domain.Discounts;
 @using Grand.Framework.UI;
 @{
-    Html.AddScriptParts("~/Scripts/jquery.tmpl.min.js");
+    Html.AddScriptParts("~/Scripts/jquery.tmpl.min.js", excludeFromBundle: true);
 }
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)

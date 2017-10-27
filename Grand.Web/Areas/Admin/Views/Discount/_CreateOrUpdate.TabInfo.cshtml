@@ -2,9 +2,6 @@
 @using Grand.Core.Domain.Discounts;
 @using Grand.Framework.UI;
 
-
-
-
 <script type="text/javascript">
         $(document).ready(function () {
             $("#@Html.FieldIdFor(model => model.DiscountTypeId)").change(toggleDiscountType);
@@ -22,7 +19,6 @@
 
         function toggleCalculate() {
             var selectedCalculateByPlugin = $("#@Html.FieldIdFor(model => model.CalculateByPlugin)").is(':checked');
-            console.log(selectedCalculateByPlugin);
             if (selectedCalculateByPlugin) {
                 $('#pnlUsePercentage').hide();
                 $('#pnlDiscountAmount').hide();
