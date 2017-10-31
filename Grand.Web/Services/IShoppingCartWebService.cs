@@ -4,16 +4,13 @@ using Grand.Web.Models.Media;
 using Grand.Web.Models.ShoppingCart;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 
 namespace Grand.Web.Services
 {
     public partial interface IShoppingCartWebService
     {
-        PictureModel PrepareCartItemPicture(ShoppingCartItem sci,
-            int pictureSize, bool showDefaultPicture, string productName);
+        PictureModel PrepareCartItemPicture(Product product, string attributesXml, int pictureSize, bool showDefaultPicture, string productName);
         void PrepareShoppingCart(ShoppingCartModel model,
             IList<ShoppingCartItem> cart, bool isEditable = true,
             bool validateCheckoutAttributes = false,

@@ -156,16 +156,13 @@ namespace Grand.Web.Services
             this._rewardPointsSettings = rewardPointsSettings;
         }
 
-        public virtual PictureModel PrepareCartItemPicture(ShoppingCartItem sci,
+        public virtual PictureModel PrepareCartItemPicture(Product product, string attributesXml,
             int pictureSize, bool showDefaultPicture, string productName)
         {
-            var pictureCacheKey = string.Format(ModelCacheEventConsumer.CART_PICTURE_MODEL_KEY, sci.Id, sci.ProductId, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
-            var model = _cacheManager.Get(pictureCacheKey,
-                //as we cache per user (shopping cart item identifier)
-                //let's cache just for 3 minutes
-                3, () =>
+            var pictureCacheKey = string.Format(ModelCacheEventConsumer.CART_PICTURE_MODEL_KEY, product.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
+            var model = _cacheManager.Get(pictureCacheKey, () =>
                 {
-                    var sciPicture = _productService.GetProductById(sci.ProductId).GetProductPicture(sci.AttributesXml, _pictureService, _productAttributeParser);
+                    var sciPicture = product.GetProductPicture(attributesXml, _pictureService, _productAttributeParser);
                     return new PictureModel
                     {
                         ImageUrl = _pictureService.GetPictureUrl(sciPicture, pictureSize, showDefaultPicture),
@@ -469,7 +466,7 @@ namespace Grand.Web.Services
                 //picture
                 if (_shoppingCartSettings.ShowProductImagesOnShoppingCart)
                 {
-                    cartItemModel.Picture = PrepareCartItemPicture(sci,
+                    cartItemModel.Picture = PrepareCartItemPicture(product, sci.AttributesXml,
                         _mediaSettings.CartThumbPictureSize, true, cartItemModel.ProductName);
                 }
 
@@ -705,7 +702,7 @@ namespace Grand.Web.Services
                 //picture
                 if (_shoppingCartSettings.ShowProductImagesOnWishList)
                 {
-                    cartItemModel.Picture = PrepareCartItemPicture(sci,
+                    cartItemModel.Picture = PrepareCartItemPicture(product, sci.AttributesXml,
                         _mediaSettings.CartThumbPictureSize, true, cartItemModel.ProductName);
                 }
 
@@ -849,7 +846,7 @@ namespace Grand.Web.Services
                         //picture
                         if (_shoppingCartSettings.ShowProductImagesInMiniShoppingCart)
                         {
-                            cartItemModel.Picture = PrepareCartItemPicture(sci,
+                            cartItemModel.Picture = PrepareCartItemPicture(product, sci.AttributesXml,
                                 _mediaSettings.MiniCartThumbPictureSize, true, cartItemModel.ProductName);
                         }
 

@@ -284,13 +284,14 @@ namespace Grand.Web.Services
 
         public virtual HeaderLinksModel PrepareHeaderLinks(Customer customer)
         {
+            var isRegister = customer.IsRegistered();
             var model = new HeaderLinksModel
             {
-                IsAuthenticated = customer.IsRegistered(),
-                CustomerEmailUsername = customer.IsRegistered() ? (_customerSettings.UsernamesEnabled ? customer.Username : customer.Email) : "",
+                IsAuthenticated = isRegister,
+                CustomerEmailUsername = isRegister ? (_customerSettings.UsernamesEnabled ? customer.Username : customer.Email) : "",
                 ShoppingCartEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
                 WishlistEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),
-                AllowPrivateMessages = customer.IsRegistered() && _forumSettings.AllowPrivateMessages,
+                AllowPrivateMessages = isRegister && _forumSettings.AllowPrivateMessages,
             };
             //performance optimization (use "HasShoppingCartItems" property)
             if (customer.HasShoppingCartItems)
