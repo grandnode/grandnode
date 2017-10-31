@@ -34,27 +34,27 @@ namespace Grand.Web.ViewComponents
         public IViewComponentResult Invoke()
         {
             var customer = _workContext.CurrentCustomer;
-
-            var unreadMessageCount = _commonWebService.GetUnreadPrivateMessages();
-            var unreadMessage = string.Empty;
-            var alertMessage = string.Empty;
-            if (unreadMessageCount > 0)
-            {
-                unreadMessage = string.Format(_localizationService.GetResource("PrivateMessages.TotalUnread"), unreadMessageCount);
-
-                //notifications here
-                if (_forumSettings.ShowAlertForPM &&
-                    !customer.GetAttribute<bool>(SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, _storeContext.CurrentStore.Id))
-                {
-                    EngineContext.Current.Resolve<IGenericAttributeService>().SaveAttribute(customer, SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, true, _storeContext.CurrentStore.Id);
-                    alertMessage = string.Format(_localizationService.GetResource("PrivateMessages.YouHaveUnreadPM"), unreadMessageCount);
-                }
-            }
-
             var model = _commonWebService.PrepareHeaderLinks(customer);
-            model.UnreadPrivateMessages = unreadMessage;
-            model.AlertMessage = alertMessage;
+            if (_forumSettings.AllowPrivateMessages)
+            {
+                var unreadMessageCount = _commonWebService.GetUnreadPrivateMessages();
+                var unreadMessage = string.Empty;
+                var alertMessage = string.Empty;
+                if (unreadMessageCount > 0)
+                {
+                    unreadMessage = string.Format(_localizationService.GetResource("PrivateMessages.TotalUnread"), unreadMessageCount);
 
+                    //notifications here
+                    if (_forumSettings.ShowAlertForPM &&
+                        !customer.GetAttribute<bool>(SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, _storeContext.CurrentStore.Id))
+                    {
+                        EngineContext.Current.Resolve<IGenericAttributeService>().SaveAttribute(customer, SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, true, _storeContext.CurrentStore.Id);
+                        alertMessage = string.Format(_localizationService.GetResource("PrivateMessages.YouHaveUnreadPM"), unreadMessageCount);
+                    }
+                }
+                model.UnreadPrivateMessages = unreadMessage;
+                model.AlertMessage = alertMessage;
+            }
             return View(model);
         }
     }

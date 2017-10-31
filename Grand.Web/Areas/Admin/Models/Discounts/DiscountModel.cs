@@ -63,9 +63,8 @@ namespace Grand.Web.Areas.Admin.Models.Discounts
         [GrandResourceDisplayName("Admin.Promotions.Discounts.Fields.RequiresCouponCode")]
         public bool RequiresCouponCode { get; set; }
 
-        [GrandResourceDisplayName("Admin.Promotions.Discounts.Fields.CouponCode")]
-        
-        public string CouponCode { get; set; }
+        [GrandResourceDisplayName("Admin.Promotions.Discounts.Fields.Reused")]
+        public bool Reused { get; set; }
 
         [GrandResourceDisplayName("Admin.Promotions.Discounts.Fields.IsCumulative")]
         public bool IsCumulative { get; set; }

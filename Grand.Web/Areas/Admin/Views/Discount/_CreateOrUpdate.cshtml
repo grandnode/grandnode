@@ -24,33 +24,39 @@
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
             @T("Admin.Promotions.Discounts.Info")
         </li>
-        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex()) id="tab-couponcode">
+            @T("Admin.Promotions.Discounts.CouponCodes")
+        </li>
+        <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
             @T("Admin.Promotions.Discounts.Requirements")
         </li>
-        <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex()) id="tab-applied-to-products">
+        <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex()) id="tab-applied-to-products">
             @T("Admin.Promotions.Discounts.AppliedToProducts")
         </li>
-        <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex()) id="tab-applied-to-categories">
+        <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex()) id="tab-applied-to-categories">
             @T("Admin.Promotions.Discounts.AppliedToCategories")
         </li>
-        <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex()) id="tab-applied-to-manufacturers">
+        <li @Html.RenderSelectedTabIndex(5, GetSelectedTabIndex()) id="tab-applied-to-manufacturers">
             @T("Admin.Promotions.Discounts.AppliedToManufacturers")
         </li>
-        <li @Html.RenderSelectedTabIndex(6, GetSelectedTabIndex()) id="tab-applied-to-vendors">
+        <li @Html.RenderSelectedTabIndex(7, GetSelectedTabIndex()) id="tab-applied-to-vendors">
             @T("Admin.Promotions.Discounts.AppliedToVendors")
         </li>
-        <li @Html.RenderSelectedTabIndex(7, GetSelectedTabIndex()) id="tab-applied-to-stores">
+        <li @Html.RenderSelectedTabIndex(8, GetSelectedTabIndex()) id="tab-applied-to-stores">
             @T("Admin.Promotions.Discounts.AppliedToStores")
         </li>
         @if (!String.IsNullOrEmpty(Model.Id))
         {
-            <li @Html.RenderSelectedTabIndex(5, GetSelectedTabIndex())>
+            <li @Html.RenderSelectedTabIndex(6, GetSelectedTabIndex())>
                 @T("Admin.Promotions.Discounts.History")
             </li>
         }
     </ul>
     <div>
         @Html.Partial("_CreateOrUpdate.TabInfo", Model)
+    </div>
+    <div>
+        @Html.Partial("_CreateOrUpdate.TabCouponCodes", Model)
     </div>
     <div>
         @Html.Partial("_CreateOrUpdate.TabRequirements", Model)

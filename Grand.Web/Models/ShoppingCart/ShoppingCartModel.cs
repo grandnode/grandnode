@@ -23,7 +23,7 @@ namespace Grand.Web.Models.ShoppingCart
             ButtonPaymentMethodViewComponentNames = new List<string>();
         }
 
-    public bool OnePageCheckoutEnabled { get; set; }
+        public bool OnePageCheckoutEnabled { get; set; }
 
         public bool ShowSku { get; set; }
         public bool ShowProductImages { get; set; }

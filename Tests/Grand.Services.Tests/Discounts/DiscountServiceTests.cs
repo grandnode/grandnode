@@ -18,6 +18,7 @@ namespace Grand.Services.Discounts.Tests
     [TestClass()] 
     public class DiscountServiceTests {
         private IRepository<Discount> _discountRepo;
+        private IRepository<DiscountCoupon> _discountCouponRepo;
         private IRepository<DiscountUsageHistory> _discountUsageHistoryRepo;
         private IEventPublisher _eventPublisher;
         private IGenericAttributeService _genericAttributeService;
@@ -38,6 +39,7 @@ namespace Grand.Services.Discounts.Tests
                 DiscountAmount = 0,
                 DiscountLimitation = DiscountLimitationType.Unlimited,
                 LimitationTimes = 0,
+                IsEnabled = true,
             };
             var discount2 = new Discount {
                 DiscountType = DiscountType.AssignedToSkus,
@@ -46,9 +48,9 @@ namespace Grand.Services.Discounts.Tests
                 DiscountPercentage = 0,     //!
                 DiscountAmount = 5,         //use amount instad of percentage (e.g. discount 100PLN instead of discount 10%) 
                 RequiresCouponCode = true,
-                CouponCode = "SecretCode",
                 DiscountLimitation = DiscountLimitationType.NTimesPerCustomer, //only N times for this customer
                 LimitationTimes = 3, // 3 times for this customer
+                IsEnabled = true,
             };
             _discountRepo = new MongoDBRepositoryTest<Discount>();
             _discountRepo.Insert(discount1);
@@ -63,6 +65,7 @@ namespace Grand.Services.Discounts.Tests
             _storeContext = new Mock<IStoreContext>().Object;
 
             _discountUsageHistoryRepo = new Mock<IRepository<DiscountUsageHistory>>().Object;
+            _discountCouponRepo = new Mock<IRepository<DiscountCoupon>>().Object;
             var extraProductRepo = new Mock<IRepository<Product>>().Object;
             var extraCategoryRepo = new Mock<IRepository<Category>>().Object;
             var extraManufacturerRepo = new Mock<IRepository<Manufacturer>>().Object;
@@ -72,9 +75,9 @@ namespace Grand.Services.Discounts.Tests
             _genericAttributeService = new Mock<IGenericAttributeService>().Object;
             _localizationService = new Mock<ILocalizationService>().Object;
 
-            _discountService = new DiscountService(new NopNullCache(), _discountRepo,
+            _discountService = new DiscountService(new NopNullCache(), _discountRepo, _discountCouponRepo,
                 _discountUsageHistoryRepo, _localizationService, _storeContext, _genericAttributeService,
-                new PluginFinder(), _eventPublisher, extraProductRepo, extraCategoryRepo, extraManufacturerRepo, extraVendorRepo, extraStoreRepo);
+                new PluginFinder(), _eventPublisher, extraProductRepo, extraCategoryRepo, extraManufacturerRepo, extraVendorRepo, extraStoreRepo, new PerRequestCacheManager(null));
         }
 
         [TestMethod()]

@@ -11994,6 +11994,12 @@
   <LocaleResource Name="Admin.Promotions.Discounts.BackToList">
     <Value>back to discount list</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.CouponCodes">
+    <Value>Coupon Codes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.CouponCodes.SaveBeforeEdit">
+    <Value>You need to save the discount before you can add values.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Deleted">
     <Value>The discount has been deleted successfully.</Value>
   </LocaleResource>
@@ -12114,6 +12120,12 @@
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.Name.Required">
     <Value>Please provide a name.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.Reused">
+    <Value>Reused coupon code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.Reused.hint">
+    <Value>Allow to reused coupon code</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.RequiresCouponCode">
     <Value>Requires coupon code</Value>
   </LocaleResource>
@@ -12128,6 +12140,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.TimesUsed">
     <Value>Times used</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.Used">
+    <Value>Used</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.UsePercentage">
     <Value>Use percentage</Value>
@@ -17108,6 +17123,12 @@
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.DiscountCouponCode.Tooltip">
     <Value>Enter your coupon here</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.DiscountCouponCode.UsesTheSameDiscount">
+    <Value>You can't use the same discount.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.DiscountCouponCode.WasUsed">
+    <Value>This coupon code was used</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.DiscountCouponCode.WrongDiscount">
     <Value>The coupon code you entered couldn't be applied to your order</Value>

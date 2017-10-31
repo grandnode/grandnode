@@ -4,6 +4,7 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Discounts;
 using Grand.Core.Domain.Orders;
 using System.Collections.Generic;
+using Grand.Services.Discounts;
 
 namespace Grand.Services.Catalog
 {
@@ -43,7 +44,7 @@ namespace Grand.Services.Catalog
             bool includeDiscounts,
             int quantity,
             out decimal discountAmount,
-            out List<Discount> appliedDiscounts);
+            out List<AppliedDiscount> appliedDiscounts);
         /// <summary>
         /// Gets the final price
         /// </summary>
@@ -65,7 +66,7 @@ namespace Grand.Services.Catalog
             DateTime? rentalStartDate,
             DateTime? rentalEndDate,
             out decimal discountAmount,
-            out List<Discount> appliedDiscounts);
+            out List<AppliedDiscount> appliedDiscounts);
 
 
 
@@ -88,7 +89,7 @@ namespace Grand.Services.Catalog
         decimal GetUnitPrice(ShoppingCartItem shoppingCartItem,
             bool includeDiscounts,
             out decimal discountAmount,
-            out List<Discount> appliedDiscounts);
+            out List<AppliedDiscount> appliedDiscounts);
         /// <summary>
         /// Gets the shopping cart unit price (one item)
         /// </summary>
@@ -113,7 +114,7 @@ namespace Grand.Services.Catalog
             DateTime? rentalStartDate, DateTime? rentalEndDate,
             bool includeDiscounts,
             out decimal discountAmount,
-            out List<Discount> appliedDiscounts);
+            out List<AppliedDiscount> appliedDiscounts);
         /// <summary>
         /// Gets the shopping cart item sub total
         /// </summary>
@@ -133,7 +134,7 @@ namespace Grand.Services.Catalog
         decimal GetSubTotal(ShoppingCartItem shoppingCartItem,
             bool includeDiscounts,
             out decimal discountAmount,
-            out List<Discount> appliedDiscounts);
+            out List<AppliedDiscount> appliedDiscounts);
 
 
 

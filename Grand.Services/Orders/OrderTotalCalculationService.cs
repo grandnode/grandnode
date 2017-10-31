@@ -15,7 +15,6 @@ using Grand.Services.Discounts;
 using Grand.Services.Payments;
 using Grand.Services.Shipping;
 using Grand.Services.Tax;
-using Grand.Core.Infrastructure;
 
 namespace Grand.Services.Orders
 {
@@ -37,6 +36,7 @@ namespace Grand.Services.Orders
         private readonly IGiftCardService _giftCardService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IRewardPointsService _rewardPointsService;
+        private readonly IProductService _productService;
         private readonly TaxSettings _taxSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly ShippingSettings _shippingSettings;
@@ -76,6 +76,7 @@ namespace Grand.Services.Orders
             IGiftCardService giftCardService,
             IGenericAttributeService genericAttributeService,
             IRewardPointsService rewardPointsService,
+            IProductService productService,
             TaxSettings taxSettings,
             RewardPointsSettings rewardPointsSettings,
             ShippingSettings shippingSettings,
@@ -93,6 +94,7 @@ namespace Grand.Services.Orders
             this._giftCardService = giftCardService;
             this._genericAttributeService = genericAttributeService;
             this._rewardPointsService = rewardPointsService;
+            this._productService = productService;
             this._taxSettings = taxSettings;
             this._rewardPointsSettings = rewardPointsSettings;
             this._shippingSettings = shippingSettings;
@@ -112,21 +114,31 @@ namespace Grand.Services.Orders
         /// <param name="appliedDiscount">Applied discount</param>
         /// <returns>Order discount</returns>
         protected virtual decimal GetOrderSubtotalDiscount(Customer customer,
-            decimal orderSubTotal, out List<Discount> appliedDiscounts)
+            decimal orderSubTotal, out List<AppliedDiscount> appliedDiscounts)
         {
-            appliedDiscounts = new List<Discount>();
+            appliedDiscounts = new List<AppliedDiscount>();
             decimal discountAmount = decimal.Zero;
             if (_catalogSettings.IgnoreDiscounts)
                 return discountAmount;
 
             var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToOrderSubTotal);
-            var allowedDiscounts = new List<Discount>();
+            var allowedDiscounts = new List<AppliedDiscount>();
             if (allDiscounts != null)
                 foreach (var discount in allDiscounts)
-                    if (_discountService.ValidateDiscount(discount, customer).IsValid &&
-                               discount.DiscountType == DiscountType.AssignedToOrderSubTotal &&
-                               !_discountService.ContainsDiscount(allowedDiscounts, discount))
-                        allowedDiscounts.Add(discount);
+                {
+                    var validDiscount = _discountService.ValidateDiscount(discount, customer);
+                    if (validDiscount.IsValid &&
+                        discount.DiscountType == DiscountType.AssignedToOrderSubTotal &&
+                        !allowedDiscounts.Where(x => x.DiscountId == discount.Id).Any())
+                    {
+                        allowedDiscounts.Add(new AppliedDiscount
+                        {
+                            DiscountId = discount.Id,
+                            IsCumulative = discount.IsCumulative,
+                            CouponCode = validDiscount.CouponCode,
+                        });
+                    }
+                }
 
             appliedDiscounts = _discountService.GetPreferredDiscount(allowedDiscounts, orderSubTotal, out discountAmount);
 
@@ -143,22 +155,31 @@ namespace Grand.Services.Orders
         /// <param name="shippingTotal">Shipping total</param>
         /// <param name="appliedDiscount">Applied discount</param>
         /// <returns>Shipping discount</returns>
-        protected virtual decimal GetShippingDiscount(Customer customer, decimal shippingTotal, out List<Discount> appliedDiscounts)
+        protected virtual decimal GetShippingDiscount(Customer customer, decimal shippingTotal, out List<AppliedDiscount> appliedDiscounts)
         {
-            appliedDiscounts = new List<Discount>();
+            appliedDiscounts = new List<AppliedDiscount>();
             decimal shippingDiscountAmount = decimal.Zero;
             if (_catalogSettings.IgnoreDiscounts)
                 return shippingDiscountAmount;
 
             var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToShipping);
-            var allowedDiscounts = new List<Discount>();
+            var allowedDiscounts = new List<AppliedDiscount>();
             if (allDiscounts != null)
                 foreach (var discount in allDiscounts)
-                    if (_discountService.ValidateDiscount(discount, customer).IsValid &&
-                               discount.DiscountType == DiscountType.AssignedToShipping &&
-                               !_discountService.ContainsDiscount(allowedDiscounts, discount))
-                        allowedDiscounts.Add(discount);
-
+                {
+                    var validDiscount = _discountService.ValidateDiscount(discount, customer);
+                    if (validDiscount.IsValid &&
+                        discount.DiscountType == DiscountType.AssignedToShipping &&
+                        !allowedDiscounts.Where(x => x.DiscountId == discount.Id).Any())
+                    {
+                        allowedDiscounts.Add(new AppliedDiscount
+                        {
+                            DiscountId = discount.Id,
+                            IsCumulative = discount.IsCumulative,
+                            CouponCode = validDiscount.CouponCode,
+                        });
+                    }
+                }
             appliedDiscounts = _discountService.GetPreferredDiscount(allowedDiscounts, shippingTotal, out shippingDiscountAmount);
 
             if (shippingDiscountAmount < decimal.Zero)
@@ -177,22 +198,31 @@ namespace Grand.Services.Orders
         /// <param name="orderTotal">Order total</param>
         /// <param name="appliedDiscount">Applied discount</param>
         /// <returns>Order discount</returns>
-        protected virtual decimal GetOrderTotalDiscount(Customer customer, decimal orderTotal, out List<Discount> appliedDiscounts)
+        protected virtual decimal GetOrderTotalDiscount(Customer customer, decimal orderTotal, out List<AppliedDiscount> appliedDiscounts)
         {
-            appliedDiscounts = new List<Discount>();
+            appliedDiscounts = new List<AppliedDiscount>();
             decimal discountAmount = decimal.Zero;
             if (_catalogSettings.IgnoreDiscounts)
                 return discountAmount;
 
             var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToOrderTotal);
-            var allowedDiscounts = new List<Discount>();
+            var allowedDiscounts = new List<AppliedDiscount>();
             if (allDiscounts != null)
                 foreach (var discount in allDiscounts)
-                    if (_discountService.ValidateDiscount(discount, customer).IsValid &&
+                {
+                    var validDiscount = _discountService.ValidateDiscount(discount, customer);
+                    if (validDiscount.IsValid &&
                                discount.DiscountType == DiscountType.AssignedToOrderTotal &&
-                               !_discountService.ContainsDiscount(allowedDiscounts, discount))
-                        allowedDiscounts.Add(discount);
-
+                               !allowedDiscounts.Where(x => x.DiscountId == discount.Id).Any())
+                    {
+                        allowedDiscounts.Add(new AppliedDiscount
+                        {
+                            DiscountId = discount.Id,
+                            IsCumulative = discount.IsCumulative,
+                            CouponCode = validDiscount.CouponCode,
+                        });
+                    }
+                }
             appliedDiscounts = _discountService.GetPreferredDiscount(allowedDiscounts, orderTotal, out discountAmount);
 
             if (discountAmount < decimal.Zero)
@@ -219,13 +249,12 @@ namespace Grand.Services.Orders
         /// <param name="subTotalWithDiscount">Sub total (with discount)</param>
         public virtual void GetShoppingCartSubTotal(IList<ShoppingCartItem> cart,
             bool includingTax,
-            out decimal discountAmount, out List<Discount> appliedDiscounts,
+            out decimal discountAmount, out List<AppliedDiscount> appliedDiscounts,
             out decimal subTotalWithoutDiscount, out decimal subTotalWithDiscount)
         {
-            SortedDictionary<decimal, decimal> taxRates;
             GetShoppingCartSubTotal(cart, includingTax,
                 out discountAmount, out appliedDiscounts,
-                out subTotalWithoutDiscount, out subTotalWithDiscount, out taxRates);
+                out subTotalWithoutDiscount, out subTotalWithDiscount, out SortedDictionary<decimal, decimal> taxRates);
         }
 
         /// <summary>
@@ -240,12 +269,12 @@ namespace Grand.Services.Orders
         /// <param name="taxRates">Tax rates (of order sub total)</param>
         public virtual void GetShoppingCartSubTotal(IList<ShoppingCartItem> cart,
             bool includingTax,
-            out decimal discountAmount, out List<Discount> appliedDiscounts,
+            out decimal discountAmount, out List<AppliedDiscount> appliedDiscounts,
             out decimal subTotalWithoutDiscount, out decimal subTotalWithDiscount,
             out SortedDictionary<decimal, decimal> taxRates)
         {
             discountAmount = decimal.Zero;
-            appliedDiscounts = new List<Discount>();
+            appliedDiscounts = new List<AppliedDiscount>();
             subTotalWithoutDiscount = decimal.Zero;
             subTotalWithDiscount = decimal.Zero;
             taxRates = new SortedDictionary<decimal, decimal>();
@@ -259,11 +288,10 @@ namespace Grand.Services.Orders
             //sub totals
             decimal subTotalExclTaxWithoutDiscount = decimal.Zero;
             decimal subTotalInclTaxWithoutDiscount = decimal.Zero;
-            var productService = EngineContext.Current.Resolve<IProductService>();
             foreach (var shoppingCartItem in cart)
             {
                 decimal sciSubTotal = _priceCalculationService.GetSubTotal(shoppingCartItem);
-                var product = productService.GetProductById(shoppingCartItem.ProductId);
+                var product = _productService.GetProductById(shoppingCartItem.ProductId);
                 decimal taxRate;
                 decimal sciExclTax = _taxService.GetProductPrice(product, sciSubTotal, false, customer, out taxRate);
                 decimal sciInclTax = _taxService.GetProductPrice(product, sciSubTotal, true, customer, out taxRate);
@@ -295,7 +323,6 @@ namespace Grand.Services.Orders
                     foreach (var attributeValue in attributeValues)
                     {
                         decimal taxRate;
-
                         decimal caExclTax = _taxService.GetCheckoutAttributePrice(attributeValue, false, customer, out taxRate);
                         decimal caInclTax = _taxService.GetCheckoutAttributePrice(attributeValue, true, customer, out taxRate);
                         subTotalExclTaxWithoutDiscount += caExclTax;
@@ -451,7 +478,7 @@ namespace Grand.Services.Orders
             {
                 //check whether we have subtotal enough to have free shipping
                 decimal subTotalDiscountAmount;
-                List<Discount> subTotalAppliedDiscounts;
+                List<AppliedDiscount> subTotalAppliedDiscounts;
                 decimal subTotalWithoutDiscountBase;
                 decimal subTotalWithDiscountBase;
                 GetShoppingCartSubTotal(cart, _shippingSettings.FreeShippingOverXIncludingTax, out subTotalDiscountAmount,
@@ -473,9 +500,9 @@ namespace Grand.Services.Orders
         /// <param name="appliedDiscount">Applied discount</param>
         /// <returns>Adjusted shipping rate</returns>
         public virtual decimal AdjustShippingRate(decimal shippingRate,
-            IList<ShoppingCartItem> cart, out List<Discount> appliedDiscounts)
+            IList<ShoppingCartItem> cart, out List<AppliedDiscount> appliedDiscounts)
         {
-            appliedDiscounts = new List<Discount>();
+            appliedDiscounts = new List<AppliedDiscount>();
 
             //free shipping
             if (IsFreeShipping(cart))
@@ -532,8 +559,7 @@ namespace Grand.Services.Orders
         public virtual decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax,
             out decimal taxRate)
         {
-            List<Discount> appliedDiscounts;
-            return GetShoppingCartShippingTotal(cart, includingTax, out taxRate, out appliedDiscounts);
+            return GetShoppingCartShippingTotal(cart, includingTax, out taxRate, out List<AppliedDiscount> appliedDiscounts);
         }
 
         /// <summary>
@@ -545,11 +571,11 @@ namespace Grand.Services.Orders
         /// <param name="appliedDiscount">Applied discount</param>
         /// <returns>Shipping total</returns>
         public virtual decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax,
-            out decimal taxRate, out List<Discount> appliedDiscounts)
+            out decimal taxRate, out List<AppliedDiscount> appliedDiscounts)
         {
             decimal? shippingTotal = null;
             decimal? shippingTotalTaxed = null;
-            appliedDiscounts = new List<Discount>();
+            appliedDiscounts = new List<AppliedDiscount>();
             taxRate = decimal.Zero;
 
             var customer = cart.GetCustomer();
@@ -674,7 +700,7 @@ namespace Grand.Services.Orders
             //order sub total (items + checkout attributes)
             decimal subTotalTaxTotal = decimal.Zero;
             decimal orderSubTotalDiscountAmount;
-            List<Discount> orderSubTotalAppliedDiscounts;
+            List<AppliedDiscount> orderSubTotalAppliedDiscounts;
             decimal subTotalWithoutDiscountBase;
             decimal subTotalWithDiscountBase;
             SortedDictionary<decimal, decimal> orderSubTotalTaxRates;
@@ -771,17 +797,12 @@ namespace Grand.Services.Orders
         public virtual decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart,
             bool? useRewardPoints = null, bool usePaymentMethodAdditionalFee = true)
         {
-            decimal discountAmount;
-            List<Discount> appliedDiscounts;
-            int redeemedRewardPoints;
-            decimal redeemedRewardPointsAmount;
-            List<AppliedGiftCard> appliedGiftCards;
             return GetShoppingCartTotal(cart,
-                out discountAmount,
-                out appliedDiscounts,
-                out appliedGiftCards,
-                out redeemedRewardPoints,
-                out redeemedRewardPointsAmount,
+                out decimal discountAmount,
+                out List<AppliedDiscount> appliedDiscounts,
+                out List<AppliedGiftCard> appliedGiftCards,
+                out int redeemedRewardPoints,
+                out decimal redeemedRewardPointsAmount,
                 useRewardPoints,
                 usePaymentMethodAdditionalFee);
         }
@@ -799,7 +820,7 @@ namespace Grand.Services.Orders
         /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating order total</param>
         /// <returns>Shopping cart total;Null if shopping cart total couldn't be calculated now</returns>
         public virtual decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart,
-            out decimal discountAmount, out List<Discount> appliedDiscounts,
+            out decimal discountAmount, out List<AppliedDiscount> appliedDiscounts,
             out List<AppliedGiftCard> appliedGiftCards,
             out int redeemedRewardPoints, out decimal redeemedRewardPointsAmount,
             bool? useRewardPoints = null, bool usePaymentMethodAdditionalFee = true)
@@ -816,24 +837,15 @@ namespace Grand.Services.Orders
                     _storeContext.CurrentStore.Id);
             }
 
-
             //subtotal without tax
-            decimal orderSubTotalDiscountAmount;
-            List<Discount> orderSubTotalAppliedDiscounts;
-            decimal subTotalWithoutDiscountBase;
-            decimal subTotalWithDiscountBase;
             GetShoppingCartSubTotal(cart, false,
-                out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscounts,
-                out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
+                out decimal orderSubTotalDiscountAmount, out List<AppliedDiscount> orderSubTotalAppliedDiscounts,
+                out decimal subTotalWithoutDiscountBase, out decimal subTotalWithDiscountBase);
             //subtotal with discount
             decimal subtotalBase = subTotalWithDiscountBase;
 
-
-
             //shipping without tax
             decimal? shoppingCartShipping = GetShoppingCartShippingTotal(cart, false);
-
-
 
             //payment method additional fee without tax
             decimal paymentMethodAdditionalFeeWithoutTax = decimal.Zero;
@@ -899,9 +911,11 @@ namespace Grand.Services.Orders
                             //reduce subtotal
                             resultTemp -= amountCanBeUsed;
 
-                            var appliedGiftCard = new AppliedGiftCard();
-                            appliedGiftCard.GiftCard = gc;
-                            appliedGiftCard.AmountCanBeUsed = amountCanBeUsed;
+                            var appliedGiftCard = new AppliedGiftCard
+                            {
+                                GiftCard = gc,
+                                AmountCanBeUsed = amountCanBeUsed
+                            };
                             appliedGiftCards.Add(appliedGiftCard);
                         }
             }

@@ -383,4 +383,25 @@
   <LocaleResource Name="Enums.Grand.Core.Domain.Directory.RoundingType.Rounding1Up">
     <Value>Rounding up with 1.00 intervals (1.01–1.99 round to 2.00)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.CouponCodes.SaveBeforeEdit">
+    <Value>You need to save the discount before you can add values.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.CouponCodes">
+    <Value>Coupon Codes</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.DiscountCouponCode.UsesTheSameDiscount">
+    <Value>You can't use the same discount.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.DiscountCouponCode.WasUsed">
+    <Value>This coupon code was used</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.Used">
+    <Value>Used</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.Reused">
+    <Value>Reused coupon code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.Reused.hint">
+    <Value>Allow to reused coupon code</Value>
+  </LocaleResource>
 </Language>

@@ -317,7 +317,7 @@ html .km-pane-wrapper .k-header {
   border-color: transparent;
 }
 .k-multiselect-wrap .k-i-close, .k-update {
-  background-image: url('http://kendo.cdn.telerik.com/2016.2.504/styles/HighContrast/sprite.png');
+  /*background-image: url('http://kendo.cdn.telerik.com/2016.2.504/styles/HighContrast/sprite.png'); */
   border-color: transparent;
 }
 

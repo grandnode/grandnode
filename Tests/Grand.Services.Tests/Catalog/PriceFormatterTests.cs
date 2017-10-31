@@ -23,6 +23,7 @@ namespace Grand.Services.Catalog.Tests
         private ICurrencyService _currencyService;
         private CurrencySettings _currencySettings;
         private IWorkContext _workContext;
+        private Mock<IWorkContext> tempWorkContext;
         private ILocalizationService _localizationService;
         private TaxSettings _taxSettings;
         private IPriceFormatter _priceFormatter;
@@ -31,7 +32,10 @@ namespace Grand.Services.Catalog.Tests
         public void TestInitialize()
         {
             var cacheManager = new NopNullCache();
-            _workContext = null;
+            tempWorkContext = new Mock<IWorkContext>();
+            {
+                _workContext = tempWorkContext.Object;
+            }
             _currencySettings = new CurrencySettings();
             var currency01 = new Currency
             {
@@ -105,7 +109,9 @@ namespace Grand.Services.Catalog.Tests
                 DisplayOrder = 1,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                MidpointRound = MidpointRounding.AwayFromZero,
+                RoundingType = RoundingType.Rounding001,
             };
             var language0111 = new Language {
                 Id = "1",
@@ -124,18 +130,22 @@ namespace Grand.Services.Catalog.Tests
                 Name = "US Dollar",
                 CurrencyCode = "USD",
                 DisplayLocale = "en-US",
+                MidpointRound = MidpointRounding.AwayFromZero,
+
             };
             var gbp_currency = new Currency {
                 Id = "2",
                 Name = "great british pound",
                 CurrencyCode = "GBP",
                 DisplayLocale = "en-GB",
+                MidpointRound = MidpointRounding.AwayFromZero,
             };
             var euro_currency = new Currency {
                 Id = "3",
                 Name = "Euro",
                 CurrencyCode = "EUR",
                 DisplayLocale = "en_150",
+                MidpointRound = MidpointRounding.AwayFromZero,
             };
             var language = new Language {
                 Id = "1",
@@ -157,6 +167,7 @@ namespace Grand.Services.Catalog.Tests
                 Name = "US Dollar",
                 CurrencyCode = "USD",
                 DisplayLocale = "en-US",
+                MidpointRound = MidpointRounding.AwayFromZero,
             };
             var language = new Language {
                 Id = "1",

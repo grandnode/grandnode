@@ -111,9 +111,11 @@
 
         function toggleRequiresCouponCode() {
             if ($('#@Html.FieldIdFor(model => model.RequiresCouponCode)').is(':checked')) {
-                $('#pnlCouponCode').show();
+                $('#tab-couponcode').show();
+                $('#pnlReused').show();
             } else {
-                $('#pnlCouponCode').hide();
+                $('#tab-couponcode').hide();
+                $('#pnlReused').hide();
             }
         }
 </script>
@@ -205,11 +207,14 @@
                 @Html.ValidationMessageFor(model => model.RequiresCouponCode)
             </div>
         </div>
-        <div class="form-group" id="pnlCouponCode">
-            @Html.GrandLabelFor(model => model.CouponCode)
+        <div class="form-group" id="pnlReused">
+            @Html.GrandLabelFor(model => model.Reused)
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.CouponCode)
-                @Html.ValidationMessageFor(model => model.CouponCode)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.Reused)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.Reused)
             </div>
         </div>
         <div class="form-group">

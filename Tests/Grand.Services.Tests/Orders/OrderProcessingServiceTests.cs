@@ -204,7 +204,7 @@ namespace Grand.Services.Orders.Tests
             _orderTotalCalcService = new OrderTotalCalculationService(_workContext, _storeContext,
                 _priceCalcService, _taxService, _shippingService, _paymentService,
                 _checkoutAttributeParser, _discountService, _giftCardService,
-                _genericAttributeService, null,
+                _genericAttributeService, null, _productService,
                 _taxSettings, _rewardPointsSettings, _shippingSettings, _shoppingCartSettings, _catalogSettings);
 
             _orderService = new Mock<IOrderService>().Object;

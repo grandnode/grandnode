@@ -224,7 +224,7 @@ namespace Grand.Web.Services
                     model.DiscountBox.AppliedDiscountsWithCodes.Add(new ShoppingCartModel.DiscountBoxModel.DiscountInfoModel()
                     {
                         Id = discount.Id,
-                        CouponCode = discount.CouponCode
+                        CouponCode = couponCode
                     });
                 }
             }
@@ -450,10 +450,7 @@ namespace Grand.Web.Services
                 else
                 {
                     //sub total
-                    List<Discount> scDiscounts;
-                    decimal shoppingCartItemDiscountBase;
-                    decimal taxRate;
-                    decimal shoppingCartItemSubTotalWithDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetSubTotal(sci, true, out shoppingCartItemDiscountBase, out scDiscounts), out taxRate);
+                    decimal shoppingCartItemSubTotalWithDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetSubTotal(sci, true, out decimal shoppingCartItemDiscountBase, out List<AppliedDiscount> scDiscounts), out decimal taxRate);
                     decimal shoppingCartItemSubTotalWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartItemSubTotalWithDiscountBase, _workContext.WorkingCurrency);
                     cartItemModel.SubTotal = _priceFormatter.FormatPrice(shoppingCartItemSubTotalWithDiscount);
 
@@ -686,10 +683,10 @@ namespace Grand.Web.Services
                 else
                 {
                     //sub total
-                    List<Discount> scDiscounts;
+                    ;
                     decimal shoppingCartItemDiscountBase;
                     decimal taxRate;
-                    decimal shoppingCartItemSubTotalWithDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetSubTotal(sci, true, out shoppingCartItemDiscountBase, out scDiscounts), out taxRate);
+                    decimal shoppingCartItemSubTotalWithDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetSubTotal(sci, true, out shoppingCartItemDiscountBase, out List<AppliedDiscount> scDiscounts), out taxRate);
                     decimal shoppingCartItemSubTotalWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartItemSubTotalWithDiscountBase, _workContext.WorkingCurrency);
                     cartItemModel.SubTotal = _priceFormatter.FormatPrice(shoppingCartItemSubTotalWithDiscount);
 
@@ -792,14 +789,10 @@ namespace Grand.Web.Services
                 if (cart.Any())
                 {
                     //subtotal
-                    decimal orderSubTotalDiscountAmountBase;
-                    List<Discount> orderSubTotalAppliedDiscounts;
-                    decimal subTotalWithoutDiscountBase;
-                    decimal subTotalWithDiscountBase;
                     var subTotalIncludingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal;
                     _orderTotalCalculationService.GetShoppingCartSubTotal(cart, subTotalIncludingTax,
-                        out orderSubTotalDiscountAmountBase, out orderSubTotalAppliedDiscounts,
-                        out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
+                        out decimal orderSubTotalDiscountAmountBase, out List<AppliedDiscount> orderSubTotalAppliedDiscounts,
+                        out decimal subTotalWithoutDiscountBase, out decimal subTotalWithDiscountBase);
                     decimal subtotalBase = subTotalWithoutDiscountBase;
                     decimal subtotal = _currencyService.ConvertFromPrimaryStoreCurrency(subtotalBase, _workContext.WorkingCurrency);
                     model.SubTotal = _priceFormatter.FormatPrice(subtotal, false, _workContext.WorkingCurrency, _workContext.WorkingLanguage, subTotalIncludingTax);
@@ -876,14 +869,10 @@ namespace Grand.Web.Services
             if (cart.Any())
             {
                 //subtotal
-                decimal orderSubTotalDiscountAmountBase;
-                List<Discount> orderSubTotalAppliedDiscounts;
-                decimal subTotalWithoutDiscountBase;
-                decimal subTotalWithDiscountBase;
                 var subTotalIncludingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal;
                 _orderTotalCalculationService.GetShoppingCartSubTotal(cart, subTotalIncludingTax,
-                    out orderSubTotalDiscountAmountBase, out orderSubTotalAppliedDiscounts,
-                    out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
+                    out decimal orderSubTotalDiscountAmountBase, out List<AppliedDiscount> orderSubTotalAppliedDiscounts,
+                    out decimal subTotalWithoutDiscountBase, out decimal subTotalWithDiscountBase);
                 decimal subtotalBase = subTotalWithoutDiscountBase;
                 decimal subtotal = _currencyService.ConvertFromPrimaryStoreCurrency(subtotalBase, _workContext.WorkingCurrency);
                 model.SubTotal = _priceFormatter.FormatPrice(subtotal, true, _workContext.WorkingCurrency, _workContext.WorkingLanguage, subTotalIncludingTax);
@@ -962,14 +951,9 @@ namespace Grand.Web.Services
                 model.DisplayTax = displayTax;
 
                 //total
-                decimal orderTotalDiscountAmountBase;
-                List<Discount> orderTotalAppliedDiscounts;
-                List<AppliedGiftCard> appliedGiftCards;
-                int redeemedRewardPoints;
-                decimal redeemedRewardPointsAmount;
                 decimal? shoppingCartTotalBase = _orderTotalCalculationService.GetShoppingCartTotal(cart,
-                    out orderTotalDiscountAmountBase, out orderTotalAppliedDiscounts,
-                    out appliedGiftCards, out redeemedRewardPoints, out redeemedRewardPointsAmount);
+                    out decimal orderTotalDiscountAmountBase, out List<AppliedDiscount> orderTotalAppliedDiscounts,
+                    out List<AppliedGiftCard> appliedGiftCards, out int redeemedRewardPoints, out decimal redeemedRewardPointsAmount);
                 if (shoppingCartTotalBase.HasValue)
                 {
                     decimal shoppingCartTotal = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartTotalBase.Value, _workContext.WorkingCurrency);
@@ -1353,10 +1337,10 @@ namespace Grand.Web.Services
                                 Description = shippingOption.Description,
 
                             };
+
                             //calculate discounted and taxed rate
-                            List<Discount> appliedDiscounts = null;
                             decimal shippingTotal = _orderTotalCalculationService.AdjustShippingRate(shippingOption.Rate,
-                                cart, out appliedDiscounts);
+                                cart, out List<AppliedDiscount> appliedDiscounts);
 
                             decimal rateBase = _taxService.GetShippingPrice(shippingTotal, _workContext.CurrentCustomer);
                             decimal rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);

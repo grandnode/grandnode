@@ -42,7 +42,6 @@ using Grand.Services.Polls;
 using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Shipping;
-//using Grand.Services.Shipping.Date;
 using Grand.Services.Stores;
 using Grand.Services.Tasks;
 using Grand.Services.Tax;
@@ -102,6 +101,9 @@ namespace Grand.Framework.Infrastructure
 
             //plugins
             builder.RegisterType<PluginFinder>().As<IPluginFinder>().InstancePerLifetimeScope();
+
+            //cache manager
+            builder.RegisterType<PerRequestCacheManager>().InstancePerLifetimeScope();
 
             //cache manager
             if (config.RedisCachingEnabled)

@@ -103,6 +103,7 @@ namespace Grand.Services.Installation
         private readonly IRepository<Country> _countryRepository;
         private readonly IRepository<StateProvince> _stateProvinceRepository;
         private readonly IRepository<Discount> _discountRepository;
+        private readonly IRepository<DiscountCoupon> _discountCouponRepository;
         private readonly IRepository<DiscountUsageHistory> _discountusageRepository;
         private readonly IRepository<BlogPost> _blogPostRepository;
         private readonly IRepository<Topic> _topicRepository;
@@ -199,6 +200,7 @@ namespace Grand.Services.Installation
             IRepository<Country> countryRepository,
             IRepository<StateProvince> stateProvinceRepository,
             IRepository<Discount> discountRepository,
+            IRepository<DiscountCoupon> discountCouponRepository,
             IRepository<BlogPost> blogPostRepository,
             IRepository<Topic> topicRepository,
             IRepository<NewsItem> newsItemRepository,
@@ -290,6 +292,7 @@ namespace Grand.Services.Installation
             this._countryRepository = countryRepository;
             this._stateProvinceRepository = stateProvinceRepository;
             this._discountRepository = discountRepository;
+            this._discountCouponRepository = discountCouponRepository;
             this._blogPostRepository = blogPostRepository;
             this._topicRepository = topicRepository;
             this._productReviewRepository = productReviewRepository;
@@ -9688,7 +9691,6 @@ namespace Grand.Services.Installation
                                             UsePercentage = false,
                                             DiscountAmount = 10,
                                             RequiresCouponCode = true,
-                                            CouponCode = "123",
                                         },
                                     new Discount
                                         {
@@ -9700,10 +9702,14 @@ namespace Grand.Services.Installation
                                             StartDateUtc = new DateTime(2010,1,1),
                                             EndDateUtc = new DateTime(2020,1,1),
                                             RequiresCouponCode = true,
-                                            CouponCode = "456",
                                         },
                                 };
             _discountRepository.Insert(discounts);
+            var coupon = new DiscountCoupon();
+            coupon.CouponCode = "123";
+            coupon.DiscountId = _discountRepository.Table.Where(x => x.Name == "Sample discount with coupon code").FirstOrDefault().Id;
+            _discountCouponRepository.Insert(coupon);
+
         }
 
         protected virtual void InstallBlogPosts()
@@ -11010,6 +11016,10 @@ namespace Grand.Services.Installation
 
             //discount
             _discountRepository.Collection.Indexes.CreateOneAsync(Builders<Discount>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _discountCouponRepository.Collection.Indexes.CreateOneAsync(Builders<DiscountCoupon>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _discountCouponRepository.Collection.Indexes.CreateOneAsync(Builders<DiscountCoupon>.IndexKeys.Ascending(x => x.CouponCode), new CreateIndexOptions() { Name = "CouponCode", Unique = true });
+            _discountCouponRepository.Collection.Indexes.CreateOneAsync(Builders<DiscountCoupon>.IndexKeys.Ascending(x => x.DiscountId), new CreateIndexOptions() { Name = "DiscountId", Unique = false });
+
             _discountusageRepository.Collection.Indexes.CreateOneAsync(Builders<DiscountUsageHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _discountusageRepository.Collection.Indexes.CreateOneAsync(Builders<DiscountUsageHistory>.IndexKeys.Ascending(x => x.CustomerId), new CreateIndexOptions() { Name = "CustomerId" });
             _discountusageRepository.Collection.Indexes.CreateOneAsync(Builders<DiscountUsageHistory>.IndexKeys.Ascending(x => x.DiscountId), new CreateIndexOptions() { Name = "DiscountId" });

@@ -398,8 +398,7 @@ namespace Grand.Web.Controllers
                 {
                     if (formKey.Equals(string.Format("addtocart_{0}.CustomerEnteredPrice", productId), StringComparison.OrdinalIgnoreCase))
                     {
-                        decimal customerEnteredPrice;
-                        if (decimal.TryParse(form[formKey], out customerEnteredPrice))
+                        if (decimal.TryParse(form[formKey], out decimal customerEnteredPrice))
                             customerEnteredPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(customerEnteredPrice, _workContext.WorkingCurrency);
                         break;
                     }
@@ -583,16 +582,13 @@ namespace Grand.Web.Controllers
             if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices) && !product.CustomerEntersPrice)
             {
                 //we do not calculate price of "customer enters price" option is enabled
-                List<Discount> scDiscounts;
-                decimal discountAmount;
                 decimal finalPrice = _priceCalculationService.GetUnitPrice(product,
                     _workContext.CurrentCustomer,
                     ShoppingCartType.ShoppingCart,
                     1, attributeXml, 0,
                     rentalStartDate, rentalEndDate,
-                    true, out discountAmount, out scDiscounts);
-                decimal taxRate;
-                decimal finalPriceWithDiscountBase = _taxService.GetProductPrice(product, finalPrice, out taxRate);
+                    true, out decimal discountAmount, out List<AppliedDiscount> scDiscounts);
+                decimal finalPriceWithDiscountBase = _taxService.GetProductPrice(product, finalPrice, out decimal taxRate);
                 decimal finalPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithDiscountBase, _workContext.WorkingCurrency);
                 price = _priceFormatter.FormatPrice(finalPriceWithDiscount);
             }
@@ -868,8 +864,7 @@ namespace Grand.Web.Controllers
                     foreach (string formKey in form.Keys)
                         if (formKey.Equals(string.Format("itemquantity{0}", sci.Id), StringComparison.OrdinalIgnoreCase))
                         {
-                            int newQuantity;
-                            if (int.TryParse(form[formKey], out newQuantity))
+                            if (int.TryParse(form[formKey], out int newQuantity))
                             {
                                 var currSciWarnings = _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
                                     sci.Id, sci.AttributesXml, sci.CustomerEnteredPrice,
@@ -999,28 +994,54 @@ namespace Grand.Web.Controllers
                 var discount = _discountService.GetDiscountByCouponCode(discountcouponcode, true);
                 if (discount != null && discount.RequiresCouponCode)
                 {
-                    var validationResult = _discountService.ValidateDiscount(discount, _workContext.CurrentCustomer, discountcouponcode);
-                    if (validationResult.IsValid)
+                    var coupons = _workContext.CurrentCustomer.ParseAppliedDiscountCouponCodes();
+                    var existsAndUsed = false;
+                    foreach (var item in coupons)
                     {
-                        //valid
-                        _workContext.CurrentCustomer.ApplyDiscountCouponCode(discountcouponcode);
-                        model.DiscountBox.Message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.Applied");
-                        model.DiscountBox.IsApplied = true;
+                        if (_discountService.ExistsCodeInDiscount(item, discount.Id, null))
+                            existsAndUsed = true;
                     }
-                    else
+                    if (!existsAndUsed)
                     {
-                        if (!String.IsNullOrEmpty(validationResult.UserError))
+                        if (!discount.Reused)
+                            existsAndUsed = !_discountService.ExistsCodeInDiscount(discountcouponcode, discount.Id, false);
+
+                        if (!existsAndUsed)
                         {
-                            //some user error
-                            model.DiscountBox.Message = validationResult.UserError;
-                            model.DiscountBox.IsApplied = false;
+                            var validationResult = _discountService.ValidateDiscount(discount, _workContext.CurrentCustomer, discountcouponcode);
+                            if (validationResult.IsValid)
+                            {
+                                //valid
+                                _workContext.CurrentCustomer.ApplyDiscountCouponCode(discountcouponcode);
+                                model.DiscountBox.Message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.Applied");
+                                model.DiscountBox.IsApplied = true;
+                            }
+                            else
+                            {
+                                if (!String.IsNullOrEmpty(validationResult.UserError))
+                                {
+                                    //some user error
+                                    model.DiscountBox.Message = validationResult.UserError;
+                                    model.DiscountBox.IsApplied = false;
+                                }
+                                else
+                                {
+                                    //general error text
+                                    model.DiscountBox.Message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.WrongDiscount");
+                                    model.DiscountBox.IsApplied = false;
+                                }
+                            }
                         }
                         else
                         {
-                            //general error text
-                            model.DiscountBox.Message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.WrongDiscount");
+                            model.DiscountBox.Message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.WasUsed");
                             model.DiscountBox.IsApplied = false;
                         }
+                    }
+                    else
+                    {
+                        model.DiscountBox.Message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.UsesTheSameDiscount");
+                        model.DiscountBox.IsApplied = false;
                     }
                 }
                 else
@@ -1120,7 +1141,13 @@ namespace Grand.Web.Controllers
             var discount = _discountService.GetDiscountById(discountId);
             if (discount != null)
             {
-                _workContext.CurrentCustomer.RemoveDiscountCouponCode(discount.CouponCode);
+                var coupons = _workContext.CurrentCustomer.ParseAppliedDiscountCouponCodes();
+                foreach (var item in coupons)
+                {
+                    var dd = _discountService.GetDiscountByCouponCode(item);
+                    if(dd.Id == discount.Id)
+                        _workContext.CurrentCustomer.RemoveDiscountCouponCode(item);
+                }
             }
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -1210,8 +1237,7 @@ namespace Grand.Web.Controllers
                     foreach (string formKey in form.Keys)
                         if (formKey.Equals(string.Format("itemquantity{0}", sci.Id), StringComparison.OrdinalIgnoreCase))
                         {
-                            int newQuantity;
-                            if (int.TryParse(form[formKey], out newQuantity))
+                            if (int.TryParse(form[formKey], out int newQuantity))
                             {
                                 var currSciWarnings = _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
                                     sci.Id, sci.AttributesXml, sci.CustomerEnteredPrice,

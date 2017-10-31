@@ -12,7 +12,6 @@ using Grand.Services.Events;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Orders
@@ -166,9 +165,9 @@ namespace Grand.Services.Orders
             var filters = Builders<ProductAlsoPurchased>.Filter;
             var filter = filters.Where(x => x.OrderId == order.Id);
             _productAlsoPurchasedRepository.Collection.DeleteManyAsync(filter);
-
             order.Deleted = true;
             UpdateOrder(order);
+            
         }
 
         /// <summary>

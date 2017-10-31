@@ -66,9 +66,9 @@ namespace Grand.Core.Domain.Discounts
         public bool RequiresCouponCode { get; set; }
 
         /// <summary>
-        /// Gets or sets the coupon code
+        /// Gets or sets a value indicating whether coupon code can be reused
         /// </summary>
-        public string CouponCode { get; set; }
+        public bool Reused { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether discount can be used simultaneously with other discounts (with the same discount type)

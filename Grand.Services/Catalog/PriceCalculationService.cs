@@ -95,9 +95,9 @@ namespace Grand.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
         /// <returns>Discounts</returns>
-        protected virtual IList<Discount> GetAllowedDiscountsAppliedToProduct(Product product, Customer customer)
+        protected virtual IList<AppliedDiscount> GetAllowedDiscountsAppliedToProduct(Product product, Customer customer)
         {
-            var allowedDiscounts = new List<Discount>();
+            var allowedDiscounts = new List<AppliedDiscount>();
             if (_catalogSettings.IgnoreDiscounts)
                 return allowedDiscounts;
 
@@ -107,25 +107,37 @@ namespace Grand.Services.Catalog
                 {
                     var discount = _discountService.GetDiscountById(appliedDiscount);
                     if (discount != null)
-                        if (_discountService.ValidateDiscount(discount, customer).IsValid &&
+                    {
+                        var validDiscount = _discountService.ValidateDiscount(discount, customer);
+                        if (validDiscount.IsValid &&
                             discount.DiscountType == DiscountType.AssignedToSkus)
-                            allowedDiscounts.Add(discount);
+                            allowedDiscounts.Add(new AppliedDiscount() {
+                                CouponCode = validDiscount.CouponCode,
+                                DiscountId = discount.Id,
+                                IsCumulative = discount.IsCumulative
+                            });
+                    }
                 }
             }
             return allowedDiscounts;
         }
 
-        protected virtual IList<Discount> GetAllowedDiscountsAppliedToAllProduct(Product product, Customer customer)
+        protected virtual IList<AppliedDiscount> GetAllowedDiscountsAppliedToAllProduct(Product product, Customer customer)
         {
-            var allowedDiscounts = new List<Discount>();
+            var allowedDiscounts = new List<AppliedDiscount>();
             if (_catalogSettings.IgnoreDiscounts)
                 return allowedDiscounts;
 
             var discounts = _discountService.GetAllDiscounts(DiscountType.AssignedToAllProducts);
             foreach (var discount in discounts)
             {
-                if (_discountService.ValidateDiscount(discount, customer).IsValid)
-                    allowedDiscounts.Add(discount);
+                var validDiscount = _discountService.ValidateDiscount(discount, customer);
+                if (validDiscount.IsValid)
+                    allowedDiscounts.Add(new AppliedDiscount() {
+                        CouponCode = validDiscount.CouponCode,
+                        DiscountId = discount.Id,
+                        IsCumulative = discount.IsCumulative
+                    });
             }
             return allowedDiscounts;
         }
@@ -137,9 +149,9 @@ namespace Grand.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
         /// <returns>Discounts</returns>
-        protected virtual IList<Discount> GetAllowedDiscountsAppliedToCategories(Product product, Customer customer)
+        protected virtual IList<AppliedDiscount> GetAllowedDiscountsAppliedToCategories(Product product, Customer customer)
         {
-            var allowedDiscounts = new List<Discount>();
+            var allowedDiscounts = new List<AppliedDiscount>();
             if (_catalogSettings.IgnoreDiscounts)
                 return allowedDiscounts;
 
@@ -152,9 +164,15 @@ namespace Grand.Services.Catalog
                     {
                         var discount = _discountService.GetDiscountById(appliedDiscount);
                         if (discount != null)
-                            if (_discountService.ValidateDiscount(discount, customer).IsValid &&
-                                    discount.DiscountType == DiscountType.AssignedToCategories)
-                                allowedDiscounts.Add(discount);
+                        {
+                            var validDiscount = _discountService.ValidateDiscount(discount, customer);
+                            if (validDiscount.IsValid && discount.DiscountType == DiscountType.AssignedToCategories)
+                                allowedDiscounts.Add(new AppliedDiscount() {
+                                    CouponCode = validDiscount.CouponCode,
+                                    DiscountId = discount.Id,
+                                    IsCumulative = discount.IsCumulative
+                                });
+                        }
                     }
                 }
             }
@@ -167,9 +185,9 @@ namespace Grand.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
         /// <returns>Discounts</returns>
-        protected virtual IList<Discount> GetAllowedDiscountsAppliedToManufacturers(Product product, Customer customer)
+        protected virtual IList<AppliedDiscount> GetAllowedDiscountsAppliedToManufacturers(Product product, Customer customer)
         {
-            var allowedDiscounts = new List<Discount>();
+            var allowedDiscounts = new List<AppliedDiscount>();
             if (_catalogSettings.IgnoreDiscounts)
                 return allowedDiscounts;
 
@@ -182,9 +200,17 @@ namespace Grand.Services.Catalog
                     {
                         var discount = _discountService.GetDiscountById(appliedDiscount);
                         if (discount != null)
-                            if (_discountService.ValidateDiscount(discount, customer).IsValid &&
+                        {
+                            var validDiscount = _discountService.ValidateDiscount(discount, customer);
+                            if (validDiscount.IsValid &&
                                      discount.DiscountType == DiscountType.AssignedToManufacturers)
-                                allowedDiscounts.Add(discount);
+                                allowedDiscounts.Add(new AppliedDiscount()
+                                {
+                                    CouponCode = validDiscount.CouponCode,
+                                    DiscountId = discount.Id,
+                                    IsCumulative = discount.IsCumulative
+                                });
+                        }
                     }
                 }
             }
@@ -197,9 +223,9 @@ namespace Grand.Services.Catalog
         /// <param name="product"></param>
         /// <param name="customer"></param>
         /// <returns></returns>
-        protected virtual IList<Discount> GetAllowedDiscountsAppliedToVendors(Product product, Customer customer)
+        protected virtual IList<AppliedDiscount> GetAllowedDiscountsAppliedToVendors(Product product, Customer customer)
         {
-            var allowedDiscounts = new List<Discount>();
+            var allowedDiscounts = new List<AppliedDiscount>();
             if (_catalogSettings.IgnoreDiscounts)
                 return allowedDiscounts;
 
@@ -214,9 +240,17 @@ namespace Grand.Services.Catalog
                         {
                             var discount = _discountService.GetDiscountById(appliedDiscount);
                             if (discount != null)
-                                if (_discountService.ValidateDiscount(discount, customer).IsValid &&
+                            {
+                                var validDiscount = _discountService.ValidateDiscount(discount, customer);
+                                if (validDiscount.IsValid &&
                                          discount.DiscountType == DiscountType.AssignedToVendors)
-                                    allowedDiscounts.Add(discount);
+                                    allowedDiscounts.Add(new AppliedDiscount()
+                                    {
+                                        CouponCode = validDiscount.CouponCode,
+                                        DiscountId = discount.Id,
+                                        IsCumulative = discount.IsCumulative,
+                                    });
+                            }
                         }
                     }
                 }
@@ -230,9 +264,9 @@ namespace Grand.Services.Catalog
         /// <param name="product"></param>
         /// <param name="customer"></param>
         /// <returns></returns>
-        protected virtual IList<Discount> GetAllowedDiscountsAppliedToStores(Product product, Customer customer)
+        protected virtual IList<AppliedDiscount> GetAllowedDiscountsAppliedToStores(Product product, Customer customer)
         {
-            var allowedDiscounts = new List<Discount>();
+            var allowedDiscounts = new List<AppliedDiscount>();
             if (_catalogSettings.IgnoreDiscounts)
                 return allowedDiscounts;
 
@@ -254,9 +288,16 @@ namespace Grand.Services.Catalog
                             {
                                 var discount = _discountService.GetDiscountById(appliedDiscount);
                                 if (discount != null)
-                                    if (_discountService.ValidateDiscount(discount, customer).IsValid &&
+                                {
+                                    var validDiscount = _discountService.ValidateDiscount(discount, customer);
+                                    if (validDiscount.IsValid &&
                                              discount.DiscountType == DiscountType.AssignedToStores)
-                                        allowedDiscounts.Add(discount);
+                                        allowedDiscounts.Add(new AppliedDiscount() {
+                                            CouponCode = validDiscount.CouponCode,
+                                            DiscountId = discount.Id,
+                                            IsCumulative = discount.IsCumulative
+                                        });
+                                }
                             }
                         }
                     }
@@ -271,40 +312,40 @@ namespace Grand.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
         /// <returns>Discounts</returns>
-        protected virtual IList<Discount> GetAllowedDiscounts(Product product, Customer customer)
+        protected virtual IList<AppliedDiscount> GetAllowedDiscounts(Product product, Customer customer)
         {
-            var allowedDiscounts = new List<Discount>();
+            var allowedDiscounts = new List<AppliedDiscount>();
             if (_catalogSettings.IgnoreDiscounts)
                 return allowedDiscounts;
 
             //discounts applied to products
             foreach (var discount in GetAllowedDiscountsAppliedToProduct(product, customer))
-                if (!_discountService.ContainsDiscount(allowedDiscounts, discount))
+                if(!allowedDiscounts.Where(x=>x.DiscountId == discount.DiscountId).Any())
                     allowedDiscounts.Add(discount);
 
             //discounts applied to all products
             foreach (var discount in GetAllowedDiscountsAppliedToAllProduct(product, customer))
-                if (!_discountService.ContainsDiscount(allowedDiscounts, discount))
+                if (!allowedDiscounts.Where(x => x.DiscountId == discount.DiscountId).Any())
                     allowedDiscounts.Add(discount);
 
             //discounts applied to categories
             foreach (var discount in GetAllowedDiscountsAppliedToCategories(product, customer))
-                if (!_discountService.ContainsDiscount(allowedDiscounts, discount))
+                if (!allowedDiscounts.Where(x => x.DiscountId == discount.DiscountId).Any())
                     allowedDiscounts.Add(discount);
 
             //discounts applied to manufacturers
             foreach (var discount in GetAllowedDiscountsAppliedToManufacturers(product, customer))
-                if (!_discountService.ContainsDiscount(allowedDiscounts, discount))
+                if (!allowedDiscounts.Where(x => x.DiscountId == discount.DiscountId).Any())
                     allowedDiscounts.Add(discount);
 
             //discounts applied to vendors
             foreach (var discount in GetAllowedDiscountsAppliedToVendors(product, customer))
-                if (!_discountService.ContainsDiscount(allowedDiscounts, discount))
+                if (!allowedDiscounts.Where(x => x.DiscountId == discount.DiscountId).Any())
                     allowedDiscounts.Add(discount);
 
             //discounts applied to stores
             foreach (var discount in GetAllowedDiscountsAppliedToStores(product, customer))
-                if (!_discountService.ContainsDiscount(allowedDiscounts, discount))
+                if (!allowedDiscounts.Where(x => x.DiscountId == discount.DiscountId).Any())
                     allowedDiscounts.Add(discount);
 
             return allowedDiscounts;
@@ -321,7 +362,7 @@ namespace Grand.Services.Catalog
         protected virtual decimal GetDiscountAmount(Product product,
             Customer customer,
             decimal productPriceWithoutDiscount,
-            out List<Discount> appliedDiscounts)
+            out List<AppliedDiscount> appliedDiscounts)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -371,7 +412,7 @@ namespace Grand.Services.Catalog
             int quantity = 1)
         {
             decimal discountAmount;
-            List<Discount> appliedDiscounts;
+            List<AppliedDiscount> appliedDiscounts;
             return GetFinalPrice(product, customer, additionalCharge, includeDiscounts,
                 quantity, out discountAmount, out appliedDiscounts);
         }
@@ -392,7 +433,7 @@ namespace Grand.Services.Catalog
             bool includeDiscounts,
             int quantity,
             out decimal discountAmount,
-            out List<Discount> appliedDiscounts)
+            out List<AppliedDiscount> appliedDiscounts)
         {
             return GetFinalPrice(product, customer,
                 additionalCharge, includeDiscounts, quantity,
@@ -420,13 +461,13 @@ namespace Grand.Services.Catalog
             DateTime? rentalStartDate,
             DateTime? rentalEndDate,
             out decimal discountAmount,
-            out List<Discount> appliedDiscounts)
+            out List<AppliedDiscount> appliedDiscounts)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
 
             discountAmount = decimal.Zero;
-            appliedDiscounts = new List<Discount>();
+            appliedDiscounts = new List<AppliedDiscount>();
 
             var cacheKey = string.Format(PriceCacheEventConsumer.PRODUCT_PRICE_MODEL_KEY,
                 product.Id,
@@ -440,8 +481,8 @@ namespace Grand.Services.Catalog
             //otherwise, it can cause memory leaks (to store all possible date period combinations)
             if (product.IsRental)
                 cacheTime = 0;
-            var cachedPrice = _cacheManager.Get(cacheKey, cacheTime, () =>
-            {
+
+            ProductPriceForCaching PrepareModel() {
                 var result = new ProductPriceForCaching();
 
                 //initial price
@@ -468,13 +509,13 @@ namespace Grand.Services.Catalog
                 if (includeDiscounts)
                 {
                     //discount
-                    List<Discount> tmpAppliedDiscounts;
+                    List<AppliedDiscount> tmpAppliedDiscounts;
                     decimal tmpDiscountAmount = GetDiscountAmount(product, customer, price, out tmpAppliedDiscounts);
                     price = price - tmpDiscountAmount;
 
                     if (tmpAppliedDiscounts != null)
                     {
-                        result.AppliedDiscountIds = tmpAppliedDiscounts.Select(x => x.Id).ToList();
+                        result.AppliedDiscountIds = tmpAppliedDiscounts.Select(x => x.DiscountId).ToList();
                         result.AppliedDiscountAmount = tmpDiscountAmount;
                     }
                 }
@@ -484,7 +525,9 @@ namespace Grand.Services.Catalog
 
                 result.Price = price;
                 return result;
-            });
+            }
+
+            var cachedPrice = cacheTime > 0 ? _cacheManager.Get(cacheKey, cacheTime, () => { return PrepareModel(); }) : PrepareModel();
 
             if (includeDiscounts)
             {
@@ -492,7 +535,7 @@ namespace Grand.Services.Catalog
                 {
                     var appliedDiscount = _discountService.GetDiscountById(appliedDiscountId);
                     if (appliedDiscount != null)
-                        appliedDiscounts.Add(appliedDiscount);
+                        appliedDiscounts.Add(new AppliedDiscount() { DiscountId = appliedDiscount.Id, IsCumulative = appliedDiscount.IsCumulative });
                 }
                 if (appliedDiscounts.Any())
                 {
@@ -515,7 +558,7 @@ namespace Grand.Services.Catalog
             bool includeDiscounts = true)
         {
             decimal discountAmount;
-            List<Discount> appliedDiscounts;
+            List<AppliedDiscount> appliedDiscounts;
             return GetUnitPrice(shoppingCartItem, includeDiscounts,
                 out discountAmount, out appliedDiscounts);
         }
@@ -530,7 +573,7 @@ namespace Grand.Services.Catalog
         public virtual decimal GetUnitPrice(ShoppingCartItem shoppingCartItem,
             bool includeDiscounts,
             out decimal discountAmount,
-            out List<Discount> appliedDiscounts)
+            out List<AppliedDiscount> appliedDiscounts)
         {
             if (shoppingCartItem == null)
                 throw new ArgumentNullException("shoppingCartItem");
@@ -571,7 +614,7 @@ namespace Grand.Services.Catalog
             DateTime? rentalStartDate, DateTime? rentalEndDate,
             bool includeDiscounts,
             out decimal discountAmount,
-            out List<Discount> appliedDiscounts)
+            out List<AppliedDiscount> appliedDiscounts)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -580,7 +623,7 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("customer");
 
             discountAmount = decimal.Zero;
-            appliedDiscounts = new List<Discount>();
+            appliedDiscounts = new List<AppliedDiscount>();
 
             decimal finalPrice;
 
@@ -654,7 +697,7 @@ namespace Grand.Services.Catalog
             bool includeDiscounts = true)
         {
             decimal discountAmount;
-            List<Discount> appliedDiscounts;
+            List<AppliedDiscount> appliedDiscounts;
             return GetSubTotal(shoppingCartItem, includeDiscounts, out discountAmount, out appliedDiscounts);
         }
         /// <summary>
@@ -668,7 +711,7 @@ namespace Grand.Services.Catalog
         public virtual decimal GetSubTotal(ShoppingCartItem shoppingCartItem,
            bool includeDiscounts,
            out decimal discountAmount,
-           out List<Discount> appliedDiscounts)
+           out List<AppliedDiscount> appliedDiscounts)
         {
             if (shoppingCartItem == null)
                 throw new ArgumentNullException("shoppingCartItem");
@@ -685,7 +728,7 @@ namespace Grand.Services.Catalog
                 //we can properly use "MaximumDiscountedQuantity" property only for one discount (not cumulative ones)
                 Discount oneAndOnlyDiscount = null;
                 if (appliedDiscounts.Count == 1)
-                    oneAndOnlyDiscount = appliedDiscounts.First();
+                    oneAndOnlyDiscount = _discountService.GetDiscountById(appliedDiscounts.FirstOrDefault().DiscountId);
 
                 if (oneAndOnlyDiscount != null &&
                     oneAndOnlyDiscount.MaximumDiscountedQuantity.HasValue &&

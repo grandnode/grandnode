@@ -220,7 +220,7 @@ namespace Grand.Services.Orders
             public PlaceOrderContainter()
             {
                 this.Cart = new List<ShoppingCartItem>();
-                this.AppliedDiscounts = new List<Discount>();
+                this.AppliedDiscounts = new List<AppliedDiscount>();
                 this.AppliedGiftCards = new List<AppliedGiftCard>();
             }
 
@@ -246,7 +246,7 @@ namespace Grand.Services.Orders
             public string CheckoutAttributesXml { get; set; }
 
             public IList<ShoppingCartItem> Cart { get; set; }
-            public List<Discount> AppliedDiscounts { get; set; }
+            public List<AppliedDiscount> AppliedDiscounts { get; set; }
             public List<AppliedGiftCard> AppliedGiftCards { get; set; }
 
             public decimal OrderSubTotalInclTax { get; set; }
@@ -461,7 +461,7 @@ namespace Grand.Services.Orders
             {
                 //sub total (incl tax)
                 decimal orderSubTotalDiscountAmount;
-                List<Discount> orderSubTotalAppliedDiscounts;
+                List<AppliedDiscount> orderSubTotalAppliedDiscounts;
                 decimal subTotalWithoutDiscountBase;
                 decimal subTotalWithDiscountBase;
                 _orderTotalCalculationService.GetShoppingCartSubTotal(details.Cart,
@@ -471,7 +471,7 @@ namespace Grand.Services.Orders
                 details.OrderSubTotalDiscountInclTax = orderSubTotalDiscountAmount;
 
                 foreach (var disc in orderSubTotalAppliedDiscounts)
-                    if (!_discountService.ContainsDiscount(details.AppliedDiscounts, disc))
+                    if(!details.AppliedDiscounts.Where(x=>x.DiscountId == disc.DiscountId).Any())
                         details.AppliedDiscounts.Add(disc);
 
                 //sub total (excl tax)
@@ -567,7 +567,7 @@ namespace Grand.Services.Orders
 
             //shipping total
             decimal tax;
-            List<Discount> shippingTotalDiscounts;
+            List<AppliedDiscount> shippingTotalDiscounts;
             var orderShippingTotalInclTax = _orderTotalCalculationService.GetShoppingCartShippingTotal(details.Cart, true, out tax, out shippingTotalDiscounts);
             var orderShippingTotalExclTax = _orderTotalCalculationService.GetShoppingCartShippingTotal(details.Cart, false);
             if (!orderShippingTotalInclTax.HasValue || !orderShippingTotalExclTax.HasValue)
@@ -577,8 +577,10 @@ namespace Grand.Services.Orders
             details.OrderShippingTotalExclTax = orderShippingTotalExclTax.Value;
 
             foreach (var disc in shippingTotalDiscounts)
-                if (!_discountService.ContainsDiscount(details.AppliedDiscounts, disc))
+            {
+                if (!details.AppliedDiscounts.Where(x => x.DiscountId == disc.DiscountId).Any())
                     details.AppliedDiscounts.Add(disc);
+            }
 
             //payment total
             if (!processPaymentRequest.IsRecurringPayment)
@@ -624,7 +626,7 @@ namespace Grand.Services.Orders
 
             //order total (and applied discounts, gift cards, reward points)
             List<AppliedGiftCard> appliedGiftCards;
-            List<Discount> orderAppliedDiscounts;
+            List<AppliedDiscount> orderAppliedDiscounts;
             decimal orderDiscountAmount;
             int redeemedRewardPoints;
             decimal redeemedRewardPointsAmount;
@@ -641,11 +643,12 @@ namespace Grand.Services.Orders
 
             //discount history
             foreach (var disc in orderAppliedDiscounts)
-                if (!_discountService.ContainsDiscount(details.AppliedDiscounts, disc))
+            {
+                if(!details.AppliedDiscounts.Where(x=>x.DiscountId == disc.DiscountId).Any())
                     details.AppliedDiscounts.Add(disc);
+            }
 
             processPaymentRequest.OrderTotal = details.OrderTotal;
-
 
             //recurring or standard shopping cart?
             if (!processPaymentRequest.IsRecurringPayment)
@@ -1272,7 +1275,7 @@ namespace Grand.Services.Orders
                         {
                             //prices
                             decimal taxRate;
-                            List<Discount> scDiscounts;
+                            List<AppliedDiscount> scDiscounts;
                             decimal discountAmount;
                             decimal scUnitPrice = _priceCalculationService.GetUnitPrice(sc);
                             var product = _productService.GetProductById(sc.ProductId);
@@ -1287,8 +1290,10 @@ namespace Grand.Services.Orders
                             decimal discountAmountExclTax = prices.discountAmountExclTax;
 
                             foreach (var disc in scDiscounts)
-                                if (!_discountService.ContainsDiscount(details.AppliedDiscounts, disc))
+                            {
+                                if(!details.AppliedDiscounts.Where(x=>x.DiscountId == disc.DiscountId).Any())
                                     details.AppliedDiscounts.Add(disc);
+                            }
 
                             //attributes
                             string attributeDescription = _productAttributeFormatter.FormatAttributes(product, sc.AttributesXml, details.Customer);
@@ -1473,7 +1478,8 @@ namespace Grand.Services.Orders
                         {
                             var duh = new DiscountUsageHistory
                             {
-                                DiscountId = discount.Id,
+                                DiscountId = discount.DiscountId,
+                                CouponCode = discount.CouponCode,
                                 OrderId = order.Id,
                                 CustomerId = order.CustomerId,
                                 CreatedOnUtc = DateTime.UtcNow
@@ -1762,6 +1768,9 @@ namespace Grand.Services.Orders
             order.Deleted = true;
             //now delete an order
             _orderService.UpdateOrder(order);
+
+            //cancel discounts 
+            _discountService.CancelDiscount(order.Id);
         }
 
         /// <summary>
@@ -2153,6 +2162,8 @@ namespace Grand.Services.Orders
                 var product = _productService.GetProductById(orderItem.ProductId);
                 _productService.AdjustInventory(product, orderItem.Quantity, orderItem.AttributesXml, orderItem.WarehouseId);
             }
+
+            _discountService.CancelDiscount(order.Id);
 
             _eventPublisher.Publish(new OrderCancelledEvent(order));
 
@@ -3052,13 +3063,9 @@ namespace Grand.Services.Orders
             if (cart.Any() && _orderSettings.MinOrderSubtotalAmount > decimal.Zero)
             {
                 //subtotal
-                decimal orderSubTotalDiscountAmountBase;
-                List<Discount> orderSubTotalAppliedDiscounts;
-                decimal subTotalWithoutDiscountBase;
-                decimal subTotalWithDiscountBase;
                 _orderTotalCalculationService.GetShoppingCartSubTotal(cart, false,
-                    out orderSubTotalDiscountAmountBase, out orderSubTotalAppliedDiscounts,
-                    out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
+                    out decimal orderSubTotalDiscountAmountBase, out List<AppliedDiscount> orderSubTotalAppliedDiscounts,
+                    out decimal subTotalWithoutDiscountBase, out decimal subTotalWithDiscountBase);
 
                 if (subTotalWithoutDiscountBase < _orderSettings.MinOrderSubtotalAmount)
                     return false;

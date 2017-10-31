@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Discounts;
 using Grand.Core.Domain.Orders;
+using Grand.Services.Discounts;
 
 namespace Grand.Services.Orders
 {
@@ -21,7 +22,7 @@ namespace Grand.Services.Orders
         /// <param name="subTotalWithDiscount">Sub total (with discount)</param>
         void GetShoppingCartSubTotal(IList<ShoppingCartItem> cart, 
             bool includingTax,
-            out decimal discountAmount, out List<Discount> appliedDiscounts,
+            out decimal discountAmount, out List<AppliedDiscount> appliedDiscounts,
             out decimal subTotalWithoutDiscount, out decimal subTotalWithDiscount);
 
         /// <summary>
@@ -36,13 +37,9 @@ namespace Grand.Services.Orders
         /// <param name="taxRates">Tax rates (of order sub total)</param>
         void GetShoppingCartSubTotal(IList<ShoppingCartItem> cart,
             bool includingTax,
-            out decimal discountAmount, out List<Discount> appliedDiscounts,
+            out decimal discountAmount, out List<AppliedDiscount> appliedDiscounts,
             out decimal subTotalWithoutDiscount, out decimal subTotalWithDiscount,
             out SortedDictionary<decimal, decimal> taxRates);
-
-
-
-
 
         /// <summary>
         /// Adjust shipping rate (free shipping, additional charges, discounts)
@@ -52,7 +49,7 @@ namespace Grand.Services.Orders
         /// <param name="appliedDiscount">Applied discount</param>
         /// <returns>Adjusted shipping rate</returns>
         decimal AdjustShippingRate(decimal shippingRate,
-            IList<ShoppingCartItem> cart, out List<Discount> appliedDiscounts);
+            IList<ShoppingCartItem> cart, out List<AppliedDiscount> appliedDiscounts);
         
         /// <summary>
         /// Gets shopping cart additional shipping charge
@@ -102,11 +99,7 @@ namespace Grand.Services.Orders
         /// <param name="appliedDiscount">Applied discount</param>
         /// <returns>Shipping total</returns>
         decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax,
-            out decimal taxRate, out List<Discount> appliedDiscounts);
-
-
-
-
+            out decimal taxRate, out List<AppliedDiscount> appliedDiscounts);
 
 
         /// <summary>
@@ -126,10 +119,6 @@ namespace Grand.Services.Orders
         /// <returns>Tax total</returns>
         decimal GetTaxTotal(IList<ShoppingCartItem> cart, out SortedDictionary<decimal, decimal> taxRates, 
             bool usePaymentMethodAdditionalFee = true);
-
-
-
-
 
         /// <summary>
         /// Gets shopping cart total
@@ -153,14 +142,10 @@ namespace Grand.Services.Orders
         /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating order total</param>
         /// <returns>Shopping cart total;Null if shopping cart total couldn't be calculated now</returns>
         decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart,
-            out decimal discountAmount, out List<Discount> appliedDiscounts,
+            out decimal discountAmount, out List<AppliedDiscount> appliedDiscounts,
             out List<AppliedGiftCard> appliedGiftCards,
             out int redeemedRewardPoints, out decimal redeemedRewardPointsAmount,
             bool? useRewardPoints = null, bool usePaymentMethodAdditionalFee = true);
-
-
-
-
 
         /// <summary>
         /// Converts existing reward points to amount

@@ -163,8 +163,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
 
-            var model = new DiscountListModel();
-            model.AvailableDiscountTypes = DiscountType.AssignedToOrderTotal.ToSelectList(false).ToList();
+            var model = new DiscountListModel
+            {
+                AvailableDiscountTypes = DiscountType.AssignedToOrderTotal.ToSelectList(false).ToList()
+            };
             model.AvailableDiscountTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
             return View(model);
@@ -358,6 +360,77 @@ namespace Grand.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
+        #endregion
+
+        #region Discount coupon codes
+        [HttpPost]
+        public IActionResult CouponCodeList(DataSourceRequest command, string discountId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
+            var discount = _discountService.GetDiscountById(discountId);
+            if (discount == null)
+                throw new Exception("No discount found with the specified id");
+
+            var couponcodes = _discountService.GetAllCouponCodesByDiscountId(discount.Id, pageIndex: command.Page - 1, pageSize: command.PageSize);
+            var gridModel = new DataSourceResult
+            {
+                Data = couponcodes.Select(x => new 
+                {
+                    Id = x.Id,
+                    CouponCode = x.CouponCode,
+                    Used = x.Used
+                }),
+                Total = couponcodes.Count
+            };
+            return Json(gridModel);
+        }
+
+        public IActionResult CouponCodeDelete(string discountId, string Id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
+            var discount = _discountService.GetDiscountById(discountId);
+            if (discount == null)
+                throw new Exception("No discount found with the specified id");
+
+            var coupon = _discountService.GetDiscountCodeById(Id);
+            if (coupon == null)
+                throw new Exception("No coupon code found with the specified id");
+
+            if(!coupon.Used)
+                _discountService.DeleteDiscountCoupon(coupon);
+            else
+                return new JsonResult(new DataSourceResult() { Errors = "You can't delete coupon code, it was used" });
+
+            return new NullJsonResult();
+        }
+        public IActionResult CouponCodeInsert(string discountId, string couponCode)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
+            if(string.IsNullOrEmpty(couponCode))
+                throw new Exception("Coupon code can't be empty");
+
+            var discount = _discountService.GetDiscountById(discountId);
+            if (discount == null)
+                throw new Exception("No discount found with the specified id");
+
+            if(_discountService.GetDiscountByCouponCode(couponCode)!=null)
+                return new JsonResult(new DataSourceResult() { Errors = "Coupon code exists" });
+
+            var coupon = new DiscountCoupon
+            {
+                CouponCode = couponCode,
+                DiscountId = discountId
+            };
+            _discountService.InsertDiscountCoupon(coupon);
+
+            return new NullJsonResult();
+        }
         #endregion
 
         #region Discount requirements
@@ -1029,7 +1102,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (discount == null)
                 throw new ArgumentException("No discount found with the specified id");
 
-            var duh = _discountService.GetAllDiscountUsageHistory(discount.Id, null, null, command.Page - 1, command.PageSize);
+            var duh = _discountService.GetAllDiscountUsageHistory(discount.Id, null, null, null, command.Page - 1, command.PageSize);
 
             var gridModel = new DataSourceResult
             {

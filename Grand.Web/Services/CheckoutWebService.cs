@@ -9,6 +9,7 @@ using Grand.Core.Plugins;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Directory;
+using Grand.Services.Discounts;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
 using Grand.Services.Payments;
@@ -244,9 +245,8 @@ namespace Grand.Web.Services
                     };
 
                     //adjust rate
-                    List<Discount> appliedDiscounts;
                     var shippingTotal = _orderTotalCalculationService.AdjustShippingRate(
-                        shippingOption.Rate, cart, out appliedDiscounts);
+                        shippingOption.Rate, cart, out List<AppliedDiscount> appliedDiscounts);
 
                     decimal rateBase = _taxService.GetShippingPrice(shippingTotal, _workContext.CurrentCustomer);
                     decimal rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);

@@ -75,6 +75,14 @@ namespace Grand.Services.Discounts
         Discount GetDiscountByCouponCode(string couponCode, bool showHidden = false);
 
         /// <summary>
+        /// Exist coupon code in discount
+        /// </summary>
+        /// <param name="couponCode"></param>
+        /// <param name="discountId"></param>
+        /// <returns></returns>
+        bool ExistsCodeInDiscount(string couponCode, string discountId, bool? used);
+
+        /// <summary>
         /// Validate discount
         /// </summary>
         /// <param name="discount">Discount</param>
@@ -118,7 +126,7 @@ namespace Grand.Services.Discounts
         /// <param name="pageSize">Page size</param>
         /// <returns>Discount usage history records</returns>
         IPagedList<DiscountUsageHistory> GetAllDiscountUsageHistory(string discountId = "",
-            string customerId = "", string orderId = "", 
+            string customerId = "", string orderId = "", bool? canceled = null,
             int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
@@ -139,6 +147,54 @@ namespace Grand.Services.Discounts
         /// <param name="discountUsageHistory">Discount usage history record</param>
         void DeleteDiscountUsageHistory(DiscountUsageHistory discountUsageHistory);
 
+        /// <summary>
+        /// Get all coupon codes for discount
+        /// </summary>
+        /// <param name="discountId"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        IPagedList<DiscountCoupon> GetAllCouponCodesByDiscountId(string discountId, int pageIndex = 0, int pageSize = int.MaxValue);
+
+        /// <summary>
+        /// Get discount code by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        DiscountCoupon GetDiscountCodeById(string id);
+
+        /// <summary>
+        /// Get discount code by discount code
+        /// </summary>
+        /// <param name="couponCode"></param>
+        /// <returns></returns>
+        DiscountCoupon GetDiscountCodeByCode(string couponCode);
+
+        /// <summary>
+        /// Delete discount code
+        /// </summary>
+        /// <param name="coupon"></param>
+        void DeleteDiscountCoupon(DiscountCoupon coupon);
+
+        /// <summary>
+        /// Update discount code - set as used or not
+        /// </summary>
+        /// <param name="couponCode"></param>
+        /// <param name="discountId"></param>
+        /// <param name="used"></param>
+        void DiscountCouponSetAsUsed(string couponCode, bool used);
+
+        /// <summary>
+        /// Cancel discount if order was canceled or deleted
+        /// </summary>
+        /// <param name="orderId"></param>
+        void CancelDiscount(string orderId);
+
+        /// <summary>
+        /// Insert discount code
+        /// </summary>
+        /// <param name="coupon"></param>
+        void InsertDiscountCoupon(DiscountCoupon coupon);
 
         /// <summary>
         /// Get discount amount from plugin
@@ -155,18 +211,9 @@ namespace Grand.Services.Discounts
         /// <param name="amount"></param>
         /// <param name="discountAmount"></param>
         /// <returns></returns>
-        List<Discount> GetPreferredDiscount(IList<Discount> discounts,
+        List<AppliedDiscount> GetPreferredDiscount(IList<AppliedDiscount> discounts,
             decimal amount, out decimal discountAmount);
-
-        /// <summary>
-        /// Contains Discount
-        /// </summary>
-        /// <param name="discounts"></param>
-        /// <param name="discount"></param>
-        /// <returns></returns>
-        bool ContainsDiscount(IList<Discount> discounts,
-            Discount discount);
-
+        
         /// <summary>
         /// 
         /// </summary>

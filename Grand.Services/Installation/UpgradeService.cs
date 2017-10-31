@@ -28,6 +28,7 @@ using MongoDB.Driver.Core.Operations;
 using MongoDB.Driver.Core.Bindings;
 using System.Threading;
 using Grand.Services.Topics;
+using Grand.Core.Domain.Discounts;
 
 namespace Grand.Services.Installation
 {
@@ -637,6 +638,15 @@ namespace Grand.Services.Installation
             _customerProductPriceRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerProductPrice>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _customerProductPriceRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerProductPrice>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x => x.ProductId), new CreateIndexOptions() { Name = "CustomerProduct", Unique = true });
 
+
+            #endregion
+
+            #region Discount coupon code
+
+            var _discountCouponRepository = EngineContext.Current.Resolve<IRepository<DiscountCoupon>>();
+            _discountCouponRepository.Collection.Indexes.CreateOneAsync(Builders<DiscountCoupon>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _discountCouponRepository.Collection.Indexes.CreateOneAsync(Builders<DiscountCoupon>.IndexKeys.Ascending(x => x.CouponCode), new CreateIndexOptions() { Name = "CouponCode", Unique = true });
+            _discountCouponRepository.Collection.Indexes.CreateOneAsync(Builders<DiscountCoupon>.IndexKeys.Ascending(x => x.DiscountId), new CreateIndexOptions() { Name = "DiscountId", Unique = false });
 
             #endregion
 

@@ -1,0 +1,104 @@
+﻿@model DiscountModel
+@using Grand.Core.Domain.Discounts;
+@using Grand.Framework.UI;
+
+    @if (!String.IsNullOrEmpty(Model.Id))
+    {
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="couponcode-grid"></div>
+            </div>            
+        </div>
+        <script>
+            $(document).ready(function () {
+                $("#couponcode-grid").kendoGrid({
+                    dataSource: {
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("CouponCodeList", "Discount", new { discountId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                            create: {
+                                url: "@Html.Raw(Url.Action("CouponCodeInsert", "Discount", new { discountId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                            destroy: {
+                                url: "@Html.Raw(Url.Action("CouponCodeDelete", "Discount", new { discountId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "Id",
+                                fields: {
+                                    CouponCode: { editable: true, type: "string" },
+                                    Used: { editable: false, type: "boolean" },
+                                }
+                            }
+                        },
+                        requestEnd: function (e) {
+                            if (e.type == "create") {
+                                this.read();
+                            }
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        numeric: false,
+                        previousNext: false,
+                        info: false
+                    },
+                    toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }, { name: "save", text: "@T("Admin.Common.Save")" }, { name: "cancel", text: "@T("Admin.Common.Cancel")" }],
+                    editable: {
+                        confirmation: false,
+                        mode: "inline",
+                    },
+                    scrollable: false,
+                    columns: [{
+                        field: "CouponCode",
+                        title: "@T("Admin.Promotions.Discounts.Fields.CouponCode")"
+                    },
+                    {
+                        field: "Used",
+                        title: "@T("Admin.Promotions.Discounts.Fields.Used")",
+                        width: 100,
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        template: '# if(Used) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+                    },
+                    {
+                        command: [{
+                            name: "destroy",
+                            text: "@T("Admin.Common.Delete")"
+                        }],
+                        width: 150
+                    }]
+                });
+            });
+        </script>
+        
+    }
+    else
+    {
+        <div class="note note-info">
+            @T("Admin.Promotions.Discounts.CouponCodes.SaveBeforeEdit")
+        </div>
+    }

@@ -13,6 +13,11 @@ namespace Grand.Core.Domain.Discounts
         public string DiscountId { get; set; }
 
         /// <summary>
+        /// Gets or sets the discount coupon code
+        /// </summary>
+        public string CouponCode { get; set; }
+
+        /// <summary>
         /// Gets or sets the order identifier
         /// </summary>
         public string OrderId { get; set; }
@@ -26,6 +31,11 @@ namespace Grand.Core.Domain.Discounts
         /// Gets or sets the date and time of instance creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
+
+        /// <summary>
+        /// Gets or sets the canceled identifier
+        /// </summary>
+        public bool Canceled { get; set; }
 
     }
 }
