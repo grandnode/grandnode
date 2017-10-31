@@ -149,7 +149,13 @@ namespace Grand.Framework.Controllers
             ViewData.Model = model;
             var viewResult = razorViewEngine.FindView(actionContext, viewName, false);
             if (viewResult.View == null)
-                throw new ArgumentNullException($"{viewName} view was not found");
+            {
+                //or try to get a view by the path
+                viewResult = razorViewEngine.GetView(null, viewName, false);
+                if (viewResult.View == null)
+                    throw new ArgumentNullException($"{viewName} view was not found");
+            }
+
 
             using (var stringWriter = new StringWriter())
             {
