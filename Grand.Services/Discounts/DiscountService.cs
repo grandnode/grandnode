@@ -574,8 +574,7 @@ namespace Grand.Services.Discounts
 
             //invalid by default
 
-
-            string key = $"Discount_{customer.Id}_{discount.Id}_{string.Join("_", couponCodesToValidate)}";
+            string key = $"DiscountValidationResult_{customer.Id}_{discount.Id}_{string.Join("_", couponCodesToValidate)}";
             var validationResult = _perRequestCache.Get(key, () =>
             {
                 var result = new DiscountValidationResult();

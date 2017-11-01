@@ -3,7 +3,7 @@ using Grand.Core.Domain.Orders;
 namespace Grand.Services.Discounts
 {
     /// <summary>
-    /// Applied gift card
+    /// Applied discount
     /// </summary>
     public class AppliedDiscount
     {
@@ -17,6 +17,10 @@ namespace Grand.Services.Discounts
         /// </summary>
         public string CouponCode { get; set; }
 
+
+        /// <summary>
+        /// Gets or sets is discount is cumulative
+        /// </summary>
         public bool IsCumulative { get; set; }
     }
 }

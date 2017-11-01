@@ -382,7 +382,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     CouponCode = x.CouponCode,
                     Used = x.Used
                 }),
-                Total = couponcodes.Count
+                Total = couponcodes.TotalCount
             };
             return Json(gridModel);
         }
@@ -419,7 +419,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (discount == null)
                 throw new Exception("No discount found with the specified id");
 
-            if(_discountService.GetDiscountByCouponCode(couponCode)!=null)
+            couponCode = couponCode.ToUpper();
+
+            if (_discountService.GetDiscountByCouponCode(couponCode)!=null)
                 return new JsonResult(new DataSourceResult() { Errors = "Coupon code exists" });
 
             var coupon = new DiscountCoupon
@@ -517,7 +519,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (discount == null)
                 throw new Exception("No discount found with the specified id");
 
-            var products = _productService.GetProductsByDiscount(discount.Id);
+            var products = _productService.GetProductsByDiscount(discount.Id, pageIndex: command.Page - 1, pageSize: command.PageSize);
             var gridModel = new DataSourceResult
             {
                 Data = products.Select(x => new DiscountModel.AppliedToProductModel
@@ -525,7 +527,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     ProductId = x.Id,
                     ProductName = x.Name
                 }),
-                Total = products.Count
+                Total = products.TotalCount
             };
 
             return Json(gridModel);

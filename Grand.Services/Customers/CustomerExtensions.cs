@@ -108,7 +108,7 @@ namespace Grand.Services.Customers
                     if (node1.Attributes != null && node1.Attributes["Code"] != null)
                     {
                         string code = node1.Attributes["Code"].InnerText.Trim();
-                        couponCodes.Add(code);
+                        couponCodes.Add(code.ToUpper());
                     }
                 }
             }

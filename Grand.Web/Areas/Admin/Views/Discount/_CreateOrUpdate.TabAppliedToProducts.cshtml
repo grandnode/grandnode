@@ -1,10 +1,8 @@
 ﻿@model DiscountModel
-@using Grand.Core.Domain.Discounts;
-@using Grand.Framework.UI;
-
-
-
-
+@{    
+    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+}
 @{
     if (!String.IsNullOrEmpty(Model.Id))
     {
@@ -54,15 +52,14 @@
                             // Cancel the changes
                             this.cancelChanges();
                         },
+                        pageSize: @(defaultGridPageSize),
                         serverPaging: true,
                         serverFiltering: true,
                         serverSorting: true
                     },
                     pageable: {
                         refresh: true,
-                        numeric: false,
-                        previousNext: false,
-                        info: false
+                        pageSizes: [@(gridPageSizes)]
                     },
                     editable: {
                         confirmation: false,

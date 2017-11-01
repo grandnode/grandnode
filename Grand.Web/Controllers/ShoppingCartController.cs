@@ -7,7 +7,6 @@ using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Discounts;
 using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
@@ -990,6 +989,7 @@ namespace Grand.Web.Controllers
             var model = new ShoppingCartModel();
             if (!String.IsNullOrWhiteSpace(discountcouponcode))
             {
+                discountcouponcode = discountcouponcode.ToUpper();
                 //we find even hidden records here. this way we can display a user-friendly message if it's expired
                 var discount = _discountService.GetDiscountByCouponCode(discountcouponcode, true);
                 if (discount != null && discount.RequiresCouponCode)

@@ -64,7 +64,7 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="discountId">Product identifiers</param>
         /// <returns>Products</returns>
-        IList<Product> GetProductsByDiscount(string discountId);
+        IPagedList<Product> GetProductsByDiscount(string discountId, int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Inserts a product

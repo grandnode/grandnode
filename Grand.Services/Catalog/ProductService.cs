@@ -284,15 +284,13 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="discountId">Product identifiers</param>
         /// <returns>Products</returns>
-        public virtual IList<Product> GetProductsByDiscount(string discountId)
+        public virtual IPagedList<Product> GetProductsByDiscount(string discountId, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = from c in _productRepository.Table
                         where c.AppliedDiscounts.Any(x=>x == discountId)
                         select c;
 
-            var products = query.ToList();
-            return products;
-
+            return new PagedList<Product>(query, pageIndex, pageSize);
         }
 
 

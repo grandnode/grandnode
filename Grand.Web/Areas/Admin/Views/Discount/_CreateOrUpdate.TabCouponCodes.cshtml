@@ -1,10 +1,10 @@
 ﻿@model DiscountModel
-@using Grand.Core.Domain.Discounts;
-@using Grand.Framework.UI;
-
-    @if (!String.IsNullOrEmpty(Model.Id))
-    {
-
+@{ 
+    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+}
+@if (!String.IsNullOrEmpty(Model.Id))
+{
         <div class="panel panel-default">
             <div class="panel-body">
                 <div id="couponcode-grid"></div>
@@ -56,15 +56,14 @@
                             // Cancel the changes
                             this.cancelChanges();
                         },
+                        pageSize: @(defaultGridPageSize),
                         serverPaging: true,
                         serverFiltering: true,
                         serverSorting: true
                     },
                     pageable: {
                         refresh: true,
-                        numeric: false,
-                        previousNext: false,
-                        info: false
+                        pageSizes: [@(gridPageSizes)]
                     },
                     toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }, { name: "save", text: "@T("Admin.Common.Save")" }, { name: "cancel", text: "@T("Admin.Common.Cancel")" }],
                     editable: {
