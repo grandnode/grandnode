@@ -148,12 +148,12 @@ namespace Grand.Web.Controllers
 
                 return RedirectToRoute("Product", new { SeName = parentGroupedProduct.GetSeName() });
             }
-
+            var customer = _workContext.CurrentCustomer;
             //update existing shopping cart item?
             ShoppingCartItem updatecartitem = null;
             if (_shoppingCartSettings.AllowCartItemEditing && !String.IsNullOrEmpty(updatecartitemid))
             {
-                var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                var cart = customer.ShoppingCartItems
                     .LimitPerStore(_storeContext.CurrentStore.Id)
                     .ToList();
                 updatecartitem = cart.FirstOrDefault(x => x.Id == updatecartitemid);
@@ -176,7 +176,7 @@ namespace Grand.Web.Controllers
             var productTemplateViewPath = _productWebService.PrepareProductTemplateViewPath(product.ProductTemplateId);
 
             //save as recently viewed
-            _recentlyViewedProductsService.AddProductToRecentlyViewedList(_workContext.CurrentCustomer.Id, product.Id);
+            _recentlyViewedProductsService.AddProductToRecentlyViewedList(customer.Id, product.Id);
 
             //display "edit" (manage) link
             if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) &&
@@ -191,7 +191,7 @@ namespace Grand.Web.Controllers
 
             //activity log
             _customerActivityService.InsertActivity("PublicStore.ViewProduct", product.Id, _localizationService.GetResource("ActivityLog.PublicStore.ViewProduct"), product.Name);
-            _customerActionEventService.Viewed(_workContext.CurrentCustomer, this.HttpContext.Request.Path.ToString(), this.Request.Headers[HeaderNames.Referer].ToString() != null ? Request.Headers[HeaderNames.Referer].ToString() : "");
+            _customerActionEventService.Viewed(customer, this.HttpContext.Request.Path.ToString(), this.Request.Headers[HeaderNames.Referer].ToString() != null ? Request.Headers[HeaderNames.Referer].ToString() : "");
             _productService.UpdateMostView(productId, 1);
 
             return View(productTemplateViewPath, model);

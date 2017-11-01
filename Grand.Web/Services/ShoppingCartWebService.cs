@@ -4,7 +4,6 @@ using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Directory;
-using Grand.Core.Domain.Discounts;
 using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
@@ -191,13 +190,15 @@ namespace Grand.Web.Services
             if (!cart.Any())
                 return;
 
+            var customer = _workContext.CurrentCustomer;
+
             #region Simple properties
 
             model.IsEditable = isEditable;
             model.ShowProductImages = _shoppingCartSettings.ShowProductImagesOnShoppingCart;
             model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
-            var checkoutAttributesXml = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);
-            model.CheckoutAttributeInfo = _checkoutAttributeFormatter.FormatAttributes(checkoutAttributesXml, _workContext.CurrentCustomer);
+            var checkoutAttributesXml = customer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);
+            model.CheckoutAttributeInfo = _checkoutAttributeFormatter.FormatAttributes(checkoutAttributesXml, customer);
             bool minOrderSubtotalAmountOk = _orderProcessingService.ValidateMinOrderSubtotalAmount(cart);
             if (!minOrderSubtotalAmountOk)
             {
@@ -210,13 +211,13 @@ namespace Grand.Web.Services
 
             //gift card and gift card boxes
             model.DiscountBox.Display = _shoppingCartSettings.ShowDiscountBox;
-            var discountCouponCodes = _workContext.CurrentCustomer.ParseAppliedDiscountCouponCodes();
+            var discountCouponCodes = customer.ParseAppliedDiscountCouponCodes();
             foreach (var couponCode in discountCouponCodes)
             {
                 var discount = _discountService.GetDiscountByCouponCode(couponCode);
                 if (discount != null &&
                     discount.RequiresCouponCode &&
-                    _discountService.ValidateDiscount(discount, _workContext.CurrentCustomer).IsValid)
+                    _discountService.ValidateDiscount(discount, customer).IsValid)
                 {
                     model.DiscountBox.AppliedDiscountsWithCodes.Add(new ShoppingCartModel.DiscountBoxModel.DiscountInfoModel()
                     {
@@ -287,7 +288,7 @@ namespace Grand.Web.Services
 
 
                 //set already selected attributes
-                var selectedCheckoutAttributes = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);
+                var selectedCheckoutAttributes = customer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
@@ -472,7 +473,7 @@ namespace Grand.Web.Services
 
                 //item warnings
                 var itemWarnings = _shoppingCartService.GetShoppingCartItemWarnings(
-                    _workContext.CurrentCustomer,
+                    customer,
                     sci.ShoppingCartType,
                     product,
                     sci.StoreId,
@@ -493,7 +494,7 @@ namespace Grand.Web.Services
             #region Button payment methods
 
             var paymentMethods = _paymentService
-                .LoadActivePaymentMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id)
+                .LoadActivePaymentMethods(customer, _storeContext.CurrentStore.Id)
                 .Where(pm => pm.PaymentMethodType == PaymentMethodType.Button)
                 .Where(pm => !pm.HidePaymentMethod(cart))
                 .ToList();
@@ -516,7 +517,7 @@ namespace Grand.Web.Services
                 model.OrderReviewData.Display = true;
 
                 //billing info
-                var billingAddress = _workContext.CurrentCustomer.BillingAddress;
+                var billingAddress = customer.BillingAddress;
                 if (billingAddress != null)
                     _addressWebService.PrepareModel(model: model.OrderReviewData.BillingAddress,
                         address: billingAddress,
@@ -527,14 +528,13 @@ namespace Grand.Web.Services
                 {
                     model.OrderReviewData.IsShippable = true;
 
-                    var pickupPoint = _workContext.CurrentCustomer
-                       .GetAttribute<string>(SystemCustomerAttributeNames.SelectedPickupPoint, _storeContext.CurrentStore.Id);
+                    var pickupPoint = customer.GetAttribute<string>(SystemCustomerAttributeNames.SelectedPickupPoint, _storeContext.CurrentStore.Id);
 
                     model.OrderReviewData.SelectedPickUpInStore = _shippingSettings.AllowPickUpInStore && !String.IsNullOrEmpty(pickupPoint);
 
                     if (!model.OrderReviewData.SelectedPickUpInStore)
                     {
-                        var shippingAddress = _workContext.CurrentCustomer.ShippingAddress;
+                        var shippingAddress = customer.ShippingAddress;
                         if (shippingAddress != null)
                             _addressWebService.PrepareModel(model: model.OrderReviewData.ShippingAddress,
                                 address: shippingAddress,
@@ -556,15 +556,15 @@ namespace Grand.Web.Services
                         }
                     }
                     //selected shipping method
-                    var shippingOption = _workContext.CurrentCustomer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.SelectedShippingOption, _storeContext.CurrentStore.Id);
+                    var shippingOption = customer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.SelectedShippingOption, _storeContext.CurrentStore.Id);
                     if (shippingOption != null)
                     {
                         model.OrderReviewData.ShippingMethod = shippingOption.Name;
-                        model.OrderReviewData.ShippingAdditionDescription = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.ShippingOptionAttributeDescription, _storeContext.CurrentStore.Id);
+                        model.OrderReviewData.ShippingAdditionDescription = customer.GetAttribute<string>(SystemCustomerAttributeNames.ShippingOptionAttributeDescription, _storeContext.CurrentStore.Id);
                     }
                 }
                 //payment info
-                var selectedPaymentMethodSystemName = _workContext.CurrentCustomer.GetAttribute<string>(
+                var selectedPaymentMethodSystemName = customer.GetAttribute<string>(
                     SystemCustomerAttributeNames.SelectedPaymentMethod, _storeContext.CurrentStore.Id);
                 var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(selectedPaymentMethodSystemName);
                 model.OrderReviewData.PaymentMethod = paymentMethod != null ? paymentMethod.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id) : "";
@@ -708,7 +708,7 @@ namespace Grand.Web.Services
 
                 //item warnings
                 var itemWarnings = _shoppingCartService.GetShoppingCartItemWarnings(
-                    _workContext.CurrentCustomer,
+                    customer,
                     sci.ShoppingCartType,
                     product,
                     sci.StoreId,
@@ -733,10 +733,12 @@ namespace Grand.Web.Services
             model.Enabled = cart.Any() && cart.RequiresShipping() && _shippingSettings.EstimateShippingEnabled;
             if (model.Enabled)
             {
+                var customer = _workContext.CurrentCustomer;
+                var languageId = _workContext.WorkingLanguage.Id;
                 //countries
-                string defaultEstimateCountryId = (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null) ? _workContext.CurrentCustomer.ShippingAddress.CountryId : model.CountryId;
+                string defaultEstimateCountryId = (setEstimateShippingDefaultAddress && customer.ShippingAddress != null) ? customer.ShippingAddress.CountryId : model.CountryId;
                 model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "" });
-                foreach (var c in _countryService.GetAllCountriesForShipping(_workContext.WorkingLanguage.Id))
+                foreach (var c in _countryService.GetAllCountriesForShipping(languageId))
                     model.AvailableCountries.Add(new SelectListItem
                     {
                         Text = c.GetLocalized(x => x.Name),
@@ -744,8 +746,8 @@ namespace Grand.Web.Services
                         Selected = c.Id == defaultEstimateCountryId
                     });
                 //states
-                string defaultEstimateStateId = (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null) ? _workContext.CurrentCustomer.ShippingAddress.StateProvinceId : model.StateProvinceId;
-                var states = !String.IsNullOrEmpty(defaultEstimateCountryId) ? _stateProvinceService.GetStateProvincesByCountryId(defaultEstimateCountryId, _workContext.WorkingLanguage.Id).ToList() : new List<StateProvince>();
+                string defaultEstimateStateId = (setEstimateShippingDefaultAddress && customer.ShippingAddress != null) ? customer.ShippingAddress.StateProvinceId : model.StateProvinceId;
+                var states = !String.IsNullOrEmpty(defaultEstimateCountryId) ? _stateProvinceService.GetStateProvincesByCountryId(defaultEstimateCountryId, languageId).ToList() : new List<StateProvince>();
                 if (states.Any())
                     foreach (var s in states)
                         model.AvailableStates.Add(new SelectListItem
@@ -757,30 +759,32 @@ namespace Grand.Web.Services
                 else
                     model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Address.OtherNonUS"), Value = "" });
 
-                if (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null)
-                    model.ZipPostalCode = _workContext.CurrentCustomer.ShippingAddress.ZipPostalCode;
+                if (setEstimateShippingDefaultAddress && customer.ShippingAddress != null)
+                    model.ZipPostalCode = customer.ShippingAddress.ZipPostalCode;
             }
             return model;
         }
 
         public virtual MiniShoppingCartModel PrepareMiniShoppingCart()
         {
+            var customer = _workContext.CurrentCustomer;
+            var storeId = _storeContext.CurrentStore.Id;
+            var currency = _workContext.WorkingCurrency;
+
             var model = new MiniShoppingCartModel
             {
                 ShowProductImages = _shoppingCartSettings.ShowProductImagesInMiniShoppingCart,
-                //let's always display it
                 DisplayShoppingCartButton = true,
-                CurrentCustomerIsGuest = _workContext.CurrentCustomer.IsGuest(),
+                CurrentCustomerIsGuest = customer.IsGuest(),
                 AnonymousCheckoutAllowed = _orderSettings.AnonymousCheckoutAllowed,
             };
 
-
             //performance optimization (use "HasShoppingCartItems" property)
-            if (_workContext.CurrentCustomer.HasShoppingCartItems)
+            if (customer.HasShoppingCartItems)
             {
-                var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                var cart = customer.ShoppingCartItems
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                    .LimitPerStore(_storeContext.CurrentStore.Id)
+                    .LimitPerStore(storeId)
                     .ToList();
                 model.TotalProducts = cart.GetTotalProducts();
                 if (cart.Any())
@@ -791,8 +795,8 @@ namespace Grand.Web.Services
                         out decimal orderSubTotalDiscountAmountBase, out List<AppliedDiscount> orderSubTotalAppliedDiscounts,
                         out decimal subTotalWithoutDiscountBase, out decimal subTotalWithDiscountBase);
                     decimal subtotalBase = subTotalWithoutDiscountBase;
-                    decimal subtotal = _currencyService.ConvertFromPrimaryStoreCurrency(subtotalBase, _workContext.WorkingCurrency);
-                    model.SubTotal = _priceFormatter.FormatPrice(subtotal, false, _workContext.WorkingCurrency, _workContext.WorkingLanguage, subTotalIncludingTax);
+                    decimal subtotal = _currencyService.ConvertFromPrimaryStoreCurrency(subtotalBase, currency);
+                    model.SubTotal = _priceFormatter.FormatPrice(subtotal, false, currency, _workContext.WorkingLanguage, subTotalIncludingTax);
 
                     var requiresShipping = cart.RequiresShipping();
                     //a customer should visit the shopping cart page (hide checkout button) before going to checkout if:
@@ -800,11 +804,10 @@ namespace Grand.Web.Services
                     //2. min order sub-total is OK
                     //3. we have at least one checkout attribute
                     var checkoutAttributesExistCacheKey = string.Format(ModelCacheEventConsumer.CHECKOUTATTRIBUTES_EXIST_KEY,
-                        _storeContext.CurrentStore.Id, requiresShipping);
+                        storeId, requiresShipping);
                     var checkoutAttributesExist = _cacheManager.Get(checkoutAttributesExistCacheKey,
-                        () =>
-                        {
-                            var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, !requiresShipping);
+                        () => {
+                            var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(storeId, !requiresShipping);
                             return checkoutAttributes.Any();
                         });
 
@@ -839,7 +842,7 @@ namespace Grand.Web.Services
                         {
                             decimal taxRate;
                             decimal shoppingCartUnitPriceWithDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetUnitPrice(sci), out taxRate);
-                            decimal shoppingCartUnitPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartUnitPriceWithDiscountBase, _workContext.WorkingCurrency);
+                            decimal shoppingCartUnitPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartUnitPriceWithDiscountBase, currency);
                             cartItemModel.UnitPrice = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount);
                         }
 
@@ -865,6 +868,7 @@ namespace Grand.Web.Services
 
             if (cart.Any())
             {
+                var customer = _workContext.CurrentCustomer;
                 //subtotal
                 var subTotalIncludingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal;
                 _orderTotalCalculationService.GetShoppingCartSubTotal(cart, subTotalIncludingTax,
@@ -892,17 +896,17 @@ namespace Grand.Web.Services
                         model.Shipping = _priceFormatter.FormatShippingPrice(shoppingCartShipping, true);
 
                         //selected shipping method
-                        var shippingOption = _workContext.CurrentCustomer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.SelectedShippingOption, _storeContext.CurrentStore.Id);
+                        var shippingOption = customer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.SelectedShippingOption, _storeContext.CurrentStore.Id);
                         if (shippingOption != null)
                             model.SelectedShippingMethod = shippingOption.Name;
                     }
                 }
 
                 //payment method fee
-                var paymentMethodSystemName = _workContext.CurrentCustomer.GetAttribute<string>(
+                var paymentMethodSystemName = customer.GetAttribute<string>(
                     SystemCustomerAttributeNames.SelectedPaymentMethod, _storeContext.CurrentStore.Id);
                 decimal paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(cart, paymentMethodSystemName);
-                decimal paymentMethodAdditionalFeeWithTaxBase = _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, _workContext.CurrentCustomer);
+                decimal paymentMethodAdditionalFeeWithTaxBase = _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, customer);
                 if (paymentMethodAdditionalFeeWithTaxBase > decimal.Zero)
                 {
                     decimal paymentMethodAdditionalFeeWithTax = _currencyService.ConvertFromPrimaryStoreCurrency(paymentMethodAdditionalFeeWithTaxBase, _workContext.WorkingCurrency);
@@ -1004,7 +1008,7 @@ namespace Grand.Web.Services
                     var earnRewardPoints = shoppingCartTotalBase.Value - shippingBaseInclTax.Value;
                     if (earnRewardPoints > 0)
                         model.WillEarnRewardPoints = _orderTotalCalculationService
-                            .CalculateRewardPoints(_workContext.CurrentCustomer, earnRewardPoints);
+                            .CalculateRewardPoints(customer, earnRewardPoints);
                 }
 
             }

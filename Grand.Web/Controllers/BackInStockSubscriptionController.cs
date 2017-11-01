@@ -56,24 +56,27 @@ namespace Grand.Web.Controllers
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
+            var customer = _workContext.CurrentCustomer;
+            var store = _storeContext.CurrentStore;
+
             var model = new BackInStockSubscribeModel();
             model.ProductId = product.Id;
             model.ProductName = product.GetLocalized(x => x.Name);
             model.ProductSeName = product.GetSeName();
-            model.IsCurrentCustomerRegistered = _workContext.CurrentCustomer.IsRegistered();
+            model.IsCurrentCustomerRegistered = customer.IsRegistered();
             model.MaximumBackInStockSubscriptions = _catalogSettings.MaximumBackInStockSubscriptions;
             model.CurrentNumberOfBackInStockSubscriptions = _backInStockSubscriptionService
-                .GetAllSubscriptionsByCustomerId(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id, 0, 1)
+                .GetAllSubscriptionsByCustomerId(customer.Id, store.Id, 0, 1)
                 .TotalCount;
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
                 product.BackorderMode == BackorderMode.NoBackorders &&
                 product.AllowBackInStockSubscriptions &&
-                product.GetTotalStockQuantity(warehouseId: _storeContext.CurrentStore.DefaultWarehouseId) <= 0)
+                product.GetTotalStockQuantity(warehouseId: store.DefaultWarehouseId) <= 0)
             {
                 //out of stock
                 model.SubscriptionAllowed = true;
                 model.AlreadySubscribed = _backInStockSubscriptionService
-                    .FindSubscription(_workContext.CurrentCustomer.Id, product.Id, _storeContext.CurrentStore.Id, product.UseMultipleWarehouses ? _storeContext.CurrentStore.DefaultWarehouseId : "") != null;
+                    .FindSubscription(customer.Id, product.Id, store.Id, product.UseMultipleWarehouses ? store.DefaultWarehouseId : "") != null;
             }
             return View(model);
         }
@@ -84,7 +87,9 @@ namespace Grand.Web.Controllers
             if (product == null )
                 throw new ArgumentException("No product found with the specified id");
 
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            var customer = _workContext.CurrentCustomer;
+
+            if (!customer.IsRegistered())
                 return Content(_localizationService.GetResource("BackInStockSubscriptions.OnlyRegistered"));
 
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
@@ -94,7 +99,7 @@ namespace Grand.Web.Controllers
             {
                 //out of stock
                 var subscription = _backInStockSubscriptionService
-                    .FindSubscription(_workContext.CurrentCustomer.Id, product.Id, _storeContext.CurrentStore.Id, product.UseMultipleWarehouses ? _storeContext.CurrentStore.DefaultWarehouseId : "");
+                    .FindSubscription(customer.Id, product.Id, _storeContext.CurrentStore.Id, product.UseMultipleWarehouses ? _storeContext.CurrentStore.DefaultWarehouseId : "");
                 if (subscription != null)
                 {
                     //subscription already exists
@@ -106,14 +111,14 @@ namespace Grand.Web.Controllers
                 //subscription does not exist
                 //subscribe
                 if (_backInStockSubscriptionService
-                    .GetAllSubscriptionsByCustomerId(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id, 0, 1)
+                    .GetAllSubscriptionsByCustomerId(customer.Id, _storeContext.CurrentStore.Id, 0, 1)
                     .TotalCount >= _catalogSettings.MaximumBackInStockSubscriptions)
                 {
                     return Content(string.Format(_localizationService.GetResource("BackInStockSubscriptions.MaxSubscriptions"), _catalogSettings.MaximumBackInStockSubscriptions));
                 }
                 subscription = new BackInStockSubscription
                 {
-                    CustomerId = _workContext.CurrentCustomer.Id,
+                    CustomerId = customer.Id,
                     ProductId = product.Id,
                     StoreId = _storeContext.CurrentStore.Id,
                     WarehouseId = product.UseMultipleWarehouses ? _storeContext.CurrentStore.DefaultWarehouseId : "",

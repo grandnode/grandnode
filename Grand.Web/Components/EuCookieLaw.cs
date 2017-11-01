@@ -30,11 +30,12 @@ namespace Grand.Web.ViewComponents
                 //disabled
                 return Content("");
 
+            var customer = _workContext.CurrentCustomer;
             //ignore search engines because some pages could be indexed with the EU cookie as description
-            if (_workContext.CurrentCustomer.IsSearchEngineAccount())
+            if (customer.IsSearchEngineAccount())
                 return Content("");
 
-            if (_workContext.CurrentCustomer.GetAttribute<bool>(SystemCustomerAttributeNames.EuCookieLawAccepted, _storeContext.CurrentStore.Id))
+            if (customer.GetAttribute<bool>(SystemCustomerAttributeNames.EuCookieLawAccepted, _storeContext.CurrentStore.Id))
                 //already accepted
                 return Content("");
 

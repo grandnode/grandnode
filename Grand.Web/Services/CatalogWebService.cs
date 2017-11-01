@@ -418,7 +418,11 @@ namespace Grand.Web.Services
         public virtual CategoryModel PrepareCategory(Category category, CatalogPagingFilteringModel command)
         {
             var model = category.ToModel();
-
+            var customer = _workContext.CurrentCustomer;
+            var storeId = _storeContext.CurrentStore.Id;
+            var languageId = _workContext.WorkingLanguage.Id;
+            var currency = _workContext.WorkingCurrency;
+            var connectionSecured = _webHelper.IsCurrentConnectionSecured();
             //sorting
             PrepareSortingOptions(model.PagingFilteringContext, command);
             //view mode
@@ -437,10 +441,10 @@ namespace Grand.Web.Services
             if (selectedPriceRange != null)
             {
                 if (selectedPriceRange.From.HasValue)
-                    minPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.From.Value, _workContext.WorkingCurrency);
+                    minPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.From.Value, currency);
 
                 if (selectedPriceRange.To.HasValue)
-                    maxPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.To.Value, _workContext.WorkingCurrency);
+                    maxPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.To.Value, currency);
             }
 
 
@@ -451,9 +455,9 @@ namespace Grand.Web.Services
 
                 string breadcrumbCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_BREADCRUMB_KEY,
                     category.Id,
-                    string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
-                    _storeContext.CurrentStore.Id,
-                    _workContext.WorkingLanguage.Id);
+                    string.Join(",", customer.GetCustomerRoleIds()),
+                    storeId,
+                    languageId);
                 model.CategoryBreadcrumb = _cacheManager.Get(breadcrumbCacheKey, () =>
                     category
                     .GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService)
@@ -470,10 +474,10 @@ namespace Grand.Web.Services
             //subcategories
             string subCategoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_SUBCATEGORIES_KEY,
                 category.Id,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
-                _storeContext.CurrentStore.Id,
-                _workContext.WorkingLanguage.Id,
-                _webHelper.IsCurrentConnectionSecured());
+                string.Join(",", customer.GetCustomerRoleIds()),
+                storeId,
+                languageId,
+                connectionSecured);
             model.SubCategories = _cacheManager.Get(subCategoriesCacheKey, () =>
                 _categoryService.GetAllCategoriesByParentCategoryId(category.Id)
                 .Select(x =>
@@ -488,7 +492,7 @@ namespace Grand.Web.Services
 
                     //prepare picture model
                     int pictureSize = _mediaSettings.CategoryThumbPictureSize;
-                    var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_PICTURE_MODEL_KEY, x.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
+                    var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_PICTURE_MODEL_KEY, x.Id, pictureSize, true, languageId, connectionSecured, storeId);
                     subCatModel.PictureModel = _cacheManager.Get(categoryPictureCacheKey, () =>
                     {
                         var picture = _pictureService.GetPictureById(x.PictureId);
@@ -513,7 +517,7 @@ namespace Grand.Web.Services
                 //We cache a value indicating whether we have featured products
                 IPagedList<Product> featuredProducts = null;
                 string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HAS_FEATURED_PRODUCTS_KEY, category.Id,
-                    string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), _storeContext.CurrentStore.Id);
+                    string.Join(",", customer.GetCustomerRoleIds()), storeId);
                 var hasFeaturedProductsCache = _cacheManager.Get<bool?>(cacheKey);
                 if (!hasFeaturedProductsCache.HasValue)
                 {
@@ -522,7 +526,7 @@ namespace Grand.Web.Services
                     featuredProducts = _productService.SearchProducts(
                        pageSize: _catalogSettings.LimitOfFeaturedProducts,
                        categoryIds: new List<string> { category.Id },
-                       storeId: _storeContext.CurrentStore.Id,
+                       storeId: storeId,
                        visibleIndividuallyOnly: true,
                        featuredProducts: true);
                     hasFeaturedProductsCache = featuredProducts.Any();
@@ -535,7 +539,7 @@ namespace Grand.Web.Services
                     featuredProducts = _productService.SearchProducts(
                        pageSize: _catalogSettings.LimitOfFeaturedProducts,
                        categoryIds: new List<string> { category.Id },
-                       storeId: _storeContext.CurrentStore.Id,
+                       storeId: storeId,
                        visibleIndividuallyOnly: true,
                        featuredProducts: true);
                 }
@@ -558,7 +562,7 @@ namespace Grand.Web.Services
             IList<string> filterableSpecificationAttributeOptionIds;
             var products = _productService.SearchProducts(out filterableSpecificationAttributeOptionIds, true,
                 categoryIds: categoryIds,
-                storeId: _storeContext.CurrentStore.Id,
+                storeId: storeId,
                 visibleIndividuallyOnly: true,
                 featuredProducts: _catalogSettings.IncludeFeaturedProductsInNormalLists ? null : (bool?)false,
                 priceMin: minPriceConverted,
@@ -791,6 +795,7 @@ namespace Grand.Web.Services
         public virtual ManufacturerModel PrepareManufacturer(Manufacturer manufacturer, CatalogPagingFilteringModel command)
         {
             var model = manufacturer.ToModel();
+            var currency = _workContext.WorkingCurrency;
 
             //sorting
             PrepareSortingOptions(model.PagingFilteringContext, command);
@@ -811,10 +816,10 @@ namespace Grand.Web.Services
             if (selectedPriceRange != null)
             {
                 if (selectedPriceRange.From.HasValue)
-                    minPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.From.Value, _workContext.WorkingCurrency);
+                    minPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.From.Value, currency);
 
                 if (selectedPriceRange.To.HasValue)
-                    maxPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.To.Value, _workContext.WorkingCurrency);
+                    maxPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.To.Value, currency);
             }
 
 

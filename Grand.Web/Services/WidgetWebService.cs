@@ -5,7 +5,6 @@ using Grand.Framework.Themes;
 using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Models.Cms;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Routing;
 
 namespace Grand.Web.Services

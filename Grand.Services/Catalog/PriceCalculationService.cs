@@ -393,9 +393,6 @@ namespace Grand.Services.Catalog
 
         #region Methods
 
-
-
-
         /// <summary>
         /// Gets the final price
         /// </summary>

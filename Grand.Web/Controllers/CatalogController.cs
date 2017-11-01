@@ -137,9 +137,11 @@ namespace Grand.Web.Controllers
             //Store mapping
             if (!_storeMappingService.Authorize(category))
                 return InvokeHttp404();
-            
+
+            var customer = _workContext.CurrentCustomer;
+
             //'Continue shopping' URL
-            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 
+            _genericAttributeService.SaveAttribute(customer, 
                 SystemCustomerAttributeNames.LastContinueShoppingPage, 
                 _webHelper.GetThisPageUrl(false),
                 _storeContext.CurrentStore.Id);
@@ -150,7 +152,7 @@ namespace Grand.Web.Controllers
 
             //activity log
             _customerActivityService.InsertActivity("PublicStore.ViewCategory", category.Id, _localizationService.GetResource("ActivityLog.PublicStore.ViewCategory"), category.Name);
-            _customerActionEventService.Viewed(_workContext.CurrentCustomer, this.HttpContext.Request.Path.ToString(), this.Request.Headers[HeaderNames.Referer].ToString() != null ? Request.Headers["Referer"].ToString() : "");
+            _customerActionEventService.Viewed(customer, this.HttpContext.Request.Path.ToString(), this.Request.Headers[HeaderNames.Referer].ToString() != null ? Request.Headers["Referer"].ToString() : "");
             //model
             var model = _catalogWebService.PrepareCategory(category, command);
 
@@ -183,9 +185,11 @@ namespace Grand.Web.Controllers
             //Store mapping
             if (!_storeMappingService.Authorize(manufacturer))
                 return InvokeHttp404();
-            
+
+            var customer = _workContext.CurrentCustomer;
+
             //'Continue shopping' URL
-            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 
+            _genericAttributeService.SaveAttribute(customer, 
                 SystemCustomerAttributeNames.LastContinueShoppingPage, 
                 _webHelper.GetThisPageUrl(false),
                 _storeContext.CurrentStore.Id);
@@ -196,7 +200,7 @@ namespace Grand.Web.Controllers
             
             //activity log
             _customerActivityService.InsertActivity("PublicStore.ViewManufacturer", manufacturer.Id, _localizationService.GetResource("ActivityLog.PublicStore.ViewManufacturer"), manufacturer.Name);
-            _customerActionEventService.Viewed(_workContext.CurrentCustomer, this.HttpContext.Request.Path.ToString(), this.Request.Headers[HeaderNames.Referer].ToString() != null ? Request.Headers[HeaderNames.Referer].ToString() : "");
+            _customerActionEventService.Viewed(customer, this.HttpContext.Request.Path.ToString(), this.Request.Headers[HeaderNames.Referer].ToString() != null ? Request.Headers[HeaderNames.Referer].ToString() : "");
 
             //model
             var model = _catalogWebService.PrepareManufacturer(manufacturer, command);
@@ -341,7 +345,9 @@ namespace Grand.Web.Controllers
             if (vendorReview == null)
                 throw new ArgumentException("No vendor review found with the specified id");
 
-            if (_workContext.CurrentCustomer.IsGuest() && !_vendorSettings.AllowAnonymousUsersToReviewVendor)
+            var customer = _workContext.CurrentCustomer;
+
+            if (customer.IsGuest() && !_vendorSettings.AllowAnonymousUsersToReviewVendor)
             {
                 return Json(new
                 {
@@ -352,7 +358,7 @@ namespace Grand.Web.Controllers
             }
 
             //customers aren't allowed to vote for their own reviews
-            if (vendorReview.CustomerId == _workContext.CurrentCustomer.Id)
+            if (vendorReview.CustomerId == customer.Id)
             {
                 return Json(new
                 {
@@ -364,7 +370,7 @@ namespace Grand.Web.Controllers
 
             //delete previous helpfulness
             var prh = vendorReview.VendorReviewHelpfulnessEntries
-                .FirstOrDefault(x => x.CustomerId == _workContext.CurrentCustomer.Id);
+                .FirstOrDefault(x => x.CustomerId == customer.Id);
             if (prh != null)
             {
                 //existing one
@@ -376,14 +382,14 @@ namespace Grand.Web.Controllers
                 prh = new VendorReviewHelpfulness
                 {
                     VendorReviewId = vendorReview.Id,
-                    CustomerId = _workContext.CurrentCustomer.Id,
+                    CustomerId = customer.Id,
                     WasHelpful = washelpful,
                 };
                 vendorReview.VendorReviewHelpfulnessEntries.Add(prh);
-                if (!_workContext.CurrentCustomer.IsHasVendorReviewH)
+                if (!customer.IsHasVendorReviewH)
                 {
-                    _workContext.CurrentCustomer.IsHasVendorReviewH = true;
-                    EngineContext.Current.Resolve<ICustomerService>().UpdateHasVendorReviewH(_workContext.CurrentCustomer.Id);
+                    customer.IsHasVendorReviewH = true;
+                    EngineContext.Current.Resolve<ICustomerService>().UpdateHasVendorReviewH(customer.Id);
                 }
             }
 

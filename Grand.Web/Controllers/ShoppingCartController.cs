@@ -227,9 +227,11 @@ namespace Grand.Web.Controllers
                 });
             }
 
+            var customer = _workContext.CurrentCustomer;
+
             //get standard warnings without attribute validations
             //first, try to find existing shopping cart item
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
+            var cart = customer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == cartType)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
@@ -237,7 +239,7 @@ namespace Grand.Web.Controllers
             //if we already have the same product in the cart, then use the total quantity to validate
             var quantityToValidate = shoppingCartItem != null ? shoppingCartItem.Quantity + quantity : quantity;
             var addToCartWarnings = _shoppingCartService
-                .GetShoppingCartItemWarnings(_workContext.CurrentCustomer, cartType,
+                .GetShoppingCartItemWarnings(customer, cartType,
                 product, _storeContext.CurrentStore.Id, string.Empty, 
                 decimal.Zero, null, null, quantityToValidate, false, true, false, false, false);
             if (addToCartWarnings.Any())
@@ -252,7 +254,7 @@ namespace Grand.Web.Controllers
             }
 
             //now let's try adding product to the cart (now including product attribute validation, etc)
-            addToCartWarnings = _shoppingCartService.AddToCart(customer: _workContext.CurrentCustomer,
+            addToCartWarnings = _shoppingCartService.AddToCart(customer: customer,
                 productId: productId,
                 shoppingCartType: cartType,
                 storeId: _storeContext.CurrentStore.Id,
@@ -286,7 +288,7 @@ namespace Grand.Web.Controllers
                         
                         //display notification message and update appropriate blocks
                         var updatetopwishlistsectionhtml = string.Format(_localizationService.GetResource("Wishlist.HeaderQuantity"),
-                        _workContext.CurrentCustomer.ShoppingCartItems
+                        customer.ShoppingCartItems
                         .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
                         .LimitPerStore(_storeContext.CurrentStore.Id)
                         .ToList()
@@ -315,7 +317,7 @@ namespace Grand.Web.Controllers
                         
                         //display notification message and update appropriate blocks
                         var updatetopcartsectionhtml = string.Format(_localizationService.GetResource("ShoppingCart.HeaderQuantity"),
-                        _workContext.CurrentCustomer.ShoppingCartItems
+                        customer.ShoppingCartItems
                         .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                         .LimitPerStore(_storeContext.CurrentStore.Id)
                         .ToList()

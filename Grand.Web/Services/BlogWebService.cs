@@ -287,10 +287,11 @@ namespace Grand.Web.Services
 
         public BlogComment InsertBlogComment(BlogPostModel model, BlogPost blogPost)
         {
+            var customer = _workContext.CurrentCustomer;
             var comment = new BlogComment
             {
                 BlogPostId = blogPost.Id,
-                CustomerId = _workContext.CurrentCustomer.Id,
+                CustomerId = customer.Id,
                 CommentText = model.AddNewComment.CommentText,
                 CreatedOnUtc = DateTime.UtcNow,
                 BlogPostTitle = blogPost.Title,
@@ -300,10 +301,10 @@ namespace Grand.Web.Services
             //update totals
             blogPost.CommentCount = _blogService.GetBlogCommentsByBlogPostId(blogPost.Id).Count;
             _blogService.UpdateBlogPost(blogPost);
-            if (!_workContext.CurrentCustomer.IsHasBlogComments)
+            if (!customer.IsHasBlogComments)
             {
-                _workContext.CurrentCustomer.IsHasBlogComments = true;
-                EngineContext.Current.Resolve<ICustomerService>().UpdateHasBlogComments(_workContext.CurrentCustomer.Id);
+                customer.IsHasBlogComments = true;
+                EngineContext.Current.Resolve<ICustomerService>().UpdateHasBlogComments(customer.Id);
             }
             //notify a store owner
             if (_blogSettings.NotifyAboutNewBlogComments)

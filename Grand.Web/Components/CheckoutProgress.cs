@@ -1,8 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
-using Grand.Web.Services;
-using System.Linq;
 using Grand.Web.Models.Checkout;
 
 namespace Grand.Web.ViewComponents

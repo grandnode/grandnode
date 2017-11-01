@@ -127,21 +127,23 @@ namespace Grand.Web.Controllers
 
         public virtual IActionResult Index()
         {
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
+            var customer = _workContext.CurrentCustomer;
+
+            var cart = customer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
-            if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
+            if ((customer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
                 return Challenge();
 
             //reset checkout data
-            _customerService.ResetCheckoutData(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
+            _customerService.ResetCheckoutData(customer, _storeContext.CurrentStore.Id);
 
             //validation (cart)
-            var checkoutAttributesXml = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);
+            var checkoutAttributesXml = customer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);
             var scWarnings = _shoppingCartService.GetShoppingCartWarnings(cart, checkoutAttributesXml, true);
             if (scWarnings.Any())
                 return RedirectToRoute("ShoppingCart");
@@ -151,7 +153,7 @@ namespace Grand.Web.Controllers
             foreach (ShoppingCartItem sci in cart)
             {
                 var product = productService.GetProductById(sci.ProductId);
-                var sciWarnings = _shoppingCartService.GetShoppingCartItemWarnings(_workContext.CurrentCustomer,
+                var sciWarnings = _shoppingCartService.GetShoppingCartItemWarnings(customer,
                     sci.ShoppingCartType,
                     product,
                     sci.StoreId,

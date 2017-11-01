@@ -140,6 +140,7 @@ namespace Grand.Web.Services
             var currentStoreId = _storeContext.CurrentStore.Id;
             var currentLanguageId = _workContext.WorkingLanguage;
             int pictureSize = productThumbPictureSize.HasValue ? productThumbPictureSize.Value : _mediaSettings.ProductThumbPictureSize;
+            var connectionSecured = _webHelper.IsCurrentConnectionSecured();
 
             var res = new Dictionary<string, string>
             {
@@ -391,7 +392,7 @@ namespace Grand.Web.Services
                 {
                     #region Prepare product picture
                     //prepare picture model
-                    var defaultProductPictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DEFAULTPICTURE_MODEL_KEY, product.Id, pictureSize, true, currentLanguageId, _webHelper.IsCurrentConnectionSecured(), currentStoreId);
+                    var defaultProductPictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DEFAULTPICTURE_MODEL_KEY, product.Id, pictureSize, true, currentLanguageId, connectionSecured, currentStoreId);
                     model.DefaultPictureModel = _cacheManager.Get(defaultProductPictureCacheKey, () =>
                     {
                         var picture = product.ProductPictures.OrderBy(x=>x.DisplayOrder).FirstOrDefault();

@@ -267,17 +267,17 @@ namespace Grand.Web.Services
             model.Id = forumTopic.Id;
             model.Subject = forumTopic.Subject;
             model.SeName = forumTopic.GetSeName();
-
-            model.IsCustomerAllowedToEditTopic = _forumService.IsCustomerAllowedToEditTopic(_workContext.CurrentCustomer, forumTopic);
-            model.IsCustomerAllowedToDeleteTopic = _forumService.IsCustomerAllowedToDeleteTopic(_workContext.CurrentCustomer, forumTopic);
-            model.IsCustomerAllowedToMoveTopic = _forumService.IsCustomerAllowedToMoveTopic(_workContext.CurrentCustomer, forumTopic);
-            model.IsCustomerAllowedToSubscribe = _forumService.IsCustomerAllowedToSubscribe(_workContext.CurrentCustomer);
+            var currentcustomer = _workContext.CurrentCustomer;
+            model.IsCustomerAllowedToEditTopic = _forumService.IsCustomerAllowedToEditTopic(currentcustomer, forumTopic);
+            model.IsCustomerAllowedToDeleteTopic = _forumService.IsCustomerAllowedToDeleteTopic(currentcustomer, forumTopic);
+            model.IsCustomerAllowedToMoveTopic = _forumService.IsCustomerAllowedToMoveTopic(currentcustomer, forumTopic);
+            model.IsCustomerAllowedToSubscribe = _forumService.IsCustomerAllowedToSubscribe(currentcustomer);
 
             if (model.IsCustomerAllowedToSubscribe)
             {
                 model.WatchTopicText = _localizationService.GetResource("Forum.WatchTopic");
 
-                var forumTopicSubscription = _forumService.GetAllSubscriptions(_workContext.CurrentCustomer.Id,
+                var forumTopicSubscription = _forumService.GetAllSubscriptions(currentcustomer.Id,
                     "", forumTopic.Id, 0, 1).FirstOrDefault();
                 if (forumTopicSubscription != null)
                 {
@@ -296,8 +296,8 @@ namespace Grand.Web.Services
                     ForumTopicId = post.TopicId,
                     ForumTopicSeName = forumTopic.GetSeName(),
                     FormattedText = post.FormatPostText(),
-                    IsCurrentCustomerAllowedToEditPost = _forumService.IsCustomerAllowedToEditPost(_workContext.CurrentCustomer, post),
-                    IsCurrentCustomerAllowedToDeletePost = _forumService.IsCustomerAllowedToDeletePost(_workContext.CurrentCustomer, post),
+                    IsCurrentCustomerAllowedToEditPost = _forumService.IsCustomerAllowedToEditPost(currentcustomer, post),
+                    IsCurrentCustomerAllowedToDeletePost = _forumService.IsCustomerAllowedToDeletePost(currentcustomer, post),
                     CustomerId = post.CustomerId,
                     AllowViewingProfiles = _customerSettings.AllowViewingProfiles,
                     CustomerName = customer.FormatUserName(),
