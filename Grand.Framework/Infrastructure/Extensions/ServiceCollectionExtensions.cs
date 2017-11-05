@@ -240,9 +240,6 @@ namespace Grand.Framework.Infrastructure.Extensions
             //add custom model binder provider (to the top of the provider list)
             mvcBuilder.AddMvcOptions(options => options.ModelBinderProviders.Insert(0, new GrandModelBinderProvider()));
 
-            //add global exception filter
-            mvcBuilder.AddMvcOptions(options => options.Filters.Add(new ExceptionFilter()));
-
             //add fluent validation
             mvcBuilder.AddFluentValidation(configuration => configuration.ValidatorFactoryType = typeof(GrandValidatorFactory));
 

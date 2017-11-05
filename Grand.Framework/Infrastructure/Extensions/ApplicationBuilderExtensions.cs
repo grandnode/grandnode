@@ -19,6 +19,7 @@ using Grand.Service.Authentication;
 using Grand.Core.Caching;
 using Microsoft.Extensions.Caching.Memory;
 using Grand.Services.Logging;
+using System.Threading.Tasks;
 
 namespace Grand.Framework.Infrastructure.Extensions
 {
@@ -42,9 +43,9 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseGrandExceptionHandler(this IApplicationBuilder application)
         {
-            var nopConfig = EngineContext.Current.Resolve<GrandConfig>();
+            var grandConfig = EngineContext.Current.Resolve<GrandConfig>();
             var hostingEnvironment = EngineContext.Current.Resolve<IHostingEnvironment>();
-            bool useDetailedExceptionPage = nopConfig.DisplayFullErrorStack || hostingEnvironment.IsDevelopment();
+            bool useDetailedExceptionPage = grandConfig.DisplayFullErrorStack || hostingEnvironment.IsDevelopment();
             if (useDetailedExceptionPage)
             {
                 //get detailed exceptions for developing and testing purposes
@@ -55,6 +56,35 @@ namespace Grand.Framework.Infrastructure.Extensions
                 //or use special exception handler
                 application.UseExceptionHandler("/errorpage.htm");
             }
+
+            //log errors
+            application.UseExceptionHandler(handler =>
+            {
+                handler.Run(context =>
+                {
+                    var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
+                    if (exception == null)
+                        return Task.CompletedTask;
+
+                    try
+                    {
+                        //check whether database is installed
+                        if (DataSettingsHelper.DatabaseIsInstalled())
+                        {
+                            //get current customer
+                            var currentCustomer = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer;
+
+                            //log error
+                            EngineContext.Current.Resolve<ILogger>().Error(exception.Message, exception, currentCustomer);
+                        }
+                    }
+                    finally
+                    {
+                        //rethrow the exception to show the error page
+                        throw exception;
+                    }
+                });
+            });
         }
 
         /// <summary>
@@ -110,17 +140,19 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseBadRequestResult(this IApplicationBuilder application)
         {
-            #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-            application.UseStatusCodePages(async context =>
-            #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+            application.UseStatusCodePages(context =>
             {
+                //handle 404 (Bad request)
                 if (context.HttpContext.Response.StatusCode == StatusCodes.Status400BadRequest)
                 {
                     var logger = EngineContext.Current.Resolve<ILogger>();
                     var workContext = EngineContext.Current.Resolve<IWorkContext>();
                     logger.Error("Error 400. Bad request", null, customer: workContext.CurrentCustomer);
                 }
+
+                return Task.CompletedTask;
             });
+
         }
 
         /// <summary>
