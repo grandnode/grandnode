@@ -1029,7 +1029,7 @@ namespace Grand.Services.Shipping
                         if (String.IsNullOrEmpty(so.ShippingRateComputationMethodSystemName))
                             so.ShippingRateComputationMethodSystemName = srcm.PluginDescriptor.SystemName;
                         if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                            so.Rate = RoundingHelper.RoundPrice(so.Rate);
+                            so.Rate = RoundingHelper.RoundPrice(so.Rate, EngineContext.Current.Resolve<IWorkContext>().WorkingCurrency);
                         result.ShippingOptions.Add(so);
                     }
                 }

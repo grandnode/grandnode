@@ -186,7 +186,7 @@ namespace Grand.Services.Orders
                 shippingDiscountAmount = decimal.Zero;
 
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                shippingDiscountAmount = RoundingHelper.RoundPrice(shippingDiscountAmount);
+                shippingDiscountAmount = RoundingHelper.RoundPrice(shippingDiscountAmount, _workContext.WorkingCurrency);
 
             return shippingDiscountAmount;
         }
@@ -229,7 +229,7 @@ namespace Grand.Services.Orders
                 discountAmount = decimal.Zero;
 
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                discountAmount = RoundingHelper.RoundPrice(discountAmount);
+                discountAmount = RoundingHelper.RoundPrice(discountAmount, _workContext.WorkingCurrency);
 
             return discountAmount;
         }
@@ -284,6 +284,7 @@ namespace Grand.Services.Orders
 
             //get the customer 
             Customer customer = cart.GetCustomer();
+            var currency = _workContext.WorkingCurrency;
 
             //sub totals
             decimal subTotalExclTaxWithoutDiscount = decimal.Zero;
@@ -352,7 +353,7 @@ namespace Grand.Services.Orders
                 subTotalWithoutDiscount = decimal.Zero;
 
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                subTotalWithoutDiscount = RoundingHelper.RoundPrice(subTotalWithoutDiscount);
+                subTotalWithoutDiscount = RoundingHelper.RoundPrice(subTotalWithoutDiscount, currency);
 
             //We calculate discount amount on order subtotal excl tax (discount first)
             //calculate discount amount ('Applied to order subtotal' discount)
@@ -380,7 +381,7 @@ namespace Grand.Services.Orders
                         discountAmountInclTax += discountTax;
                         taxValue = taxRates[taxRate] - discountTax;
                         if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                            taxValue = RoundingHelper.RoundPrice(taxValue);
+                            taxValue = RoundingHelper.RoundPrice(taxValue, currency);
                         taxRates[taxRate] = taxValue;
                     }
 
@@ -391,8 +392,8 @@ namespace Grand.Services.Orders
 
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
             {
-                discountAmountInclTax = RoundingHelper.RoundPrice(discountAmountInclTax);
-                discountAmountExclTax = RoundingHelper.RoundPrice(discountAmountExclTax);
+                discountAmountInclTax = RoundingHelper.RoundPrice(discountAmountInclTax, currency);
+                discountAmountExclTax = RoundingHelper.RoundPrice(discountAmountExclTax, currency);
             }
 
             if (includingTax)
@@ -410,7 +411,7 @@ namespace Grand.Services.Orders
                 subTotalWithDiscount = decimal.Zero;
 
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                subTotalWithDiscount = RoundingHelper.RoundPrice(subTotalWithDiscount);
+                subTotalWithDiscount = RoundingHelper.RoundPrice(subTotalWithDiscount, currency);
         }
 
 
@@ -521,7 +522,7 @@ namespace Grand.Services.Orders
                 adjustedRate = decimal.Zero;
 
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                adjustedRate = RoundingHelper.RoundPrice(adjustedRate);
+                adjustedRate = RoundingHelper.RoundPrice(adjustedRate, _workContext.WorkingCurrency);
 
             return adjustedRate;
         }
@@ -579,6 +580,7 @@ namespace Grand.Services.Orders
             taxRate = decimal.Zero;
 
             var customer = cart.GetCustomer();
+            var currency = _workContext.WorkingCurrency;
 
             bool isFreeShipping = IsFreeShipping(cart);
             if (isFreeShipping)
@@ -642,7 +644,7 @@ namespace Grand.Services.Orders
 
                 //round
                 if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                    shippingTotal = RoundingHelper.RoundPrice(shippingTotal.Value);
+                    shippingTotal = RoundingHelper.RoundPrice(shippingTotal.Value, currency);
 
                 shippingTotalTaxed = _taxService.GetShippingPrice(shippingTotal.Value,
                     includingTax,
@@ -651,7 +653,7 @@ namespace Grand.Services.Orders
 
                 //round
                 if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                    shippingTotalTaxed = RoundingHelper.RoundPrice(shippingTotalTaxed.Value);
+                    shippingTotalTaxed = RoundingHelper.RoundPrice(shippingTotalTaxed.Value, currency);
             }
 
             return shippingTotalTaxed;
@@ -783,7 +785,7 @@ namespace Grand.Services.Orders
                 taxTotal = decimal.Zero;
             //round tax
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                taxTotal = RoundingHelper.RoundPrice(taxTotal);
+                taxTotal = RoundingHelper.RoundPrice(taxTotal, _workContext.WorkingCurrency);
             return taxTotal;
         }
 
@@ -829,6 +831,8 @@ namespace Grand.Services.Orders
             redeemedRewardPointsAmount = decimal.Zero;
 
             var customer = cart.GetCustomer();
+            var currency = _workContext.WorkingCurrency;
+
             string paymentMethodSystemName = "";
             if (customer != null)
             {
@@ -871,7 +875,7 @@ namespace Grand.Services.Orders
             resultTemp += paymentMethodAdditionalFeeWithoutTax;
             resultTemp += shoppingCartTax;
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                resultTemp = RoundingHelper.RoundPrice(resultTemp);
+                resultTemp = RoundingHelper.RoundPrice(resultTemp, currency);
 
             #region Order total discount
 
@@ -887,7 +891,7 @@ namespace Grand.Services.Orders
             if (resultTemp < decimal.Zero)
                 resultTemp = decimal.Zero;
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                resultTemp = RoundingHelper.RoundPrice(resultTemp);
+                resultTemp = RoundingHelper.RoundPrice(resultTemp, currency);
 
             #endregion
 
@@ -925,7 +929,7 @@ namespace Grand.Services.Orders
             if (resultTemp < decimal.Zero)
                 resultTemp = decimal.Zero;
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                resultTemp = RoundingHelper.RoundPrice(resultTemp);
+                resultTemp = RoundingHelper.RoundPrice(resultTemp, currency);
 
             if (!shoppingCartShipping.HasValue)
             {
@@ -969,7 +973,7 @@ namespace Grand.Services.Orders
 
             orderTotal = orderTotal - redeemedRewardPointsAmount;
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                orderTotal = RoundingHelper.RoundPrice(orderTotal);
+                orderTotal = RoundingHelper.RoundPrice(orderTotal, currency);
             return orderTotal;
         }
 
@@ -985,7 +989,7 @@ namespace Grand.Services.Orders
 
             var result = rewardPoints * _rewardPointsSettings.ExchangeRate;
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                result = RoundingHelper.RoundPrice(result);
+                result = RoundingHelper.RoundPrice(result, _workContext.WorkingCurrency);
             return result;
         }
 

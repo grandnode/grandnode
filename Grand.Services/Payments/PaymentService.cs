@@ -324,7 +324,7 @@ namespace Grand.Services.Payments
                 result = decimal.Zero;
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
             {
-                result = RoundingHelper.RoundPrice(result);
+                result = RoundingHelper.RoundPrice(result, Grand.Core.Infrastructure.EngineContext.Current.Resolve<IWorkContext>().WorkingCurrency);
             }
             return result;
         }

@@ -680,7 +680,7 @@ namespace Grand.Services.Catalog
 
             //rounding
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                finalPrice = RoundingHelper.RoundPrice(finalPrice);
+                finalPrice = RoundingHelper.RoundPrice(finalPrice, _workContext.WorkingCurrency);
 
             return finalPrice;
         }

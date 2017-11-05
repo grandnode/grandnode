@@ -387,7 +387,7 @@ namespace Grand.Plugin.Feed.GoogleShopping
                             finalPriceBase = product.Price;
                         }
                         decimal price = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, currency);
-                        price = RoundingHelper.RoundPrice(price);
+                        price = RoundingHelper.RoundPrice(price, _workContext.WorkingCurrency);
                         writer.WriteElementString("g", "price", googleBaseNamespace,
                                                   price.ToString(new CultureInfo("en-US", false).NumberFormat) + " " +
                                                   currency.CurrencyCode);
