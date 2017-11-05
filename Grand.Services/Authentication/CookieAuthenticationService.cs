@@ -6,6 +6,7 @@ using Grand.Core.Domain.Customers;
 using Grand.Services.Customers;
 using Grand.Services.Authentication;
 using Microsoft.AspNetCore.Authentication;
+using System.Collections.Generic;
 
 namespace Grand.Service.Authentication
 {
@@ -48,11 +49,12 @@ namespace Grand.Service.Authentication
                 return;
 
             //create claims for username and email of the customer
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.Name, customer.Username, ClaimValueTypes.String, GrandCookieAuthenticationDefaults.ClaimsIssuer),
-                new Claim(ClaimTypes.Email, customer.Email, ClaimValueTypes.Email, GrandCookieAuthenticationDefaults.ClaimsIssuer)
-            };
+            var claims = new List<Claim>();
+            if (!string.IsNullOrEmpty(customer.Username))
+                claims.Add(new Claim(ClaimTypes.Name, customer.Username, ClaimValueTypes.String, GrandCookieAuthenticationDefaults.ClaimsIssuer));
+
+            if (!string.IsNullOrEmpty(customer.Email))
+                claims.Add(new Claim(ClaimTypes.Email, customer.Email, ClaimValueTypes.Email, GrandCookieAuthenticationDefaults.ClaimsIssuer));
 
             //create principal for the current authentication scheme
             var userIdentity = new ClaimsIdentity(claims, GrandCookieAuthenticationDefaults.AuthenticationScheme);
