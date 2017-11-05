@@ -1,12 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Grand.Framework.Mvc.Filters;
-using Grand.Framework.Extensions;
 using System;
 using System.Linq;
-
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Polls;
 using Grand.Core.Domain.Polls;
@@ -14,10 +9,8 @@ using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Polls;
 using Grand.Services.Security;
-using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
-using MongoDB.Bson;
 using Grand.Core.Domain.Localization;
 using System.Collections.Generic;
 using Grand.Services.Stores;

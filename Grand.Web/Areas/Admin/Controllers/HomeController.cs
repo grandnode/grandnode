@@ -1,15 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Grand.Framework.Mvc.Filters;
-using Grand.Framework.Extensions;
 using System;
-using System.Net;
-//using System.ServiceModel.Syndication;
-
-using System.Xml;
-using Grand.Web.Areas.Admin.Infrastructure.Cache;
 using Grand.Web.Areas.Admin.Models.Home;
 using Grand.Core;
 using Grand.Core.Caching;
@@ -18,11 +8,9 @@ using Grand.Services.Configuration;
 using Grand.Services.Orders;
 using Grand.Services.Customers;
 using MongoDB.Bson;
-using MongoDB.Driver;
 using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Orders;
-using System.Threading.Tasks;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Seo;
 using System.Collections.Generic;
