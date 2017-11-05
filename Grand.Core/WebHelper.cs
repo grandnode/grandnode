@@ -12,6 +12,7 @@ using Grand.Core.Configuration;
 using Microsoft.Net.Http.Headers;
 using System.Net;
 using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace Grand.Core
 {
@@ -503,7 +504,10 @@ namespace Grand.Core
         /// </summary>
         public virtual void RestartAppDomain()
         {
-            _applicationLifetime.StopApplication();
+            if(OperatingSystem.IsWindows())
+                File.SetLastWriteTimeUtc(CommonHelper.MapPath("~/web.config"), DateTime.UtcNow);
+            else
+                _applicationLifetime.StopApplication();
         }
 
         /// <summary>
