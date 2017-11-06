@@ -492,6 +492,13 @@ namespace Grand.Services.Forums
             //delete topic
             _forumTopicRepository.Delete(forumTopic);
 
+            //delete posts
+            var queryPosts = _forumPostRepository.Table.Where(x => x.TopicId == forumTopic.Id).ToList();
+            foreach (var post in queryPosts)
+            {
+                _forumPostRepository.Delete(post);
+            }
+
             //delete forum subscriptions
             var queryFs = from ft in _forumSubscriptionRepository.Table
                           where ft.TopicId == forumTopic.Id
