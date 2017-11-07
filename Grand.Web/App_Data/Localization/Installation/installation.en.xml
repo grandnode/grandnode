@@ -134,4 +134,7 @@
   <LocaleResource Name="WindowsAuthentication">
     <Value>Use integrated Windows authentication</Value>
   </LocaleResource>
+  <LocaleResource Name="Installed">
+    <Value>Application has been installed successfully, please restart application.</Value>
+  </LocaleResource>
 </Language>

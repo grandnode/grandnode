@@ -202,16 +202,21 @@ namespace Grand.Web.Controllers
                     permissionProviders.Add(typeof(StandardPermissionProvider));
                     foreach (var providerType in permissionProviders)
                     {
-                        dynamic provider = Activator.CreateInstance(providerType);
+                        var provider = (IPermissionProvider)Activator.CreateInstance(providerType);
                         EngineContext.Current.Resolve<IPermissionService>().InstallPermissions(provider);
                     }
 
-
                     //restart application
-                    webHelper.RestartAppDomain();
-
-                    //Redirect to home page
-                    return RedirectToRoute("HomePage");
+                    if (Core.OperatingSystem.IsWindows())
+                    {
+                        webHelper.RestartAppDomain();
+                        //Redirect to home page
+                        return RedirectToRoute("HomePage");
+                    }
+                    else
+                    {
+                        return View(new InstallModel() { Installed = true });
+                    }
 
                 }
                 catch (Exception exception)

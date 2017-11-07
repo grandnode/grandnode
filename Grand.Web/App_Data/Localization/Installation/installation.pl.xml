@@ -137,4 +137,7 @@
   <LocaleResource Name="WindowsAuthentication">
     <Value>Użyj zintegrowane uwierzytelniania Windows</Value>
   </LocaleResource>
+    <LocaleResource Name="Installed">
+    <Value>Aplikacja została zainstalowana, proszę ponownie uruchomić usługę.</Value>
+  </LocaleResource>
 </Language>
