@@ -46,11 +46,12 @@ namespace Grand.Services.Catalog
                 case RoundingType.Rounding005Up:
                 case RoundingType.Rounding005Down:
                     fractionPart = (fractionPart - Math.Truncate(fractionPart)) * 10;
-
+                    if (fractionPart == 5 || fractionPart == 0)
+                        break;
                     if (roundingType == RoundingType.Rounding005Down)
-                        fractionPart = fractionPart >= 5 ? 5 - fractionPart : fractionPart * -1;
+                        fractionPart = fractionPart > 5 ? 5 - fractionPart : fractionPart * -1;
                     else
-                        fractionPart = fractionPart >= 5 ? 10 - fractionPart : 5 - fractionPart;
+                        fractionPart = fractionPart > 5 ? 10 - fractionPart : 5 - fractionPart;
 
                     rez += fractionPart / 100;
                     break;
@@ -58,6 +59,8 @@ namespace Grand.Services.Catalog
                 case RoundingType.Rounding01Up:
                 case RoundingType.Rounding01Down:
                     fractionPart = (fractionPart - Math.Truncate(fractionPart)) * 10;
+                    if (fractionPart == 0)
+                        break;
 
                     if (roundingType == RoundingType.Rounding01Down && fractionPart == 5)
                         fractionPart = -5;
