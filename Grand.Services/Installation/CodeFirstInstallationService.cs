@@ -4906,6 +4906,7 @@ namespace Grand.Services.Installation
                 RenderXuaCompatible = false,
                 XuaCompatibleValue = "IE=edge",
                 DeleteGuestTaskOlderThanMinutes = 1440,
+                PopupForTermsOfServiceLinks = true
             });
             _settingService.SaveSetting(new SecuritySettings
             {

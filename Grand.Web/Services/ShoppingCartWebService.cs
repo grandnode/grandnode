@@ -29,10 +29,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Routing;
 using Grand.Core.Http;
 
 namespace Grand.Web.Services
@@ -76,7 +74,7 @@ namespace Grand.Web.Services
         private readonly ShippingSettings _shippingSettings;
         private readonly TaxSettings _taxSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
-
+        private readonly CommonSettings _commonSettings;
 
         public ShoppingCartWebService(
             ICacheManager cacheManager,
@@ -114,7 +112,8 @@ namespace Grand.Web.Services
             CatalogSettings catalogSettings,
             ShippingSettings shippingSettings,
             TaxSettings taxSettings,
-            RewardPointsSettings rewardPointsSettings)
+            RewardPointsSettings rewardPointsSettings,
+            CommonSettings commonSettings)
         {
             this._cacheManager = cacheManager;
             this._workContext = workContext;
@@ -153,6 +152,7 @@ namespace Grand.Web.Services
             this._shippingSettings = shippingSettings;
             this._taxSettings = taxSettings;
             this._rewardPointsSettings = rewardPointsSettings;
+            this._commonSettings = commonSettings;
         }
 
         public virtual PictureModel PrepareCartItemPicture(Product product, string attributesXml,
@@ -195,6 +195,7 @@ namespace Grand.Web.Services
             #region Simple properties
 
             model.IsEditable = isEditable;
+            model.TermsOfServicePopup = _commonSettings.PopupForTermsOfServiceLinks;
             model.ShowProductImages = _shoppingCartSettings.ShowProductImagesOnShoppingCart;
             model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
             var checkoutAttributesXml = customer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);

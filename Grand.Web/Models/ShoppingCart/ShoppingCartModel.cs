@@ -28,6 +28,7 @@ namespace Grand.Web.Models.ShoppingCart
         public bool ShowSku { get; set; }
         public bool ShowProductImages { get; set; }
         public bool IsEditable { get; set; }
+        public bool TermsOfServicePopup { get; set; }
         public IList<ShoppingCartItemModel> Items { get; set; }
 
         public string CheckoutAttributeInfo { get; set; }

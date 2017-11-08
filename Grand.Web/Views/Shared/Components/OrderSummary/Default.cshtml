@@ -295,14 +295,21 @@
                             <input class="custom-control-input" id="termsofservice" type="checkbox" name="termsofservice" />
                             <span class="sr-only">checkbox</span>
                             <span class="custom-control-indicator"></span>
-                            <span>@T("Checkout.TermsOfService.IAccept")<a class="custom-control-description read pl-1 font-weight-bold" onclick="javascript:OpenWindow('@Url.RouteUrl("TopicPopup", new { SystemName = "conditionsofuse" })', 450, 500, true)">@T("Checkout.TermsOfService.Read")</a></span>
+                            @if (Model.TermsOfServicePopup)
+                            {
+                                <span>@T("Checkout.TermsOfService.IAccept")<a class="custom-control-description read pl-1 font-weight-bold" onclick="javascript:OpenWindow('@Url.RouteUrl("TopicPopup", new { SystemName = "conditionsofuse" })', 450, 500, true)">@T("Checkout.TermsOfService.Read")</a></span>
+                            }
+                            else
+                            {
+                                <span>@T("Checkout.TermsOfService.IAccept")<a class="custom-control-description read pl-1 font-weight-bold" href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("conditionsofuse") })">@T("Checkout.TermsOfService.Read")</a></span>
+                            }
                         </label>
                     </div>
-                    <div class="modal fade" id="grandModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+                    <div class="modal fade" id="ModalConditionsOfUse" tabindex="-1" role="dialog" aria-labelledby="ModalLabel">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">@T("Checkout.TermsOfService")</h5>
+                                    <h5 class="modal-title" id="ModalLabel">@T("Checkout.TermsOfService")</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span>&times;</span>
                                     </button>
@@ -325,7 +332,7 @@
                                             if ($('#termsofservice').length > 0) {
                                                 //terms of service element exists
                                                 if (!$('#termsofservice').is(':checked')) {
-                                                    $("#grandModal").modal('show');
+                                                    $("#ModalConditionsOfUse").modal('show');
                                                     termOfServiceOk = false;
                                                 } else {
                                                     termOfServiceOk = true;
