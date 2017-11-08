@@ -313,17 +313,16 @@ namespace Grand.Services.Seo
                 Indent = true,
                 IndentChars = "\t",
                 NewLineChars = "\r\n",
-                Encoding = Encoding.UTF8
+                Encoding = Encoding.UTF8,
             };
 
             using (var writer = XmlWriter.Create(stream, xwSettings))
             {
-                //writer.Formatting = Formatting.Indented;
                 writer.WriteStartDocument();
                 writer.WriteStartElement("urlset");
-                writer.WriteAttributeString("xmlns", "http://www.sitemaps.org/schemas/sitemap/0.9");
-                writer.WriteAttributeString("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-                writer.WriteAttributeString("xsi:schemaLocation", "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd");
+                writer.WriteAttributeString("urlset", "xmlns", null, "http://www.sitemaps.org/schemas/sitemap/0.9");
+                writer.WriteAttributeString("xmlns", "xsi", null, "http://www.w3.org/2001/XMLSchema-instance");
+                writer.WriteAttributeString("xsi", "schemaLocation", null ,"http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd");
 
                 //write URLs from list to the sitemap
                 foreach (var url in sitemapUrls)
