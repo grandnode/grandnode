@@ -47,6 +47,7 @@ namespace Grand.Services.Customers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ICacheManager _cacheManager;
         private readonly IPopupService _popupService;
+        private readonly IStoreContext _storeContext;
 
         #endregion
 
@@ -72,7 +73,8 @@ namespace Grand.Services.Customers
             ICustomerTagService customerTagService,
             IHttpContextAccessor httpContextAccessor,
             ICacheManager cacheManager,
-            IPopupService popupService)
+            IPopupService popupService,
+            IStoreContext storeContext)
         {
             this._customerActionRepository = customerActionRepository;
             this._customerActionTypeRepository = customerActionTypeRepository;
@@ -95,6 +97,7 @@ namespace Grand.Services.Customers
             this._httpContextAccessor = httpContextAccessor;
             this._cacheManager = cacheManager;
             this._popupService = popupService;
+            this._storeContext = storeContext;
         }
 
         #endregion
@@ -267,6 +270,11 @@ namespace Grand.Services.Customers
                     cond = item.UrlReferrer.Select(x => x.Name).Contains(previousUrl);
                 }
 
+                if(item.CustomerActionConditionType == CustomerActionConditionTypeEnum.Store)
+                {
+                    cond = ConditionStores(item, _storeContext.CurrentStore.Id);
+                }
+
                 if (action.Condition == CustomerActionConditionEnum.OneOfThem && cond)
                     return true;
                 if (action.Condition == CustomerActionConditionEnum.AllOfThem && !cond)
@@ -341,6 +349,12 @@ namespace Grand.Services.Customers
         {
             return condition.Products.Contains(productId);
         }
+
+        protected bool ConditionStores(CustomerAction.ActionCondition condition, string storeId)
+        {
+            return condition.Stores.Contains(storeId);
+        }
+
 
         protected bool ConditionProducts(CustomerAction.ActionCondition condition, ICollection<string> products)
         {

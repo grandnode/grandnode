@@ -110,6 +110,16 @@ namespace Grand.Web.Areas.Admin.Models.Customers
             public string CustomerRoleId { get; set; }
             public string Id { get; set; }
         }
+
+        public partial class AddStoreConditionModel
+        {
+            public string CustomerActionId { get; set; }
+            public string ConditionId { get; set; }
+
+            public string StoreId { get; set; }
+            public string Id { get; set; }
+        }
+
         public partial class AddCustomerTagConditionModel
         {
             public string CustomerActionId { get; set; }

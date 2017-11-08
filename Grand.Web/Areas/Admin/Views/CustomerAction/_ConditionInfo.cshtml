@@ -114,6 +114,22 @@
                 $('#tab-urlReferrer').hide();
                 $('#tab-urlCurrent').hide();
             }
+            else if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerActionConditionTypeEnum.Store).ToString()))
+            {
+                $('#tab-product').hide();
+                $('#tab-manufacturer').hide();
+                $('#tab-category').hide();
+                $('#tab-vendor').hide();
+                $('#tab-productAttribute').hide();
+                $('#tab-productSpecification').hide();
+                $('#tab-customerRole').hide();
+                $('#tab-customerTag').hide();
+                $('#tab-customerRegister').hide();
+                $('#tab-customAttribute').hide();
+                $('#tab-urlReferrer').hide();
+                $('#tab-urlCurrent').hide();
+                $('#tab-store').show();
+            }
             else if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerActionConditionTypeEnum.CustomerTag).ToString()))
             {
                 $('#tab-product').hide();

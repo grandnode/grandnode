@@ -83,6 +83,7 @@ namespace Grand.Core.Domain.Customers
             private ICollection<string> _vendors;
             private ICollection<string> _customerRoles;
             private ICollection<string> _customerTags;
+            private ICollection<string> _stores;
             private ICollection<ProductAttributeValue> _productAttribute;
             private ICollection<ProductSpecification> _productSpecification;
             private ICollection<CustomerRegister> _customerRegister;
@@ -141,6 +142,11 @@ namespace Grand.Core.Domain.Customers
             {
                 get { return _customerTags ?? (_customerTags = new List<string>()); }
                 protected set { _customerTags = value; }
+            }
+            public virtual ICollection<string> Stores
+            {
+                get { return _stores ?? (_stores = new List<string>()); }
+                protected set { _stores = value; }
             }
             public virtual ICollection<ProductAttributeValue> ProductAttribute
             {

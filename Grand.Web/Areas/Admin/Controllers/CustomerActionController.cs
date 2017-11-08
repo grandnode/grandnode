@@ -583,6 +583,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 condition.UrlReferrer.Remove(condition.UrlReferrer.FirstOrDefault(x => x.Id == id));
                 _customerActionService.UpdateCustomerAction(customerActions);
             }
+            if (condition.CustomerActionConditionTypeId == (int)CustomerActionConditionTypeEnum.Store)
+            {
+                condition.Stores.Remove(id);
+                _customerActionService.UpdateCustomerAction(customerActions);
+            }
 
 
             return new NullJsonResult();
@@ -974,6 +979,59 @@ namespace Grand.Web.Areas.Admin.Controllers
             var customerRole = _customerService.GetAllCustomerRoles().Select(x => new { Id = x.Id, Name = x.Name });
             return Json(customerRole);
         }
+
+        #endregion
+
+        #region Stores
+
+        [HttpGet]
+        public IActionResult Stores()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
+                return AccessDeniedView();
+            var stores = _storeService.GetAllStores().Select(x => new { Id = x.Id, Name = x.Name });
+            return Json(stores);
+        }
+
+        [HttpPost]
+        public IActionResult ConditionStore(string customerActionId, string conditionId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
+                return AccessDeniedView();
+
+            var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
+            var condition = customerActions.Conditions.FirstOrDefault(x => x.Id == conditionId);
+
+            var gridModel = new DataSourceResult
+            {
+                Data = condition != null ? condition.Stores.Select(z => new { Id = z, Store = _storeService.GetStoreById(z) != null ? _storeService.GetStoreById(z).Name : "" }) : null,
+                Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
+            };
+            return Json(gridModel);
+        }
+
+        [HttpPost]
+        public IActionResult ConditionStoreInsert(CustomerActionConditionModel.AddStoreConditionModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
+                return AccessDeniedView();
+
+            var customerAction = _customerActionService.GetCustomerActionById(model.CustomerActionId);
+            if (customerAction != null)
+            {
+                var condition = customerAction.Conditions.FirstOrDefault(x => x.Id == model.ConditionId);
+                if (condition != null)
+                {
+                    if (condition.Stores.Where(x => x == model.StoreId).Count() == 0)
+                    {
+                        condition.Stores.Add(model.StoreId);
+                        _customerActionService.UpdateCustomerAction(customerAction);
+                    }
+                }
+            }
+            return new NullJsonResult();
+        }
+
 
         #endregion
 

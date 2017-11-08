@@ -404,4 +404,10 @@
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.Reused.hint">
     <Value>Allow to reused coupon code</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerActionCondition.Fields.StoreName">
+    <Value>Store name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerActionCondition.Store">
+    <Value>Store</Value>
+  </LocaleResource>
 </Language>

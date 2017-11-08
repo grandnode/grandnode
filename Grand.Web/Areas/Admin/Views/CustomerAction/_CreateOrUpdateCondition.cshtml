@@ -56,6 +56,9 @@
         <li @Html.RenderSelectedTabIndex(12, GetSelectedTabIndex()) id="tab-urlCurrent">
             @T("Admin.Customers.CustomerActionCondition.UrlCurrent")
         </li>
+        <li @Html.RenderSelectedTabIndex(13, GetSelectedTabIndex()) id="tab-store">
+            @T("Admin.Customers.CustomerActionCondition.Store")
+        </li>
     </ul>
     <div>
        @Html.Partial("_ConditionInfo", Model)
@@ -95,6 +98,9 @@
     </div>
     <div>
         @Html.Partial("_ConditionUrlCurrent", Model)
+    </div>
+    <div>
+        @Html.Partial("_ConditionStore", Model)
     </div>
 </div>
 

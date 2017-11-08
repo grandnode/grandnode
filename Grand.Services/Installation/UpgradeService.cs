@@ -679,6 +679,16 @@ namespace Grand.Services.Installation
 
             #endregion
 
+            #region CustomerActionType - add store condition
+
+            var _customerActionType = EngineContext.Current.Resolve<IRepository<CustomerActionType>>();
+            foreach (var item in _customerActionType.Table.ToList())
+            {
+                item.ConditionType.Add(13);
+                _customerActionType.Update(item);
+            }
+
+            #endregion
         }
 
         private void InstallStringResources(string filenames)

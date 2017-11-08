@@ -29,7 +29,8 @@ namespace Grand.Core.Domain.Customers
         CustomerRegisterField = 9,
         CustomCustomerAttribute = 10,
         UrlReferrer = 11,
-        UrlCurrent = 12
+        UrlCurrent = 12,
+        Store = 13
     }
 
     public enum CustomerReactionTypeEnum

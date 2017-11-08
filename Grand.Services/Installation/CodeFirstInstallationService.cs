@@ -4298,35 +4298,35 @@ namespace Grand.Services.Installation
                     Name = "Add to cart",
                     SystemKeyword = "AddToCart",
                     Enabled = false,
-                    ConditionType = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }
+                    ConditionType = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13 }
                 },
                 new CustomerActionType()
                 {
                     Name = "Add order",
                     SystemKeyword = "AddOrder",
                     Enabled = false,
-                    ConditionType = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }
+                    ConditionType = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13 }
                 },
                 new CustomerActionType()
                 {
                     Name = "Viewed",
                     SystemKeyword = "Viewed",
                     Enabled = false,
-                    ConditionType = {1, 2, 3, 7, 8, 9, 10}
+                    ConditionType = {1, 2, 3, 7, 8, 9, 10, 13}
                 },
                 new CustomerActionType()
                 {
                     Name = "Url",
                     SystemKeyword = "Url",
                     Enabled = false,
-                    ConditionType = {7, 8, 9, 10, 11, 12}
+                    ConditionType = {7, 8, 9, 10, 11, 12, 13}
                 },
                 new CustomerActionType()
                 {
                     Name = "Customer Registration",
                     SystemKeyword = "Registration",
                     Enabled = false,
-                    ConditionType = {7, 8, 9, 10}
+                    ConditionType = {7, 8, 9, 10, 13}
                 }
             };
             _customerActionType.Insert(customerActionType);
