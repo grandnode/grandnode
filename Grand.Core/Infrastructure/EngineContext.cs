@@ -12,8 +12,7 @@ namespace Grand.Core.Infrastructure
         /// <summary>
         /// Create a static instance of the Grand engine.
         /// </summary>
-        //TO DO - available from 2.0 .net Core
-        [MethodImpl(MethodImplOptions.NoOptimization)] 
+        [MethodImpl(MethodImplOptions.Synchronized)] 
         public static IEngine Create()
         {
             //create NopEngine as engine

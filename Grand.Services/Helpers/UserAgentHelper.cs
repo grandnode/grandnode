@@ -31,7 +31,7 @@ namespace Grand.Services.Helpers
             this._httpContextAccessor = httpContextAccessor;
         }
 
-        [MethodImpl(MethodImplOptions.NoOptimization)]
+        [MethodImpl(MethodImplOptions.Synchronized)]
         protected virtual BrowscapXmlHelper GetBrowscapXmlHelper()
         {
             if (Singleton<BrowscapXmlHelper>.Instance != null)
