@@ -56,7 +56,7 @@
 
 @{
     //resources for product tags input
-    Html.AppendCssFileParts("~/Content/tagEditor/jquery.tag-editor.css");
-    Html.AppendScriptParts("~/Scripts/tagEditor/jquery.tag-editor.min.js");
-    Html.AppendScriptParts("~/Scripts/tagEditor/jquery.caret.min.js");
+    Html.AppendCssFileParts("~/Content/tagEditor/jquery.tag-editor.css", excludeFromBundle: true);
+    Html.AppendScriptParts("~/Scripts/tagEditor/jquery.tag-editor.min.js", excludeFromBundle: true);
+    Html.AppendScriptParts("~/Scripts/tagEditor/jquery.caret.min.js", excludeFromBundle: true);
 }

@@ -823,11 +823,6 @@ namespace Grand.Web.Controllers
             if (paymentMethod == null)
                 return RedirectToRoute("CheckoutPaymentMethod");
 
-            //var paymentControllerType = paymentMethod.GetControllerType();
-            //var paymentController = this.HttpContext.RequestServices.GetService(paymentControllerType) as BasePaymentController;
-            //if (paymentController == null)
-            //    throw new Exception("Payment controller cannot be loaded");
-
             var warnings = paymentMethod.ValidatePaymentForm(form);
             foreach (var warning in warnings)
                 ModelState.AddModelError("", warning);

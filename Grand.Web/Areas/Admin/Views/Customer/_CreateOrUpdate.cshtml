@@ -1,14 +1,11 @@
 ﻿@model CustomerModel
-@using Grand.Core.Domain.Orders;
-@using Grand.Services.Customers;
-@using System.Text;
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 @{
     //resources for product tags input
-    Html.AppendCssFileParts("~/Content/tagEditor/jquery.tag-editor.css");
-    Html.AppendScriptParts("~/Scripts/tagEditor/jquery.tag-editor.min.js");
-    Html.AppendScriptParts("~/Scripts/tagEditor/jquery.caret.min.js");
+    Html.AppendCssFileParts("~/Content/tagEditor/jquery.tag-editor.css", excludeFromBundle: true);
+    Html.AppendScriptParts("~/Scripts/tagEditor/jquery.tag-editor.min.js", excludeFromBundle: true);
+    Html.AppendScriptParts("~/Scripts/tagEditor/jquery.caret.min.js", excludeFromBundle: true);
 }
 <script>
     $(document).ready(function() {
