@@ -28,10 +28,7 @@ namespace Grand.Web.ViewComponents
             if (!_newsSettings.Enabled || !_newsSettings.ShowHeaderRssUrl)
                 return Content("");
 
-            string link = string.Format("<link href=\"{0}\" rel=\"alternate\" type=\"application/rss+xml\" title=\"{1}: News\" />",
-                Url.RouteUrl("NewsRSS", new { languageId = _workContext.WorkingLanguage.Id }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http"), _storeContext.CurrentStore.GetLocalized(x => x.Name));
-
-            return Content(link);
+            return View();
 
         }
     }
