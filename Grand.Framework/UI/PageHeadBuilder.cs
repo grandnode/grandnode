@@ -307,8 +307,8 @@ namespace Grand.Framework.UI
                     string configFilePath = _hostingEnvironment.ContentRootPath + "\\" + outputFileName + ".json";
                     bundle.FileName = configFilePath;
 
-                    var budnleDirectory = Path.Combine(_hostingEnvironment.WebRootPath, "bundles");
-                    var filePaths = Directory.EnumerateFiles(budnleDirectory);
+                    var bundleDirectory = Path.Combine(_hostingEnvironment.WebRootPath, "bundles");
+                    var filePaths = Directory.EnumerateFiles(bundleDirectory);
                     var fileNames = filePaths.Select(x => x.Substring(x.LastIndexOf("\\") + 1));
 
                     if (!fileNames.Contains(outputFileName + ".min.js"))
@@ -321,7 +321,11 @@ namespace Grand.Framework.UI
                     }
 
                     //render
-                    result.AppendFormat("<script src=\"{0}\" type=\"{1}\"></script>", urlHelper.Content("~/bundles/" + outputFileName + ".min.js"), "text/javascript");
+                    if (File.Exists(bundleDirectory + "\\" + outputFileName + ".min.js"))
+                        result.AppendFormat("<script src=\"{0}\" type=\"{1}\"></script>", urlHelper.Content("~/bundles/" + outputFileName + ".min.js"), "text/javascript");
+                    else
+                        result.AppendFormat("<script src=\"{0}\" type=\"{1}\"></script>", urlHelper.Content("~/bundles/" + outputFileName + ".js"), "text/javascript");
+
                     result.Append(Environment.NewLine);
                 }
 
@@ -434,7 +438,6 @@ namespace Grand.Framework.UI
                         {
                             //remove starting /
                             src = src.Remove(0, 1);
-                            srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src.Replace("/", "\\").Replace("\\\\", "\\"));
                             if (File.Exists(srcPath))
                                 item.FilePath = srcPath;
                         }
@@ -470,7 +473,11 @@ namespace Grand.Framework.UI
                         }
                     }
                     //render
-                    result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"{1}\" />", urlHelper.Content("~/bundles/" + outputFileName + ".min.css"), "text/css");
+                    if (File.Exists(bundleDirectory+"\\"+outputFileName + ".min.css"))
+                        result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"{1}\" />", urlHelper.Content("~/bundles/" + outputFileName + ".min.css"), "text/css");
+                    else
+                        result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"{1}\" />", urlHelper.Content("~/bundles/" + outputFileName + ".css"), "text/css");
+
                     result.Append(Environment.NewLine);
                 }
 
