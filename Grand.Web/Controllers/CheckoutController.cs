@@ -1275,8 +1275,7 @@ namespace Grand.Web.Controllers
                 if (_shippingSettings.AllowPickUpInStore)
                 {
                     var model = new CheckoutShippingAddressModel();
-                    TryUpdateModelAsync(model);
-
+                    
                     if (model.PickUpInStore)
                     {
                         //customer decided to pick up in store
@@ -1355,6 +1354,11 @@ namespace Grand.Web.Controllers
                     TryValidateModel(model.NewAddress);
                     if (!ModelState.IsValid)
                     {
+                        var xx = ModelState.Values.SelectMany(v => v.Errors);
+                        foreach (var item in xx)
+                        {
+                            string tt = item.ErrorMessage;
+                        }
                         //model is not valid. redisplay the form with errors
                         var shippingAddressModel = _checkoutWebService.PrepareShippingAddress(selectedCountryId: model.NewAddress.CountryId, overrideAttributesXml: customAttributes);
                         shippingAddressModel.NewAddressPreselected = true;
