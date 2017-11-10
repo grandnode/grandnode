@@ -1,5 +1,3 @@
-using System;
-using System.Xml;
 
 namespace Grand.Core.Configuration
 {

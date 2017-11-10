@@ -15,8 +15,6 @@ using Grand.Framework.Globalization;
 using Grand.Framework.Mvc.Routing;
 using StackExchange.Profiling;
 using StackExchange.Profiling.Storage;
-using Grand.Service.Authentication;
-using Grand.Core.Caching;
 using Microsoft.Extensions.Caching.Memory;
 using Grand.Services.Logging;
 using System.Threading.Tasks;

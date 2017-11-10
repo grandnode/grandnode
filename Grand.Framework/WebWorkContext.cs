@@ -8,7 +8,6 @@ using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Tax;
 using Grand.Core.Domain.Vendors;
-using Grand.Core.Extensions;
 using Grand.Services.Authentication;
 using Grand.Services.Common;
 using Grand.Services.Customers;

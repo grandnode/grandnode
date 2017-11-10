@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-using Grand.Core;
 using System.Text.RegularExpressions;
 using System.Text;
 using Grand.Core.Extensions;
