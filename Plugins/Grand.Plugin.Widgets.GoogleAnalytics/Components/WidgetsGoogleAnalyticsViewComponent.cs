@@ -76,7 +76,7 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Components
                 _logger.InsertLog(Core.Domain.Logging.LogLevel.Error, "Error creating scripts for google ecommerce tracking", ex.ToString());
             }
 
-            return View("~/Plugins/Widgets.GoogleAnalytics/netcoreapp2.0/Views/PublicInfo.cshtml", globalScript);
+            return View("~/Plugins/Widgets.GoogleAnalytics/Views/PublicInfo.cshtml", globalScript);
         }
 
         private Order GetLastOrder()

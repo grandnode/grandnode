@@ -30,7 +30,7 @@ namespace Grand.Plugin.Payments.PayInStore.Controllers
             model.AdditionalFee = _payInStorePaymentSettings.AdditionalFee;
             model.AdditionalFeePercentage = _payInStorePaymentSettings.AdditionalFeePercentage;
 
-            return View("~/Plugins/Payments.PayInStore/netcoreapp2.0/Views/Configure.cshtml", model);
+            return View("~/Plugins/Payments.PayInStore/Views/Configure.cshtml", model);
         }
 
         [HttpPost]

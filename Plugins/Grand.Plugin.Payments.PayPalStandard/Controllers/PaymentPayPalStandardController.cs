@@ -100,7 +100,7 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
                 model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage, storeScope);
             }
 
-            return View("~/Plugins/Payments.PayPalStandard/netcoreapp2.0/Views/PaymentPayPalStandard/Configure.cshtml", model);
+            return View("~/Plugins/Payments.PayPalStandard/Views/PaymentPayPalStandard/Configure.cshtml", model);
         }
 
         [HttpPost]

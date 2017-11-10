@@ -7,7 +7,7 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Components
     {
         public IViewComponentResult Invoke()
         {
-            return View("~/Plugins/ExternalAuth.Facebook/netcoreapp2.0/Views/PublicInfo.cshtml");
+            return View("~/Plugins/ExternalAuth.Facebook/Views/PublicInfo.cshtml");
         }
     }
 }

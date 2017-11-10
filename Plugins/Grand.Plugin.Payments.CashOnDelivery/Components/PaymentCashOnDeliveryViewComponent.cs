@@ -31,7 +31,7 @@ namespace Grand.Plugin.Payments.CashOnDelivery.Components
                 DescriptionText = cashOnDeliveryPaymentSettings.GetLocalizedSetting(x=>x.DescriptionText, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id)
             };
 
-            return View("~/Plugins/Payments.CashOnDelivery/netcoreapp2.0/Views/PaymentCashOnDelivery/PaymentInfo.cshtml", model);
+            return View("~/Plugins/Payments.CashOnDelivery/Views/PaymentCashOnDelivery/PaymentInfo.cshtml", model);
         }
     }
 }

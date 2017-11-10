@@ -40,7 +40,7 @@ namespace Grand.Plugin.Payments.CheckMoneyOrder.Components
                 DescriptionText = checkMoneyOrderPaymentSettings.GetLocalizedSetting(x => x.DescriptionText, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id)
             };
 
-            return View("~/Plugins/Payments.CheckMoneyOrder/netcoreapp2.0/Views/PaymentCheckMoneyOrder/PaymentInfo.cshtml", model);
+            return View("~/Plugins/Payments.CheckMoneyOrder/Views/PaymentCheckMoneyOrder/PaymentInfo.cshtml", model);
         }
     }
 }

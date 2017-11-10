@@ -72,7 +72,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Controllers
                     model.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
             }
 
-            return View("~/Plugins/Tax.CountryStateZip/netcoreapp2.0/Views/TaxCountryStateZip/Configure.cshtml", model);
+            return View("~/Plugins/Tax.CountryStateZip/Views/TaxCountryStateZip/Configure.cshtml", model);
         }
 
         [HttpPost]

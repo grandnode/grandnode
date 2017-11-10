@@ -436,7 +436,7 @@ namespace Grand.Core.Plugins
         {
             if (folder == null) return false;
             if (folder.Parent == null) return false;
-            if (!folder.Parent.Parent.Name.Equals("Plugins", StringComparison.OrdinalIgnoreCase)) return false;
+            if (!folder.Parent.Name.Equals("Plugins", StringComparison.OrdinalIgnoreCase)) return false;
             return true;
         }
 

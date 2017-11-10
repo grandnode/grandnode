@@ -46,7 +46,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Components
                     shippingPointsModel.Add(new SelectListItem() { Value = shippingPoint.Id, Text = shippingPoint.ShippingPointName });
                 }
 
-                return View("~/Plugins/Shipping.ShippingPoint/netcoreapp2.0/Views/FormComboBox.cshtml", shippingPointsModel);
+                return View("~/Plugins/Shipping.ShippingPoint/Views/FormComboBox.cshtml", shippingPointsModel);
             }
             return Content("ShippingPointController: given Shipping Option doesn't exist");
 

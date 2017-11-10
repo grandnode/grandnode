@@ -79,7 +79,7 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Controllers
                 model.IncludingTax_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.IncludingTax, storeScope);
             }
 
-            return View("~/Plugins/Widgets.GoogleAnalytics/netcoreapp2.0/Views/Configure.cshtml", model);
+            return View("~/Plugins/Widgets.GoogleAnalytics/Views/Configure.cshtml", model);
         }
 
         [HttpPost]

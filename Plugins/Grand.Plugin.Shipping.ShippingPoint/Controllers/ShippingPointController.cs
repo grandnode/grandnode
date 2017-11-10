@@ -64,7 +64,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Controllers
 
         public IActionResult Configure()
         {
-            return View("~/Plugins/Shipping.ShippingPoint/netcoreapp2.0/Views/Configure.cshtml");
+            return View("~/Plugins/Shipping.ShippingPoint/Views/Configure.cshtml");
         }
 
         [HttpPost]
@@ -112,7 +112,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Controllers
         public ActionResult Create()
         {
             var model = new ShippingPointModel();
-            return View("~/Plugins/Shipping.ShippingPoint/netcoreapp2.0/Views/Create.cshtml", PrepareShippingPointModel(model));
+            return View("~/Plugins/Shipping.ShippingPoint/Views/Create.cshtml", PrepareShippingPointModel(model));
         }
 
         [HttpPost]
@@ -130,7 +130,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Controllers
 
             PrepareShippingPointModel(model);
 
-            return View("~/Plugins/Shipping.ShippingPoint/netcoreapp2.0/Views/Create.cshtml", model);
+            return View("~/Plugins/Shipping.ShippingPoint/Views/Create.cshtml", model);
         }
 
         public ActionResult Edit(string id)
@@ -138,7 +138,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Controllers
             var shippingPoints = _shippingPointService.GetStoreShippingPointById(id);
             var model = shippingPoints.ToModel();
             PrepareShippingPointModel(model);
-            return View("~/Plugins/Shipping.ShippingPoint/netcoreapp2.0/Views/Edit.cshtml", model);
+            return View("~/Plugins/Shipping.ShippingPoint/Views/Edit.cshtml", model);
         }
 
         [HttpPost]
@@ -156,7 +156,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Controllers
 
             PrepareShippingPointModel(model);
 
-            return View("~/Plugins/Shipping.ShippingPoint/netcoreapp2.0/Views/Edit.cshtml", model);
+            return View("~/Plugins/Shipping.ShippingPoint/Views/Edit.cshtml", model);
         }
 
         [HttpPost]

@@ -78,7 +78,7 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Controllers
                 model.ClientSecret_OverrideForStore = _settingService.SettingExists(settings, setting => setting.ClientSecret, storeScope);
             }
 
-            return View("~/Plugins/ExternalAuth.Facebook/netcoreapp2.0/Views/Configure.cshtml", model);
+            return View("~/Plugins/ExternalAuth.Facebook/Views/Configure.cshtml", model);
         }
 
         [HttpPost]
@@ -159,7 +159,7 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Controllers
         public IActionResult SignInFailed(string error_code, string error_message, string state)
         {
             //handle exception and display message to user
-            return View("~/Plugins/ExternalAuth.Facebook/netcoreapp2.0/Views/SignInFailed.cshtml", error_message);
+            return View("~/Plugins/ExternalAuth.Facebook/Views/SignInFailed.cshtml", error_message);
         }
 
 

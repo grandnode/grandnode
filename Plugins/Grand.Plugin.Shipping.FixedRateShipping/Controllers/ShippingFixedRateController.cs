@@ -31,7 +31,7 @@ namespace Grand.Plugin.Shipping.FixedRateShipping.Controllers
         
         public IActionResult Configure()
         {
-            return View("~/Plugins/Shipping.FixedRateShipping/netcoreapp2.0/Views/ShippingFixedRate/Configure.cshtml");
+            return View("~/Plugins/Shipping.FixedRateShipping/Views/ShippingFixedRate/Configure.cshtml");
         }
 
         [HttpPost]

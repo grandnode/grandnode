@@ -65,7 +65,7 @@ namespace Grand.Plugin.DiscountRequirements.CustomerRoles.Controllers
             //add a prefix
             ViewData.TemplateInfo.HtmlFieldPrefix = string.Format("DiscountRequirementsCustomerRoles{0}", !String.IsNullOrEmpty(discountRequirementId) ? discountRequirementId : "");
 
-            return View("~/Plugins/DiscountRequirements.Standard/netcoreapp2.0/Views/CustomerRoles/Configure.cshtml", model);
+            return View("~/Plugins/DiscountRequirements.Standard/Views/CustomerRoles/Configure.cshtml", model);
         }
 
         [HttpPost]

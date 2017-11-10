@@ -55,7 +55,7 @@ namespace Grand.Plugin.DiscountRequirements.Standard.HadSpentAmount.Controllers
             //add a prefix
             ViewData.TemplateInfo.HtmlFieldPrefix = string.Format("DiscountRequirementsHadSpentAmount{0}-{1}",discount.Id,  !String.IsNullOrEmpty(discountRequirementId) ? discountRequirementId : "");
 
-            return View("~/Plugins/DiscountRequirements.Standard/netcoreapp2.0/Views/HadSpentAmount/Configure.cshtml", model);
+            return View("~/Plugins/DiscountRequirements.Standard/Views/HadSpentAmount/Configure.cshtml", model);
         }
 
         [HttpPost]

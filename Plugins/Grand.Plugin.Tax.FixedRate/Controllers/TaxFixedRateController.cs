@@ -32,7 +32,7 @@ namespace Grand.Plugin.Tax.FixedRate.Controllers
 
         public IActionResult Configure()
         {
-            return View("~/Plugins/Tax.FixedRate/netcoreapp2.0/Views/Configure.cshtml");
+            return View("~/Plugins/Tax.FixedRate/Views/Configure.cshtml");
         }
 
         [HttpPost]

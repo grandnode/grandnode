@@ -100,7 +100,7 @@ namespace Grand.Plugin.Feed.GoogleShopping.Controllers
                     });
             }
 
-            return View("~/Plugins/Feed.GoogleShopping/netcoreapp2.0/Views/FeedGoogleShopping/Configure.cshtml", model);
+            return View("~/Plugins/Feed.GoogleShopping/Views/FeedGoogleShopping/Configure.cshtml", model);
         }
 
         [HttpPost]

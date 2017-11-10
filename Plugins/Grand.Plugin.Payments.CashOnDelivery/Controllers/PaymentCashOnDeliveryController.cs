@@ -64,7 +64,7 @@ namespace Grand.Plugin.Payments.CashOnDelivery.Controllers
                 model.ShippableProductRequired_OverrideForStore = _settingService.SettingExists(cashOnDeliveryPaymentSettings, x => x.ShippableProductRequired, storeScope);
             }
 
-            return View("~/Plugins/Payments.CashOnDelivery/netcoreapp2.0/Views/PaymentCashOnDelivery/Configure.cshtml", model);
+            return View("~/Plugins/Payments.CashOnDelivery/Views/PaymentCashOnDelivery/Configure.cshtml", model);
         }
 
         [HttpPost]
