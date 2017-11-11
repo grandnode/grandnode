@@ -62,6 +62,9 @@ namespace Grand.Plugin.ExternalAuth.Facebook
             this.AddOrUpdatePluginLocaleResource("Plugins.ExternalAuth.Facebook.ClientKeyIdentifier.Hint", "Enter your app ID/API key here. You can find it on your FaceBook application page.");
             this.AddOrUpdatePluginLocaleResource("Plugins.ExternalAuth.Facebook.ClientSecret", "App Secret");
             this.AddOrUpdatePluginLocaleResource("Plugins.ExternalAuth.Facebook.ClientSecret.Hint", "Enter your app secret here. You can find it on your FaceBook application page.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.ExternalAuth.Facebook.Failed", "Facebook - Login error");
+            this.AddOrUpdatePluginLocaleResource("Plugins.ExternalAuth.Facebook.Failed.ErrorCode", "Error code");
+            this.AddOrUpdatePluginLocaleResource("Plugins.ExternalAuth.Facebook.Failed.ErrorMessage", "Error message");
 
             base.Install();
         }

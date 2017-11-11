@@ -45,7 +45,7 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Infrastructure
                         errorCode = WebUtility.UrlEncode(errorCode);
                         errorMessage = WebUtility.UrlEncode(errorMessage);
 
-                        var urlToRedirect = string.Format($"{webHelper.GetStoreLocation()}/signin-failed?error_code={errorCode}&error_message={errorMessage}");
+                        var urlToRedirect = $"{webHelper.GetStoreLocation()}signin-failed?error_code={errorCode}&error_message={errorMessage}";
 
                         ctx.Response.Redirect(urlToRedirect);
                         ctx.HandleResponse();

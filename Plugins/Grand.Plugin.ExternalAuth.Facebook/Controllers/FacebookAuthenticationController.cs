@@ -159,7 +159,12 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Controllers
         public IActionResult SignInFailed(string error_code, string error_message, string state)
         {
             //handle exception and display message to user
-            return View("~/Plugins/ExternalAuth.Facebook/Views/SignInFailed.cshtml", error_message);
+            var model = new FailedModel()
+            {
+                ErrorCode = error_code,
+                ErrorMessage = error_message
+            };
+            return View("~/Plugins/ExternalAuth.Facebook/Views/SignInFailed.cshtml", model);
         }
 
 
