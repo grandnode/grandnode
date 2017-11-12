@@ -1,9 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
 using Grand.Web.Services;
-using System.Linq;
-using Grand.Core.Domain.Forums;
 using Grand.Services.Forums;
 
 namespace Grand.Web.ViewComponents

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Grand.Services.Localization;
-using Grand.Services.Security;
-using Grand.Services.Stores;
-using Grand.Services.Topics;
-using Grand.Web.Services;
+﻿using Grand.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Grand.Web.Components

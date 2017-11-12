@@ -1,9 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Threading.Tasks;
-using Grand.Web.Services;
-using System.Linq;
-using Grand.Core.Domain.Common;
 using Grand.Core.Domain;
 using Grand.Core.Domain.Customers;
 using Grand.Core;

@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
 using Grand.Web.Services;
-using System.Linq;
 
 namespace Grand.Web.ViewComponents
 {

@@ -1,15 +1,12 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Grand.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Grand.Core.Domain.Catalog;
 using Grand.Services.Catalog;
 using Grand.Core;
-using Grand.Services.Customers;
 using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Core.Caching;
-using Grand.Services.Orders;
 using Grand.Web.Infrastructure.Cache;
 
 namespace Grand.Web.Components

@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Threading.Tasks;
-using Grand.Web.Services;
-using System.Linq;
 using Grand.Web.Models.Profile;
 using Grand.Services.Forums;
 using Grand.Services.Customers;
@@ -12,7 +9,6 @@ using Grand.Core;
 using Grand.Services.Helpers;
 using Grand.Core.Domain.Forums;
 using Grand.Core.Domain.Customers;
-using Grand.Services.Common;
 using Grand.Services.Media;
 using Grand.Core.Domain.Media;
 using Grand.Services.Directory;
