@@ -82,7 +82,10 @@
         <div class="form-group" id="pnlUnlimitedDownloads">
             @Html.GrandLabelFor(model => model.UnlimitedDownloads)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.UnlimitedDownloads)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.UnlimitedDownloads)
+                   <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.UnlimitedDownloads)
             </div>
         </div>
