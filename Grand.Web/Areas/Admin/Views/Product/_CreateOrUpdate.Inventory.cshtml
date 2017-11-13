@@ -216,7 +216,10 @@
         <div class="form-group" id="pnlAllowAddingOnlyExistingAttributeCombinations">
             @Html.GrandLabelFor(model => model.AllowAddingOnlyExistingAttributeCombinations)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.AllowAddingOnlyExistingAttributeCombinations)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.AllowAddingOnlyExistingAttributeCombinations)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.AllowAddingOnlyExistingAttributeCombinations)
             </div>
         </div>
