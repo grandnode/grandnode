@@ -5,7 +5,7 @@ GrandNode is a free, open source e-commerce solution based on ASP.NET CORE and N
 
 GrandNode Site: [http://www.grandnode.com](http://www.grandnode.com)
 
-GrandNode demo store: [http://www.grandnode.com/demo](http://www.grandnode.com/demo)
+GrandNode demo store: [http://www.demo.grandnode.com/](http://www.demo.grandnode.com/)
 
 Complete feature list: [http://www.grandnode.com/features](http://www.grandnode.com/features)
 
@@ -17,12 +17,12 @@ Forums: [http://www.grandnode.com/boards/](http://www.grandnode.com/boards/)
 
 ## Development status ## 
 
-The latest stable version is 3.90
-Active development version: 4.00 (branch [develop](https://github.com/grandnode/grandnode/tree/develop))
+The latest stable version is 4.00
+Active development version: 4.10 (branch [develop](https://github.com/grandnode/grandnode/tree/develop))
 
-[Roadmap for 4.00](https://github.com/grandnode/grandnode/milestone/1)
+[Roadmap for 4.10](https://github.com/grandnode/grandnode/milestone/2)
 
-[Tickets linked to 4.00](https://github.com/grandnode/grandnode/issues)
+[Tickets linked to 4.10](https://github.com/grandnode/grandnode/issues)
 
 ## How to contribute code ##
 
