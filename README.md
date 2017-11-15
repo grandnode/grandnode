@@ -3,7 +3,7 @@ GrandNode is a free, open source e-commerce solution based on ASP.NET CORE and N
 
 ## GrandNode resources: ##
 
-GrandNode Site: [https://grandnode.com](http://bit.ly/GrandNode)
+GrandNode Site: [https://grandnode.com](https://grandnode.com)
 
 GrandNode demo store: [http://www.demo.grandnode.com/](http://www.demo.grandnode.com/)
 
