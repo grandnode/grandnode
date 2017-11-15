@@ -31,10 +31,10 @@
             <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
                 @T("Admin.Vendors.VendorNotes")
             </li>
+            <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
+                @T("Admin.Vendors.Reviews")
+            </li>
         }
-        <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
-            @T("Admin.Vendors.Reviews")
-        </li>
     </ul>
     <div>
         @Html.Partial("_CreateOrUpdate.TabInfo", Model)
@@ -50,10 +50,10 @@
         <div>
             @Html.Partial("_CreateOrUpdate.TabVendorNotes", Model)
         </div>
+        <div>
+            @Html.Partial("_CreateOrUpdate.TabVendorReviews", Model)
+        </div>
     }
-    <div>
-        @Html.Partial("_CreateOrUpdate.TabVendorReviews", Model)
-    </div>
 </div>
 
 @{
