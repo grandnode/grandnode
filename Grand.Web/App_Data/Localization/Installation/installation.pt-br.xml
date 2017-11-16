@@ -1,4 +1,4 @@
-<Language Name="Portugês (Brasil)" IsDefault="false" IsRightToLeft="false">
+<Language Name="Português (Brasil)" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Email do Administrador</Value>
   </LocaleResource>
@@ -107,13 +107,13 @@
   <LocaleResource Name="MongoDBServerNameRequired">
     <Value>Entre com o nome do servidor MongoDB</Value>
   </LocaleResource>
-  <LocaleResource Name="MongoDBServerPassword">
+  <LocaleResource Name="MongoDBPassword">
     <Value>Senha MongoDB</Value>
   </LocaleResource>
-  <LocaleResource Name="MongoDBServerPasswordRequired">
+  <LocaleResource Name="MongoDBPasswordRequired">
     <Value>Entre com a senha MongoDB</Value>
   </LocaleResource>
-  <LocaleResource Name="MongoDBServerUsername">
+  <LocaleResource Name="MongoDBUsername">
     <Value>Usuário MongoDB</Value>
   </LocaleResource>
   <LocaleResource Name="MongoDBServerUsernameRequired">
@@ -123,10 +123,10 @@
     <Value>Use um banco de dados de servidor MongoDB (ou MongoDB Express)</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
-    <Value>Guardar informação</Value>
+    <Value>Informações da Loja</Value>
   </LocaleResource>
   <LocaleResource Name="Title">
-    <Value>Instação grandnode</Value>
+    <Value>Instalação grandnode</Value>
   </LocaleResource>
   <LocaleResource Name="Tooltip1">
     <Value>grandnode é a solução ASP.NET online líder em lojas de e-commerce. Este passo a passo irá guiar você no processo de configuração do grandnode</Value>
