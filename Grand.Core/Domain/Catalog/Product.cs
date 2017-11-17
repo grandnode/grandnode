@@ -123,13 +123,15 @@ namespace Grand.Core.Domain.Catalog
         /// </summary>
         public bool SubjectToAcl { get; set; }
         public IList<string> CustomerRoles { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
         /// </summary>
         public bool LimitedToStores { get; set; }
         public IList<string> Stores { get; set; }
-
+        /// <summary>
+        /// Gets or sets the ExternalId
+        /// </summary>
+        public string ExternalId { get; set; }
         /// <summary>
         /// Gets or sets the SKU
         /// </summary>
@@ -142,7 +144,6 @@ namespace Grand.Core.Domain.Catalog
         /// Gets or sets the Global Trade Item Number (GTIN). These identifiers include UPC (in North America), EAN (in Europe), JAN (in Japan), and ISBN (for books).
         /// </summary>
         public string Gtin { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether the product is gift card
         /// </summary>
@@ -151,7 +152,6 @@ namespace Grand.Core.Domain.Catalog
         /// Gets or sets the gift card type identifier
         /// </summary>
         public int GiftCardTypeId { get; set; }
-
         /// <summary>
         /// Gets or sets gift card amount that can be used after purchase. If not specified, then product price will be used.
         /// </summary>
