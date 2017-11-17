@@ -804,6 +804,9 @@ namespace Grand.Web.Services
 
                         model.ProductPrice.Price = _priceFormatter.FormatPrice(finalPriceWithoutDiscount);
 
+                        if(product.CatalogPrice > 0)
+                            model.ProductPrice.CatalogPrice = _priceFormatter.FormatPrice(product.CatalogPrice);
+
                         if (finalPriceWithoutDiscountBase != finalPriceWithDiscountBase)
                             model.ProductPrice.PriceWithDiscount = _priceFormatter.FormatPrice(finalPriceWithDiscount);
 
@@ -837,6 +840,7 @@ namespace Grand.Web.Services
             {
                 model.ProductPrice.HidePrices = true;
                 model.ProductPrice.OldPrice = null;
+                model.ProductPrice.CatalogPrice = null;
                 model.ProductPrice.Price = null;
             }
             #endregion

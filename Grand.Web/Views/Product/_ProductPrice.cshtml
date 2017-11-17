@@ -22,6 +22,14 @@
                 <span>@Model.RentalPrice</span>
             </div>
         }
+        if (!String.IsNullOrWhiteSpace(Model.CatalogPrice))
+        {
+            @*catalog price*@
+            <div class="catalog-product-price">
+                <label>@T("Products.Price.CatalogPrice"):</label>
+                <span>@Model.CatalogPrice</span>
+            </div>
+        }
         if (!String.IsNullOrWhiteSpace(Model.OldPrice))
         {
             @*old price*@

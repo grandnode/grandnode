@@ -374,10 +374,17 @@ namespace Grand.Core.Domain.Catalog
         /// Gets or sets the old price
         /// </summary>
         public decimal OldPrice { get; set; }
+
+        /// <summary>
+        /// Gets or sets the catalog price
+        /// </summary>
+        public decimal CatalogPrice { get; set; }
+
         /// <summary>
         /// Gets or sets the product cost
         /// </summary>
         public decimal ProductCost { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether a customer enters price
         /// </summary>

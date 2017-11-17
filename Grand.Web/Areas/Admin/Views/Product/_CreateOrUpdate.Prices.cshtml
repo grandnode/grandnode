@@ -1,6 +1,4 @@
-﻿@using Grand.Services.Customers
-@using Grand.Services.Stores
-@model ProductModel
+﻿@model ProductModel
 
 <div class="form-horizontal portlet light bg-inverse form-fit" id="group-prices">
     <div class="form-body">
@@ -16,6 +14,13 @@
             <div class="col-md-9 col-sm-9">
                 @Html.GrandEditorFor(model => model.OldPrice) [@Model.PrimaryStoreCurrencyCode]
                 @Html.ValidationMessageFor(model => model.OldPrice)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.CatalogPrice)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.CatalogPrice) [@Model.PrimaryStoreCurrencyCode]
+                @Html.ValidationMessageFor(model => model.CatalogPrice)
             </div>
         </div>
         <div class="form-group">

@@ -298,6 +298,9 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.OldPrice")]
         public decimal OldPrice { get; set; }
 
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.CatalogPrice")]
+        public decimal CatalogPrice { get; set; }
+
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.ProductCost")]
         public decimal ProductCost { get; set; }
 

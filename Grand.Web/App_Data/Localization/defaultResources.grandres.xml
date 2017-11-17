@@ -2574,6 +2574,12 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.CallForPrice.Hint">
     <Value>Check to show "Call for Pricing" or "Call for quote" instead of price</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.CatalogPrice">
+    <Value>Catalog price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.CatalogPrice.hint">
+    <Value>The catalog price of the product. If you set an catalog price, this will display alongside the current price on the product page to show the difference in price.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.CreatedOn">
     <Value>Created on</Value>
   </LocaleResource>
@@ -16701,6 +16707,9 @@
   <LocaleResource Name="Products.Price">
     <Value>Price</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.Price.CatalogPrice">
+    <Value>Catalog Price</Value>
+  </LocaleResource>  
   <LocaleResource Name="Products.Price.OldPrice">
     <Value>Old price</Value>
   </LocaleResource>

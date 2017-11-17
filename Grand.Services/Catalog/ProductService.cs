@@ -345,6 +345,7 @@ namespace Grand.Services.Catalog
                 .Set(x => x.BasepriceEnabled, product.BasepriceEnabled)
                 .Set(x => x.BasepriceUnitId, product.BasepriceUnitId)
                 .Set(x => x.CallForPrice, product.CallForPrice)
+                .Set(x => x.CatalogPrice, product.CatalogPrice)
                 .Set(x => x.CreatedOnUtc, product.CreatedOnUtc)
                 .Set(x => x.CustomerEntersPrice, product.CustomerEntersPrice)
                 .Set(x => x.CustomerRoles, product.CustomerRoles)

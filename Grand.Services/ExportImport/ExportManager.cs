@@ -380,6 +380,7 @@ namespace Grand.Services.ExportImport
                 xmlWriter.WriteElementString("CallForPrice", null, product.CallForPrice.ToString());
                 xmlWriter.WriteElementString("Price", null, product.Price.ToString());
                 xmlWriter.WriteElementString("OldPrice", null, product.OldPrice.ToString());
+                xmlWriter.WriteElementString("CatalogPrice", null, product.CatalogPrice.ToString());
                 xmlWriter.WriteElementString("ProductCost", null, product.ProductCost.ToString());
                 xmlWriter.WriteElementString("CustomerEntersPrice", null, product.CustomerEntersPrice.ToString());
                 xmlWriter.WriteElementString("MinimumCustomerEnteredPrice", null, product.MinimumCustomerEnteredPrice.ToString());
@@ -655,6 +656,7 @@ namespace Grand.Services.ExportImport
                 new PropertyByName<Product>("CallForPrice", p => p.CallForPrice),
                 new PropertyByName<Product>("Price", p => p.Price),
                 new PropertyByName<Product>("OldPrice", p => p.OldPrice),
+                new PropertyByName<Product>("CatalogPrice", p => p.CatalogPrice),
                 new PropertyByName<Product>("ProductCost", p => p.ProductCost),
                 new PropertyByName<Product>("CustomerEntersPrice", p => p.CustomerEntersPrice),
                 new PropertyByName<Product>("MinimumCustomerEnteredPrice", p => p.MinimumCustomerEnteredPrice),

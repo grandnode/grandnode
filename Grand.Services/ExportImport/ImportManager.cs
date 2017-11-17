@@ -418,6 +418,9 @@ namespace Grand.Services.ExportImport
                             case "oldprice":
                                 product.OldPrice = property.DecimalValue;
                                 break;
+                            case "catalogprice":
+                                product.CatalogPrice = property.DecimalValue;
+                                break;
                             case "productcost":
                                 product.ProductCost = property.DecimalValue;
                                 break;

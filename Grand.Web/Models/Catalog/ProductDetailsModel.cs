@@ -165,6 +165,7 @@ namespace Grand.Web.Models.Catalog
             public string CurrencyCode { get; set; }
 
             public string OldPrice { get; set; }
+            public string CatalogPrice { get; set; }
 
             public string Price { get; set; }
             public string PriceWithDiscount { get; set; }
