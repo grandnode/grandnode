@@ -25,6 +25,9 @@ namespace Grand.Web.Models.Catalog
         public bool MarkAsNew { get; set; }
 
         public string Sku { get; set; }
+        public string Gtin { get; set; }
+        public string ManufacturerPartNumber { get; set; }
+        public bool IsFreeShipping { get; set; }
         //price
         public ProductPriceModel ProductPrice { get; set; }
         //picture
@@ -39,6 +42,7 @@ namespace Grand.Web.Models.Catalog
         public partial class ProductPriceModel : BaseGrandModel
         {
             public string OldPrice { get; set; }
+            public string CatalogPrice { get; set; }
             public string Price {get;set;}
             public decimal PriceValue { get; set; }
             public string BasePricePAngV { get; set; }

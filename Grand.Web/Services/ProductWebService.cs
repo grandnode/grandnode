@@ -162,6 +162,9 @@ namespace Grand.Web.Services
                     SeName = product.GetSeName(),
                     ProductType = product.ProductType,
                     Sku = product.Sku,
+                    Gtin = product.Gtin,
+                    ManufacturerPartNumber = product.ManufacturerPartNumber,
+                    IsFreeShipping = product.IsFreeShipping,
                     MarkAsNew = product.MarkAsNew &&
                         (!product.MarkAsNewStartDateTimeUtc.HasValue || product.MarkAsNewStartDateTimeUtc.Value < DateTime.UtcNow) &&
                         (!product.MarkAsNewEndDateTimeUtc.HasValue || product.MarkAsNewEndDateTimeUtc.Value > DateTime.UtcNow)
@@ -193,6 +196,13 @@ namespace Grand.Web.Services
                                 //compare products
                                 priceModel.DisableAddToCompareListButton = !_catalogSettings.CompareProductsEnabled;
 
+                                //catalog price, not used in views, but it's for front developer
+                                if (product.CatalogPrice > 0)
+                                {
+                                    decimal catalogPrice = _currencyService.ConvertFromPrimaryStoreCurrency(product.CatalogPrice, currentCurrency);
+                                    priceModel.CatalogPrice = _priceFormatter.FormatPrice(catalogPrice);
+                                }
+
                                 switch (associatedProducts.Count)
                                 {
                                     case 0:
@@ -205,8 +215,6 @@ namespace Grand.Web.Services
                                             //we have at least one associated product
                                             //compare products
                                             priceModel.DisableAddToCompareListButton = !_catalogSettings.CompareProductsEnabled;
-                                            //priceModel.AvailableForPreOrder = false;
-
                                             if (displayPrices)
                                             {
                                                 //find a minimum possible price
@@ -288,6 +296,13 @@ namespace Grand.Web.Services
                                     priceModel.AvailableForPreOrder = !product.PreOrderAvailabilityStartDateTimeUtc.HasValue ||
                                         product.PreOrderAvailabilityStartDateTimeUtc.Value >= DateTime.UtcNow;
                                     priceModel.PreOrderAvailabilityStartDateTimeUtc = product.PreOrderAvailabilityStartDateTimeUtc;
+                                }
+
+                                //catalog price, not used in views, but it's for front developer
+                                if (product.CatalogPrice > 0)
+                                {
+                                    decimal catalogPrice = _currencyService.ConvertFromPrimaryStoreCurrency(product.CatalogPrice, currentCurrency);
+                                    priceModel.CatalogPrice = _priceFormatter.FormatPrice(catalogPrice);
                                 }
 
                                 //prices
@@ -804,8 +819,11 @@ namespace Grand.Web.Services
 
                         model.ProductPrice.Price = _priceFormatter.FormatPrice(finalPriceWithoutDiscount);
 
-                        if(product.CatalogPrice > 0)
-                            model.ProductPrice.CatalogPrice = _priceFormatter.FormatPrice(product.CatalogPrice);
+                        if (product.CatalogPrice > 0)
+                        {
+                            var catalogPrice = _currencyService.ConvertFromPrimaryStoreCurrency(product.CatalogPrice, _workContext.WorkingCurrency);
+                            model.ProductPrice.CatalogPrice = _priceFormatter.FormatPrice(catalogPrice);
+                        }
 
                         if (finalPriceWithoutDiscountBase != finalPriceWithDiscountBase)
                             model.ProductPrice.PriceWithDiscount = _priceFormatter.FormatPrice(finalPriceWithDiscount);
