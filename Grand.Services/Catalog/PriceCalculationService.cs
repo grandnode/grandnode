@@ -622,14 +622,24 @@ namespace Grand.Services.Catalog
             discountAmount = decimal.Zero;
             appliedDiscounts = new List<AppliedDiscount>();
 
-            decimal finalPrice;
-
+            decimal? finalPrice = null;
             var combination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
-            if (combination != null && combination.OverriddenPrice.HasValue)
+            if (combination != null)
             {
-                finalPrice = combination.OverriddenPrice.Value;
+                if(combination.OverriddenPrice.HasValue)
+                    finalPrice = combination.OverriddenPrice.Value;
+                if(combination.TierPrices.Any())
+                {
+                    var storeId = _storeContext.CurrentStore.Id;
+                    var actualTierPrices = combination.TierPrices.Where(x => string.IsNullOrEmpty(x.StoreId) || x.StoreId == storeId)
+                        .Where(x => string.IsNullOrEmpty(x.CustomerRoleId) ||
+                        customer.CustomerRoles.Where(role => role.Active).Select(role => role.Id).Contains(x.CustomerRoleId)).ToList();
+                    var tierPrice = actualTierPrices.LastOrDefault(price => quantity >= price.Quantity);
+                    if (tierPrice != null)
+                        finalPrice = tierPrice.Price;
+                }
             }
-            else
+            if(!finalPrice.HasValue)
             {
                 //summarize price of all attributes
                 decimal attributesTotalPrice = decimal.Zero;
@@ -678,11 +688,14 @@ namespace Grand.Services.Catalog
                 }
             }
 
+            if (!finalPrice.HasValue)
+                finalPrice = 0;
+
             //rounding
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                finalPrice = RoundingHelper.RoundPrice(finalPrice, _workContext.WorkingCurrency);
+                finalPrice = RoundingHelper.RoundPrice(finalPrice.Value, _workContext.WorkingCurrency);
 
-            return finalPrice;
+            return finalPrice.Value;
         }
         /// <summary>
         /// Gets the shopping cart item sub total

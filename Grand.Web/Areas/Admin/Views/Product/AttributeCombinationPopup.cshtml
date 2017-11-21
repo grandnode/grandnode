@@ -2,6 +2,8 @@
 @{
     Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
 }
+@inject Grand.Services.Stores.IStoreService _storeService
+@inject Grand.Services.Customers.ICustomerService _customerService
 @{
     //page title
     if (string.IsNullOrEmpty(Model.Id))
@@ -228,6 +230,17 @@
                                 </div>
                             </div>
                         </div>
+                        @if (!string.IsNullOrEmpty(Model.Id))
+                        {
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.TierPrices")
+                                </div>
+                                <div class="panel-body">
+                                    <div id="tierprices-grid"></div>
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
@@ -243,7 +256,188 @@
         window.close();
     </script>
     }
+    @if (!string.IsNullOrEmpty(Model.Id))
+    {
+    <script>
+        $(document).ready(function () {
+            $("#tierprices-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("ProductAttributeCombinationTierPriceList", "Product", new { productId = Model.ProductId, productAttributeCombinationId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        create: {
+                            url: "@Html.Raw(Url.Action("ProductAttributeCombinationTierPriceInsert", "Product", new { productId = Model.ProductId, productAttributeCombinationId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        update: {
+                            url:"@Html.Raw(Url.Action("ProductAttributeCombinationTierPriceUpdate", "Product", new { productId = Model.ProductId, productAttributeCombinationId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        destroy: {
+                            url: "@Html.Raw(Url.Action("ProductAttributeCombinationTierPriceDelete", "Product", new { productId = Model.ProductId, productAttributeCombinationId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors",
+                        model: {
+                            id: "Id",
+                            fields: {
+                                Store: { editable: true, type: "string" },
+                                StoreId: { editable: true, type: "string" },
+                                CustomerRole: { editable: true, type: "string" },
+                                CustomerRoleId: { editable: true, type: "string" },
+                                Quantity: { editable: true, type: "number" },
+                                Price: { editable: true, type: "number" },
+                                Id: { editable: false, type: "string" }
+                            }
+                        }
+                    },
+                    requestEnd: function (e) {
+                        if (e.type == "create" || e.type == "update") {
+                            this.read();
+                        }
+                    },
+                    error: function (e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    numeric: false,
+                    previousNext: false,
+                    info: false
+                },
+                toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "StoreId",
+                    title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.TierPrices.Store")",
+                    width: 250,
+                    editor: storeDropDownEditor,
+                    template: "#:Store#"
+                },
+                {
+                    field: "CustomerRoleId",
+                    title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.TierPrices.CustomerRole")",
+                    width: 250,
+                    editor: customerRoleDropDownEditor,
+                    template: "#:CustomerRole#"
+                },
 
+                {
+                    field: "Quantity",
+                    title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.TierPrices.Quantity")",
+                    width: 150,
+                    format: "{0:0}"
+                }, {
+                    field: "Price",
+                    title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.TierPrices.Price")",
+                    width: 150,
+                    editor: function (container, options) {
+                        $('<input name="' + options.field + '"/>')
+                                .appendTo(container)
+                                .kendoNumericTextBox({
+                                    format: "{0:n4}",
+                                    decimals: 4
+                                });
+                    }
+                },{
+                    command: [{
+                        name: "edit",
+                        text: {
+                            edit: "@T("Admin.Common.Edit")",
+                            update: "@T("Admin.Common.Update")",
+                            cancel: "@T("Admin.Common.Cancel")"
+                        }
+                    }, {
+                        name: "destroy",
+                        text: "@T("Admin.Common.Delete")"
+                    }],
+                    width: 200
+                }]
+            });
+        });
 
+        //local datasource
+        var allStores = [
+            {
+                Id : ' ',
+                Name : "@T("Admin.Configuration.Settings.AllSettings.Fields.StoreName.AllStores")"
+            }
+            @{
+                var allStores = _storeService.GetAllStores();
+            }
+            @foreach (var store in allStores)
+            {
+                <text>
+                        , {
+                            Id: "@(store.Id)",
+                            Name: "@(Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(store.Name)))"
+                        }
+                        </text>
+            }
 
+        ];
+
+        var allCustomerRoles = [
+            {
+                Id : ' ',
+                Name : "@T("Admin.Catalog.Products.TierPrices.Fields.CustomerRole.All")"
+            }
+            @{
+                var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
+            }
+            @foreach (var customerRole in allCustomerRoles)
+            {
+                <text>
+                    , {
+            Id: "@(customerRole.Id)",
+            Name: "@(Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(customerRole.Name)))"
+        }
+        </text>
+            }
+        ];
+
+        function storeDropDownEditor(container, options) {
+            $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:StoreId"/>')
+                .appendTo(container)
+                .kendoDropDownList({
+                    autoBind: true,
+                    dataSource: allStores,
+                });
+        }
+
+        function customerRoleDropDownEditor(container, options) {
+            $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:CustomerRoleId"/>')
+                .appendTo(container)
+                .kendoDropDownList({
+                    autoBind: true,
+                    dataSource: allCustomerRoles,
+
+                });
+        }
+    </script>
+    }
 }

@@ -9,6 +9,7 @@ namespace Grand.Core.Domain.Catalog
     public partial class ProductAttributeCombination : SubBaseEntity
     {
         private ICollection<ProductCombinationWarehouseInventory> _warehouseInventory;
+        private ICollection<ProductCombinationTierPrices> _tierPrices;
 
         /// <summary>
         /// Gets or sets the product identifier
@@ -63,5 +64,15 @@ namespace Grand.Core.Domain.Catalog
             get { return _warehouseInventory ?? (_warehouseInventory = new List<ProductCombinationWarehouseInventory>()); }
             protected set { _warehouseInventory = value; }
         }
+
+        /// <summary>
+        /// Gets or sets the collection of "ProductCombinationTierPrices" records. 
+        /// </summary>
+        public virtual ICollection<ProductCombinationTierPrices> TierPrices
+        {
+            get { return _tierPrices ?? (_tierPrices = new List<ProductCombinationTierPrices>()); }
+            protected set { _tierPrices = value; }
+        }
+
     }
 }

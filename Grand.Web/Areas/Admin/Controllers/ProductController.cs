@@ -4743,6 +4743,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     model = combination.ToModel();
                     model.UseMultipleWarehouses = product.UseMultipleWarehouses;
                     model.WarehouseInventoryModels = wim;
+                    model.ProductId = productId;
                     model.AttributesXML = _productAttributeFormatter.FormatAttributes(product, combination.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false);
                     if(model.UseMultipleWarehouses)
                     {
@@ -5128,7 +5129,172 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(new { Success = true });
         }
 
+        #region Product Attribute combination - tier prices
 
+        [HttpPost]
+        public IActionResult ProductAttributeCombinationTierPriceList(DataSourceRequest command, string productId, string productAttributeCombinationId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var product = _productService.GetProductById(productId);
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+                return Content("This is not your product");
+
+            var tierprices = product.ProductAttributeCombinations.Where(x=>x.Id == productAttributeCombinationId).SelectMany(x=>x.TierPrices);
+            var tierPriceModel = tierprices
+                .Select(x =>
+                {
+                    string storeName;
+                    if (!String.IsNullOrEmpty(x.StoreId))
+                    {
+                        var store = _storeService.GetStoreById(x.StoreId);
+                        storeName = store != null ? store.Name : "Deleted";
+                    }
+                    else
+                    {
+                        storeName = _localizationService.GetResource("Admin.Catalog.Products.TierPrices.Fields.Store.All");
+                    }
+
+                    var priceModel = new ProductModel.ProductAttributeCombinationTierPricesModel
+                    {
+                        Id = x.Id,
+                        CustomerRoleId = x.CustomerRoleId,
+                        CustomerRole = !String.IsNullOrEmpty(x.CustomerRoleId) ? _customerService.GetCustomerRoleById(x.CustomerRoleId).Name : _localizationService.GetResource("Admin.Catalog.Products.TierPrices.Fields.CustomerRole.All"),
+                        StoreId = x.StoreId,
+                        Store = storeName,
+                        Price = x.Price,
+                        Quantity = x.Quantity
+                    };
+                    return priceModel;
+                })
+                .ToList();
+
+            var gridModel = new DataSourceResult
+            {
+                Data = tierPriceModel,
+                Total = tierPriceModel.Count
+            };
+
+            return Json(gridModel);
+        }
+
+        [HttpPost]
+        public IActionResult ProductAttributeCombinationTierPriceInsert(string productId, string productAttributeCombinationId, ProductModel.ProductAttributeCombinationTierPricesModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var product = _productService.GetProductById(productId);
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+                return Content("This is not your product");
+
+            if (!String.IsNullOrEmpty(model.CustomerRoleId))
+                model.CustomerRoleId = model.CustomerRoleId.Trim();
+            else
+                model.CustomerRoleId = "";
+
+            if (!String.IsNullOrEmpty(model.StoreId))
+                model.StoreId = model.StoreId.Trim();
+            else
+                model.StoreId = "";
+
+            var combination = product.ProductAttributeCombinations.FirstOrDefault(x => x.Id == productAttributeCombinationId);
+            if (combination != null)
+            {
+                ProductCombinationTierPrices pctp = new ProductCombinationTierPrices();
+                pctp.Price = model.Price;
+                pctp.Quantity = model.Quantity;
+                pctp.StoreId = model.StoreId;
+                pctp.CustomerRoleId = model.CustomerRoleId;
+                combination.TierPrices.Add(pctp);
+                combination.ProductId = productId;
+                combination.Id = productAttributeCombinationId;
+                _productAttributeService.UpdateProductAttributeCombination(combination);
+            }
+            return new NullJsonResult();
+        }
+
+        [HttpPost]
+        public IActionResult ProductAttributeCombinationTierPriceUpdate(string productId, string productAttributeCombinationId, ProductModel.ProductAttributeCombinationTierPricesModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var product = _productService.GetProductById(productId);
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+                return Content("This is not your product");
+
+            if (!String.IsNullOrEmpty(model.CustomerRoleId))
+                model.CustomerRoleId = model.CustomerRoleId.Trim();
+            else
+                model.CustomerRoleId = "";
+
+            if (!String.IsNullOrEmpty(model.StoreId))
+                model.StoreId = model.StoreId.Trim();
+            else
+                model.StoreId = "";
+
+            var combination = product.ProductAttributeCombinations.FirstOrDefault(x => x.Id == productAttributeCombinationId);
+            if (combination != null)
+            {
+                var tierPrice = combination.TierPrices.FirstOrDefault(x => x.Id == model.Id);
+                if (tierPrice != null)
+                {
+                    tierPrice.Price = model.Price;
+                    tierPrice.Quantity = model.Quantity;
+                    tierPrice.StoreId = model.StoreId;
+                    tierPrice.CustomerRoleId = model.CustomerRoleId;
+                    combination.ProductId = productId;
+                    combination.Id = productAttributeCombinationId;
+                    _productAttributeService.UpdateProductAttributeCombination(combination);
+                }
+            }
+            return new NullJsonResult();
+        }
+
+        [HttpPost]
+        public IActionResult ProductAttributeCombinationTierPriceDelete(string productId, string productAttributeCombinationId, string id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var product = _productService.GetProductById(productId);
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+                return Content("This is not your product");
+
+            var combination = product.ProductAttributeCombinations.FirstOrDefault(x => x.Id == productAttributeCombinationId);
+            if (combination != null)
+            {
+                var tierPrice = combination.TierPrices.FirstOrDefault(x => x.Id == id);
+                if (tierPrice != null)
+                {
+                    combination.TierPrices.Remove(tierPrice);
+                    combination.ProductId = productId;
+                    combination.Id = productAttributeCombinationId;
+                    _productAttributeService.UpdateProductAttributeCombination(combination);
+                }
+            }
+            return new NullJsonResult();
+        }
+
+        #endregion
         #endregion
 
         #endregion

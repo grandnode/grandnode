@@ -996,6 +996,28 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
 
         }
 
+        public partial class ProductAttributeCombinationTierPricesModel : BaseGrandEntityModel
+        {
+            public string StoreId { get; set; }
+            public string Store { get; set; }
+
+            /// <summary>
+            /// Gets or sets the customer role identifier
+            /// </summary>
+            public string CustomerRoleId { get; set; }
+            public string CustomerRole { get; set; }
+
+            /// <summary>
+            /// Gets or sets the quantity
+            /// </summary>
+            public int Quantity { get; set; }
+
+            /// <summary>
+            /// Gets or sets the price
+            /// </summary>
+            public decimal Price { get; set; }
+        }
+
         #endregion
     }
 
