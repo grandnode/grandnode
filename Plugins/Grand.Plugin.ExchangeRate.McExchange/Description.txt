@@ -2,7 +2,7 @@
 FriendlyName: Money converter exchange rate provider
 SystemName: CurrencyExchange.MoneyConverter
 Version: 1.08
-SupportedVersions: 4.00
+SupportedVersions: 4.10
 Author: grandnode team
 DisplayOrder: 1
 FileName: Grand.Plugin.ExchangeRate.McExchange.dll

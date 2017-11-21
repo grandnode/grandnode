@@ -44,6 +44,7 @@ namespace Grand.Services.Installation
         private const string version_380 = "3.80";
         private const string version_390 = "3.90";
         private const string version_400 = "4.00";
+        private const string version_410 = "4.10";
 
         #endregion
 
@@ -83,6 +84,11 @@ namespace Grand.Services.Installation
                 fromversion = version_400;
             }
 
+            if (fromversion == version_400)
+            {
+                From400To410();
+                fromversion = version_410;
+            }
             if (fromversion == toversion)
             {
                 var databaseversion = _versionRepository.Table.FirstOrDefault();
@@ -688,6 +694,13 @@ namespace Grand.Services.Installation
                 _customerActionType.Update(item);
             }
 
+            #endregion
+        }
+
+        private void From400To410()
+        {
+            #region Install String resources
+            InstallStringResources("EN_400_410.nopres.xml");
             #endregion
         }
 
