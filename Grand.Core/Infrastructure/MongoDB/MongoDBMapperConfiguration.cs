@@ -15,6 +15,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Bson.Serialization.Serializers;
+using System;
 
 namespace Grand.Core.Infrastructure.MongoDB
 {
@@ -29,6 +30,7 @@ namespace Grand.Core.Infrastructure.MongoDB
         {
             BsonSerializer.RegisterSerializer(typeof(decimal), new DecimalSerializer(BsonType.Double));
             BsonSerializer.RegisterSerializer(typeof(decimal?), new NullableSerializer<decimal>(new DecimalSerializer(BsonType.Double)));
+            BsonSerializer.RegisterSerializer(typeof(DateTime), new DateTimeSerializer(DateTimeKind.Unspecified));
 
             //global set an equivalent of [BsonIgnoreExtraElements] for every Domain Model
             var cp = new ConventionPack();
