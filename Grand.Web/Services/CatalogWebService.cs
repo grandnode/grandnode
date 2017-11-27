@@ -58,7 +58,7 @@ namespace Grand.Web.Services
         private readonly ICategoryTemplateService _categoryTemplateService;
         private readonly IManufacturerTemplateService _manufacturerTemplateService;
         private readonly IPriceFormatter _priceFormatter;
-
+        private readonly IAddressWebService _addressWebService;
         private readonly CatalogSettings _catalogSettings;
         private readonly BlogSettings _blogSettings;
         private readonly ForumSettings _forumSettings;
@@ -91,6 +91,7 @@ namespace Grand.Web.Services
             ICategoryTemplateService categoryTemplateService,
             IManufacturerTemplateService manufacturerTemplateService,
             IPriceFormatter priceFormatter,
+            IAddressWebService addressWebService,
             CatalogSettings catalogSettings,
             BlogSettings blogSettings,
             ForumSettings forumSettings,
@@ -122,6 +123,7 @@ namespace Grand.Web.Services
             this._categoryTemplateService = categoryTemplateService;
             this._manufacturerTemplateService = manufacturerTemplateService;
             this._priceFormatter = priceFormatter;
+            this._addressWebService = addressWebService;
             this._catalogSettings = catalogSettings;
             this._blogSettings = blogSettings;
             this._forumSettings = forumSettings;
@@ -899,6 +901,11 @@ namespace Grand.Web.Services
                 SeName = vendor.GetSeName(),
                 AllowCustomersToContactVendors = _vendorSettings.AllowCustomersToContactVendors
             };
+
+            _addressWebService.PrepareVendorAddressModel(model: model.Address,
+            address: vendor.Address,
+            excludeProperties: false,
+            vendorSettings: _vendorSettings);
 
             //sorting
             PrepareSortingOptions(model.PagingFilteringContext, command);
