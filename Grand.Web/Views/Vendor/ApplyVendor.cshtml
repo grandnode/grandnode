@@ -78,11 +78,17 @@
 
                         </div>
                     }
+                    <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                    @{
+                        var dataDictAddress = new ViewDataDictionary(ViewData);
+                        dataDictAddress.TemplateInfo.HtmlFieldPrefix = "Address";
+                        @await Html.PartialAsync("_CreateOrUpdateVendorAddress", Model.Address, dataDictAddress)
+                    }
                 </div>
                 <div class="col-12 buttons pt-1 pb-1">
                     <input type="submit" id="apply-vendor" class="btn btn-success apply-vendor-button" value="@T("Vendors.ApplyAccount.Button")" />
                 </div>
             </form>
         }
-                @await Component.InvokeAsync("Widget", new { widgetZone = "applyvendor_bottom" })
+        @await Component.InvokeAsync("Widget", new { widgetZone = "applyvendor_bottom" })
 </div>

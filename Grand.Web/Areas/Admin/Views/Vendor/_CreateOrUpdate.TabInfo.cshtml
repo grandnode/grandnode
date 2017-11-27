@@ -31,7 +31,7 @@
             <div class="form-group">
                 @Html.GrandLabelFor(model => model.Locales[item].Description)
                 <div class="col-md-9 col-sm-9">
-                    @Html.EditorFor(model => model.Locales[item].Description, "RichEditor")
+                    @Html.GrandTextAreaFor(model => model.Locales[item].Description, new { style = "Height: 100px;" })
                     @Html.ValidationMessageFor(model => model.Locales[item].Description)
                 </div>
             </div>
@@ -51,7 +51,7 @@
             <div class="form-group">
                 @Html.GrandLabelFor(model => model.Description)
                 <div class="col-md-9 col-sm-9">
-                    @Html.EditorFor(x => x.Description, "RichEditor")
+                    @Html.GrandTextAreaFor(model => model.Description, new { style = "Height: 100px;" })
                     @Html.ValidationMessageFor(model => model.Description)
                 </div>
             </div>
@@ -159,3 +159,14 @@
         </div>
     </div>
 </div>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        @T("Admin.Vendors.Fields.Address")
+    </div>
+    <div class="panel-body">
+        @Html.EditorFor(model => model.Address, "Address")
+    </div>
+</div>
+

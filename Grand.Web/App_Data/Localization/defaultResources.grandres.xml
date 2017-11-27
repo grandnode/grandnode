@@ -591,10 +591,16 @@
   <LocaleResource Name="Account.VendorInfo.Email">
     <Value>Email</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Email.hint">
+    <Value>Email</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.VendorInfo.Email.Required">
     <Value>Email is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.VendorInfo.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Name.hint">
     <Value>Name</Value>
   </LocaleResource>
   <LocaleResource Name="Account.VendorInfo.Name.Required">
@@ -608,6 +614,60 @@
   </LocaleResource>
   <LocaleResource Name="Account.VendorInfo.Picture.Remove">
     <Value>Remove picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.City">
+    <Value>City</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.City.Required">
+    <Value>City is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Company">
+    <Value>Company name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Company.Required">
+    <Value>Company name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Country">
+    <Value>Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Country.Required">
+    <Value>Country is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.faxnumber">
+    <Value>Fax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.faxnumber.Required">
+    <Value>Fax is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.phonenumber">
+    <Value>Phone</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.phonenumber.Required">
+    <Value>Phone is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.StateProvince">
+    <Value>State / province</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.StateProvince.Required">
+    <Value>State / province is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Address1">
+    <Value>Street address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Address1.Required">
+    <Value>Street address is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Address2">
+    <Value>Street address 2</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Address2.Required">
+    <Value>Street address 2 is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.ZipPostalCode">
+    <Value>Zip / postal code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.ZipPostalCode.Required">
+    <Value>Zip / postal code is required</Value>
   </LocaleResource>
   <LocaleResource Name="Account.YourAddress">
     <Value>Your Address</Value>
@@ -7409,6 +7469,105 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Vendor">
     <Value>Vendor settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.Address">
+    <Value>Address settings for Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.CityEnabled">
+    <Value>'City' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.CityEnabled.Hint">
+    <Value>Set if 'City' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.CityRequired">
+    <Value>'City' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.CityRequired.Hint">
+    <Value>Check if 'City' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.CompanyEnabled">
+    <Value>'Company' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.CompanyEnabled.Hint">
+    <Value>Set if 'Company' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.CompanyRequired">
+    <Value>'Company' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.CompanyRequired.Hint">
+    <Value>Check if 'Company' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.CountryEnabled">
+    <Value>'Country' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.CountryEnabled.Hint">
+    <Value>Set if 'Country' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.FaxEnabled">
+    <Value>'Fax number' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.FaxEnabled.Hint">
+    <Value>Set if 'Fax number' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.FaxRequired">
+    <Value>'Fax number' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.FaxRequired.Hint">
+    <Value>Check if 'Fax number' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.PhoneEnabled">
+    <Value>'Phone number' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.PhoneEnabled.Hint">
+    <Value>Set if 'Phone number' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.PhoneRequired">
+    <Value>'Phone number' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.PhoneRequired.Hint">
+    <Value>Check if 'Phone number' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.StateProvinceEnabled">
+    <Value>'State/province' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.StateProvinceEnabled.Hint">
+    <Value>Set if 'State/province' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.StreetAddress2Enabled">
+    <Value>'Street address 2' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.StreetAddress2Enabled.Hint">
+    <Value>Set if 'Street address 2' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.StreetAddress2Required">
+    <Value>'Street address 2' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.StreetAddress2Required.Hint">
+    <Value>Check if 'Street address 2' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.StreetAddressEnabled">
+    <Value>'Street address' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.StreetAddressEnabled.Hint">
+    <Value>Set if 'Street address' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.StreetAddressRequired">
+    <Value>'Street address' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.StreetAddressRequired.Hint">
+    <Value>Check if 'Street address' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.ZipPostalCodeEnabled">
+    <Value>'Zip / postal code' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.ZipPostalCodeEnabled.Hint">
+    <Value>Set if 'Zip / postal code' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.ZipPostalCodeRequired">
+    <Value>'Zip / postal code' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.ZipPostalCodeRequired.Hint">
+    <Value>Check if 'Zip / postal code' is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowAnonymousUsersToReviewVendor">
     <Value>Allow anonymous users to write vendor reviews</Value>

@@ -10,9 +10,10 @@ using Grand.Web.Models.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Grand.Core.Domain.Vendors;
+using Grand.Web.Models.Vendors;
 
 namespace Grand.Web.Services
 {
@@ -71,6 +72,24 @@ namespace Grand.Web.Services
             Customer customer = null,
             string overrideAttributesXml = "")
         {
+            //prepare address model
+            PrepareAddressModel(model, address, excludeProperties, loadCountries, prePopulateWithCustomerFields, customer, _addressSettings);
+
+            //customer attribute services
+            PrepareCustomAddressAttributes(model, address, overrideAttributesXml);
+            if (address != null)
+            {
+                model.FormattedCustomAddressAttributes = _addressAttributeFormatter.FormatAttributes(address.CustomAttributes);
+            }
+        }
+
+        public virtual void PrepareAddressModel(AddressModel model,
+            Address address, bool excludeProperties,
+            Func<IList<Country>> loadCountries = null,
+            bool prePopulateWithCustomerFields = false,
+            Customer customer = null,
+            AddressSettings addressSettings = null)
+        {
             if (model == null)
                 throw new ArgumentNullException("model");
 
@@ -81,7 +100,6 @@ namespace Grand.Web.Services
                 model.LastName = address.LastName;
                 model.Email = address.Email;
                 model.Company = address.Company;
-
                 model.CountryId = address.CountryId;
                 Country country = null;
                 if (!String.IsNullOrEmpty(address.CountryId))
@@ -114,15 +132,12 @@ namespace Grand.Web.Services
                 model.Address2 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2);
                 model.ZipPostalCode = customer.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode);
                 model.City = customer.GetAttribute<string>(SystemCustomerAttributeNames.City);
-                //ignore country and state for prepopulation. it can cause some issues when posting pack with errors, etc
-                //model.CountryId = customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
-                //model.StateProvinceId = customer.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId);
                 model.PhoneNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone);
                 model.FaxNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.Fax);
             }
 
             //countries and states
-            if (_addressSettings.CountryEnabled && loadCountries != null)
+            if (addressSettings.CountryEnabled && loadCountries != null)
             {
 
                 model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "" });
@@ -136,7 +151,7 @@ namespace Grand.Web.Services
                     });
                 }
 
-                if (_addressSettings.StateProvinceEnabled)
+                if (addressSettings.StateProvinceEnabled)
                 {
                     var languageId = _workContext.WorkingLanguage.Id;
                     var states = _stateProvinceService
@@ -169,30 +184,142 @@ namespace Grand.Web.Services
             }
 
             //form fields
-            model.CompanyEnabled = _addressSettings.CompanyEnabled;
-            model.CompanyRequired = _addressSettings.CompanyRequired;
-            model.StreetAddressEnabled = _addressSettings.StreetAddressEnabled;
-            model.StreetAddressRequired = _addressSettings.StreetAddressRequired;
-            model.StreetAddress2Enabled = _addressSettings.StreetAddress2Enabled;
-            model.StreetAddress2Required = _addressSettings.StreetAddress2Required;
-            model.ZipPostalCodeEnabled = _addressSettings.ZipPostalCodeEnabled;
-            model.ZipPostalCodeRequired = _addressSettings.ZipPostalCodeRequired;
-            model.CityEnabled = _addressSettings.CityEnabled;
-            model.CityRequired = _addressSettings.CityRequired;
-            model.CountryEnabled = _addressSettings.CountryEnabled;
-            model.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
-            model.PhoneEnabled = _addressSettings.PhoneEnabled;
-            model.PhoneRequired = _addressSettings.PhoneRequired;
-            model.FaxEnabled = _addressSettings.FaxEnabled;
-            model.FaxRequired = _addressSettings.FaxRequired;
-
-            //customer attribute services
-            PrepareCustomAddressAttributes(model, address, overrideAttributesXml);
-            if (address != null)
-            {
-                model.FormattedCustomAddressAttributes = _addressAttributeFormatter.FormatAttributes(address.CustomAttributes);
-            }
+            model.CompanyEnabled = addressSettings.CompanyEnabled;
+            model.CompanyRequired = addressSettings.CompanyRequired;
+            model.StreetAddressEnabled = addressSettings.StreetAddressEnabled;
+            model.StreetAddressRequired = addressSettings.StreetAddressRequired;
+            model.StreetAddress2Enabled = addressSettings.StreetAddress2Enabled;
+            model.StreetAddress2Required = addressSettings.StreetAddress2Required;
+            model.ZipPostalCodeEnabled = addressSettings.ZipPostalCodeEnabled;
+            model.ZipPostalCodeRequired = addressSettings.ZipPostalCodeRequired;
+            model.CityEnabled = addressSettings.CityEnabled;
+            model.CityRequired = addressSettings.CityRequired;
+            model.CountryEnabled = addressSettings.CountryEnabled;
+            model.StateProvinceEnabled = addressSettings.StateProvinceEnabled;
+            model.PhoneEnabled = addressSettings.PhoneEnabled;
+            model.PhoneRequired = addressSettings.PhoneRequired;
+            model.FaxEnabled = addressSettings.FaxEnabled;
+            model.FaxRequired = addressSettings.FaxRequired;
         }
+
+        public virtual void PrepareVendorAddressModel(VendorAddressModel model,
+            Address address, bool excludeProperties,
+            Func<IList<Country>> loadCountries = null,
+            bool prePopulateWithCustomerFields = false,
+            Customer customer = null,
+            VendorSettings vendorSettings = null)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            if (!excludeProperties && address != null)
+            {
+                model.Company = address.Company;
+                model.CountryId = address.CountryId;
+                Country country = null;
+                if (!String.IsNullOrEmpty(address.CountryId))
+                    country = _countryService.GetCountryById(address.CountryId);
+                model.CountryName = country != null ? country.GetLocalized(x => x.Name) : null;
+
+                model.StateProvinceId = address.StateProvinceId;
+                StateProvince state = null;
+                if (!String.IsNullOrEmpty(address.StateProvinceId))
+                    state = _stateProvinceService.GetStateProvinceById(address.StateProvinceId);
+                model.StateProvinceName = state != null ? state.GetLocalized(x => x.Name) : null;
+
+                model.City = address.City;
+                model.Address1 = address.Address1;
+                model.Address2 = address.Address2;
+                model.ZipPostalCode = address.ZipPostalCode;
+                model.PhoneNumber = address.PhoneNumber;
+                model.FaxNumber = address.FaxNumber;
+            }
+
+            if (address == null && prePopulateWithCustomerFields)
+            {
+                if (customer == null)
+                    throw new Exception("Customer cannot be null when prepopulating an address");
+                model.Company = customer.GetAttribute<string>(SystemCustomerAttributeNames.Company);
+                model.Address1 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress);
+                model.Address2 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2);
+                model.ZipPostalCode = customer.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode);
+                model.City = customer.GetAttribute<string>(SystemCustomerAttributeNames.City);
+                model.PhoneNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone);
+                model.FaxNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.Fax);
+
+                if(vendorSettings.CountryEnabled)
+                    model.CountryId = customer.GetAttribute<string>(SystemCustomerAttributeNames.CountryId);
+
+                if (vendorSettings.StateProvinceEnabled)
+                    model.StateProvinceId = customer.GetAttribute<string>(SystemCustomerAttributeNames.StateProvinceId);
+            }
+
+            //countries and states
+            if (vendorSettings.CountryEnabled && loadCountries != null)
+            {
+                model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "" });
+                foreach (var c in loadCountries())
+                {
+                    model.AvailableCountries.Add(new SelectListItem
+                    {
+                        Text = c.GetLocalized(x => x.Name),
+                        Value = c.Id.ToString(),
+                        Selected = c.Id == model.CountryId
+                    });
+                }
+
+                if (vendorSettings.StateProvinceEnabled)
+                {
+                    var languageId = _workContext.WorkingLanguage.Id;
+                    var states = _stateProvinceService
+                        .GetStateProvincesByCountryId(!String.IsNullOrEmpty(model.CountryId) ? model.CountryId : "", languageId)
+                        .ToList();
+                    if (states.Any())
+                    {
+                        model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectState"), Value = "" });
+
+                        foreach (var s in states)
+                        {
+                            model.AvailableStates.Add(new SelectListItem
+                            {
+                                Text = s.GetLocalized(x => x.Name),
+                                Value = s.Id.ToString(),
+                                Selected = (s.Id == model.StateProvinceId)
+                            });
+                        }
+                    }
+                    else
+                    {
+                        bool anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
+                        model.AvailableStates.Add(new SelectListItem
+                        {
+                            Text = _localizationService.GetResource(anyCountrySelected ? "Address.OtherNonUS" : "Address.SelectState"),
+                            Value = ""
+                        });
+                    }
+                }
+            }
+
+            //form fields
+            model.CompanyEnabled = vendorSettings.CompanyEnabled;
+            model.CompanyRequired = vendorSettings.CompanyRequired;
+            model.StreetAddressEnabled = vendorSettings.StreetAddressEnabled;
+            model.StreetAddressRequired = vendorSettings.StreetAddressRequired;
+            model.StreetAddress2Enabled = vendorSettings.StreetAddress2Enabled;
+            model.StreetAddress2Required = vendorSettings.StreetAddress2Required;
+            model.ZipPostalCodeEnabled = vendorSettings.ZipPostalCodeEnabled;
+            model.ZipPostalCodeRequired = vendorSettings.ZipPostalCodeRequired;
+            model.CityEnabled = vendorSettings.CityEnabled;
+            model.CityRequired = vendorSettings.CityRequired;
+            model.CountryEnabled = vendorSettings.CountryEnabled;
+            model.StateProvinceEnabled = vendorSettings.StateProvinceEnabled;
+            model.PhoneEnabled = vendorSettings.PhoneEnabled;
+            model.PhoneRequired = vendorSettings.PhoneRequired;
+            model.FaxEnabled = vendorSettings.FaxEnabled;
+            model.FaxRequired = vendorSettings.FaxRequired;
+        }
+
+
         public virtual void PrepareCustomAddressAttributes(AddressModel model,
             Address address,
             string overrideAttributesXml = "")

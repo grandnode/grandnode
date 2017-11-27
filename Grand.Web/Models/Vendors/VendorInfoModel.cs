@@ -8,6 +8,11 @@ namespace Grand.Web.Models.Vendors
     [Validator(typeof(VendorInfoValidator))]
     public partial class VendorInfoModel : BaseGrandModel
     {
+        public VendorInfoModel()
+        {
+            this.Address = new VendorAddressModel();
+        }
+
         [GrandResourceDisplayName("Account.VendorInfo.Name")]
         public string Name { get; set; }
 
@@ -19,5 +24,7 @@ namespace Grand.Web.Models.Vendors
 
         [GrandResourceDisplayName("Account.VendorInfo.Picture")]
         public string PictureUrl { get; set; }
+
+        public VendorAddressModel Address { get; set; }
     }
 }

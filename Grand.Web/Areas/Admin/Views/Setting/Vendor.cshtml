@@ -3,6 +3,93 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Vendor").Text;
 }
+
+<script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#@Html.FieldIdFor(model => model.AddressSettings.CountryEnabled)").click(toggleVendorCountryFormField);
+            $("#@Html.FieldIdFor(model => model.AddressSettings.StateProvinceEnabled)").click(toggleVendorStateProvinceFormField);
+            $("#@Html.FieldIdFor(model => model.AddressSettings.CompanyEnabled)").click(toggleVendorRequiredFormField);
+            $("#@Html.FieldIdFor(model => model.AddressSettings.StreetAddressEnabled)").click(toggleVendorRequiredFormField);
+            $("#@Html.FieldIdFor(model => model.AddressSettings.StreetAddress2Enabled)").click(toggleVendorRequiredFormField);
+            $("#@Html.FieldIdFor(model => model.AddressSettings.ZipPostalCodeEnabled)").click(toggleVendorRequiredFormField);
+            $("#@Html.FieldIdFor(model => model.AddressSettings.CityEnabled)").click(toggleVendorRequiredFormField);
+            $("#@Html.FieldIdFor(model => model.AddressSettings.PhoneEnabled)").click(toggleVendorRequiredFormField);
+            $("#@Html.FieldIdFor(model => model.AddressSettings.FaxEnabled)").click(toggleVendorRequiredFormField);
+
+
+            toggleVendorCountryFormField();
+            toggleVendorStateProvinceFormField();
+            toggleVendorRequiredFormField();
+        });
+
+        function toggleVendorCountryFormField() {
+            if ($('#@Html.FieldIdFor(model => model.AddressSettings.CountryEnabled)').is(':checked')) {
+                $('#pnlVendorCountryRequired').show();
+                $('#pnlVendorStateProvinceEnabled').show();
+                toggleVendorStateProvinceFormField();
+            } else {
+                $('#pnlVendorCountryRequired').hide();
+                $('#pnlVendorStateProvinceEnabled').hide();
+                toggleVendorStateProvinceFormField();
+            }
+        }
+
+        function toggleVendorStateProvinceFormField() {
+            if ($('#@Html.FieldIdFor(model => model.AddressSettings.CountryEnabled)').is(':checked') &&
+                $('#@Html.FieldIdFor(model => model.AddressSettings.StateProvinceEnabled)').is(':checked')) {
+                $('#pnlVendorStateProvinceRequired').show();
+            } else {
+                $('#pnlVendorStateProvinceRequired').hide();
+            }
+        }
+
+        function toggleVendorRequiredFormField() {
+            if ($('#@Html.FieldIdFor(model => model.AddressSettings.CompanyEnabled)').is(':checked')) {
+                $('#pnlVendorCompanyRequired').show();
+            } else {
+                $('#pnlVendorCompanyRequired').hide();
+            }
+
+            if ($('#@Html.FieldIdFor(model => model.AddressSettings.StreetAddressEnabled)').is(':checked')) {
+                $('#pnlVendorStreetAddressRequired').show();
+            } else {
+                $('#pnlVendorStreetAddressRequired').hide();
+            }
+
+            if ($('#@Html.FieldIdFor(model => model.AddressSettings.StreetAddress2Enabled)').is(':checked')) {
+                $('#pnlVendorStreetAddress2Required').show();
+            } else {
+                $('#pnlVendorStreetAddress2Required').hide();
+            }
+
+            if ($('#@Html.FieldIdFor(model => model.AddressSettings.ZipPostalCodeEnabled)').is(':checked')) {
+                $('#pnlVendorZipPostalCodeRequired').show();
+            } else {
+                $('#pnlVendorZipPostalCodeRequired').hide();
+            }
+
+            if ($('#@Html.FieldIdFor(model => model.AddressSettings.CityEnabled)').is(':checked')) {
+                $('#pnlVendorCityRequired').show();
+            } else {
+                $('#pnlVendorCityRequired').hide();
+            }
+
+            if ($('#@Html.FieldIdFor(model => model.AddressSettings.PhoneEnabled)').is(':checked')) {
+                $('#pnlVendorPhoneRequired').show();
+            } else {
+                $('#pnlVendorPhoneRequired').hide();
+            }
+
+            if ($('#@Html.FieldIdFor(model => model.AddressSettings.FaxEnabled)').is(':checked')) {
+                $('#pnlVendorFaxRequired').show();
+            } else {
+                $('#pnlVendorFaxRequired').hide();
+            }
+        }
+
+</script>
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -39,7 +126,7 @@
                                     @Html.GrandLabelFor(model => model.VendorsBlockItemsToDisplay, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.EditorFor(model => model.VendorsBlockItemsToDisplay)
+                                    @Html.GrandEditorFor(model => model.VendorsBlockItemsToDisplay)
                                     @Html.ValidationMessageFor(model => model.VendorsBlockItemsToDisplay)
                                 </div>
                             </div>
@@ -190,7 +277,206 @@
 
                         </div>
                     </div>
-                </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            @T("Admin.Configuration.Settings.Vendor.Address")
+                        </div>
+                        <div class="form-horizontal panel-body">
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.GrandLabelFor(model => model.AddressSettings.CompanyEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.AddressSettings.CompanyEnabled)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.AddressSettings.CompanyEnabled)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlVendorCompanyRequired">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.GrandLabelFor(model => model.AddressSettings.CompanyRequired, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.AddressSettings.CompanyRequired)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.AddressSettings.CompanyRequired)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.GrandLabelFor(model => model.AddressSettings.StreetAddressEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.AddressSettings.StreetAddressEnabled)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.AddressSettings.StreetAddressEnabled)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlVendorStreetAddressRequired">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.GrandLabelFor(model => model.AddressSettings.StreetAddressRequired, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.AddressSettings.StreetAddressRequired)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.AddressSettings.StreetAddressRequired)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.GrandLabelFor(model => model.AddressSettings.StreetAddress2Enabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.AddressSettings.StreetAddress2Enabled)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.AddressSettings.StreetAddress2Enabled)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlVendorStreetAddress2Required">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.GrandLabelFor(model => model.AddressSettings.StreetAddress2Required, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.AddressSettings.StreetAddress2Required)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.AddressSettings.StreetAddress2Required)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.GrandLabelFor(model => model.AddressSettings.ZipPostalCodeEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.AddressSettings.ZipPostalCodeEnabled)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.AddressSettings.ZipPostalCodeEnabled)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlVendorZipPostalCodeRequired">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.GrandLabelFor(model => model.AddressSettings.ZipPostalCodeRequired, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.AddressSettings.ZipPostalCodeRequired)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.AddressSettings.ZipPostalCodeRequired)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.GrandLabelFor(model => model.AddressSettings.CityEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.AddressSettings.CityEnabled)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.AddressSettings.CityEnabled)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlVendorCityRequired">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.GrandLabelFor(model => model.AddressSettings.CityRequired, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.AddressSettings.CityRequired)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.AddressSettings.CityRequired)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.GrandLabelFor(model => model.AddressSettings.CountryEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.AddressSettings.CountryEnabled)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.AddressSettings.CountryEnabled)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlVendorStateProvinceEnabled">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.GrandLabelFor(model => model.AddressSettings.StateProvinceEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.AddressSettings.StateProvinceEnabled)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.AddressSettings.StateProvinceEnabled)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.GrandLabelFor(model => model.AddressSettings.PhoneEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.AddressSettings.PhoneEnabled)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.AddressSettings.PhoneEnabled)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlVendorPhoneRequired">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.GrandLabelFor(model => model.AddressSettings.PhoneRequired, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.AddressSettings.PhoneRequired)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.AddressSettings.PhoneRequired)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.GrandLabelFor(model => model.AddressSettings.FaxEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.AddressSettings.FaxEnabled)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.AddressSettings.FaxEnabled)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlVendorFaxRequired">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.GrandLabelFor(model => model.AddressSettings.FaxRequired, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.AddressSettings.FaxRequired)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.AddressSettings.FaxRequired)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>                
             </div>
         </div>
     </div>

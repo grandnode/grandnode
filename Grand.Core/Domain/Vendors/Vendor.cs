@@ -1,3 +1,4 @@
+using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Seo;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace Grand.Core.Domain.Vendors
         public Vendor()
         {
             Locales = new List<LocalizedProperty>();
+            Address = new Address();
         }
         /// <summary>
         /// Gets or sets the name
@@ -115,6 +117,12 @@ namespace Grand.Core.Domain.Vendors
         /// Gets or sets the total rating votes (not approved reviews)
         /// </summary>
         public int NotApprovedTotalReviews { get; set; }
+
+        /// <summary>
+        /// Gets or sets the vendor address
+        /// </summary>
+        public virtual Address Address { get; set; }
+
 
         /// <summary>
         /// Gets or sets the collection of locales

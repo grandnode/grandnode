@@ -1,4 +1,5 @@
 ﻿using Grand.Core.Configuration;
+using Grand.Core.Domain.Common;
 
 namespace Grand.Core.Domain.Vendors
 {
@@ -79,6 +80,103 @@ namespace Grand.Core.Domain.Vendors
         /// Gets or sets a value indicating the default allow customer review value of the vendor
         /// </summary>
         public bool DefaultAllowCustomerReview { get; set; }
+
+        #region Address settings
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Company' is enabled
+        /// </summary>
+        public bool CompanyEnabled { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Company' is required
+        /// </summary>
+        public bool CompanyRequired { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Street address' is enabled
+        /// </summary>
+        public bool StreetAddressEnabled { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Street address' is required
+        /// </summary>
+        public bool StreetAddressRequired { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Street address 2' is enabled
+        /// </summary>
+        public bool StreetAddress2Enabled { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Street address 2' is required
+        /// </summary>
+        public bool StreetAddress2Required { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Zip / postal code' is enabled
+        /// </summary>
+        public bool ZipPostalCodeEnabled { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Zip / postal code' is required
+        /// </summary>
+        public bool ZipPostalCodeRequired { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'City' is enabled
+        /// </summary>
+        public bool CityEnabled { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether 'City' is required
+        /// </summary>
+        public bool CityRequired { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Country' is enabled
+        /// </summary>
+        public bool CountryEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'State / province' is enabled
+        /// </summary>
+        public bool StateProvinceEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Phone number' is enabled
+        /// </summary>
+        public bool PhoneEnabled { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Phone number' is required
+        /// </summary>
+        public bool PhoneRequired { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Fax number' is enabled
+        /// </summary>
+        public bool FaxEnabled { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Fax number' is required
+        /// </summary>
+        public bool FaxRequired { get; set; }
+
+        public AddressSettings AddressSettings => new AddressSettings()
+        {
+            CityEnabled = this.CityEnabled,
+            CityRequired = this.CityRequired,
+            CompanyEnabled = this.CompanyEnabled,
+            CompanyRequired = this.CompanyRequired,
+            CountryEnabled = this.CountryEnabled,
+            FaxEnabled = this.FaxEnabled,
+            FaxRequired = this.FaxRequired,
+            PhoneEnabled = this.PhoneEnabled,
+            PhoneRequired = this.PhoneRequired,
+            StateProvinceEnabled = this.StateProvinceEnabled,
+            StreetAddress2Enabled = this.StreetAddress2Enabled,
+            StreetAddress2Required = this.StreetAddress2Required,
+            StreetAddressEnabled = this.StreetAddressEnabled,
+            StreetAddressRequired = this.StreetAddressRequired,
+            ZipPostalCodeEnabled = this.ZipPostalCodeEnabled,
+            ZipPostalCodeRequired = this.ZipPostalCodeRequired,
+        };
+
+        #endregion
 
     }
 }

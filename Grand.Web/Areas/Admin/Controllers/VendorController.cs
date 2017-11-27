@@ -22,6 +22,9 @@ using System;
 using Grand.Core.Domain.Customers;
 using Grand.Services.Stores;
 using Grand.Core;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Grand.Services.Directory;
+using Grand.Core.Domain.Directory;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -40,6 +43,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IDiscountService _discountService;
         private readonly IStoreService _storeService;
         private readonly IWorkContext _workContext;
+        private readonly ICountryService _countryService;
+        private readonly IStateProvinceService _stateProvinceService;
+
         private readonly VendorSettings _vendorSettings;
 
         #endregion
@@ -57,6 +63,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             IDiscountService discountService,
             IStoreService storeService,
             IWorkContext workContext,
+            ICountryService countryService,
+            IStateProvinceService stateProvinceService,
             VendorSettings vendorSettings)
         {
             this._customerService = customerService;
@@ -71,6 +79,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._discountService = discountService;
             this._storeService = storeService;
             this._workContext = workContext;
+            this._countryService = countryService;
+            this._stateProvinceService = stateProvinceService;
         }
 
         #endregion
@@ -181,6 +191,48 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.IsApproved = vendorReview.IsApproved;
             }
         }
+        
+        
+        protected virtual void PrepareVendorAddressModel(VendorModel model, Vendor vendor)
+        {
+
+            if (model.Address == null)
+                model.Address = new Models.Common.AddressModel();
+
+            model.Address.FirstNameEnabled = false;
+            model.Address.FirstNameRequired = false;
+            model.Address.LastNameEnabled = false;
+            model.Address.LastNameRequired = false;
+            model.Address.EmailEnabled = false;
+            model.Address.EmailRequired = false;
+            model.Address.CompanyEnabled = true;
+            model.Address.CountryEnabled = true;
+            model.Address.StateProvinceEnabled = true;
+            model.Address.CityEnabled = true;
+            model.Address.CityRequired = true;
+            model.Address.StreetAddressEnabled = true;
+            model.Address.StreetAddressRequired = true;
+            model.Address.StreetAddress2Enabled = true;
+            model.Address.ZipPostalCodeEnabled = true;
+            model.Address.ZipPostalCodeRequired = true;
+            model.Address.PhoneEnabled = true;
+            model.Address.PhoneRequired = true;
+            model.Address.FaxEnabled = true;
+
+            //address
+            model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "" });
+            foreach (var c in _countryService.GetAllCountries(showHidden: true))
+                model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (vendor != null && c.Id == vendor.Address.CountryId) });
+
+            var states = !String.IsNullOrEmpty(model.Address.CountryId) ? _stateProvinceService.GetStateProvincesByCountryId(model.Address.CountryId, showHidden: true).ToList() : new List<StateProvince>();
+            if (states.Count > 0)
+            {
+                foreach (var s in states)
+                    model.Address.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (vendor != null && s.Id == vendor.Address.StateProvinceId) });
+            }
+            else
+                model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "" });
+        }
         #endregion
 
         #region Methods
@@ -241,6 +293,10 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //default value
             model.Active = true;
+
+            //prepare address model
+            PrepareVendorAddressModel(model, null);
+
             return View(model);
         }
 
@@ -254,6 +310,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var vendor = model.ToEntity();
+                vendor.Address = model.Address.ToEntity();
+                vendor.Address.CreatedOnUtc = DateTime.UtcNow;
+
                 _vendorService.InsertVendor(vendor);
 
                 //discounts
@@ -279,6 +338,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                 SuccessNotification(_localizationService.GetResource("Admin.Vendors.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = vendor.Id }) : RedirectToAction("List");
             }
+            //prepare address model
+            PrepareVendorAddressModel(model, null);
             //discounts
             PrepareDiscountModel(model, null, true);
             //If we got this far, something failed, redisplay form
@@ -319,6 +380,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                     Email = c.Email
                 })
                 .ToList();
+
+            //prepare address model
+            PrepareVendorAddressModel(model, vendor);
+
             return View(model);
         }
 
@@ -339,6 +404,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 vendor = model.ToEntity(vendor);
                 vendor.Locales = UpdateLocales(vendor, model);
                 model.SeName = vendor.ValidateSeName(model.SeName, vendor.Name, true);
+                vendor.Address = model.Address.ToEntity(vendor.Address);
 
                 //discounts
                 var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToVendors, showHidden: true);
@@ -389,6 +455,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
             //discounts
             PrepareDiscountModel(model, vendor, true);
+
+            //prepare address model
+            PrepareVendorAddressModel(model, vendor);
 
             //associated customer emails
             model.AssociatedCustomers = _customerService

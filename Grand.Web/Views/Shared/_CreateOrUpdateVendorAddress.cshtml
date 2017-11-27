@@ -1,0 +1,120 @@
+﻿@model VendorAddressModel
+@if (Model.CountryEnabled && Model.StateProvinceEnabled)
+{
+    <script type="text/javascript">
+            function loadStates(selectedItem)
+            {
+                //var selectedItem = $(this).val();
+                var ddlStates = $("#@Html.IdFor(model => model.StateProvinceId)");
+                var statesProgress = $("#states-loading-progress");
+                statesProgress.show();
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    url: "@(Url.RouteUrl("GetStatesByCountryId"))",
+                    data: { "countryId": selectedItem, "addSelectStateItem": "true" },
+                    success: function (data) {
+                        ddlStates.html('');
+                        $.each(data, function (id, option) {
+                            ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                        });
+                        statesProgress.hide();
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve states.');
+                        statesProgress.hide();
+                    }
+                });
+
+            }
+
+            $(function () {
+                $("#@Html.IdFor(model => model.CountryId)").change(function () {
+                    var selectedItem = $(this).val();
+                    loadStates(selectedItem);
+                });
+                if ($("#@Html.IdFor(model => model.CountryId)").val().length > 0)
+                {
+                    var selectedItem = $("#@Html.IdFor(model => model.CountryId)").val();
+                    loadStates(selectedItem);
+                }
+            });
+    </script>
+}
+<input asp-for="Id" type="hidden" />
+<div class="edit-address row">
+    @if (Model.CompanyEnabled)
+    {
+        <div class="form-group col-sm-12">
+            <label asp-for="Company" class="col-form-label">@T("Address.Fields.Company"):</label>
+            <input asp-for="Company" class="form-control"/>
+            <span asp-validation-for="Company"></span>
+        </div>
+    }
+    @if (Model.CountryEnabled)
+    {
+        <div class="form-group col-sm-12 col-md-6">
+            <label asp-for="CountryId" class="col-form-label">@T("Address.Fields.Country"):</label>
+            <select asp-for="CountryId" asp-items="Model.AvailableCountries" class="custom-select form-control"></select>
+            <span asp-validation-for="CountryId"></span>
+        </div>
+    }
+
+    @if (Model.CountryEnabled && Model.StateProvinceEnabled)
+    {
+        <div class="form-group col-sm-12 col-md-6">
+            <label asp-for="StateProvinceId" class="col-form-label">@T("Address.Fields.StateProvince"):</label>
+            <select asp-for="StateProvinceId" class="custom-select form-control" asp-items="Model.AvailableStates"></select>
+            <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
+            <span asp-validation-for="StateProvinceId"></span>
+        </div>
+    }
+    @if (Model.CityEnabled)
+    {
+        <div class="form-group col-sm-12">
+            <label asp-for="City" class="col-form-label">@T("Address.Fields.City"):</label>
+            <input asp-for="City" class="form-control"/>
+            <span asp-validation-for="City"></span>
+        </div>
+    }
+    @if (Model.StreetAddressEnabled)
+    {
+        <div class="form-group col-sm-12 col-md-6">
+            <label asp-for="Address1" class="col-form-label">@T("Address.Fields.Address1"):</label>
+            <input asp-for="Address1" class="form-control"/>
+            <span asp-validation-for="Address1"></span>
+        </div>
+    }
+    @if (Model.StreetAddress2Enabled)
+    {
+        <div class="form-group col-sm-12 col-md-6">
+            <label asp-for="Address2" class="col-form-label">@T("Address.Fields.Address2"):</label>
+            <input asp-for="Address2" class="form-control" />
+            <span asp-validation-for="Address2"></span>
+        </div>
+    }
+    @if (Model.ZipPostalCodeEnabled)
+    {
+        <div class="form-group col-sm-12">
+            <label asp-for="ZipPostalCode" class="col-form-label">@T("Address.Fields.ZipPostalCode"):</label>
+            <input asp-for="ZipPostalCode" class="form-control" />
+            <span asp-validation-for="ZipPostalCode"></span>
+        </div>
+    }
+    @if (Model.PhoneEnabled)
+    {
+        <div class="form-group col-sm-12 col-md-6">
+            <label asp-for="PhoneNumber" class="col-form-label">@T("Address.Fields.PhoneNumber"):</label>
+            <input asp-for="PhoneNumber" class="form-control" />
+            <span asp-validation-for="PhoneNumber"></span>
+        </div>
+    }
+    @if (Model.FaxEnabled)
+    {
+        <div class="form-group col-sm-12 col-md-6">
+            <label asp-for="FaxNumber" class="col-form-label">@T("Address.Fields.FaxNumber"):</label>
+            <input asp-for="FaxNumber" class="form-control"/>
+            <span asp-validation-for="FaxNumber"></span>
+        </div>
+    }
+</div>
