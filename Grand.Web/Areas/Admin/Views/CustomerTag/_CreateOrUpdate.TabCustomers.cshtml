@@ -52,15 +52,14 @@
                             // Cancel the changes
                             this.cancelChanges();
                         },
+                        pageSize: @(defaultGridPageSize),
                         serverPaging: true,
                         serverFiltering: true,
                         serverSorting: true
                     },
                     pageable: {
                         refresh: true,
-                        numeric: false,
-                        previousNext: false,
-                        info: false
+                        pageSizes: [@(gridPageSizes)]
                     },
                     editable: {
                         confirmation: false,
