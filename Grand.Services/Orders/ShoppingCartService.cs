@@ -1296,6 +1296,12 @@ namespace Grand.Services.Orders
                     toCustomer.ApplyGiftCardCouponCode(code);
 
             }
+
+            //copy url referer
+            var lastUrlReferrer = fromCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LastUrlReferrer);
+            _genericAttributeService.SaveAttribute(toCustomer, SystemCustomerAttributeNames.LastUrlReferrer, lastUrlReferrer);
+
+
         }
 
         #endregion
