@@ -948,6 +948,13 @@ namespace Grand.Web.Services
                     SeName = vendor.GetSeName(),
                     AllowCustomersToContactVendors = _vendorSettings.AllowCustomersToContactVendors
                 };
+
+                //prepare vendor address
+                _addressWebService.PrepareVendorAddressModel(model: vendorModel.Address,
+                address: vendor.Address,
+                excludeProperties: false,
+                vendorSettings: _vendorSettings);
+
                 //prepare picture model
                 int pictureSize = _mediaSettings.VendorThumbPictureSize;
                 var pictureCacheKey = string.Format(ModelCacheEventConsumer.VENDOR_PICTURE_MODEL_KEY, vendor.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
