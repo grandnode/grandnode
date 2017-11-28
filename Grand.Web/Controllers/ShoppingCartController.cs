@@ -968,8 +968,8 @@ namespace Grand.Web.Controllers
             if (_workContext.CurrentCustomer.IsGuest())
             {
                 if (!_orderSettings.AnonymousCheckoutAllowed)
-                    return new UnauthorizedResult();
-                
+                    return Challenge();
+
                 return RedirectToRoute("LoginCheckoutAsGuest", new {returnUrl = Url.RouteUrl("ShoppingCart")});
             }
             

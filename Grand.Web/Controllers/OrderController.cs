@@ -58,7 +58,7 @@ namespace Grand.Web.Controllers
         public virtual IActionResult CustomerOrders()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             var model = _orderWebService.PrepareCustomerOrderList();
             return View(model);
@@ -71,7 +71,7 @@ namespace Grand.Web.Controllers
         public virtual IActionResult CancelRecurringPayment(IFormCollection form)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             //get recurring payment identifier
             string recurringPaymentId = "";
@@ -105,7 +105,7 @@ namespace Grand.Web.Controllers
         public virtual IActionResult CustomerRewardPoints()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             var rewardPointsSettings = EngineContext.Current.Resolve<RewardPointsSettings>();
             if (!rewardPointsSettings.Enabled)
@@ -122,7 +122,7 @@ namespace Grand.Web.Controllers
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
-                return new UnauthorizedResult();
+                return Challenge();
 
             var model = _orderWebService.PrepareOrderDetails(order);
 
@@ -135,7 +135,7 @@ namespace Grand.Web.Controllers
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
-                return new UnauthorizedResult();
+                return Challenge();
 
             var model = _orderWebService.PrepareOrderDetails(order);
             model.PrintMode = true;
@@ -155,7 +155,7 @@ namespace Grand.Web.Controllers
                 || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId
                 || !orderSettings.UserCanCancelUnpaidOrder)
 
-                return new UnauthorizedResult();
+                return Challenge();
 
             _orderProcessingService.CancelOrder(order, true, true);
 
@@ -167,7 +167,7 @@ namespace Grand.Web.Controllers
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
-                return new UnauthorizedResult();
+                return Challenge();
 
             var orders = new List<Order>();
             orders.Add(order);
@@ -185,7 +185,7 @@ namespace Grand.Web.Controllers
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
-                return new UnauthorizedResult();
+                return Challenge();
 
             _orderProcessingService.ReOrder(order);
             return RedirectToRoute("ShoppingCart");
@@ -199,7 +199,7 @@ namespace Grand.Web.Controllers
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
-                return new UnauthorizedResult();
+                return Challenge();
 
             if (!_paymentService.CanRePostProcessPayment(order))
                 return RedirectToRoute("OrderDetails", new { orderId = orderId });
@@ -227,11 +227,11 @@ namespace Grand.Web.Controllers
         {
             var shipment = EngineContext.Current.Resolve<IShipmentService>().GetShipmentById(shipmentId);
             if (shipment == null)
-                return new UnauthorizedResult();
+                return Challenge();
 
             var order = _orderService.GetOrderById(shipment.OrderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
-                return new UnauthorizedResult();
+                return Challenge();
 
             var model = _orderWebService.PrepareShipmentDetails(shipment);
 
