@@ -1995,6 +1995,12 @@
   <LocaleResource Name="Admin.Catalog.Categories.Fields.Published.Hint">
     <Value>Check to publish this category (visible in store). Uncheck to unpublish (category not available in store).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.SearchBoxDisplayOrder">
+    <Value>Display order for search box</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.SearchBoxDisplayOrder.hint">
+    <Value>Display order for search box</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.SeName">
     <Value>Search engine friendly page name</Value>
   </LocaleResource>
@@ -2006,6 +2012,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.ShowOnHomePage.Hint">
     <Value>Check if you want to show a category on home page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.ShowOnSearchBox">
+    <Value>Show category on search box</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.ShowOnSearchBox.hint">
+    <Value>You can show which category will shown on search box</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.SubjectToAcl">
     <Value>Subject to ACL</Value>

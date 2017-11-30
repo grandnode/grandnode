@@ -310,6 +310,21 @@ namespace Grand.Services.Catalog
         }
 
         /// <summary>
+        /// Gets all categories displayed on the home page
+        /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Categories</returns>
+        public virtual IList<Category> GetAllCategoriesSearchBox()
+        {
+            var builder = Builders<Category>.Filter;
+            var filter = builder.Eq(x => x.Published, true);
+            filter = filter & builder.Eq(x => x.ShowOnSearchBox, true);
+            var query = _categoryRepository.Collection.Find(filter).SortBy(x => x.SearchBoxDisplayOrder);
+
+            return query.ToList();
+        }
+
+        /// <summary>
         /// Gets all categories by discount id
         /// </summary>
         /// <returns>Categories</returns>

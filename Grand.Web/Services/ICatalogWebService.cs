@@ -1,14 +1,13 @@
 ﻿using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Vendors;
 using Grand.Web.Models.Catalog;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Grand.Web.Services
 {
     public partial interface ICatalogWebService
     {
+        List<string> GetChildCategoryIds(string parentCategoryId);
         void PrepareSortingOptions(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command);
         void PrepareViewModes(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command);
 

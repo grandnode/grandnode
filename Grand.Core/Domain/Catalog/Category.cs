@@ -86,6 +86,16 @@ namespace Grand.Core.Domain.Catalog
         public bool ShowOnHomePage { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to show the category on search box
+        /// </summary>
+        public bool ShowOnSearchBox { get; set; }
+
+        /// <summary>
+        /// Gets or sets the display order on search box category
+        /// </summary>
+        public int SearchBoxDisplayOrder { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to include this category in the top menu
         /// </summary>
         public bool IncludeInTopMenu { get; set; }

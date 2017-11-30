@@ -88,6 +88,12 @@ input {
     width: 100%;
     padding-top: 9px;
 }
+
+.search-box-select
+{
+    max-width: 150px;
+}
+
 .basic-search label,
 .advanced-search label{
     font-weight: 500;
@@ -1339,6 +1345,9 @@ footer .list-group .list-group-item {
     .wishlist-content .remove-from-cart label{
         padding-left: 0 !important;
     }
+    .search-box-select {
+        max-width: 100px;
+    }
 }
 
 @media (max-width: 575px) {
@@ -1382,6 +1391,7 @@ footer .list-group .list-group-item {
   .comment{
     padding-bottom: 50px !important;
   }
+    
 }
 @media (max-width: 372px){
     .navbar-light .navbar-nav .nav-link {

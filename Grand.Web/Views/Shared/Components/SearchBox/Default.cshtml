@@ -4,6 +4,10 @@
     <label for="small-searchterms" class="sr-only">@T("Search.SearchBox.Tooltip")</label>
     <div class="input-group flex-row">
         <input type="text" class="form-control search-box-text" id="small-searchterms" autocomplete="off" name="q" placeholder="@T("Search.SearchBox.Tooltip")">
+        @if (Model.AvailableCategories.Any())
+        {
+            <select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" class="search-box-select custom-select input-group-addon"></select>
+        }
         @await Component.InvokeAsync("Widget", new { widgetZone = "searchbox_before_search_button" })
         @if (Model.SearchTermMinimumLength > 0)
             {
@@ -29,12 +33,27 @@
     @if (Model.AutoCompleteEnabled)
     {
     <text>
-        <script type="text/javascript">
-                $(document).ready(function() {
+        <script type="text/javascript">$(document).ready(function () {
                     $('#small-searchterms').autocomplete({
                         delay: 500,
                         minLength: @(Model.SearchTermMinimumLength.ToString()),
-                        source: '@(Url.RouteUrl("ProductSearchAutoComplete"))',
+                        source: function (request, response) {
+                            var category = '';
+                            if ($("#SearchCategoryId").length > 0) {
+                                category = $("#SearchCategoryId").val();
+                            }
+                            $.ajax({
+                                url: '@(Url.RouteUrl("ProductSearchAutoComplete"))',
+                                dataType: "json",
+                                data: {
+                                    term: request.term,
+                                    categoryId: category
+                                },
+                                success: function (data) {
+                                    response(data);
+                                }
+                            });
+                        },
                         appendTo: '.search-box',
                         select: function(event, ui) {
                             $("#small-searchterms").val(ui.item.label);

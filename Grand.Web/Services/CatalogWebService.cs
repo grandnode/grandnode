@@ -132,30 +132,6 @@ namespace Grand.Web.Services
             this._vendorSettings = vendorSettings;
         }
 
-        #region Utilities
-
-        [NonAction]
-        protected virtual List<string> GetChildCategoryIds(string parentCategoryId)
-        {
-            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY,
-                parentCategoryId,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
-                _storeContext.CurrentStore.Id);
-            return _cacheManager.Get(cacheKey, () =>
-            {
-                var categoriesIds = new List<string>();
-                var categories = _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId);
-                foreach (var category in categories)
-                {
-                    categoriesIds.Add(category.Id);
-                    categoriesIds.AddRange(GetChildCategoryIds(category.Id));
-                }
-                return categoriesIds;
-            });
-        }
-
-        #endregion
-
         #region Sort,view,size options
 
         public virtual void PrepareSortingOptions(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command)
@@ -316,6 +292,26 @@ namespace Grand.Web.Services
         #endregion
 
         #region Category
+
+        public virtual List<string> GetChildCategoryIds(string parentCategoryId)
+        {
+            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY,
+                parentCategoryId,
+                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                _storeContext.CurrentStore.Id);
+            return _cacheManager.Get(cacheKey, () =>
+            {
+                var categoriesIds = new List<string>();
+                var categories = _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId);
+                foreach (var category in categories)
+                {
+                    categoriesIds.Add(category.Id);
+                    categoriesIds.AddRange(GetChildCategoryIds(category.Id));
+                }
+                return categoriesIds;
+            });
+        }
+
 
         public virtual List<CategorySimpleModel> PrepareCategorySimpleModels()
         {
@@ -1097,13 +1093,37 @@ namespace Grand.Web.Services
         #region Search
         public virtual SearchBoxModel PrepareSearchBox()
         {
-            var model = new SearchBoxModel
-            {
-                AutoCompleteEnabled = _catalogSettings.ProductSearchAutoCompleteEnabled,
-                ShowProductImagesInSearchAutoComplete = _catalogSettings.ShowProductImagesInSearchAutoComplete,
-                SearchTermMinimumLength = _catalogSettings.ProductSearchTermMinimumLength
-            };
-            return model;
+            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_ALL_SEARCHBOX,
+                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                _storeContext.CurrentStore.Id);
+
+            return _cacheManager.Get(cacheKey, () =>
+            {   
+                var searchbocategories = _categoryService.GetAllCategoriesSearchBox();
+                searchbocategories = searchbocategories
+                    .Where(c => _aclService.Authorize(c) && _storeMappingService.Authorize(c))
+                    .ToList();
+
+                var availableCategories = new List<SelectListItem>();
+                if (searchbocategories.Any())
+                {
+                    availableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Common.All"), Value = "" });
+                    foreach (var s in searchbocategories)
+                        availableCategories.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+                }
+
+                var model = new SearchBoxModel
+                {
+                    AutoCompleteEnabled = _catalogSettings.ProductSearchAutoCompleteEnabled,
+                    ShowProductImagesInSearchAutoComplete = _catalogSettings.ShowProductImagesInSearchAutoComplete,
+                    SearchTermMinimumLength = _catalogSettings.ProductSearchTermMinimumLength,
+                    AvailableCategories = availableCategories
+                };
+
+                return model;
+            });
+
+
         }
 
         public virtual SearchModel PrepareSearch(SearchModel model, CatalogPagingFilteringModel command)

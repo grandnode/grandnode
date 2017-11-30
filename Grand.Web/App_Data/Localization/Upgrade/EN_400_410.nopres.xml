@@ -184,5 +184,20 @@
   <LocaleResource Name="account.vendorinfo.name.hint">
     <Value>Name</Value>
   </LocaleResource>
-  
+
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.ShowOnSearchBox">
+    <Value>Show category on search box</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.ShowOnSearchBox.hint">
+    <Value>You can show which category will shown on search box</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.SearchBoxDisplayOrder">
+    <Value>Display order for search box</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.SearchBoxDisplayOrder.hint">
+    <Value>Display order for search box</Value>
+  </LocaleResource>
+
+
 </Language>

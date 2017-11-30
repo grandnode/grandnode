@@ -208,6 +208,16 @@ namespace Grand.Web.Infrastructure.Cache
         /// {2} : current store ID
         /// </remarks>
         public const string CATEGORY_ALL_MODEL_KEY = "Grand.pres.category.all-{0}-{1}-{2}";
+
+        /// <summary>
+        /// Key for CategorySearchBoxModel caching
+        /// </summary>
+        /// <remarks>
+        /// {1} : comma separated list of customer roles
+        /// {2} : current store ID
+        /// </remarks>
+        public const string CATEGORY_ALL_SEARCHBOX = "Grand.pres.category.all.searchbox-{0}-{1}";
+
         public const string CATEGORY_ALL_PATTERN_KEY = "Grand.pres.category.all";
 
         /// <summary>

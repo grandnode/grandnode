@@ -70,6 +70,11 @@ namespace Grand.Core.Domain.Catalog
         public bool ShowProductsFromSubcategories { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether a search box  should include products from subcategories
+        /// </summary>
+        public bool ShowProductsFromSubcategoriesInSearchBox { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether number of products should be displayed beside each category
         /// </summary>
         public bool ShowCategoryProductNumber { get; set; }

@@ -27,6 +27,7 @@ using Grand.Web.Models.Vendors;
 using Grand.Framework.Controllers;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Infrastructure;
+using System.Collections.Generic;
 
 namespace Grand.Web.Controllers
 {
@@ -447,7 +448,7 @@ namespace Grand.Web.Controllers
             return View(searchmodel);
         }
 
-        public virtual IActionResult SearchTermAutoComplete(string term)
+        public virtual IActionResult SearchTermAutoComplete(string term, string categoryId)
         {
             if (String.IsNullOrWhiteSpace(term) || term.Length < _catalogSettings.ProductSearchTermMinimumLength)
                 return Content("");
@@ -455,10 +456,22 @@ namespace Grand.Web.Controllers
             //products
             var productNumber = _catalogSettings.ProductSearchAutoCompleteNumberOfProducts > 0 ?
                 _catalogSettings.ProductSearchAutoCompleteNumberOfProducts : 10;
+            var categoryIds = new List<string>();
+            if (!string.IsNullOrEmpty(categoryId))
+            {
+                categoryIds.Add(categoryId);
+                if (_catalogSettings.ShowProductsFromSubcategoriesInSearchBox)
+                {
+                    //include subcategories
+                    categoryIds.AddRange(_catalogWebService.GetChildCategoryIds(categoryId));
+                }
+            }
+
 
             var products = _productService.SearchProducts(
                 storeId: _storeContext.CurrentStore.Id,
                 keywords: term,
+                categoryIds: categoryIds,
                 searchSku: _catalogSettings.SearchBySku,
                 languageId: _workContext.WorkingLanguage.Id,
                 visibleIndividuallyOnly: true,

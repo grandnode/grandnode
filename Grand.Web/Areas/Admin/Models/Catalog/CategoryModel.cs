@@ -93,6 +93,12 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
 
         public string Breadcrumb { get; set; }
 
+        //seach box
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.ShowOnSearchBox")]
+        public bool ShowOnSearchBox { get; set; }
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.SearchBoxDisplayOrder")]
+        public int SearchBoxDisplayOrder { get; set; }
+
         //ACL
         [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.SubjectToAcl")]
         public bool SubjectToAcl { get; set; }
