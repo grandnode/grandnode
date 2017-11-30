@@ -763,7 +763,6 @@ namespace Grand.Services.ExportImport
 
                     manager.ReadFromXlsx(worksheet, iRow);
                     var manufacturerid = manager.GetProperty("id") != null ? manager.GetProperty("id").StringValue : string.Empty;
-
                     var manufacturer = string.IsNullOrEmpty(manufacturerid) ? null : _manufacturerService.GetManufacturerById(manufacturerid);
 
                     var isNew = manufacturer == null;
@@ -821,7 +820,6 @@ namespace Grand.Services.ExportImport
                             case "picture":
                                 picture = property.StringValue;
                                 break;
-
                         }
                     }
 
@@ -855,30 +853,6 @@ namespace Grand.Services.ExportImport
         /// <param name="stream">Stream</param>
         public virtual void ImportCategoryFromXlsx(Stream stream)
         {
-            var properties = new[]
-            {
-                new PropertyByName<Category>("Id"),
-                new PropertyByName<Category>("Name"),
-                new PropertyByName<Category>("Description"),
-                new PropertyByName<Category>("CategoryTemplateId"),
-                new PropertyByName<Category>("MetaKeywords"),
-                new PropertyByName<Category>("MetaDescription"),
-                new PropertyByName<Category>("MetaTitle"),
-                new PropertyByName<Category>("SeName"),
-                new PropertyByName<Category>("ParentCategoryId"),
-                new PropertyByName<Category>("Picture"),
-                new PropertyByName<Category>("PageSize"),
-                new PropertyByName<Category>("AllowCustomersToSelectPageSize"),
-                new PropertyByName<Category>("PageSizeOptions"),
-                new PropertyByName<Category>("PriceRanges"),
-                new PropertyByName<Category>("ShowOnHomePage"),
-                new PropertyByName<Category>("IncludeInTopMenu"),
-                new PropertyByName<Category>("Published"),
-                new PropertyByName<Category>("DisplayOrder")
-            };
-
-            var manager = new PropertyManager<Category>(properties);
-
             using (var xlPackage = new ExcelPackage(stream))
             {
                 // get the first worksheet in the workbook
@@ -887,6 +861,29 @@ namespace Grand.Services.ExportImport
                     throw new GrandException("No worksheet found");
 
                 var iRow = 2;
+
+                //property array
+                //the columns
+                var properties = new List<PropertyByName<Category>>();
+                var poz = 1;
+                while (true)
+                {
+                    try
+                    {
+                        var cell = worksheet.Cells[1, poz];
+
+                        if (cell == null || cell.Value == null || String.IsNullOrEmpty(cell.Value.ToString()))
+                            break;
+
+                        poz += 1;
+                        properties.Add(new PropertyByName<Category>(cell.Value.ToString().ToLower()));
+                    }
+                    catch
+                    {
+                        break;
+                    }
+                }
+                var manager = new PropertyManager<Category>(properties.ToArray());
 
                 while (true)
                 {
@@ -899,7 +896,8 @@ namespace Grand.Services.ExportImport
 
                     manager.ReadFromXlsx(worksheet, iRow);
 
-                    var category = _categoryService.GetCategoryById(manager.GetProperty("Id").StringValue);
+                    var categoryid = manager.GetProperty("id") != null ? manager.GetProperty("id").StringValue : string.Empty;
+                    var category = string.IsNullOrEmpty(categoryid) ? null : _categoryService.GetCategoryById(categoryid);
 
                     var isNew = category == null;
 
@@ -908,26 +906,80 @@ namespace Grand.Services.ExportImport
                     if (isNew)
                         category.CreatedOnUtc = DateTime.UtcNow;
 
-                    category.Name = manager.GetProperty("Name").StringValue;
-                    category.Description = manager.GetProperty("Description").StringValue;
-                    category.CategoryTemplateId = manager.GetProperty("CategoryTemplateId").StringValue;
-                    category.MetaKeywords = manager.GetProperty("MetaKeywords").StringValue;
-                    category.MetaDescription = manager.GetProperty("MetaDescription").StringValue;
-                    category.MetaTitle = manager.GetProperty("MetaTitle").StringValue;
-                    var _seName = manager.GetProperty("SeName").StringValue;
-                    category.ParentCategoryId = manager.GetProperty("ParentCategoryId").StringValue;
-                    var picture = LoadPicture(manager.GetProperty("Picture").StringValue, category.Name, isNew ? "" : category.PictureId);
-                    category.PageSize = manager.GetProperty("PageSize").IntValue;
-                    category.AllowCustomersToSelectPageSize = manager.GetProperty("AllowCustomersToSelectPageSize").BooleanValue;
-                    category.PageSizeOptions = manager.GetProperty("PageSizeOptions").StringValue;
-                    category.PriceRanges = manager.GetProperty("PriceRanges").StringValue;
-                    category.ShowOnHomePage = manager.GetProperty("ShowOnHomePage").BooleanValue;
-                    category.IncludeInTopMenu = manager.GetProperty("IncludeInTopMenu").BooleanValue;
-                    category.Published = manager.GetProperty("Published").BooleanValue;
-                    category.DisplayOrder = manager.GetProperty("DisplayOrder").IntValue;
+                    string sename = string.Empty;
+                    string picture = string.Empty;
 
-                    if (picture != null)
-                        category.PictureId = picture.Id;
+                    foreach (var property in manager.GetProperties)
+                    {
+                        switch (property.PropertyName.ToLower())
+                        {
+                            case "name":
+                                category.Name = property.StringValue;
+                                break;
+                            case "description":
+                                category.Description = property.StringValue;
+                                break;
+                            case "categorytemplateid":
+                                category.CategoryTemplateId = property.StringValue;
+                                break;
+                            case "metakeywords":
+                                category.MetaKeywords = property.StringValue;
+                                break;
+                            case "metadescription":
+                                category.MetaDescription = property.StringValue;
+                                break;
+                            case "metatitle":
+                                category.MetaTitle = property.StringValue;
+                                break;
+                            case "sename":
+                                sename = property.StringValue;
+                                break;
+                            case "pagesize":
+                                category.PageSize = property.IntValue > 0 ? property.IntValue : 10;
+                                break;
+                            case "allowcustomerstoselectpageSize":
+                                category.AllowCustomersToSelectPageSize = property.BooleanValue;
+                                break;
+                            case "pagesizeoptions":
+                                category.PageSizeOptions = property.StringValue;
+                                break;
+                            case "priceranges":
+                                category.PriceRanges = property.StringValue;
+                                break;
+                            case "published":
+                                category.Published = property.BooleanValue;
+                                break;
+                            case "displayorder":
+                                category.DisplayOrder = property.IntValue;
+                                break;
+                            case "showonhomepage":
+                                category.ShowOnHomePage = property.BooleanValue;
+                                break;
+                            case "includeintopmenu":
+                                category.ShowOnHomePage = property.BooleanValue;
+                                break;
+                            case "showonsearchbox":
+                                category.ShowOnSearchBox = property.BooleanValue;
+                                break;
+                            case "searchboxdisplayorder":
+                                category.SearchBoxDisplayOrder = property.IntValue;
+                                break;
+                            case "picture":
+                                picture = property.StringValue;
+                                break;
+                            case "parentcategoryid":
+                                category.ParentCategoryId = property.StringValue;
+                                break;
+
+                        }
+                    }
+
+                    if(!string.IsNullOrEmpty(picture))
+                    {
+                        var _picture = LoadPicture(picture, category.Name, isNew ? "" : category.PictureId);
+                        if (_picture != null)
+                            category.PictureId = _picture.Id;
+                    }
 
                     category.UpdatedOnUtc = DateTime.UtcNow;
 
@@ -936,12 +988,10 @@ namespace Grand.Services.ExportImport
                     else
                         _categoryService.UpdateCategory(category);
 
-                    _seName = category.ValidateSeName(_seName, category.Name, true);
-                    category.SeName = _seName;
+                    sename = category.ValidateSeName(sename, category.Name, true);
+                    category.SeName = sename;
                     _categoryService.UpdateCategory(category);
-
-                    _urlRecordService.SaveSlug(category, _seName, "");
-
+                    _urlRecordService.SaveSlug(category, sename, "");
 
                     iRow++;
                 }
