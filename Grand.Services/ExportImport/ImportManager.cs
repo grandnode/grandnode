@@ -11,7 +11,6 @@ using Grand.Services.Media;
 using Grand.Services.Messages;
 using Grand.Services.Seo;
 using OfficeOpenXml;
-using MongoDB.Bson;
 using Grand.Services.ExportImport.Help;
 using Grand.Core.Domain.Media;
 using System.Collections.Generic;
@@ -64,28 +63,6 @@ namespace Grand.Services.ExportImport
         #endregion
 
         #region Utilities
-
-        protected virtual int GetColumnIndex(string[] properties, string columnName)
-        {
-            if (properties == null)
-                throw new ArgumentNullException("properties");
-
-            if (columnName == null)
-                throw new ArgumentNullException("columnName");
-
-            for (int i = 0; i < properties.Length; i++)
-                if (properties[i].Equals(columnName, StringComparison.OrdinalIgnoreCase))
-                    return i + 1; //excel indexes start from 1
-            return 0;
-        }
-
-        protected virtual string ConvertColumnToString(object columnValue)
-        {
-            if (columnValue == null)
-                return null;
-
-            return Convert.ToString(columnValue);
-        }
 
         protected virtual string GetMimeTypeFromFilePath(string filePath)
         {
@@ -743,34 +720,35 @@ namespace Grand.Services.ExportImport
         /// <param name="stream">Stream</param>
         public virtual void ImportManufacturerFromXlsx(Stream stream)
         {
-            //property array
-            var properties = new[]
-            {
-                new PropertyByName<Manufacturer>("Id"),
-                new PropertyByName<Manufacturer>("Name"),
-                new PropertyByName<Manufacturer>("Description"),
-                new PropertyByName<Manufacturer>("ManufacturerTemplateId"),
-                new PropertyByName<Manufacturer>("MetaKeywords"),
-                new PropertyByName<Manufacturer>("MetaDescription"),
-                new PropertyByName<Manufacturer>("MetaTitle"),
-                new PropertyByName<Manufacturer>("SeName"),
-                new PropertyByName<Manufacturer>("Picture"),
-                new PropertyByName<Manufacturer>("PageSize"),
-                new PropertyByName<Manufacturer>("AllowCustomersToSelectPageSize"),
-                new PropertyByName<Manufacturer>("PageSizeOptions"),
-                new PropertyByName<Manufacturer>("PriceRanges"),
-                new PropertyByName<Manufacturer>("Published"),
-                new PropertyByName<Manufacturer>("DisplayOrder")
-            };
-
-            var manager = new PropertyManager<Manufacturer>(properties);
-
             using (var xlPackage = new ExcelPackage(stream))
             {
                 // get the first worksheet in the workbook
                 var worksheet = xlPackage.Workbook.Worksheets.FirstOrDefault();
                 if (worksheet == null)
                     throw new GrandException("No worksheet found");
+
+                //property array
+                //the columns
+                var properties = new List<PropertyByName<Manufacturer>>();
+                var poz = 1;
+                while (true)
+                {
+                    try
+                    {
+                        var cell = worksheet.Cells[1, poz];
+
+                        if (cell == null || cell.Value == null || String.IsNullOrEmpty(cell.Value.ToString()))
+                            break;
+
+                        poz += 1;
+                        properties.Add(new PropertyByName<Manufacturer>(cell.Value.ToString().ToLower()));
+                    }
+                    catch
+                    {
+                        break;
+                    }
+                }
+                var manager = new PropertyManager<Manufacturer>(properties.ToArray());
 
                 var iRow = 2;
 
@@ -784,8 +762,9 @@ namespace Grand.Services.ExportImport
                         break;
 
                     manager.ReadFromXlsx(worksheet, iRow);
+                    var manufacturerid = manager.GetProperty("id") != null ? manager.GetProperty("id").StringValue : string.Empty;
 
-                    var manufacturer = _manufacturerService.GetManufacturerById(manager.GetProperty("Id").StringValue);
+                    var manufacturer = string.IsNullOrEmpty(manufacturerid) ? null : _manufacturerService.GetManufacturerById(manufacturerid);
 
                     var isNew = manufacturer == null;
 
@@ -794,25 +773,65 @@ namespace Grand.Services.ExportImport
                     if (isNew)
                         manufacturer.CreatedOnUtc = DateTime.UtcNow;
 
-                    manufacturer.Name = manager.GetProperty("Name").StringValue;
-                    manufacturer.Description = manager.GetProperty("Description").StringValue;
-                    manufacturer.ManufacturerTemplateId = manager.GetProperty("ManufacturerTemplateId").StringValue;
-                    manufacturer.MetaKeywords = manager.GetProperty("MetaKeywords").StringValue;
-                    manufacturer.MetaDescription = manager.GetProperty("MetaDescription").StringValue;
-                    manufacturer.MetaTitle = manager.GetProperty("MetaTitle").StringValue;
-                    var _seName = manager.GetProperty("SeName").StringValue;
-                    var picture = LoadPicture(manager.GetProperty("Picture").StringValue, manufacturer.Name,
-                        isNew ? "" : manufacturer.PictureId);
-                    manufacturer.PageSize = manager.GetProperty("PageSize").IntValue;
-                    manufacturer.AllowCustomersToSelectPageSize = manager.GetProperty("AllowCustomersToSelectPageSize").BooleanValue;
-                    manufacturer.PageSizeOptions = manager.GetProperty("PageSizeOptions").StringValue;
-                    manufacturer.PriceRanges = manager.GetProperty("PriceRanges").StringValue;
-                    manufacturer.Published = manager.GetProperty("Published").BooleanValue;
-                    manufacturer.DisplayOrder = manager.GetProperty("DisplayOrder").IntValue;
+                    string sename = string.Empty;
+                    string picture = string.Empty;
+                    foreach (var property in manager.GetProperties)
+                    {
+                        switch (property.PropertyName.ToLower())
+                        {
+                            case "name":
+                                manufacturer.Name = property.StringValue;
+                                break;
+                            case "description":
+                                manufacturer.Description = property.StringValue;
+                                break;
+                            case "manufacturertemplateid":
+                                manufacturer.ManufacturerTemplateId = property.StringValue;
+                                break;
+                            case "metakeywords":
+                                manufacturer.MetaKeywords = property.StringValue;
+                                break;
+                            case "metadescription":
+                                manufacturer.MetaDescription = property.StringValue;
+                                break;
+                            case "metatitle":
+                                manufacturer.MetaTitle = property.StringValue;
+                                break;
+                            case "sename":
+                                sename = property.StringValue;
+                                break;
+                            case "pagesize":
+                                manufacturer.PageSize = property.IntValue > 0 ? property.IntValue : 10;
+                                break;
+                            case "allowcustomerstoselectpageSize":
+                                manufacturer.AllowCustomersToSelectPageSize = property.BooleanValue;
+                                break;
+                            case "pagesizeoptions":
+                                manufacturer.PageSizeOptions = property.StringValue;
+                                break;
+                            case "priceranges":
+                                manufacturer.PriceRanges = property.StringValue;
+                                break;
+                            case "published":
+                                manufacturer.Published = property.BooleanValue;
+                                break;
+                            case "displayorder":
+                                manufacturer.DisplayOrder = property.IntValue;
+                                break;
+                            case "picture":
+                                picture = property.StringValue;
+                                break;
 
-                    if (picture != null)
-                        manufacturer.PictureId = picture.Id;
+                        }
+                    }
 
+                    if (!string.IsNullOrEmpty(picture))
+                    {
+                        var _picture = LoadPicture(picture, manufacturer.Name,
+                            isNew ? "" : manufacturer.PictureId);
+                        if (picture != null)
+                            manufacturer.PictureId = _picture.Id;
+                    }
                     manufacturer.UpdatedOnUtc = DateTime.UtcNow;
 
                     if (isNew)
@@ -820,8 +839,8 @@ namespace Grand.Services.ExportImport
                     else
                         _manufacturerService.UpdateManufacturer(manufacturer);
 
-                    _seName = manufacturer.ValidateSeName(_seName, manufacturer.Name, true);
-                    manufacturer.SeName = _seName;
+                    sename = manufacturer.ValidateSeName(sename, manufacturer.Name, true);
+                    manufacturer.SeName = sename;
                     _manufacturerService.UpdateManufacturer(manufacturer);
                     _urlRecordService.SaveSlug(manufacturer, manufacturer.SeName, "");
 
