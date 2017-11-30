@@ -151,7 +151,7 @@
 </script>
 @*import manufacturers form*@
 <div class="modal-dialog" id="importexcel-window" style="display:none; padding: 0 10px;">
-    @using (Html.BeginForm("ImportFromXlsx", "Category", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    @using (Html.BeginForm("ImportFromXlsx", "Manufacturer", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
         <em>@T("Admin.Catalog.Manufacturer.List.ImportFromExcelTip")</em>
