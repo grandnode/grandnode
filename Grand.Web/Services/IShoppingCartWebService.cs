@@ -5,6 +5,7 @@ using Grand.Web.Models.ShoppingCart;
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
+using Grand.Core.Domain.Customers;
 
 namespace Grand.Web.Services
 {
@@ -24,6 +25,8 @@ namespace Grand.Web.Services
         EstimateShippingModel PrepareEstimateShipping(IList<ShoppingCartItem> cart, bool setEstimateShippingDefaultAddress = true);
 
         OrderTotalsModel PrepareOrderTotals(IList<ShoppingCartItem> cart, bool isEditable);
+
+        AddToCartModel PrepareAddToCartModel(Product product, Customer customer, int quantity, string attributesXml, ShoppingCartType cartType);
 
         void ParseAndSaveCheckoutAttributes(List<ShoppingCartItem> cart, IFormCollection form);
 

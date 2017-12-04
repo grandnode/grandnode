@@ -17,6 +17,7 @@ namespace Grand.Core.Domain.Media
         public int VendorThumbPictureSize { get; set; }
         public int CartThumbPictureSize { get; set; }
         public int MiniCartThumbPictureSize { get; set; }
+        public int AddToCartThumbPictureSize { get; set; }
         public int AutoCompleteSearchThumbPictureSize { get; set; }
         public int ImageSquarePictureSize { get; set; }
         public bool DefaultPictureZoomEnabled { get; set; }

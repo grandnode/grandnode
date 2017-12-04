@@ -554,14 +554,14 @@ namespace Grand.Web.Controllers
                 return Json(new
                 {
                     success = false,
-                    message = "No product found with the specified ID"
+                    comparemessage = "No product found with the specified ID"
                 });
 
             if (!_catalogSettings.CompareProductsEnabled)
                 return Json(new
                 {
                     success = false,
-                    message = "Product comparison is disabled"
+                    comparemessage = "Product comparison is disabled"
                 });
 
             _compareProductsService.AddProductToCompareList(productId);
@@ -572,7 +572,7 @@ namespace Grand.Web.Controllers
             return Json(new
             {
                 success = true,
-                message = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToCompareList.Link"), Url.RouteUrl("CompareProducts"))
+                comparemessage = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToCompareList.Link"), Url.RouteUrl("CompareProducts"))
                 //use the code below (commented) if you want a customer to be automatically redirected to the compare products page
                 //redirect = Url.RouteUrl("CompareProducts"),
             });

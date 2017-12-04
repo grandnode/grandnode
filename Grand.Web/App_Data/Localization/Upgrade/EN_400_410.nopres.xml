@@ -177,27 +177,51 @@
   <LocaleResource Name="Account.VendorInfo.ZipPostalCode.Required">
     <Value>Zip / postal code is required</Value>
   </LocaleResource>
-
   <LocaleResource Name="Account.VendorInfo.Email.hint">
     <Value>Email</Value>
   </LocaleResource>
   <LocaleResource Name="account.vendorinfo.name.hint">
     <Value>Name</Value>
   </LocaleResource>
-
   <LocaleResource Name="Admin.Catalog.Categories.Fields.ShowOnSearchBox">
     <Value>Show category on search box</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.ShowOnSearchBox.hint">
     <Value>You can show which category will shown on search box</Value>
   </LocaleResource>
-
   <LocaleResource Name="Admin.Catalog.Categories.Fields.SearchBoxDisplayOrder">
     <Value>Display order for search box</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.SearchBoxDisplayOrder.hint">
     <Value>Display order for search box</Value>
   </LocaleResource>
-
+  <LocaleResource Name="AddToCart.Attributes">
+    <Value>Attributes:</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.Continue">
+    <Value>Continue</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.ProductName">
+    <Value>Product Name:</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.Price">
+    <Value>Price</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.Qty">
+    <Value>Qty</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.ShoppingCart">
+    <Value>Product was successfully added to Cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.ViewCart">
+    <Value>Go to cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.Wishlist">
+    <Value>Product was successfully added to wishlist</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.ViewWishlist">
+    <Value>Go to wishlist</Value>
+  </LocaleResource>
+  
 
 </Language>

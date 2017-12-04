@@ -269,6 +269,8 @@ namespace Grand.Web.Controllers
                 });
             }
 
+            var addtoCartModel = _shoppingCartWebService.PrepareAddToCartModel(product, customer, quantity, "", cartType);
+
             //added to the cart/wishlist
             switch (cartType)
             {
@@ -297,6 +299,7 @@ namespace Grand.Web.Controllers
                         {
                             success = true,
                             message = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToTheWishlist.Link"), Url.RouteUrl("Wishlist")),
+                            html = this.RenderPartialViewToString("AddToCart", addtoCartModel),
                             updatetopwishlistsectionhtml = updatetopwishlistsectionhtml,
                         });
                     }
@@ -331,6 +334,7 @@ namespace Grand.Web.Controllers
                         {
                             success = true,
                             message = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToTheCart.Link"), Url.RouteUrl("ShoppingCart")),
+                            html = this.RenderPartialViewToString("AddToCart", addtoCartModel),
                             updatetopcartsectionhtml = updatetopcartsectionhtml,
                             updateflyoutcartsectionhtml = updateflyoutcartsectionhtml
                         });
@@ -483,6 +487,8 @@ namespace Grand.Web.Controllers
                 });
             }
 
+            var addtoCartModel = _shoppingCartWebService.PrepareAddToCartModel(product, _workContext.CurrentCustomer, quantity, attributes, cartType);
+
             //added to the cart/wishlist
             switch (cartType)
             {
@@ -513,6 +519,7 @@ namespace Grand.Web.Controllers
                             success = true,
                             message = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToTheWishlist.Link"), Url.RouteUrl("Wishlist")),
                             updatetopwishlistsectionhtml = updatetopwishlistsectionhtml,
+                            html = this.RenderPartialViewToString("AddToCart", addtoCartModel),
                         });
                     }
                 case ShoppingCartType.ShoppingCart:
@@ -545,6 +552,7 @@ namespace Grand.Web.Controllers
                         {
                             success = true,
                             message = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToTheCart.Link"), Url.RouteUrl("ShoppingCart")),
+                            html = this.RenderPartialViewToString("AddToCart", addtoCartModel),
                             updatetopcartsectionhtml = updatetopcartsectionhtml,
                             updateflyoutcartsectionhtml = updateflyoutcartsectionhtml
                         });

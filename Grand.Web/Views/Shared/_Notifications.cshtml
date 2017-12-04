@@ -70,7 +70,8 @@
         </div>
     </form>
 </div>
-
+<div class="modal fade" id="ModalAddToCart" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
+</div>
 <script>
     $(document).ready(function () {
         CustomerAction.init('@Url.Action("CustomerActionEventUrl", "Common")', '@Url.Action("GetActivePopup", "Common")', '@Url.Action("RemovePopup", "Common")');

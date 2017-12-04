@@ -1017,6 +1017,40 @@ namespace Grand.Web.Services
             return model;
         }
 
+        public virtual AddToCartModel PrepareAddToCartModel(Product product, Customer customer, int quantity, string attributesXml, ShoppingCartType cartType)
+        {
+            var model = new AddToCartModel();
+            model.AttributeDescription = _productAttributeFormatter.FormatAttributes(product, attributesXml);
+            model.ProductSeName = product.GetSeName();
+            model.CartType = cartType;
+            model.ProductId = product.Id;
+            model.ProductName = product.GetLocalized(x => x.Name);
+            model.Quantity = quantity;
+
+            var sci = customer.ShoppingCartItems.FirstOrDefault(x => x.ProductId == product.Id && (string.IsNullOrEmpty(x.AttributesXml) ? "": x.AttributesXml) == attributesXml);
+
+            //unit prices
+            if (product.CallForPrice)
+            {
+                model.Price = _localizationService.GetResource("Products.CallForPrice");
+            }
+            else
+            {
+                decimal taxRate;
+                decimal shoppingCartUnitPriceWithDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetUnitPrice(sci), out taxRate);
+                decimal shoppingCartUnitPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartUnitPriceWithDiscountBase, _workContext.WorkingCurrency);
+                model.Price = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount);
+                model.DecimalPrice = shoppingCartUnitPriceWithDiscount;
+                model.TotalPrice = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount* sci.Quantity);
+            }
+
+            //picture
+            model.Picture = PrepareCartItemPicture(product, sci.AttributesXml, _mediaSettings.AddToCartThumbPictureSize, true, model.ProductName);
+
+            return model;
+
+        }
+
         public virtual void ParseAndSaveCheckoutAttributes(List<ShoppingCartItem> cart, IFormCollection form)
         {
             if (cart == null)

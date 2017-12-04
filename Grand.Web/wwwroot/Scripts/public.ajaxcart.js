@@ -1,18 +1,14 @@
 ﻿/*
 ** ajax cart implementation
 */
-
-
 var AjaxCart = {
     loadWaiting: false,
-    usepopupnotifications: false,
     topcartselector: '',
     topwishlistselector: '',
     flyoutcartselector: '',
 
-    init: function (usepopupnotifications, topcartselector, topwishlistselector, flyoutcartselector) {
+    init: function (topcartselector, topwishlistselector, flyoutcartselector) {
         this.loadWaiting = false;
-        this.usepopupnotifications = usepopupnotifications;
         this.topcartselector = topcartselector;
         this.topwishlistselector = topwishlistselector;
         this.flyoutcartselector = flyoutcartselector;
@@ -84,27 +80,24 @@ var AjaxCart = {
         if (response.updateflyoutcartsectionhtml) {
             $(AjaxCart.flyoutcartselector).replaceWith(response.updateflyoutcartsectionhtml);
         }
+        if (response.comparemessage) {
+            if (response.success == true) {
+                displayBarNotification(response.comparemessage, 'success', 3500);
+            }
+            else {
+                displayBarNotification(response.comparemessage, 'error', 3500);
+            }
+            return false;
+        }
         if (response.message) {
             //display notification
             if (response.success == true) {
                 //success
-                if (AjaxCart.usepopupnotifications == true) {
-                    displayPopupNotification(response.message, 'success', true);
-                }
-                else {
-                    //specify timeout for success messages
-                    displayBarNotification(response.message, 'success', 3500);
-                }
+                displayPopupAddToCart(response.html);
             }
             else {
                 //error
-                if (AjaxCart.usepopupnotifications == true) {
-                    displayPopupNotification(response.message, 'error', true);
-                }
-                else {
-                    //no timeout for errors
-                    displayBarNotification(response.message, 'error', 0);
-                }
+                displayBarNotification(response.message, 'error', 3500);
             }
             return false;
         }

@@ -55,6 +55,12 @@ function displayPopupNotification(message, messagetype, modal) {
     $('#generalModal').modal('show');
 }
 
+function displayPopupAddToCart(html) {
+    $('#ModalAddToCart').html(html).modal('show');
+}
+
+
+
 
 var barNotificationTimeout;
 function displayBarNotification(message, messagetype, timeout) {
