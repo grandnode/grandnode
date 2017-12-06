@@ -569,19 +569,23 @@ namespace Grand.Web.Controllers
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
+
+            var customer = _workContext.CurrentCustomer;
+            var store = _storeContext.CurrentStore;
+
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
             if (_orderSettings.OnePageCheckoutEnabled)
                 return RedirectToRoute("CheckoutOnePage");
 
-            if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
+            if ((customer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
                 return Challenge();
 
             if (!cart.RequiresShipping())
             {
-                _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer,
-                    SystemCustomerAttributeNames.SelectedShippingOption, null, _storeContext.CurrentStore.Id);
+                _genericAttributeService.SaveAttribute<ShippingOption>(customer,
+                    SystemCustomerAttributeNames.SelectedShippingOption, null, store.Id);
                 return RedirectToRoute("CheckoutPaymentMethod");
             }
 
@@ -595,8 +599,8 @@ namespace Grand.Web.Controllers
             string shippingRateComputationMethodSystemName = splittedOption[1];
 
             //clear shipping option XML/Description
-            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.ShippingOptionAttributeXml, "", _storeContext.CurrentStore.Id);
-            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.ShippingOptionAttributeDescription, "", _storeContext.CurrentStore.Id);
+            _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.ShippingOptionAttributeXml, "", store.Id);
+            _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.ShippingOptionAttributeDescription, "", store.Id);
 
             //validate customer's input
             List<string> warnings;
@@ -604,12 +608,12 @@ namespace Grand.Web.Controllers
 
             //find it
             //performance optimization. try cache first
-            var shippingOptions = _workContext.CurrentCustomer.GetAttribute<List<ShippingOption>>(SystemCustomerAttributeNames.OfferedShippingOptions, _storeContext.CurrentStore.Id);
+            var shippingOptions = customer.GetAttribute<List<ShippingOption>>(SystemCustomerAttributeNames.OfferedShippingOptions, store.Id);
             if (shippingOptions == null || shippingOptions.Count == 0)
             {
                 //not found? let's load them using shipping service
                 shippingOptions = _shippingService
-                    .GetShippingOptions(cart, _workContext.CurrentCustomer.ShippingAddress, shippingRateComputationMethodSystemName, _storeContext.CurrentStore.Id)
+                    .GetShippingOptions(customer, cart, customer.ShippingAddress, shippingRateComputationMethodSystemName, store.Id)
                     .ShippingOptions
                     .ToList();
             }
@@ -626,14 +630,14 @@ namespace Grand.Web.Controllers
                 return ShippingMethod();
 
             //save
-            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, shippingOption, _storeContext.CurrentStore.Id);
+            _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.SelectedShippingOption, shippingOption, store.Id);
 
             if (ModelState.IsValid)
             {
                 return RedirectToRoute("CheckoutPaymentMethod");
             }
 
-            var model = _checkoutWebService.PrepareShippingMethod(cart, _workContext.CurrentCustomer.ShippingAddress);
+            var model = _checkoutWebService.PrepareShippingMethod(cart, customer.ShippingAddress);
             return View(model);
         }
         
@@ -1409,17 +1413,21 @@ namespace Grand.Web.Controllers
             try
             {
                 //validation
-                var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                var customer = _workContext.CurrentCustomer;
+                var store = _storeContext.CurrentStore;
+
+                var cart = customer.ShoppingCartItems
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                    .LimitPerStore(_storeContext.CurrentStore.Id)
+                    .LimitPerStore(store.Id)
                     .ToList();
                 if (!cart.Any())
                     throw new Exception("Your cart is empty");
 
+
                 if (!_orderSettings.OnePageCheckoutEnabled)
                     throw new Exception("One page checkout is disabled");
 
-                if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
+                if ((customer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
                     throw new Exception("Anonymous checkout is not allowed");
                 
                 if (!cart.RequiresShipping())
@@ -1436,8 +1444,8 @@ namespace Grand.Web.Controllers
                 string shippingRateComputationMethodSystemName = splittedOption[1];
 
                 //clear shipping option XML/Description
-                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.ShippingOptionAttributeXml, "", _storeContext.CurrentStore.Id);
-                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.ShippingOptionAttributeDescription, "", _storeContext.CurrentStore.Id);
+                _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.ShippingOptionAttributeXml, "", store.Id);
+                _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.ShippingOptionAttributeDescription, "", store.Id);
 
                 //validate customer's input
                 List<string> warnings;
@@ -1445,12 +1453,12 @@ namespace Grand.Web.Controllers
 
                 //find it
                 //performance optimization. try cache first
-                var shippingOptions = _workContext.CurrentCustomer.GetAttribute<List<ShippingOption>>(SystemCustomerAttributeNames.OfferedShippingOptions, _storeContext.CurrentStore.Id);
+                var shippingOptions = customer.GetAttribute<List<ShippingOption>>(SystemCustomerAttributeNames.OfferedShippingOptions, store.Id);
                 if (shippingOptions == null || shippingOptions.Count == 0)
                 {
                     //not found? let's load them using shipping service
                     shippingOptions = _shippingService
-                        .GetShippingOptions(cart, _workContext.CurrentCustomer.ShippingAddress, shippingRateComputationMethodSystemName, _storeContext.CurrentStore.Id)
+                        .GetShippingOptions(customer, cart, customer.ShippingAddress, shippingRateComputationMethodSystemName, store.Id)
                         .ShippingOptions
                         .ToList();
                 }
@@ -1467,7 +1475,7 @@ namespace Grand.Web.Controllers
                     throw new Exception("Selected shipping method can't be loaded");
 
                 //save
-                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, shippingOption, _storeContext.CurrentStore.Id);
+                _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.SelectedShippingOption, shippingOption, store.Id);
 
                 if (ModelState.IsValid)
                 {

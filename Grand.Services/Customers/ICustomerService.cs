@@ -413,9 +413,9 @@ namespace Grand.Services.Customers
         #region Shopping cart 
 
         void ClearShoppingCartItem(string customerId, string storeId, ShoppingCartType shoppingCartType);
-        void DeleteShoppingCartItem(ShoppingCartItem shoppingCartItem);
-        void InsertShoppingCartItem(ShoppingCartItem shoppingCartItem);
-        void UpdateShoppingCartItem(ShoppingCartItem shoppingCartItem);
+        void DeleteShoppingCartItem(string customerId, ShoppingCartItem shoppingCartItem);
+        void InsertShoppingCartItem(string customerId, ShoppingCartItem shoppingCartItem);
+        void UpdateShoppingCartItem(string customerId, ShoppingCartItem shoppingCartItem);
         void UpdateHasShoppingCartItems(Customer customer);
         #endregion
 

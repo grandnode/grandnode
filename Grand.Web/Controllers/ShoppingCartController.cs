@@ -293,8 +293,8 @@ namespace Grand.Web.Controllers
                         customer.ShoppingCartItems
                         .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
                         .LimitPerStore(_storeContext.CurrentStore.Id)
-                        .ToList()
-                        .GetTotalProducts());
+                        .Sum(x=>x.Quantity));
+
                         return Json(new
                         {
                             success = true,
@@ -323,8 +323,7 @@ namespace Grand.Web.Controllers
                         customer.ShoppingCartItems
                         .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                         .LimitPerStore(_storeContext.CurrentStore.Id)
-                        .ToList()
-                        .GetTotalProducts());
+                        .Sum(x => x.Quantity));
                         
                         var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
                             ? this.RenderViewComponentToString("FlyoutShoppingCart")
@@ -470,7 +469,7 @@ namespace Grand.Web.Controllers
                 if (otherCartItemWithSameParameters != null && !addToCartWarnings.Any())
                 {
                     //delete the same shopping cart item (the other one)
-                    _shoppingCartService.DeleteShoppingCartItem(otherCartItemWithSameParameters);
+                    _shoppingCartService.DeleteShoppingCartItem(_workContext.CurrentCustomer.Id, otherCartItemWithSameParameters);
                 }
             }
 
@@ -511,8 +510,7 @@ namespace Grand.Web.Controllers
                         _workContext.CurrentCustomer.ShoppingCartItems
                         .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
                         .LimitPerStore(_storeContext.CurrentStore.Id)
-                        .ToList()
-                        .GetTotalProducts());
+                        .Sum(x => x.Quantity));
                         
                         return Json(new
                         {
@@ -542,8 +540,8 @@ namespace Grand.Web.Controllers
                         _workContext.CurrentCustomer.ShoppingCartItems
                         .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                         .LimitPerStore(_storeContext.CurrentStore.Id)
-                        .ToList()
-                        .GetTotalProducts());
+                        .Sum(x => x.Quantity));
+
                         var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
                             ? this.RenderViewComponentToString("FlyoutShoppingCart")
                             : "";
@@ -867,7 +865,7 @@ namespace Grand.Web.Controllers
             {
                 bool remove = allIdsToRemove.Contains(sci.Id);
                 if (remove)
-                    _shoppingCartService.DeleteShoppingCartItem(sci, ensureOnlyActiveCheckoutAttributes: true);
+                    _shoppingCartService.DeleteShoppingCartItem(_workContext.CurrentCustomer.Id, sci, ensureOnlyActiveCheckoutAttributes: true);
                 else
                 {
                     foreach (string formKey in form.Keys)
@@ -926,7 +924,7 @@ namespace Grand.Web.Controllers
             var innerWarnings = new Dictionary<string, IList<string>>();
             foreach (var sci in cart)
             {
-                _shoppingCartService.DeleteShoppingCartItem(sci, ensureOnlyActiveCheckoutAttributes: true);
+                _shoppingCartService.DeleteShoppingCartItem(_workContext.CurrentCustomer.Id, sci, ensureOnlyActiveCheckoutAttributes: true);
             }
             //parse and save checkout attributes
             _shoppingCartWebService.ParseAndSaveCheckoutAttributes(cart, form);
@@ -1224,7 +1222,9 @@ namespace Grand.Web.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
                 return RedirectToRoute("HomePage");
 
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
+            var customer = _workContext.CurrentCustomer;
+
+            var cart = customer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
@@ -1241,7 +1241,7 @@ namespace Grand.Web.Controllers
             {
                 bool remove = allIdsToRemove.Contains(sci.Id);
                 if (remove)
-                    _shoppingCartService.DeleteShoppingCartItem(sci);
+                    _shoppingCartService.DeleteShoppingCartItem(customer.Id, sci);
                 else
                 {
                     foreach (string formKey in form.Keys)
@@ -1261,7 +1261,7 @@ namespace Grand.Web.Controllers
             }
 
             //updated wishlist
-            _workContext.CurrentCustomer = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id);
+            _workContext.CurrentCustomer = _customerService.GetCustomerById(customer.Id);
 
             cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
@@ -1329,7 +1329,7 @@ namespace Grand.Web.Controllers
                         !warnings.Any()) //no warnings ( already in the cart)
                     {
                         //let's remove the item from wishlist
-                        _shoppingCartService.DeleteShoppingCartItem(sci);
+                        _shoppingCartService.DeleteShoppingCartItem(_workContext.CurrentCustomer.Id, sci);
                     }
                     allWarnings.AddRange(warnings);
                 }

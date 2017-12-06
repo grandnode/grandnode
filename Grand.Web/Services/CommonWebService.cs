@@ -299,13 +299,13 @@ namespace Grand.Web.Services
                 model.ShoppingCartItems = customer.ShoppingCartItems
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                     .LimitPerStore(_storeContext.CurrentStore.Id)
-                    .ToList()
-                    .GetTotalProducts();
+                    .Sum(x => x.Quantity);
+
                 model.WishlistItems = customer.ShoppingCartItems
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
                     .LimitPerStore(_storeContext.CurrentStore.Id)
-                    .ToList()
-                    .GetTotalProducts();
+                    .Sum(x => x.Quantity);
+
             }
 
             return model;

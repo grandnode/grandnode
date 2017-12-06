@@ -291,7 +291,6 @@ namespace Grand.Services.Catalog.Tests
 
             var shoppingCartItem = new ShoppingCartItem
             {
-                CustomerId = "98767",//customer001.Id, //98767
                 ProductId = "242422",// product001.Id, //222
                 Quantity = 2
             };
@@ -324,7 +323,6 @@ namespace Grand.Services.Catalog.Tests
 
             var shoppingCartItem = new ShoppingCartItem
             {
-                CustomerId = customer001.Id, //98767
                 ProductId = product001.Id, //222
                 Quantity = 2
             };

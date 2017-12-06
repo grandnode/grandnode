@@ -785,7 +785,7 @@ namespace Grand.Services.Customers
 
                     foreach (var item in query.ToList())
                     {
-                        if (!UsedAction(item.Id, cart.CustomerId))
+                        if (!UsedAction(item.Id, customer.Id))
                         {
                             if (Condition(item, product, cart.AttributesXml, customer, null, null))
                             {

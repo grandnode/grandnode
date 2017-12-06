@@ -599,7 +599,7 @@ namespace Grand.Web.Services
 
             #region Simple properties
 
-            var customer = cart.GetCustomer();
+            var customer = _workContext.CurrentCustomer;
             model.CustomerGuid = customer.CustomerGuid;
             model.CustomerFullname = customer.GetFullName();
             model.ShowProductImages = _shoppingCartSettings.ShowProductImagesOnWishList;
@@ -787,7 +787,7 @@ namespace Grand.Web.Services
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                     .LimitPerStore(storeId)
                     .ToList();
-                model.TotalProducts = cart.GetTotalProducts();
+                model.TotalProducts = cart.Sum(x=>x.Quantity);
                 if (cart.Any())
                 {
                     //subtotal
@@ -1342,6 +1342,7 @@ namespace Grand.Web.Services
             {
             }
         }
+
         public virtual EstimateShippingResultModel PrepareEstimateShippingResult(List<ShoppingCartItem> cart, string countryId, string stateProvinceId, string zipPostalCode)
         {
             var model = new EstimateShippingResultModel();
@@ -1355,7 +1356,7 @@ namespace Grand.Web.Services
                     ZipPostalCode = zipPostalCode,
                 };
                 GetShippingOptionResponse getShippingOptionResponse = _shippingService
-                    .GetShippingOptions(cart, address, "", _storeContext.CurrentStore.Id);
+                    .GetShippingOptions(_workContext.CurrentCustomer, cart, address, "", _storeContext.CurrentStore.Id);
                 if (!getShippingOptionResponse.Success)
                 {
                     foreach (var error in getShippingOptionResponse.Errors)

@@ -87,7 +87,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     CustomerId = x.Id,
                     CustomerEmail = x.IsRegistered() ? x.Email : _localizationService.GetResource("Admin.Customers.Guest"),
-                    TotalItems = x.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList().GetTotalProducts()
+                    TotalItems = x.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).Sum(y=>y.Quantity)
                 }),
                 Total = customers.TotalCount
             };
@@ -111,7 +111,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                     decimal taxRate;
                     var store = _storeService.GetStoreById(sci.StoreId);
                     var product = EngineContext.Current.Resolve<IProductService>().GetProductById(sci.ProductId);
-                    var _customer = _customerService.GetCustomerById(sci.CustomerId);
                     var sciModel = new ShoppingCartItemModel
                     {
                         Id = sci.Id,
@@ -119,7 +118,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         ProductId = sci.ProductId,
                         Quantity = sci.Quantity,
                         ProductName = product.Name,
-                        AttributeInfo = _productAttributeFormatter.FormatAttributes(product, sci.AttributesXml, _customer),
+                        AttributeInfo = _productAttributeFormatter.FormatAttributes(product, sci.AttributesXml, customer),
                         UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(product, _priceCalculationService.GetUnitPrice(sci), out taxRate)),
                         Total = _priceFormatter.FormatPrice(_taxService.GetProductPrice(product, _priceCalculationService.GetSubTotal(sci), out taxRate)),
                         UpdatedOn = _dateTimeHelper.ConvertToUserTime(sci.UpdatedOnUtc, DateTimeKind.Utc)
@@ -163,7 +162,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     CustomerId = x.Id,
                     CustomerEmail = x.IsRegistered() ? x.Email : _localizationService.GetResource("Admin.Customers.Guest"),
-                    TotalItems = x.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList().GetTotalProducts()
+                    TotalItems = x.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).Sum(y=>y.Quantity)
                 }),
                 Total = customers.TotalCount
             };

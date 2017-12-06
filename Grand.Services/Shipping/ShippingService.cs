@@ -823,7 +823,8 @@ namespace Grand.Services.Shipping
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <param name="shippingFromMultipleLocations">Value indicating whether shipping is done from multiple locations (warehouses)</param>
         /// <returns>Shipment packages (requests)</returns>
-        public virtual IList<GetShippingOptionRequest> CreateShippingOptionRequests(IList<ShoppingCartItem> cart,
+        public virtual IList<GetShippingOptionRequest> CreateShippingOptionRequests(Customer customer,
+            IList<ShoppingCartItem> cart,
             Address shippingAddress, string storeId, out bool shippingFromMultipleLocations)
         {
             //if we always ship from the default shipping origin, then there's only one request
@@ -884,8 +885,6 @@ namespace Grand.Services.Shipping
                     request.StoreId = storeId;
                     //add item
                     request.Items.Add(new GetShippingOptionRequest.PackageItem(sci));
-                    //customer
-                    request.Customer = cart.GetCustomer();
                     //ship to
                     request.ShippingAddress = shippingAddress;
                     //ship from
@@ -945,7 +944,7 @@ namespace Grand.Services.Shipping
         /// <param name="allowedShippingRateComputationMethodSystemName">Filter by shipping rate computation method identifier; null to load shipping options of all shipping rate computation methods</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Shipping options</returns>
-        public virtual GetShippingOptionResponse GetShippingOptions(IList<ShoppingCartItem> cart,
+        public virtual GetShippingOptionResponse GetShippingOptions(Customer customer, IList<ShoppingCartItem> cart,
             Address shippingAddress, string allowedShippingRateComputationMethodSystemName = "", 
             string storeId = "")
         {
@@ -956,7 +955,7 @@ namespace Grand.Services.Shipping
             
             //create a package
             bool shippingFromMultipleLocations;
-            var shippingOptionRequests = CreateShippingOptionRequests(cart, shippingAddress, storeId, out shippingFromMultipleLocations);
+            var shippingOptionRequests = CreateShippingOptionRequests(customer, cart, shippingAddress, storeId, out shippingFromMultipleLocations);
             result.ShippingFromMultipleLocations = shippingFromMultipleLocations;
 
             var shippingRateComputationMethods = LoadActiveShippingRateComputationMethods(storeId, cart);

@@ -224,7 +224,8 @@ namespace Grand.Services.Shipping
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Shipment packages (requests)</returns>
         /// <param name="shippingFromMultipleLocations">Value indicating whether shipping is done from multiple locations (warehouses)</param>
-        IList<GetShippingOptionRequest> CreateShippingOptionRequests(IList<ShoppingCartItem> cart,
+        IList<GetShippingOptionRequest> CreateShippingOptionRequests(Customer customer,
+            IList<ShoppingCartItem> cart,
             Address shippingAddress, string storeId, out bool shippingFromMultipleLocations);
 
         /// <summary>
@@ -235,7 +236,7 @@ namespace Grand.Services.Shipping
         /// <param name="allowedShippingRateComputationMethodSystemName">Filter by shipping rate computation method identifier; null to load shipping options of all shipping rate computation methods</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Shipping options</returns>
-        GetShippingOptionResponse GetShippingOptions(IList<ShoppingCartItem> cart, Address shippingAddress,
+        GetShippingOptionResponse GetShippingOptions(Customer customer, IList<ShoppingCartItem> cart, Address shippingAddress,
             string allowedShippingRateComputationMethodSystemName = "", string storeId = "");
     }
 }

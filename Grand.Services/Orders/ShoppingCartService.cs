@@ -123,13 +123,13 @@ namespace Grand.Services.Orders
         /// <param name="shoppingCartItem">Shopping cart item</param>
         /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
         /// <param name="ensureOnlyActiveCheckoutAttributes">A value indicating whether to ensure that only active checkout attributes are attached to the current customer</param>
-        public virtual void DeleteShoppingCartItem(ShoppingCartItem shoppingCartItem, bool resetCheckoutData = true, 
+        public virtual void DeleteShoppingCartItem(string customerId, ShoppingCartItem shoppingCartItem, bool resetCheckoutData = true, 
             bool ensureOnlyActiveCheckoutAttributes = false)
         {
             if (shoppingCartItem == null)
                 throw new ArgumentNullException("shoppingCartItem");
 
-            var customer = _customerService.GetCustomerById(shoppingCartItem.CustomerId);
+            var customer = _customerService.GetCustomerById(customerId);
             var storeId = shoppingCartItem.StoreId;
 
             //reset checkout data
@@ -140,7 +140,7 @@ namespace Grand.Services.Orders
 
             //delete item
             customer.ShoppingCartItems.Remove(customer.ShoppingCartItems.Where(x => x.Id == shoppingCartItem.Id).FirstOrDefault());
-            _customerService.DeleteShoppingCartItem(shoppingCartItem);
+            _customerService.DeleteShoppingCartItem(customerId, shoppingCartItem);
 
             //reset "HasShoppingCartItems" property used for performance optimization
             customer.HasShoppingCartItems = customer.ShoppingCartItems.Any();
@@ -1104,7 +1104,7 @@ namespace Grand.Services.Orders
                     shoppingCartItem.AttributesXml = attributesXml;
                     shoppingCartItem.Quantity = newQuantity;
                     shoppingCartItem.UpdatedOnUtc = DateTime.UtcNow;
-                    _customerService.UpdateShoppingCartItem(shoppingCartItem);
+                    _customerService.UpdateShoppingCartItem(customer.Id, shoppingCartItem);
 
                     //event notification
                     _eventPublisher.EntityUpdated(shoppingCartItem);
@@ -1151,7 +1151,6 @@ namespace Grand.Services.Orders
                         ShoppingCartType = shoppingCartType,
                         StoreId = storeId,
                         ProductId = productId,
-                        CustomerId = customer.Id,
                         AttributesXml = attributesXml,
                         CustomerEnteredPrice = customerEnteredPrice,
                         Quantity = quantity,
@@ -1171,7 +1170,7 @@ namespace Grand.Services.Orders
 
                     //updated "HasShoppingCartItems" property used for performance optimization
                     customer.HasShoppingCartItems = customer.ShoppingCartItems.Any();
-                    _customerService.InsertShoppingCartItem(shoppingCartItem);
+                    _customerService.InsertShoppingCartItem(customer.Id, shoppingCartItem);
                     _customerService.UpdateHasShoppingCartItems(customer);
 
                     _customerActionEventService.AddToCart(shoppingCartItem, product, customer);
@@ -1237,7 +1236,7 @@ namespace Grand.Services.Orders
                         shoppingCartItem.IsShipEnabled = product.IsShipEnabled;
                         shoppingCartItem.IsTaxExempt = product.IsTaxExempt;
                         shoppingCartItem.IsGiftCard = product.IsGiftCard;
-                        _customerService.UpdateShoppingCartItem(shoppingCartItem);
+                        _customerService.UpdateShoppingCartItem(customer.Id, shoppingCartItem);
 
                         //event notification
                         _eventPublisher.EntityUpdated(shoppingCartItem);
@@ -1246,7 +1245,7 @@ namespace Grand.Services.Orders
                 else
                 {
                     //delete a shopping cart item
-                    DeleteShoppingCartItem(shoppingCartItem, resetCheckoutData, true);
+                    DeleteShoppingCartItem(customer.Id, shoppingCartItem, resetCheckoutData, true);
                 }
             }
 
@@ -1281,7 +1280,7 @@ namespace Grand.Services.Orders
             for (int i = 0; i < fromCart.Count; i++)
             {
                 var sci = fromCart[i];
-                DeleteShoppingCartItem(sci);
+                DeleteShoppingCartItem(fromCustomer.Id, sci);
             }
 
             //copy discount and gift card coupon codes

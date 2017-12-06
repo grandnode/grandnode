@@ -283,7 +283,7 @@ namespace Grand.Services.Orders
                 return;
 
             //get the customer 
-            Customer customer = cart.GetCustomer();
+            Customer customer = _workContext.CurrentCustomer;
             var currency = _workContext.WorkingCurrency;
 
             //sub totals
@@ -442,7 +442,7 @@ namespace Grand.Services.Orders
         /// <returns>A value indicating whether shipping is free</returns>
         public virtual bool IsFreeShipping(IList<ShoppingCartItem> cart)
         {
-            Customer customer = cart.GetCustomer();
+            Customer customer = _workContext.CurrentCustomer;
             if (customer != null)
             {
                 //check whether customer has a free shipping
@@ -514,7 +514,7 @@ namespace Grand.Services.Orders
             var adjustedRate = shippingRate + additionalShippingCharge;
 
             //discount
-            var customer = cart.GetCustomer();
+            var customer = _workContext.CurrentCustomer;
             decimal discountAmount = GetShippingDiscount(customer, adjustedRate, out appliedDiscounts);
             adjustedRate = adjustedRate - discountAmount;
 
@@ -579,7 +579,7 @@ namespace Grand.Services.Orders
             appliedDiscounts = new List<AppliedDiscount>();
             taxRate = decimal.Zero;
 
-            var customer = cart.GetCustomer();
+            var customer = _workContext.CurrentCustomer;
             var currency = _workContext.WorkingCurrency;
 
             bool isFreeShipping = IsFreeShipping(cart);
@@ -611,7 +611,7 @@ namespace Grand.Services.Orders
                     var shippingRateComputationMethod = shippingRateComputationMethods[0];
 
                     bool shippingFromMultipleLocations;
-                    var shippingOptionRequests = _shippingService.CreateShippingOptionRequests(cart,
+                    var shippingOptionRequests = _shippingService.CreateShippingOptionRequests(customer, cart,
                         shippingAddress,
                         _storeContext.CurrentStore.Id,
                         out shippingFromMultipleLocations);
@@ -690,7 +690,7 @@ namespace Grand.Services.Orders
 
             taxRates = new SortedDictionary<decimal, decimal>();
 
-            var customer = cart.GetCustomer();
+            var customer = _workContext.CurrentCustomer;
             string paymentMethodSystemName = "";
             if (customer != null)
             {
@@ -830,7 +830,7 @@ namespace Grand.Services.Orders
             redeemedRewardPoints = 0;
             redeemedRewardPointsAmount = decimal.Zero;
 
-            var customer = cart.GetCustomer();
+            var customer = _workContext.CurrentCustomer;
             var currency = _workContext.WorkingCurrency;
 
             string paymentMethodSystemName = "";

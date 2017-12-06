@@ -223,7 +223,7 @@ namespace Grand.Web.Services
             var model = new CheckoutShippingMethodModel();
 
             var getShippingOptionResponse = _shippingService
-                .GetShippingOptions(cart, shippingAddress,
+                .GetShippingOptions(_workContext.CurrentCustomer, cart, shippingAddress,
                 "", _storeContext.CurrentStore.Id);
             if (getShippingOptionResponse.Success)
             {

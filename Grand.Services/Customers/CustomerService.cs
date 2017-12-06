@@ -1267,22 +1267,22 @@ namespace Grand.Services.Customers
 
         #region Customer Shopping Cart Item
 
-        public virtual void DeleteShoppingCartItem(ShoppingCartItem shoppingCartItem)
+        public virtual void DeleteShoppingCartItem(string customerId, ShoppingCartItem shoppingCartItem)
         {
             if (shoppingCartItem == null)
                 throw new ArgumentNullException("shoppingCartItem");
 
             var updatebuilder = Builders<Customer>.Update;
             var update = updatebuilder.Pull(p => p.ShoppingCartItems, shoppingCartItem);
-            _customerRepository.Collection.UpdateOneAsync(new BsonDocument("_id", shoppingCartItem.CustomerId), update);
+            _customerRepository.Collection.UpdateOneAsync(new BsonDocument("_id", customerId), update);
 
             //event notification
             _eventPublisher.EntityDeleted(shoppingCartItem);
 
             if (shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                UpdateCustomerLastUpdateCartDate(shoppingCartItem.CustomerId, DateTime.UtcNow);
+                UpdateCustomerLastUpdateCartDate(customerId, DateTime.UtcNow);
             else
-                UpdateCustomerLastUpdateWishList(shoppingCartItem.CustomerId, DateTime.UtcNow);
+                UpdateCustomerLastUpdateWishList(customerId, DateTime.UtcNow);
 
         }
 
@@ -1301,31 +1301,31 @@ namespace Grand.Services.Customers
         }
 
 
-        public virtual void InsertShoppingCartItem(ShoppingCartItem shoppingCartItem)
+        public virtual void InsertShoppingCartItem(string customerId, ShoppingCartItem shoppingCartItem)
         {
             if (shoppingCartItem == null)
                 throw new ArgumentNullException("shoppingCartItem");
 
             var updatebuilder = Builders<Customer>.Update;
             var update = updatebuilder.AddToSet(p => p.ShoppingCartItems, shoppingCartItem);
-            _customerRepository.Collection.UpdateOneAsync(new BsonDocument("_id", shoppingCartItem.CustomerId), update);
+            _customerRepository.Collection.UpdateOneAsync(new BsonDocument("_id", customerId), update);
 
             //event notification
             _eventPublisher.EntityInserted(shoppingCartItem);
 
             if (shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                UpdateCustomerLastUpdateCartDate(shoppingCartItem.CustomerId, DateTime.UtcNow);
+                UpdateCustomerLastUpdateCartDate(customerId, DateTime.UtcNow);
             else
-                UpdateCustomerLastUpdateWishList(shoppingCartItem.CustomerId, DateTime.UtcNow);
+                UpdateCustomerLastUpdateWishList(customerId, DateTime.UtcNow);
         }
 
-        public virtual void UpdateShoppingCartItem(ShoppingCartItem shoppingCartItem)
+        public virtual void UpdateShoppingCartItem(string customerId, ShoppingCartItem shoppingCartItem)
         {
             if (shoppingCartItem == null)
                 throw new ArgumentNullException("shoppingCartItem");
 
             var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, shoppingCartItem.CustomerId);
+            var filter = builder.Eq(x => x.Id, customerId);
             filter = filter & builder.ElemMatch(x => x.ShoppingCartItems, y => y.Id == shoppingCartItem.Id);
             var update = Builders<Customer>.Update
                 .Set(x => x.ShoppingCartItems.ElementAt(-1).Quantity, shoppingCartItem.Quantity)
@@ -1347,9 +1347,9 @@ namespace Grand.Services.Customers
             _eventPublisher.EntityUpdated(shoppingCartItem);
 
             if (shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                UpdateCustomerLastUpdateCartDate(shoppingCartItem.CustomerId, DateTime.UtcNow);
+                UpdateCustomerLastUpdateCartDate(customerId, DateTime.UtcNow);
             else
-                UpdateCustomerLastUpdateWishList(shoppingCartItem.CustomerId, DateTime.UtcNow);
+                UpdateCustomerLastUpdateWishList(customerId, DateTime.UtcNow);
 
         }
 
