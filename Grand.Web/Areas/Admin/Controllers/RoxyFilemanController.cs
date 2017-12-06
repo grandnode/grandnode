@@ -533,7 +533,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         /// <returns>A task that represents the completion of the operation</returns>
         protected virtual async Task GetFilesAsync(string directoryPath, string type)
         {
-            //directoryPath = GetVirtualPath(directoryPath);
+            directoryPath = GetVirtualPath(directoryPath);
             var files = GetFiles(GetFullPath(directoryPath), type);
 
             await HttpContext.Response.WriteAsync("[");
@@ -555,9 +555,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                             }
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        throw ex;
+                    catch {
+                        continue;
                     }
                 }
                 await HttpContext.Response.WriteAsync($"{{\"p\":\"{directoryPath.TrimEnd('/')}/{file.Name}\",\"t\":\"{Math.Ceiling(GetTimestamp(file.LastWriteTime))}\",\"s\":\"{file.Length}\",\"w\":\"{width}\",\"h\":\"{height}\"}}");
@@ -952,53 +951,57 @@ namespace Grand.Web.Areas.Admin.Controllers
         /// <param name="height">Height</param>
         protected virtual void CreateThumbnail(string path, int width, int height)
         {
-            path = GetFullPath(GetVirtualPath(path));
-            using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            try
             {
-                using (var image = new Bitmap(Image.FromStream(stream)))
+                path = GetFullPath(GetVirtualPath(path));
+                using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read))
                 {
-                    var cropX = 0;
-                    var cropY = 0;
-
-                    var imgRatio = (double)image.Width / (double)image.Height;
-
-                    if (height == 0)
-                        height = Convert.ToInt32(Math.Floor((double)width / imgRatio));
-
-                    if (width > image.Width)
-                        width = image.Width;
-                    if (height > image.Height)
-                        height = image.Height;
-
-                    var cropRatio = (double)width / (double)height;
-                    var cropWidth = Convert.ToInt32(Math.Floor((double)image.Height * cropRatio));
-                    var cropHeight = Convert.ToInt32(Math.Floor((double)cropWidth / cropRatio));
-
-                    if (cropWidth > image.Width)
+                    using (var image = new Bitmap(Image.FromStream(stream)))
                     {
-                        cropWidth = image.Width;
-                        cropHeight = Convert.ToInt32(Math.Floor((double)cropWidth / cropRatio));
-                    }
+                        var cropX = 0;
+                        var cropY = 0;
 
-                    if (cropHeight > image.Height)
-                    {
-                        cropHeight = image.Height;
-                        cropWidth = Convert.ToInt32(Math.Floor((double)cropHeight * cropRatio));
-                    }
+                        var imgRatio = (double)image.Width / (double)image.Height;
 
-                    if (cropWidth < image.Width)
-                        cropX = Convert.ToInt32(Math.Floor((double)(image.Width - cropWidth) / 2));
-                    if (cropHeight < image.Height)
-                        cropY = Convert.ToInt32(Math.Floor((double)(image.Height - cropHeight) / 2));
+                        if (height == 0)
+                            height = Convert.ToInt32(Math.Floor((double)width / imgRatio));
 
-                    using (var cropImg = image.Clone(new Rectangle(cropX, cropY, cropWidth, cropHeight), PixelFormat.DontCare))
-                    {
-                        HttpContext.Response.Headers.Add("Content-Type", "image/png");
-                        cropImg.GetThumbnailImage(width, height, () => { return false; }, IntPtr.Zero).Save(HttpContext.Response.Body, ImageFormat.Png);
-                        HttpContext.Response.Body.Close();
+                        if (width > image.Width)
+                            width = image.Width;
+                        if (height > image.Height)
+                            height = image.Height;
+
+                        var cropRatio = (double)width / (double)height;
+                        var cropWidth = Convert.ToInt32(Math.Floor((double)image.Height * cropRatio));
+                        var cropHeight = Convert.ToInt32(Math.Floor((double)cropWidth / cropRatio));
+
+                        if (cropWidth > image.Width)
+                        {
+                            cropWidth = image.Width;
+                            cropHeight = Convert.ToInt32(Math.Floor((double)cropWidth / cropRatio));
+                        }
+
+                        if (cropHeight > image.Height)
+                        {
+                            cropHeight = image.Height;
+                            cropWidth = Convert.ToInt32(Math.Floor((double)cropHeight * cropRatio));
+                        }
+
+                        if (cropWidth < image.Width)
+                            cropX = Convert.ToInt32(Math.Floor((double)(image.Width - cropWidth) / 2));
+                        if (cropHeight < image.Height)
+                            cropY = Convert.ToInt32(Math.Floor((double)(image.Height - cropHeight) / 2));
+
+                        using (var cropImg = image.Clone(new Rectangle(cropX, cropY, cropWidth, cropHeight), PixelFormat.DontCare))
+                        {
+                            HttpContext.Response.Headers.Add("Content-Type", "image/png");
+                            cropImg.GetThumbnailImage(width, height, () => { return false; }, IntPtr.Zero).Save(HttpContext.Response.Body, ImageFormat.Png);
+                            HttpContext.Response.Body.Close();
+                        }
                     }
                 }
             }
+            catch { }
         }
 
         /// <summary>
@@ -1017,45 +1020,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                     return ImageFormat.Gif;
                 default:
                     return ImageFormat.Jpeg;
-            }
-        }
-
-        /// <summary>
-        /// Resize the image
-        /// </summary>
-        /// <param name="sourcePath">Path to the source image</param>
-        /// <param name="destinstionPath">Path to the destination image</param>
-        /// <param name="width">Width</param>
-        /// <param name="height">Height</param>
-        protected virtual void ImageResize(string sourcePath, string destinstionPath, int width, int height)
-        {
-            using (var stream = new FileStream(sourcePath, FileMode.Open, FileAccess.Read))
-            {
-                using (var image = Image.FromStream(stream))
-                {
-                    var ratio = (float)image.Width / (float)image.Height;
-                    if ((image.Width <= width && image.Height <= height) || (width == 0 && height == 0))
-                        return;
-
-                    var newWidth = width;
-                    int newHeight = Convert.ToInt16(Math.Floor((float)newWidth / ratio));
-                    if ((height > 0 && newHeight > height) || (width == 0))
-                    {
-                        newHeight = height;
-                        newWidth = Convert.ToInt16(Math.Floor((float)newHeight * ratio));
-                    }
-
-                    using (var newImage = new Bitmap(newWidth, newHeight))
-                    {
-                        using (var graphics = Graphics.FromImage(newImage))
-                        {
-                            graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                            graphics.DrawImage(image, 0, 0, newWidth, newHeight);
-                            if (!string.IsNullOrEmpty(destinstionPath))
-                                newImage.Save(destinstionPath, GetImageFormat(destinstionPath));
-                        }
-                    }
-                }
             }
         }
 
@@ -1093,12 +1057,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                         using (var stream = new FileStream(destinationFile, FileMode.OpenOrCreate))
                         {
                             HttpContext.Request.Form.Files[i].CopyTo(stream);
-                        }
-                        if (GetFileType(new FileInfo(uniqueFileName).Extension) == "image")
-                        {
-                            int.TryParse(GetSetting("MAX_IMAGE_WIDTH"), out int w);
-                            int.TryParse(GetSetting("MAX_IMAGE_HEIGHT"), out int h);
-                            ImageResize(destinationFile, destinationFile, w, h);
                         }
                     }
                     else
