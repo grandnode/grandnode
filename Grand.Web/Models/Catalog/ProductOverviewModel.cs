@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Grand.Framework.Mvc;
 using Grand.Web.Models.Media;
 using Grand.Core.Domain.Catalog;
 using Grand.Framework.Mvc.Models;
+using Grand.Core.Domain.Tax;
 
 namespace Grand.Web.Models.Catalog
 {
@@ -16,18 +16,20 @@ namespace Grand.Web.Models.Catalog
             SpecificationAttributeModels = new List<ProductSpecificationModel>();
             ReviewOverviewModel = new ProductReviewOverviewModel();
         }
-
         public string Name { get; set; }
         public string ShortDescription { get; set; }
         public string FullDescription { get; set; }
         public string SeName { get; set; }
         public ProductType ProductType { get; set; }
         public bool MarkAsNew { get; set; }
-
         public string Sku { get; set; }
         public string Gtin { get; set; }
         public string ManufacturerPartNumber { get; set; }
         public bool IsFreeShipping { get; set; }
+        public bool ShowSku { get; set; }
+        public bool ShowQty { get; set; }
+        public TaxDisplayType TaxDisplayType { get; set; }
+
         //price
         public ProductPriceModel ProductPrice { get; set; }
         //picture

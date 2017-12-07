@@ -141,6 +141,9 @@ namespace Grand.Web.Services
             var currentLanguageId = _workContext.WorkingLanguage;
             int pictureSize = productThumbPictureSize.HasValue ? productThumbPictureSize.Value : _mediaSettings.ProductThumbPictureSize;
             var connectionSecured = _webHelper.IsCurrentConnectionSecured();
+            var showSku = _catalogSettings.ShowSkuOnCatalogPages;
+            var taxDisplay = _workContext.TaxDisplayType;
+            var showQty = _catalogSettings.DisplayQuantityOnCatalogPages;
 
             var res = new Dictionary<string, string>
             {
@@ -165,6 +168,9 @@ namespace Grand.Web.Services
                     Gtin = product.Gtin,
                     ManufacturerPartNumber = product.ManufacturerPartNumber,
                     IsFreeShipping = product.IsFreeShipping,
+                    ShowSku = showSku,
+                    TaxDisplayType = taxDisplay,
+                    ShowQty = showQty,
                     MarkAsNew = product.MarkAsNew &&
                         (!product.MarkAsNewStartDateTimeUtc.HasValue || product.MarkAsNewStartDateTimeUtc.Value < DateTime.UtcNow) &&
                         (!product.MarkAsNewEndDateTimeUtc.HasValue || product.MarkAsNewEndDateTimeUtc.Value > DateTime.UtcNow)

@@ -144,7 +144,7 @@ namespace Grand.Web.Models.Catalog
 
             public bool DisableBuyButton { get; set; }
             public bool DisableWishlistButton { get; set; }
-
+            
             //rental
             public bool IsRental { get; set; }
             public string MeasureUnit { get; set; }

@@ -1,25 +1,36 @@
 ﻿@model ProductOverviewModel
-@using Grand.Core.Domain.Catalog
-@inject CatalogSettings catalogSettings
-@inject IWorkContext workContext
 @{
     //prepare "Add to cart" AJAX link
     string addtocartlink = "";
+    string addtowishlistlink = "";
     var shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart;
     var quantity = 1;
-    if (Model.ProductPrice.ForceRedirectionAfterAddingToCart)
+    if (!Model.ShowQty)
     {
-        addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity, forceredirection = Model.ProductPrice.ForceRedirectionAfterAddingToCart });
+        if (Model.ProductPrice.ForceRedirectionAfterAddingToCart)
+        {
+            addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity, forceredirection = Model.ProductPrice.ForceRedirectionAfterAddingToCart });
+        }
+        else
+        {
+            addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity });
+        }
+        addtowishlistlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = (int)ShoppingCartType.Wishlist, quantity = quantity });
     }
     else
     {
-        addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity });
+        if (Model.ProductPrice.ForceRedirectionAfterAddingToCart)
+        {
+            addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, forceredirection = Model.ProductPrice.ForceRedirectionAfterAddingToCart });
+        }
+        else
+        {
+            addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId});
+        }
+        addtowishlistlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = (int)ShoppingCartType.Wishlist});
     }
-
-    var addtowishlistlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = (int)ShoppingCartType.Wishlist, quantity = quantity });
     var addtocomparelink = Url.RouteUrl("AddProductToCompare", new { productId = Model.Id });
 }
-
     <div class="card gen" data-productid="@Model.Id">
         <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
             <img class="card-img-top img-fluid" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
@@ -27,7 +38,7 @@
         <div class="card-block">
             <h3 class="h6 card-title">
                 <strong><a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">@Model.Name</a></strong>
-                @if (catalogSettings.ShowSkuOnCatalogPages && !string.IsNullOrEmpty(Model.Sku))
+                @if (Model.ShowSku && !string.IsNullOrEmpty(Model.Sku))
                 {
                         <span class="d-block py-1">@Model.Sku</span>
                 }
@@ -53,15 +64,12 @@
                     </div>
                 </div>
             }
-
             @if (!String.IsNullOrEmpty(Model.ProductPrice.BasePricePAngV))
             {
                 <div class="base-price-pangv">
                     @Model.ProductPrice.BasePricePAngV
                 </div>
             }
-
-
             @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
             {
                 <div class="col-12 px-0">
@@ -70,17 +78,15 @@
                     </span>
                 </div>
             }
-
             @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_after", additionalData = Model.Id })
             <div class="col-12 px-0">
                 <h3 class="h6 card-subtitle mb-3 mt-3">
                     <span class="price actual-price">@Model.ProductPrice.Price</span>
                 </h3>
             </div>
-
             @if (Model.ProductPrice.DisplayTaxShippingInfo)
             {
-                var inclTax = workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
+                var inclTax = Model.TaxDisplayType == TaxDisplayType.IncludingTax;
                 <div class="col-12 tax-shipping-info mt-2 mb-2 px-0">
                     @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("shippinginfo") }))
                 </div>
@@ -92,6 +98,12 @@
         <div class="card-footer pl-0 pr-0">
                 <div class="d-flex justify-content-center">
                     <div class="btn-group">
+                        @if (Model.ShowQty)
+                        {
+                            var qtyId = "addtocart_" + @Model.Id + "_EnteredQuantity";
+                            <input class="form-control input-group-addon catalog-quantity"  
+                                   type="text" id="@qtyId" name="@qtyId" value="1" >
+                        }
                         @if (!Model.ProductPrice.DisableBuyButton)
                         {
                             var addToCartText = T("ShoppingCart.AddToCart").Text;
@@ -103,8 +115,12 @@
                             {
                                 addToCartText = T("ShoppingCart.PreOrder").Text;
                             }
-                            <button type="button" class="btn btn-primary" onclick="AjaxCart.addproducttocart_catalog('@addtocartlink');return false;">
-                                <span class="fa fa fa-shopping-cart"></span> <span class="hidden-lg-down">@(addToCartText)</span>
+                            <button type="button" class="btn btn-primary" onclick="AjaxCart.addproducttocart_catalog('@addtocartlink', '@Model.ShowQty', '@Model.Id');return false;">
+                                <span class="fa fa fa-shopping-cart"></span> 
+                                @if (!Model.ShowQty)
+                                {
+                                    <span class="hidden-lg-down">@(addToCartText)</span>
+                                }
                                 <span class="sr-only">AddToCart</span>
                             </button>
                         }
@@ -117,7 +133,7 @@
                         }
                         @if (!Model.ProductPrice.DisableWishlistButton)
                         {
-                            <button type="button" value="@T("ShoppingCart.AddToWishlist")" title="@T("ShoppingCart.AddToWishlist")" class="btn btn-secondary" onclick="AjaxCart.addproducttocart_catalog('@addtowishlistlink');return false;">
+                            <button type="button" value="@T("ShoppingCart.AddToWishlist")" title="@T("ShoppingCart.AddToWishlist")" class="btn btn-secondary" onclick="AjaxCart.addproducttocart_catalog('@addtowishlistlink', '@Model.ShowQty', '@Model.Id');return false;">
                                 <span class="fa fa-heart-o"></span>
                                 <span class="sr-only">AddToWishlist</span>
                             </button>
@@ -129,5 +145,3 @@
             </div>
         @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_middle", additionalData = Model.Id })
     </div>
-
-

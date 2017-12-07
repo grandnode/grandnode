@@ -380,7 +380,10 @@ namespace Grand.Core.Domain.Catalog
         /// Gets or sets the default value to use for Manufacturer page size (for new manufacturers)
         /// </summary>
         public int DefaultManufacturerPageSize { get; set; }
-
+        /// <summary>
+        /// Gets or sets the default value to use show extra field quantity on catalog pages
+        /// </summary>
+        public bool DisplayQuantityOnCatalogPages { get; set; }
         /// <summary>
         /// Limit of featured products
         /// </summary>

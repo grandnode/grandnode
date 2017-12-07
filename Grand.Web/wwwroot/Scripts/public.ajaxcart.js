@@ -20,7 +20,16 @@ var AjaxCart = {
     },
 
     //add a product to the cart/wishlist from the catalog pages
-    addproducttocart_catalog: function (urladd) {
+    addproducttocart_catalog: function (urladd, showqty, productid) {
+        if (showqty.toLowerCase() == 'true') {
+            var qty = $('#addtocart_' + productid + '_EnteredQuantity').val();
+            if (urladd.indexOf("forceredirection") != -1) {
+                urladd += '&quantity=' + qty;
+            }
+            else {
+                urladd += '?quantity=' + qty;
+            }
+        }
         if (this.loadWaiting != false) {
             return;
         }

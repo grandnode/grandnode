@@ -794,6 +794,9 @@ section.totals {
 .listWiew .card-block {
     min-height: 270px;
 }
+.catalog-quantity {
+    max-width: 52px;
+}
 .method-name .custom-control-indicator {
     top: 10px;
 }
