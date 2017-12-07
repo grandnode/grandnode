@@ -205,13 +205,13 @@
     <Value>Product Name:</Value>
   </LocaleResource>
   <LocaleResource Name="AddToCart.Price">
-    <Value>Price</Value>
+    <Value>Price:</Value>
   </LocaleResource>
   <LocaleResource Name="AddToCart.Qty">
-    <Value>Qty</Value>
+    <Value>Qty:</Value>
   </LocaleResource>
   <LocaleResource Name="AddToCart.ShoppingCart">
-    <Value>Product was successfully added to Cart</Value>
+    <Value>Product was successfully added to cart</Value>
   </LocaleResource>
   <LocaleResource Name="AddToCart.ViewCart">
     <Value>Go to cart</Value>
@@ -222,6 +222,19 @@
   <LocaleResource Name="AddToCart.ViewWishlist">
     <Value>Go to wishlist</Value>
   </LocaleResource>
-  
-
+  <LocaleResource Name="AddToCart.TotalPrice">
+    <Value>Total price</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.SubTotal">
+    <Value>Sub-Total</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.SubTotalDiscount">
+    <Value>Discount</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.Cart.Items">
+    <Value>There are {0} in your cart.</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.Wishlist.Items">
+    <Value>There are {0} in your wishlist.</Value>
+  </LocaleResource>
 </Language>

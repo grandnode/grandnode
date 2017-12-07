@@ -1028,6 +1028,7 @@ namespace Grand.Web.Services
             model.Quantity = quantity;
 
             var sci = customer.ShoppingCartItems.FirstOrDefault(x => x.ProductId == product.Id && (string.IsNullOrEmpty(x.AttributesXml) ? "": x.AttributesXml) == attributesXml);
+            model.ItemQuantity = sci.Quantity;
 
             //unit prices
             if (product.CallForPrice)
@@ -1047,6 +1048,28 @@ namespace Grand.Web.Services
             //picture
             model.Picture = PrepareCartItemPicture(product, sci.AttributesXml, _mediaSettings.AddToCartThumbPictureSize, true, model.ProductName);
 
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                .Where(x => x.ShoppingCartType == cartType)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
+                .ToList();
+
+            model.TotalItems = cart.Sum(x => x.Quantity);
+            if (cartType == ShoppingCartType.ShoppingCart)
+            {
+                var subTotalIncludingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal;
+                _orderTotalCalculationService.GetShoppingCartSubTotal(cart, subTotalIncludingTax,
+                    out decimal orderSubTotalDiscountAmountBase, out List<AppliedDiscount> orderSubTotalAppliedDiscounts,
+                    out decimal subTotalWithoutDiscountBase, out decimal subTotalWithDiscountBase);
+                decimal subtotalBase = subTotalWithoutDiscountBase;
+                decimal subtotal = _currencyService.ConvertFromPrimaryStoreCurrency(subtotalBase, _workContext.WorkingCurrency);
+                model.SubTotal = _priceFormatter.FormatPrice(subtotal, true, _workContext.WorkingCurrency, _workContext.WorkingLanguage, subTotalIncludingTax);
+                model.DecimalSubTotal = subtotal;
+                if (orderSubTotalDiscountAmountBase > decimal.Zero)
+                {
+                    decimal orderSubTotalDiscountAmount = _currencyService.ConvertFromPrimaryStoreCurrency(orderSubTotalDiscountAmountBase, _workContext.WorkingCurrency);
+                    model.SubTotalDiscount = _priceFormatter.FormatPrice(-orderSubTotalDiscountAmount, true, _workContext.WorkingCurrency, _workContext.WorkingLanguage, subTotalIncludingTax);
+                }
+            }
             return model;
 
         }

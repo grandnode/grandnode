@@ -55,12 +55,15 @@ function displayPopupNotification(message, messagetype, modal) {
     $('#generalModal').modal('show');
 }
 
+$('#ModalAddToCart .modal-dialog').on('click tap', function (e) {
+    if ($(e.target).hasClass('modal-dialog')) {
+        $('.modal').modal('hide');
+    }
+})
+
 function displayPopupAddToCart(html) {
     $('#ModalAddToCart').html(html).modal('show');
 }
-
-
-
 
 var barNotificationTimeout;
 function displayBarNotification(message, messagetype, timeout) {
