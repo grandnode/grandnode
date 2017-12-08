@@ -241,15 +241,25 @@
                                     @Html.ValidationMessageFor(model => model.AllowCartItemEditing)
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.CartsSharedBetweenStores_OverrideForStore, model => model.CartsSharedBetweenStores, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.CartsSharedBetweenStores, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.CartsSharedBetweenStores)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.CartsSharedBetweenStores)
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-
-
     <script type="text/javascript">
         $(document).ready(function () {
 

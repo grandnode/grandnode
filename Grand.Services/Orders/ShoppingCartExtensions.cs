@@ -7,6 +7,7 @@ using Grand.Core.Domain.Orders;
 using Grand.Services.Localization;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;
+using Grand.Core.Infrastructure;
 
 namespace Grand.Services.Orders
 {
@@ -108,7 +109,10 @@ namespace Grand.Services.Orders
 
         public static IEnumerable<ShoppingCartItem> LimitPerStore(this IEnumerable<ShoppingCartItem> cart, string storeId)
         {
-            //simply replace the following code with "return cart"
+            var shoppingCartSettings = EngineContext.Current.Resolve<ShoppingCartSettings>();
+            if (shoppingCartSettings.CartsSharedBetweenStores)
+                return cart;
+
             return cart.Where(x => x.StoreId == storeId);
         }
     }

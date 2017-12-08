@@ -1021,6 +1021,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.ShowProductImagesInMiniShoppingCart_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.MiniShoppingCartProductNumber_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.AllowCartItemEditing_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.CartsSharedBetweenStores_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<ShoppingCartSettingsModel, ShoppingCartSettings>()
                 .ForMember(dest => dest.RoundPricesDuringCalculation, mo => mo.Ignore())

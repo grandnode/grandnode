@@ -1926,6 +1926,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.ShowProductImagesInMiniShoppingCart_OverrideForStore = _settingService.SettingExists(shoppingCartSettings, x => x.ShowProductImagesInMiniShoppingCart, storeScope);
                 model.MiniShoppingCartProductNumber_OverrideForStore = _settingService.SettingExists(shoppingCartSettings, x => x.MiniShoppingCartProductNumber, storeScope);
                 model.AllowCartItemEditing_OverrideForStore = _settingService.SettingExists(shoppingCartSettings, x => x.AllowCartItemEditing, storeScope);
+                model.CartsSharedBetweenStores_OverrideForStore = _settingService.SettingExists(shoppingCartSettings, x => x.CartsSharedBetweenStores, storeScope);
             }
             return View(model);
         }
@@ -2027,6 +2028,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(shoppingCartSettings, x => x.AllowCartItemEditing, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(shoppingCartSettings, x => x.AllowCartItemEditing, storeScope);
+
+            if (model.CartsSharedBetweenStores_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(shoppingCartSettings, x => x.CartsSharedBetweenStores, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(shoppingCartSettings, x => x.CartsSharedBetweenStores, storeScope);
 
             //now clear cache
             _cacheManager.Clear();
