@@ -79,5 +79,10 @@ namespace Grand.Core.Domain.Common
         /// Gets or sets a value indicating whether "accept terms of service" links should be open in popup window. If disabled, then they'll be open on a new page.
         /// </summary>
         public bool PopupForTermsOfServiceLinks { get; set; }
+
+        /// <summary>
+        /// Gets or sets to allow user to select store 
+        /// </summary>
+        public bool AllowToSelectStore { get; set; }
     }
 }

@@ -26,6 +26,7 @@ using Grand.Core.Infrastructure;
 using Microsoft.AspNetCore.Diagnostics;
 using Grand.Framework.Mvc.Filters;
 using Microsoft.AspNetCore.Http;
+using Grand.Services.Stores;
 
 namespace Grand.Web.Controllers
 {
@@ -36,6 +37,7 @@ namespace Grand.Web.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
+        private readonly IStoreService _storeService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerActionEventService _customerActionEventService;
         private readonly IPopupService _popupService;
@@ -57,6 +59,7 @@ namespace Grand.Web.Controllers
             ILocalizationService localizationService,
             IWorkContext workContext,
             IStoreContext storeContext,
+            IStoreService storeService,
             ICustomerActivityService customerActivityService,
             ICustomerActionEventService customerActionEventService,
             IPopupService popupService,
@@ -74,6 +77,7 @@ namespace Grand.Web.Controllers
             this._localizationService = localizationService;
             this._workContext = workContext;
             this._storeContext = storeContext;
+            this._storeService = storeService;
             this._customerActivityService = customerActivityService;
             this._customerActionEventService = customerActionEventService;
             this._popupService = popupService;
@@ -142,6 +146,36 @@ namespace Grand.Web.Controllers
         public virtual IActionResult SetCurrency(string customerCurrency, string returnUrl = "")
         {
             _commonWebService.SetCurrency(customerCurrency);
+
+            //home page
+            if (String.IsNullOrEmpty(returnUrl))
+                returnUrl = Url.RouteUrl("HomePage");
+
+            //prevent open redirection attack
+            if (!Url.IsLocalUrl(returnUrl))
+                returnUrl = Url.RouteUrl("HomePage");
+
+            return Redirect(returnUrl);
+        }
+
+        //available even when navigation is not allowed
+        [CheckAccessPublicStore(true)]
+        public virtual IActionResult SetStore(string store, string returnUrl = "")
+        {
+            var currentstoreid = _storeContext.CurrentStore.Id;
+            if (currentstoreid != store)
+                _commonWebService.SetStore(store);
+
+            var prevStore = _storeService.GetStoreById(currentstoreid);
+            var currStore = _storeService.GetStoreById(store);
+
+            if(prevStore!=null && currStore !=null)
+            {
+                if(prevStore.Url!=currStore.Url)
+                {
+                    return Redirect(currStore.SslEnabled ? currStore.SecureUrl : currStore.Url);
+                }
+            }
 
             //home page
             if (String.IsNullOrEmpty(returnUrl))

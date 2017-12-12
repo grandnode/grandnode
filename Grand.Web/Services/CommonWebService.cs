@@ -37,6 +37,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Hosting;
+using Grand.Services.Stores;
 
 namespace Grand.Web.Services
 {
@@ -44,6 +45,7 @@ namespace Grand.Web.Services
     {
         private readonly ICacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
+        private readonly IStoreService _storeService;
         private readonly IThemeContext _themeContext;
         private readonly IPictureService _pictureService;
         private readonly IWebHelper _webHelper;
@@ -61,9 +63,7 @@ namespace Grand.Web.Services
         private readonly ISitemapGenerator _sitemapGenerator;
         private readonly IThemeProvider _themeProvider;
         private readonly IForumService _forumservice;
-
         private readonly IHostingEnvironment _hostingEnvironment;
-
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly LocalizationSettings _localizationSettings;
         private readonly TaxSettings _taxSettings;
@@ -78,6 +78,7 @@ namespace Grand.Web.Services
 
         public CommonWebService(ICacheManager cacheManager, 
             IStoreContext storeContext,
+            IStoreService storeService,
             IThemeContext themeContext,
             IPictureService pictureService,
             IWebHelper webHelper,
@@ -111,6 +112,7 @@ namespace Grand.Web.Services
         {
             this._cacheManager = cacheManager;
             this._storeContext = storeContext;
+            this._storeService = storeService;
             this._themeContext = themeContext;
             this._pictureService = pictureService;
             this._webHelper = webHelper;
@@ -262,6 +264,42 @@ namespace Grand.Web.Services
         {
             var taxDisplayType = (TaxDisplayType)Enum.ToObject(typeof(TaxDisplayType), customerTaxType);
             _workContext.TaxDisplayType = taxDisplayType;
+        }
+
+        public virtual StoreSelectorModel PrepareStoreSelector()
+        {
+            if (!_commonSettings.AllowToSelectStore)
+                return null;
+
+            var availableStores = _cacheManager.Get(ModelCacheEventConsumer.AVAILABLE_STORES_MODEL_KEY, () =>
+            {
+                var result = _storeService.GetAllStores()
+                    .Select(x => new StoreModel
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                    })
+                    .ToList();
+                return result;
+            });
+
+            var model = new StoreSelectorModel
+            {
+                CurrentStoreId = _storeContext.CurrentStore.Id,
+                AvailableStores = availableStores,
+            };
+
+            return model;
+        }
+
+        public virtual void SetStore(string storeid)
+        {
+            if (_commonSettings.AllowToSelectStore)
+            {
+                var store = _storeService.GetStoreById(storeid);
+                if (store != null)
+                    _storeContext.CurrentStore = store;
+            }
         }
 
         public virtual int GetUnreadPrivateMessages()

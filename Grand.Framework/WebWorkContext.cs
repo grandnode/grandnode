@@ -104,7 +104,7 @@ namespace Grand.Framework
         }
 
         /// <summary>
-        /// Set nop customer cookie
+        /// Set customer cookie
         /// </summary>
         /// <param name="customerGuid">Guid of the customer</param>
         protected virtual void SetCustomerCookie(Guid customerGuid)

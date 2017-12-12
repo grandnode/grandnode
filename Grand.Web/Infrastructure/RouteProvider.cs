@@ -96,6 +96,10 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("ChangeTaxType",
                             "changetaxtype/{customertaxtype}",
                             new { controller = "Common", action = "SetTaxType" });
+            //change store (AJAX link)
+            routeBuilder.MapLocalizedRoute("ChangeStore",
+                            "changestore/{store}",
+                            new { controller = "Common", action = "SetStore" });
 
             //recently viewed products
             routeBuilder.MapLocalizedRoute("RecentlyViewedProducts",

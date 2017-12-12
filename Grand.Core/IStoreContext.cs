@@ -10,6 +10,6 @@ namespace Grand.Core
         /// <summary>
         /// Gets or sets the current store
         /// </summary>
-        Store CurrentStore { get; }
+        Store CurrentStore { get; set; }
     }
 }

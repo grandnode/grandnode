@@ -18,6 +18,8 @@ namespace Grand.Web.Services
         void SetCurrency(string customerCurrency);
         TaxTypeSelectorModel PrepareTaxTypeSelector();
         void SetTaxType(int customerTaxType);
+        StoreSelectorModel PrepareStoreSelector();
+        void SetStore(string storeid);
         int GetUnreadPrivateMessages();
         HeaderLinksModel PrepareHeaderLinks(Customer customer);
         AdminHeaderLinksModel PrepareAdminHeaderLinks(Customer customer);
