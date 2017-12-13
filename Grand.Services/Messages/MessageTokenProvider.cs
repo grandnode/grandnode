@@ -984,6 +984,16 @@ namespace Grand.Services.Messages
         {
             tokens.Add(new Token("Vendor.Name", vendor.Name));
             tokens.Add(new Token("Vendor.Email", vendor.Email));
+            tokens.Add(new Token("Vendor.Description", vendor.Description));
+            tokens.Add(new Token("Vendor.Address1", vendor.Address?.Address1));
+            tokens.Add(new Token("Vendor.Address2", vendor.Address?.Address2));
+            tokens.Add(new Token("Vendor.City", vendor.Address?.City));
+            tokens.Add(new Token("Vendor.Company", vendor.Address?.Company));
+            tokens.Add(new Token("Vendor.FaxNumber", vendor.Address?.FaxNumber));
+            tokens.Add(new Token("Vendor.PhoneNumber", vendor.Address?.PhoneNumber));
+            tokens.Add(new Token("Vendor.ZipPostalCode", vendor.Address?.ZipPostalCode));
+            tokens.Add(new Token("Vendor.StateProvince", !String.IsNullOrEmpty(vendor.Address?.StateProvinceId) ? EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(vendor.Address?.StateProvinceId).GetLocalized(x => x.Name) : ""));
+            tokens.Add(new Token("Vendor.Country", !String.IsNullOrEmpty(vendor.Address?.CountryId) ? EngineContext.Current.Resolve<ICountryService>().GetCountryById(vendor.Address?.CountryId).GetLocalized(x => x.Name) : ""));
 
             //event notification
             _eventPublisher.EntityTokensAdded(vendor, tokens);
@@ -1260,8 +1270,18 @@ namespace Grand.Services.Messages
                 "%ContactUs.SenderEmail%",
                 "%ContactUs.SenderName%",
                 "%ContactUs.Body%",
-                "%Vendor.Name%",
+                "%Vendor.Address1%",
+                "%Vendor.Address2%",
+                "%Vendor.City%",
+                "%Vendor.Company%",
+                "%Vendor.Country%",
+                "%Vendor.Description%",
                 "%Vendor.Email%",
+                "%Vendor.FaxNumber%",
+                "%Vendor.Name%",
+                "%Vendor.PhoneNumber%",
+                "%Vendor.StateProvince%",
+                "%Vendor.ZipPostalCode%",
                 "%Wishlist.URLForCustomer%", 
                 "%NewsLetterSubscription.Email%", 
                 "%NewsLetterSubscription.ActivationUrl%",

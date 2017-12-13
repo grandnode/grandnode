@@ -25,7 +25,6 @@ namespace Grand.Services.Messages
         }
         #endregion
 
-
         #region Methods
         /// <summary>
         /// Inserts a newsletter category
