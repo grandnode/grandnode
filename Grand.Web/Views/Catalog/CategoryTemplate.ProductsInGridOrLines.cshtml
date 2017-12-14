@@ -68,22 +68,22 @@
         {
             <div class="categotyItems">
                 <div class="row">
-                    @foreach (var item in Model.SubCategories)
+                @foreach (var item in Model.SubCategories)
                 {
-                <div class="col-md-4 col-sm-6 col-12 mb-2">
-                    <div class="card">
-                        <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                    <div class="col-md-4 col-sm-6 col-12 mb-2">
+                        <div class="card">
+                            <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })" title="@item.PictureModel.Title">
 
-                            <img class="card-img-top img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title">
+                                <img class="card-img-top img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title">
 
-                            <h2 class="h6 m-3 card-title">
-                                @item.Name
-                            </h2>
+                                <h2 class="h6 m-3 card-title">
+                                    @item.Name
+                                </h2>
 
-                        </a>
+                            </a>
+                        </div>
                     </div>
-                </div>
-                    }
+                }
                 </div>
             </div>
         }

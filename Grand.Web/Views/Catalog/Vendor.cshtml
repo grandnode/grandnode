@@ -15,10 +15,17 @@
 }
 
 <div class="page vendor-page">
-       <div class="col-12"> 
-    <h1 class="h2 generalTitle">
-        @Model.Name
-    </h1> 
+    <div class="col-12"> 
+        <div class="row">
+            <div class="col-sm-4">
+                <img class="card-img-top img-fluid" alt="@Model.PictureModel.AlternateText" src="@Model.PictureModel.ImageUrl" title="@Model.PictureModel.Title">
+            </div>
+            <div class="col-sm-8 align-items-center d-flex">
+                <h1 class="h2">
+                    @Model.Name
+                </h1> 
+            </div>
+        </div>
            <div class="row">
                <div class="col-md-7 col-sm-12">
                    @if (Model.AllowCustomersToContactVendors)
@@ -29,16 +36,16 @@
                    @*description*@
                    @if (!String.IsNullOrWhiteSpace(Model.Description))
                    {
-                           <article class="text-xs-center generalMarginSupporter vendor-description">
-                               @Html.Raw(Model.Description)
-                           </article>
+                        <article class="text-xs-center generalMarginSupporter vendor-description">
+                            @Html.Raw(Model.Description)
+                        </article>
                    }
                    @*review*@
                    @if (Model.VendorReviewOverview.AllowCustomerReviews)
                    {
-                           <div>
-                               @await Html.PartialAsync("_VendorReviewOverview", Model.VendorReviewOverview)
-                           </div>
+                        <div>
+                            @await Html.PartialAsync("_VendorReviewOverview", Model.VendorReviewOverview)
+                        </div>
                    }
                </div>
                <div class="col-md-5 col-sm-12">
