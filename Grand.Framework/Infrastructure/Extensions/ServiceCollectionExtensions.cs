@@ -37,7 +37,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <returns>Configured service provider</returns>
         public static IServiceProvider ConfigureApplicationServices(this IServiceCollection services, IConfiguration configuration)
         {
-            //add NopConfig configuration parameters
+            //add GrandConfig configuration parameters
             services.ConfigureStartupConfig<GrandConfig>(configuration.GetSection("Grand"));
             //add hosting configuration parameters
             services.ConfigureStartupConfig<HostingConfig>(configuration.GetSection("Hosting"));

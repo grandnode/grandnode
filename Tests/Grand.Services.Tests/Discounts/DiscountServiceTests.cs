@@ -75,7 +75,7 @@ namespace Grand.Services.Discounts.Tests
             _genericAttributeService = new Mock<IGenericAttributeService>().Object;
             _localizationService = new Mock<ILocalizationService>().Object;
 
-            _discountService = new DiscountService(new NopNullCache(), _discountRepo, _discountCouponRepo,
+            _discountService = new DiscountService(new GrandNullCache(), _discountRepo, _discountCouponRepo,
                 _discountUsageHistoryRepo, _localizationService, _storeContext, _genericAttributeService,
                 new PluginFinder(), _eventPublisher, extraProductRepo, extraCategoryRepo, extraManufacturerRepo, extraVendorRepo, extraStoreRepo, new PerRequestCacheManager(null));
         }

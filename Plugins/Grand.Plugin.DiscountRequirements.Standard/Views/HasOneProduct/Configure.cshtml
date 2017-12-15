@@ -28,7 +28,7 @@
                     //notify parent if it's a new requirement
                     @if (String.IsNullOrEmpty(Model.RequirementId))
                     {
-                        <text>$("#discountRequirementContainer").trigger('nopnewdiscountruleadded', [data.NewRequirementId]);</text>
+                        <text>$("#discountRequirementContainer").trigger('grandnewdiscountruleadded', [data.NewRequirementId]);</text>
                     }
                 },
                 error:function (xhr, ajaxOptions, thrownError){

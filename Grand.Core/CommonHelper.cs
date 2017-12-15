@@ -8,9 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using System.Security.Cryptography;
 using System.Text.RegularExpressions;
-using System.Threading;
 
 namespace Grand.Core
 {
@@ -174,7 +172,7 @@ namespace Grand.Core
             return true;
         }
 
-        public static TypeConverter GetNopCustomTypeConverter(Type type)
+        public static TypeConverter GetGrandCustomTypeConverter(Type type)
         {
             //we can't use the following code in order to register our custom type descriptors
             //TypeDescriptor.AddAttributes(typeof(List<int>), new TypeConverterAttribute(typeof(GenericListTypeConverter<int>)));
@@ -220,8 +218,8 @@ namespace Grand.Core
             {
                 var sourceType = value.GetType();
 
-                TypeConverter destinationConverter = GetNopCustomTypeConverter(destinationType);
-                TypeConverter sourceConverter = GetNopCustomTypeConverter(sourceType);
+                TypeConverter destinationConverter = GetGrandCustomTypeConverter(destinationType);
+                TypeConverter sourceConverter = GetGrandCustomTypeConverter(sourceType);
                 if (destinationConverter != null && destinationConverter.CanConvertFrom(value.GetType()))
                     return destinationConverter.ConvertFrom(null, culture, value);
                 if (sourceConverter != null && sourceConverter.CanConvertTo(destinationType))

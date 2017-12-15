@@ -4,7 +4,7 @@ using System;
 namespace Grand.Core.Tests
 {
     [TestClass()]
-    public class NopExceptionTests {
+    public class GrandExceptionTests {
         [TestMethod()]
         public void pass_individual_message_to_exception() {
             try {

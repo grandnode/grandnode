@@ -1,6 +1,4 @@
 ﻿using System;
-using Grand.Core.Configuration;
-using Grand.Core.Infrastructure.DependencyManagement;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Builder;
@@ -10,8 +8,8 @@ namespace Grand.Core.Infrastructure
 {
     /// <summary>
     /// Classes implementing this interface can serve as a portal for the 
-    /// various services composing the Nop engine. Edit functionality, modules
-    /// and implementations access most Nop functionality through this 
+    /// various services composing the Grand engine. Edit functionality, modules
+    /// and implementations access most functionality through this 
     /// interface.
     /// </summary>
     public interface IEngine

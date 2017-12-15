@@ -335,7 +335,7 @@ namespace Grand.Plugin.Payments.PayPalStandard
                      */
                     decimal discountTotal = cartTotal - postProcessPaymentRequest.Order.OrderTotal;
                     discountTotal = Math.Round(discountTotal, 2);
-                    //gift card or rewared point amount applied to cart in nopCommerce - shows in Paypal as "discount"
+                    //gift card or rewared point amount applied to cart in app - shows in Paypal as "discount"
                     builder.AppendFormat("&discount_amount_cart={0}", discountTotal.ToString("0.00", CultureInfo.InvariantCulture));
                 }
             }

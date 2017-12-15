@@ -1,9 +1,9 @@
 namespace Grand.Core.Caching
 {
     /// <summary>
-    /// Represents a NopNullCache (caches nothing)
+    /// Represents a GrandNullCache (caches nothing)
     /// </summary>
-    public partial class NopNullCache : ICacheManager
+    public partial class GrandNullCache : ICacheManager
     {
         /// <summary>
         /// Gets or sets the value associated with the specified key.

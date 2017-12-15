@@ -269,7 +269,7 @@ namespace Grand.Services.Configuration
             if (key == null)
                 throw new ArgumentNullException("key");
             key = key.Trim().ToLowerInvariant();
-            string valueStr = CommonHelper.GetNopCustomTypeConverter(typeof(T)).ConvertToInvariantString(value);
+            string valueStr = CommonHelper.GetGrandCustomTypeConverter(typeof(T)).ConvertToInvariantString(value);
 
             var allSettings = GetAllSettingsCached();
             var settingForCaching = allSettings.ContainsKey(key) ?
@@ -351,13 +351,13 @@ namespace Grand.Services.Configuration
                     if (setting == null)
                         continue;
 
-                    if (!CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).CanConvertFrom(typeof(string)))
+                    if (!CommonHelper.GetGrandCustomTypeConverter(prop.PropertyType).CanConvertFrom(typeof(string)))
                         continue;
 
-                    if (!CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).IsValid(setting))
+                    if (!CommonHelper.GetGrandCustomTypeConverter(prop.PropertyType).IsValid(setting))
                         continue;
 
-                    object value = CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).ConvertFromInvariantString(setting);
+                    object value = CommonHelper.GetGrandCustomTypeConverter(prop.PropertyType).ConvertFromInvariantString(setting);
 
                     //set property
                     prop.SetValue(settings, value, null);
@@ -383,7 +383,7 @@ namespace Grand.Services.Configuration
                 if (!prop.CanRead || !prop.CanWrite)
                     continue;
 
-                if (!CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).CanConvertFrom(typeof(string)))
+                if (!CommonHelper.GetGrandCustomTypeConverter(prop.PropertyType).CanConvertFrom(typeof(string)))
                     continue;
 
                 string key = typeof(T).Name + "." + prop.Name;

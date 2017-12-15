@@ -92,7 +92,7 @@ namespace Grand.Framework
         #region Utilities
 
         /// <summary>
-        /// Get nop customer cookie
+        /// Get customer cookie
         /// </summary>
         /// <returns>String value of cookie</returns>
         protected virtual string GetCustomerCookie()

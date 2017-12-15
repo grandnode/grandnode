@@ -15,7 +15,7 @@ namespace Grand.Core.Infrastructure
         [MethodImpl(MethodImplOptions.Synchronized)] 
         public static IEngine Create()
         {
-            //create NopEngine as engine
+            //create GrandEngine as engine
             if (Singleton<IEngine>.Instance == null)
                 Singleton<IEngine>.Instance = new GrandEngine();
 
@@ -37,7 +37,7 @@ namespace Grand.Core.Infrastructure
         #region Properties
 
         /// <summary>
-        /// Gets the singleton Nop engine used to access Nop services.
+        /// Gets the singleton Grand engine used to access Nop services.
         /// </summary>
         public static IEngine Current
         {

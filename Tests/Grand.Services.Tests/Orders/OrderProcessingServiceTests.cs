@@ -112,7 +112,7 @@ namespace Grand.Services.Orders.Tests
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
 
-            var cacheManager = new NopNullCache();
+            var cacheManager = new GrandNullCache();
 
             _productService = new Mock<IProductService>().Object;
 

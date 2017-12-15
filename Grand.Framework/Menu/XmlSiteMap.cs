@@ -74,9 +74,9 @@ namespace Grand.Framework.Menu
             siteMapNode.SystemName = GetStringValueFromAttribute(xmlNode, "SystemName");
 
             //title
-            var nopResource = GetStringValueFromAttribute(xmlNode, "nopResource");
+            var resource = GetStringValueFromAttribute(xmlNode, "grandResource");
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-            siteMapNode.Title = localizationService.GetResource(nopResource);
+            siteMapNode.Title = localizationService.GetResource(resource);
 
             //routes, url
             string controllerName = GetStringValueFromAttribute(xmlNode, "controller");
@@ -87,7 +87,6 @@ namespace Grand.Framework.Menu
                 siteMapNode.ControllerName = controllerName;
                 siteMapNode.ActionName = actionName;
 
-                //apply admin area as described here - http://www.nopcommerce.com/boards/t/20478/broken-menus-in-admin-area-whilst-trying-to-make-a-plugin-admin-page.aspx
                 siteMapNode.RouteValues = new RouteValueDictionary { { "area", "Admin" } };
             }
             else if (!string.IsNullOrEmpty(url))

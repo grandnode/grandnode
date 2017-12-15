@@ -60,7 +60,7 @@ namespace Grand.Services.Logging.Tests
                 CustomerId = _customer2.Id,
             };
 
-            _cacheManager = new NopNullCache();
+            _cacheManager = new GrandNullCache();
             _workContext = new Mock<IWorkContext>().Object;
 
             _activityLogRepository = new MongoDBRepositoryTest<ActivityLog>();

@@ -56,7 +56,7 @@ namespace Grand.Services.Shipping.Tests
             _checkoutAttributeParser = new Mock<ICheckoutAttributeParser>().Object;
             _pickupPointRepository = new Mock<IRepository<PickupPoint>>().Object;
 
-            var cacheManager = new NopNullCache();
+            var cacheManager = new GrandNullCache();
 
             var pluginFinder = new PluginFinder();
             _productService = new Mock<IProductService>().Object;

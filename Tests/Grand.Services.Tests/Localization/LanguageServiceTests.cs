@@ -53,7 +53,7 @@ namespace Grand.Services.Localization.Tests
             }
             _localizationSettings = new LocalizationSettings();
 
-            _languageService = new LanguageService(new NopNullCache(), _languageRepo, _storeMappingService,
+            _languageService = new LanguageService(new GrandNullCache(), _languageRepo, _storeMappingService,
                 _settingService, _localizationSettings, _eventPublisher);
         }
 

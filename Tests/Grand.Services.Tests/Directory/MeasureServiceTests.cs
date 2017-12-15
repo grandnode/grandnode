@@ -139,7 +139,7 @@ namespace Grand.Services.Directory.Tests
                 _eventPublisher = tempEventPublisher.Object;
             }
 
-            _measureService = new MeasureService(new NopNullCache(), _measureDimensionRepository,
+            _measureService = new MeasureService(new GrandNullCache(), _measureDimensionRepository,
                 _measureWeightRepository, _measureUnitRepository, _measureSettings, _eventPublisher);
         }
 

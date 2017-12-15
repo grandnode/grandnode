@@ -147,7 +147,7 @@ namespace Grand.Services.Customers.Tests
 
             _customerSettings = new CustomerSettings();
             _commonSettings = new CommonSettings();
-            _customerService = new CustomerService(new NopNullCache(), _customerRepo, _customerRoleRepo, _customerProductPriceRepo,
+            _customerService = new CustomerService(new GrandNullCache(), _customerRepo, _customerRoleRepo, _customerProductPriceRepo,
                 _customerHistoryRepo,
                 _customerRoleProductRepo, _orderRepo, _forumPostRepo, _forumTopicRepo,
                 null, null, _genericAttributeService, null,

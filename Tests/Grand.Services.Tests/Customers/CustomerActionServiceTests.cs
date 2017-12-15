@@ -92,7 +92,7 @@ namespace Grand.Services.Customers.Tests
             };
             _customerActionRepository.Insert(customerActions);
             _customerActionService = new CustomerActionService(_customerActionRepository, _customerActionTypeRepository,
-            _customerActionHistoryRepository, _eventPublisher, new NopNullCache());
+            _customerActionHistoryRepository, _eventPublisher, new GrandNullCache());
 
         }
 

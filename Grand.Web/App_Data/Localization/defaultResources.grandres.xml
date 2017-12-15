@@ -13824,10 +13824,10 @@
   <LocaleResource Name="Admin.System.SystemInfo.LoadedAssemblies.Hint">
     <Value>A list of loaded assemblies</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.System.SystemInfo.NopVersion">
+  <LocaleResource Name="Admin.System.SystemInfo.GrandVersion">
     <Value>grandnode version</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.System.SystemInfo.NopVersion.Hint">
+  <LocaleResource Name="Admin.System.SystemInfo.GrandVersion.Hint">
     <Value>grandnode version</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.OperatingSystem">

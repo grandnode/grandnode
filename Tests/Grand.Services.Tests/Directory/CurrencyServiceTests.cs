@@ -79,7 +79,7 @@ namespace Grand.Services.Directory.Tests
             }
 
             _storeMappingService = new Mock<IStoreMappingService>().Object;
-            var cacheManager = new NopNullCache();
+            var cacheManager = new GrandNullCache();
             _currencySettings = new CurrencySettings();
             _currencySettings.PrimaryStoreCurrencyId = currencyUSD.Id;
             _currencySettings.PrimaryExchangeRateCurrencyId = currencyEUR.Id;

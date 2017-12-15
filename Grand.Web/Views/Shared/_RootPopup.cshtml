@@ -7,8 +7,8 @@
 <head>
     <title>@Html.GrandTitle(true)</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-    <meta name="description" content="@(Html.NopMetaDescription())" />
-    <meta name="keywords" content="@(Html.NopMetaKeywords())" />
+    <meta name="description" content="@(Html.GrandMetaDescription())" />
+    <meta name="keywords" content="@(Html.GrandMetaKeywords())" />
     @Html.GrandHeadCustom()
     @*This is used so that themes can inject content into the header*@
     @await Html.PartialAsync("Head")

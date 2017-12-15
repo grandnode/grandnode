@@ -9,7 +9,7 @@ using Grand.Framework.Mvc.Models;
 namespace Grand.Framework.Mvc.ModelBinding
 {
     /// <summary>
-    /// Represents model binder for the binding models inherited from the BaseNopModel
+    /// Represents model binder for the binding models inherited from the BaseGrandModel
     /// </summary>
     public class GrandModelBinder : ComplexTypeModelBinder
     {
@@ -56,7 +56,7 @@ namespace Grand.Framework.Mvc.ModelBinding
             if (bindingContext == null)
                 throw new ArgumentNullException(nameof(bindingContext));
 
-            //trim property string values for nop models
+            //trim property string values for models
             var valueAsString = bindingResult.Model as string;
             if (bindingContext.Model is BaseGrandModel && !string.IsNullOrEmpty(valueAsString))
             {

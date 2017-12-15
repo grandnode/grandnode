@@ -66,7 +66,7 @@ namespace Grand.Services.Catalog.Tests
             _productAttributeParser = new Mock<IProductAttributeParser>().Object;
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
-            _cacheManager = new NopNullCache();
+            _cacheManager = new GrandNullCache();
             _priceCalcService = new PriceCalculationService(
                 _workContext,
                 _storeContext,

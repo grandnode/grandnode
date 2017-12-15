@@ -20,7 +20,7 @@ namespace Grand.Web.Areas.Admin.Models.Common
         public string AspNetInfo { get; set; }
 
 
-        [GrandResourceDisplayName("Admin.System.SystemInfo.NopVersion")]
+        [GrandResourceDisplayName("Admin.System.SystemInfo.GrandVersion")]
         public string GrandVersion { get; set; }
 
         [GrandResourceDisplayName("Admin.System.SystemInfo.OperatingSystem")]

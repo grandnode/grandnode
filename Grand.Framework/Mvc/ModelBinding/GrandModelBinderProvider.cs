@@ -7,12 +7,12 @@ using System.Reflection;
 namespace Grand.Framework.Mvc.ModelBinding
 {
     /// <summary>
-    /// Represents model binder provider for the creating NopModelBinder
+    /// Represents model binder provider for the creating GrandModelBinder
     /// </summary>
     public class GrandModelBinderProvider : IModelBinderProvider
     {
         /// <summary>
-        /// Creates a nop model binder based on passed context
+        /// Creates a model binder based on passed context
         /// </summary>
         /// <param name="context">Model binder provider context</param>
         /// <returns>Model binder</returns>
@@ -26,7 +26,7 @@ namespace Grand.Framework.Mvc.ModelBinding
             if (!typeof(BaseGrandModel).IsAssignableFrom(modelType))
                 return null;
 
-            //use NopModelBinder as a ComplexTypeModelBinder for BaseNopModel
+            //use GrandModelBinder as a ComplexTypeModelBinder for BaseGrandModel
             if (context.Metadata.IsComplexType && !context.Metadata.IsCollectionType)
             {
                 //create binders for all model properties

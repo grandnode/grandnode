@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
@@ -16,15 +15,11 @@ using Grand.Core.Infrastructure.DependencyManagement;
 using Grand.Core.Infrastructure.Mapper;
 using Grand.Core.Plugins;
 using Grand.Core.Infrastructure.MongoDB;
-using Microsoft.Extensions.FileProviders;
-using Microsoft.AspNetCore.Mvc.Razor;
-using System.Runtime.Loader;
-using System.IO;
 
 namespace Grand.Core.Infrastructure
 {
     /// <summary>
-    /// Represents Nop engine
+    /// Represents Grand engine
     /// </summary>
     public class GrandEngine : IEngine
     {

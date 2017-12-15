@@ -61,7 +61,7 @@ namespace Grand.Framework.Mvc.Razor
         public int GetSelectedTabIndex()
         {
             //keep this method synchornized with
-            //"SetSelectedTabIndex" method of \Administration\Controllers\BaseNopController.cs
+            //"SetSelectedTabIndex" method of \Administration\Controllers\BaseGrandController.cs
             int index = 0;
             string dataKey = "Grand.selected-tab-index";
             if (ViewData[dataKey] is int)

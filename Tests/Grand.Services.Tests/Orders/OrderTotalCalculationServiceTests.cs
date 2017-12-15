@@ -86,7 +86,7 @@ namespace Grand.Services.Orders.Tests
             _productService = new Mock<IProductService>().Object;
 
             var pluginFinder = new PluginFinder();
-            var cacheManager = new NopNullCache();
+            var cacheManager = new GrandNullCache();
 
             _discountService = new Mock<IDiscountService>().Object;
             _categoryService = new Mock<ICategoryService>().Object;
