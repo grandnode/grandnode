@@ -345,7 +345,7 @@ namespace Grand.Services.Installation
 
         protected virtual string GetSamplesPath()
         {
-            return Path.Combine(_hostingEnvironment.WebRootPath, "content/samples/");
+            return Path.Combine(_hostingEnvironment.WebRootPath, "Content/samples/");
         }
 
 

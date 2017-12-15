@@ -586,8 +586,8 @@ namespace Grand.Web.Services
                 {
                     "/admin",
                     "/bin/",
-                    "/content/files/",
-                    "/content/files/exportimport/",
+                    "/Content/files/",
+                    "/Content/files/exportimport/",
                     "/country/getstatesbycountryid",
                     "/install",
                     "/upgrade",
