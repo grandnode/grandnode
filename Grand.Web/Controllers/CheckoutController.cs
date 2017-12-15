@@ -1254,7 +1254,7 @@ namespace Grand.Web.Controllers
             }
         }
 
-        public virtual IActionResult OpcSaveShipping(IFormCollection form)
+        public virtual IActionResult OpcSaveShipping(CheckoutShippingAddressModel model, IFormCollection form)
         {
             try
             {
@@ -1278,7 +1278,6 @@ namespace Grand.Web.Controllers
                 //Pick up in store?
                 if (_shippingSettings.AllowPickUpInStore)
                 {
-                    var model = new CheckoutShippingAddressModel();
                     
                     if (model.PickUpInStore)
                     {
@@ -1343,7 +1342,6 @@ namespace Grand.Web.Controllers
                 else
                 {
                     //new address
-                    var model = new CheckoutShippingAddressModel();
                     TryUpdateModelAsync(model.NewAddress, "ShippingNewAddress");
 
                     //custom address attributes

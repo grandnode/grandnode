@@ -52,7 +52,7 @@
                     else
                     {
                         <label for="pickup-points-select">@T("Checkout.PickupPoints.SelectPickupPoint")</label>
-                        <select name="pickup-point-id" id="pickup-points-select" class="address-select" title="">
+                        <select name="pickup-point-id" id="pickup-points-select" class="custom-select address-select" title="">
                             @foreach (var point in Model.PickupPoints)
                             {
                                 var addressLine = new StringBuilder();
