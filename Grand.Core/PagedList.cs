@@ -29,7 +29,7 @@ namespace Grand.Core
         {
             var range = source.Skip(pageIndex * pageSize).Limit(pageSize+1).ToList();
             int total = range.Count > pageSize ? range.Count : pageSize;
-            this.TotalCount = total;
+            this.TotalCount = source.ToListAsync().Result.Count;
             if(pageSize > 0)
                 this.TotalPages = total / pageSize;
 
