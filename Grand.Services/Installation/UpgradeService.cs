@@ -30,6 +30,7 @@ using System.Threading;
 using Grand.Services.Topics;
 using Grand.Core.Domain.Discounts;
 
+
 namespace Grand.Services.Installation
 {
     public partial class UpgradeService : IUpgradeService
@@ -282,7 +283,7 @@ namespace Grand.Services.Installation
             string upgrade_script = File.ReadAllText(filePath);
             var bscript = new BsonJavaScript(upgrade_script);
             var operation = new EvalOperation(_versionRepository.Database.DatabaseNamespace, bscript, null);
-            var writeBinding = new WritableServerBinding(_versionRepository.Database.Client.Cluster);
+            var writeBinding = new WritableServerBinding(_versionRepository.Database.Client.Cluster, NoCoreSession.NewHandle());
             operation.Execute(writeBinding, CancellationToken.None);
 
             #endregion
