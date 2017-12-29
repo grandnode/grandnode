@@ -65,7 +65,8 @@ namespace Grand.Services.Common
             var collection = _baseRepository.Database.GetCollection<GenericAttributeBaseEntity>(keyGroup);
             var query = _baseRepository.Database.GetCollection<GenericAttributeBaseEntity>(keyGroup).AsQueryable();
 
-            var props = query.Where(x => x.Id == entity.Id).SelectMany(x => x.GenericAttributes).ToList();
+            var props = query.Where(x => x.Id == entity.Id).SelectMany(x => x.GenericAttributes)
+                .Where(x => string.IsNullOrEmpty(storeId) || x.StoreId == storeId).ToList();
 
             var prop = props.FirstOrDefault(ga =>
                 ga.Key.Equals(key, StringComparison.OrdinalIgnoreCase)); //should be culture invariant
@@ -87,7 +88,7 @@ namespace Grand.Services.Common
                     prop.Value = valueStr;
                     var builder = Builders<GenericAttributeBaseEntity>.Filter;
                     var filter = builder.Eq(x => x.Id, entity.Id);
-                    filter = filter & builder.Where(x => x.GenericAttributes.Any(y => y.Key == prop.Key));
+                    filter = filter & builder.Where(x => x.GenericAttributes.Any(y => y.Key == prop.Key && y.StoreId == storeId));
                     var update = Builders<GenericAttributeBaseEntity>.Update
                         .Set(x => x.GenericAttributes.ElementAt(-1).Value, prop.Value);
 
