@@ -28,8 +28,8 @@ namespace Grand.Core.Infrastructure.MongoDB
         /// <param name="config">Config</param>
         public static void RegisterMongoDBMappings(GrandConfig config)
         {
-            BsonSerializer.RegisterSerializer(typeof(decimal), new DecimalSerializer(BsonType.Double));
-            BsonSerializer.RegisterSerializer(typeof(decimal?), new NullableSerializer<decimal>(new DecimalSerializer(BsonType.Double)));
+            BsonSerializer.RegisterSerializer(typeof(decimal), new DecimalSerializer(BsonType.Decimal128));
+            BsonSerializer.RegisterSerializer(typeof(decimal?), new NullableSerializer<decimal>(new DecimalSerializer(BsonType.Decimal128)));
             BsonSerializer.RegisterSerializer(typeof(DateTime), new DateTimeSerializer(DateTimeKind.Unspecified));
 
             //global set an equivalent of [BsonIgnoreExtraElements] for every Domain Model
