@@ -19,6 +19,8 @@
                             if (!$('#termsofservice').is(':checked')) {
                                 $('#terms-of-service-warning-box').modal('show')
                                 termOfServiceOk = false;
+                                $("body.modal-open").removeAttr("style");
+                                $(".navUp.modal-open").removeAttr("style");
                             } else {
                                 termOfServiceOk = true;
                             }

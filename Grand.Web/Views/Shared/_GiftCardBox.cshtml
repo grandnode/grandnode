@@ -32,9 +32,9 @@
         </script>
         @if (!String.IsNullOrEmpty(Model.Message))
         { 
-            <div class="card card-inverse @(Model.IsApplied ? "card-success message-success" : "card-danger message-failure") text-center">
-                <div class="card-block">
-                    <blockquote class="card-blockquote">
+            <div class="card text-white @(Model.IsApplied ? "card-success message-success" : "card-danger message-failure") text-center">
+                <div class="card-body p-3">
+                    <blockquote class="card-bodyquote mb-0">
                         <span>@Model.Message</span>
                     </blockquote>
                 </div>

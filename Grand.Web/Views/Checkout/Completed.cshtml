@@ -15,7 +15,7 @@
         @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_completed_top", additionalData = Model.OrderId })
         <div class="card order-completed text-center">
             <h5 class="card-header text-success text-center"><strong>@T("Checkout.YourOrderHasBeenSuccessfullyProcessed")</strong></h5>
-            <div class="card-block text-center">
+            <div class="card-body text-center">
                 <div class="order-number generalMarginSupporter text-center">
                     <strong>@T("Checkout.OrderNumber"): @Model.OrderNumber</strong>
                 </div>

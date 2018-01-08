@@ -35,7 +35,7 @@
         <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
             <img class="card-img-top img-fluid" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
         </a>
-        <div class="card-block">
+        <div class="card-body">
             <h3 class="h6 card-title">
                 <strong><a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">@Model.Name</a></strong>
                 @if (Model.ShowSku && !string.IsNullOrEmpty(Model.Sku))
@@ -91,7 +91,7 @@
                     @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("shippinginfo") }))
                 </div>
             }
-            <p class="card-text hidden-xl-down">
+            <p class="card-text d-none">
                 @Html.Raw(Model.ShortDescription)
             </p>
         </div>
@@ -119,7 +119,7 @@
                                 <span class="fa fa fa-shopping-cart"></span> 
                                 @if (!Model.ShowQty)
                                 {
-                                    <span class="hidden-lg-down">@(addToCartText)</span>
+                                    <span class="d-none d-xl-block">@(addToCartText)</span>
                                 }
                                 <span class="sr-only">AddToCart</span>
                             </button>

@@ -33,7 +33,7 @@
                                     <span asp-validation-for="AddProductReview.ReviewText"></span>
                                 <div class="form-group review-rating row d-flex justify-content-around">
                                     <label asp-for="AddProductReview.Rating" class="col-12 col-form-label">@T("Reviews.Fields.Rating"):</label>
-                                        <span class="col col-form-label label first hidden-sm-down text-right">@T("Reviews.Fields.Rating.Bad")</span>
+                                        <span class="col col-form-label label first d-none d-md-block text-right">@T("Reviews.Fields.Rating.Bad")</span>
                                         <div class="col-12 col-sm-6 rating-options text-center">
                                             <label class="custom-control custom-radio">
                                                 <input asp-for="AddProductReview.Rating" value="1" type="radio" id="addproductrating_1" class="custom-control-input"/>
@@ -61,7 +61,7 @@
                                                 <span class="custom-control-description">5</span>
                                             </label>
                                         </div>
-                                        <span class="label col col-form-label hidden-sm-down text-left">@T("Reviews.Fields.Rating.Excellent")</span>
+                                        <span class="label col col-form-label d-none d-md-block text-left">@T("Reviews.Fields.Rating.Excellent")</span>
                                 </div>
                                 @if (Model.AddProductReview.DisplayCaptcha)
                                 {
@@ -112,7 +112,7 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="card-block mb-3">
+                        <div class="card-body mb-3">
                             <div class="review-title">
                                 <strong>@review.Title</strong>
                             </div>

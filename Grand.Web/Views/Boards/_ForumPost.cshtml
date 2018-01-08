@@ -8,7 +8,7 @@
 <div class="topic-post" id="@Html.Encode(String.Format("post{0}", Model.Id))">
         <div class="card pb-3">
             <div class="flex-column flex-md-row d-flex card-header user-info">
-                <div class="col-lg-2 col-md-3 col-sm-3 text-center text-md-left">
+                <div class="col-lg-2 col-md-3 col-sm-3 text-center text-md-left forum-media-header">
                     @if (Model.AllowViewingProfiles)
                     {
                         <strong>
@@ -24,9 +24,9 @@
                         </h5>
                     }
                 </div>
-                <div class="col-lg-10 col-md-9 col-12">
+                <div class="col-lg-10 col-md-9 col-12 forum-media-header">
                     <div class="row">
-                        <div class="col-lg-4 col-md-6 post-time hidden-sm-down">
+                        <div class="col-lg-4 col-md-6 post-time d-none d-md-block">
                             <span>@T("Forum.Posted"):</span>
                             <span class="stat-value">@Model.PostCreatedOnStr</span>
                         </div>
@@ -38,18 +38,18 @@
                             @if (Model.IsCurrentCustomerAllowedToDeletePost)
                             {
                                 <a href="#" class="btn btn-secondary delete-post-button" onclick="deletepost('@(Model.Id)')">
-                                    <i class="fa fa-trash hidden-lg-up" aria-hidden="true"></i>
-                                    <span class="hidden-md-down">@T("Forum.DeletePost").Text</span>
+                                    <i class="fa fa-trash d-lg-none" aria-hidden="true"></i>
+                                    <span class="d-none d-lg-block">@T("Forum.DeletePost").Text</span>
                                 </a>
                             }
                             @Html.RouteLink(T("Forum.QuotePost").Text, "PostCreateQuote", new { id = Model.ForumTopicId, quote = Model.Id }, new { @class = "btn btn-secondary quote-post-button" })
 
-                            <a id="@Model.Id" title="@T("Forum.PostLinkTitle")" class="btn btn-secondary btn-sm post-link-button" href="@(thisPageUrl)#@(Model.Id)"><span class="hidden-md-down">@T("Forum.PostLink")</span></a>
+                            <a id="@Model.Id" title="@T("Forum.PostLinkTitle")" class="btn btn-secondary btn-sm post-link-button" href="@(thisPageUrl)#@(Model.Id)"><span class="d-none d-lg-block">@T("Forum.PostLink")</span></a>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="card-block row flex-row mb-3">
+            <div class="card-body row flex-row mb-3">
                     <div class="col-lg-3 col-md-4 col-12 text-center text-md-left">
                         @if (!String.IsNullOrEmpty(Model.CustomerAvatarUrl))
                         {
@@ -67,7 +67,7 @@
                             </div>
                         }
                         <ul class="user-stats pl-0 mb-0">
-                            <li class="post-time hidden-md-up small">
+                            <li class="post-time d-md-none small">
                                 <span>@T("Forum.Posted"):</span>
                                 <span class="stat-value">@Model.PostCreatedOnStr</span>
                             </li>

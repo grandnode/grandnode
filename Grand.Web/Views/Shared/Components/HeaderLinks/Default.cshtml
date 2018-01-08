@@ -1,33 +1,51 @@
 ﻿@model HeaderLinksModel
-@using System.Text.Encodings.Web;
+@using System.Text.Encodings.Web
 @await Component.InvokeAsync("Widget", new { widgetZone = "header_links_before" })
 @if (Model.IsAuthenticated)
 {
     <li class="nav-item">
-        <a class="nav-link ico-account" href="@Url.RouteUrl("CustomerInfo")">
-            <span class=""><span class="fa fa-user-o"></span></span>
-            <span class="hidden-sm-down">@Model.CustomerEmailUsername</span>
+        <a class="nav-link ico-account d-none d-lg-flex" href="@Url.RouteUrl("CustomerInfo")">
+            <span class="align-self-center"><span class="fa fa-user"></span></span>
+            <span class="d-none d-lg-block">@T("Account.MyAccount")</span>
         </a>
     </li>
-    <li class="nav-item">
+    <li class="nav-item d-none d-lg-block">
         <a class="nav-link ico-logout" href="@Url.RouteUrl("Logout")">
-            <span class=""><span class="fa fa-sign-out"></span></span>
-            <span class="hidden-sm-down">@T("Account.Logout")</span>
+            <span class="align-self-center"><span class="fa fa-power-off"></span></span>
+            <span class="d-none d-lg-block">@T("Account.Logout")</span>
+        </a>
+    </li>
+    <li class="nav-item d-flex d-lg-none align-self-start" id="mobile-hl-opener">
+        <a class="ico-account nav-link d-flex justify-content-center" href="@Url.RouteUrl("CustomerInfo")">
+            <span class="align-self-center"><span class="fa fa-user"></span></span>
+            <span class="d-none d-lg-block">@T("Account.MyAccount")</span>
+        </a>
+    </li>
+    <li class="nav-item d-flex d-lg-none align-self-start">
+        <a class="nav-link ico-logout" href="@Url.RouteUrl("Logout")">
+            <span class="align-self-center"><span class="fa fa-power-off"></span></span>
+            <span class="d-none d-lg-block">@T("Account.Logout")</span>
         </a>
     </li>
 }
 else
 {
-    <li class="nav-item"><a class="nav-link ico-register" href="@Url.RouteUrl("Register")"><span class="fa fa-user-plus"></span><span class="hidden-sm-down">@T("Account.Register")</span></a></li>
-            <li class="nav-item"><a class="nav-link ico-login" href="@Url.RouteUrl("Login")"><span class="fa fa-sign-in"></span><span class="hidden-sm-down">@T("Account.Login")</span></a></li>
+    <li class="nav-item d-none d-lg-block"><a class="nav-link ico-register" href="@Url.RouteUrl("Register")"><span class="fa fa-user-plus align-self-center"></span><span class="d-none d-lg-block">@T("Account.Register")</span></a></li>
+    <li class="nav-item d-none d-lg-block"><a class="nav-link ico-login" href="@Url.RouteUrl("Login")"><span class="fa fa-user align-self-center"></span><span class="d-none d-lg-block">@T("Account.Login")</span></a></li>
+    <li class="nav-item d-flex d-lg-none justify-content-center align-self-start">
+        <a class="nav-link ico-login admin" href="@Url.RouteUrl("Login")">
+            <span class="fa fa-user align-self-center"></span>
+            <span class="d-none d-lg-block">@T("Account.Login")</span>
+        </a>
+    </li>
 }
 @if (Model.AllowPrivateMessages)
 {
     <li class="nav-item">
-        <a class="nav-link ico-inbox" href="@Url.RouteUrl("PrivateMessages", new { tab = "inbox" })">
-            <span class="fa fa-envelope-o"></span>
-            <span class="inbox-label hidden-sm-down">@T("PrivateMessages.Inbox")</span>
-            <span class="inbox-unread hidden-md-down">@Model.UnreadPrivateMessages</span>
+        <a class="nav-link ico-inbox" href="@Url.RouteUrl("PrivateMessages", new { tab = "" })">
+            <span class="fa fa-envelope-o align-self-center"></span>
+            <span class="inbox-label d-none d-lg-block">@T("PrivateMessages.Inbox")</span>
+            <span class="inbox-unread d-none d-lg-block">@Model.UnreadPrivateMessages</span>
         </a>
     </li>
 }
@@ -35,13 +53,13 @@ else
 {
     <li class="nav-item">
         <a class="nav-link" href="@Url.RouteUrl("Wishlist")">
-            <span class="wishlist-label">
+            <span class="wishlist-label align-self-center">
                 <span class="fa fa-heart-o"></span>
             </span>
-            <span class="hidden-sm-down">
+            <span class="d-none d-lg-block">
                 @T("Wishlist")
             </span>
-            <span class="wishlist-qty hidden-sm-down">@T("Wishlist.HeaderQuantity", Model.WishlistItems)</span>
+            <span class="wishlist-qty d-none d-lg-block">@T("Wishlist.HeaderQuantity", Model.WishlistItems)</span>
         </a>
     </li>
 }
@@ -50,35 +68,36 @@ else
     <li class="nav-item" id="topcartlink">
         <div class="btn-group dropdown">
             <a class="nav-link dropdown-toggle" href="@Url.RouteUrl("ShoppingCart")">
-                <span class="cart-label">
+                <span class="cart-label align-self-center">
                     <span class="fa fa-shopping-cart"></span>
                 </span>
-                <span class="hidden-sm-down">
+                <span class="d-none d-lg-block">
                     @T("ShoppingCart")
                 </span>
                 <span class="cart-qty">@T("ShoppingCart.HeaderQuantity", Model.ShoppingCartItems)</span>
             </a>
-            <div class="dropdown-menu dropdown-menu-right flyoutdropdown">
+            <div class="dropdown-menu dropdown-menu-right">
                 @await Component.InvokeAsync("FlyoutShoppingCart")
             </div>
         </div>
     </li>
     <script>
-        $(document).ready(function () {
-            if ($('.mini-shopping-cart').length == 0) {
-                $(".flyoutdropdown").hide();
-            }
-        });
+        if ($("#topcartlink .dropdown-menu").height() > 1) {
+        }
+        else {
+            $("#topcartlink .dropdown-menu").hide();
+        }
     </script>
 }
 @await Component.InvokeAsync("Widget", new { widgetZone = "header_links_after" })
 @if (Model.AllowPrivateMessages && !string.IsNullOrEmpty(Model.AlertMessage))
 {
     //new private message notification
-    <script type="text/javascript">
-        $(document).ready(function () {
-            displayPopupNotification('@Html.Raw(JavaScriptEncoder.Default.Encode(Model.AlertMessage))', 'success', false);
-        });
+    <script type="text/javascript" asp-location="Footer">
+            $(document).ready(function () {
+                displayPopupNotification('@Html.Raw(JavaScriptEncoder.Default.Encode(Model.AlertMessage))', 'success', false);
+            });
     </script>
 }
+
 

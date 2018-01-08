@@ -7,7 +7,7 @@
                 <colgroup>
                     <col />
                 </colgroup>
-                <thead class="table-inverse">
+                <thead class="table-dark">
                     <tr>
                         <th>
                             <div class="col-12">
@@ -15,13 +15,13 @@
                                     <div class="forum-details offset-md-1 col-md-6">
                                         @T("Forum.Forum")
                                     </div>
-                                    <div class="topics col-md-1 hidden-sm-down">
+                                    <div class="topics col-md-1 d-none d-md-block">
                                         @T("Forum.Topics")
                                     </div>
-                                    <div class="posts col-md-1 hidden-sm-down">
+                                    <div class="posts col-md-1 d-none d-md-block">
                                         @T("Forum.Posts")
                                     </div>
-                                    <div class="latest-post col-md-3 hidden-sm-down">
+                                    <div class="latest-post col-md-2 d-none d-md-block">
                                         @T("Forum.LatestPost")
                                     </div>
                                 </div>
@@ -47,8 +47,8 @@
                                                 @forum.Description
                                             </div>
                                         </div>
-                                        <div class="topics col-12 col-md-1 hidden-sm-down">@forum.NumTopics</div>
-                                        <div class="posts col-12 col-md-1 hidden-sm-down">@forum.NumPosts</div>
+                                        <div class="topics col-12 col-md-1 d-none d-md-block">@forum.NumTopics</div>
+                                        <div class="posts col-12 col-md-1 d-none d-md-block">@forum.NumPosts</div>
                                         <div class="latest-post col-12 col-md-3">
                                             @await Component.InvokeAsync("ForumLastPost", new { forumPostId = forum.LastPostId, showTopic = true })
                                         </div>

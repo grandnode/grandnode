@@ -17,10 +17,10 @@
     @if(Model.ExistingAddresses.Count > 0)
     {
         <div class="select-billing-address">
-            <div class="col-12">
+            <div class="col-12 px-0">
                 <label class="genera" for="billing-address-select">@T("Checkout.SelectBillingAddressOrEnterNewOne")</label>
             </div>
-            <div class="col-12">
+            <div class="col-12 px-0">
                 <select name="billing_address_id" id="billing-address-select" class="custom-select address-select"
                         title="" onchange="Billing.newAddress(!this.value)">
                     @foreach (var address in Model.ExistingAddresses)
@@ -59,12 +59,12 @@
     @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_billing_address_middle" })
     <div class="new-billing-address" id="billing-new-address-form">
         <div class="enter-address">
-            <div asp-validation-summary="ModelOnly" class="message-error"></div>
             @{
                 var dataDictAddress = new ViewDataDictionary(ViewData);
                 dataDictAddress.TemplateInfo.HtmlFieldPrefix = "BillingNewAddress";
                 @await Html.PartialAsync("_CreateOrUpdateAddress", Model.NewAddress, dataDictAddress)
             }
+            <div asp-validation-summary="ModelOnly" class="message-error"></div>
         </div>
     </div>
     @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_billing_address_bottom" })

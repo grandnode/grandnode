@@ -1,35 +1,75 @@
 ﻿<header>
     @await Component.InvokeAsync("Widget", new { widgetZone = "header" })
-    <nav class="navbar fixed-top navbar-light bg-faded navUp p-0">
-        <div class="collapse btn-toolbar generalDropDown" id="generalDropDown">
+    <nav class="navbar fixed-top navbar-light bg-light navUp p-0">
+        <div class="collapse btn-toolbar generalDropDown d-none d-lg-flex" id="generalDropDown">
+            @await Component.InvokeAsync("TaxTypeSelector")
+            @await Component.InvokeAsync("CurrencySelector")
+            @await Component.InvokeAsync("LanguageSelector")
+            @await Component.InvokeAsync("Widget", new { widgetZone = "header_selectors" })
         </div>
         <div class="container">
-            <ul class="nav navbar-nav header-links pl-0 flex-row">
-                <li class="nav-item float-xs-right hidden-md-up mr-auto">
+            <ul class="nav navbar-nav header-links pl-0 flex-row w-100">
+                <li class="nav-item mobile-menu-button d-lg-none align-self-center">
+                    <a id="mobile-menu-opener"><span></span><span></span><span></span></a>
+                </li>
+                <li class="nav-item float-xs-right d-lg-none d-none ml-auto">
                     <a class="btn btn-outlined-info general-opener" data-toggle="collapse" aria-expanded="false" aria-controls="generalDropDown">
                         <span class="fa fa-cogs" aria-hidden="true"></span>
                     </a>
                 </li>
-                <li class="nav-item float-xs-right hidden-sm-down mr-auto">
-                    <div class="generalDropDown btn-toolbar float-xs-right ">
-                        <div class="settingSellector">
-                            @await Component.InvokeAsync("TaxTypeSelector")
-                            @await Component.InvokeAsync("CurrencySelector")
-                            @await Component.InvokeAsync("LanguageSelector")
-                            @await Component.InvokeAsync("StoreSelector")
-                        </div>
+                <li class="nav-item ml-auto flex-column d-lg-none" id="mobile-lang-button">
+                    <a class="nav-link d-none">
+                        <span class="fa fa-language"></span>
+                        @await Component.InvokeAsync("LanguageSelector")
+                    </a>
+                </li>
+                <li class="nav-item float-xs-right d-none d-lg-block mr-auto">
+                    <div class="generalDropDown btn-toolbar float-xs-right">
+                        @await Component.InvokeAsync("TaxTypeSelector")
+                        @await Component.InvokeAsync("CurrencySelector")
+                        @await Component.InvokeAsync("LanguageSelector")
+                        @await Component.InvokeAsync("StoreSelector")
+                        @await Component.InvokeAsync("Widget", new { widgetZone = "header_selectors" })
                     </div>
                 </li>
+                <li class="nav-item d-flex d-lg-none mobile-search" data-toggle="modal" data-target="#searchModal">
+                    <a class="nav-link">
+                        <span class="fa fa-search"></span>
+                    </a>
+                </li>
+                @await Component.InvokeAsync("AdminHeaderLinks")
                 @await Component.InvokeAsync("HeaderLinks")
             </ul>
         </div>
+        <div class="collapse navbar-collapse" id="mobile-collapsing-menu">
+            <div class="col-12 options-container">
+                <div class="row justify-content-center">
+                    @await Component.InvokeAsync("TaxTypeSelector")
+                    @await Component.InvokeAsync("CurrencySelector")
+                    @await Component.InvokeAsync("LanguageSelector")
+                    @await Component.InvokeAsync("StoreSelector")
+
+                </div>
+            </div>
+            <ul class="nav navbar-nav">
+                @await Component.InvokeAsync("TopMenu")
+            </ul>
+        </div>
     </nav>
-    <div class="headBottom d-md-inline-flex d-sm-grid text-md-left text-center mt-3 mb-3">
+    <div class="headBottom d-flex align-items-center d-lg-inline-flex text-lg-left text-center mt-0 mb-0">
         <div class="col header-logo pr-0 pl-0">
             @await Component.InvokeAsync("Logo")
         </div>
-        <div class="col formSearch pr-0 pl-0">
+        <div class="col formSearch pr-0 pl-0 d-none d-lg-block">
             @await Component.InvokeAsync("SearchBox")
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+            </div>
         </div>
     </div>
     <script>

@@ -2,6 +2,7 @@
 @inject SeoSettings seoSettings
 @inject StoreInformationSettings storeInformationSettings
 @{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     var displayMiniProfiler = storeInformationSettings.DisplayMiniProfilerInPublicStore;
     //X-UA-Compatible tag
     if (commonSettings.RenderXuaCompatible)
@@ -23,7 +24,7 @@
     <meta name="description" content="@(Html.GrandMetaDescription())" />
     <meta name="keywords" content="@(Html.GrandMetaKeywords())" />
     <meta name="generator" content="grandnode" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
     @Html.GrandHeadCustom()
     @*This is used so that themes can inject content into the header*@
     @await Html.PartialAsync("Head")

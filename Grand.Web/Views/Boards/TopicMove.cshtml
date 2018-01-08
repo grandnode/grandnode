@@ -13,9 +13,9 @@
     <form asp-route="TopicMove" method="post">
         <input asp-for="Id" type="hidden" />
         <div class="form-fields">
-            <div class="inputs">
+            <div class="inputs col-md-4 col-12 px-0 mb-2 ">
                 <label>@T("Forum.SelectTheForumToMoveTopic"):</label>
-                @Html.DropDownList("ForumSelected", new SelectList(Model.ForumList, "Value", "Text"))
+                @Html.DropDownList("ForumSelected", new SelectList(Model.ForumList, "Value", "Text"), new { @class = "form-control custom-select" })
             </div>
         </div>
         <div class="btn-group btn-group-sm">

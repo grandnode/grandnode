@@ -9,20 +9,35 @@
 
     if (Model.UseImages)
     {
+        <div class="btn-group btn-group-sm float-xs-right align-self-center d-none d-lg-block pr-1">
+            <ul class="list-inline language-list pl-0 mb-0 d-flex align-items-center">
+                @foreach (var lang in Model.AvailableLanguages)
+                {
 
-        <div class="btn-group btn-group-sm float-xs-right">
-                <ul class="list-inline language-list pl-0 mb-0">
-                    @foreach (var lang in Model.AvailableLanguages)
-                        {
-                        <li class="list-inline-item">
-                            <a href="@webHelper.ModifyQueryString(Url.RouteUrl("ChangeLanguage", new {langid = lang.Id}), "returnurl=" + WebUtility.UrlEncode(rawUrl), null)" title="@lang.Name">
-                                <img title='@lang.Name' alt='@lang.Name' @(lang.Id == Model.CurrentLanguageId ? " class=selected" : null)
-                                     src="@Url.Content("~/Content/Images/flags/" + @lang.FlagImageFileName) " />
-                            </a>
-                        </li>
-                    }
-                </ul>
-            </div>
+                    <li class="list-inline-item">
+                        <a href="@webHelper.ModifyQueryString(Url.RouteUrl("ChangeLanguage", new {langid = lang.Id}), "returnurl=" + WebUtility.UrlEncode(rawUrl), null)" title="@lang.Name">
+                            <img title='@lang.Name' alt='@lang.Name' @(lang.Id == Model.CurrentLanguageId ? " class=selected" : null)
+                                 src="@Url.Content("~/images/flags/" + @lang.FlagImageFileName) " />
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+        <div class="col px-0 language-list-mobile option-list-mobile text-center">
+            <h6 class="language-button mobile-option-button mb-0">Language</h6>
+            <ul class="">
+                @foreach (var lang in Model.AvailableLanguages)
+                {
+                    <li class="flag-lang">
+                        <a class="nav-link d-flex d-lg-none p-0" href="@webHelper.ModifyQueryString(Url.RouteUrl("ChangeLanguage", new {langid = lang.Id}), "returnurl=" + WebUtility.UrlEncode(rawUrl), null)" title="@lang.Name">
+                            <img title='@lang.Name' alt='@lang.Name' @(lang.Id == Model.CurrentLanguageId ? " class=selected" : null)
+                                 src="@Url.Content("~/images/flags/" + @lang.FlagImageFileName) " />
+                        </a>
+                    </li>
+
+                }
+            </ul>
+        </div>
     }
     else
     {
@@ -33,7 +48,7 @@
             Selected = lang.Id.Equals(Model.CurrentLanguageId)
         });
 
-        <div class="btn-group btn-group-sm float-xs-right mr-2">
+        <div class="language-selector d-none d-lg-block btn-group btn-group-sm float-xs-right pr-1">
             <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
                 <span>@languages.FirstOrDefault(x => x.Selected).Text</span>
                 <span class="sr-only">Toggle Dropdown</span>
@@ -48,6 +63,22 @@
                     }
                 </ul>
             </div>
+        </div>
+
+        <div class="col px-0 language-list-mobile option-list-mobile text-center">
+            <h6 class="language-button mobile-option-button mb-0">Language</h6>
+            <ul class="">
+                @foreach (var item in languages)
+                {
+                    var className = item.Selected ? "active" : "";
+                    <li class="@className">
+                        <a href="@item.Value" class="nav-link d-flex d-lg-none p-0">
+                            @item.Text
+                        </a>
+                    </li>
+
+                }
+            </ul>
         </div>
     }
 }

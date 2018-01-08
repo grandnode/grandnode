@@ -55,7 +55,7 @@
 
     <div class="order-details-area">
         <div class="card">
-            <div class="card-block d-flex flex-row row">
+            <div class="card-body d-flex flex-row row">
                 <div class="col-sm-6 col-12 billing">
                         <ul class="billing-info pl-0">
                             <li class="title">
@@ -345,43 +345,79 @@
         @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_beforeproducts", additionalData = Model.Id })
         <div class="products">
             <h5 class="generalTitle">@T("Order.Product(s)")</h5>
-            <div class="table-responsive">
-                <table class="table table-hover text-sm-center text-md-left">
-                    <colgroup>
-                        <col />
-                    </colgroup>
-                    <thead class="table-inverse">
-                        <tr>
-                            <th>
-                                <div class="d-flex flex-row justify-content-start">
-                                    <div class="name col">
-                                        @T("Order.Product(s).Name")
-                                    </div>
-                                    <div class="col d-flex flex-row ml-auto justify-content-between hidden-sm-down">
-                                        <div class="price col">
-                                            <div class="row">
-                                                @T("Order.Product(s).Price")
-                                            </div>
-                                        </div>
-                                        <div class="quantity col text-sm-center">
-                                            @T("Order.Product(s).Quantity")
-                                        </div>
-                                        <div class="total col-4 hidden-sm-down text-right px-0">
-                                                @T("Order.Product(s).Total")
-                                        </div>
-                                    </div>
-                                </div>
-                            </th>
+            <div class="mt-1">
+                <table class="table-hover w-100 mb-3">
+                    <thead class="table-dark">
+                        <tr class="text-center">
+                            <th class="border border-secondary p-3 d-lg-table-cell d-none">@T("ShoppingCart.Product(s)")</th>
+                            <th class="border border-secondary p-3 d-lg-table-cell d-none"> @T("ShoppingCart.UnitPrice")</th>
+                            <th class="border border-secondary p-3 d-lg-table-cell d-none"> @T("ShoppingCart.Quantity")</th>             
+                            <th class="border border-secondary p-3 d-lg-table-cell d-none"> @T("ShoppingCart.ItemTotal")</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @foreach (var item in Model.Items)
-                        {
-                            <tr>
-                                <td>
-                                        <div class="d-md-flex flex-row flex-lg-row text-center text-md-left">
-                                            <div class="product col">
-                                                @if (!Model.PrintMode)
+                    
+                    @foreach (var item in Model.Items)
+            {
+            <tbody class="desktop-shopping-table">
+            <tr class="text-center">
+                <td class="table-name border border-secondary p-3 d-lg-table-cell d-none">
+                    @if (!Model.PrintMode)
+                                                {
+                                                    <em><a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a></em>
+                                                }
+                                                else
+                                                {
+                                                    @item.ProductName
+                                                }
+                                                @if (Model.ShowSku)
+                                                {
+                                                    <div class="sku col-12 px-0 text-center">
+                                                        @item.Sku
+                                                    </div>
+                                                }
+                                                @if (!String.IsNullOrEmpty(item.AttributeInfo))
+                                                {
+                                                    <div class="attributes">
+                                                        @Html.Raw(item.AttributeInfo)
+                                                    </div>
+                                                }
+                                                @if (!String.IsNullOrEmpty(item.RentalInfo))
+                                                {
+                                                    <div class="rental-info">
+                                                        @Html.Raw(item.RentalInfo)
+                                                    </div>
+                                                }
+                                                @if (!String.IsNullOrEmpty(item.DownloadId))
+                                                {
+                                                    <div class="download">
+                                                        <a href="@Url.RouteUrl("GetDownload", new { orderItemId = item.OrderItemGuid })">@T("DownloadableProducts.Fields.Download")</a>
+                                                    </div>
+                                                }
+                                                @if (!String.IsNullOrEmpty(item.LicenseId))
+                                                {
+                                                    <div class="download license">
+                                                        <a href="@Url.RouteUrl("GetLicense", new {orderItemId = item.OrderItemGuid})">@T("DownloadableProducts.Fields.DownloadLicense")</a>
+                                                    </div>
+                                                }
+                                                @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_product_line", additionalData = item.Id })
+                </td>
+                <td class="table-unit border border-secondary p-3 d-lg-table-cell d-none">
+                    @item.UnitPrice
+                </td>
+                <td class="table-qty border border-secondary p-3 d-lg-table-cell d-none">
+                    <div class="d-flex justify-content-center col-md-7 m-auto">
+                        @item.Quantity
+                    </div>
+                </td>
+                <td class="table-total border border-secondary p-3 d-lg-table-cell d-none">
+                      @item.SubTotal                     
+                </td>
+            </tr>
+            </tbody>
+            <tbody class="d-lg-none w-100 mobile-shopping-table">         
+                <tr class="text-center">
+                    <td class="table-name border border-secondary p-3">
+                        @if (!Model.PrintMode)
                                                 {
                                                     <em><a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a></em>
                                                 }
@@ -419,35 +455,25 @@
                                                         <a href="@Url.RouteUrl("GetLicense", new {orderItemId = item.OrderItemGuid})">@T("DownloadableProducts.Fields.DownloadLicense")</a>
                                                     </div>
                                                 }
-                                                @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_product_line", additionalData = item.Id })
-                                            </div>
-                                            <div class="col">
-                                                <div class="row flex-row subrow">
-                                                    <div class="unit-price col text-center text-md-left">
-                                                        <span class="product-unit-price">
-                                                            <span class="td-title hidden-md-up">@T("ShoppingCart.UnitPrice"):</span>
-                                                            @item.UnitPrice
-                                                        </span>
-                                                    </div>
-                                                    <div class="quantity text-center col">
-                                                        <span class="td-title hidden-md-up text-center">@T("ShoppingCart.Quantity"):</span>
-                                                        <span class="btn btn-secondary product-quantity">
-                                                            @item.Quantity
-                                                        </span>
-                                                    </div>
-                                                    <div class="col-lg-4 col subtotal text-sm-right d-flex flex-column justify-content-center">
-                                                        <span class="product-subtotal product-subtotal">
-                                                            <span class="td-title hidden-md-up">@T("ShoppingCart.ItemTotal"): </span>
-                                                            @item.SubTotal
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
+                    </td>
+                    <td class="table-unit border border-secondary p-3">
+                        @item.UnitPrice
+                    </td>
+                </tr>
+                <tr class="text-center">
+                    <td class="table-qty border border-secondary p-3" colspan="2">
+                        <div class="d-flex justify-content-center col-md-6 m-auto">
+                            <span class="mr-2">@T("addtocart.qty")</span>@item.Quantity
+                        </div>
+                    </td>
+                </tr>
+                <tr class="text-center">
+                    <td class="table-total border border-secondary p-3" colspan="2">
+                        <p class="bg-secondary p-3 mb-0 w-100"><strong class="text-white h5">@item.SubTotal</strong></p>
+                    </td>
+                </tr>
+            </tbody>
+                }
                 </table>
             </div>
         </div>
@@ -620,16 +646,16 @@
                                             <div class="shipment-id col-md-2 col-sm-12">
                                                 @T("Order.Shipments.ID")
                                             </div>
-                                            <div class="tracking-number col-sm-2 hidden-sm-down">
+                                            <div class="tracking-number col-sm-2 d-none d-md-block">
                                                 @T("Order.Shipments.TrackingNumber")
                                             </div>
-                                            <div class="shipping-date col-sm-3 hidden-sm-down">
+                                            <div class="shipping-date col-sm-3 d-none d-md-block">
                                                 @T("Order.Shipments.ShippedDate")
                                             </div>
-                                            <div class="delivery-date col-sm-3 hidden-sm-down">
+                                            <div class="delivery-date col-sm-3 d-none d-md-block">
                                                 @T("Order.Shipments.DeliveryDate")
                                             </div>
-                                            <div class="view-details col-sm-2 hidden-sm-down">
+                                            <div class="view-details col-sm-2 d-none d-md-block">
                                                 @T("Order.Shipments.ViewDetails")
                                             </div>
                                         </div>
@@ -645,34 +671,34 @@
                                         <div class="col-12">
                                             <div class="row">
                                                 <div class="shipment-id col-md-2 col-sm-12">
-                                                    <strong class="hidden-lg-up">@T("Order.Shipments.ID"): </strong>
+                                                    <strong class="d-lg-none">@T("Order.Shipments.ID"): </strong>
                                                     <span>@item.ShipmentNumber.ToString()</span>
                                                 </div>
                                                 <div class="tracking-number col-md-2 col-sm-12">
-                                                    <strong class="hidden-lg-up">@T("Order.Shipments.TrackingNumber"): </strong>
+                                                    <strong class="d-lg-none">@T("Order.Shipments.TrackingNumber"): </strong>
                                                     @item.TrackingNumber
                                                 </div>
                                                 <div class="shipped-date col-md-3 col-sm-12">
                                                     @if (item.ShippedDate.HasValue)
                                                     {
-                                                        <strong class="hidden-lg-up">@T("Order.Shipments.ShippedDate"): </strong>
+                                                        <strong class="d-lg-none">@T("Order.Shipments.ShippedDate"): </strong>
                                                         <span>@item.ShippedDate.Value.ToString("D")</span>
                                                     }
                                                     else
                                                     {
-                                                        <strong class="hidden-lg-up">@T("Order.Shipments.ShippedDate"): </strong>
+                                                        <strong class="d-lg-none">@T("Order.Shipments.ShippedDate"): </strong>
                                                         <span>@T("Order.Shipments.ShippedDate.NotYet")</span>
                                                     }
                                                 </div>
                                                 <div class="delivery-date col-md-3 col-sm-12">
                                                     @if (item.DeliveryDate.HasValue)
                                                     {
-                                                        <strong class="hidden-lg-up">@T("Order.Shipments.DeliveryDate"): </strong>
+                                                        <strong class="d-lg-none">@T("Order.Shipments.DeliveryDate"): </strong>
                                                         <span>@item.DeliveryDate.Value.ToString("D")</span>
                                                     }
                                                     else
                                                     {
-                                                        <span class="hidden-lg-up">@T("Order.Shipments.ViewDetails")</span>
+                                                        <span class="d-lg-none">@T("Order.Shipments.ViewDetails")</span>
                                                         <span>@T("Order.Shipments.DeliveryDate.NotYet")</span>
                                                     }
                                                 </div>

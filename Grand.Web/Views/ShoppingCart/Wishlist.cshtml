@@ -8,7 +8,7 @@
     Html.AddTitleParts(T("PageTitle.Wishlist").Text);
 }
 <div class="page wishlist-page mt-3">
-    <h2 class="text-center generalTitle mb-0">
+    <h2 class="generalTitle text-center mt-3">
         @if (Model.IsEditable)
         {
             @T("Wishlist")
@@ -20,7 +20,7 @@
     </h2>
     @if (Model.Items.Count > 0)
     {
-        <div class="wishlist-content">
+        <div class="wishlist-content mt-3">
             @if (Model.Warnings.Count > 0)
             {
                 <div class="message-error">
@@ -33,234 +33,310 @@
                 </div>
             }
             <form asp-route="Wishlist" method="post">
-                <table class="table table-hover">
-                        <colgroup></colgroup>
-                        <thead class="thead-inverse">
-                            <tr>
-                                @if (Model.IsEditable || Model.DisplayAddToCart)
-                                {
-                                    <th>
-                                        <div class="flex-row d-flex hidden-md-down">
-                                            @if (Model.IsEditable)
-                                            {
-                                                <div class="remove-from-cart hidden-md-down">
-                                                    <i class="fa fa-times"></i>
-                                                </div>
-                                            }
-                                            @if (Model.DisplayAddToCart)
-                                            {
-                                                <div class="add-to-cart hidden-md-down">
-                                                    <i class="fa fa-shopping-cart"></i>
-                                                </div>
-                                            }
-                                        </div>
-                                        <span class="sr-only">@T("Remove") @T("account.shoppingcart")</span>
-                                    </th>
-                                }
-                                <th>
-                                    <div class="d-flex justify-content-start d-flex justify-content-start flex-row">
+                <table class="table-hover w-100 mb-3">
+
+                    <thead class="table-dark">
+                        <tr class="text-center">
+                            @if (Model.ShowProductImages)
+                            {
+                                <th class="border border-secondary p-3 d-lg-table-cell d-none">
+                                    @T("ShoppingCart.Image")
+                                </th>
+                            }
+                            <th class="border border-secondary p-3 d-lg-table-cell d-none">@T("ShoppingCart.Product(s)")</th>
+                            <th class="border border-secondary p-3 d-lg-table-cell d-none"> @T("ShoppingCart.UnitPrice")</th>
+                            <th class="border border-secondary p-3 d-lg-table-cell d-none"> @T("ShoppingCart.Quantity")</th>
+                            @if (Model.IsEditable || Model.DisplayAddToCart)
+                            {
+                                <th class="border border-secondary p-3 d-lg-table-cell d-none">
+                                    @T("common.edit")
+                                </th>
+                            }
+                            <th class="border border-secondary p-3 d-lg-table-cell d-none"> @T("ShoppingCart.ItemTotal")</th>
+                        </tr>
+                    </thead>
+                    @foreach (var item in Model.Items)
+                    {
+                        <tbody class="desktop-shopping-table">
+                            <tr class="text-center">
+                                <td class="border border-secondary p-3 d-lg-table-cell d-none">
+                                    <div class="table-photo">
                                         @if (Model.ShowProductImages)
                                         {
-                                            <div class="col-sm-2 product-picture hidden-md-down">
-                                                <span>@T("ShoppingCart.Image")</span>
-                                            </div>
+                                            <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" /></a>
                                         }
-                                        <div class="col-md-6 col-12 col-lg product">
-                                            <span>@T("ShoppingCart.Product(s)")</span>
-                                        </div>
-                                        <div class="@(Model.IsEditable ? "col" : "col") d-flex flex-row justify-content-between ml-auto hidden-sm-down">
-                                            <div class="col-sm-4 hidden-md-down pl-0">
-                                                @T("ShoppingCart.UnitPrice")
-                                            </div>
-                                            <div class="col-sm-4 hidden-md-down text-center">
-                                                @T("ShoppingCart.Quantity")
-                                            </div>
-                                            <div class="col-sm-4 hidden-md-down text-right pl-2 pr-0">
-                                                @T("ShoppingCart.ItemTotal")
-                                            </div>
-                                        </div>
                                     </div>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.Items)
-                            {
-                                <tr class="align-middle">
-                                        @if (Model.IsEditable || Model.DisplayAddToCart)
+                                </td>
+                                <td class="table-name border border-secondary p-3 d-lg-table-cell d-none">
+                                    <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })" class="product-name"><strong>@item.ProductName</strong></a>
+
+                                    @if (Model.ShowSku && !String.IsNullOrEmpty(item.Sku))
+                                    {
+                                        <span class="sku-number text-center">@item.Sku</span>
+                                    }
+
+                                    @if (!String.IsNullOrEmpty(item.AttributeInfo))
+                                    {
+                                        <div class="attributes">
+                                            @Html.Raw(item.AttributeInfo)
+                                        </div>
+                                    }
+                                    @if (!String.IsNullOrEmpty(item.RecurringInfo))
+                                    {
+                                        <div class="recurring-info">
+                                            @Html.Raw(item.RecurringInfo)
+                                        </div>
+                                    }
+                                    @if (!String.IsNullOrEmpty(item.RentalInfo))
+                                    {
+                                        <div class="rental-info">
+                                            @Html.Raw(item.RentalInfo)
+                                        </div>
+                                    }
+                                    @if (Model.IsEditable && item.AllowItemEditing)
+                                    {
+                                        var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName });
+                                        editCartItemUrl = webHelper.ModifyQueryString(editCartItemUrl, "updatecartitemid=" + item.Id, null);
+                                        <div class="edit-item mb-1 mt-1">
+                                            <a class="btn btn-sm btn-secondary" href="@editCartItemUrl">@T("Common.Edit")</a>
+                                        </div>
+                                    }
+                                    @if (item.Warnings.Count > 0)
+                                    {
+                                        <div class="message-error">
+                                            <ul>
+                                                @foreach (var warning in item.Warnings)
+                                                {
+                                                    <li>@warning</li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    }
+                                </td>
+                                <td class="table-unit border border-secondary p-3 d-lg-table-cell d-none">
+                                    @item.UnitPrice
+                                </td>
+                                <td class="table-qty border border-secondary p-3 d-lg-table-cell d-none">
+                                    <div class="d-flex justify-content-center col-md-7 m-auto">
+                                        @if (Model.IsEditable)
                                         {
-                                            <td class="remove-from-cart">
-                                                <div class="col-12 px-0">
-                                                    <div class="flex-row d-flex justify-content-center justify-content-md-start">
-                                                        @if (Model.IsEditable)
-                                                        {
-                                                            <fieldset>
-                                                                <legend class="sr-only">@T("Remove")-@(item.Id)</legend>
-                                                                <label for="@T("Remove")-@(item.Id)" class="custom-control custom-checkbox pl-2">
-                                                                    <input id="@T("Remove")-@(item.Id)" type="checkbox" class="custom-control-input" name="removefromcart" value="@(item.Id)" />
-                                                                    <span class="sr-only">@T("Remove")-@(item.Id)</span>
-                                                                    <span class="custom-control-indicator"></span>
-                                                                    <span class="hidden-lg-up">
-                                                                        <span class="custom-control-description">&nbsp;</span>
-                                                                        <i class="fa fa-times"></i>
-                                                                    </span>
-                                                                </label>
-                                                            </fieldset>
-                                                        }
-                                                        @if (Model.DisplayAddToCart)
-                                                        {
-                                                            <fieldset>
-                                                                <legend class="sr-only">@T("account.shoppingcart")-@("item.Id")</legend>
-                                                                <label for="@T("account.shoppingcart")-@(item.Id)" class="custom-control custom-checkbox pl-2">
-                                                                    <input id="@T("account.shoppingcart")-@(item.Id)" type="checkbox" class="custom-control-input" name="addtocart" value="@(item.Id)" />
-                                                                    <span class="custom-control-indicator"></span>
-                                                                    <span class="sr-only">@T("account.shoppingcart")-@(item.Id)</span>
-                                                                    <span class="custom-control-description">
-                                                                        <span>&nbsp;</span>
-                                                                        <span class="hidden-lg-up"><i class="fa fa-shopping-cart"></i></span>
-                                                                    </span>
-                                                                </label>
-                                                            </fieldset>
-                                                        }
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        }
-                                    <td class="cart-content align-middle text-sm-center text-md-left">
-                                        <div class="d-flex flex-row row mx-0">
-                                            @if (Model.ShowProductImages)
+                                            if (item.AllowedQuantities.Count > 0)
                                             {
-                                                <div class="col-6 offset-3 offset-md-0 col-md-3 col-lg-2 product-picture">
-                                                    <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" /></a>
-                                                </div>
+                                                <select id="itemqty@(item.Id)" data-qty-id="itemquantity@(item.Id)" name="itemqty@(item.Id)" class="custom-select form-control qty-dropdown">
+                                                    @foreach (var qty in item.AllowedQuantities)
+                                                    {
+
+                                                        <option id="itemqty@(item.Id)" selected="@qty.Selected" value="@qty.Value">@qty.Value</option>
+
+                                                    }
+                                                </select>
+                                            }
+                                            else
+                                            {
+                                                <label class="sr-only" for="itemquantity@(item.Id)">itemquantity@(item.Id)</label>
+                                                <input id="itemquantity@(item.Id)" data-qty-id="itemquantity@(item.Id)" name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="form-control qty-input float-sm-right text-center" />
                                             }
 
-
-                                            <div class="col-12 col-md-9 col-lg product text-center text-md-left">
-                                                <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })" class="product-name"><strong>@item.ProductName</strong></a>
-
-                                                @if (Model.ShowSku && !String.IsNullOrEmpty(item.Sku))
-                                                {
-                                                    <span class="sku-number text-sm-center text-md-left">@item.Sku</span>
-                                                }
-
-                                                @if (!String.IsNullOrEmpty(item.AttributeInfo))
-                                                {
-                                                    <div class="attributes small text-center text-md-left">
-                                                        @Html.Raw(item.AttributeInfo)
-                                                    </div>
-                                                }
-                                                @if (!String.IsNullOrEmpty(item.RecurringInfo))
-                                                {
-                                                    <div class="recurring-info">
-                                                        @Html.Raw(item.RecurringInfo)
-                                                    </div>
-                                                }
-                                                @if (!String.IsNullOrEmpty(item.RentalInfo))
-                                                {
-                                                    <div class="rental-info">
-                                                        @Html.Raw(item.RentalInfo)
-                                                    </div>
-                                                }
-                                                @if (Model.IsEditable && item.AllowItemEditing)
-                                                {
-                                                    var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName });
-                                                    editCartItemUrl = webHelper.ModifyQueryString(editCartItemUrl, "updatecartitemid=" + item.Id, null);
-                                                    <div class="edit-item mb-1 mt-1 text-center text-md-left">
-                                                        <a class="btn btn-sm btn-secondary" href="@editCartItemUrl">@T("Common.Edit")</a>
-                                                    </div>
-                                                }
-                                                @if (item.Warnings.Count > 0)
-                                                {
-                                                    <div class="message-error">
-                                                        <ul>
-                                                            @foreach (var warning in item.Warnings)
-                                                            {
-                                                                <li>@warning</li>
-                                                            }
-                                                        </ul>
-                                                    </div>
-                                                }
-                                            </div>
-
-                                            <div class="col-md-9 col-lg ml-auto">
-                                                <div class="flex-row subrow justify-content-center justify-content-md-between row">
-                                                    <div class="col-lg-4 col unit-price text-center text-sm-left">
-                                                        <span class="td-title product-unit-price hidden-lg-up">
-                                                            @T("ShoppingCart.UnitPrice"):
-                                                        </span>
-                                                        <span>@item.UnitPrice</span>
-                                                    </div>
-                                                    <div class="col-lg-4 col offset-sm-0 offset-md-0 quantity justify-content-center">
-                                                        @if (Model.IsEditable)
-                                                        {
-                                                            if (item.AllowedQuantities.Count > 0)
-                                                            {
-
-                                                                <div class="d-flex flex-md-row flex-sm-column qtyRvd">
-                                                                    <div class="col-5 text-sm-right hidden-lg-up">
-                                                                        <span class="td-title">@T("ShoppingCart.Quantity"):</span>
-                                                                    </div>
-                                                                    <div class="col">
-                                                                        <select id="itemqty@(item.Id)" name="itemqty@(item.Id)" class="custom-select form-control qty-dropdown">
-                                                                            @foreach (var qty in item.AllowedQuantities)
-                                                                            {
-                                                                                <option id="itemqty@(item.Id)" selected="@qty.Selected" value="@qty.Value">@qty.Value</option>
-                                                                            }
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-
-                                                            }
-                                                            else
-                                                            {
-                                                                <div class="d-flex flex-row">
-                                                                    <div class="col-5 col-lg-12 hidden-lg-up px-0">
-                                                                        <span class="td-title">@T("ShoppingCart.Quantity"):</span>
-                                                                    </div>
-                                                                    <div class="col-7 col-lg-8 offset-lg-2 pl-0 pr-0">
-                                                                        <label class="sr-only" for="itemquantity@(item.Id)">itemquantity@(item.Id)</label>
-                                                                        <input id="itemquantity@(item.Id)" name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="form-control qty-input float-sm-right" />
-                                                                    </div>
-                                                                </div>
-                                                            }
-
-                                                        }
-                                                        else
-                                                        {
-                                                            <div class="d-flex flex-row">
-                                                                <div class="col-5 col-lg-12 text-center hidden-lg-up">
-                                                                    <span class="td-title hidden-lg-up">@T("ShoppingCart.Quantity"):</span>
-                                                                </div>
-                                                                <div class="col-7 col-lg-8 offset-lg-2 pl-0 pr-0">
-                                                                    <label class="sr-only" for="itemquantity@(item.Id)">itemquantity@(item.Id)</label>
-                                                                    <input id="itemquantity@(item.Id)" name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="form-control qty-input float-sm-right" readonly />
-                                                                </div>
-                                                            </div>
-                                                        }
-                                                    </div>
-                                                    <div class="col-lg-4 col subtotal text-sm-right d-flex flex-column justify-content-center">
-                                                        <span class="product-subtotal">
-                                                            <span class="td-title hidden-lg-up">
-                                                                <span>@T("ShoppingCart.ItemTotal"):</span> 
-                                                            </span>
-                                                            <span>@item.SubTotal</span>
-                                                        </span>
-                                                        @if (!String.IsNullOrEmpty(item.Discount))
-                                                        {
-                                                            <div class="discount text-success">
-                                                                @T("ShoppingCart.ItemYouSave"): @item.Discount
-                                                            </div>
-                                                        }
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        }
+                                        else
+                                        {
+                                            <label class="sr-only" for="itemquantity@(item.Id)">itemquantity@(item.Id)</label>
+                                            <input id="itemquantity@(item.Id)" data-qty-id="itemquantity@(item.Id)" name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="form-control qty-input float-sm-right text-center" readonly />
+                                        }
+                                    </div>
+                                </td>
+                                @if (Model.IsEditable || Model.DisplayAddToCart)
+                                {
+                                    <td class="table-remove border border-secondary p-3 d-lg-table-cell d-none">
+                                    @if (Model.IsEditable)
+                                    {
+                                        <span>@T("shoppingcart.remove")</span>
+                                            <fieldset>
+                                                <legend></legend>
+                                                <label class="custom-control custom-checkbox">
+                                                    <input class="custom-control-input" type="checkbox" name="removefromcart" value="@(item.Id)" />
+                                                    <span class="custom-control-indicator"></span>
+                                                    <span class="sr-only">checkbox</span>
+                                                    <span class="custom-control-description td-title">
+                                                        &nbsp;
+                                                        <span class="fa fa-times d-md-none pl-2"></span>
+                                                    </span>
+                                                </label>
+                                            </fieldset>
+                                        
+                                    }
+                                    @if (Model.DisplayAddToCart)
+                                    {
+                                        <span>@T("shoppingcart.addtocart")</span>
+                                        <fieldset>
+                                            <legend></legend>
+                                            <label for="@T("account.shoppingcart")-@(item.Id)" class="custom-control custom-checkbox pl-2">
+                                                <input id="@T("account.shoppingcart")-@(item.Id)" class="custom-control-input" type="checkbox" name="addtocart" value="@(item.Id)" />
+                                                <span class="custom-control-indicator"></span>
+                                                <span class="sr-only">@T("account.shoppingcart")-@(item.Id)</span>
+                                                <span class="custom-control-description">
+                                                    <span>&nbsp;</span>
+                                                    <span class="d-lg-none"><i class="fa fa-shopping-cart"></i></span>
+                                                </span>
+                                            </label>
+                                        </fieldset>
+                                    }
                                     </td>
-                                </tr>
-                            }
+                                }
+                                <td class="table-total border border-secondary p-3 d-lg-table-cell d-none">
+                                    @item.SubTotal
+                                    @if (!String.IsNullOrEmpty(item.Discount))
+                                    {
+                                        <div class="discount text-success text-center text-md-right">
+                                            <span>@T("ShoppingCart.ItemYouSave"): </span>
+                                            <span>@item.Discount</span>
+                                        </div>
+                                    }
+                                </td>
+                            </tr>
                         </tbody>
-                    </table>
+                        <tbody class="d-lg-none w-100 mobile-shopping-table">
+                            <tr class="text-center">
+                                <td class="table-photo border border-secondary p-3" colspan="2">
+                                    @if (Model.ShowProductImages)
+                                    {
+                                        <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" /></a>
+                                    }
+                                </td>
+                            </tr>
+                            <tr class="text-center">
+                                <td class="table-name border border-secondary p-3">
+                                    <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })" class="product-name"><strong>@item.ProductName</strong></a>
+
+                                    @if (Model.ShowSku && !String.IsNullOrEmpty(item.Sku))
+                                    {
+                                        <span class="sku-number text-center">@item.Sku</span>
+                                    }
+                                    @if (!String.IsNullOrEmpty(item.AttributeInfo))
+                                    {
+                                        <div class="attributes small">
+                                            @Html.Raw(item.AttributeInfo)
+                                        </div>
+                                    }
+                                    @if (!String.IsNullOrEmpty(item.RecurringInfo))
+                                    {
+                                        <div class="recurring-info">
+                                            @Html.Raw(item.RecurringInfo)
+                                        </div>
+                                    }
+                                    @if (!String.IsNullOrEmpty(item.RentalInfo))
+                                    {
+                                        <div class="rental-info">
+                                            @Html.Raw(item.RentalInfo)
+                                        </div>
+                                    }
+                                    @if (Model.IsEditable && item.AllowItemEditing)
+                                    {
+                                        var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName });
+                                        editCartItemUrl = webHelper.ModifyQueryString(editCartItemUrl, "updatecartitemid=" + item.Id, null);
+                                        <div class="edit-item mb-1 mt-1">
+                                            <a class="btn btn-sm btn-secondary" href="@editCartItemUrl">@T("Common.Edit")</a>
+                                        </div>
+                                    }
+                                    @if (item.Warnings.Count > 0)
+                                    {
+                                        <div class="message-error">
+                                            <ul>
+                                                @foreach (var warning in item.Warnings)
+                                                {
+                                                    <li>@warning</li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    }
+                                </td>
+                                <td class="table-unit border border-secondary p-3">
+                                    @item.UnitPrice
+                                </td>
+                            </tr>
+                            <tr class="text-center">
+                                <td class="table-qty border border-secondary p-3">
+                                    <div class="d-flex justify-content-center col-md-6 m-auto px-0">
+                                        @if (Model.IsEditable)
+                                        {
+                                            if (item.AllowedQuantities.Count > 0)
+                                            {
+                                                <select id="itemqty@(item.Id)" data-qty-id="itemquantity@(item.Id)" name="itemqty@(item.Id)" class="custom-select form-control qty-dropdown">
+                                                    @foreach (var qty in item.AllowedQuantities)
+                                                    {
+
+                                                        <option id="itemqty@(item.Id)" selected="@qty.Selected" value="@qty.Value">@qty.Value</option>
+
+                                                    }
+                                                </select>
+                                            }
+                                            else
+                                            {
+                                                <label class="sr-only" for="itemquantity@(item.Id)">itemquantity@(item.Id)</label>
+                                                <span class="float-left mr-2 mt-2">@T("addtocart.qty")</span>
+                                                <input id="itemquantity@(item.Id)" data-qty-id="itemquantity@(item.Id)" name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="form-control qty-input float-sm-right text-center" />
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            <label class="sr-only" for="itemquantity@(item.Id)">itemquantity@(item.Id)</label>
+                                            <span class="float-left mr-2 mt-2">@T("addtocart.qty")</span>
+                                            <input id="itemquantity@(item.Id)" data-qty-id="itemquantity@(item.Id)" name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="form-control qty-input float-sm-right text-center" readonly />
+                                        }
+                                    </div>
+                                </td>
+                                <td class="table-remove p-3 d-flex border-0">
+                                   @if (Model.IsEditable || Model.DisplayAddToCart)
+                                   {
+                                        @if (Model.IsEditable)
+                                        {
+                                            <fieldset class="w-100">
+                                                <legend class="h6"><span class="fa fa-times"></span></legend>
+                                                <label class="custom-control custom-checkbox p-0 cart-checkbox">
+                                                    <input class="custom-control-input" type="checkbox" name="removefromcart" value="@(item.Id)" />
+                                                    <span class="custom-control-indicator"></span>
+                                                    <span class="sr-only">checkbox</span>
+                                                    <span class="custom-control-description td-title">
+                                                        &nbsp;
+                                                    </span>
+                                                </label>
+                                            </fieldset>
+                                        }
+                                        @if (Model.DisplayAddToCart)
+                                        {
+                                            
+                                            <fieldset class="w-100">
+                                                <legend class="h6"><span class="fa fa-cart-plus"></span></legend>
+                                                <label for="@T("account.shoppingcart")-@(item.Id)" class="custom-control custom-checkbox p-0 cart-checkbox">
+                                                    <input id="@T("account.shoppingcart")-@(item.Id)" class="custom-control-input" type="checkbox" name="addtocart" value="@(item.Id)" />
+                                                    <span class="custom-control-indicator"></span>
+                                                    <span class="sr-only">@T("account.shoppingcart")-@(item.Id)</span>
+                                                    <span class="custom-control-description">
+                                                        &nbsp;
+                                                    </span>
+                                                </label>
+                                            </fieldset>
+                                        }
+                                   }
+                                </td>
+                            </tr>
+                            <tr class="text-center">
+                                <td class="table-total border border-secondary p-3" colspan="2">
+                                    <p class="bg-secondary p-3 mb-0 w-100"><strong class="text-white h5">@item.SubTotal</strong></p>
+                                    @if (!String.IsNullOrEmpty(item.Discount))
+                                    {
+                                        <div class="discount text-success text-center text-md-right">
+                                            <span>@T("ShoppingCart.ItemYouSave"): </span>
+                                            <span>@item.Discount</span>
+                                        </div>
+                                    }
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    }
+                </table>
                 @if (Model.Items.Count > 0 && Model.DisplayTaxShippingInfo)
                 {
                     var inclTax = workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
@@ -282,14 +358,14 @@
                     {
                         <button type="submit" name="addtocartbutton" class="btn btn-secondary wishlist-add-to-cart-button">
                             <span class="hidden-down">@T("ShoppingCart.AddToCart")</span>
-                            <i class="fa fa-cart-plus hidden-md-up" aria-hidden="true"></i>
+                            <i class="fa fa-cart-plus d-md-none" aria-hidden="true"></i>
                         </button>
                     }
                     @if (Model.IsEditable && Model.EmailWishlistEnabled)
                     {
                         <button type="button" class="btn btn-secondary email-a-friend-wishlist-button" onclick="setLocation('@Url.RouteUrl("EmailWishlist")')">
                             <span class="hidden-down">@T("Wishlist.EmailAFriend")</span>
-                            <i class="fa fa-envelope-o hidden-md-up" aria-hidden="true"></i>
+                            <i class="fa fa-envelope-o d-md-none" aria-hidden="true"></i>
                         </button>
                     }
                 </div>
@@ -312,3 +388,36 @@
         </div>
     }
 </div>
+<script>
+    $(".mobile-shopping-table .qty-input")
+        .keyup(function () {
+            var value = $(this).val();
+            var tid = "#" + $(this).attr("data-qty-id");
+            var tname = $(this).attr("data-qty-id");
+            $(this).attr("value", value);
+            $(this).attr("id", tname);
+            $(this).attr("name", tname);
+            container = ".desktop-shopping-table";
+            $(tid, container).attr("name", "");
+            $(tid, container).attr("id", "");
+        })
+        .keyup();
+
+    $(".desktop-shopping-table .qty-input")
+        .keyup(function () {
+            var dvalue = $(this).val();
+            var dtid = "#" + $(this).attr("data-qty-id");
+            var dtname = $(this).attr("data-qty-id");
+            $(this).attr("value", dvalue);
+            $(this).attr("id", dtname);
+            $(this).attr("name", dtname);
+            container2 = ".mobile-shopping-table";
+            $(dtid, container2).attr("name", "");
+            $(dtid, container2).attr("id", "");
+        })
+        .keyup();
+
+    $(".cart-checkbox").click(function () {
+        $(this).find(".custom-control-indicator").toggleClass("checked-cart");
+    });
+</script>

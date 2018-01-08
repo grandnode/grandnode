@@ -10,6 +10,8 @@
                     $('#modal-subscribe').html(result);
                 });
                 $('#subscribe-modal-form').modal('show');
+                $("body.modal-open").removeAttr("style");
+                $(".navUp").removeAttr("style");
             });
         });
     </script>

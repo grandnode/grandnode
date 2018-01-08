@@ -1,5 +1,5 @@
 ﻿@model CheckoutProgressModel
-<div class="row order-progress mb-2 hidden-sm-down">
+<div class="row order-progress mb-2 mt-4 d-none d-md-flex">
             @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_progress_before" })
             <div class="col-12 col-md-4 col-lg-2 mb-1 active-step">
                 <a class="btn btn-block btn-secondary p-3 col-sm-12" @(Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? @Html.Raw(string.Format(" href=\"{0}\"", Url.RouteUrl("ShoppingCart"))) : null)>

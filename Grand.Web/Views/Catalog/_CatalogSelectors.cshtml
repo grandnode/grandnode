@@ -25,7 +25,7 @@
                                 @Html.DropDownList("products-pagesize", Model.PageSizeOptions, new { @class = "custom-select form-control", onchange = "setLocation(this.value);" })
                             </div>
                          </div>
-                        <div class="hidden-md-down pt-2 pl-2">
+                        <div class="d-none d-lg-block pt-2 pl-2">
                             @T("Catalog.PageSize.PerPage")
                         </div>
                     </div>
@@ -34,8 +34,8 @@
             @*view mode*@
             @if (Model.AllowProductViewModeChanging)
             {
-                <div class="ml-auto col text-sm-right rightHead hidden-sm-down pr-0">
-                        <div class="col hidden-sm-down text-right">
+                <div class="ml-auto col text-sm-right rightHead d-none d-md-block pr-0">
+                        <div class="col d-none d-md-block text-right">
                                 <span>@T("Catalog.ViewMode")</span>
                         </div>
 

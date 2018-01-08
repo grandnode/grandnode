@@ -63,6 +63,8 @@ $('#ModalAddToCart .modal-dialog').on('click tap', function (e) {
 
 function displayPopupAddToCart(html) {
     $('#ModalAddToCart').html(html).modal('show');
+    $("body.modal-open").removeAttr("style");
+    $(".navUp").removeAttr("style");
 }
 
 var barNotificationTimeout;
@@ -225,3 +227,123 @@ function productRatingStarFinal(whole, half, empty, elem) {
     $("."+elem+"").html(stars);
 
 };
+
+// required asterisk position
+$(".form-group .required").each(function () {
+    var label_req = $(this).siblings("label");
+    $(this).insertAfter(label_req);
+});
+
+// mobile collapsing menu
+$(document).ready(function () {
+    $("#mobile-menu-opener").click(function () {
+        $("#mobile-collapsing-menu").toggleClass("show");
+        $("#mobile-menu-opener").toggleClass("show");
+        if ($("#back-to-top").hasClass("show")) {
+            $("#back-to-top").removeClass("show");
+        }
+        $("#mobile-collapsing-menu .dropdown-menu").removeClass("show");
+        $("body").toggleClass("noscroll");
+    });
+
+
+    $("#mobile-collapsing-menu .nav-item.dropdown .fa-angle-down").click(function () {
+        $(this).parent().find(".dropdown-menu").toggleClass("show");
+        $(".option-list-mobile ul").removeClass("show");
+        var sub_name = $(this).parent().find(".nav-link.dropdown-toggle").text();
+        var sub_value = $(this).parent().find(".nav-link.dropdown-toggle").attr("href");
+        $(".sub-cat-name").html(sub_name);
+        $(".sub-cat-name").attr("href", sub_value);
+        $(".currency-button.icon-change").removeClass("icon-change");
+        $(".language-button.icon-change").removeClass("icon-change");
+        $(".tax-button.icon-change").removeClass("icon-change");
+        $(".store-button.icon-change").removeClass("icon-change");
+    });
+
+    $("#mobile-collapsing-menu .fa-times").click(function () {
+        $(this).parent().removeClass("show");
+    });
+
+    // mobile: currency, language, tax
+
+    if ($(".tax-list-mobile").length > 0) {
+    }
+    else {
+        $(".tax-button").hide();
+    }
+    if ($(".currency-list-mobile").length > 0) {
+    }
+    else {
+        $(".currency-button").hide();
+    }
+    if ($(".language-list-mobile").length > 0) {
+    }
+    else {
+        $(".language-button").hide();
+    }
+    if ($(".store-list-mobile").length > 0) {
+    }
+    else {
+        $(".store-button").hide();
+    }
+
+    $(".currency-button").click(function () {
+        $(".currency-list-mobile ul").toggleClass("show");
+        $(".language-list-mobile ul").removeClass("show");
+        $(".tax-list-mobile ul").removeClass("show");
+        $(".store-list-mobile ul").removeClass("show");
+        $(this).toggleClass("icon-change");
+        $(".language-button.icon-change").removeClass("icon-change");
+        $(".tax-button.icon-change").removeClass("icon-change");
+        $(".store-button.icon-change").removeClass("icon-change");
+    });
+
+    $(".language-button").click(function () {
+        $(".language-list-mobile ul").toggleClass("show");
+        $(".tax-list-mobile ul").removeClass("show");
+        $(".currency-list-mobile ul").removeClass("show");
+        $(".store-list-mobile ul").removeClass("show");
+        $(this).toggleClass("icon-change");
+        $(".currency-button.icon-change").removeClass("icon-change");
+        $(".tax-button.icon-change").removeClass("icon-change");
+        $(".store-button.icon-change").removeClass("icon-change");
+    });
+
+    $(".tax-button").click(function () {
+        $(".tax-list-mobile ul").toggleClass("show");
+        $(".currency-list-mobile ul").removeClass("show");
+        $(".language-list-mobile ul").removeClass("show");
+        $(".store-list-mobile ul").removeClass("show");
+        $(this).toggleClass("icon-change");
+        $(".currency-button.icon-change").removeClass("icon-change");
+        $(".language-button.icon-change").removeClass("icon-change");
+        $(".store-button.icon-change").removeClass("icon-change");
+    });
+
+    $(".store-button").click(function () {
+        $(".store-list-mobile ul").toggleClass("show");
+        $(".currency-list-mobile ul").removeClass("show");
+        $(".tax-list-mobile ul").removeClass("show");
+        $(".language-list-mobile ul").removeClass("show");
+        $(this).toggleClass("icon-change");
+        $(".currency-button.icon-change").removeClass("icon-change");
+        $(".tax-button.icon-change").removeClass("icon-change");
+        $(".language-button.icon-change").removeClass("icon-change");
+    });
+
+    $("#mobile-collapsing-menu .currency-list-mobile li.active").insertBefore("#mobile-collapsing-menu .currency-list-mobile li:first");
+    $("#mobile-collapsing-menu .store-list-mobile li.active").insertBefore("#mobile-collapsing-menu .store-list-mobile li:first");
+    $("#mobile-collapsing-menu .tax-list-mobile li.active").insertBefore("#mobile-collapsing-menu .tax-list-mobile li:first");
+    $("#mobile-collapsing-menu .language-list-mobile li img.selected").parent().parent().addClass("active").insertBefore("#mobile-collapsing-menu .language-list-mobile li:first");
+    $("#mobile-collapsing-menu .language-list-mobile li.active").insertBefore("#mobile-collapsing-menu .language-list-mobile li:first");
+
+    $(document).ready(function () {
+        $(".mobile-search").click(function () {
+            $("#small-search-box-form").appendTo("#searchModal .modal-content");
+        });
+    });
+    $("#searchModal").on("hidden.bs.modal", function () {
+        $("#small-search-box-form").appendTo(".formSearch");
+    });
+});
+

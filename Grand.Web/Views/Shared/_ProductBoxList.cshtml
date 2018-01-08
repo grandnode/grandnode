@@ -41,7 +41,7 @@
                 </div>
             </div>
             <div class="col-12 col-md-8 col-sm-7">
-                <div class="card-block text-left">
+                <div class="card-body text-left">
                     <h2 class="h6 card-title">
                         <strong><a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">@Model.Name</a></strong>
                         @if (Model.ShowSku && !string.IsNullOrEmpty(Model.Sku))
@@ -49,7 +49,7 @@
                             <span class="d-block py-1">@Model.Sku</span>
                         }
                     </h2>
-                    <p class="card-text hidden-xl-down">
+                    <p class="card-text d-none">
                         @Html.Raw(Model.ShortDescription)
                     </p>
                 @if (Model.ReviewOverviewModel.AllowCustomerReviews)

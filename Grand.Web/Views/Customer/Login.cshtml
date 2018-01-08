@@ -25,7 +25,7 @@
                 <div class="card">
                     <form asp-route="Login" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
                         <h5 class="card-header"><strong>@T("Account.Login.ReturningCustomer")</strong></h5>
-                        <div class="card-block">
+                        <div class="card-body">
                             <div class="col-12">
                                 <div asp-validation-summary="ModelOnly" class="message-error">@T("Account.Login.Unsuccessful")</div>
                                 <div class="form-group">
@@ -109,7 +109,7 @@
             else
             {
                 <div class="col-lg-6 col-12">
-                        <div class="card-block register-block">
+                        <div class="card-body register-block">
                             <h5><strong>@T("Account.Login.NewCustomer")</strong></h5>
                             <div class="text generalMarginSupporter">
                                 @T("Account.Login.NewCustomerText")

@@ -34,9 +34,9 @@
 
         @if (!String.IsNullOrEmpty(Model.Message))
         {
-            <div class="card card-inverse mb-3 @(Model.IsApplied ? "card-success message-success" : "card-danger message-failure") text-center">
-                <div class="card-block p-2">
-                    <blockquote class="card-blockquote">
+            <div class="card text-white mb-3 @(Model.IsApplied ? "card-success message-success" : "card-danger message-failure") text-center">
+                <div class="card-body p-3">
+                    <blockquote class="card-bodyquote mb-0">
                         <span>@Model.Message</span>
                     </blockquote>
                 </div>
@@ -45,9 +45,9 @@
         @foreach (var discount in Model.AppliedDiscountsWithCodes)
         {
 
-            <div class="card card-inverse card-success text-center current-code mb-3">
-                <div class="card-block p-2">
-                    <blockquote class="card-blockquote">
+            <div class="card text-white card-success text-center current-code mb-3">
+                <div class="card-body p-3">
+                    <blockquote class="card-bodyquote mb-0">
                         <span>@string.Format(T("ShoppingCart.DiscountCouponCode.CurrentCode").Text, discount.CouponCode)</span>
                         <button type="submit" name="removediscount-@discount.Id" title="@T("Common.Remove")" class="ml-auto btn btn-sm btn-secondary remove-discount-button float-sm-right" >
                             <i class="fa fa-times" aria-hidden="true"></i>

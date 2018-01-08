@@ -11,7 +11,7 @@
             {
                 string controlId = string.Format("checkout_attribute_{0}", attribute.Id);
                 string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
-                <div id="@string.Format("checkout_attribute_label_{0}", attribute.Id)" class="col-12">
+                <div id="@string.Format("checkout_attribute_label_{0}", attribute.Id)" class="col-12 media-pad-off">
                     <span class="col-form-label text-prompt">
                         @textPrompt
                     </span>

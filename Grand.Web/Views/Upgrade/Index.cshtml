@@ -11,7 +11,6 @@
 <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/public.common.js")" type="text/javascript"></script>
 <link href="@Url.Content("~/Content/bootstrap/bootstrap.min.css")" rel="stylesheet">
-<script src="@Url.Content("~/Content/bootstrap/tether.min.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Content/bootstrap/bootstrap.min.js")" type="text/javascript"></script>
 <div class="container">
     <div class="page upgrade-page">
@@ -20,7 +19,7 @@
             <h1 class="h4 generalTitle"> @T("UpgradeSystem.NonActual")</h1>
             <div class="col-12 px-0">
                 <div class="card text-xs-center">
-                    <div class="card-block">
+                    <div class="card-body">
                         <h2 class="h4">@T("UpgradeSystem.DatabaseVersion"): @Model.DatabaseVersion</h2>
                         <h2 class="h4">@T("UpgradeSystem.ApplicationVersion"): @Model.ApplicationVersion</h2>
                         <h2 class="h6 mt-1 mb-1 text-success">@T("UpgradeSystem.Message1")</h2>

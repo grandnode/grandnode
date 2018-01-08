@@ -1,32 +1,49 @@
 ﻿@model AdminHeaderLinksModel
 @if (Model.IsCustomerImpersonated || Model.DisplayAdminLink)
 {
-    if (Model.IsCustomerImpersonated)
+
+    @if (Model.IsCustomerImpersonated)
     {
-        <span class="input-group-btn">
+        <span class="input-group-btn admin-group d-none d-lg-flex">
             <span>@string.Format(T("Account.ImpersonatedAs").Text, Model.ImpersonatedCustomerEmailUsername)</span>
             <a class="btn btn-outline-primary nav-link finish-impersonation" href="@Url.RouteUrl("Logout")" title="@T("Account.ImpersonatedAs.Finish.Hint")">
-                <span class="hidden-sm-down">@T("Account.ImpersonatedAs.Finish")</span>
+                <span class="d-none d-lg-block">@T("Account.ImpersonatedAs.Finish")</span>
                 <span class="fa fa-user-o"></span>
             </a>
         </span>
-
     }
-    if (Model.DisplayAdminLink)
+    @if (Model.DisplayAdminLink)
     {
-        <span class="input-group-btn">
-            <a class="btn btn-outline-primary administration" href="@Url.Content("~/admin")">
-                <span class="fa fa-cogs"></span> <span class="hidden-sm-down">Admin</span>
+        <span class="input-group-btn admin-group d-none d-lg-flex">
+            <a class="btn btn-outline-primary administration" href="@Url.Content("~/Admin")">
+                <span class="fa fa-cogs align-self-center pr-1"></span> <span class="d-none d-lg-block">@T("admin")</span>
             </a>
         </span>
     }
-    if (!String.IsNullOrEmpty(Model.EditPageUrl))
+    @if (!string.IsNullOrEmpty(Model.EditPageUrl))
     {
-        <span class="input-group-btn">
+        <span class="input-group-btn admin-group d-none d-lg-flex">
             <a target="_blank" class="btn btn-primary" href="@Model.EditPageUrl">
-                <span class="fa fa-pencil-square-o"></span>
+                <span class="fa fa-pencil-square-o align-self-center"></span>
                 <span class="sr-only">@Model.EditPageUrl</span>
             </a>
         </span>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.EditPageUrl))
+    {
+        <li class="nav-item admin edit ico-login d-flex d-lg-none align-items-center">
+            <a class="nav-link" href="@Model.EditPageUrl">
+                <span class="fa fa-pencil-square-o align-self-center"></span>
+            </a>
+        </li>
+    }
+    @if (Model.DisplayAdminLink)
+    {
+        <li class="nav-item admin ico-login d-flex d-lg-none align-items-center">
+            <a class="nav-link" href="@Url.Content("~/Admin")">
+                <span class="fa fa-cogs align-self-center"></span>
+            </a>
+        </li>
     }
 }

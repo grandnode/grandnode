@@ -42,7 +42,7 @@
         @await Html.PartialAsync("_ExternalAuthentication.AssociateMessage")
         <div class="card mb-3">
             <h3 class="h4 card-header">@T("Account.YourPersonalDetails")</h3>
-            <div class="card-block">
+            <div class="card-body">
                     @if (Model.GenderEnabled)
                     {
                         <div class="col-lg-3 col-sm-12">
@@ -133,7 +133,7 @@
         {
             <div class="card mb-3">
                 <h3 class="h5 card-header">@T("Account.CompanyDetails")</h3>
-                <div class="card-block">
+                <div class="card-body">
                     <div class="form-group">
                         <label asp-for="Company" class="col-form-label">@T("Account.Fields.Company"):</label>
                         <input asp-for="Company"  class="form-control"/>
@@ -146,7 +146,7 @@
         @if (Model.DisplayVatNumber)
         {
             <div class="card mb-3">
-                <div class="card-block">
+                <div class="card-body">
                     <div class="form-group">
                         <label asp-for="VatNumber" class="col-form-label">@T("Account.Fields.VatNumber"):</label>
                         <input asp-for="VatNumber" class="form-control" />
@@ -165,7 +165,7 @@
                 <h3 class="h5 card-header">
                     @T("Account.YourAddress")
                 </h3>
-                <div class="card-block">
+                <div class="card-body">
                     <div class="form-fields d-flex row">
                         @if (Model.StreetAddressEnabled)
                         {
@@ -231,7 +231,7 @@
         {
             <div class="card mb-3">
                 <h3 class="h5 card-header">@T("Account.YourContactInformation")</h3>
-                <div class="card-block">
+                <div class="card-body">
                     <div class="d-flex row">
                         @if (Model.PhoneEnabled)
                         {
@@ -260,7 +260,7 @@
         {
             <div class="card mb-3">
                 <h3 class="h5 card-header">@T("Account.Options")</h3>
-                <div class="card-block">
+                <div class="card-body">
                         @if (Model.NewsletterEnabled)
                         {
                             <div class="form-group">
@@ -285,7 +285,7 @@
         {
             <div class="card mb-3">
                 <h3 class="h5 card-header">@T("Account.Preferences")</h3>
-                <div class="card-block">
+                <div class="card-body">
                     @if (Model.AllowCustomersToSetTimeZone)
                     {
                         <div class="form-group col-12 text-left px-0">
@@ -299,7 +299,7 @@
         }
         <div class="card mb-3">
             <h3 class="h5 card-header">@T("Account.YourPassword")</h3>
-            <div class="card-block">
+            <div class="card-body">
                 <div class="form-group col-12">
                     <div class="row">
                         <label asp-for="Password" class="col-form-label">@T("Account.Fields.Password"):</label>
