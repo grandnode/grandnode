@@ -1,12 +1,6 @@
 ﻿<header>
     @await Component.InvokeAsync("Widget", new { widgetZone = "header" })
     <nav class="navbar fixed-top navbar-light bg-light navUp p-0">
-        <div class="collapse btn-toolbar generalDropDown d-none d-lg-flex" id="generalDropDown">
-            @await Component.InvokeAsync("TaxTypeSelector")
-            @await Component.InvokeAsync("CurrencySelector")
-            @await Component.InvokeAsync("LanguageSelector")
-            @await Component.InvokeAsync("Widget", new { widgetZone = "header_selectors" })
-        </div>
         <div class="container">
             <ul class="nav navbar-nav header-links pl-0 flex-row w-100">
                 <li class="nav-item mobile-menu-button d-lg-none align-self-center">
@@ -15,12 +9,6 @@
                 <li class="nav-item float-xs-right d-lg-none d-none ml-auto">
                     <a class="btn btn-outlined-info general-opener" data-toggle="collapse" aria-expanded="false" aria-controls="generalDropDown">
                         <span class="fa fa-cogs" aria-hidden="true"></span>
-                    </a>
-                </li>
-                <li class="nav-item ml-auto flex-column d-lg-none" id="mobile-lang-button">
-                    <a class="nav-link d-none">
-                        <span class="fa fa-language"></span>
-                        @await Component.InvokeAsync("LanguageSelector")
                     </a>
                 </li>
                 <li class="nav-item float-xs-right d-none d-lg-block mr-auto">
@@ -48,7 +36,6 @@
                     @await Component.InvokeAsync("CurrencySelector")
                     @await Component.InvokeAsync("LanguageSelector")
                     @await Component.InvokeAsync("StoreSelector")
-
                 </div>
             </div>
             <ul class="nav navbar-nav">
