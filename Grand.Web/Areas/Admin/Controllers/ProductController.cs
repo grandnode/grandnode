@@ -94,6 +94,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IDownloadService _downloadService;
         private readonly IRepository<Product> _productRepository;
         private readonly ICacheManager _cacheManager;
+        private readonly IProductReservationService _productReservationService;
         private readonly MediaSettings _mediaSettings;
         #endregion
 
@@ -141,6 +142,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             IDownloadService downloadService,
             IRepository<Product> productRepository,
             ICacheManager cacheManager,
+            IProductReservationService productReservationService,
             MediaSettings mediaSettings)
         {
             this._productService = productService;
@@ -185,6 +187,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._downloadService = downloadService;
             this._productRepository = productRepository;
             this._cacheManager = cacheManager;
+            this._productReservationService = productReservationService;
             this._mediaSettings = mediaSettings;
         }
 
@@ -493,6 +496,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             //anyway they're not used (you need to save a product before you map add them)
             if (product != null)
             {
+                //reservation
+                model.CalendarModel.Interval = product.Interval;
+                model.CalendarModel.IntervalUnit = product.IntervalUnitId;
+
                 //product attributes
                 foreach (var productAttribute in _productAttributeService.GetAllProductAttributes())
                 {
@@ -5333,5 +5340,203 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #endregion
 
+        #region Reservation
+
+        [HttpPost]
+        public IActionResult ListReservations(DataSourceRequest command, string productId)
+        {
+            var reservations = _productReservationService.GetProductReservationsByProductId(productId, null, null, command.Page - 1, command.PageSize);
+            var reservationModel = reservations
+                .Select(x => new ProductModel.ReservationModel
+                {
+                    ReservationId = x.Id,
+                    Date = x.Date,
+                    OrderId = x.OrderId,
+                    Parameter = x.Parameter,
+                    Resource = x.Resource,
+                    Duration = x.Duration
+                }).ToList();
+
+            var gridModel = new DataSourceResult
+            {
+                Data = reservationModel,
+                Total = reservations.TotalCount
+            };
+
+            return Json(gridModel);
+        }
+
+        [HttpPost]
+        public IActionResult GenerateCalendar(string productId, ProductModel.GenerateCalendarModel model)
+        {
+            var reservations = _productReservationService.GetProductReservationsByProductId(productId, null, null);
+            if (reservations.Any())
+            {
+                var product = _productService.GetProductById(productId);
+                if (product == null)
+                    throw new ArgumentNullException("product");
+
+                if (((product.IntervalUnitType == IntervalUnit.Minute || product.IntervalUnitType == IntervalUnit.Hour) && (IntervalUnit)model.Interval == IntervalUnit.Day) ||
+                    (product.IntervalUnitType == IntervalUnit.Day) && (((IntervalUnit)model.IntervalUnit == IntervalUnit.Minute || (IntervalUnit)model.IntervalUnit == IntervalUnit.Hour)))
+                {
+                    return Json(new { errors = _localizationService.GetResource("Admin.Catalog.Products.Calendar.CannotChangeInterval") });
+                }
+            }
+            _productService.UpdateIntervalProperties(productId, model.Interval, (IntervalUnit)model.IntervalUnit);
+
+            if (!ModelState.IsValid)
+            {
+                Dictionary<string, Dictionary<string, object>> error = (Dictionary<string, Dictionary<string, object>>)ModelState.SerializeErrors();
+                string s = "";
+                foreach (var error1 in error)
+                {
+                    foreach (var error2 in error1.Value)
+                    {
+                        string[] v = (string[])error2.Value;
+                        s += v[0] + "\n";
+                    }
+                }
+
+                return Json(new { errors = s });
+            }
+
+            int minutesToAdd = 0;
+            if ((IntervalUnit)model.IntervalUnit == IntervalUnit.Minute)
+            {
+                minutesToAdd = model.Interval;
+            }
+            else if ((IntervalUnit)model.IntervalUnit == IntervalUnit.Hour)
+            {
+                minutesToAdd = model.Interval * 60;
+            }
+            else if ((IntervalUnit)model.IntervalUnit == IntervalUnit.Day)
+            {
+                minutesToAdd = model.Interval * 60 * 24;
+            }
+
+            int _hourFrom = model.StartTime.Hour;
+            int _minutesFrom = model.StartTime.Minute;
+            int _hourTo = model.EndTime.Hour;
+            int _minutesTo = model.EndTime.Minute;
+            DateTime _dateFrom = new DateTime(model.StartDateUtc.Year, model.StartDateUtc.Month, model.StartDateUtc.Day, 0, 0, 0, 0);
+            DateTime _dateTo = new DateTime(model.EndDateUtc.Year, model.EndDateUtc.Month, model.EndDateUtc.Day, 23, 59, 59, 999);
+            if ((IntervalUnit)model.IntervalUnit == IntervalUnit.Day)
+                model.Quantity = 1;
+
+            List<DateTime> dates = new List<DateTime>();
+            for (DateTime iterator = _dateFrom; iterator <= _dateTo; iterator += new TimeSpan(0, minutesToAdd, 0))
+            {
+                if ((IntervalUnit)model.IntervalUnit != IntervalUnit.Day)
+                {
+                    if (iterator.Hour >= _hourFrom && iterator.Hour <= _hourTo)
+                    {
+                        if (iterator.Hour == _hourTo)
+                        {
+                            if (iterator.Minute > _minutesTo)
+                            {
+                                continue;
+                            }
+                        }
+
+                        if (iterator.Hour == _hourFrom)
+                        {
+                            if (iterator.Minute < _minutesFrom)
+                            {
+                                continue;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+
+                if (iterator.DayOfWeek == DayOfWeek.Monday && !model.Monday)
+                {
+                    continue;
+                }
+
+                if (iterator.DayOfWeek == DayOfWeek.Tuesday && !model.Tuesday)
+                {
+                    continue;
+                }
+
+                if (iterator.DayOfWeek == DayOfWeek.Wednesday && !model.Wednesday)
+                {
+                    continue;
+                }
+
+                if (iterator.DayOfWeek == DayOfWeek.Thursday && !model.Thursday)
+                {
+                    continue;
+                }
+
+                if (iterator.DayOfWeek == DayOfWeek.Friday && !model.Friday)
+                {
+                    continue;
+                }
+
+                if (iterator.DayOfWeek == DayOfWeek.Saturday && !model.Saturday)
+                {
+                    continue;
+                }
+
+                if (iterator.DayOfWeek == DayOfWeek.Sunday && !model.Sunday)
+                {
+                    continue;
+                }
+
+                for (int i = 0; i < model.Quantity; i++)
+                {
+                    dates.Add(iterator);
+                    try
+                    {
+                        _productReservationService.InsertProductReservation(new ProductReservation
+                        {
+                            OrderId = "",
+                            Date = iterator,
+                            ProductId = productId,
+                            Resource = model.Resource,
+                            Parameter = model.Parameter,
+                            Duration = model.Interval + " " + ((IntervalUnit)model.IntervalUnit).GetLocalizedEnum(_localizationService, _workContext),
+                        });
+                    } catch { };
+                }
+            }
+
+            return Json(new { success = true });
+        }
+
+        public IActionResult ClearCalendar(string productId)
+        {
+            var toDelete = _productReservationService.GetProductReservationsByProductId(productId, true, null);
+            foreach (var record in toDelete)
+            {
+                _productReservationService.DeleteProductReservation(record);
+            }
+
+            return Json("");
+        }
+
+        [HttpPost]
+        public IActionResult ProductReservationDelete(ProductModel.ReservationModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var toDelete = _productReservationService.GetProductReservation(model.ReservationId);
+            if (toDelete != null)
+            {
+                if(string.IsNullOrEmpty(toDelete.OrderId))
+                    _productReservationService.DeleteProductReservation(toDelete);
+                else
+                    return Json(new DataSourceResult { Errors = _localizationService.GetResource("Admin.Catalog.ProductReservations.CantDeleteWithOrder") });
+            }
+
+            return Json("");
+        }
+
+        #endregion
     }
 }

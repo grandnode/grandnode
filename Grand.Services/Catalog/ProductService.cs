@@ -1238,6 +1238,24 @@ namespace Grand.Services.Catalog
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
         }
 
+        /// <summary>
+        /// Update Interval properties
+        /// </summary>
+        /// <param name="Interval">Interval</param>
+        /// <param name="IntervalUnit">Interval unit</param>
+        public virtual void UpdateIntervalProperties(string productId, int interval, IntervalUnit intervalUnit)
+        {
+            var product = GetProductById(productId);
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            product.Interval = interval;
+            product.IntervalUnitId = (int)intervalUnit;
+
+            _productRepository.Update(product);
+            _eventPublisher.EntityUpdated(product);
+        }
+
         #endregion
 
         #region Inventory management methods

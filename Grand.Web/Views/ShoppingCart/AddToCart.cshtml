@@ -40,6 +40,15 @@
                                         </div>
                                     </div>
                                 }
+                                @if (!string.IsNullOrEmpty(Model.ReservationInfo))
+                                {
+                                    <div class="form-group col-12 px-0 d-none d-md-block">
+                                        <label class="w-100"><strong>@T("AddToCart.ReservationInfo")</strong></label>
+                                        <div class="attributes">
+                                            @Html.Raw(Model.ReservationInfo)
+                                        </div>
+                                    </div>
+                                }
                                 <div class="form-group col-12 pl-0 mb-1 d-flex">
                                     <label class=""><strong>@T("AddToCart.Qty")</strong></label>
                                     <label class="pl-3">@Model.Quantity</label>

@@ -31,7 +31,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -66,6 +65,7 @@ namespace Grand.Web.Services
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IDownloadService _downloadService;
         private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly IProductReservationService _productReservationService;
 
         private readonly MediaSettings _mediaSettings;
         private readonly CatalogSettings _catalogSettings;
@@ -82,7 +82,7 @@ namespace Grand.Web.Services
             IProductTemplateService productTemplateService, IProductAttributeParser productAttributeParser, IShippingService shippingService,
             IVendorService vendorService, ICategoryService categoryService, IAclService aclService, IStoreMappingService storeMappingService,
             IProductTagService productTagService, IProductAttributeService productAttributeService, IManufacturerService manufacturerService,
-            IDateTimeHelper dateTimeHelper, IDownloadService downloadService, IWorkflowMessageService workflowMessageService,
+            IDateTimeHelper dateTimeHelper, IDownloadService downloadService, IWorkflowMessageService workflowMessageService, IProductReservationService productReservationService,
             MediaSettings mediaSettings, CatalogSettings catalogSettings, SeoSettings seoSettings, VendorSettings vendorSettings, CustomerSettings customerSettings,
             CaptchaSettings captchaSettings, LocalizationSettings localizationSettings)
         {
@@ -113,6 +113,7 @@ namespace Grand.Web.Services
             this._dateTimeHelper = dateTimeHelper;
             this._downloadService = downloadService;
             this._workflowMessageService = workflowMessageService;
+            this._productReservationService = productReservationService;
 
             this._mediaSettings = mediaSettings;
             this._catalogSettings = catalogSettings;
@@ -281,6 +282,7 @@ namespace Grand.Web.Services
                             }
                             break;
                         case ProductType.SimpleProduct:
+                        case ProductType.Reservation:
                         default:
                             {
                                 #region Simple product
@@ -1214,7 +1216,7 @@ namespace Grand.Web.Services
                     model.RentalEndDate = updatecartitem.RentalEndDateUtc;
                 }
             }
-
+            model.ProductType = product.ProductType;
             #endregion
 
             #region Associated products
@@ -1231,6 +1233,53 @@ namespace Grand.Web.Services
             }
 
             #endregion
+
+            #region Product reservations
+            if (product.ProductType == ProductType.Reservation)
+            {
+                model.AddToCart.IsReservation = true;
+                var reservations = _productReservationService.GetProductReservationsByProductId(product.Id, true, null).ToList();
+                var inCart = _workContext.CurrentCustomer.ShoppingCartItems.Where(x => !string.IsNullOrEmpty(x.ReservationId)).ToList();
+                foreach (var cartItem in inCart)
+                {
+                    var matching = reservations.Where(x => x.Id == cartItem.ReservationId);
+                    if (matching.Any())
+                    {
+                        reservations.Remove(matching.First());
+                    }
+                }
+
+                if (reservations.Any())
+                {
+                    var first = reservations.Where(x => x.Date.Date >= DateTime.UtcNow.Date).OrderBy(x => x.Date).FirstOrDefault();
+                    if (first != null)
+                    {
+                        model.StartDate = first.Date;
+                    }
+                    else
+                    {
+                        model.StartDate = DateTime.UtcNow;
+                    }
+                }
+
+                model.IntervalUnit = product.IntervalUnitType;
+
+                var list = reservations.GroupBy(x => x.Parameter).ToList().Select(x => x.Key);
+                foreach (var item in list)
+                {
+                    if (!string.IsNullOrEmpty(item))
+                    {
+                        model.Parameters.Add(new SelectListItem { Text = item, Value = item });
+                    }
+                }
+
+                if (model.Parameters.Any())
+                {
+                    model.Parameters.Insert(0, new SelectListItem { Text = "", Value = "" });
+                }
+            }
+
+            #endregion Product reservations
 
             return model;
         }

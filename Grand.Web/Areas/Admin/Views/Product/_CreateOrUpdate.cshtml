@@ -74,6 +74,9 @@
             <li @Html.RenderSelectedTabIndex(15, GetSelectedTabIndex())>
                 @T("Admin.Catalog.Products.Reviews")
             </li>
+            <li @Html.RenderSelectedTabIndex(16, GetSelectedTabIndex()) id="tab-calendar">
+                @T("Admin.Catalog.Products.Calendar")
+            </li>
         }
     </ul>
     <div>
@@ -127,6 +130,9 @@
         </div>
         <div>
             @Html.Partial("_CreateOrUpdate.Reviews", Model)
+        </div>
+        <div>
+            @Html.Partial("_CreateOrUpdate.Calendar", Model)
         </div>
     }
 </div>

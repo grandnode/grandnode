@@ -118,7 +118,7 @@ namespace Grand.Services.Orders
             int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true,
             bool getStandardWarnings = true, bool getAttributesWarnings = true,
             bool getGiftCardWarnings = true, bool getRequiredProductWarnings = true,
-            bool getRentalWarnings = true);
+            bool getRentalWarnings = true, bool getReservationWarnings = true, string reservationId = "", string sciId = "");
 
         /// <summary>
         /// Validates whether this shopping cart is valid
@@ -129,6 +129,18 @@ namespace Grand.Services.Orders
         /// <returns>Warnings</returns>
         IList<string> GetShoppingCartWarnings(IList<ShoppingCartItem> shoppingCart,
             string checkoutAttributesXml, bool validateCheckoutAttributes);
+
+
+        /// <summary>
+        /// Validates shopping cart item for reservation products
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="reservationId">Reservation Id</param>
+        /// <param name="startDate">Start date</param>
+        /// <param name="endDate">Start date</param>
+        /// <returns>Warnings</returns>
+        IList<string> GetReservationProductWarnings(string reservationId, Product product, DateTime? startDate, DateTime? endDate, string sciId);
+
 
         /// <summary>
         /// Finds a shopping cart item in the cart
@@ -168,7 +180,7 @@ namespace Grand.Services.Orders
             ShoppingCartType shoppingCartType, string storeId, string attributesXml = null,
             decimal customerEnteredPrice = decimal.Zero, 
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
-            int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true);
+            int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true, string reservationId = "", string resource = "", string duration = "");
         
         /// <summary>
         /// Updates the shopping cart item

@@ -77,6 +77,7 @@
             $('#tab-inventory-product').show();
             $('#tab-attributes-product').show();
             $('#tab-purchased-product').show();
+            $('#tab-calendar').hide();
 
         } else if (selectedProductTypeId == @(((int) ProductType.GroupedProduct).ToString())) {
             $('#group-required-other-products').hide();
@@ -91,7 +92,22 @@
             $('#tab-inventory-product').hide();
             $('#tab-attributes-product').hide();
             $('#tab-purchased-product').hide();
+            $('#tab-calendar').hide();
 
+        } else if (selectedProductTypeId == @(((int) ProductType.Reservation).ToString())){
+            $('#group-required-other-products').show();
+            $('#group-giftcard').show();
+            $('#group-downloads').show();
+            $('#group-recurring').show();
+            $('#group-rental').show();
+            $('#group-shipping').show();
+            $('#group-tax').show();
+            $('#tab-associated-products').hide();
+            $('#tab-price-product').show();
+            $('#tab-inventory-product').show();
+            $('#tab-attributes-product').show();
+            $('#tab-purchased-product').show();
+            $('#tab-calendar').show();
         }
     }
 
@@ -530,7 +546,7 @@
                     <span></span>
                 </label>
                 @Html.ValidationMessageFor(model => model.AllowCustomerReviews)
-        </div>
+            </div>
         </div>
         <div class="form-group">
             @Html.GrandLabelFor(model => model.ProductTags)

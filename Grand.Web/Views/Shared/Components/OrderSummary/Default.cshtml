@@ -79,6 +79,12 @@
                                                     @Html.Raw(item.RentalInfo)
                                                 </div>
                                                 }
+                                        @if (!String.IsNullOrEmpty(item.ReservationInfo))
+                                            {
+                                            <div>
+                                                @Html.Raw(@item.ReservationInfo)
+                                            </div>
+                                            }
                                         @if (Model.IsEditable && item.AllowItemEditing)
                                                 {
                                                     var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName });

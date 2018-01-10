@@ -162,7 +162,8 @@ namespace Grand.Web.Controllers
                     sci.RentalStartDateUtc,
                     sci.RentalEndDateUtc,
                     sci.Quantity,
-                    false);
+                    false,
+                    reservationId: sci.ReservationId);
                 if (sciWarnings.Any())
                     return RedirectToRoute("ShoppingCart");
             }

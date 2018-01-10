@@ -103,6 +103,16 @@ var AjaxCart = {
             if (response.success == true) {
                 //success
                 displayPopupAddToCart(response.html);
+
+                if (response.refreshreservation == true) {
+                    var param = "";
+                    if ($("#parameterDropdown").val() != null) {
+                        param = $("#parameterDropdown").val();
+                    }
+
+                    Reservation.fillAvailableDates(Reservation.currentYear, Reservation.currentMonth, param, true);
+                }
+
             }
             else {
                 //error

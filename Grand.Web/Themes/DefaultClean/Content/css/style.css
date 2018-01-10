@@ -1796,6 +1796,7 @@ span.product-quantity {
     padding-left: 15px;
 }
 /*datapicker*/
+
 .ui-datepicker {
     background-color: #fff;
     padding: 10px;
@@ -1815,6 +1816,8 @@ span.product-quantity {
 .ui-datepicker-calendar td {
     padding: 7px;
 }
+
+
 
 .associatedItem {
     border-bottom: 2px solid #eeeeee;

@@ -91,13 +91,12 @@
                             dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", Model.Id);
                             @await Html.PartialAsync("_GiftCardInfo", Model.GiftCard, dataDictGiftCard)
                         }
-                        <!--rental info-->
+                        <!--reservation info-->
 
                         @{
-
-                            var dataDictRental = new ViewDataDictionary(ViewData);
-                            dataDictRental.TemplateInfo.HtmlFieldPrefix = string.Format("rental_{0}", Model.Id);
-                            @await Html.PartialAsync("_RentalInfo", Model, dataDictRental)
+                           var dataDictReservation = new ViewDataDictionary(ViewData);
+                           dataDictReservation.TemplateInfo.HtmlFieldPrefix = string.Format("reservation_{0}", Model.Id);
+                           @await Html.PartialAsync("_ReservationInfo", Model, dataDictReservation)
                         }
                         <!--price & add to cart-->
                         <div class="col-12 overview-buttons generalMarginSupporter">

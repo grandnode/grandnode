@@ -24,7 +24,6 @@ namespace Grand.Services.Orders
     {
         #region Fields
 
-        //private readonly IRepository<ShoppingCartItem> _sciRepository;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly ICurrencyService _currencyService;
@@ -44,6 +43,7 @@ namespace Grand.Services.Orders
         private readonly IProductAttributeService _productAttributeService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ICustomerActionEventService _customerActionEventService;
+        private readonly IProductReservationService _productReservationService;
         #endregion
 
         #region Ctor
@@ -51,7 +51,6 @@ namespace Grand.Services.Orders
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="sciRepository">Shopping cart repository</param>
         /// <param name="workContext">Work context</param>
         /// <param name="storeContext">Store context</param>
         /// <param name="currencyService">Currency service</param>
@@ -70,6 +69,8 @@ namespace Grand.Services.Orders
         /// <param name="genericAttributeService">Generic attribute service</param>
         /// <param name="productAttributeService">Product attribute service</param>
         /// <param name="dateTimeHelper">Datetime helper</param>
+        /// <param name="customerActionEventService">Customer action event service</param>
+        /// <param name="productReservationService">Product reservation service</param>
         public ShoppingCartService(
             IWorkContext workContext, 
             IStoreContext storeContext,
@@ -89,9 +90,9 @@ namespace Grand.Services.Orders
             IGenericAttributeService genericAttributeService,
             IProductAttributeService productAttributeService,
             IDateTimeHelper dateTimeHelper,
-            ICustomerActionEventService customerActionEventService)
+            ICustomerActionEventService customerActionEventService,
+            IProductReservationService productReservationService)
         {
-            //this._sciRepository = sciRepository;
             this._workContext = workContext;
             this._storeContext = storeContext;
             this._currencyService = currencyService;
@@ -111,6 +112,7 @@ namespace Grand.Services.Orders
             this._productAttributeService = productAttributeService;
             this._dateTimeHelper = dateTimeHelper;
             this._customerActionEventService = customerActionEventService;
+            this._productReservationService = productReservationService;
         }
 
         #endregion
@@ -129,6 +131,17 @@ namespace Grand.Services.Orders
             if (shoppingCartItem == null)
                 throw new ArgumentNullException("shoppingCartItem");
 
+            if (shoppingCartItem.RentalStartDateUtc.HasValue && shoppingCartItem.RentalEndDateUtc.HasValue)
+            {
+                var reserved = _productReservationService.GetCustomerReservationsHelperBySciId(shoppingCartItem.Id);
+                foreach (var res in reserved)
+                {
+                    if (res.CustomerId == _workContext.CurrentCustomer.Id)
+                    {
+                        _productReservationService.DeleteCustomerReservationsHelper(res);
+                    }
+                }
+            }
             var customer = _customerService.GetCustomerById(customerId);
             var storeId = shoppingCartItem.StoreId;
 
@@ -304,10 +317,10 @@ namespace Grand.Services.Orders
                 warnings.Add(_localizationService.GetResource("ShoppingCart.ProductUnpublished"));
             }
 
-            //we can add only simple products
-            if (product.ProductType != ProductType.SimpleProduct)
+            //we can't add grouped product
+            if (product.ProductType == ProductType.GroupedProduct)
             {
-                warnings.Add("This is not simple product");
+                warnings.Add("You can't add grouped product");
             }
             
             //ACL
@@ -760,6 +773,76 @@ namespace Grand.Services.Orders
 
 
         /// <summary>
+        /// Validates shopping cart item for reservation products
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="reservationId">Reservation Id</param>
+        /// <param name="startDate">Start date</param>
+        /// <param name="endDate">Start date</param>
+        /// <returns>Warnings</returns>
+        public IList<string> GetReservationProductWarnings(string reservationId, Product product, DateTime? startDate, DateTime? endDate, string sciId)
+        {
+            var warnings = new List<string>();
+
+            if (product.ProductType != ProductType.Reservation)
+                return warnings;
+
+            if (string.IsNullOrEmpty(reservationId) && product.IntervalUnitType != IntervalUnit.Day)
+            {
+                warnings.Add(_localizationService.GetResource("ShoppingCart.Reservation.NoReservationFound"));
+                return warnings;
+            }
+
+            if (product.IntervalUnitType != IntervalUnit.Day)
+            {
+                var reservation = _productReservationService.GetProductReservation(reservationId);
+                if (reservation == null)
+                {
+                    warnings.Add("ShoppingCart.Reservation.ReservationDeleted");
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(reservation.OrderId))
+                    {
+                        warnings.Add(_localizationService.GetResource("ShoppingCart.Reservation.AlreadyReserved"));
+                    }
+                }
+            }
+            else
+            {
+                if (!(startDate.HasValue && endDate.HasValue))
+                {
+                    warnings.Add(_localizationService.GetResource("ShoppingCart.Reservation.ChoosebothDates"));
+                }
+                else
+                {
+                    if (startDate.Value >= endDate.Value)
+                    {
+                        warnings.Add(_localizationService.GetResource("ShoppingCart.Reservation.EndDateMustBeLaterThanStartDate"));
+                    }
+
+                    if (startDate.Value < DateTime.Now || endDate.Value < DateTime.Now)
+                    {
+                        warnings.Add(_localizationService.GetResource("ShoppingCart.Reservation.ReservationDatesMustBeLaterThanToday"));
+                    }
+
+                    var reserved = _productReservationService.GetCustomerReservationsHelperBySciId(sciId);
+                    foreach (var item in reserved)
+                    {
+                        var reservation = _productReservationService.GetProductReservation(item.ReservationId);
+                        if (!string.IsNullOrEmpty(reservation.OrderId))
+                        {
+                            warnings.Add(_localizationService.GetResource("ShoppingCart.Reservation.AlreadyReserved"));
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return warnings;
+        }
+
+        /// <summary>
         /// Validates shopping cart item
         /// </summary>
         /// <param name="customer">Customer</param>
@@ -785,7 +868,7 @@ namespace Grand.Services.Orders
             int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true,
             bool getStandardWarnings = true, bool getAttributesWarnings = true,
             bool getGiftCardWarnings = true, bool getRequiredProductWarnings = true,
-            bool getRentalWarnings = true)
+            bool getRentalWarnings = true, bool getReservationWarnings = true, string reservationId = "", string sciId = "")
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -811,7 +894,12 @@ namespace Grand.Services.Orders
             //rental products
             if (getRentalWarnings)
                 warnings.AddRange(GetRentalProductWarnings(product, rentalStartDate, rentalEndDate));
-            
+
+            //reservation products
+            if (getReservationWarnings)
+                warnings.AddRange(GetReservationProductWarnings(reservationId, product, rentalStartDate, rentalEndDate, sciId));
+
+
             return warnings;
         }
 
@@ -1043,7 +1131,8 @@ namespace Grand.Services.Orders
             ShoppingCartType shoppingCartType, string storeId, string attributesXml = null,
             decimal customerEnteredPrice = decimal.Zero,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
-            int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true)
+            int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true, 
+            string reservationId = "", string parameter = "", string duration = "")
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
@@ -1078,6 +1167,47 @@ namespace Grand.Services.Orders
                 return warnings;
             }
 
+            IGrouping<string, ProductReservation> groupToBook = null;
+            if (rentalStartDate.HasValue && rentalEndDate.HasValue)
+            {
+                var reservations = _productReservationService.GetProductReservationsByProductId(product.Id, true, null);
+                var reserved = _productReservationService.GetCustomerReservationsHelpers();
+                foreach (var item in reserved)
+                {
+                    var match = reservations.Where(x => x.Id == item.ReservationId).FirstOrDefault();
+                    if (match != null)
+                    {
+                        reservations.Remove(match);
+                    }
+                }
+
+                var grouped = reservations.GroupBy(x => x.Resource);
+                foreach (var group in grouped)
+                {
+                    bool groupCanBeBooked = true;
+                    for (DateTime iterator = rentalStartDate.Value; iterator <= rentalEndDate.Value; iterator += new TimeSpan(24, 0, 0))
+                    {
+                        if (!group.Select(x => x.Date).Contains(iterator))
+                        {
+                            groupCanBeBooked = false;
+                            break;
+                        }
+                    }
+
+                    if (groupCanBeBooked)
+                    {
+                        groupToBook = group;
+                        break;
+                    }
+                }
+
+                if (groupToBook == null)
+                {
+                    warnings.Add(_localizationService.GetResource("ShoppingCart.Reservation.NoFreeReservationsInThisPeriod"));
+                    return warnings;
+                }
+            }
+
             //reset checkout info
             _customerService.ResetCheckoutData(customer, storeId);
 
@@ -1090,7 +1220,7 @@ namespace Grand.Services.Orders
                 shoppingCartType, productId, attributesXml, customerEnteredPrice,
                 rentalStartDate, rentalEndDate);
 
-            if (shoppingCartItem != null)
+            if (shoppingCartItem != null && product.ProductType != ProductType.Reservation)
             {
                 //update existing shopping cart item
                 int newQuantity = shoppingCartItem.Quantity + quantity;
@@ -1116,7 +1246,7 @@ namespace Grand.Services.Orders
                 warnings.AddRange(GetShoppingCartItemWarnings(customer, shoppingCartType, product,
                     storeId, attributesXml, customerEnteredPrice,
                     rentalStartDate, rentalEndDate, 
-                    quantity, automaticallyAddRequiredProductsIfEnabled));
+                    quantity, automaticallyAddRequiredProductsIfEnabled, reservationId: reservationId));
                 if (!warnings.Any())
                 {
                     //maximum items validation
@@ -1164,7 +1294,10 @@ namespace Grand.Services.Orders
                         IsGiftCard = product.IsGiftCard,
                         ShoppingCartTypeId = (int)shoppingCartType,
                         CreatedOnUtc = now,
-                        UpdatedOnUtc = now
+                        UpdatedOnUtc = now,
+                        ReservationId = reservationId,
+                        Parameter = parameter,
+                        Duration = duration
                     };
                     customer.ShoppingCartItems.Add(shoppingCartItem);
 
@@ -1178,6 +1311,20 @@ namespace Grand.Services.Orders
                     _eventPublisher.EntityInserted(shoppingCartItem);
                 }
             }
+
+            if (!warnings.Any() && groupToBook != null)
+            {
+                foreach (var item in groupToBook.Where(x => x.Date >= rentalStartDate && x.Date <= rentalEndDate))
+                {
+                    _productReservationService.InsertCustomerReservationsHelper(new CustomerReservationsHelper
+                    {
+                        CustomerId = customer.Id,
+                        ReservationId = item.Id,
+                        ShoppingCartItemId = shoppingCartItem.Id
+                    });
+                }
+            }
+
 
             return warnings;
         }

@@ -13,5 +13,10 @@ namespace Grand.Core.Domain.Catalog
         /// Grouped (product with variants)
         /// </summary>
         GroupedProduct = 10,
+
+        /// <summary>
+        /// Reservation product
+        /// </summary>
+        Reservation = 15,
     }
 }

@@ -350,7 +350,7 @@ namespace Grand.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            if (!product.IsRental)
+            if (product.ProductType != ProductType.Reservation)
                 return 1;
 
             if (startDate.CompareTo(endDate) >= 0)

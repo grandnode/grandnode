@@ -30,13 +30,14 @@ namespace Grand.Web.Models.Catalog
             ProductManufacturers = new List<ManufacturerModel>();
             ProductReviewOverview = new ProductReviewOverviewModel();
             TierPrices = new List<TierPriceModel>();
+            Parameters = new List<SelectListItem>();
         }
 
         //picture(s)
         public bool DefaultPictureZoomEnabled { get; set; }
         public PictureModel DefaultPictureModel { get; set; }
         public IList<PictureModel> PictureModels { get; set; }
-
+        public ProductType ProductType { get; set; }
         public string Name { get; set; }
         public string ShortDescription { get; set; }
         public string FullDescription { get; set; }
@@ -70,6 +71,9 @@ namespace Grand.Web.Models.Catalog
         public bool IsRental { get; set; }
         public DateTime? RentalStartDate { get; set; }
         public DateTime? RentalEndDate { get; set; }
+        public IntervalUnit IntervalUnit { get; set; }
+        public List<SelectListItem> Parameters { get; set; }
+        public DateTime StartDate { get; set; }
 
         public string StockAvailability { get; set; }
 
@@ -147,6 +151,10 @@ namespace Grand.Web.Models.Catalog
             
             //rental
             public bool IsRental { get; set; }
+
+            //reservation
+            public bool IsReservation { get; set; }
+
             public string MeasureUnit { get; set; }
             //pre-order
             public bool AvailableForPreOrder { get; set; }

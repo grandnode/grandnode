@@ -109,5 +109,10 @@ namespace Grand.Core.Domain.Orders
         /// Gets or sets a value indicating whether shopping carts (and wishlist) are shared between stores (in multi-store environment)
         /// </summary>
         public bool CartsSharedBetweenStores { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value reservation format date 
+        /// </summary>
+        public string ReservationDateFormat { get; set; }
     }
 }

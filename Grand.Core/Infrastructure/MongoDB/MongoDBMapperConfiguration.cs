@@ -43,6 +43,7 @@ namespace Grand.Core.Infrastructure.MongoDB
 
                 //ignore these Fields, an equivalent of [BsonIgnore]
                 cm.UnmapMember(c => c.ProductType);
+                cm.UnmapMember(c => c.IntervalUnitType);
                 cm.UnmapMember(c => c.BackorderMode);
                 cm.UnmapMember(c => c.DownloadActivationType);
                 cm.UnmapMember(c => c.GiftCardType);

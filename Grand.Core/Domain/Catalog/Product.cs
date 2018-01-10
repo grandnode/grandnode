@@ -239,7 +239,26 @@ namespace Grand.Core.Domain.Catalog
         /// Gets or sets the rental period (price for this period)
         /// </summary>
         public int RentalPricePeriodId { get; set; }
+        /// <summary>
+        /// Gets or sets Interval Unit
+        /// </summary>
+        public IntervalUnit IntervalUnitType 
+        {
+            get
+            {
+                return (IntervalUnit)this.IntervalUnitId;
+            }
+            set
+            {
+                this.IntervalUnitId = (int)value;
+            }
 
+        }
+        /// <summary>
+        /// Gets or sets Interval
+        /// </summary>
+        public int Interval { get; set; }
+        public int IntervalUnitId { get; set; }
         /// <summary>
         /// Gets or sets a value indicating whether the entity is ship enabled
         /// </summary>

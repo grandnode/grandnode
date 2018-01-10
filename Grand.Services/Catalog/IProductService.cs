@@ -287,6 +287,15 @@ namespace Grand.Services.Catalog
         /// <param name="product">Product</param>
         void UpdateHasTierPricesProperty(string productId);
 
+        /// <summary>
+        /// Update Interval properties
+        /// </summary>
+        /// <param name="productId">Product Id</param>
+        /// <param name="Interval">Interval</param>
+        /// <param name="IntervalUnit">Interval unit</param>
+        void UpdateIntervalProperties(string productId, int interval, IntervalUnit intervalUnit);
+
+
         #endregion
 
         #region Inventory management methods

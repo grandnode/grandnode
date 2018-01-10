@@ -107,5 +107,20 @@ namespace Grand.Core.Domain.Orders
 
         public bool IsRecurring { get; set; }
 
+        /// <summary>
+        /// Gets or sets the reservation identifier
+        /// </summary>
+        public string ReservationId { get; set; }
+
+        /// <summary>
+        /// Gets or sets parameter of reservation
+        /// </summary>
+        public string Parameter { get; set; }
+
+        /// <summary>
+        /// Gets or sets Duration of reservation
+        /// </summary>
+        public string Duration { get; set; }
+
     }
 }

@@ -89,6 +89,7 @@ namespace Grand.Services.Installation
         private readonly IRepository<Vendor> _vendorRepository;
         private readonly IRepository<Manufacturer> _manufacturerRepository;
         private readonly IRepository<Product> _productRepository;
+        private readonly IRepository<ProductReservation> _productReservationRepository;
         private readonly IRepository<ProductAlsoPurchased> _productalsopurchasedRepository;
         private readonly IRepository<Picture> _pictureRepository;
         private readonly IRepository<UrlRecord> _urlRecordRepository;
@@ -186,6 +187,7 @@ namespace Grand.Services.Installation
             IRepository<Category> categoryRepository,
             IRepository<Manufacturer> manufacturerRepository,
             IRepository<Product> productRepository,
+            IRepository<ProductReservation> productReservationRepository,
             IRepository<ProductAlsoPurchased> productalsopurchasedRepository,
             IRepository<Picture> pictureRepository,
             IRepository<UrlRecord> urlRecordRepository,
@@ -278,6 +280,7 @@ namespace Grand.Services.Installation
             this._categoryRepository = categoryRepository;
             this._manufacturerRepository = manufacturerRepository;
             this._productRepository = productRepository;
+            this._productReservationRepository = productReservationRepository;
             this._pictureRepository = pictureRepository;
             this._productalsopurchasedRepository = productalsopurchasedRepository;
             this._urlRecordRepository = urlRecordRepository;
@@ -10968,6 +10971,10 @@ namespace Grand.Services.Installation
 
             _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending("ProductSpecificationAttributes.SpecificationAttributeOptionId").Ascending("ProductSpecificationAttributes.AllowFiltering"), new CreateIndexOptions() { Name = "ProductSpecificationAttributes", Unique = false });
 
+            //productreseration
+            _productReservationRepository.Collection.Indexes.CreateOneAsync(Builders<ProductReservation>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _productReservationRepository.Collection.Indexes.CreateOneAsync(Builders<ProductReservation>.IndexKeys.Ascending(x => x.ProductId).Ascending(x => x.Date), new CreateIndexOptions() { Name = "ProductReservation", Unique = false });
+            _productReservationRepository.Collection.Indexes.CreateOneAsync(Builders<ProductReservation>.IndexKeys.Ascending(x => x.ProductId).Ascending(x => x.Date).Ascending(x=>x.Resource).Ascending(x=>x.Parameter), new CreateIndexOptions() { Name = "ProductReservationRecord", Unique = true });
 
             //ProductReview
             _productReviewRepository.Collection.Indexes.CreateOneAsync(Builders<ProductReview>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });

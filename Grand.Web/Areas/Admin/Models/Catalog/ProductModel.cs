@@ -4,15 +4,12 @@ using Grand.Framework.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-
 using FluentValidation.Attributes;
 using Grand.Web.Areas.Admin.Models.Customers;
 using Grand.Web.Areas.Admin.Models.Discounts;
 using Grand.Web.Areas.Admin.Models.Stores;
 using Grand.Web.Areas.Admin.Validators.Catalog;
-using Grand.Framework;
 using Grand.Framework.Localization;
-using Grand.Framework.Mvc;
 
 namespace Grand.Web.Areas.Admin.Models.Catalog
 {
@@ -38,6 +35,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             AddPictureModel = new ProductPictureModel();
             AddSpecificationAttributeModel = new AddProductSpecificationAttributeModel();
             ProductWarehouseInventoryModels = new List<ProductWarehouseInventoryModel>();
+            CalendarModel = new GenerateCalendarModel();
         }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.ID")]
@@ -109,9 +107,6 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.ProductTags")]
         public string ProductTags { get; set; }
-
-
-
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Sku")]
         
@@ -198,6 +193,9 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.RentalPricePeriod")]
         public int RentalPricePeriodId { get; set; }
+
+        //calendar
+        public GenerateCalendarModel CalendarModel { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.IsShipEnabled")]
         public bool IsShipEnabled { get; set; }
@@ -761,8 +759,70 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             [GrandResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory.Fields.PlannedQuantity")]
             public int PlannedQuantity { get; set; }
         }
+        public partial class ReservationModel : BaseGrandEntityModel
+        {
+            public string ReservationId { get; set; }
+            public DateTime Date { get; set; }
+            public string Resource { get; set; }
+            public string Parameter { get; set; }
+            public string OrderId { get; set; }
+            public string Duration { get; set; }
+        }
 
+        [Validator(typeof(GenerateCalendarValidator))]
+        public partial class GenerateCalendarModel : BaseGrandModel
+        {
+            [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.StartDateUtc")]
+            [UIHint("Date")]
+            public DateTime StartDateUtc { get; set; }
 
+            [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.StartTime")]
+            [UIHint("Time")]
+            public DateTime StartTime { get; set; }
+
+            [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.EndDateUtc")]
+            [UIHint("Date")]
+            public DateTime EndDateUtc { get; set; }
+            [UIHint("Time")]
+
+            [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.EndTime")]
+            public DateTime EndTime { get; set; }
+
+            [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.Interval")]
+            public int Interval { get; set; }
+            public int IntervalUnit { get; set; }
+
+            [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.Quantity")]
+            public int Quantity { get; set; }
+
+            [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.Resource")]
+            public string Resource { get; set; }
+
+            [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.Parameter")]
+            public string Parameter { get; set; }
+
+            [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.Monday")]
+            public bool Monday { get; set; }
+
+            [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.Tuesday")]
+            public bool Tuesday { get; set; }
+
+            [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.Wednesday")]
+            public bool Wednesday { get; set; }
+
+            [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.Thursday")]
+            public bool Thursday { get; set; }
+
+            [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.Friday")]
+            public bool Friday { get; set; }
+
+            [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.Saturday")]
+            public bool Saturday { get; set; }
+
+            [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.Sunday")]
+            public bool Sunday { get; set; }
+
+        }
         public partial class ProductAttributeMappingModel : BaseGrandEntityModel
         {
             public string ProductId { get; set; }
@@ -939,7 +999,6 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
 
             #endregion
         }
-
         public partial class ActivityLogModel : BaseGrandEntityModel
         {
             [GrandResourceDisplayName("Admin.Catalog.Products.ActivityLog.ActivityLogType")]
@@ -952,7 +1011,6 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public string CustomerId { get; set; }
             public string CustomerEmail { get; set; }
         }
-
         public partial class ProductAttributeValueLocalizedModel : ILocalizedModelLocal
         {
             public string LanguageId { get; set; }
@@ -995,7 +1053,6 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public int NotifyAdminForQuantityBelow { get; set; }
 
         }
-
         public partial class ProductAttributeCombinationTierPricesModel : BaseGrandEntityModel
         {
             public string StoreId { get; set; }

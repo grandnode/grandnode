@@ -474,9 +474,9 @@ namespace Grand.Services.Catalog
                 string.Join(",", customer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
             var cacheTime = _catalogSettings.CacheProductPrices ? 60 : 0;
-            //we do not cache price for rental products
+            //we do not cache price for reservation products
             //otherwise, it can cause memory leaks (to store all possible date period combinations)
-            if (product.IsRental)
+            if (product.ProductType == ProductType.Reservation)
                 cacheTime = 0;
 
             ProductPriceForCaching PrepareModel() {
@@ -498,10 +498,14 @@ namespace Grand.Services.Catalog
                 //additional charge
                 price = price + additionalCharge;
 
-                //rental products
-                if (product.IsRental)
+                //reservations
+                if (product.ProductType == ProductType.Reservation)
                     if (rentalStartDate.HasValue && rentalEndDate.HasValue)
-                        price = price * product.GetRentalPeriods(rentalStartDate.Value, rentalEndDate.Value);
+                    {
+                        decimal d = 0;
+                        decimal.TryParse((rentalEndDate - rentalStartDate).Value.TotalDays.ToString(), out d);
+                        price = price * d;
+                    }
 
                 if (includeDiscounts)
                 {
@@ -682,8 +686,8 @@ namespace Grand.Services.Catalog
                         attributesTotalPrice,
                         includeDiscounts,
                         qty,
-                        product.IsRental ? rentalStartDate : null,
-                        product.IsRental ? rentalEndDate : null,
+                        product.ProductType == ProductType.Reservation ? rentalStartDate : null,
+                        product.ProductType == ProductType.Reservation ? rentalEndDate : null,
                         out discountAmount, out appliedDiscounts);
                 }
             }

@@ -33,6 +33,7 @@ using Grand.Web.Services;
 using Grand.Core.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Grand.Framework.Mvc.Filters;
+using System.Globalization;
 
 namespace Grand.Web.Controllers
 {
@@ -64,7 +65,7 @@ namespace Grand.Web.Controllers
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IAddressWebService _addressWebService;
         private readonly IShoppingCartWebService _shoppingCartWebService;
-
+        private readonly IProductReservationService _productReservationService;
         private readonly MediaSettings _mediaSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly CatalogSettings _catalogSettings;
@@ -102,6 +103,7 @@ namespace Grand.Web.Controllers
             IGenericAttributeService genericAttributeService,
             IAddressWebService addressWebService,
             IShoppingCartWebService shoppingCartWebService,
+            IProductReservationService productReservationService,
             MediaSettings mediaSettings,
             ShoppingCartSettings shoppingCartSettings,
             CatalogSettings catalogSettings, 
@@ -137,7 +139,7 @@ namespace Grand.Web.Controllers
             this._genericAttributeService = genericAttributeService;
             this._addressWebService = addressWebService;
             this._shoppingCartWebService = shoppingCartWebService;
-
+            this._productReservationService = productReservationService;
             this._mediaSettings = mediaSettings;
             this._shoppingCartSettings = shoppingCartSettings;
             this._catalogSettings = catalogSettings;
@@ -269,7 +271,7 @@ namespace Grand.Web.Controllers
                 });
             }
 
-            var addtoCartModel = _shoppingCartWebService.PrepareAddToCartModel(product, customer, quantity, "", cartType);
+            var addtoCartModel = _shoppingCartWebService.PrepareAddToCartModel(product, customer, quantity, "", cartType, null, null, "", "", "");
 
             //added to the cart/wishlist
             switch (cartType)
@@ -355,13 +357,13 @@ namespace Grand.Web.Controllers
                 });
             }
 
-            //we can add only simple products
-            if (product.ProductType != ProductType.SimpleProduct)
+            //you can't add group products
+            if (product.ProductType == ProductType.GroupedProduct)
             {
                 return Json(new
                 {
                     success = false,
-                    message = "Only simple products could be added to the cart"
+                    message = "Grouped products couldn't be added to the cart"
                 });
             }
 
@@ -428,9 +430,82 @@ namespace Grand.Web.Controllers
             //rental attributes
             DateTime? rentalStartDate = null;
             DateTime? rentalEndDate = null;
-            if (product.IsRental)
+            if (product.ProductType == ProductType.Reservation)
             {
-                _shoppingCartWebService.ParseRentalDates(product, form, out rentalStartDate, out rentalEndDate);
+                _shoppingCartWebService.ParseReservationDates(product, form, out rentalStartDate, out rentalEndDate);
+            }
+
+            //product reservation
+            string reservationId = "";
+            string parameter = "";
+            string duration = "";
+            if (product.ProductType == ProductType.Reservation)
+            {
+                foreach (string formKey in form.Keys)
+                {
+                    if (formKey.Contains("Reservation_"))
+                    {
+                        reservationId = formKey.Replace("Reservation_", "");
+                        break;
+                    }
+                }
+                foreach (var f in form)
+                {
+                    if (f.Key == "parameterDropdown")
+                    {
+                        parameter = f.Value;
+                    }
+                }
+                if (product.IntervalUnitType == IntervalUnit.Hour || product.IntervalUnitType == IntervalUnit.Minute)
+                {
+                    if (string.IsNullOrEmpty(reservationId))
+                    {
+                        return Json(new
+                        {
+                            success = false,
+                            message = _localizationService.GetResource("Product.Addtocart.Reservation.Duration.Required")
+                        });
+                    }
+                    var reservation = _productReservationService.GetProductReservation(reservationId);
+                    if (reservation == null)
+                    {
+                        return Json(new
+                        {
+                            success = false,
+                            message = "No reservation found"
+                        });
+                    }
+                    duration = reservation.Duration;
+                    rentalStartDate = reservation.Date;
+                }
+                else if (product.IntervalUnitType == IntervalUnit.Day)
+                {
+                    string datefrom = "";
+                    string dateto = "";
+                    foreach (var item in form)
+                    {
+                        if (item.Key == "reservationDatepickerFrom")
+                        {
+                            datefrom = item.Value;
+                        }
+
+                        if (item.Key == "reservationDatepickerTo")
+                        {
+                            dateto = item.Value;
+                        }
+                    }
+
+                    string datePickerFormat = "MM/dd/yyyy";
+                    if (!string.IsNullOrEmpty(datefrom))
+                    {
+                        rentalStartDate = DateTime.ParseExact(datefrom, datePickerFormat, CultureInfo.InvariantCulture);
+                    }
+
+                    if (!string.IsNullOrEmpty(dateto))
+                    {
+                        rentalEndDate = DateTime.ParseExact(dateto, datePickerFormat, CultureInfo.InvariantCulture);
+                    }
+                }
             }
 
             var cartType = updatecartitem == null ? (ShoppingCartType)shoppingCartTypeId :
@@ -445,7 +520,7 @@ namespace Grand.Web.Controllers
                 addToCartWarnings.AddRange(_shoppingCartService.AddToCart(_workContext.CurrentCustomer,
                     productId, cartType, _storeContext.CurrentStore.Id,
                     attributes, customerEnteredPriceConverted,
-                    rentalStartDate, rentalEndDate, quantity, true));
+                    rentalStartDate, rentalEndDate, quantity, true, reservationId, parameter, duration));
             }
             else
             {
@@ -486,7 +561,7 @@ namespace Grand.Web.Controllers
                 });
             }
 
-            var addtoCartModel = _shoppingCartWebService.PrepareAddToCartModel(product, _workContext.CurrentCustomer, quantity, attributes, cartType);
+            var addtoCartModel = _shoppingCartWebService.PrepareAddToCartModel(product, _workContext.CurrentCustomer, quantity, attributes, cartType, rentalStartDate, rentalEndDate, reservationId, parameter, duration);
 
             //added to the cart/wishlist
             switch (cartType)
@@ -552,7 +627,8 @@ namespace Grand.Web.Controllers
                             message = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToTheCart.Link"), Url.RouteUrl("ShoppingCart")),
                             html = this.RenderPartialViewToString("AddToCart", addtoCartModel),
                             updatetopcartsectionhtml = updatetopcartsectionhtml,
-                            updateflyoutcartsectionhtml = updateflyoutcartsectionhtml
+                            updateflyoutcartsectionhtml = updateflyoutcartsectionhtml,
+                            refreshreservation = product.ProductType == ProductType.Reservation && product.IntervalUnitType != IntervalUnit.Day
                         });
                     }
             }
@@ -575,9 +651,9 @@ namespace Grand.Web.Controllers
             //rental attributes
             DateTime? rentalStartDate = null;
             DateTime? rentalEndDate = null;
-            if (product.IsRental)
+            if (product.ProductType == ProductType.Reservation)
             {
-                _shoppingCartWebService.ParseRentalDates(product, form, out rentalStartDate, out rentalEndDate);
+                _shoppingCartWebService.ParseReservationDates(product, form, out rentalStartDate, out rentalEndDate);
             }
 
             string sku = product.FormatSku(attributeXml, _productAttributeParser);

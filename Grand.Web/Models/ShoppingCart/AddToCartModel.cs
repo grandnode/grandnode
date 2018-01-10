@@ -15,6 +15,7 @@ namespace Grand.Web.Models.ShoppingCart
         public string ProductName { get; set; }
         public string ProductSeName { get; set; }
         public string AttributeDescription { get; set; }
+        public string ReservationInfo { get; set; }
         public PictureModel Picture { get; set; }
         public int Quantity { get; set; }
         public int ItemQuantity { get; set; }
