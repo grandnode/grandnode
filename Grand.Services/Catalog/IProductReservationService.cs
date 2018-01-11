@@ -56,6 +56,12 @@ namespace Grand.Services.Catalog
         void DeleteCustomerReservationsHelper(CustomerReservationsHelper crh);
 
         /// <summary>
+        /// Cancel reservations by orderId 
+        /// </summary>
+        /// <param name="orderId"></param>
+        void CancelReservationsByOrderId(string orderId);
+
+        /// <summary>
         /// Gets customer reservations helper by id
         /// </summary>
         /// <param name="Id"></param>

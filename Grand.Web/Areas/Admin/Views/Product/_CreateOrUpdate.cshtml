@@ -62,22 +62,23 @@
         <li @Html.RenderSelectedTabIndex(12, GetSelectedTabIndex()) id="tab-associated-products">
             @T("Admin.Catalog.Products.AssociatedProducts")
         </li>
-        <li @Html.RenderSelectedTabIndex(13, GetSelectedTabIndex())>
-            @T("Admin.Catalog.Products.ActivityLog")
+        <li @Html.RenderSelectedTabIndex(13, GetSelectedTabIndex()) id="tab-calendar">
+            @T("Admin.Catalog.Products.Calendar")
         </li>
-
         @if (!String.IsNullOrEmpty(Model.Id))
         {
-            <li @Html.RenderSelectedTabIndex(14, GetSelectedTabIndex()) id="tab-purchased-product">
+            <li @Html.RenderSelectedTabIndex(14, GetSelectedTabIndex())>
+                @T("Admin.Catalog.Products.ActivityLog")
+            </li>
+            <li @Html.RenderSelectedTabIndex(15, GetSelectedTabIndex()) id="tab-purchased-product">
                 @T("Admin.Catalog.Products.PurchasedWithOrders")
             </li>
-            <li @Html.RenderSelectedTabIndex(15, GetSelectedTabIndex())>
+            <li @Html.RenderSelectedTabIndex(16, GetSelectedTabIndex())>
                 @T("Admin.Catalog.Products.Reviews")
             </li>
-            <li @Html.RenderSelectedTabIndex(16, GetSelectedTabIndex()) id="tab-calendar">
-                @T("Admin.Catalog.Products.Calendar")
-            </li>
         }
+        
+
     </ul>
     <div>
         @Html.Partial("_CreateOrUpdate.Info", Model)
@@ -120,6 +121,10 @@
     <div>
         @Html.Partial("_CreateOrUpdate.AssociatedProducts", Model)
     </div>
+    <div>
+        @Html.Partial("_CreateOrUpdate.Calendar", Model)
+    </div>
+
     @if (!String.IsNullOrEmpty(Model.Id))
     {
         <div>
@@ -130,9 +135,6 @@
         </div>
         <div>
             @Html.Partial("_CreateOrUpdate.Reviews", Model)
-        </div>
-        <div>
-            @Html.Partial("_CreateOrUpdate.Calendar", Model)
         </div>
     }
 </div>

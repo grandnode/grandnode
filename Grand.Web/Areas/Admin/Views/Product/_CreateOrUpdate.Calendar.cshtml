@@ -4,324 +4,333 @@
     var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
 }
 @using Grand.Core.Domain.Catalog;
-
-<div class="form-horizontal">
-    <h2>@T("Admin.Catalog.Products.Calendar.Calendarconfiguration")</h2>
-    <div class="form-body">
-        <div class="form-group">
-            @Html.GrandLabelFor(model => model.CalendarModel.StartDateUtc)
-            <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.CalendarModel.StartDateUtc)
-                <span id="pnlStartTime">
-                    @Html.GrandEditorFor(model => model.CalendarModel.StartTime)
-                </span>
+@if (!String.IsNullOrEmpty(Model.Id))
+{
+    <div class="form-horizontal">
+        <h2>@T("Admin.Catalog.Products.Calendar.Calendarconfiguration")</h2>
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.CalendarModel.StartDateUtc)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.CalendarModel.StartDateUtc)
+                    <span id="pnlStartTime">
+                        @Html.GrandEditorFor(model => model.CalendarModel.StartTime)
+                    </span>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            @Html.GrandLabelFor(model => model.CalendarModel.EndDateUtc)
-            <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.CalendarModel.EndDateUtc)
-                <span id="pnlEndTime">
-                    @Html.GrandEditorFor(model => model.CalendarModel.EndTime)
-                </span>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.CalendarModel.EndDateUtc)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.CalendarModel.EndDateUtc)
+                    <span id="pnlEndTime">
+                        @Html.GrandEditorFor(model => model.CalendarModel.EndTime)
+                    </span>
+                </div>
             </div>
-        </div>
-        <div class="form-inline">
-            @Html.GrandLabelFor(model => model.CalendarModel.Interval)
-            <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.CalendarModel.Interval)
-                @Html.GrandDropDownListFor(model => model.CalendarModel.IntervalUnit, ((IntervalUnit)Model.CalendarModel.IntervalUnit).ToSelectList(), new { @class = "form-control input-xsmall", style = "height: 30px;padding: 0px;" })
+            <div class="form-inline">
+                @Html.GrandLabelFor(model => model.CalendarModel.Interval)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.CalendarModel.Interval)
+                    @Html.GrandDropDownListFor(model => model.CalendarModel.IntervalUnit, ((IntervalUnit)Model.CalendarModel.IntervalUnit).ToSelectList(), new { @class = "form-control input-xsmall", style = "height: 30px;padding: 0px;" })
+                </div>
             </div>
-        </div>
-        <div class="form-group" id="pnlQuantity">
-            @Html.GrandLabelFor(model => model.CalendarModel.Quantity)
-            <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.CalendarModel.Quantity)
+            <div class="form-group" id="pnlQuantity">
+                @Html.GrandLabelFor(model => model.CalendarModel.Quantity)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.CalendarModel.Quantity)
+                </div>
             </div>
-        </div>
         
-        <div class="form-group" id="pnlResource">
-            @Html.GrandLabelFor(model => model.CalendarModel.Resource)
-            <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.CalendarModel.Resource)
+            <div class="form-group" id="pnlResource">
+                @Html.GrandLabelFor(model => model.CalendarModel.Resource)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.CalendarModel.Resource)
+                </div>
             </div>
-        </div>
 
-        <div class="form-group" id="pnlParameter">
-            @Html.GrandLabelFor(model => model.CalendarModel.Parameter)
-            <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.CalendarModel.Parameter)
+            <div class="form-group" id="pnlParameter">
+                @Html.GrandLabelFor(model => model.CalendarModel.Parameter)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.CalendarModel.Parameter)
+                </div>
             </div>
-        </div>
 
-        <div class="portlet box blue">
-            <div class="portlet-title">
-                <div class="caption">caption</div>
-            </div>
-            <div class="portlet-body">
-                <div class="form-body">
-                    <div class="form-group">
-                        @Html.GrandLabelFor(model => model.CalendarModel.Monday)
-                        <label class="mt-checkbox mt-checkbox-outline">
-                            @Html.GrandEditorFor(model => model.CalendarModel.Monday)
-                            <span></span>
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        @Html.GrandLabelFor(model => model.CalendarModel.Tuesday)
-                        <label class="mt-checkbox mt-checkbox-outline">
-                            @Html.GrandEditorFor(model => model.CalendarModel.Tuesday)
-                            <span></span>
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        @Html.GrandLabelFor(model => model.CalendarModel.Wednesday)
-                        <label class="mt-checkbox mt-checkbox-outline">
-                            @Html.GrandEditorFor(model => model.CalendarModel.Wednesday)
-                            <span></span>
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        @Html.GrandLabelFor(model => model.CalendarModel.Thursday)
-                        <label class="mt-checkbox mt-checkbox-outline">
-                            @Html.GrandEditorFor(model => model.CalendarModel.Thursday)
-                            <span></span>
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        @Html.GrandLabelFor(model => model.CalendarModel.Friday)
-                        <label class="mt-checkbox mt-checkbox-outline">
-                            @Html.GrandEditorFor(model => model.CalendarModel.Friday)
-                            <span></span>
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        @Html.GrandLabelFor(model => model.CalendarModel.Saturday)
-                        <label class="mt-checkbox mt-checkbox-outline">
-                            @Html.GrandEditorFor(model => model.CalendarModel.Saturday)
-                            <span></span>
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        @Html.GrandLabelFor(model => model.CalendarModel.Sunday)
-                        <label class="mt-checkbox mt-checkbox-outline">
-                            @Html.GrandEditorFor(model => model.CalendarModel.Sunday)
-                            <span></span>
-                        </label>
+            <div class="portlet box blue">
+                <div class="portlet-title">
+                    <div class="caption">caption</div>
+                </div>
+                <div class="portlet-body">
+                    <div class="form-body">
+                        <div class="form-group">
+                            @Html.GrandLabelFor(model => model.CalendarModel.Monday)
+                            <label class="mt-checkbox mt-checkbox-outline">
+                                @Html.GrandEditorFor(model => model.CalendarModel.Monday)
+                                <span></span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            @Html.GrandLabelFor(model => model.CalendarModel.Tuesday)
+                            <label class="mt-checkbox mt-checkbox-outline">
+                                @Html.GrandEditorFor(model => model.CalendarModel.Tuesday)
+                                <span></span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            @Html.GrandLabelFor(model => model.CalendarModel.Wednesday)
+                            <label class="mt-checkbox mt-checkbox-outline">
+                                @Html.GrandEditorFor(model => model.CalendarModel.Wednesday)
+                                <span></span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            @Html.GrandLabelFor(model => model.CalendarModel.Thursday)
+                            <label class="mt-checkbox mt-checkbox-outline">
+                                @Html.GrandEditorFor(model => model.CalendarModel.Thursday)
+                                <span></span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            @Html.GrandLabelFor(model => model.CalendarModel.Friday)
+                            <label class="mt-checkbox mt-checkbox-outline">
+                                @Html.GrandEditorFor(model => model.CalendarModel.Friday)
+                                <span></span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            @Html.GrandLabelFor(model => model.CalendarModel.Saturday)
+                            <label class="mt-checkbox mt-checkbox-outline">
+                                @Html.GrandEditorFor(model => model.CalendarModel.Saturday)
+                                <span></span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            @Html.GrandLabelFor(model => model.CalendarModel.Sunday)
+                            <label class="mt-checkbox mt-checkbox-outline">
+                                @Html.GrandEditorFor(model => model.CalendarModel.Sunday)
+                                <span></span>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div class="panel panel-default">
-    <div class="panel-footer">
-        <button id="generateCalendar" type="button" class="btn btn-primary">@T("Admin.Catalog.Products.Calendar.Generatecalendar")</button>
-        <button id="clearCalendar" type="button" class="btn btn-danger" style="margin-left:10px">@T("Admin.Catalog.Products.Calendar.Clearcalendar")</button>
+    <div class="panel panel-default">
+        <div class="panel-footer">
+            <button id="generateCalendar" type="button" class="btn btn-primary">@T("Admin.Catalog.Products.Calendar.Generatecalendar")</button>
+            <button id="clearCalendar" type="button" class="btn btn-danger" style="margin-left:10px">@T("Admin.Catalog.Products.Calendar.Clearcalendar")</button>
+        </div>
+        <div class="panel-body">
+            <div id="reservations-grid"></div>
+        </div>
     </div>
-    <div class="panel-body">
-        <div id="reservations-grid"></div>
-    </div>
-</div>
 
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
-    $(document).ready(function () {
-            function toggleInternalType() {
-                var selectedInternalTypeId = $("#@Html.FieldIdFor(model => model.CalendarModel.IntervalUnit)").val();
-                if (selectedInternalTypeId == @(((int)IntervalUnit.Day).ToString())) {
-                    $("#pnlStartTime").hide();
-                    $("#pnlEndTime").hide();
-                    $("#pnlResource").show();
-                    $("#pnlParameter").hide();
-                    $("#pnlQuantity").hide();
-                } else {
-                    $("#pnlStartTime").show();
-                    $("#pnlEndTime").show();
-                    $("#pnlResource").hide();
-                    $("#pnlParameter").show();
-                    $("#pnlQuantity").show();
+        $(document).ready(function () {
+                function toggleInternalType() {
+                    var selectedInternalTypeId = $("#@Html.FieldIdFor(model => model.CalendarModel.IntervalUnit)").val();
+                    if (selectedInternalTypeId == @(((int)IntervalUnit.Day).ToString())) {
+                        $("#pnlStartTime").hide();
+                        $("#pnlEndTime").hide();
+                        $("#pnlResource").show();
+                        $("#pnlParameter").hide();
+                        $("#pnlQuantity").hide();
+                    } else {
+                        $("#pnlStartTime").show();
+                        $("#pnlEndTime").show();
+                        $("#pnlResource").hide();
+                        $("#pnlParameter").show();
+                        $("#pnlQuantity").show();
+                    }
+
                 }
-
-            }
-            toggleInternalType();
-            $("#@Html.FieldIdFor(model => model.CalendarModel.IntervalUnit)").change(toggleInternalType);
+                toggleInternalType();
+                $("#@Html.FieldIdFor(model => model.CalendarModel.IntervalUnit)").change(toggleInternalType);
 
 
-            $("#generateCalendar").click(function () {
+                $("#generateCalendar").click(function () {
 
-                var datepickerFrom = $("#@Html.FieldIdFor(model => model.CalendarModel.StartDateUtc)").data("kendoDatePicker");
-                var dateFrom = datepickerFrom.value();
-                dateFrom = kendo.toString(dateFrom, "MM/dd/yyyy");
+                    var datepickerFrom = $("#@Html.FieldIdFor(model => model.CalendarModel.StartDateUtc)").data("kendoDatePicker");
+                    var dateFrom = datepickerFrom.value();
+                    dateFrom = kendo.toString(dateFrom, "MM/dd/yyyy");
 
-                var datepickerTo = $("#@Html.FieldIdFor(model => model.CalendarModel.EndDateUtc)").data("kendoDatePicker");
-                var dateTo = datepickerTo.value();
-                dateTo = kendo.toString(dateTo, "MM/dd/yyyy");
+                    var datepickerTo = $("#@Html.FieldIdFor(model => model.CalendarModel.EndDateUtc)").data("kendoDatePicker");
+                    var dateTo = datepickerTo.value();
+                    dateTo = kendo.toString(dateTo, "MM/dd/yyyy");
 
-                var timeFrom = $("#@Html.FieldIdFor(model => model.CalendarModel.StartTime)").data("kendoTimePicker");
-                var hourFrom = timeFrom.value();
-                hourFrom = kendo.toString(hourFrom, "HH:mm");
+                    var timeFrom = $("#@Html.FieldIdFor(model => model.CalendarModel.StartTime)").data("kendoTimePicker");
+                    var hourFrom = timeFrom.value();
+                    hourFrom = kendo.toString(hourFrom, "HH:mm");
 
-                var timeTo = $("#@Html.FieldIdFor(model => model.CalendarModel.EndTime)").data("kendoTimePicker");
-                var hourTo = timeTo.value();
-                hourTo = kendo.toString(hourTo, "HH:mm");
+                    var timeTo = $("#@Html.FieldIdFor(model => model.CalendarModel.EndTime)").data("kendoTimePicker");
+                    var hourTo = timeTo.value();
+                    hourTo = kendo.toString(hourTo, "HH:mm");
 
-                var interval = $("#@Html.FieldIdFor(model => model.CalendarModel.Interval)").val();
-                var intervalUnit = $("#@Html.FieldIdFor(model => model.CalendarModel.IntervalUnit)").val();
-                var quantity = $("#@Html.FieldIdFor(model => model.CalendarModel.Quantity)").val();
-                var monday = $("#@Html.FieldIdFor(model => model.CalendarModel.Monday)").prop("checked");
-                var tuesday = $("#@Html.FieldIdFor(model => model.CalendarModel.Tuesday)").prop("checked");
-                var wednesday = $("#@Html.FieldIdFor(model => model.CalendarModel.Wednesday)").prop("checked");
-                var thursday = $("#@Html.FieldIdFor(model => model.CalendarModel.Thursday)").prop("checked");
-                var friday = $("#@Html.FieldIdFor(model => model.CalendarModel.Friday)").prop("checked");
-                var saturday = $("#@Html.FieldIdFor(model => model.CalendarModel.Saturday)").prop("checked");
-                var sunday = $("#@Html.FieldIdFor(model => model.CalendarModel.Sunday)").prop("checked");
-                var resource = $("#@Html.FieldIdFor(model => model.CalendarModel.Resource)").val()
-                var parameter = $("#@Html.FieldIdFor(model => model.CalendarModel.Parameter)").val()
+                    var interval = $("#@Html.FieldIdFor(model => model.CalendarModel.Interval)").val();
+                    var intervalUnit = $("#@Html.FieldIdFor(model => model.CalendarModel.IntervalUnit)").val();
+                    var quantity = $("#@Html.FieldIdFor(model => model.CalendarModel.Quantity)").val();
+                    var monday = $("#@Html.FieldIdFor(model => model.CalendarModel.Monday)").prop("checked");
+                    var tuesday = $("#@Html.FieldIdFor(model => model.CalendarModel.Tuesday)").prop("checked");
+                    var wednesday = $("#@Html.FieldIdFor(model => model.CalendarModel.Wednesday)").prop("checked");
+                    var thursday = $("#@Html.FieldIdFor(model => model.CalendarModel.Thursday)").prop("checked");
+                    var friday = $("#@Html.FieldIdFor(model => model.CalendarModel.Friday)").prop("checked");
+                    var saturday = $("#@Html.FieldIdFor(model => model.CalendarModel.Saturday)").prop("checked");
+                    var sunday = $("#@Html.FieldIdFor(model => model.CalendarModel.Sunday)").prop("checked");
+                    var resource = $("#@Html.FieldIdFor(model => model.CalendarModel.Resource)").val()
+                    var parameter = $("#@Html.FieldIdFor(model => model.CalendarModel.Parameter)").val()
 
-                var postData = {
-                    productId: '@(Model.Id)',
-                    StartDateUtc: dateFrom,
-                    StartTime: hourFrom,
-                    EndDateUtc: dateTo,
-                    EndTime: hourTo,
-                    Interval: interval,
-                    IntervalUnit: intervalUnit,
-                    Quantity: quantity,
-                    Monday: monday,
-                    Tuesday: tuesday,
-                    Wednesday: wednesday,
-                    Thursday: thursday,
-                    Friday: friday,
-                    Saturday: saturday,
-                    Sunday: sunday,
-                    Resource: resource,
-                    Parameter: parameter
-                };
+                    var postData = {
+                        productId: '@(Model.Id)',
+                        StartDateUtc: dateFrom,
+                        StartTime: hourFrom,
+                        EndDateUtc: dateTo,
+                        EndTime: hourTo,
+                        Interval: interval,
+                        IntervalUnit: intervalUnit,
+                        Quantity: quantity,
+                        Monday: monday,
+                        Tuesday: tuesday,
+                        Wednesday: wednesday,
+                        Thursday: thursday,
+                        Friday: friday,
+                        Saturday: saturday,
+                        Sunday: sunday,
+                        Resource: resource,
+                        Parameter: parameter
+                    };
 
-                addAntiForgeryToken(postData);
+                    addAntiForgeryToken(postData);
 
-                $.ajax({
-                    cache: false,
-                    type: "POST",
-                    url: "@(Url.Action("GenerateCalendar", "Product"))",
-                    dataType: 'json',
-                    data: postData,
-                    success: function (data) {
-                        if (data.success) {
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: "@(Url.Action("GenerateCalendar", "Product"))",
+                        dataType: 'json',
+                        data: postData,
+                        success: function (data) {
+                            if (data.success) {
+                                var grid = $("#reservations-grid").data('kendoGrid');
+                                grid.dataSource.read();
+                            }
+                            else {
+                                alert(data.errors);
+                            }
+                        },
+                        error: function () {
+                            alert('Error');
+                        }
+                    });
+                });
+
+                $("#clearCalendar").click(function () {
+                    var postData = {
+                        productId: '@(Model.Id)'
+                    };
+
+                    addAntiForgeryToken(postData);
+
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: "@(Url.Action("ClearCalendar", "Product"))",
+                        dataType: 'json',
+                        data: postData,
+                        success: function (data) {
                             var grid = $("#reservations-grid").data('kendoGrid');
                             grid.dataSource.read();
+                        },
+                        error: function () {
+                            alert('Error');
                         }
-                        else {
-                            alert(data.errors);
-                        }
-                    },
-                    error: function () {
-                        alert('Error');
-                    }
+                    });
                 });
-            });
 
-            $("#clearCalendar").click(function () {
-                var postData = {
-                    productId: '@(Model.Id)'
-                };
-
-                addAntiForgeryToken(postData);
-
-                $.ajax({
-                    cache: false,
-                    type: "POST",
-                    url: "@(Url.Action("ClearCalendar", "Product"))",
-                    dataType: 'json',
-                    data: postData,
-                    success: function (data) {
-                        var grid = $("#reservations-grid").data('kendoGrid');
-                        grid.dataSource.read();
-                    },
-                    error: function () {
-                        alert('Error');
-                    }
-                });
-            });
-
-    });
-
-
-    $(document).ready(function () {
-
-            $("#reservations-grid").kendoGrid({
-            dataSource: {
-                transport: {
-                    read: {
-                        url: "@Html.Raw(Url.Action("ListReservations", "Product", new { productId = Model.Id }))",
-                        type: "POST",
-                        dataType: "json",
-                        data: addAntiForgeryToken,
-                    }, destroy: {
-                        url: "@Html.Raw(Url.Action("ProductReservationDelete", "Product"))",
-                        type: "POST",
-                        dataType: "json",
-                        data: addAntiForgeryToken
-                    }
-            },
-            schema: {
-                data: "Data",
-                total: "Total",
-                errors: "Errors",
-                model: {
-                    id: "Id",
-                }
-            },
-            error: function (e) {
-                display_kendoui_grid_error(e);
-                // Cancel the changes
-                this.cancelChanges();
-            },
-            pageSize: @(defaultGridPageSize),
-            serverPaging: true,
-            serverFiltering: true,
-            serverSorting: true
-        },
-        pageable: {
-            refresh: true,
-            pageSizes: [@(gridPageSizes)]
-        },
-        editable: {
-            confirmation: false,
-            mode: "inline"
-        },
-        scrollable: false,
-        columns: [{
-            field: "Date",
-            title: "@T("Admin.Catalog.Products.Calendar.Date")",
-            width: 200,
-            type: "date",
-            format: "{0:G}"
-        }, {
-            field: "Resource",
-            title: "@T("Admin.Catalog.Products.Calendar.Resource")",
-            width: 200
-        }, {
-            field: "Parameter",
-            title: "@T("Admin.Catalog.Products.Calendar.Parameter")",
-            width: 200
-        }, {
-            field: "Duration",
-            title: "@T("Admin.Catalog.Products.Calendar.Duration")",
-            width: 200
-        }, {
-            field: "OrderId",
-            title: "@T("Admin.Catalog.Products.Calendar.OrderId")",
-            width: 200
-        }, {
-            command: [{
-                name: "destroy",
-                text: "@T("Admin.Common.Delete")"
-            }],
-            width: 100
-        }]
         });
-    });
-</script>
+
+
+        $(document).ready(function () {
+
+                $("#reservations-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("ListReservations", "Product", new { productId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken,
+                        }, destroy: {
+                            url: "@Html.Raw(Url.Action("ProductReservationDelete", "Product"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors",
+                    model: {
+                        id: "Id",
+                    }
+                },
+                error: function (e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                pageSize: @(defaultGridPageSize),
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: [@(gridPageSizes)]
+            },
+            editable: {
+                confirmation: false,
+                mode: "inline"
+            },
+            scrollable: false,
+            columns: [{
+                field: "Date",
+                title: "@T("Admin.Catalog.Products.Calendar.Date")",
+                width: 200,
+                type: "date",
+                format: "{0:G}"
+            }, {
+                field: "Resource",
+                title: "@T("Admin.Catalog.Products.Calendar.Resource")",
+                width: 200
+            }, {
+                field: "Parameter",
+                title: "@T("Admin.Catalog.Products.Calendar.Parameter")",
+                width: 200
+            }, {
+                field: "Duration",
+                title: "@T("Admin.Catalog.Products.Calendar.Duration")",
+                width: 200
+            }, {
+                field: "OrderId",
+                title: "@T("Admin.Catalog.Products.Calendar.OrderId")",
+                width: 200,
+                template: '# if(OrderId) {# <a class="btn btn-sm btn-default" href="../../Order/Edit/#=OrderId#"><i class="fa fa-search"></i> @T("Admin.Common.View")</a>  #} #'
+            }, {
+                command: [{
+                    name: "destroy",
+                    text: "@T("Admin.Common.Delete")"
+                }],
+                width: 100
+            }]
+            });
+        });
+    </script>
+}
+else
+{
+    <div class="note note-info">
+        @T("Admin.Catalog.Products.Calendar.SaveBeforeEdit")
+    </div>
+}

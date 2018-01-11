@@ -103,8 +103,14 @@
             $('#tab-attributes-product').show();
             $('#tab-purchased-product').show();
             $('#tab-calendar').show();
+            $("#@Html.FieldIdFor(model => model.ManageInventoryMethodId)").val("0");
+            toggleManageStock();
+            $("#@Html.FieldIdFor(model => model.IsShipEnabled)").prop("checked", false);
+            toggleShipping();
+            $('#tab-inventory-product').hide();
         }
     }
+
 
     function togglePreOrder() {
         if ($('#@Html.FieldIdFor(model => model.AvailableForPreOrder)').is(':checked')) {
@@ -232,7 +238,7 @@
         }
     }
 
-    
+
     function toggleTax() {
         if ($('#@Html.FieldIdFor(model => model.IsTaxExempt)').is(':checked')) {
             $('#pnlTaxCategory').hide();

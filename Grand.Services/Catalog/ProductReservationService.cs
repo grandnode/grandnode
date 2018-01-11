@@ -140,6 +140,21 @@ namespace Grand.Services.Catalog
             _eventPublisher.EntityDeleted(crh);
         }
 
+
+        /// <summary>
+        /// Cancel reservations by orderId 
+        /// </summary>
+        /// <param name="orderId"></param>
+        public void CancelReservationsByOrderId(string orderId)
+        {
+            if (!string.IsNullOrEmpty(orderId))
+            {
+                var update = new UpdateDefinitionBuilder<ProductReservation>().Set(x => x.OrderId, "");
+                var result = _productReservationRepository.Collection.UpdateManyAsync(x => x.OrderId == orderId, update).Result;
+            }
+
+        }
+
         /// <summary>
         /// Gets customer reservations helper by id
         /// </summary>

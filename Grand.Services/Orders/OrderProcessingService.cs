@@ -1866,6 +1866,9 @@ namespace Grand.Services.Orders
                         _productService.AdjustInventory(product, orderItem.Quantity, orderItem.AttributesXml, orderItem.WarehouseId);
                 }
 
+                //cancel reservations
+                _productReservationService.CancelReservationsByOrderId(order.Id);
+
             }
             //deactivate gift cards
             if (_orderSettings.DeactivateGiftCardsAfterDeletingOrder)
@@ -2268,6 +2271,9 @@ namespace Grand.Services.Orders
                 var product = _productService.GetProductById(orderItem.ProductId);
                 _productService.AdjustInventory(product, orderItem.Quantity, orderItem.AttributesXml, orderItem.WarehouseId);
             }
+
+            //cancel reservations
+            _productReservationService.CancelReservationsByOrderId(order.Id);
 
             _discountService.CancelDiscount(order.Id);
 
