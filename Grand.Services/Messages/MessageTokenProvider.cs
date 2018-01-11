@@ -189,16 +189,6 @@ namespace Grand.Services.Messages
                     sb.AppendLine("<br />");
                     sb.AppendLine(orderItem.AttributeDescription);
                 }
-                //rental info
-                if (product.IsRental)
-                {
-                    var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
-                    var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
-                    var rentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
-                        rentalStartDate, rentalEndDate);
-                    sb.AppendLine("<br />");
-                    sb.AppendLine(rentalInfo);
-                }
                 //sku
                 if (_catalogSettings.ShowSkuOnProductDetailsPage)
                 {
@@ -499,16 +489,6 @@ namespace Grand.Services.Messages
                 {
                     sb.AppendLine("<br />");
                     sb.AppendLine(orderItem.AttributeDescription);
-                }
-                //rental info
-                if (product.IsRental)
-                {
-                    var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
-                    var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
-                    var rentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
-                        rentalStartDate, rentalEndDate);
-                    sb.AppendLine("<br />");
-                    sb.AppendLine(rentalInfo);
                 }
                 //sku
                 if (_catalogSettings.ShowSkuOnProductDetailsPage)

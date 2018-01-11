@@ -56,12 +56,6 @@
                                     @Html.GrandDropDownListFor(model => model.SearchVendorId, Model.AvailableVendors)
                                 </div>
                             </div>
-                            <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchProductTypeId, new Dictionary<string, object> { { "class", "col-sm-3" } })
-                                <div class="col-md-9 col-sm-9">
-                                    @Html.GrandDropDownListFor(model => model.SearchProductTypeId, Model.AvailableProductTypes)
-                                </div>
-                            </div>
                             <div class="form-actions">
                                 <div class="row">
                                     <div class="col-md-offset-1 col-md-11 col-sm-11 btn-group btn-group-devided">

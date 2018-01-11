@@ -40,9 +40,9 @@
                 else
                 {
                     addToCartText = T("ShoppingCart.AddToCart").Text;
-                    if (Model.IsRental)
+                    if (Model.IsReservation)
                     {
-                        addToCartText = T("ShoppingCart.Rent").Text;
+                        addToCartText = T("ShoppingCart.Reservation").Text;
                     }
                     if (Model.AvailableForPreOrder)
                     {

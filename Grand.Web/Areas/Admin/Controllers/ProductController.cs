@@ -700,7 +700,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.MaxNumberOfDownloads = 10;
                 model.RecurringCycleLength = 100;
                 model.RecurringTotalCycles = 10;
-                model.RentalPriceLength = 1;
                 model.StockQuantity = 0;
                 model.NotifyAdminForQuantityBelow = 1;
                 model.OrderMinimumQuantity = 1;
@@ -2266,7 +2265,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 manufacturerId: model.SearchManufacturerId,
                 storeId: model.SearchStoreId,
                 vendorId: model.SearchVendorId,
-                productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
+                productType: ProductType.SimpleProduct,
                 keywords: model.SearchProductName,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize,

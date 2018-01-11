@@ -347,9 +347,8 @@ namespace Grand.Services.ExportImport
                 xmlWriter.WriteElementString("RecurringCycleLength", null, product.RecurringCycleLength.ToString());
                 xmlWriter.WriteElementString("RecurringCyclePeriodId", null, product.RecurringCyclePeriodId.ToString());
                 xmlWriter.WriteElementString("RecurringTotalCycles", null, product.RecurringTotalCycles.ToString());
-                xmlWriter.WriteElementString("IsRental", null, product.IsRental.ToString());
-                xmlWriter.WriteElementString("RentalPriceLength", null, product.RentalPriceLength.ToString());
-                xmlWriter.WriteElementString("RentalPricePeriodId", null, product.RentalPricePeriodId.ToString());
+                xmlWriter.WriteElementString("Interval", null, product.Interval.ToString());
+                xmlWriter.WriteElementString("IntervalUnitId", null, product.IntervalUnitId.ToString());
                 xmlWriter.WriteElementString("IsShipEnabled", null, product.IsShipEnabled.ToString());
                 xmlWriter.WriteElementString("IsFreeShipping", null, product.IsFreeShipping.ToString());
                 xmlWriter.WriteElementString("ShipSeparately", null, product.ShipSeparately.ToString());
@@ -623,9 +622,8 @@ namespace Grand.Services.ExportImport
                 new PropertyByName<Product>("RecurringCycleLength", p => p.RecurringCycleLength),
                 new PropertyByName<Product>("RecurringCyclePeriodId", p => p.RecurringCyclePeriodId),
                 new PropertyByName<Product>("RecurringTotalCycles", p => p.RecurringTotalCycles),
-                new PropertyByName<Product>("IsRental", p => p.IsRental),
-                new PropertyByName<Product>("RentalPriceLength", p => p.RentalPriceLength),
-                new PropertyByName<Product>("RentalPricePeriodId", p => p.RentalPricePeriodId),
+                new PropertyByName<Product>("Interval", p => p.Interval),
+                new PropertyByName<Product>("IntervalUnitId", p => p.IntervalUnitId),
                 new PropertyByName<Product>("IsShipEnabled", p => p.IsShipEnabled),
                 new PropertyByName<Product>("IsFreeShipping", p => p.IsFreeShipping),
                 new PropertyByName<Product>("ShipSeparately", p => p.ShipSeparately),
@@ -786,10 +784,6 @@ namespace Grand.Services.ExportImport
                             xmlWriter.WriteElementString("DownloadCount", null, orderItem.DownloadCount.ToString());
                             xmlWriter.WriteElementString("IsDownloadActivated", null, orderItem.IsDownloadActivated.ToString());
                             xmlWriter.WriteElementString("LicenseDownloadId", null, orderItem.LicenseDownloadId.ToString());
-                            var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
-                            xmlWriter.WriteElementString("RentalStartDateUtc", null, rentalStartDate);
-                            var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
-                            xmlWriter.WriteElementString("RentalEndDateUtc", null, rentalEndDate);
                         }
                         xmlWriter.WriteEndElement();
                     }

@@ -185,15 +185,6 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.RecurringTotalCycles")]
         public int RecurringTotalCycles { get; set; }
 
-        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.IsRental")]
-        public bool IsRental { get; set; }
-
-        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.RentalPriceLength")]
-        public int RentalPriceLength { get; set; }
-
-        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.RentalPricePeriod")]
-        public int RentalPricePeriodId { get; set; }
-
         //calendar
         public GenerateCalendarModel CalendarModel { get; set; }
 

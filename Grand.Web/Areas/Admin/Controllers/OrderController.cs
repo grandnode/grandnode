@@ -663,15 +663,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     orderItemModel.AttributeInfo = orderItem.AttributeDescription;
                     if (product.IsRecurring)
                         orderItemModel.RecurringInfo = string.Format(_localizationService.GetResource("Admin.Orders.Products.RecurringPeriod"), product.RecurringCycleLength, product.RecurringCyclePeriod.GetLocalizedEnum(_localizationService, _workContext));
-                    //rental info
-                    if (product.IsRental)
-                    {
-                        var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
-                        var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
-                        orderItemModel.RentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
-                            rentalStartDate, rentalEndDate);
-                    }
-
+                    
                     //return requests
                     orderItemModel.ReturnRequestIds = _returnRequestService.SearchReturnRequests(orderItemId: orderItem.Id)
                         .Select(rr => rr.Id).ToList();
@@ -757,8 +749,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 model.GiftCard.GiftCardType = product.GiftCardType;
             }
-            //rental
-            model.IsRental = product.IsRental;
             return model;
         }
 
@@ -824,14 +814,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                             QuantityInAllShipments = qtyInAllShipments,
                             QuantityToAdd = maxQtyToAdd,
                         };
-                        //rental info
-                        if (product.IsRental)
-                        {
-                            var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
-                            var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
-                            shipmentItemModel.RentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
-                                rentalStartDate, rentalEndDate);
-                        }
 
                         model.Items.Add(shipmentItemModel);
                     }
@@ -2538,23 +2520,26 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             #endregion
 
-            #region Rental product
+            #region Reservation product
 
             DateTime? rentalStartDate = null;
             DateTime? rentalEndDate = null;
-            if (product.IsRental)
+            if (product.ProductType == ProductType.Reservation)
             {
-                var ctrlStartDate = form["rental_start_date"];
-                var ctrlEndDate = form["rental_end_date"];
-                try
+                if (product.IntervalUnitType == IntervalUnit.Day)
                 {
-                    //currenly we support only this format (as in the \Views\Order\_ProductAddRentalInfo.cshtml file)
-                    const string datePickerFormat = "MM/dd/yyyy";
-                    rentalStartDate = DateTime.ParseExact(ctrlStartDate, datePickerFormat, CultureInfo.InvariantCulture);
-                    rentalEndDate = DateTime.ParseExact(ctrlEndDate, datePickerFormat, CultureInfo.InvariantCulture);
-                }
-                catch
-                {
+                    var ctrlStartDate = form["rental_start_date"];
+                    var ctrlEndDate = form["rental_end_date"];
+                    try
+                    {
+                        //currenly we support only this format (as in the \Views\Order\_ProductAddRentalInfo.cshtml file)
+                        const string datePickerFormat = "MM/dd/yyyy";
+                        rentalStartDate = DateTime.ParseExact(ctrlStartDate, datePickerFormat, CultureInfo.InvariantCulture);
+                        rentalEndDate = DateTime.ParseExact(ctrlEndDate, datePickerFormat, CultureInfo.InvariantCulture);
+                    }
+                    catch
+                    {
+                    }
                 }
             }
 
@@ -2563,7 +2548,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             //warnings
             warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(customer, ShoppingCartType.ShoppingCart, product, quantity, attributesXml));
             warnings.AddRange(_shoppingCartService.GetShoppingCartItemGiftCardWarnings(ShoppingCartType.ShoppingCart, product, attributesXml));
-            warnings.AddRange(_shoppingCartService.GetRentalProductWarnings(product, rentalStartDate, rentalEndDate));
             if (warnings.Count == 0)
             {
                 //no errors
@@ -3014,15 +2998,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     QuantityInAllShipments = qtyInAllShipments,
                     QuantityToAdd = maxQtyToAdd,
                 };
-                //rental info
-                if (product.IsRental)
-                {
-                    var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
-                    var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
-                    shipmentItemModel.RentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
-                        rentalStartDate, rentalEndDate);
-                }
-
+                
                 if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
                 {
                     if (product.UseMultipleWarehouses)

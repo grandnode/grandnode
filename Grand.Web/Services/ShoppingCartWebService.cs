@@ -420,43 +420,31 @@ namespace Grand.Web.Services
                 if (product.IsRecurring)
                     cartItemModel.RecurringInfo = string.Format(_localizationService.GetResource("ShoppingCart.RecurringPeriod"), product.RecurringCycleLength, product.RecurringCyclePeriod.GetLocalizedEnum(_localizationService, _workContext));
 
-                //rental info
-                if (product.IsRental)
-                {
-                    var rentalStartDate = sci.RentalStartDateUtc.HasValue ? product.FormatRentalDate(sci.RentalStartDateUtc.Value) : "";
-                    var rentalEndDate = sci.RentalEndDateUtc.HasValue ? product.FormatRentalDate(sci.RentalEndDateUtc.Value) : "";
-                    cartItemModel.RentalInfo = string.Format(_localizationService.GetResource("ShoppingCart.Rental.FormattedDate"),
-                        rentalStartDate, rentalEndDate);
-                }
-
                 //reservation info
                 if (product.ProductType == ProductType.Reservation)
                 {
                     if (sci.RentalEndDateUtc == default(DateTime) || sci.RentalEndDateUtc == null)
                     {
-                        cartItemModel.ReservationInfo = sci.RentalStartDateUtc?.ToString(_shoppingCartSettings.ReservationDateFormat);
+                        cartItemModel.ReservationInfo = string.Format(_localizationService.GetResource("ShoppingCart.Reservation.StartDate"), sci.RentalStartDateUtc?.ToString(_shoppingCartSettings.ReservationDateFormat));
                     }
                     else
                     {
-                        cartItemModel.ReservationInfo = sci.RentalStartDateUtc?.ToString(_shoppingCartSettings.ReservationDateFormat) + " - " + sci.RentalEndDateUtc?.ToString(_shoppingCartSettings.ReservationDateFormat);
+                        cartItemModel.ReservationInfo = string.Format(_localizationService.GetResource("ShoppingCart.Reservation.Date"), sci.RentalStartDateUtc?.ToString(_shoppingCartSettings.ReservationDateFormat), sci.RentalEndDateUtc?.ToString(_shoppingCartSettings.ReservationDateFormat));
                     }
 
                     if (!string.IsNullOrEmpty(sci.Parameter))
                     {
-                        cartItemModel.ReservationInfo += "<br>" + _localizationService.GetResource("Products.Additionaloption") + ": " + sci.Parameter;
+                        cartItemModel.ReservationInfo += "<br>" + string.Format(_localizationService.GetResource("ShoppingCart.Reservation.Option"), sci.Parameter);
                     }
-
                     if (!string.IsNullOrEmpty(sci.Parameter))
                     {
                         cartItemModel.Parameter = sci.Parameter;
                     }
-
                     if (!string.IsNullOrEmpty(sci.Duration))
                     {
-                        cartItemModel.ReservationInfo += "<br>" + _localizationService.GetResource("Products.Duration") + ": " + sci.Duration;
+                        cartItemModel.ReservationInfo += "<br>" + string.Format(_localizationService.GetResource("ShoppingCart.Reservation.Duration"), sci.Duration);
                     }
                 }
-
 
                 //unit prices
                 if (product.CallForPrice)
@@ -683,15 +671,6 @@ namespace Grand.Web.Services
                 if (product.IsRecurring)
                     cartItemModel.RecurringInfo = string.Format(_localizationService.GetResource("ShoppingCart.RecurringPeriod"), product.RecurringCycleLength, product.RecurringCyclePeriod.GetLocalizedEnum(_localizationService, _workContext));
 
-                //rental info
-                if (product.IsRental)
-                {
-                    var rentalStartDate = sci.RentalStartDateUtc.HasValue ? product.FormatRentalDate(sci.RentalStartDateUtc.Value) : "";
-                    var rentalEndDate = sci.RentalEndDateUtc.HasValue ? product.FormatRentalDate(sci.RentalEndDateUtc.Value) : "";
-                    cartItemModel.RentalInfo = string.Format(_localizationService.GetResource("ShoppingCart.Rental.FormattedDate"),
-                        rentalStartDate, rentalEndDate);
-                }
-
                 //unit prices
                 if (product.CallForPrice)
                 {
@@ -865,7 +844,31 @@ namespace Grand.Web.Services
                             Quantity = sci.Quantity,
                             AttributeInfo = _productAttributeFormatter.FormatAttributes(product, sci.AttributesXml)
                         };
+                        if(product.ProductType == ProductType.Reservation)
+                        {
+                            var reservation = "";
+                            if (sci.RentalEndDateUtc == default(DateTime) || sci.RentalEndDateUtc == null)
+                            {
+                                reservation = string.Format(_localizationService.GetResource("ShoppingCart.Reservation.StartDate"), sci.RentalStartDateUtc?.ToString(_shoppingCartSettings.ReservationDateFormat));
+                            }
+                            else
+                            {
+                                reservation = string.Format(_localizationService.GetResource("ShoppingCart.Reservation.Date"), sci.RentalStartDateUtc?.ToString(_shoppingCartSettings.ReservationDateFormat), sci.RentalEndDateUtc?.ToString(_shoppingCartSettings.ReservationDateFormat));
+                            }
 
+                            if (!string.IsNullOrEmpty(sci.Parameter))
+                            {
+                                reservation += "<br>" + string.Format(_localizationService.GetResource("ShoppingCart.Reservation.Option"), sci.Parameter);
+                            }
+                            if (!string.IsNullOrEmpty(sci.Duration))
+                            {
+                                reservation += "<br>" + string.Format(_localizationService.GetResource("ShoppingCart.Reservation.Duration"), sci.Duration);
+                            }
+                            if (string.IsNullOrEmpty(cartItemModel.AttributeInfo))
+                                cartItemModel.AttributeInfo = reservation;
+                            else
+                                cartItemModel.AttributeInfo += "<br>" + reservation;
+                        }
                         //unit prices
                         if (product.CallForPrice)
                         {
@@ -1059,30 +1062,28 @@ namespace Grand.Web.Services
             model.ProductName = product.GetLocalized(x => x.Name);
             model.Quantity = quantity;
 
-            //reservation product
+            //reservation info
             if (product.ProductType == ProductType.Reservation)
             {
                 if (endDate == default(DateTime) || endDate == null)
                 {
-                    model.ReservationInfo = startDate?.ToString(_shoppingCartSettings.ReservationDateFormat);
+                    model.ReservationInfo = string.Format(_localizationService.GetResource("ShoppingCart.Reservation.StartDate"), startDate?.ToString(_shoppingCartSettings.ReservationDateFormat));
                 }
                 else
                 {
-                    model.ReservationInfo = startDate?.ToString(_shoppingCartSettings.ReservationDateFormat) + " - " + endDate?.ToString(_shoppingCartSettings.ReservationDateFormat);
+                    model.ReservationInfo = string.Format(_localizationService.GetResource("ShoppingCart.Reservation.Date"), startDate?.ToString(_shoppingCartSettings.ReservationDateFormat), endDate?.ToString(_shoppingCartSettings.ReservationDateFormat));
                 }
 
                 if (!string.IsNullOrEmpty(parameter))
                 {
-                    model.ReservationInfo += "<br>" + _localizationService.GetResource("Product.AdditionalReservationOption") + ": " + parameter;
+                    model.ReservationInfo += "<br>" + string.Format(_localizationService.GetResource("ShoppingCart.Reservation.Option"), parameter);
                 }
                 if (!string.IsNullOrEmpty(duration))
                 {
-                    model.ReservationInfo += "<br>" + _localizationService.GetResource("Product.Duration") + ": " + duration;
+                    model.ReservationInfo += "<br>" + string.Format(_localizationService.GetResource("ShoppingCart.Reservation.Duration"), duration);
                 }
             }
-
-
-
+            
             var sci = customer.ShoppingCartItems.FirstOrDefault(x => x.ProductId == product.Id && (string.IsNullOrEmpty(x.AttributesXml) ? "": x.AttributesXml) == attributesXml);
             model.ItemQuantity = sci.Quantity;
 

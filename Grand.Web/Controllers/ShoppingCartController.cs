@@ -200,15 +200,7 @@ namespace Grand.Web.Controllers
                     redirect = Url.RouteUrl("Product", new { SeName = product.GetSeName() }),
                 });
             }
-
-            if (product.IsRental)
-            {
-                //rental products require start/end dates to be entered
-                return Json(new
-                {
-                    redirect = Url.RouteUrl("Product", new { SeName = product.GetSeName() }),
-                });
-            }
+            
 
             var allowedQuantities = product.ParseAllowedQuantities();
             if (allowedQuantities.Length > 0)

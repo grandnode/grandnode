@@ -82,16 +82,7 @@ namespace Grand.Services.Orders
         IList<string> GetShoppingCartItemGiftCardWarnings(ShoppingCartType shoppingCartType,
             Product product, string attributesXml);
 
-        /// <summary>
-        /// Validates shopping cart item for rental products
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="rentalStartDate">Rental start date</param>
-        /// <param name="rentalEndDate">Rental end date</param>
-        /// <returns>Warnings</returns>
-        IList<string> GetRentalProductWarnings(Product product,
-            DateTime? rentalStartDate = null, DateTime? rentalEndDate = null);
-
+        
         /// <summary>
         /// Validates shopping cart item
         /// </summary>

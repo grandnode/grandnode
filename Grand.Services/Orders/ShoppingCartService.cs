@@ -716,62 +716,7 @@ namespace Grand.Services.Orders
             return warnings;
         }
 
-        /// <summary>
-        /// Validates shopping cart item for rental products
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="rentalStartDate">Rental start date</param>
-        /// <param name="rentalEndDate">Rental end date</param>
-        /// <returns>Warnings</returns>
-        public virtual IList<string> GetRentalProductWarnings(Product product,
-            DateTime? rentalStartDate = null, DateTime? rentalEndDate = null)
-        {
-            if (product == null)
-                throw new ArgumentNullException("product");
-
-            var warnings = new List<string>();
-
-            if (!product.IsRental)
-                return warnings;
-
-            if (!rentalStartDate.HasValue)
-            {
-                warnings.Add(_localizationService.GetResource("ShoppingCart.Rental.EnterStartDate"));
-                return warnings;
-            }
-            if (!rentalEndDate.HasValue)
-            {
-                warnings.Add(_localizationService.GetResource("ShoppingCart.Rental.EnterEndDate"));
-                return warnings;
-            }
-            if (rentalStartDate.Value.CompareTo(rentalEndDate.Value) > 0)
-            {
-                warnings.Add(_localizationService.GetResource("ShoppingCart.Rental.StartDateLessEndDate"));
-                return warnings;
-            }
-
-            //allowed start date should be the future date
-            //we should compare rental start date with a store local time
-            //but we what if a store works in distinct timezones? how we should handle it? skip it for now
-            //we also ignore hours (anyway not supported yet)
-            //today
-            DateTime nowDtInStoreTimeZone = _dateTimeHelper.ConvertToUserTime(DateTime.Now, TimeZoneInfo.Local, _dateTimeHelper.DefaultStoreTimeZone);
-            var todayDt = new DateTime(nowDtInStoreTimeZone.Year, nowDtInStoreTimeZone.Month, nowDtInStoreTimeZone.Day);
-            DateTime todayDtUtc = _dateTimeHelper.ConvertToUtcTime(todayDt, _dateTimeHelper.DefaultStoreTimeZone);
-            //dates are entered in store timezone (e.g. like in hotels)
-            DateTime startDateUtc = _dateTimeHelper.ConvertToUtcTime(rentalStartDate.Value, _dateTimeHelper.DefaultStoreTimeZone);
-            //but we what if dates should be entered in a customer timezone?
-            //DateTime startDateUtc = _dateTimeHelper.ConvertToUtcTime(rentalStartDate.Value, _dateTimeHelper.CurrentTimeZone);
-            if (todayDtUtc.CompareTo(startDateUtc) > 0)
-            {
-                warnings.Add(_localizationService.GetResource("ShoppingCart.Rental.StartDateShouldBeFuture"));
-                return warnings;
-            }
-
-            return warnings;
-        }
-
-
+        
         /// <summary>
         /// Validates shopping cart item for reservation products
         /// </summary>
@@ -890,10 +835,6 @@ namespace Grand.Services.Orders
             //required products
             if (getRequiredProductWarnings)
                 warnings.AddRange(GetRequiredProductWarnings(customer, shoppingCartType, product, storeId, automaticallyAddRequiredProductsIfEnabled));
-
-            //rental products
-            if (getRentalWarnings)
-                warnings.AddRange(GetRentalProductWarnings(product, rentalStartDate, rentalEndDate));
 
             //reservation products
             if (getReservationWarnings)
@@ -1097,15 +1038,8 @@ namespace Grand.Services.Orders
                     if (_product.CustomerEntersPrice)
                         customerEnteredPricesEqual = Math.Round(sci.CustomerEnteredPrice, 2) == Math.Round(customerEnteredPrice, 2);
 
-                    //rental products
-                    bool rentalInfoEqual = true;
-                    if (_product.IsRental)
-                    {
-                        rentalInfoEqual = sci.RentalStartDateUtc == rentalStartDate && sci.RentalEndDateUtc == rentalEndDate;
-                    }
-
                     //found?
-                    if (attributesEqual && giftCardInfoSame && customerEnteredPricesEqual && rentalInfoEqual)
+                    if (attributesEqual && giftCardInfoSame && customerEnteredPricesEqual)
                         return sci;
                 }
             }

@@ -226,19 +226,14 @@ namespace Grand.Core.Domain.Catalog
         /// Gets or sets the total cycles
         /// </summary>
         public int RecurringTotalCycles { get; set; }
-
         /// <summary>
-        /// Gets or sets a value indicating whether the product is rental
+        /// Gets or sets Interval
         /// </summary>
-        public bool IsRental { get; set; }
+        public int Interval { get; set; }
         /// <summary>
-        /// Gets or sets the rental length for some period (price for this period)
+        /// Gets or sets IntervalUnitId
         /// </summary>
-        public int RentalPriceLength { get; set; }
-        /// <summary>
-        /// Gets or sets the rental period (price for this period)
-        /// </summary>
-        public int RentalPricePeriodId { get; set; }
+        public int IntervalUnitId { get; set; }
         /// <summary>
         /// Gets or sets Interval Unit
         /// </summary>
@@ -254,11 +249,6 @@ namespace Grand.Core.Domain.Catalog
             }
 
         }
-        /// <summary>
-        /// Gets or sets Interval
-        /// </summary>
-        public int Interval { get; set; }
-        public int IntervalUnitId { get; set; }
         /// <summary>
         /// Gets or sets a value indicating whether the entity is ship enabled
         /// </summary>
@@ -646,21 +636,6 @@ namespace Grand.Core.Domain.Catalog
             set
             {
                 this.RecurringCyclePeriodId = (int)value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the period for rental products
-        /// </summary>
-        public RentalPricePeriod RentalPricePeriod
-        {
-            get
-            {
-                return (RentalPricePeriod)this.RentalPricePeriodId;
-            }
-            set
-            {
-                this.RentalPricePeriodId = (int)value;
             }
         }
 

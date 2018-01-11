@@ -107,9 +107,9 @@
                         @if (!Model.ProductPrice.DisableBuyButton)
                         {
                             var addToCartText = T("ShoppingCart.AddToCart").Text;
-                            if (Model.ProductPrice.IsRental)
+                            if (Model.ProductType == ProductType.Reservation)
                             {
-                                addToCartText = T("ShoppingCart.Rent").Text;
+                                addToCartText = T("ShoppingCart.Reservation").Text;
                             }
                             if (Model.ProductPrice.AvailableForPreOrder)
                             {

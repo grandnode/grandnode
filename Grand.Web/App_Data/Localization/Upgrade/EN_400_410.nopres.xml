@@ -244,5 +244,8 @@
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.CartsSharedBetweenStores.Hint">
     <Value>Determines whether shopping carts (and wishlists) are shared between stores (in multi-store environment).</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.Price.ReservationPrice">
+    <Value>Reservation price</Value>
+  </LocaleResource>
 
 </Language>

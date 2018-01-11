@@ -295,9 +295,6 @@ namespace Grand.Web.Services
                                 //compare products
                                 priceModel.DisableAddToCompareListButton = !_catalogSettings.CompareProductsEnabled;
 
-                                //rental
-                                priceModel.IsRental = product.IsRental;
-
                                 //pre-order
                                 if (product.AvailableForPreOrder)
                                 {
@@ -373,11 +370,11 @@ namespace Grand.Web.Services
                                                     priceModel.PriceValue = finalPrice;
                                                 }
                                             }
-                                            if (product.IsRental)
+                                            if (product.ProductType == ProductType.Reservation)
                                             {
                                                 //rental product
-                                                priceModel.OldPrice = _priceFormatter.FormatRentalProductPeriod(product, priceModel.OldPrice);
-                                                priceModel.Price = _priceFormatter.FormatRentalProductPeriod(product, priceModel.Price);
+                                                priceModel.OldPrice = _priceFormatter.FormatReservationProductPeriod(product, priceModel.OldPrice);
+                                                priceModel.Price = _priceFormatter.FormatReservationProductPeriod(product, priceModel.Price);
                                             }
 
 
@@ -610,7 +607,8 @@ namespace Grand.Web.Services
             model.CompareProductsEnabled = _catalogSettings.CompareProductsEnabled;
             //store name
             model.CurrentStoreName = _storeContext.CurrentStore.GetLocalized(x => x.Name);
-
+            //product type
+            model.ProductType = product.ProductType;
             #endregion
 
             #region Vendor details
@@ -852,12 +850,12 @@ namespace Grand.Web.Services
                         //currency code
                         model.ProductPrice.CurrencyCode = _workContext.WorkingCurrency.CurrencyCode;
 
-                        //rental
-                        if (product.IsRental)
+                        //reservation
+                        if (product.ProductType == ProductType.Reservation)
                         {
-                            model.ProductPrice.IsRental = true;
+                            model.ProductPrice.IsReservation = true;
                             var priceStr = _priceFormatter.FormatPrice(finalPriceWithDiscount);
-                            model.ProductPrice.RentalPrice = _priceFormatter.FormatRentalProductPeriod(product, priceStr);
+                            model.ProductPrice.ReservationPrice = _priceFormatter.FormatReservationProductPeriod(product, priceStr);
                         }
                     }
                 }
@@ -915,8 +913,6 @@ namespace Grand.Web.Services
                     product.PreOrderAvailabilityStartDateTimeUtc.Value >= DateTime.UtcNow;
                 model.AddToCart.PreOrderAvailabilityStartDateTimeUtc = product.PreOrderAvailabilityStartDateTimeUtc;
             }
-            //rental
-            model.AddToCart.IsRental = product.IsRental;
 
             //customer entered price
             model.AddToCart.CustomerEntersPrice = product.CustomerEntersPrice;
@@ -1204,21 +1200,6 @@ namespace Grand.Web.Services
 
             #endregion
 
-            #region Rental products
-
-            if (product.IsRental)
-            {
-                model.IsRental = true;
-                //set already entered dates attributes (if we're going to update the existing shopping cart item)
-                if (updatecartitem != null)
-                {
-                    model.RentalStartDate = updatecartitem.RentalStartDateUtc;
-                    model.RentalEndDate = updatecartitem.RentalEndDateUtc;
-                }
-            }
-            model.ProductType = product.ProductType;
-            #endregion
-
             #region Associated products
 
             if (product.ProductType == ProductType.GroupedProduct)
@@ -1263,6 +1244,7 @@ namespace Grand.Web.Services
                 }
 
                 model.IntervalUnit = product.IntervalUnitType;
+                model.Interval = product.Interval;
 
                 var list = reservations.GroupBy(x => x.Parameter).ToList().Select(x => x.Key);
                 foreach (var item in list)

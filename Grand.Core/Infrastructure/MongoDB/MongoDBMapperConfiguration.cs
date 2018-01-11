@@ -50,7 +50,6 @@ namespace Grand.Core.Infrastructure.MongoDB
                 cm.UnmapMember(c => c.LowStockActivity);
                 cm.UnmapMember(c => c.ManageInventoryMethod);
                 cm.UnmapMember(c => c.RecurringCyclePeriod);
-                cm.UnmapMember(c => c.RentalPricePeriod);
             });
 
             BsonClassMap.RegisterClassMap<ProductAttributeCombination>(cm =>

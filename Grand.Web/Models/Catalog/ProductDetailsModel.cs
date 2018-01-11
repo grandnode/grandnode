@@ -67,10 +67,7 @@ namespace Grand.Web.Models.Catalog
         public string DeliveryDate { get; set; }
         public string DeliveryColorSquaresRgb { get; set; }
 
-
-        public bool IsRental { get; set; }
-        public DateTime? RentalStartDate { get; set; }
-        public DateTime? RentalEndDate { get; set; }
+        public int Interval { get; set; }
         public IntervalUnit IntervalUnit { get; set; }
         public List<SelectListItem> Parameters { get; set; }
         public DateTime StartDate { get; set; }
@@ -149,9 +146,6 @@ namespace Grand.Web.Models.Catalog
             public bool DisableBuyButton { get; set; }
             public bool DisableWishlistButton { get; set; }
             
-            //rental
-            public bool IsRental { get; set; }
-
             //reservation
             public bool IsReservation { get; set; }
 
@@ -187,9 +181,9 @@ namespace Grand.Web.Models.Catalog
 
             public bool HidePrices { get; set; }
 
-            //rental
-            public bool IsRental { get; set; }
-            public string RentalPrice { get; set; }
+            //Reservation
+            public bool IsReservation { get; set; }
+            public string ReservationPrice { get; set; }
 
             /// <summary>
             /// A value indicating whether we should display tax/shipping info (used in Germany)

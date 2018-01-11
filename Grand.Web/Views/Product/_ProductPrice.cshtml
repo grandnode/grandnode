@@ -15,11 +15,11 @@
     }
     else
     {
-        if (Model.IsRental)
+        if (Model.IsReservation)
         {
             <div class="rental-price">
-                <label>@T("Products.Price.RentalPrice"):</label>
-                <span>@Model.RentalPrice</span>
+                <label>@T("Products.Price.ReservationPrice"):</label>
+                <span>@Model.ReservationPrice</span>
             </div>
         }
         if (!String.IsNullOrWhiteSpace(Model.CatalogPrice))

@@ -51,14 +51,9 @@ namespace Grand.Web.Models.Catalog
             public bool DisableBuyButton { get; set; }
             public bool DisableWishlistButton { get; set; }
             public bool DisableAddToCompareListButton { get; set; }
-
             public bool AvailableForPreOrder { get; set; }
             public DateTime? PreOrderAvailabilityStartDateTimeUtc { get; set; }
-
-            public bool IsRental { get; set; }
-
             public bool ForceRedirectionAfterAddingToCart { get; set; }
-
             /// <summary>
             /// A value indicating whether we should display tax/shipping info (used in Germany)
             /// </summary>

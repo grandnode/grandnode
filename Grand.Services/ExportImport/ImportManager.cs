@@ -296,14 +296,11 @@ namespace Grand.Services.ExportImport
                             case "recurringtotalcycles":
                                 product.RecurringTotalCycles = property.IntValue;
                                 break;
-                            case "isrental":
-                                product.IsRental = property.BooleanValue;
+                            case "Interval":
+                                product.Interval = property.IntValue;
                                 break;
-                            case "rentalpricelength":
-                                product.RentalPriceLength = property.IntValue;
-                                break;
-                            case "rentalpriceperiodid":
-                                product.RentalPricePeriodId = property.IntValue;
+                            case "IntervalUnitId":
+                                product.IntervalUnitId = property.IntValue;
                                 break;
                             case "isshipenabled":
                                 product.IsShipEnabled = property.BooleanValue;
