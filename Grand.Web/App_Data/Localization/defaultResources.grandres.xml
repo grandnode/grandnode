@@ -585,35 +585,17 @@
   <LocaleResource Name="Account.VendorInfo">
     <Value>Vendor info</Value>
   </LocaleResource>
-  <LocaleResource Name="Account.VendorInfo.Description">
-    <Value>Description</Value>
+  <LocaleResource Name="Account.VendorInfo.Address1">
+    <Value>Street address</Value>
   </LocaleResource>
-  <LocaleResource Name="Account.VendorInfo.Email">
-    <Value>Email</Value>
+  <LocaleResource Name="Account.VendorInfo.Address1.Required">
+    <Value>Street address is required</Value>
   </LocaleResource>
-  <LocaleResource Name="Account.VendorInfo.Email.hint">
-    <Value>Email</Value>
+  <LocaleResource Name="Account.VendorInfo.Address2">
+    <Value>Street address 2</Value>
   </LocaleResource>
-  <LocaleResource Name="Account.VendorInfo.Email.Required">
-    <Value>Email is required.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Account.VendorInfo.Name">
-    <Value>Name</Value>
-  </LocaleResource>
-  <LocaleResource Name="Account.VendorInfo.Name.hint">
-    <Value>Name</Value>
-  </LocaleResource>
-  <LocaleResource Name="Account.VendorInfo.Name.Required">
-    <Value>Vendor name is required.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Account.VendorInfo.Picture">
-    <Value>Picture</Value>
-  </LocaleResource>
-  <LocaleResource Name="Account.VendorInfo.Picture.ErrorMessage">
-    <Value>You can add only picture file</Value>
-  </LocaleResource>
-  <LocaleResource Name="Account.VendorInfo.Picture.Remove">
-    <Value>Remove picture</Value>
+  <LocaleResource Name="Account.VendorInfo.Address2.Required">
+    <Value>Street address 2 is required</Value>
   </LocaleResource>
   <LocaleResource Name="Account.VendorInfo.City">
     <Value>City</Value>
@@ -633,11 +615,32 @@
   <LocaleResource Name="Account.VendorInfo.Country.Required">
     <Value>Country is required</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Description">
+    <Value>Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Email">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Email.hint">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Email.Required">
+    <Value>Email is required.</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.VendorInfo.faxnumber">
     <Value>Fax</Value>
   </LocaleResource>
   <LocaleResource Name="Account.VendorInfo.faxnumber.Required">
     <Value>Fax is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Name.hint">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Name.Required">
+    <Value>Vendor name is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.VendorInfo.phonenumber">
     <Value>Phone</Value>
@@ -645,23 +648,20 @@
   <LocaleResource Name="Account.VendorInfo.phonenumber.Required">
     <Value>Phone is required</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Picture">
+    <Value>Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Picture.ErrorMessage">
+    <Value>You can add only picture file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Picture.Remove">
+    <Value>Remove picture</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.VendorInfo.StateProvince">
     <Value>State / province</Value>
   </LocaleResource>
   <LocaleResource Name="Account.VendorInfo.StateProvince.Required">
     <Value>State / province is required</Value>
-  </LocaleResource>
-  <LocaleResource Name="Account.VendorInfo.Address1">
-    <Value>Street address</Value>
-  </LocaleResource>
-  <LocaleResource Name="Account.VendorInfo.Address1.Required">
-    <Value>Street address is required</Value>
-  </LocaleResource>
-  <LocaleResource Name="Account.VendorInfo.Address2">
-    <Value>Street address 2</Value>
-  </LocaleResource>
-  <LocaleResource Name="Account.VendorInfo.Address2.Required">
-    <Value>Street address 2 is required</Value>
   </LocaleResource>
   <LocaleResource Name="Account.VendorInfo.ZipPostalCode">
     <Value>Zip / postal code</Value>
@@ -951,48 +951,6 @@
   <LocaleResource Name="ActivityLog.SendPM">
     <Value>PM (from admin panel) {0}</Value>
   </LocaleResource>
-  <LocaleResource Name="AddToCart.Attributes">
-    <Value>Attributes:</Value>
-  </LocaleResource>
-  <LocaleResource Name="AddToCart.Cart.Items">
-    <Value>There are {0} in your cart.</Value>
-  </LocaleResource>
-  <LocaleResource Name="AddToCart.Continue">
-    <Value>Continue</Value>
-  </LocaleResource>
-  <LocaleResource Name="AddToCart.ProductName">
-    <Value>Product Name:</Value>
-  </LocaleResource>
-  <LocaleResource Name="AddToCart.Price">
-    <Value>Price:</Value>
-  </LocaleResource>
-  <LocaleResource Name="AddToCart.Qty">
-    <Value>Qty:</Value>
-  </LocaleResource>
-  <LocaleResource Name="AddToCart.ShoppingCart">
-    <Value>Product was successfully added to cart</Value>
-  </LocaleResource>
-  <LocaleResource Name="AddToCart.SubTotal">
-    <Value>Sub-Total</Value>
-  </LocaleResource>
-  <LocaleResource Name="AddToCart.SubTotalDiscount">
-    <Value>Discount</Value>
-  </LocaleResource>
-  <LocaleResource Name="AddToCart.TotalPrice">
-    <Value>Total price</Value>
-  </LocaleResource>
-  <LocaleResource Name="AddToCart.ViewCart">
-    <Value>Go to cart</Value>
-  </LocaleResource>
-  <LocaleResource Name="AddToCart.ViewWishlist">
-    <Value>Go to wishlist</Value>
-  </LocaleResource>
-  <LocaleResource Name="AddToCart.Wishlist">
-    <Value>Product was successfully added to wishlist</Value>
-  </LocaleResource>
-  <LocaleResource Name="AddToCart.Wishlist.Items">
-    <Value>There are {0} in your wishlist.</Value>
-  </LocaleResource>
   <LocaleResource Name="Address">
     <Value>Address</Value>
   </LocaleResource>
@@ -1076,6 +1034,51 @@
   </LocaleResource>
   <LocaleResource Name="Address.SelectState">
     <Value>Select state</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.Attributes">
+    <Value>Attributes:</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.Cart.Items">
+    <Value>There are {0} in your cart.</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.Continue">
+    <Value>Continue</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.Price">
+    <Value>Price:</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.ProductName">
+    <Value>Product Name:</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.Qty">
+    <Value>Qty:</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.ReservationInfo">
+    <Value>Reservation info</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.ShoppingCart">
+    <Value>Product was successfully added to cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.SubTotal">
+    <Value>Sub-Total</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.SubTotalDiscount">
+    <Value>Discount</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.TotalPrice">
+    <Value>Total price</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.ViewCart">
+    <Value>Go to cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.ViewWishlist">
+    <Value>Go to wishlist</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.Wishlist">
+    <Value>Product was successfully added to wishlist</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.Wishlist.Items">
+    <Value>There are {0} in your wishlist.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin">
     <Value>Admin</Value>
@@ -2343,6 +2346,27 @@
   <LocaleResource Name="Admin.Catalog.Manufacturers.Updated">
     <Value>The manufacturer has been updated successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReservations.CantDeleteWithOrder">
+    <Value>You can't delete reservation with the order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReservations.Fields.Days.Finaldatemustbegreaterthanstartdate">
+    <Value>Final date must be greater than start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.productreservations.fields.endtime.required">
+    <Value>End date is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReservations.Fields.Interval.Intervalmustbegreaterthanzero">
+    <Value>Interval must be greater than zero</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReservations.Fields.Quantity.Quantitymustbegreaterthanzero">
+    <Value>Quantity must be greater than zero</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReservations.Fields.Resource.Required">
+    <Value>Resource name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.productreservations.fields.starttime.required">
+    <Value>Start time is required</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductReviews">
     <Value>Product reviews</Value>
   </LocaleResource>
@@ -2504,6 +2528,42 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.BackToList">
     <Value>back to product list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar">
+    <Value>Reservation calendar</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.Calendarconfiguration">
+    <Value>Calendar configuration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.CannotChangeInterval">
+    <Value>You can't change interval because records with conflicting interval exist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.Clearcalendar">
+    <Value>Clear calendar</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.Date">
+    <Value>Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.Duration">
+    <Value>Duration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.Generatecalendar">
+    <Value>Generate calendar</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.OrderId">
+    <Value>Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.Parameter">
+    <Value>Parameter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.Resource">
+    <Value>Resource</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.SaveBeforeEdit">
+    <Value>You need to save the product before you can generate calendar</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.WeekDay">
+    <Value>Week day</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Categories">
     <Value>Category mappings</Value>
@@ -2681,6 +2741,51 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.BasepriceUnit.Hint">
     <Value>Enter a unit of product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.EndDateUtc">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.EndTime">
+    <Value>To hour</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Friday">
+    <Value>Friday</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Interval">
+    <Value>Interval</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Monday">
+    <Value>Monday</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Parameter">
+    <Value>Additional parameter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Quantity">
+    <Value>Quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Resource">
+    <Value>Resource</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Saturday">
+    <Value>Saturday</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.StartDateUtc">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.StartTime">
+    <Value>From hour</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Sunday">
+    <Value>Sunday</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Thursday">
+    <Value>Thursday</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Tuesday">
+    <Value>Tuesday</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Wednesday">
+    <Value>Wednesday</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.CallForPrice">
     <Value>Call for price</Value>
@@ -3369,9 +3474,6 @@
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Description2">
     <Value>Also note that some attribute control types that support custom user input (e.g. file upload, textboxes, date picker) are useless with attribute combinations</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateAll">
-    <Value>Generate all possible combinations</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.AllowOutOfStockOrders">
     <Value>Allow out of stock</Value>
   </LocaleResource>
@@ -3417,6 +3519,9 @@
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.StockQuantity.Hint">
     <Value>The current stock quantity of this combination.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateAll">
+    <Value>Generate all possible combinations</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.TierPrices">
     <Value>Tier prices</Value>
   </LocaleResource>
@@ -3426,11 +3531,11 @@
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.TierPrices.Price">
     <Value>Price</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.TierPrices.Store">
-    <Value>Store</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.TierPrices.Quantity">
     <Value>Quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.TierPrices.Store">
+    <Value>Store</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Update">
     <Value>Enter details below</Value>
@@ -7268,7 +7373,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.CartsSharedBetweenStores.Hint">
     <Value>Determines whether shopping carts (and wishlists) are shared between stores (in multi-store environment).</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.CrossSellsNumber">
     <Value>Number of 'Cross-Sells'</Value>
   </LocaleResource>
@@ -12348,17 +12453,17 @@
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.Name.Required">
     <Value>Please provide a name.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.Discounts.Fields.Reused">
-    <Value>Reused coupon code</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.Discounts.Fields.Reused.hint">
-    <Value>Allow to reused coupon code</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.RequiresCouponCode">
     <Value>Requires coupon code</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.RequiresCouponCode.Hint">
     <Value>If checked, a customer must supply a valid coupon code for the discount to be applied.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.Reused">
+    <Value>Reused coupon code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.Reused.hint">
+    <Value>Allow to reused coupon code</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.StartDate">
     <Value>Start date</Value>
@@ -13788,6 +13893,12 @@
   <LocaleResource Name="Admin.System.SystemInfo.ASPNETInfo.Hint">
     <Value>ASP.NET info</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.GrandVersion">
+    <Value>grandnode version</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.GrandVersion.Hint">
+    <Value>grandnode version</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.HTTPHOST">
     <Value>HTTP_HOST</Value>
   </LocaleResource>
@@ -13805,12 +13916,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.LoadedAssemblies.Hint">
     <Value>A list of loaded assemblies</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.SystemInfo.GrandVersion">
-    <Value>grandnode version</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.System.SystemInfo.GrandVersion.Hint">
-    <Value>grandnode version</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.OperatingSystem">
     <Value>Operating system</Value>
@@ -14844,6 +14949,15 @@
   <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.GiftCardType.Virtual">
     <Value>Virtual</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.IntervalUnit.Day">
+    <Value>Day(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.IntervalUnit.Hour">
+    <Value>Hour(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.IntervalUnit.Minute">
+    <Value>Minute(s)</Value>
+  </LocaleResource>
   <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.LowStockActivity.DisableBuyButton">
     <Value>Disable buy button</Value>
   </LocaleResource>
@@ -14949,6 +15063,30 @@
   <LocaleResource Name="Enums.Grand.Core.Domain.Customers.PasswordFormat.Hashed">
     <Value>Hashed</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Grand.Core.Domain.Directory.RoundingType.Rounding001">
+    <Value>Default rounding</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Grand.Core.Domain.Directory.RoundingType.Rounding005Down">
+    <Value>Rounding down with 0.05 intervals (0.06 round to 0.05)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Grand.Core.Domain.Directory.RoundingType.Rounding005Up">
+    <Value>Rounding up with 0.05 intervals (0.06 round to 0.10)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Grand.Core.Domain.Directory.RoundingType.Rounding01Down">
+    <Value>Rounding down with 0.10 intervals (1.05 round to 1.00)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Grand.Core.Domain.Directory.RoundingType.Rounding01Up">
+    <Value>Rounding up with 0.10 intervals (1.05 round to 1.10)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Grand.Core.Domain.Directory.RoundingType.Rounding05">
+    <Value>Rounding with 0.50 intervals</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Grand.Core.Domain.Directory.RoundingType.Rounding1">
+    <Value>Rounding with 1.00 intervals (1.01-1.49 round to 1.00, 1.50-1.99 round to 2.00)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Grand.Core.Domain.Directory.RoundingType.Rounding1Up">
+    <Value>Rounding up with 1.00 intervals (1.01–1.99 round to 2.00)</Value>
+  </LocaleResource>
   <LocaleResource Name="Enums.Grand.Core.Domain.Discounts.DiscountLimitationType.NTimesOnly">
     <Value>N times only</Value>
   </LocaleResource>
@@ -14984,30 +15122,6 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Grand.Core.Domain.Discounts.DiscountType.AssignedToVendors">
     <Value>Assigned to vendors</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Directory.RoundingType.Rounding001">
-    <Value>Default rounding</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Directory.RoundingType.Rounding005Up">
-    <Value>Rounding up with 0.05 intervals (0.06 round to 0.10)</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Directory.RoundingType.Rounding005Down">
-    <Value>Rounding down with 0.05 intervals (0.06 round to 0.05)</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Directory.RoundingType.Rounding01Up">
-    <Value>Rounding up with 0.10 intervals (1.05 round to 1.10)</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Directory.RoundingType.Rounding01Down">
-    <Value>Rounding down with 0.10 intervals (1.05 round to 1.00)</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Directory.RoundingType.Rounding05">
-    <Value>Rounding with 0.50 intervals</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Directory.RoundingType.Rounding1">
-    <Value>Rounding with 1.00 intervals (1.01-1.49 round to 1.00, 1.50-1.99 round to 2.00)</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Grand.Core.Domain.Directory.RoundingType.Rounding1Up">
-    <Value>Rounding up with 1.00 intervals (1.01–1.99 round to 2.00)</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Grand.Core.Domain.Forums.EditorType.BBCodeEditor">
     <Value>BBCode editor</Value>
@@ -15624,11 +15738,11 @@
   <LocaleResource Name="Manufacturers.ViewAll">
     <Value>View all</Value>
   </LocaleResource>
-  <LocaleResource Name="Media.Blog.ImageLinkTitleFormat">
-    <Value>Show blog post for {0}</Value>
-  </LocaleResource>
   <LocaleResource Name="Media.Blog.ImageAlternateTextFormat">
     <Value>Picture for blog post {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Media.Blog.ImageLinkTitleFormat">
+    <Value>Show blog post for {0}</Value>
   </LocaleResource>
   <LocaleResource Name="Media.Category.ImageAlternateTextFormat">
     <Value>Picture for category {0}</Value>
@@ -15657,11 +15771,11 @@
   <LocaleResource Name="Media.Manufacturer.ImageLinkTitleFormat">
     <Value>Show products manufactured by {0}</Value>
   </LocaleResource>
-  <LocaleResource Name="Media.News.ImageLinkTitleFormat">
-    <Value>Show news item for {0}</Value>
-  </LocaleResource>
   <LocaleResource Name="Media.News.ImageAlternateTextFormat">
     <Value>Picture for news item {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Media.News.ImageLinkTitleFormat">
+    <Value>Show news item for {0}</Value>
   </LocaleResource>
   <LocaleResource Name="Media.Product.ImageAlternateTextFormat">
     <Value>Picture of {0}</Value>
@@ -15810,9 +15924,6 @@
   <LocaleResource Name="News.ViewAll">
     <Value>View News Archive</Value>
   </LocaleResource>
-  <LocaleResource Name="newsrss">
-    <Value>RSS</Value>
-  </LocaleResource>
   <LocaleResource Name="Newsletter.Email.Placeholder">
     <Value>Enter your email here...</Value>
   </LocaleResource>
@@ -15851,6 +15962,9 @@
   </LocaleResource>
   <LocaleResource Name="NewsletterCategory.Title">
     <Value>I would like to receive notifications about:</Value>
+  </LocaleResource>
+  <LocaleResource Name="newsrss">
+    <Value>RSS</Value>
   </LocaleResource>
   <LocaleResource Name="Order.BillingAddress">
     <Value>Billing Address</Value>
@@ -16683,11 +16797,20 @@
   <LocaleResource Name="PrivateMessages.YouHaveUnreadPM">
     <Value>You have {0} unread message(s) in your Inbox</Value>
   </LocaleResource>
+  <LocaleResource Name="Product.Addtocart.Hourisrequired">
+    <Value>Hour is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Product.Addtocart.Reservation.Duration.Required">
+    <Value>Duration is required</Value>
+  </LocaleResource>
   <LocaleResource Name="Product.AssociatedProducts">
     <Value>Products variants</Value>
   </LocaleResource>
   <LocaleResource Name="Product.Description">
     <Value>Product description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.AdditionalParameter">
+    <Value>Additional parameter</Value>
   </LocaleResource>
   <LocaleResource Name="Products.AlsoPurchased">
     <Value>Customers who bought this item also bought</Value>
@@ -16905,14 +17028,26 @@
   <LocaleResource Name="Products.NoAssociatedProducts">
     <Value>This product is sold out</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.Noavailablereservations">
+    <Value>No available reservations</Value>
+  </LocaleResource>
   <LocaleResource Name="Products.Price">
     <Value>Price</Value>
   </LocaleResource>
   <LocaleResource Name="Products.Price.CatalogPrice">
     <Value>Catalog Price</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Products.Price.OldPrice">
     <Value>Old price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Price.Reservation.Days">
+    <Value>{0} per {1} day(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Price.Reservation.Hour">
+    <Value>{0} per {1} hour(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Price.Reservation.Minute">
+    <Value>{0} per {1} minute(s)</Value>
   </LocaleResource>
   <LocaleResource Name="Products.Price.ReservationPrice">
     <Value>Reservation price</Value>
@@ -16958,6 +17093,18 @@
   </LocaleResource>
   <LocaleResource Name="Products.RelatedProducts">
     <Value>Related products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Reservation.Date">
+    <Value>Reservation date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Reservation.DateFrom">
+    <Value>Reservation start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Reservation.DateTo">
+    <Value>Reservation end date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Reservation.Hour">
+    <Value>Reservation hour</Value>
   </LocaleResource>
   <LocaleResource Name="Products.ReservationEndDate">
     <Value>End date</Value>
@@ -17463,11 +17610,41 @@
   <LocaleResource Name="ShoppingCart.Remove">
     <Value>Remove</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.RequiredProductWarning">
+    <Value>This product requires the following product is added to the cart: {0}</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart.Reservation">
     <Value>Reservation</Value>
   </LocaleResource>
-  <LocaleResource Name="ShoppingCart.RequiredProductWarning">
-    <Value>This product requires the following product is added to the cart: {0}</Value>
+  <LocaleResource Name="ShoppingCart.Reservation.Alreadyreserved">
+    <Value>Already reserved</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Reservation.Choosebothdates">
+    <Value>Please choose both dates</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shoppingcart.Reservation.Date">
+    <Value>Reservation from {0} to {1}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shoppingcart.Reservation.Duration">
+    <Value>Duration {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Reservation.Enddatemustbelaterthanstartdate">
+    <Value>End date must be later than start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Reservation.Nofreereservationsinthisperiod">
+    <Value>No free bookings in this period</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Reservation.Noreservationfound">
+    <Value>Reservation not found</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Reservation.Reservationdatesmustbelaterthantoday">
+    <Value>Reservation date must be later than today</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Reservation.Reservationdeleted">
+    <Value>Reservation was deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shoppingcart.Reservation.Startdate">
+    <Value>Date {0}</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.SelectAttribute">
     <Value>Please select {0}</Value>

@@ -1434,7 +1434,7 @@ namespace Grand.Services.Orders
                                     foreach (var group in grouped)
                                     {
                                         bool groupCanBeBooked = true;
-                                        for (DateTime iterator = sc.RentalStartDateUtc.Value; iterator <= sc.RentalEndDateUtc.Value; iterator += new TimeSpan(24, 0, 0))
+                                        for (DateTime iterator = sc.RentalStartDateUtc.Value; iterator < sc.RentalEndDateUtc.Value; iterator += new TimeSpan(24, 0, 0))
                                         {
                                             if (!group.Select(x => x.Date).Contains(iterator))
                                             {
@@ -1456,7 +1456,7 @@ namespace Grand.Services.Orders
                                     }
                                     else
                                     {
-                                        var temp = groupToBook.Where(x => x.Date >= sc.RentalStartDateUtc && x.Date <= sc.RentalEndDateUtc);
+                                        var temp = groupToBook.Where(x => x.Date >= sc.RentalStartDateUtc && x.Date < sc.RentalEndDateUtc);
                                         foreach (var item in temp)
                                         {
                                             item.OrderId = order.OrderGuid.ToString();

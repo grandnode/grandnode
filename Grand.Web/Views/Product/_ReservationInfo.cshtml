@@ -115,7 +115,7 @@ color: #4ab2f1 !important;
         @if (Model.Parameters.Any())
         {
             <div class="container" style="margin-left:-15px">
-                <label for="parameterDropdown" class="col-form-label">@T("Products.Additionaloption"):</label>
+                <label for="parameterDropdown" class="col-form-label">@T("Products.AdditionalParameter"):</label>
                 <select class="custom-select form-control" name="parameterDropdown" id="parameterDropdown">
                     @foreach (var parameter in Model.Parameters)
                     {
@@ -128,22 +128,22 @@ color: #4ab2f1 !important;
         @if (Model.IntervalUnit == IntervalUnit.Day)
         {
             <div>
-                <h5>@T("Products.Reservationdatefrom"):</h5>
+                <h5>@T("Products.Reservation.DateFrom"):</h5>
                 <input name="reservationDatepickerFrom_@Model.Id" id="reservationDatepickerFrom" class="form-control datepicker" />
             </div>
             <div>
-                <h5>@T("Products.Reservationdateto"):</h5>
+                <h5>@T("Products.Reservation.DateTo"):</h5>
                 <input name="reservationDatepickerTo_@Model.Id" id="reservationDatepickerTo" class="form-control datepicker" />
             </div>
         }
         else
         {
             <div>
-                <h5>@T("Products.Reservationdate"):</h5>
+                <h5>@T("Products.Reservation.Date"):</h5>
                 <div id="reservationDatepicker"></div>
             </div>
             <div>
-                <h5 style="margin-top:10px">@T("Products.Reservationhour"):</h5>
+                <h5 style="margin-top:10px">@T("Products.Reservation.Hour"):</h5>
                 <div id="hoursDiv" class="btn-group d-flex flex-wrap" data-toggle="buttons"></div>
             </div>
         }

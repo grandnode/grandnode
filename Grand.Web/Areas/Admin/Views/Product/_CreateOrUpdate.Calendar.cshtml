@@ -10,28 +10,40 @@
         <h2>@T("Admin.Catalog.Products.Calendar.Calendarconfiguration")</h2>
         <div class="form-body">
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.CalendarModel.StartDateUtc)
-                <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.CalendarModel.StartDateUtc)
-                    <span id="pnlStartTime">
-                        @Html.GrandEditorFor(model => model.CalendarModel.StartTime)
-                    </span>
-                </div>
-            </div>
-            <div class="form-group">
-                @Html.GrandLabelFor(model => model.CalendarModel.EndDateUtc)
-                <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.CalendarModel.EndDateUtc)
-                    <span id="pnlEndTime">
-                        @Html.GrandEditorFor(model => model.CalendarModel.EndTime)
-                    </span>
-                </div>
+                
+                    <div class="form-group">
+                        @Html.GrandLabelFor(model => model.CalendarModel.StartDateUtc)
+                        <div class="col-md-2 col-sm-2">
+                            @Html.GrandEditorFor(model => model.CalendarModel.StartDateUtc)
+                        </div>
+                        <div class="col-md-6" id="pnlStartTime">
+                            <label class="col-md-2 control-label">@T("Admin.Catalog.Products.Fields.Calendar.StartTime")</label>
+                            <div class="col-md-3 col-sm-3">
+                                @Html.GrandEditorFor(model => model.CalendarModel.StartTime)
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group" >
+                        @Html.GrandLabelFor(model => model.CalendarModel.EndDateUtc)
+                        <div class="col-md-2 col-sm-2">
+                            @Html.GrandEditorFor(model => model.CalendarModel.EndDateUtc)
+                        </div>
+                        <div class="col-md-6" id="pnlEndTime">
+                            <label class="col-md-2 control-label">@T("Admin.Catalog.Products.Fields.Calendar.EndTime")</label>
+                            <div class="col-md-3 col-sm-3">
+                                @Html.GrandEditorFor(model => model.CalendarModel.EndTime)
+                            </div>
+                        </div>
+                     </div>
+                
+                
             </div>
             <div class="form-inline">
                 @Html.GrandLabelFor(model => model.CalendarModel.Interval)
                 <div class="col-md-9 col-sm-9">
                     @Html.GrandEditorFor(model => model.CalendarModel.Interval)
-                    @Html.GrandDropDownListFor(model => model.CalendarModel.IntervalUnit, ((IntervalUnit)Model.CalendarModel.IntervalUnit).ToSelectList(), new { @class = "form-control input-xsmall", style = "height: 30px;padding: 0px;" })
+                    @Html.GrandDropDownListFor(model => model.CalendarModel.IntervalUnit, ((IntervalUnit)Model.CalendarModel.IntervalUnit).ToSelectList(), new { @class = "form-control input-xsmall", style = "height: 30px;padding: 0px; margin-bottom: 3px; margin-top: 3px; " })
                 </div>
             </div>
             <div class="form-group" id="pnlQuantity">
@@ -54,59 +66,46 @@
                     @Html.GrandEditorFor(model => model.CalendarModel.Parameter)
                 </div>
             </div>
-
-            <div class="portlet box blue">
+            <div class="portlet light bordered">
                 <div class="portlet-title">
-                    <div class="caption">caption</div>
+                    <div class="caption">@T("Admin.Catalog.Products.Calendar.WeekDay")</div>
                 </div>
                 <div class="portlet-body">
-                    <div class="form-body">
-                        <div class="form-group">
-                            @Html.GrandLabelFor(model => model.CalendarModel.Monday)
-                            <label class="mt-checkbox mt-checkbox-outline">
+                    <div class="form-group">
+                        <div class="mt-checkbox-inline">
+                            <label class="mt-checkbox">
                                 @Html.GrandEditorFor(model => model.CalendarModel.Monday)
+                                @T("Admin.Catalog.Products.Fields.Calendar.Monday")
                                 <span></span>
                             </label>
-                        </div>
-                        <div class="form-group">
-                            @Html.GrandLabelFor(model => model.CalendarModel.Tuesday)
-                            <label class="mt-checkbox mt-checkbox-outline">
+                            <label class="mt-checkbox">
                                 @Html.GrandEditorFor(model => model.CalendarModel.Tuesday)
+                                @T("Admin.Catalog.Products.Fields.Calendar.Tuesday")
                                 <span></span>
                             </label>
-                        </div>
-                        <div class="form-group">
-                            @Html.GrandLabelFor(model => model.CalendarModel.Wednesday)
-                            <label class="mt-checkbox mt-checkbox-outline">
+                            <label class="mt-checkbox">
                                 @Html.GrandEditorFor(model => model.CalendarModel.Wednesday)
+                                @T("Admin.Catalog.Products.Fields.Calendar.Wednesday")
                                 <span></span>
                             </label>
-                        </div>
-                        <div class="form-group">
-                            @Html.GrandLabelFor(model => model.CalendarModel.Thursday)
-                            <label class="mt-checkbox mt-checkbox-outline">
+                            <label class="mt-checkbox">
                                 @Html.GrandEditorFor(model => model.CalendarModel.Thursday)
+                                @T("Admin.Catalog.Products.Fields.Calendar.Thursday")
                                 <span></span>
                             </label>
-                        </div>
-                        <div class="form-group">
-                            @Html.GrandLabelFor(model => model.CalendarModel.Friday)
-                            <label class="mt-checkbox mt-checkbox-outline">
+                            <label class="mt-checkbox">
                                 @Html.GrandEditorFor(model => model.CalendarModel.Friday)
+                                @T("Admin.Catalog.Products.Fields.Calendar.Friday")
                                 <span></span>
                             </label>
-                        </div>
-                        <div class="form-group">
-                            @Html.GrandLabelFor(model => model.CalendarModel.Saturday)
-                            <label class="mt-checkbox mt-checkbox-outline">
+                            <label class="mt-checkbox">
                                 @Html.GrandEditorFor(model => model.CalendarModel.Saturday)
+                                @T("Admin.Catalog.Products.Fields.Calendar.Saturday")
                                 <span></span>
                             </label>
-                        </div>
-                        <div class="form-group">
-                            @Html.GrandLabelFor(model => model.CalendarModel.Sunday)
-                            <label class="mt-checkbox mt-checkbox-outline">
+                            <label class="mt-checkbox">
                                 @Html.GrandEditorFor(model => model.CalendarModel.Sunday)
+                                @T("Admin.Catalog.Products.Fields.Calendar.Sunday")
                                 <span></span>
                             </label>
                         </div>

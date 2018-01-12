@@ -28,7 +28,10 @@ var Reservation = {
             onSelect: this.onDatePickerDateChange,
             firstDay: 1,
             beforeShowDay: this.daysToMark,
-            onChangeMonthYear: this.fillAvailableDates,
+            onChangeMonthYear: function (year, month, inst) {
+                $("#hoursDiv").html('');
+                Reservation.fillAvailableDates(year, month, Reservation._parameter, false);
+            },
             defaultDate: this.startDate
         }
         );
@@ -50,10 +53,47 @@ var Reservation = {
         this.onDatePickerDateChange();
         var dropdown = document.getElementById("parameterDropdown");
         if (dropdown != null) {
-            dropdown.addEventListener("change", function () {
-                Reservation.fillAvailableDates(Reservation.currentYear, Reservation.currentMonth, $("#parameterDropdown").val(), true);
+            $("#parameterDropdown").change(function () {
+                Reservation.fillAvailableDates(Reservation.currentYear, Reservation.currentMonth, this.value, true);
             });
         }
+    },
+
+    reload: function init(startDate, startDateYear, startDateMonth) {
+        this.startDate = startDate;
+        this.startDateMonth = startDateMonth;
+        this.startDateYear = startDateYear;
+
+        this.fillAvailableDates(startDateYear, startDateMonth, Reservation._parameter, false);
+
+        $("#reservationDatepicker").datepicker({
+            onSelect: this.onDatePickerDateChange,
+            firstDay: 1,
+            beforeShowDay: this.daysToMark,
+            onChangeMonthYear: function (year, month, inst) {
+                $("#hoursDiv").html('');
+                Reservation.fillAvailableDates(year, month, Reservation._parameter, false);
+            },
+            defaultDate: this.startDate
+        }
+        );
+
+        $("#reservationDatepickerFrom").datepicker({
+            firstDay: 1,
+            defaultDate: this.startDate,
+            onSelect: this.onDatePickerSelect
+        }
+        );
+
+        $("#reservationDatepickerTo").datepicker({
+            firstDay: 1,
+            defaultDate: this.startDate,
+            onSelect: this.onDatePickerSelect
+        }
+        );
+
+        this.onDatePickerDateChange();
+        
     },
 
     daysToMark: function daysToMark(date) {
@@ -119,14 +159,15 @@ var Reservation = {
             Reservation.currentYear = year;
             Reservation.availableDates = data;
             if (reload) {
+                console.log(year);
+                console.log(month);
                 Reservation._parameter = parameter;
                 $("#reservationDatepicker").datepicker("destroy");
-                Reservation.init(Reservation.startDate, Reservation.currentYear, Reservation.currentMonth, Reservation.noReservationsMessage,
-                    Reservation.ajaxUrl, Reservation.productId, Reservation.ajaxUrl2);
+                Reservation.reload(new Date(year, month-1, 1), Reservation.currentYear, Reservation.currentMonth);
                 $("#reservationDatepicker").datepicker("refresh");
             }
         }).fail(function () {
-            alert("error niestety");
+            alert("Error");
         });
     },
 

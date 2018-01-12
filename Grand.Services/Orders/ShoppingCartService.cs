@@ -1119,7 +1119,7 @@ namespace Grand.Services.Orders
                 foreach (var group in grouped)
                 {
                     bool groupCanBeBooked = true;
-                    for (DateTime iterator = rentalStartDate.Value; iterator <= rentalEndDate.Value; iterator += new TimeSpan(24, 0, 0))
+                    for (DateTime iterator = rentalStartDate.Value; iterator < rentalEndDate.Value; iterator += new TimeSpan(24, 0, 0))
                     {
                         if (!group.Select(x => x.Date).Contains(iterator))
                         {
@@ -1248,7 +1248,7 @@ namespace Grand.Services.Orders
 
             if (!warnings.Any() && groupToBook != null)
             {
-                foreach (var item in groupToBook.Where(x => x.Date >= rentalStartDate && x.Date <= rentalEndDate))
+                foreach (var item in groupToBook.Where(x => x.Date >= rentalStartDate && x.Date < rentalEndDate))
                 {
                     _productReservationService.InsertCustomerReservationsHelper(new CustomerReservationsHelper
                     {

@@ -23,7 +23,6 @@
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.TierPrices.Quantity">
     <Value>Quantity</Value>
   </LocaleResource>
-
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.CityEnabled">
     <Value>'City' enabled</Value>
   </LocaleResource>
@@ -237,7 +236,6 @@
   <LocaleResource Name="AddToCart.Wishlist.Items">
     <Value>There are {0} in your wishlist.</Value>
   </LocaleResource>
-
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.CartsSharedBetweenStores">
     <Value>Carts shared between stores</Value>
   </LocaleResource>
@@ -247,5 +245,184 @@
   <LocaleResource Name="Products.Price.ReservationPrice">
     <Value>Reservation price</Value>
   </LocaleResource>
-
+  <LocaleResource Name="Admin.Catalog.Products.Calendar">
+    <Value>Reservation calendar</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.Calendarconfiguration">
+    <Value>Calendar configuration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.StartDateUtc">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.EndDateUtc">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.StartTime">
+    <Value>From hour</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.EndTime">
+    <Value>To hour</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Interval">
+    <Value>Interval</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Quantity">
+    <Value>Quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Resource">
+    <Value>Resource</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Parameter">
+    <Value>Additional parameter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Monday">
+    <Value>Monday</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Tuesday">
+    <Value>Tuesday</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Wednesday">
+    <Value>Wednesday</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Thursday">
+    <Value>Thursday</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Friday">
+    <Value>Friday</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Saturday">
+    <Value>Saturday</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Sunday">
+    <Value>Sunday</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.Generatecalendar">
+    <Value>Generate calendar</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.Clearcalendar">
+    <Value>Clear calendar</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.Date">
+    <Value>Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.Parameter">
+    <Value>Parameter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.Duration">
+    <Value>Duration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.OrderId">
+    <Value>Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.Resource">
+    <Value>Resource</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.AdditionalParameter">
+    <Value>Additional parameter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Reservation.DateFrom">
+    <Value>Reservation start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Reservation.DateTo">
+    <Value>Reservation end date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Reservation.Date">
+    <Value>Reservation date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Reservation.Hour">
+    <Value>Reservation hour</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Noavailablereservations">
+    <Value>No available reservations</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Reservation.Reservationdeleted">
+    <Value>Reservation was deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Reservation.Noreservationfound">
+    <Value>Reservation not found</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Reservation.Alreadyreserved">
+    <Value>Already reserved</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Reservation.Choosebothdates">
+    <Value>Please choose both dates</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Reservation.Enddatemustbelaterthanstartdate">
+    <Value>End date must be later than start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Reservation.Reservationdatesmustbelaterthantoday">
+    <Value>Reservation date must be later than today</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Reservation.Nofreereservationsinthisperiod">
+    <Value>No free bookings in this period</Value>
+  </LocaleResource>
+  <LocaleResource Name="Product.Addtocart.Hourisrequired">
+    <Value>Hour is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReservations.Fields.Days.Finaldatemustbegreaterthanstartdate">
+    <Value>Final date must be greater than start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReservations.Fields.Interval.Intervalmustbegreaterthanzero">
+    <Value>Interval must be greater than zero</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReservations.Fields.Quantity.Quantitymustbegreaterthanzero">
+    <Value>Quantity must be greater than zero</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReservations.Fields.Resource.Required">
+    <Value>Resource name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.CannotChangeInterval">
+    <Value>You can't change interval because records with conflicting interval exist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReservations.CantDeleteWithOrder">
+    <Value>You can't delete reservation with the order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Product.Addtocart.Reservation.Duration.Required">
+    <Value>Duration is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.ReservationInfo">
+    <Value>Reservation info</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Reservation">
+    <Value>Reservation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Price.Reservation.Days">
+    <Value>{0} per {1} day(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Price.Reservation.Hour">
+    <Value>{0} per {1} hour(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Price.Reservation.Minute">
+    <Value>{0} per {1} minute(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.SaveBeforeEdit">
+    <Value>You need to save the product before you can generate calendar</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.productreservations.fields.endtime.required">
+    <Value>End date is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.productreservations.fields.starttime.required">
+    <Value>Start time is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.WeekDay">
+    <Value>Week day</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.IntervalUnit.Minute">
+    <Value>Minute(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.IntervalUnit.Hour">
+    <Value>Hour(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.IntervalUnit.Day">
+    <Value>Day(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="shoppingcart.reservation.date">
+    <Value>Reservation from {0} to {1}</Value>
+  </LocaleResource>
+  <LocaleResource Name="shoppingcart.reservation.duration">
+    <Value>Duration {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="shoppingcart.reservation.startdate">
+    <Value>Date {0}</Value>
+  </LocaleResource>
 </Language>
