@@ -1844,8 +1844,6 @@ namespace Grand.Services.Catalog
             if (relatedProduct == null)
                 throw new ArgumentNullException("relatedProduct");
 
-            //_relatedProductRepository.Delete(relatedProduct);
-
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.Pull(p => p.RelatedProducts, relatedProduct);
             _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", relatedProduct.ProductId1), update);
@@ -1862,8 +1860,6 @@ namespace Grand.Services.Catalog
         {
             if (relatedProduct == null)
                 throw new ArgumentNullException("relatedProduct");
-
-            //_relatedProductRepository.Insert(relatedProduct);
 
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.AddToSet(p => p.RelatedProducts, relatedProduct);
@@ -1885,7 +1881,6 @@ namespace Grand.Services.Catalog
             if (relatedProduct == null)
                 throw new ArgumentNullException("relatedProduct");
 
-            //_relatedProductRepository.Update(relatedProduct);
             var builder = Builders<Product>.Filter;
             var filter = builder.Eq(x => x.Id, relatedProduct.ProductId1);
             filter = filter & builder.ElemMatch(x => x.RelatedProducts, y => y.Id == relatedProduct.Id);
@@ -1902,6 +1897,74 @@ namespace Grand.Services.Catalog
         }
 
         #endregion
+
+        /// <summary>
+        /// Deletes a bundle product
+        /// </summary>
+        /// <param name="bundleProduct">Bundle product</param>
+        public virtual void DeleteBundleProduct(BundleProduct bundleProduct)
+        {
+            if (bundleProduct == null)
+                throw new ArgumentNullException("bundleProduct");
+
+            var updatebuilder = Builders<Product>.Update;
+            var update = updatebuilder.Pull(p => p.BundleProducts, bundleProduct);
+            _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", bundleProduct.ProductBundleId), update);
+
+            //cache
+            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, bundleProduct.ProductBundleId));
+
+            //event notification
+            _eventPublisher.EntityDeleted(bundleProduct);
+        }
+
+        /// <summary>
+        /// Inserts a bundle product
+        /// </summary>
+        /// <param name="bundleProduct">Bundle product</param>
+        public virtual void InsertBundleProduct(BundleProduct bundleProduct)
+        {
+            if (bundleProduct == null)
+                throw new ArgumentNullException("bundleProduct");
+
+            var updatebuilder = Builders<Product>.Update;
+            var update = updatebuilder.AddToSet(p => p.BundleProducts, bundleProduct);
+            _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", bundleProduct.ProductBundleId), update);
+
+            //cache
+            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, bundleProduct.ProductBundleId));
+
+            //event notification
+            _eventPublisher.EntityInserted(bundleProduct);
+
+        }
+
+        /// <summary>
+        /// Updates a bundle product
+        /// </summary>
+        /// <param name="bundleProduct">Bundle product</param>
+        public virtual void UpdateBundleProduct(BundleProduct bundleProduct)
+        {
+            if (bundleProduct == null)
+                throw new ArgumentNullException("bundleProduct");
+
+            var builder = Builders<Product>.Filter;
+            var filter = builder.Eq(x => x.Id, bundleProduct.ProductBundleId);
+            filter = filter & builder.ElemMatch(x => x.RelatedProducts, y => y.Id == bundleProduct.Id);
+            var update = Builders<Product>.Update
+                .Set(x => x.BundleProducts.ElementAt(-1).Quantity, bundleProduct.Quantity)
+                .Set(x => x.BundleProducts.ElementAt(-1).DisplayOrder, bundleProduct.DisplayOrder);
+
+            var result = _productRepository.Collection.UpdateManyAsync(filter, update).Result;
+
+            //cache
+            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, bundleProduct.ProductBundleId));
+
+            //event notification
+            _eventPublisher.EntityUpdated(bundleProduct);
+
+        }
+
 
         #region Cross-sell products
 

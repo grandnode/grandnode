@@ -18,5 +18,10 @@ namespace Grand.Core.Domain.Catalog
         /// Reservation product
         /// </summary>
         Reservation = 15,
+
+        /// <summary>
+		/// Bundled product
+		/// </summary>
+		BundledProduct = 20
     }
 }

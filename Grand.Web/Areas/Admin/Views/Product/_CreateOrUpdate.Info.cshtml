@@ -75,7 +75,7 @@
             $('#tab-attributes-product').show();
             $('#tab-purchased-product').show();
             $('#tab-calendar').hide();
-
+            $('#tab-bundle-products').hide();
         } else if (selectedProductTypeId == @(((int) ProductType.GroupedProduct).ToString())) {
             $('#group-required-other-products').hide();
             $('#group-giftcard').hide();
@@ -89,7 +89,7 @@
             $('#tab-attributes-product').hide();
             $('#tab-purchased-product').hide();
             $('#tab-calendar').hide();
-
+            $('#tab-bundle-products').hide();
         } else if (selectedProductTypeId == @(((int) ProductType.Reservation).ToString())){
             $('#group-required-other-products').show();
             $('#group-giftcard').show();
@@ -108,6 +108,20 @@
             $("#@Html.FieldIdFor(model => model.IsShipEnabled)").prop("checked", false);
             toggleShipping();
             $('#tab-inventory-product').hide();
+        } else if (selectedProductTypeId == @(((int) ProductType.BundledProduct).ToString())){
+            $('#group-required-other-products').hide();
+            $('#group-giftcard').hide();
+            $('#group-downloads').show();
+            $('#group-recurring').hide();
+            $('#group-shipping').show();
+            $('#group-tax').show();
+            $('#tab-associated-products').hide();
+            $('#tab-price-product').show();
+            $('#tab-inventory-product').show();
+            $('#tab-attributes-product').show();
+            $('#tab-purchased-product').show();
+            $('#tab-calendar').hide();
+            $('#tab-bundle-products').show();
         }
     }
 

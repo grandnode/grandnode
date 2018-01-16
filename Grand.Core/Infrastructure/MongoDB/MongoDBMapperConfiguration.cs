@@ -116,6 +116,12 @@ namespace Grand.Core.Infrastructure.MongoDB
                 cm.UnmapMember(c => c.ProductId1);
             });
 
+            BsonClassMap.RegisterClassMap<BundleProduct>(cm =>
+            {
+                cm.AutoMap();
+                cm.UnmapMember(c => c.ProductBundleId);
+            });
+
             BsonClassMap.RegisterClassMap<TierPrice>(cm =>
             {
                 cm.AutoMap();

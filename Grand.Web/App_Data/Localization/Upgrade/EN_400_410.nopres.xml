@@ -425,4 +425,29 @@
   <LocaleResource Name="shoppingcart.reservation.startdate">
     <Value>Date {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ProductType.BundledProduct">
+    <Value>Bundled product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ProductType.Reservation">
+    <Value>Reservation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.BundleProducts">
+    <Value>Bundle product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.BundleProducts.Fields.Product">
+    <Value>Product name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.BundleProducts.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.BundleProducts.Fields.Quantity">
+    <Value>Quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.BundleProducts.AddNew">
+    <Value>Add new products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.BundleProducts.SaveBeforeEdit">
+    <Value>You need to save the product before you can add new bundle product</Value>
+  </LocaleResource>
 </Language>
+

@@ -15003,8 +15003,14 @@
   <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ProductSortingEnum.PriceDesc">
     <Value>Price: High to Low</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ProductType.BundledProduct">
+    <Value>Bundled product</Value>
+  </LocaleResource>
   <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ProductType.GroupedProduct">
     <Value>Grouped (product with variants)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ProductType.Reservation">
+    <Value>Reservation</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ProductType.SimpleProduct">
     <Value>Simple</Value>

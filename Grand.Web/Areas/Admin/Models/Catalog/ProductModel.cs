@@ -603,6 +603,55 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public bool IsLoggedInAsVendor { get; set; }
         }
 
+        public partial class BundleProductModel : BaseGrandEntityModel
+        {
+            public string ProductBundleId { get; set; }
+            public string ProductId { get; set; }
+
+            [GrandResourceDisplayName("Admin.Catalog.Products.BundleProducts.Fields.Product")]
+            public string ProductName { get; set; }
+
+            [GrandResourceDisplayName("Admin.Catalog.Products.BundleProducts.Fields.Quantity")]
+            public int Quantity { get; set; }
+
+            [GrandResourceDisplayName("Admin.Catalog.Products.BundleProducts.Fields.DisplayOrder")]
+            public int DisplayOrder { get; set; }
+        }
+        public partial class AddBundleProductModel : BaseGrandModel
+        {
+            public AddBundleProductModel()
+            {
+                AvailableCategories = new List<SelectListItem>();
+                AvailableManufacturers = new List<SelectListItem>();
+                AvailableStores = new List<SelectListItem>();
+                AvailableVendors = new List<SelectListItem>();
+            }
+
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
+
+            public string SearchProductName { get; set; }
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
+            public string SearchCategoryId { get; set; }
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
+            public string SearchManufacturerId { get; set; }
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
+            public string SearchStoreId { get; set; }
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
+            public string SearchVendorId { get; set; }
+            public IList<SelectListItem> AvailableCategories { get; set; }
+            public IList<SelectListItem> AvailableManufacturers { get; set; }
+            public IList<SelectListItem> AvailableStores { get; set; }
+            public IList<SelectListItem> AvailableVendors { get; set; }
+
+            public string ProductId { get; set; }
+
+            public string[] SelectedProductIds { get; set; }
+
+            //vendor
+            public bool IsLoggedInAsVendor { get; set; }
+        }
+
+
         public partial class AssociatedProductModel : BaseGrandEntityModel
         {
             [GrandResourceDisplayName("Admin.Catalog.Products.AssociatedProducts.Fields.Product")]

@@ -386,7 +386,29 @@ namespace Grand.Services.Catalog
         IList<Product> GetCrosssellProductsByShoppingCart(IList<ShoppingCartItem> cart, int numberOfProducts);
 
         #endregion
-        
+
+        #region Bundle products
+
+        /// <summary>
+        /// Deletes a bundle product
+        /// </summary>
+        /// <param name="bundleProduct">Bundle product</param>
+        void DeleteBundleProduct(BundleProduct bundleProduct);
+
+        /// <summary>
+        /// Inserts a bundle product
+        /// </summary>
+        /// <param name="bundleProduct">Bundle product</param>
+        void InsertBundleProduct(BundleProduct bundleProduct);
+
+        /// <summary>
+        /// Updates a bundle product
+        /// </summary>
+        /// <param name="bundleProduct">Bundle product</param>
+        void UpdateBundleProduct(BundleProduct bundleProduct);
+
+        #endregion
+
         #region Tier prices
 
         /// <summary>

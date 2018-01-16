@@ -38,38 +38,7 @@ namespace Grand.Services.Catalog
             var tierPrice = actualTierPrices.LastOrDefault(price => quantity >= price.Quantity);
 
             return tierPrice;
-        }
-        /// <summary>
-        /// Finds a related product item by specified identifiers
-        /// </summary>
-        /// <param name="source">Source</param>
-        /// <param name="productId1">The first product identifier</param>
-        /// <param name="productId2">The second product identifier</param>
-        /// <returns>Related product</returns>
-        public static RelatedProduct FindRelatedProduct(this IList<RelatedProduct> source,
-            string productId1, string productId2)
-        {
-            foreach (RelatedProduct relatedProduct in source)
-                if (relatedProduct.ProductId1 == productId1 && relatedProduct.ProductId2 == productId2)
-                    return relatedProduct;
-            return null;
-        }
-
-        /// <summary>
-        /// Finds a cross-sell product item by specified identifiers
-        /// </summary>
-        /// <param name="source">Source</param>
-        /// <param name="productId1">The first product identifier</param>
-        /// <param name="productId2">The second product identifier</param>
-        /// <returns>Cross-sell product</returns>
-        public static CrossSellProduct FindCrossSellProduct(this IList<CrossSellProduct> source,
-            string productId1, string productId2)
-        {
-            foreach (CrossSellProduct crossSellProduct in source)
-                if (crossSellProduct.ProductId1 == productId1 && crossSellProduct.ProductId2 == productId2)
-                    return crossSellProduct;
-            return null;
-        }
+        }        
 
         /// <summary>
         /// Formats the stock availability/quantity message

@@ -63,6 +63,10 @@ namespace Grand.Web.Infrastructure.Cache
         IConsumer<EntityInserted<RelatedProduct>>,
         IConsumer<EntityUpdated<RelatedProduct>>,
         IConsumer<EntityDeleted<RelatedProduct>>,
+        //bundle product
+        IConsumer<EntityInserted<BundleProduct>>,
+        IConsumer<EntityUpdated<BundleProduct>>,
+        IConsumer<EntityDeleted<BundleProduct>>,
         //product tags
         IConsumer<EntityInserted<ProductTag>>,
         IConsumer<EntityUpdated<ProductTag>>,
@@ -1036,7 +1040,22 @@ namespace Grand.Web.Infrastructure.Cache
         {
             _cacheManager.RemoveByPattern(PRODUCTS_RELATED_IDS_PATTERN_KEY);
         }
-        
+
+        //bundle products
+
+        public void HandleEvent(EntityInserted<BundleProduct> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCTS_RELATED_IDS_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<BundleProduct> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCTS_RELATED_IDS_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<BundleProduct> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCTS_RELATED_IDS_PATTERN_KEY);
+        }
+
         //specification attributes
         public void HandleEvent(EntityUpdated<SpecificationAttribute> eventMessage)
         {
