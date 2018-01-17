@@ -276,7 +276,20 @@
             $('#pnlAllowBackInStockSubscriptions').hide();
             $('#pnlBackorders').hide();
             $('#pnlAllowAddingOnlyExistingAttributeCombinations').hide();
-        } else if (selectedManageInventoryMethodId == @(((int) ManageInventoryMethod.ManageStock).ToString())) {
+        } else if (selectedManageInventoryMethodId == @(((int) ManageInventoryMethod.ManageStockByBundleProducts).ToString())) {
+            $('#pnlWarehouse').hide();
+            $('#pnlUseMultipleWarehouses').hide();
+            $('#pnlMultipleWarehouses').hide();
+            $('#pnlStockQuantity').hide();
+            $('#pnlDisplayStockAvailability').hide();
+            $('#pnlDisplayStockQuantity').hide();
+            $('#pnlMinStockQuantity').hide();
+            $('#pnlLowStockActivity').hide();
+            $('#pnlNotifyForQuantityBelow').hide();
+            $('#pnlAllowBackInStockSubscriptions').hide();
+            $('#pnlBackorders').hide();
+            $('#pnlAllowAddingOnlyExistingAttributeCombinations').hide();
+        }else if (selectedManageInventoryMethodId == @(((int) ManageInventoryMethod.ManageStock).ToString())) {
             $('#pnlUseMultipleWarehouses').show();
 
             if ($('#@Html.FieldIdFor(model => model.UseMultipleWarehouses)').is(':checked')) {

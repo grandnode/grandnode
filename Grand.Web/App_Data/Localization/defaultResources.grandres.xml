@@ -14976,6 +14976,9 @@
   <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ManageInventoryMethod.ManageStockByAttributes">
     <Value>Track inventory by product attributes</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ManageInventoryMethod.ManageStockByBundleProducts">
+    <Value>Track inventory by bundle products</Value>
+  </LocaleResource>  
   <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ProductSortingEnum.BestSellers">
     <Value>Best Sellers</Value>
   </LocaleResource>
@@ -17582,6 +17585,9 @@
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.OutOfStock">
     <Value>Out of stock</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.OutOfStock.BundleProduct">
+    <Value>Out of stock for product {0}</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.PreOrder">
     <Value>Pre-order</Value>

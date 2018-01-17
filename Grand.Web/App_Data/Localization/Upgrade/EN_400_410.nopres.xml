@@ -449,5 +449,14 @@
   <LocaleResource Name="Admin.Catalog.Products.BundleProducts.SaveBeforeEdit">
     <Value>You need to save the product before you can add new bundle product</Value>
   </LocaleResource>
+
+  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ManageInventoryMethod.ManageStockByBundleProducts">
+    <Value>Track inventory by bundle products</Value>
+  </LocaleResource>  
+
+  <LocaleResource Name="ShoppingCart.OutOfStock.BundleProduct">
+    <Value>Out of stock for product {0}</Value>
+  </LocaleResource>
+
 </Language>
 

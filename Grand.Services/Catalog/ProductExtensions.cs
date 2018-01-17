@@ -149,6 +149,7 @@ namespace Grand.Services.Catalog
                     }
                     break;
                 case ManageInventoryMethod.DontManageStock:
+                case ManageInventoryMethod.ManageStockByBundleProducts:
                 default:
                     return stockMessage;
             }

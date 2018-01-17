@@ -1414,7 +1414,17 @@ namespace Grand.Services.Catalog
                     }
                 }
             }
-
+            if(product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByBundleProducts)
+            {
+                foreach (var item in product.BundleProducts)
+                {
+                    var p1 = GetProductById(item.ProductId);
+                    if(p1 != null && p1.ManageInventoryMethod==ManageInventoryMethod.ManageStock)
+                    {
+                        AdjustInventory(p1, quantityToChange * item.Quantity, warehouseId);
+                    }
+                }
+            }
 
             //bundled products
             var attributeValues = _productAttributeParser.ParseProductAttributeValues(product, attributesXml);
@@ -1686,6 +1696,7 @@ namespace Grand.Services.Catalog
             if (!product.UseMultipleWarehouses)
                 return;
 
+            //standard manage stock 
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
             {
                 var pwi = product.ProductWarehouseInventory.FirstOrDefault(pi => pi.WarehouseId == warehouseId);
@@ -1704,7 +1715,7 @@ namespace Grand.Services.Catalog
                         .CurrentDate("UpdateDate");
                 _productRepository.Collection.UpdateOneAsync(filter, update);
             }
-
+            //manage stock by attributes
             if(product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
             {
                 var combination = product.ProductAttributeCombinations.FirstOrDefault(x => x.AttributesXml == AttributeXML);
@@ -1731,6 +1742,18 @@ namespace Grand.Services.Catalog
 
                 var result = _productRepository.Collection.UpdateManyAsync(filter, update).Result;
 
+            }
+            //manage stock by bundle products
+            if(product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByBundleProducts)
+            {
+                foreach (var item in product.BundleProducts)
+                {
+                    var p1 = GetProductById(item.ProductId);
+                    if (p1 != null && p1.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
+                    {
+                        BookReservedInventory(p1, string.Empty, warehouseId, quantity * item.Quantity);
+                    }
+                }
             }
 
             //cache
@@ -1763,9 +1786,9 @@ namespace Grand.Services.Catalog
             var shipment = EngineContext.Current.Resolve<IShipmentService>().GetShipmentById(shipmentItem.ShipmentId);
             var qty = shipmentItem.Quantity;
 
+            //standard manage stock
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
             {
-                
                 var pwi = product.ProductWarehouseInventory.FirstOrDefault(x => x.WarehouseId == shipmentItem.WarehouseId);
                 if (pwi == null)
                     return 0;
@@ -1788,6 +1811,7 @@ namespace Grand.Services.Catalog
 
             }
 
+            //manage stock by attributes
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
             {
 
@@ -1820,7 +1844,19 @@ namespace Grand.Services.Catalog
                 var result = _productRepository.Collection.UpdateManyAsync(filter, update).Result;
 
             }
-
+            //manage stock by bundle products
+            if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByBundleProducts)
+            {
+                foreach (var item in product.BundleProducts)
+                {
+                    var p1 = GetProductById(item.ProductId);
+                    if (p1 != null && p1.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
+                    {
+                        shipmentItem.Quantity = shipmentItem.Quantity * item.Quantity;
+                        ReverseBookedInventory(p1, shipmentItem);
+                    }
+                }
+            }
             //cache
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
             //_cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);

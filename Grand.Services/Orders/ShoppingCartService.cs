@@ -410,6 +410,26 @@ namespace Grand.Services.Orders
                             }
                         }
                         break;
+                    case ManageInventoryMethod.ManageStockByBundleProducts:
+                        {
+                            foreach (var item in product.BundleProducts)
+                            {
+                                var _qty = quantity * item.Quantity;
+                                var p1 = _productService.GetProductById(item.ProductId);
+                                if(p1!=null)
+                                {
+                                    if (p1.BackorderMode == BackorderMode.NoBackorders)
+                                    {
+                                        int maximumQuantityCanBeAdded = p1.GetTotalStockQuantity(warehouseId: _storeContext.CurrentStore.DefaultWarehouseId);
+                                        if (maximumQuantityCanBeAdded < _qty)
+                                        {
+                                            warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.OutOfStock.BundleProduct"), p1.Name));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        break;
                     case ManageInventoryMethod.ManageStockByAttributes:
                         {
                             var combination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
