@@ -50,23 +50,23 @@
         <li @Html.RenderSelectedTabIndex(8, GetSelectedTabIndex()) id="tab-attributes-product">
             @T("Admin.Catalog.Products.ProductAttributes")
         </li>
-        <li @Html.RenderSelectedTabIndex(9, GetSelectedTabIndex())>
-            @T("Admin.Catalog.Products.AclStores")
-        </li>
-        <li @Html.RenderSelectedTabIndex(10, GetSelectedTabIndex())>
-            @T("Admin.Catalog.Products.RelatedProducts")
-        </li>
-        <li @Html.RenderSelectedTabIndex(11, GetSelectedTabIndex())>
-            @T("Admin.Catalog.Products.CrossSells")
-        </li>
-        <li @Html.RenderSelectedTabIndex(12, GetSelectedTabIndex()) id="tab-associated-products">
-            @T("Admin.Catalog.Products.AssociatedProducts")
-        </li>
-        <li @Html.RenderSelectedTabIndex(13, GetSelectedTabIndex()) id="tab-bundle-products">
+        <li @Html.RenderSelectedTabIndex(9, GetSelectedTabIndex()) id="tab-bundle-products">
             @T("Admin.Catalog.Products.BundleProducts")
         </li>
-        <li @Html.RenderSelectedTabIndex(14, GetSelectedTabIndex()) id="tab-calendar">
+        <li @Html.RenderSelectedTabIndex(10, GetSelectedTabIndex()) id="tab-calendar">
             @T("Admin.Catalog.Products.Calendar")
+        </li>
+        <li @Html.RenderSelectedTabIndex(11, GetSelectedTabIndex())>
+            @T("Admin.Catalog.Products.AclStores")
+        </li>
+        <li @Html.RenderSelectedTabIndex(12, GetSelectedTabIndex())>
+            @T("Admin.Catalog.Products.RelatedProducts")
+        </li>
+        <li @Html.RenderSelectedTabIndex(13, GetSelectedTabIndex())>
+            @T("Admin.Catalog.Products.CrossSells")
+        </li>
+        <li @Html.RenderSelectedTabIndex(13, GetSelectedTabIndex()) id="tab-associated-products">
+            @T("Admin.Catalog.Products.AssociatedProducts")
         </li>
         @if (!String.IsNullOrEmpty(Model.Id))
         {
@@ -112,6 +112,12 @@
         @Html.Partial("_CreateOrUpdate.ProductAttributes", Model)
     </div>
     <div>
+        @Html.Partial("_CreateOrUpdate.BundleProducts", Model)
+    </div>
+    <div>
+        @Html.Partial("_CreateOrUpdate.Calendar", Model)
+    </div>
+    <div>
         @Html.Partial("_CreateOrUpdate.Acl", Model)
         @Html.Partial("_CreateOrUpdate.Stores", Model)
     </div>
@@ -124,13 +130,6 @@
     <div>
         @Html.Partial("_CreateOrUpdate.AssociatedProducts", Model)
     </div>
-    <div>
-        @Html.Partial("_CreateOrUpdate.BundleProducts", Model)
-    </div>
-    <div>
-        @Html.Partial("_CreateOrUpdate.Calendar", Model)
-    </div>
-
     @if (!String.IsNullOrEmpty(Model.Id))
     {
         <div>

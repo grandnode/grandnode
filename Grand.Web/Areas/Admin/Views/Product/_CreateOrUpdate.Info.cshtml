@@ -103,6 +103,7 @@
             $('#tab-attributes-product').show();
             $('#tab-purchased-product').show();
             $('#tab-calendar').show();
+            $('#tab-bundle-products').hide();
             $("#@Html.FieldIdFor(model => model.ManageInventoryMethodId)").val("0");
             toggleManageStock();
             $("#@Html.FieldIdFor(model => model.IsShipEnabled)").prop("checked", false);
@@ -124,7 +125,6 @@
             $('#tab-bundle-products').show();
         }
     }
-
 
     function togglePreOrder() {
         if ($('#@Html.FieldIdFor(model => model.AvailableForPreOrder)').is(':checked')) {
