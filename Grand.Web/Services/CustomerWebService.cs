@@ -643,14 +643,8 @@ namespace Grand.Web.Services
 
         public virtual CustomerDownloadableProductsModel PrepareDownloadableProducts(string customerId)
         {
-            var model = new CustomerDownloadableProductsModel();
-            var items = _orderService.GetAllOrderItems(null, customerId, null, null,
-                null, null, null, true);
-            var productService = EngineContext.Current.Resolve<IProductService>();
-            foreach (var item in items)
+            CustomerDownloadableProductsModel.DownloadableProductsModel AddOrderItem(Order order, OrderItem item, Product product)
             {
-                var order = _orderService.GetOrderByOrderItemId(item.Id);
-                var product = productService.GetProductByIdIncludeArch(item.ProductId);
                 var itemModel = new CustomerDownloadableProductsModel.DownloadableProductsModel
                 {
                     OrderItemGuid = item.OrderItemGuid,
@@ -662,13 +656,33 @@ namespace Grand.Web.Services
                     ProductAttributes = item.AttributeDescription,
                     ProductId = item.ProductId
                 };
-                model.Items.Add(itemModel);
-
                 if (_downloadService.IsDownloadAllowed(item))
                     itemModel.DownloadId = product.DownloadId;
 
                 if (_downloadService.IsLicenseDownloadAllowed(item))
                     itemModel.LicenseId = !String.IsNullOrEmpty(item.LicenseDownloadId) ? item.LicenseDownloadId : "";
+
+                return itemModel;
+            }
+
+            var model = new CustomerDownloadableProductsModel();
+            var items = _orderService.GetAllOrderItems(null, customerId, null, null,
+                null, null, null, true);
+            var productService = EngineContext.Current.Resolve<IProductService>();
+            foreach (var item in items)
+            {
+                var order = _orderService.GetOrderByOrderItemId(item.Id);
+                var product = productService.GetProductByIdIncludeArch(item.ProductId);
+                if(product.ProductType == ProductType.BundledProduct)
+                {
+                    foreach (var itemdownload in product.BundleProducts)
+                    {
+                        var p1 = productService.GetProductByIdIncludeArch(itemdownload.ProductId);
+                        if(p1!=null && p1.IsDownload)
+                            model.Items.Add(AddOrderItem(order, item, p1));
+                    }
+                }
+                model.Items.Add(AddOrderItem(order, item, product));
             }
             return model;
         }
