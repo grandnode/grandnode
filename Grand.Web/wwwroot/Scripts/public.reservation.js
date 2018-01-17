@@ -159,8 +159,6 @@ var Reservation = {
             Reservation.currentYear = year;
             Reservation.availableDates = data;
             if (reload) {
-                console.log(year);
-                console.log(month);
                 Reservation._parameter = parameter;
                 $("#reservationDatepicker").datepicker("destroy");
                 Reservation.reload(new Date(year, month-1, 1), Reservation.currentYear, Reservation.currentMonth);
