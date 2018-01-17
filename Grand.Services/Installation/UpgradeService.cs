@@ -707,7 +707,7 @@ namespace Grand.Services.Installation
             #region Install product reservation
             EngineContext.Current.Resolve<IRepository<ProductReservation>>().Collection.Indexes.CreateOneAsync(Builders<ProductReservation>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             EngineContext.Current.Resolve<IRepository<ProductReservation>>().Collection.Indexes.CreateOneAsync(Builders<ProductReservation>.IndexKeys.Ascending(x => x.ProductId).Ascending(x => x.Date), new CreateIndexOptions() { Name = "ProductReservation", Unique = false });
-            EngineContext.Current.Resolve<IRepository<ProductReservation>>().Collection.Indexes.CreateOneAsync(Builders<ProductReservation>.IndexKeys.Ascending(x => x.ProductId).Ascending(x => x.Date).Ascending(x => x.Resource).Ascending(x => x.Parameter), new CreateIndexOptions() { Name = "ProductReservationRecord", Unique = true });
+            EngineContext.Current.Resolve<IRepository<ProductReservation>>().Collection.Indexes.CreateOneAsync(Builders<ProductReservation>.IndexKeys.Ascending(x => x.ProductId).Ascending(x => x.Date).Ascending(x => x.Resource), new CreateIndexOptions() { Name = "ProductReservationRecord", Unique = true });
             #endregion
 
         }

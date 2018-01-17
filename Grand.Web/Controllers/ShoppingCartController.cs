@@ -359,6 +359,16 @@ namespace Grand.Web.Controllers
                 });
             }
 
+            //you can't add reservation product to wishlist
+            if (product.ProductType == ProductType.Reservation && (ShoppingCartType)shoppingCartTypeId == ShoppingCartType.Wishlist)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "Reservation products couldn't be added to the wishlist"
+                });
+            }
+
             #region Update existing shopping cart item?
             string updatecartitemid = "";
             foreach (string formKey in form.Keys)
@@ -455,7 +465,7 @@ namespace Grand.Web.Controllers
                         return Json(new
                         {
                             success = false,
-                            message = _localizationService.GetResource("Product.Addtocart.Reservation.Duration.Required")
+                            message = _localizationService.GetResource("Product.Addtocart.Reservation.Required")
                         });
                     }
                     var reservation = _productReservationService.GetProductReservation(reservationId);
@@ -944,7 +954,7 @@ namespace Grand.Web.Controllers
                                 var currSciWarnings = _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
                                     sci.Id, sci.AttributesXml, sci.CustomerEnteredPrice,
                                     sci.RentalStartDateUtc, sci.RentalEndDateUtc,
-                                    newQuantity, true);
+                                    newQuantity, true, sci.ReservationId, sci.Id);
                                 innerWarnings.Add(sci.Id, currSciWarnings);
                             }
                             break;

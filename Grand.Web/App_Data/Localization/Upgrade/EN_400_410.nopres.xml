@@ -377,8 +377,8 @@
   <LocaleResource Name="Admin.Catalog.ProductReservations.CantDeleteWithOrder">
     <Value>You can't delete reservation with the order</Value>
   </LocaleResource>
-  <LocaleResource Name="Product.Addtocart.Reservation.Duration.Required">
-    <Value>Duration is required</Value>
+  <LocaleResource Name="Product.Addtocart.Reservation.Required">
+    <Value>Please select hour</Value>
   </LocaleResource>
   <LocaleResource Name="AddToCart.ReservationInfo">
     <Value>Reservation info</Value>

@@ -1299,7 +1299,7 @@ namespace Grand.Services.Orders
             string shoppingCartItemId, string attributesXml,
             decimal customerEnteredPrice,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null, 
-            int quantity = 1, bool resetCheckoutData = true)
+            int quantity = 1, bool resetCheckoutData = true, string reservationId = "", string sciId = "")
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
@@ -1321,7 +1321,7 @@ namespace Grand.Services.Orders
                     warnings.AddRange(GetShoppingCartItemWarnings(customer, shoppingCartItem.ShoppingCartType,
                         product, shoppingCartItem.StoreId,
                         attributesXml, customerEnteredPrice, 
-                        rentalStartDate, rentalEndDate, quantity, false));
+                        rentalStartDate, rentalEndDate, quantity, false, reservationId: reservationId, sciId: sciId));
                     if (!warnings.Any())
                     {
                         //if everything is OK, then update a shopping cart item
@@ -1337,6 +1337,7 @@ namespace Grand.Services.Orders
                         shoppingCartItem.IsShipEnabled = product.IsShipEnabled;
                         shoppingCartItem.IsTaxExempt = product.IsTaxExempt;
                         shoppingCartItem.IsGiftCard = product.IsGiftCard;
+                        
                         _customerService.UpdateShoppingCartItem(customer.Id, shoppingCartItem);
 
                         //event notification
@@ -1374,9 +1375,9 @@ namespace Grand.Services.Orders
             for (int i = 0; i < fromCart.Count; i++)
             {
                 var sci = fromCart[i];
-                AddToCart(toCustomer, sci.ProductId, sci.ShoppingCartType, sci.StoreId, 
+                AddToCart(toCustomer, sci.ProductId, sci.ShoppingCartType, sci.StoreId,
                     sci.AttributesXml, sci.CustomerEnteredPrice,
-                    sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, false);
+                    sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, false, sci.ReservationId, sci.Parameter, sci.Duration);
             }
             for (int i = 0; i < fromCart.Count; i++)
             {

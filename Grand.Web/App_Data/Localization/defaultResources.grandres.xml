@@ -16809,8 +16809,8 @@
   <LocaleResource Name="Product.Addtocart.Hourisrequired">
     <Value>Hour is required</Value>
   </LocaleResource>
-  <LocaleResource Name="Product.Addtocart.Reservation.Duration.Required">
-    <Value>Duration is required</Value>
+  <LocaleResource Name="Product.Addtocart.Reservation.Required">
+    <Value>Please select hour</Value>
   </LocaleResource>
   <LocaleResource Name="Product.AssociatedProducts">
     <Value>Products variants</Value>

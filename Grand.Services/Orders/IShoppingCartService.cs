@@ -189,7 +189,7 @@ namespace Grand.Services.Orders
             string shoppingCartItemId, string attributesXml,
             decimal customerEnteredPrice,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
-            int quantity = 1, bool resetCheckoutData = true);
+            int quantity = 1, bool resetCheckoutData = true, string reservationId = "", string sciId = "");
         
         /// <summary>
         /// Migrate shopping cart
