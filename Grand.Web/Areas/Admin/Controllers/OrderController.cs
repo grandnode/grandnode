@@ -857,6 +857,70 @@ namespace Grand.Web.Areas.Admin.Controllers
             return model;
         }
 
+
+        [NonAction]
+        protected virtual int GetStockQty(Product product, string warehouseId)
+        {
+            List<int> _qty = new List<int>();
+            foreach (var item in product.BundleProducts)
+            {
+                var p1 = _productService.GetProductById(item.ProductId);
+                if(p1.UseMultipleWarehouses)
+                {
+                    var stock = p1.ProductWarehouseInventory.FirstOrDefault(x => x.WarehouseId == warehouseId);
+                    if(stock!=null)
+                    {
+                        _qty.Add(stock.StockQuantity / item.Quantity);
+                    }
+                }
+                else
+                {
+                    _qty.Add(p1.StockQuantity / item.Quantity);
+                }
+            }
+
+            return _qty.Count > 0 ?_qty.Min(): 0;
+        }
+
+        [NonAction]
+        protected virtual int GetPlannedQty(Product product, string warehouseId)
+        {
+            List<int> _qty = new List<int>();
+            foreach (var item in product.BundleProducts)
+            {
+                var p1 = _productService.GetProductById(item.ProductId);
+                if (p1.UseMultipleWarehouses)
+                {
+                    var stock = p1.ProductWarehouseInventory.FirstOrDefault(x => x.WarehouseId == warehouseId);
+                    if (stock != null)
+                    {
+                        _qty.Add((stock.StockQuantity-stock.ReservedQuantity) / item.Quantity);
+                    }
+                }
+            }
+            return _qty.Count > 0 ? _qty.Min() : 0;
+        }
+
+        [NonAction]
+        protected virtual int GetReservedQty(Product product, string warehouseId)
+        {
+            List<int> _qty = new List<int>();
+            foreach (var item in product.BundleProducts)
+            {
+                var p1 = _productService.GetProductById(item.ProductId);
+                if (p1.UseMultipleWarehouses)
+                {
+                    var stock = p1.ProductWarehouseInventory.FirstOrDefault(x => x.WarehouseId == warehouseId);
+                    if (stock != null)
+                    {
+                        _qty.Add(stock.ReservedQuantity / item.Quantity);
+                    }
+                }
+            }
+            return _qty.Count > 0 ? _qty.Min() : 0;
+        }
+
+
         #endregion
 
         #region Order list
@@ -3038,6 +3102,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         }
                     }
                 }
+
                 if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
                 {
                     if (product.UseMultipleWarehouses)
@@ -3077,7 +3142,42 @@ namespace Grand.Web.Areas.Admin.Controllers
                         }
                     }
                 }
-               
+
+                if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByBundleProducts)
+                {
+                    if(!string.IsNullOrEmpty(orderItem.WarehouseId))
+                    {
+                        var warehouse = _shippingService.GetWarehouseById(product.WarehouseId);
+                        if (warehouse != null)
+                        {
+                            shipmentItemModel.AvailableWarehouses.Add(new ShipmentModel.ShipmentItemModel.WarehouseInfo
+                            {
+                                WarehouseId = warehouse.Id,
+                                WarehouseName = warehouse.Name,
+                                StockQuantity = GetStockQty(product, orderItem.WarehouseId),
+                                ReservedQuantity = GetReservedQty(product, orderItem.WarehouseId),
+                                PlannedQuantity = GetPlannedQty(product, orderItem.WarehouseId)
+                            });
+                        }
+                    }
+                    else
+                    {
+                        shipmentItemModel.AllowToChooseWarehouse = true;
+                        var warehouses = _shippingService.GetAllWarehouses();
+                        foreach (var warehouse in warehouses)
+                        {
+                            shipmentItemModel.AvailableWarehouses.Add(new ShipmentModel.ShipmentItemModel.WarehouseInfo
+                            {
+                                WarehouseId = warehouse.Id,
+                                WarehouseName = warehouse.Name,
+                                StockQuantity = GetStockQty(product, warehouse.Id),
+                                ReservedQuantity = GetReservedQty(product, warehouse.Id),
+                                PlannedQuantity = GetPlannedQty(product, warehouse.Id)
+
+                            });
+                        }
+                    }
+                }
                     
                 model.Items.Add(shipmentItemModel);
             }
@@ -3131,8 +3231,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                     }
 
                 string warehouseId = "";
-                if ((product.ManageInventoryMethod == ManageInventoryMethod.ManageStock || product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes) &&
-                    product.UseMultipleWarehouses)
+                if (((product.ManageInventoryMethod == ManageInventoryMethod.ManageStock || product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes) &&
+                    product.UseMultipleWarehouses) || (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByBundleProducts))
                 {
                     //multiple warehouses supported
                     //warehouse is chosen by a store owner

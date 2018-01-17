@@ -3,114 +3,8 @@
 @inject CatalogSettings catalogSettings
 @{
     Html.AppendScriptParts("~/Scripts/public.reservation.js");
-    Html.AppendCssFileParts("~/Content/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css");
+    Html.AddCssFileParts("~/Content/jquery-ui-themes/smoothness/jquery-ui.calendar.min.css");
 }
-<style>
-    
-.ui-datepicker {
-width: 280px;
-box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
-background-color: #fff;
-text-align: center;
-border: none;
-border-radius: 0;
-padding: 0;
-font: normal 14px Arial, Helvetica, sans-serif;
-color: #777;
-}
-
-.ui-datepicker-header {
-position: relative;
-height: 32px;
-background-color: #5cb85c;
-color: #fff;
-border: none;
-border-radius: 0;
-background-image: none;
-padding: 0 !important;
-font-weight: normal;
-}
-
-.ui-datepicker-header a {
-position: absolute;
-top: 0;
-z-index: 1;
-width: 32px;
-height: 32px;
-line-height: 32px;
-font-size: 0;
-top: 0 !important;
-width: 32px !important;
-height: 32px !important;
-border: none !important;
-}
-
-.ui-datepicker-header a.ui-datepicker-prev {
-    left: 0;
-    background: url('../Content/Images/arrow-left-thick.png') center no-repeat;
-    background-size: 70%;
-}
-
-.ui-datepicker-header a.ui-datepicker-next {
-    right: 0;
-    background: url('../Content/Images/arrow-right-thick.png') center no-repeat;
-    background-size: 70%;
-}
-
-.ui-datepicker-header a span {
-    display: none !important;
-}
-
-.ui-datepicker-title {
-position: relative;
-z-index: 0;
-line-height: 32px;
-font-weight: bold;
-text-transform: uppercase;
-line-height: 32px !important;
-}
-
-.ui-datepicker-calendar {
-margin: 0 !important;
-font-size: 14px !important;
-}
-
-.ui-datepicker-calendar th {
-background-color: #eee;
-}
-
-.ui-datepicker-calendar th,
-.ui-datepicker-calendar td {
-width: 14.285%;
-border: 1px solid #ddd;
-padding: 0;
-}
-
-.ui-datepicker-calendar th span,
-.ui-datepicker-calendar td a {
-    display: block;
-    min-height: 32px;
-    line-height: 32px;
-    color: #444;
-}
-
-.ui-datepicker-calendar td a {
-    border: none !important;
-    background: none !important;
-    padding: 0;
-    text-align: center;
-    color: #444 !important;
-}
-
-.ui-datepicker-calendar .ui-state-active {
-outline: 2px solid #4ab2f1;
-font-weight: bold;
-color: #4ab2f1;
-color: #4ab2f1 !important;
-}
-</style>
-@if (Model.ProductType == ProductType.Reservation)
-{
     <div style="margin-top:10px">
         @if (Model.Parameters.Any())
         {
@@ -148,7 +42,6 @@ color: #4ab2f1 !important;
             </div>
         }
     </div>
-}
 
 <script>
     $(document).ready(function () {

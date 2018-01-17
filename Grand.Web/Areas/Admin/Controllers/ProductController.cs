@@ -2000,7 +2000,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                     return Content("This is not your product");
                 }
             }
-            bundleProduct.ProductBundleId = model.ProductId;
+            bundleProduct.ProductBundleId = model.ProductBundleId;
+            bundleProduct.ProductId = model.ProductId;
             bundleProduct.Quantity = model.Quantity > 0 ? model.Quantity : 1;
             bundleProduct.DisplayOrder = model.DisplayOrder;
             _productService.UpdateBundleProduct(bundleProduct);

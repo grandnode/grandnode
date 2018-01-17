@@ -92,8 +92,8 @@
                             @await Html.PartialAsync("_GiftCardInfo", Model.GiftCard, dataDictGiftCard)
                         }
                         <!--reservation info-->
-
-                        @{
+                        @if (Model.ProductType == ProductType.Reservation)
+                        {
                            var dataDictReservation = new ViewDataDictionary(ViewData);
                            dataDictReservation.TemplateInfo.HtmlFieldPrefix = string.Format("reservation_{0}", Model.Id);
                            @await Html.PartialAsync("_ReservationInfo", Model, dataDictReservation)

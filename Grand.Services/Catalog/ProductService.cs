@@ -1693,7 +1693,7 @@ namespace Grand.Services.Catalog
             //only products with "use multiple warehouses" are handled this way
             if (product.ManageInventoryMethod == ManageInventoryMethod.DontManageStock)
                 return;
-            if (!product.UseMultipleWarehouses)
+            if (!product.UseMultipleWarehouses && product.ManageInventoryMethod != ManageInventoryMethod.ManageStockByBundleProducts)
                 return;
 
             //standard manage stock 
@@ -1780,7 +1780,7 @@ namespace Grand.Services.Catalog
             //only products with "use multiple warehouses" are handled this way
             if (product.ManageInventoryMethod == ManageInventoryMethod.DontManageStock)
                 return 0;
-            if (!product.UseMultipleWarehouses)
+            if (!product.UseMultipleWarehouses && product.ManageInventoryMethod != ManageInventoryMethod.ManageStockByBundleProducts)
                 return 0;
 
             var shipment = EngineContext.Current.Resolve<IShipmentService>().GetShipmentById(shipmentItem.ShipmentId);
@@ -1986,7 +1986,7 @@ namespace Grand.Services.Catalog
 
             var builder = Builders<Product>.Filter;
             var filter = builder.Eq(x => x.Id, bundleProduct.ProductBundleId);
-            filter = filter & builder.ElemMatch(x => x.RelatedProducts, y => y.Id == bundleProduct.Id);
+            filter = filter & builder.ElemMatch(x => x.BundleProducts, y => y.Id == bundleProduct.Id);
             var update = Builders<Product>.Update
                 .Set(x => x.BundleProducts.ElementAt(-1).Quantity, bundleProduct.Quantity)
                 .Set(x => x.BundleProducts.ElementAt(-1).DisplayOrder, bundleProduct.DisplayOrder);

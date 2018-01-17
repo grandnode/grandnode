@@ -458,5 +458,9 @@
     <Value>Out of stock for product {0}</Value>
   </LocaleResource>
 
+  <LocaleResource Name="Admin.Orders.Shipments.Products.Warehouse.Choose">
+    <Value>{0}</Value>
+  </LocaleResource>
+
 </Language>
 
