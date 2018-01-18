@@ -453,13 +453,20 @@
   <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ManageInventoryMethod.ManageStockByBundleProducts">
     <Value>Track inventory by bundle products</Value>
   </LocaleResource>  
-
   <LocaleResource Name="ShoppingCart.OutOfStock.BundleProduct">
     <Value>Out of stock for product {0}</Value>
   </LocaleResource>
-
   <LocaleResource Name="Admin.Orders.Shipments.Products.Warehouse.Choose">
     <Value>{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Duration">
+    <Value>Duration</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Reservation.Option">
+    <Value>Additional parameter {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.Address">
+    <Value>Vendor address</Value>
   </LocaleResource>
 
 </Language>

@@ -2529,6 +2529,24 @@
   <LocaleResource Name="Admin.Catalog.Products.BackToList">
     <Value>back to product list</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.BundleProducts">
+    <Value>Bundle product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.BundleProducts.AddNew">
+    <Value>Add new products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.BundleProducts.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.BundleProducts.Fields.Product">
+    <Value>Product name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.BundleProducts.Fields.Quantity">
+    <Value>Quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.BundleProducts.SaveBeforeEdit">
+    <Value>You need to save the product before you can add new bundle product</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Calendar">
     <Value>Reservation calendar</Value>
   </LocaleResource>
@@ -14199,6 +14217,9 @@
   <LocaleResource Name="Admin.Vendors.Fields.Active.Hint">
     <Value>A value indicating whether the vendor is active.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.Address">
+    <Value>Vendor address</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.AdminComment">
     <Value>Admin comment</Value>
   </LocaleResource>
@@ -16938,6 +16959,9 @@
   <LocaleResource Name="Products.DownloadSample">
     <Value>Download sample</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.Duration">
+    <Value>Duration</Value>
+  </LocaleResource>  
   <LocaleResource Name="Products.EmailAFriend">
     <Value>Email a friend</Value>
   </LocaleResource>
@@ -17648,6 +17672,9 @@
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Reservation.Noreservationfound">
     <Value>Reservation not found</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Reservation.Option">
+    <Value>Additional parameter {0}</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Reservation.Reservationdatesmustbelaterthantoday">
     <Value>Reservation date must be later than today</Value>
