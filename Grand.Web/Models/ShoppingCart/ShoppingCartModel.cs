@@ -56,30 +56,17 @@ namespace Grand.Web.Models.ShoppingCart
                 Warnings = new List<string>();
             }
             public string Sku { get; set; }
-
             public PictureModel Picture {get;set;}
-
             public string ProductId { get; set; }
-
             public string ProductName { get; set; }
-
             public string ProductSeName { get; set; }
-
             public string UnitPrice { get; set; }
-
             public string SubTotal { get; set; }
-
             public string Discount { get; set; }
-
             public int Quantity { get; set; }
             public List<SelectListItem> AllowedQuantities { get; set; }
-            
             public string AttributeInfo { get; set; }
-
             public string RecurringInfo { get; set; }
-
-            public string RentalInfo { get; set; }
-
             public bool AllowItemEditing { get; set; }
             public bool DisableRemoval { get; set; }
             public string ReservationInfo { get; set; }

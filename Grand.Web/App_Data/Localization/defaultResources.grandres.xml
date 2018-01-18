@@ -17659,10 +17659,10 @@
     <Value>Please choose both dates</Value>
   </LocaleResource>
   <LocaleResource Name="Shoppingcart.Reservation.Date">
-    <Value>Reservation from {0} to {1}</Value>
+    <Value>Reservation from: {0} to: {1}</Value>
   </LocaleResource>
   <LocaleResource Name="Shoppingcart.Reservation.Duration">
-    <Value>Duration {0}</Value>
+    <Value>Duration: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Reservation.Enddatemustbelaterthanstartdate">
     <Value>End date must be later than start date</Value>
@@ -17683,10 +17683,10 @@
     <Value>Reservation was deleted</Value>
   </LocaleResource>
   <LocaleResource Name="Shoppingcart.Reservation.Startdate">
-    <Value>Date {0}</Value>
+    <Value>Date: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.SelectAttribute">
-    <Value>Please select {0}</Value>
+    <Value>Please select: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.SenderEmailError">
     <Value>Enter valid sender email</Value>

@@ -73,15 +73,9 @@
                                                     @Html.Raw(item.RecurringInfo)
                                                 </div>
                                                 }
-                                        @if (!String.IsNullOrEmpty(item.RentalInfo))
-                                                {
-                                                <div class="rental-info">
-                                                    @Html.Raw(item.RentalInfo)
-                                                </div>
-                                                }
                                         @if (!String.IsNullOrEmpty(item.ReservationInfo))
                                             {
-                                            <div>
+                                            <div class="rental-info">
                                                 @Html.Raw(@item.ReservationInfo)
                                             </div>
                                             }
@@ -207,11 +201,11 @@
                                                         @Html.Raw(item.RecurringInfo)
                                                     </div>
                                             }
-                                            @if (!String.IsNullOrEmpty(item.RentalInfo))
+                                            @if (!String.IsNullOrEmpty(item.ReservationInfo))
                                             {
-                                                    <div class="rental-info">
-                                                        @Html.Raw(item.RentalInfo)
-                                                    </div>
+                                                <div class="rental-info">
+                                                    @Html.Raw(@item.ReservationInfo)
+                                                </div>
                                             }
                                             @if (Model.IsEditable && item.AllowItemEditing)
                                             {

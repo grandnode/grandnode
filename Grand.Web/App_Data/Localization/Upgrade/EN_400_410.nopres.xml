@@ -417,13 +417,13 @@
     <Value>Day(s)</Value>
   </LocaleResource>
   <LocaleResource Name="shoppingcart.reservation.date">
-    <Value>Reservation from {0} to {1}</Value>
+    <Value>Reservation from: {0} to: {1}</Value>
   </LocaleResource>
   <LocaleResource Name="shoppingcart.reservation.duration">
-    <Value>Duration {0}</Value>
+    <Value>Duration: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="shoppingcart.reservation.startdate">
-    <Value>Date {0}</Value>
+    <Value>Date: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ProductType.BundledProduct">
     <Value>Bundled product</Value>
