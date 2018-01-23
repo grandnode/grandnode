@@ -1270,8 +1270,9 @@ namespace Grand.Web.Services
                 foreach (var bundle in product.BundleProducts.OrderBy(x=>x.DisplayOrder))
                 {
                     var p1 = _productService.GetProductById(bundle.ProductId);
-                    if(p1!=null && p1.Published)
+                    if(p1!=null && p1.Published && _aclService.Authorize(p1) && _storeMappingService.Authorize(p1) && p1.IsAvailable())
                     {
+
                         var bundleProduct = new ProductDetailsModel.ProductBundleModel()
                         {
                             ProductId = p1.Id,
@@ -1286,7 +1287,7 @@ namespace Grand.Web.Services
                         if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
                         {
                             decimal taxRateBundle;
-                            decimal finalPriceWithDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, includeDiscounts: true), out taxRateBundle);
+                            decimal finalPriceWithDiscountBase = _taxService.GetProductPrice(p1, _priceCalculationService.GetFinalPrice(p1, _workContext.CurrentCustomer, includeDiscounts: true), out taxRateBundle);
                             decimal finalPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithDiscountBase, _workContext.WorkingCurrency);
                             bundleProduct.Price = _priceFormatter.FormatPrice(finalPriceWithDiscount);
                             bundleProduct.PriceValue = finalPriceWithDiscount;
