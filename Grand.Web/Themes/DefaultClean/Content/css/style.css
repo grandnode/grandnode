@@ -624,11 +624,22 @@ ul.color-squares input {
     align-items: center;
 }
 
-    .product-simple-share .btn .fa {
-        margin-right: 5px;
-        align-self: center;
-    }
+.product-simple-share .btn .fa {
+    margin-right: 5px;
+    align-self: center;
+}
 
+.product-bundle .card:first-of-type {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: 0;
+}
+
+.product-bundle .card:last-of-type {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-top: 0;
+}
 pagination .pagination a:not([href]) {
     background-color: #0a5596;
     color: #fff;

@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Orders;
-using Grand.Framework;
-using Grand.Framework.Mvc;
 using Grand.Web.Models.Media;
 using Grand.Framework.Mvc.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -31,6 +28,7 @@ namespace Grand.Web.Models.Catalog
             ProductReviewOverview = new ProductReviewOverviewModel();
             TierPrices = new List<TierPriceModel>();
             Parameters = new List<SelectListItem>();
+            ProductBundleModels = new List<ProductBundleModel>();
         }
 
         //picture(s)
@@ -102,6 +100,9 @@ namespace Grand.Web.Models.Catalog
 
         //a list of associated products. For example, "Grouped" products could have several child "simple" products
         public IList<ProductDetailsModel> AssociatedProducts { get; set; }
+
+        //bundle product 
+        public IList<ProductBundleModel> ProductBundleModels { get; set; }
 
         public bool DisplayDiscontinuedMessage { get; set; }
         public string CurrentStoreName { get; set; }
@@ -294,6 +295,21 @@ namespace Grand.Web.Models.Catalog
 
             //picture model is used when we want to override a default product picture when some attribute is selected
             public PictureModel PictureModel { get; set; }
+        }
+
+        public partial class ProductBundleModel : BaseGrandModel
+        {
+            public string ProductId { get; set; }
+            public string Name { get; set; }
+            public string SeName { get; set; }
+            public string ShortDescription { get; set; }
+            public string Sku { get; set; }
+            public string Mpn { get; set; }
+            public string Gtin { get; set; }
+            public int Quantity { get; set; }
+            public string Price { get; set; }
+            public decimal PriceValue { get; set; }
+            public PictureModel DefaultPictureModel { get; set; }
         }
 
         #endregion

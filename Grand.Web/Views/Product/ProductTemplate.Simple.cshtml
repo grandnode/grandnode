@@ -79,6 +79,8 @@
                         @await Html.PartialAsync("_DeliveryInfo", Model)
                         <!--sample download-->
                         @await Html.PartialAsync("_DownloadSample", Model)
+                        <!--product bundles-->
+                        @await Html.PartialAsync("_ProductBundles", Model)
                         <!--attributes-->
                         @{
                             var dataDictAttributes = new ViewDataDictionary(ViewData);

@@ -1263,6 +1263,71 @@ namespace Grand.Web.Services
 
             #endregion Product reservations
 
+            #region Product Bundle
+
+            if(product.ProductType == ProductType.BundledProduct)
+            {
+                foreach (var bundle in product.BundleProducts.OrderBy(x=>x.DisplayOrder))
+                {
+                    var p1 = _productService.GetProductById(bundle.ProductId);
+                    if(p1!=null && p1.Published)
+                    {
+                        var bundleProduct = new ProductDetailsModel.ProductBundleModel()
+                        {
+                            ProductId = p1.Id,
+                            Name = p1.GetLocalized(x => x.Name),
+                            ShortDescription = p1.GetLocalized(x => x.ShortDescription),
+                            SeName = p1.GetSeName(),
+                            Sku = p1.Sku,
+                            Mpn = p1.ManufacturerPartNumber,
+                            Gtin = p1.Gtin,
+                            Quantity = bundle.Quantity
+                        };
+                        if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
+                        {
+                            decimal taxRateBundle;
+                            decimal finalPriceWithDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, includeDiscounts: true), out taxRateBundle);
+                            decimal finalPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithDiscountBase, _workContext.WorkingCurrency);
+                            bundleProduct.Price = _priceFormatter.FormatPrice(finalPriceWithDiscount);
+                            bundleProduct.PriceValue = finalPriceWithDiscount;
+                        }
+
+                        //prepare picture model
+                        var productbundlePicturesCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DETAILS_PICTURES_MODEL_KEY, 
+                            p1.Id, _mediaSettings.ProductBundlePictureSize, false, _workContext.WorkingLanguage.Id, 
+                            _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
+
+                        bundleProduct.DefaultPictureModel = _cacheManager.Get(productbundlePicturesCacheKey, () =>
+                        {
+                            var picture = p1.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault();
+                            if (picture == null)
+                                picture = new ProductPicture();
+
+                            var pictureModel = new PictureModel
+                            {
+                                ImageUrl = _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductBundlePictureSize),
+                                FullSizeImageUrl = _pictureService.GetPictureUrl(picture.PictureId)
+                            };
+                            //"title" attribute
+                            pictureModel.Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute)) ?
+                                picture.TitleAttribute :
+                                string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), p1.Name);
+                            //"alt" attribute
+                            pictureModel.AlternateText = (picture != null && !string.IsNullOrEmpty(picture.AltAttribute)) ?
+                                picture.AltAttribute :
+                                string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), p1.Name);
+
+                            return pictureModel;
+                        });
+
+                        model.ProductBundleModels.Add(bundleProduct);
+                    }
+
+                }
+
+            }
+            #endregion
+
             return model;
         }
 

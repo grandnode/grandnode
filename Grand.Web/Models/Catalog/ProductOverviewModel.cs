@@ -40,7 +40,6 @@ namespace Grand.Web.Models.Catalog
         public ProductReviewOverviewModel ReviewOverviewModel { get; set; }
 
 		#region Nested Classes
-
         public partial class ProductPriceModel : BaseGrandModel
         {
             public string OldPrice { get; set; }
@@ -59,7 +58,6 @@ namespace Grand.Web.Models.Catalog
             /// </summary>
             public bool DisplayTaxShippingInfo { get; set; }
         }
-
-		#endregion
+        #endregion
     }
 }
