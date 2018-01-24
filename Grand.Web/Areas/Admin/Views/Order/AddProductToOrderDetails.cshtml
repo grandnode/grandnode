@@ -2,7 +2,7 @@
 @model OrderModel.AddOrderProductModel.ProductDetailsModel
 @{
     //page title
-    ViewBag.Title = string.Format(T("Admin.Orders.Products.AddNew.Title2").Text, Model.Name, Model.OrderId);
+    ViewBag.Title = string.Format(T("Admin.Orders.Products.AddNew.Title2").Text, Model.Name, Model.OrderNumber);
 }
 @*we add enctype = "multipart/form-data" because "File upload" attribute control type requries it*@
 @using (Html.BeginForm("AddProductToOrderDetails", "Order",
@@ -21,7 +21,7 @@
                 <div class="portlet-title">
                     <div class="caption">
                         <i class="fa fa-cubes"></i>
-                        @string.Format(T("Admin.Orders.Products.AddNew.Title2").Text, Model.Name, Model.OrderId)
+                        @string.Format(T("Admin.Orders.Products.AddNew.Title2").Text, Model.Name, Model.OrderNumber)
                         @Html.ActionLink("(" + T("Admin.Orders.Products.AddNew.BackToList") + ")", "AddProductToOrder", new { orderId = Model.OrderId })
                     </div>
                 </div>
@@ -86,9 +86,6 @@
                                     @await Html.PartialAsync("_ProductAddGiftCardInfo", Model.GiftCard, dataDictGiftCard)
 
                                 }
-                                <div class="form-group">
-                                    @Html.Partial("_ProductAddRentalInfo", Model)
-                                </div>
                                 <div class="form-actions">
                                     <div class="row">
                                         <div class="col-md-offset-3 col-md-9 col-sm-9">
@@ -102,24 +99,30 @@
                                 </div>
                             </div>
                         </div>
-                                    }
-                                    else if (Model.ProductType == ProductType.GroupedProduct)
-                                    {
-                                    <div>
-                                        @*TODO add support for grouped products to be added to an existing order*@
-                                        <div class="note note-info">
-                                            Grouped products are not currently supported for adding to an existing order
-                                        </div>
-                                    </div>
-                                    }
-                                    else
-                                    {
-                                    <div class="note note-info">
-                                        This product type (unknown) is not currently supported for adding to an existing order
-                                    </div>
-                                    }
+                        }
+                        else if (Model.ProductType == ProductType.GroupedProduct)
+                        {
+                        <div>
+                            <div class="note note-info">
+                                Grouped products are not currently supported for adding to an existing order
+                            </div>
+                        </div>
+                        } else if (Model.ProductType == ProductType.Reservation)
+                        {
+                        <div>
+                            <div class="note note-info">
+                                Reservation products are not currently supported for adding to an existing order
+                            </div>
+                        </div>
+                        }
+                        else
+                        {
+                        <div class="note note-info">
+                            This product type (unknown) is not currently supported for adding to an existing order
+                        </div>
+                        }
                 </div>
             </div>
         </div>
     </div>
-                                    }
+    }

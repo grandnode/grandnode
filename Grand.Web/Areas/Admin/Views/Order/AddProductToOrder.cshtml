@@ -4,7 +4,7 @@
     var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
 
     //page title
-    ViewBag.Title = string.Format(T("Admin.Orders.Products.AddNew.Title1").Text, Model.OrderId);
+    ViewBag.Title = string.Format(T("Admin.Orders.Products.AddNew.Title1").Text, Model.OrderNumber);
 }
 @Html.AntiForgeryToken()
 
@@ -14,7 +14,7 @@
             <div class="portlet-title">
                 <div class="caption">
                     <i class="fa fa-cube"></i>
-                    @string.Format(T("Admin.Orders.Products.AddNew.Title1").Text, Model.OrderId)
+                    @string.Format(T("Admin.Orders.Products.AddNew.Title1").Text, Model.OrderNumber)
                     <small>
                         <i class="fa fa-arrow-circle-left"></i>
                         @Html.ActionLink(T("Admin.Orders.Products.AddNew.BackToOrder").Text, "Edit", new { id = Model.OrderId })

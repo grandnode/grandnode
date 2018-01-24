@@ -701,6 +701,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 ProductId = productId,
                 OrderId = orderId,
+                OrderNumber = order.OrderNumber,
                 Name = product.Name,
                 ProductType = product.ProductType,
                 UnitPriceExclTax = presetPriceExclTax,
@@ -2331,8 +2332,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = orderId });
 
+            var order = _orderService.GetOrderById(orderId);
+            if (order == null)
+                //No order found with the specified id
+                return RedirectToAction("List");
+
             var model = new OrderModel.AddOrderProductModel();
             model.OrderId = orderId;
+            model.OrderNumber = order.OrderNumber;
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             var categories = _categoryService.GetAllCategories(showHidden: true);
@@ -2584,31 +2591,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             #endregion
 
-            #region Reservation product
-
-            DateTime? rentalStartDate = null;
-            DateTime? rentalEndDate = null;
-            if (product.ProductType == ProductType.Reservation)
-            {
-                if (product.IntervalUnitType == IntervalUnit.Day)
-                {
-                    var ctrlStartDate = form["rental_start_date"];
-                    var ctrlEndDate = form["rental_end_date"];
-                    try
-                    {
-                        //currenly we support only this format (as in the \Views\Order\_ProductAddRentalInfo.cshtml file)
-                        const string datePickerFormat = "MM/dd/yyyy";
-                        rentalStartDate = DateTime.ParseExact(ctrlStartDate, datePickerFormat, CultureInfo.InvariantCulture);
-                        rentalEndDate = DateTime.ParseExact(ctrlEndDate, datePickerFormat, CultureInfo.InvariantCulture);
-                    }
-                    catch
-                    {
-                    }
-                }
-            }
-
-            #endregion
-
             //warnings
             warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(customer, ShoppingCartType.ShoppingCart, product, quantity, attributesXml));
             warnings.AddRange(_shoppingCartService.GetShoppingCartItemGiftCardWarnings(ShoppingCartType.ShoppingCart, product, attributesXml));
@@ -2638,8 +2620,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                     DownloadCount = 0,
                     IsDownloadActivated = false,
                     LicenseDownloadId = "",
-                    RentalStartDateUtc = rentalStartDate,
-                    RentalEndDateUtc = rentalEndDate,
                     CreatedOnUtc = DateTime.UtcNow,
 
                 };
