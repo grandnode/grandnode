@@ -30,7 +30,7 @@ namespace Grand.Core.Infrastructure.MongoDB
         {
             BsonSerializer.RegisterSerializer(typeof(decimal), new DecimalSerializer(BsonType.Decimal128));
             BsonSerializer.RegisterSerializer(typeof(decimal?), new NullableSerializer<decimal>(new DecimalSerializer(BsonType.Decimal128)));
-            BsonSerializer.RegisterSerializer(typeof(DateTime), new DateTimeSerializer(DateTimeKind.Unspecified));
+            BsonSerializer.RegisterSerializer(typeof(DateTime), new BsonUtcDateTimeSerializer());
 
             //global set an equivalent of [BsonIgnoreExtraElements] for every Domain Model
             var cp = new ConventionPack();
