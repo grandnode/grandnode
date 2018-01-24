@@ -107,6 +107,7 @@
             $("#@Html.FieldIdFor(model => model.ManageInventoryMethodId)").val("0");
             toggleManageStock();
             $("#@Html.FieldIdFor(model => model.IsShipEnabled)").prop("checked", false);
+            $("#@Html.FieldIdFor(model => model.NotReturnable)").prop("checked", true);
             toggleShipping();
             $('#tab-inventory-product').hide();
         } else if (selectedProductTypeId == @(((int) ProductType.BundledProduct).ToString())){
