@@ -18,7 +18,7 @@ namespace Grand.Web.Areas.Admin.Models.Vendors
         {
             get
             {
-                return Id.ToString() + ":" + VendorId.ToString();
+                return Id.ToString() + ":" + VendorId;
             }
         }
         [GrandResourceDisplayName("Admin.VendorReviews.Fields.Customer")]

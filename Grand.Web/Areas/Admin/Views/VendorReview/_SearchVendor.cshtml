@@ -25,7 +25,7 @@
 
                 //remove button
                 $('#search-vendor-clear').click(function() {
-                    $('#@Html.FieldIdFor(model => model.SearchVendorId)').val('0');
+                    $('#@Html.FieldIdFor(model => model.SearchVendorId)').val('');
                     $('#search-vendor-friendly-name').text('');
                     $('#search-vendor-clear').hide();
                     return false;
