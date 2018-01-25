@@ -83,13 +83,8 @@ namespace Grand.Framework.Infrastructure
 
             if (dataProviderSettings != null && dataProviderSettings.IsValid())
             {
-                var mongoDBDataProviderManager = new MongoDBDataProviderManager(dataSettingsManager.LoadSettings());
-                var dataProvider = mongoDBDataProviderManager.LoadDataProvider();
-                var databaseName = new MongoUrl(dataProviderSettings.DataConnectionString).DatabaseName;
                 builder.Register<IMongoClient>(c => new MongoClient(dataProviderSettings.DataConnectionString)).SingleInstance();
-                builder.Register(c => new MongoClient(dataProviderSettings.DataConnectionString).GetDatabase(databaseName)).InstancePerLifetimeScope();
                 builder.Register<IMongoDBContext>(c => new MongoDBContext(dataProviderSettings.DataConnectionString)).InstancePerLifetimeScope();
-
             }
             else
             {

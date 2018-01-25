@@ -90,7 +90,7 @@ namespace Grand.Data
         /// <returns>Entity</returns>
         public virtual T GetById(string id)
         {
-            return this._collection.Find(e => e.Id == id).FirstOrDefaultAsync().Result;
+            return this._collection.Find(e => e.Id == id).FirstOrDefault();
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace Grand.Data
         /// <param name="entity">Entity</param>
         public virtual T Update(T entity)
         {
-            var update = this._collection.ReplaceOneAsync(x=>x.Id == entity.Id, entity, new UpdateOptions() { IsUpsert = false }).Result;
+            this._collection.ReplaceOne(x=>x.Id == entity.Id, entity, new UpdateOptions() { IsUpsert = false });
             return entity;
 
         }
@@ -168,6 +168,16 @@ namespace Grand.Data
         public virtual IMongoQueryable<T> Table
         {
             get { return this._collection.AsQueryable(); }
+        }
+
+        /// <summary>
+        /// Get collection by filter definitions
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public virtual IList<T> FindByFilterDefinition(FilterDefinition<T> query)
+        {
+            return this._collection.Find(query).ToList();
         }
 
         #endregion

@@ -930,62 +930,50 @@ namespace Grand.Services.Catalog
                 builderSort = Builders<Product>.Sort.Descending(x => x.Sold);
             }
 
-            var products = new PagedList<Product>();
-            Task taskProduct = Task.Run(() =>
-            {
-                products = new PagedList<Product>(_productRepository.Collection, filter, builderSort, pageIndex, pageSize);
-
-            });
+            var products = new PagedList<Product>(_productRepository.Collection, filter, builderSort, pageIndex, pageSize);
 
             if (loadFilterableSpecificationAttributeOptionIds && !_catalogSettings.IgnoreFilterableSpecAttributeOption)
             {
                 IList<string> specyfication = new List<string>();
-                Task taskfilterSpec = Task.Run(() =>
+                var filterSpecExists = filter &
+                    builder.Where(x => x.ProductSpecificationAttributes.Count > 0);
+                var productSpec = _productRepository.Collection.Find(filterSpecExists).Limit(1);
+                if (productSpec!=null)
                 {
-                    var filterSpecExists = filter &
-                        builder.Where(x => x.ProductSpecificationAttributes.Count > 0);
-                    var productSpec = _productRepository.Collection.Find(filterSpecExists).Limit(1);
-                    if (productSpec!=null)
-                    {
-                        var qspec = _productRepository.Collection
-                        .Aggregate()
-                        .Match(filter)
-                        .Unwind(x => x.ProductSpecificationAttributes)
-                        .Project(new BsonDocument
-                         {
-                         {"AllowFiltering", "$ProductSpecificationAttributes.AllowFiltering"},
-                         {"SpecificationAttributeOptionId", "$ProductSpecificationAttributes.SpecificationAttributeOptionId"}
-                         })
-                        .Match(new BsonDocument("AllowFiltering", true))
-                        .Group(new BsonDocument
-                                {
-                                            {"_id",
-                                                new BsonDocument {
-                                                    { "SpecificationAttributeOptionId", "$SpecificationAttributeOptionId" },
-                                                }
-                                            },
-                                            {"count", new BsonDocument
-                                                {
-                                                    { "$sum" , 1}
-                                                }
-                                            }
-                                })
-                        .ToListAsync().Result;
-                        foreach (var item in qspec)
+                    var qspec = _productRepository.Collection
+                    .Aggregate()
+                    .Match(filter)
+                    .Unwind(x => x.ProductSpecificationAttributes)
+                    .Project(new BsonDocument
                         {
-                            var so = item["_id"]["SpecificationAttributeOptionId"].ToString();
-                            specyfication.Add(so);
-                        }
+                        {"AllowFiltering", "$ProductSpecificationAttributes.AllowFiltering"},
+                        {"SpecificationAttributeOptionId", "$ProductSpecificationAttributes.SpecificationAttributeOptionId"}
+                        })
+                    .Match(new BsonDocument("AllowFiltering", true))
+                    .Group(new BsonDocument
+                            {
+                                        {"_id",
+                                            new BsonDocument {
+                                                { "SpecificationAttributeOptionId", "$SpecificationAttributeOptionId" },
+                                            }
+                                        },
+                                        {"count", new BsonDocument
+                                            {
+                                                { "$sum" , 1}
+                                            }
+                                        }
+                            })
+                    .ToListAsync().Result;
+                    foreach (var item in qspec)
+                    {
+                        var so = item["_id"]["SpecificationAttributeOptionId"].ToString();
+                        specyfication.Add(so);
                     }
+                }
                     
-                });
-                taskfilterSpec.Wait();
                 filterableSpecificationAttributeOptionIds = specyfication;
             }
 
-            taskProduct.Wait();
-
-            //return products
             return products;
 
             #endregion

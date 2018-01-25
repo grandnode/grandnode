@@ -377,7 +377,7 @@ namespace Grand.Services.Vendors
             {
                 filter = filter & builder.Where(x => x.Id == vendorId);
             }
-            var vendors = _vendorRepository.Collection.Find(filter).ToList();
+            var vendors = _vendorRepository.FindByFilterDefinition(filter);
 
             return vendors;
         }
