@@ -4920,7 +4920,8 @@ namespace Grand.Services.Installation
                 EnableXsrfProtectionForAdminArea = true,
                 EnableXsrfProtectionForPublicStore = true,
                 HoneypotEnabled = false,
-                HoneypotInputName = "hpinput"
+                HoneypotInputName = "hpinput",
+                AllowNonAsciiCharInHeaders = true,
             });
             _settingService.SaveSetting(new MediaSettings
             {

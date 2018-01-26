@@ -29,7 +29,7 @@ using MongoDB.Driver.Core.Bindings;
 using System.Threading;
 using Grand.Services.Topics;
 using Grand.Core.Domain.Discounts;
-
+using Grand.Core.Domain.Security;
 
 namespace Grand.Services.Installation
 {
@@ -708,6 +708,13 @@ namespace Grand.Services.Installation
             EngineContext.Current.Resolve<IRepository<ProductReservation>>().Collection.Indexes.CreateOneAsync(Builders<ProductReservation>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             EngineContext.Current.Resolve<IRepository<ProductReservation>>().Collection.Indexes.CreateOneAsync(Builders<ProductReservation>.IndexKeys.Ascending(x => x.ProductId).Ascending(x => x.Date), new CreateIndexOptions() { Name = "ProductReservation", Unique = false });
             EngineContext.Current.Resolve<IRepository<ProductReservation>>().Collection.Indexes.CreateOneAsync(Builders<ProductReservation>.IndexKeys.Ascending(x => x.ProductId).Ascending(x => x.Date).Ascending(x => x.Resource), new CreateIndexOptions() { Name = "ProductReservationRecord", Unique = true });
+            #endregion
+
+            #region Security settings
+            var settingService = EngineContext.Current.Resolve<ISettingService>();
+            var securitySettings = EngineContext.Current.Resolve<SecuritySettings>();
+            securitySettings.AllowNonAsciiCharInHeaders = true;
+            settingService.SaveSetting(securitySettings, x => x.AllowNonAsciiCharInHeaders, "", false);
             #endregion
 
         }

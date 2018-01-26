@@ -1,5 +1,4 @@
 ﻿using System;
-//using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
@@ -8,11 +7,9 @@ using Newtonsoft.Json.Serialization;
 using Grand.Core.Configuration;
 using Grand.Core.Data;
 using Grand.Core.Infrastructure;
-using Grand.Services.Authentication;
 using Grand.Services.Logging;
 using Grand.Services.Tasks;
 using Grand.Framework.FluentValidation;
-using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Themes;
 using Grand.Service.Authentication;
@@ -24,6 +21,8 @@ using Grand.Services.Authentication.External;
 using Grand.Core;
 using System.IO;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Mvc.Internal;
+using Grand.Framework.Mvc.Routing;
 
 namespace Grand.Framework.Infrastructure.Extensions
 {
@@ -260,6 +259,16 @@ namespace Grand.Framework.Infrastructure.Extensions
             mvcBuilder.AddFluentValidation(configuration => configuration.ValidatorFactoryType = typeof(GrandValidatorFactory));
 
             return mvcBuilder;
+        }
+
+        /// <summary>
+        /// Register custom RedirectResultExecutor
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddGrandRedirectResultExecutor(this IServiceCollection services)
+        {
+            //we use custom redirect executor as a workaround to allow using non-ASCII characters in redirect URLs
+            services.AddSingleton<RedirectResultExecutor, GrandRedirectResultExecutor>();
         }
     }
 }

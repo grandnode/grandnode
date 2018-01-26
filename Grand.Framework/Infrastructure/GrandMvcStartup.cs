@@ -23,6 +23,9 @@ namespace Grand.Framework.Infrastructure
 
             //add and configure MVC feature
             services.AddGrandMvc();
+
+            //add custom redirect result executor
+            services.AddGrandRedirectResultExecutor();
         }
 
         /// <summary>

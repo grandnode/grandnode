@@ -37,5 +37,10 @@ namespace Grand.Core.Domain.Security
         /// Gets or sets a honeypot input name
         /// </summary>
         public string HoneypotInputName { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to allow non-ASCII characters in headers
+        /// </summary>
+        public bool AllowNonAsciiCharInHeaders { get; set; }
     }
 }
