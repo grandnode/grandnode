@@ -24,7 +24,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OAuth" Version="2.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Routing" Version="2.0.1" />
     <PackageReference Include="MimeMapping" Version="1.0.1.10" />
     <PackageReference Include="MongoDB.Driver.GridFS" Version="2.5.0" />
