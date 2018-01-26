@@ -21,7 +21,7 @@ using System.Text;
 
 namespace Grand.Plugin.Payments.PayPalStandard.Controllers
 {
-    [Area("Admin")]
+    
     public class PaymentPayPalStandardController : BasePaymentController
     {
         private readonly IWorkContext _workContext;
@@ -65,6 +65,7 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
         }
 
         [AuthorizeAdmin]
+        [Area("Admin")]
         public IActionResult Configure()
         {
             //load settings for a chosen store scope
@@ -105,6 +106,7 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
 
         [HttpPost]
         [AuthorizeAdmin]
+        [Area("Admin")]
         public IActionResult Configure(ConfigurationModel model)
         {
             if (!ModelState.IsValid)

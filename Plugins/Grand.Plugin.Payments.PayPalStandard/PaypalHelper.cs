@@ -7,6 +7,8 @@ namespace Grand.Plugin.Payments.PayPalStandard
     /// </summary>
     public class PaypalHelper
     {
+        public static string OrderTotalSentToPayPal => "OrderTotalSentToPayPal";
+
         /// <summary>
         /// Gets a payment status
         /// </summary>

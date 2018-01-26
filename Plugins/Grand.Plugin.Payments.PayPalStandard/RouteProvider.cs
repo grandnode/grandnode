@@ -10,17 +10,17 @@ namespace Grand.Plugin.Payments.PayPalStandard
         {
             //PDT
             routeBuilder.MapRoute("Plugin.Payments.PayPalStandard.PDTHandler",
-                 "Admin/PaymentPayPalStandard/PDTHandler",
+                 "Plugins/PaymentPayPalStandard/PDTHandler",
                  new { controller = "PaymentPayPalStandard", action = "PDTHandler" }
             );
             //IPN
             routeBuilder.MapRoute("Plugin.Payments.PayPalStandard.IPNHandler",
-                 "Admin/PaymentPayPalStandard/IPNHandler",
+                 "Plugins/PaymentPayPalStandard/IPNHandler",
                  new { controller = "PaymentPayPalStandard", action = "IPNHandler" }
             );
             //Cancel
             routeBuilder.MapRoute("Plugin.Payments.PayPalStandard.CancelOrder",
-                 "Admin/PaymentPayPalStandard/CancelOrder",
+                 "Plugins/PaymentPayPalStandard/CancelOrder",
                  new { controller = "PaymentPayPalStandard", action = "CancelOrder" }
             );
         }
