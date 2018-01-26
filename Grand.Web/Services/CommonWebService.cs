@@ -674,6 +674,9 @@ namespace Grand.Web.Services
                     sb.AppendFormat("Sitemap: {0}sitemap.xml", _storeContext.CurrentStore.Url);
                     sb.Append(newLine);
                 }
+                //host
+                sb.AppendFormat("Host: {0}", _webHelper.GetStoreLocation());
+                sb.Append(newLine);
 
                 //usual paths
                 foreach (var path in disallowPaths)
