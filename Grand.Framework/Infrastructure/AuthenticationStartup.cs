@@ -18,6 +18,9 @@ namespace Grand.Framework.Infrastructure
         /// <param name="configuration">Configuration root of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
+            //add data protection
+            services.AddGrandDataProtection();
+            //add authentication
             services.AddGrandAuthentication();
         }
 

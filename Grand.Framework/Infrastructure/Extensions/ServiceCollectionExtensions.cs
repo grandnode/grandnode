@@ -21,6 +21,9 @@ using FluentScheduler;
 using System.Linq;
 using Grand.Core.Plugins;
 using Grand.Services.Authentication.External;
+using Grand.Core;
+using System.IO;
+using Microsoft.AspNetCore.DataProtection;
 
 namespace Grand.Framework.Infrastructure.Extensions
 {
@@ -146,6 +149,19 @@ namespace Grand.Framework.Infrastructure.Extensions
             {
                 options.ViewLocationExpanders.Add(new ThemeableViewLocationExpander());
             });
+        }
+
+        /// <summary>
+        /// Adds data protection services
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddGrandDataProtection(this IServiceCollection services)
+        {
+            var dataProtectionKeysPath = CommonHelper.MapPath("~/App_Data/DataProtectionKeys");
+            var dataProtectionKeysFolder = new DirectoryInfo(dataProtectionKeysPath);
+
+            //configure the data protection system to persist keys to the specified directory
+            services.AddDataProtection().PersistKeysToFileSystem(dataProtectionKeysFolder);
         }
 
         /// <summary>
