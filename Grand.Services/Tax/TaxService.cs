@@ -105,7 +105,6 @@ namespace Grand.Services.Tax
             if (country == null)
             {
                 var ipAddress = customer.LastIpAddress;
-                //ipAddress = _webHelper.GetCurrentIpAddress();
                 var countryIsoCode = _geoLookupService.LookupCountryIsoCode(ipAddress);
                 country = _countryService.GetCountryByTwoLetterIsoCode(countryIsoCode);
             }

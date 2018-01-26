@@ -133,11 +133,10 @@ namespace Grand.Core
             if (result != null && result.Equals("::1", StringComparison.OrdinalIgnoreCase))
                 result = "127.0.0.1";
 
-            //remove port
-            if (!string.IsNullOrEmpty(result))
-                result = result.Split(':').FirstOrDefault();
-
-            return result;
+            if (IPAddress.TryParse(result ?? string.Empty, out IPAddress ip))
+                result = ip.ToString();
+            else if (!string.IsNullOrEmpty(result))
+                return result;
         }
 
 
