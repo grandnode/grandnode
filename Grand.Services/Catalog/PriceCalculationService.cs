@@ -13,6 +13,8 @@ using Grand.Services.Customers;
 using Grand.Services.Discounts;
 using Grand.Services.Vendors;
 using Grand.Services.Stores;
+using Grand.Core.Domain.Directory;
+using Grand.Services.Directory;
 
 namespace Grand.Services.Catalog
 {
@@ -34,9 +36,10 @@ namespace Grand.Services.Catalog
         private readonly ICacheManager _cacheManager;
         private readonly IVendorService _vendorService;
         private readonly IStoreService _storeService;
+        private readonly ICurrencyService _currencyService;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly CatalogSettings _catalogSettings;
-
+        private readonly CurrencySettings _currencySettings;
         #endregion
 
         #region Ctor
@@ -52,8 +55,10 @@ namespace Grand.Services.Catalog
             ICacheManager cacheManager,
             IVendorService vendorService,
             IStoreService storeService,
+            ICurrencyService currencyService,
             ShoppingCartSettings shoppingCartSettings,
-            CatalogSettings catalogSettings)
+            CatalogSettings catalogSettings,
+            CurrencySettings currencySettings)
         {
             this._workContext = workContext;
             this._storeContext = storeContext;
@@ -66,8 +71,10 @@ namespace Grand.Services.Catalog
             this._cacheManager = cacheManager;
             this._vendorService = vendorService;
             this._storeService = storeService;
+            this._currencyService = currencyService;
             this._shoppingCartSettings = shoppingCartSettings;
             this._catalogSettings = catalogSettings;
+            this._currencySettings = currencySettings;
         }
 
         #endregion
@@ -524,7 +531,15 @@ namespace Grand.Services.Catalog
                 if (price < decimal.Zero)
                     price = decimal.Zero;
 
-                result.Price = price;
+                //rounding
+                if (_shoppingCartSettings.RoundPricesDuringCalculation)
+                {
+                    var primaryCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
+                    result.Price = RoundingHelper.RoundPrice(price, primaryCurrency);
+                }
+                else
+                    result.Price = price;
+
                 return result;
             }
 
@@ -697,8 +712,10 @@ namespace Grand.Services.Catalog
 
             //rounding
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                finalPrice = RoundingHelper.RoundPrice(finalPrice.Value, _workContext.WorkingCurrency);
-
+            {
+                var primaryCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
+                finalPrice = RoundingHelper.RoundPrice(finalPrice.Value, primaryCurrency);
+            }
             return finalPrice.Value;
         }
         /// <summary>

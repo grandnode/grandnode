@@ -20,6 +20,7 @@ using Grand.Core.Infrastructure;
 using Grand.Services.Directory;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using Grand.Core.Domain.Directory;
 
 namespace Grand.Services.Shipping
 {
@@ -1028,7 +1029,10 @@ namespace Grand.Services.Shipping
                         if (String.IsNullOrEmpty(so.ShippingRateComputationMethodSystemName))
                             so.ShippingRateComputationMethodSystemName = srcm.PluginDescriptor.SystemName;
                         if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                            so.Rate = RoundingHelper.RoundPrice(so.Rate, EngineContext.Current.Resolve<IWorkContext>().WorkingCurrency);
+                        {
+                            var currency = EngineContext.Current.Resolve<ICurrencyService>().GetCurrencyById(EngineContext.Current.Resolve<CurrencySettings>().PrimaryExchangeRateCurrencyId);
+                            so.Rate = RoundingHelper.RoundPrice(so.Rate, currency);
+                        }
                         result.ShippingOptions.Add(so);
                     }
                 }
