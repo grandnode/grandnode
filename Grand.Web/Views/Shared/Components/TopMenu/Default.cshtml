@@ -70,19 +70,4 @@
     var rootCategoriesResponsive = Model.Categories.ToList();
     //name it "Categories" if we have only categories. Otherwise, "Menu"
     var responsiveMenuTitle = (rootCategoriesResponsive.Count > 0 && Model.Topics.Count == 0) ? T("Categories") : T("Menu");
-
-    <script type="text/javascript">
-        $(".nav-item .fa").on('click', function () {
-            var x = $(this).siblings("a").attr('href');
-            $('a[href$="' + x + '"]').siblings(".first-level").toggleClass('open');
-            $('a[href$="' + x + '"]').siblings(".next-level").toggleClass('open');
-            $('a[href$="' + x + '"]').parent().siblings().children(".first-level").removeClass("open");
-            $('a[href$="' + x + '"]').siblings(".fa").toggleClass("rotate");
-            $('a[href$="' + x + '"]').parent(".nav-item").siblings().find(".fa").removeClass("rotate");
-        });
-
-        $(".general-opener").on('click', function () {
-            $("#generalDropDown").toggle();
-        });
-    </script>
 }

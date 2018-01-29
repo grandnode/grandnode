@@ -345,5 +345,18 @@ $(document).ready(function () {
     $("#searchModal").on("hidden.bs.modal", function () {
         $("#small-search-box-form").appendTo(".formSearch");
     });
+
+    $(".nav-item .fa").on('click', function () {
+        var x = $(this).siblings("a").attr('href');
+        $('a[href$="' + x + '"]').siblings(".first-level").toggleClass('open');
+        $('a[href$="' + x + '"]').siblings(".next-level").toggleClass('open');
+        $('a[href$="' + x + '"]').parent().siblings().children(".first-level").removeClass("open");
+        $('a[href$="' + x + '"]').siblings(".fa").toggleClass("rotate");
+        $('a[href$="' + x + '"]').parent(".nav-item").siblings().find(".fa").removeClass("rotate");
+    });
+
+    $(".general-opener").on('click', function () {
+        $("#generalDropDown").toggle();
+    });
 });
 
