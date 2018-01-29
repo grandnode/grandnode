@@ -64,14 +64,30 @@ namespace Grand.Services.Media
             //first, let's see whether we have some attribute values with custom pictures
             if (!String.IsNullOrEmpty(attributesXml))
             {
-                var attributeValues = productAttributeParser.ParseProductAttributeValues(product, attributesXml);
-                foreach (var attributeValue in attributeValues)
+
+                var comb = product.ProductAttributeCombinations.Where(x => x.AttributesXml == attributesXml).FirstOrDefault();
+                if(comb!=null)
                 {
-                    var attributePicture = pictureService.GetPictureById(attributeValue.PictureId);
-                    if (attributePicture != null)
+                    if(!string.IsNullOrEmpty(comb.PictureId))
                     {
-                        picture = attributePicture;
-                        break;
+                        var combPicture = pictureService.GetPictureById(comb.PictureId);
+                        if (combPicture != null)
+                        {
+                            picture = combPicture;
+                        }
+                    }
+                }
+                if (picture == null)
+                {
+                    var attributeValues = productAttributeParser.ParseProductAttributeValues(product, attributesXml);
+                    foreach (var attributeValue in attributeValues)
+                    {
+                        var attributePicture = pictureService.GetPictureById(attributeValue.PictureId);
+                        if (attributePicture != null)
+                        {
+                            picture = attributePicture;
+                            break;
+                        }
                     }
                 }
             }

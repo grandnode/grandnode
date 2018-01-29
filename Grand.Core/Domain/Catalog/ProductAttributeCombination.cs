@@ -57,6 +57,11 @@ namespace Grand.Core.Domain.Catalog
         public int NotifyAdminForQuantityBelow { get; set; }
 
         /// <summary>
+        /// Gets or sets the identifier of picture associated with this combination
+        /// </summary>
+        public string PictureId { get; set; }
+
+        /// <summary>
         /// Gets or sets the collection of "ProductCombinationWarehouseInventory" records. We use it only when "UseMultipleWarehouses" is set to "true"
         /// </summary>
         public virtual ICollection<ProductCombinationWarehouseInventory> WarehouseInventory

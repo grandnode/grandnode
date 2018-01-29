@@ -34,6 +34,9 @@ using Grand.Core.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Grand.Framework.Mvc.Filters;
 using System.Globalization;
+using Grand.Web.Infrastructure.Cache;
+using Grand.Web.Models.Media;
+using Grand.Core.Caching;
 
 namespace Grand.Web.Controllers
 {
@@ -66,6 +69,8 @@ namespace Grand.Web.Controllers
         private readonly IAddressWebService _addressWebService;
         private readonly IShoppingCartWebService _shoppingCartWebService;
         private readonly IProductReservationService _productReservationService;
+        private readonly ICacheManager _cacheManager;
+        private readonly IPictureService _pictureService;
         private readonly MediaSettings _mediaSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly CatalogSettings _catalogSettings;
@@ -104,6 +109,8 @@ namespace Grand.Web.Controllers
             IAddressWebService addressWebService,
             IShoppingCartWebService shoppingCartWebService,
             IProductReservationService productReservationService,
+            ICacheManager cacheManager,
+            IPictureService pictureService,
             MediaSettings mediaSettings,
             ShoppingCartSettings shoppingCartSettings,
             CatalogSettings catalogSettings, 
@@ -140,6 +147,8 @@ namespace Grand.Web.Controllers
             this._addressWebService = addressWebService;
             this._shoppingCartWebService = shoppingCartWebService;
             this._productReservationService = productReservationService;
+            this._cacheManager = cacheManager;
+            this._pictureService = pictureService;
             this._mediaSettings = mediaSettings;
             this._shoppingCartSettings = shoppingCartSettings;
             this._catalogSettings = catalogSettings;
@@ -642,7 +651,7 @@ namespace Grand.Web.Controllers
         //handle product attribute selection event. this way we return new price, overridden gtin/sku/mpn
         //currently we use this method on the product details pages
         [HttpPost]
-        public virtual IActionResult ProductDetails_AttributeChange(string productId, bool validateAttributeConditions, IFormCollection form)
+        public virtual IActionResult ProductDetails_AttributeChange(string productId, bool validateAttributeConditions, bool loadPicture, IFormCollection form)
         {
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -698,7 +707,39 @@ namespace Grand.Web.Controllers
                     }
                 }
             }
+            //picture. used when we want to override a default product picture when some attribute is selected
+            var pictureFullSizeUrl = string.Empty;
+            var pictureDefaultSizeUrl = string.Empty;
+            if (loadPicture)
+            {
+                
+                //first, try to get product attribute combination picture
+                var pictureId =  product.ProductAttributeCombinations.Where(x=>x.AttributesXml == attributeXml).FirstOrDefault()?.PictureId ?? "";
+                //then, let's see whether we have attribute values with pictures
+                if (string.IsNullOrEmpty(pictureId))
+                {
+                    pictureId = _productAttributeParser.ParseProductAttributeValues(product, attributeXml)
+                        .FirstOrDefault(attributeValue => !string.IsNullOrEmpty(attributeValue.PictureId))?.PictureId ?? "";
+                }
 
+                if (!string.IsNullOrEmpty(pictureId))
+                {
+                    var productAttributePictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTATTRIBUTE_PICTURE_MODEL_KEY,
+                        pictureId, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
+                    var pictureModel = _cacheManager.Get(productAttributePictureCacheKey, () =>
+                    {
+                        var picture = _pictureService.GetPictureById(pictureId);
+                        return picture == null ? new PictureModel() : new PictureModel
+                        {
+                            FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
+                            ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSettings.ProductDetailsPictureSize)
+                        };
+                    });
+                    pictureFullSizeUrl = pictureModel.FullSizeImageUrl;
+                    pictureDefaultSizeUrl = pictureModel.ImageUrl;
+                }
+
+            }
             return Json(new
             {
                 gtin = gtin,
@@ -707,7 +748,9 @@ namespace Grand.Web.Controllers
                 price = price,
                 stockAvailability = stockAvailability,
                 enabledattributemappingids = enabledAttributeMappingIds.ToArray(),
-                disabledattributemappingids = disabledAttributeMappingIds.ToArray()
+                disabledattributemappingids = disabledAttributeMappingIds.ToArray(),
+                pictureFullSizeUrl,
+                pictureDefaultSizeUrl,
             });
         }
 

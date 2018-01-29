@@ -394,6 +394,24 @@ namespace Grand.Web.Areas.Admin.Controllers
                     model.ProductAttributes.Add(attributeModel);
                 }
             }
+
+
+            if(!string.IsNullOrEmpty(model.PictureId))
+            {
+                var pictureThumbnailUrl = _pictureService.GetPictureUrl(model.PictureId, 75, false);
+                model.PictureThumbnailUrl = pictureThumbnailUrl;
+            }
+
+            //pictures
+            model.ProductPictureModels = product.ProductPictures.Select(picture => new ProductModel.ProductPictureModel
+            {
+                Id = picture.Id,
+                ProductId = product.Id,
+                PictureId = picture.PictureId,
+                PictureUrl = _pictureService.GetPictureUrl(picture.PictureId),
+                DisplayOrder = picture.DisplayOrder
+            }).ToList();
+
         }
 
         [NonAction]
@@ -5201,6 +5219,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         Gtin = model.Gtin,
                         OverriddenPrice = model.OverriddenPrice,
                         NotifyAdminForQuantityBelow = model.NotifyAdminForQuantityBelow,
+                        PictureId = model.PictureId
                     };
 
                     if (product.UseMultipleWarehouses)
@@ -5231,6 +5250,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 combination.OverriddenPrice = model.OverriddenPrice;
                 combination.NotifyAdminForQuantityBelow = model.NotifyAdminForQuantityBelow;
                 combination.ProductId = product.Id;
+                combination.PictureId = model.PictureId;
 
                 if (product.UseMultipleWarehouses)
                 {

@@ -524,6 +524,7 @@ namespace Grand.Services.Catalog
                 .Set("ProductAttributeCombinations.$.OverriddenPrice", combination.OverriddenPrice)
                 .Set("ProductAttributeCombinations.$.NotifyAdminForQuantityBelow", combination.NotifyAdminForQuantityBelow)
                 .Set("ProductAttributeCombinations.$.WarehouseInventory", combination.WarehouseInventory)
+                .Set("ProductAttributeCombinations.$.PictureId", combination.PictureId)
                 .Set("ProductAttributeCombinations.$.TierPrices", combination.TierPrices);
 
             var result = _productRepository.Collection.UpdateManyAsync(filter, update).Result;
