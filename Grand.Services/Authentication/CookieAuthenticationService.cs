@@ -1,15 +1,17 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Grand.Core.Domain.Customers;
 using Grand.Services.Customers;
-using Grand.Services.Authentication;
-using Microsoft.AspNetCore.Authentication;
-using System.Collections.Generic;
+using Grand.Service.Authentication;
 
-namespace Grand.Service.Authentication
+namespace Grand.Services.Authentication
 {
+    /// <summary>
+    /// Represents service using cookie middleware for the authentication
+    /// </summary>
     public partial class CookieAuthenticationService : IGrandAuthenticationService
     {
         #region Fields
@@ -17,13 +19,18 @@ namespace Grand.Service.Authentication
         private readonly CustomerSettings _customerSettings;
         private readonly ICustomerService _customerService;
         private readonly IHttpContextAccessor _httpContextAccessor;
-
         private Customer _cachedCustomer;
 
         #endregion
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="customerSettings">Customer settings</param>
+        /// <param name="customerService">Customer service</param>
+        /// <param name="httpContextAccessor">HTTP context accessor</param>
         public CookieAuthenticationService(CustomerSettings customerSettings,
             ICustomerService customerService,
             IHttpContextAccessor httpContextAccessor)
@@ -42,14 +49,14 @@ namespace Grand.Service.Authentication
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="isPersistent">Whether the authentication session is persisted across multiple requests</param>
-        public virtual void SignIn(Customer customer, bool isPersistent)
+        public virtual async void SignIn(Customer customer, bool isPersistent)
         {
-            var authenticationManager = _httpContextAccessor.HttpContext;
-            if (authenticationManager == null)
-                return;
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
 
-            //create claims for username and email of the customer
+            //create claims for customer's username and email
             var claims = new List<Claim>();
+
             if (!string.IsNullOrEmpty(customer.Username))
                 claims.Add(new Claim(ClaimTypes.Name, customer.Username, ClaimValueTypes.String, GrandCookieAuthenticationDefaults.ClaimsIssuer));
 
@@ -68,8 +75,7 @@ namespace Grand.Service.Authentication
             };
 
             //sign in
-            var signInTask = authenticationManager.SignInAsync(GrandCookieAuthenticationDefaults.AuthenticationScheme, userPrincipal, authenticationProperties);
-            signInTask.Wait();
+            await _httpContextAccessor.HttpContext.SignInAsync(GrandCookieAuthenticationDefaults.AuthenticationScheme, userPrincipal, authenticationProperties);
 
             //cache authenticated customer
             _cachedCustomer = customer;
@@ -78,18 +84,13 @@ namespace Grand.Service.Authentication
         /// <summary>
         /// Sign out
         /// </summary>
-        public virtual void SignOut()
+        public virtual async void SignOut()
         {
-            var authenticationManager = _httpContextAccessor.HttpContext;
-            if (authenticationManager == null)
-                return;
-
             //reset cached customer
             _cachedCustomer = null;
 
             //and sign out from the current authentication scheme
-            var signOutTask = authenticationManager.SignOutAsync(GrandCookieAuthenticationDefaults.AuthenticationScheme);
-            signOutTask.Wait();
+            await _httpContextAccessor.HttpContext.SignOutAsync(GrandCookieAuthenticationDefaults.AuthenticationScheme);
         }
 
         /// <summary>
@@ -102,31 +103,25 @@ namespace Grand.Service.Authentication
             if (_cachedCustomer != null)
                 return _cachedCustomer;
 
-            var authenticationManager = _httpContextAccessor.HttpContext;
-            if (authenticationManager == null)
-                return null;
-
             //try to get authenticated user identity
-            var authenticateTask = authenticationManager.AuthenticateAsync(GrandCookieAuthenticationDefaults.AuthenticationScheme);
-            var userPrincipal = authenticateTask.Result;
-            var userIdentity = userPrincipal?.Principal?.Identities?.FirstOrDefault(identity => identity.IsAuthenticated);
-            if (userIdentity == null)
+            var authenticateResult = _httpContextAccessor.HttpContext.AuthenticateAsync(GrandCookieAuthenticationDefaults.AuthenticationScheme).Result;
+            if (!authenticateResult.Succeeded)
                 return null;
 
             Customer customer = null;
             if (_customerSettings.UsernamesEnabled)
             {
                 //try to get customer by username
-                var usernameClaim = userIdentity.FindFirst(claim => claim.Type == ClaimTypes.Name
-                    && claim.Issuer.Equals(GrandCookieAuthenticationDefaults.ClaimsIssuer, StringComparison.OrdinalIgnoreCase));
+                var usernameClaim = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Name
+                    && claim.Issuer.Equals(GrandCookieAuthenticationDefaults.ClaimsIssuer, StringComparison.InvariantCultureIgnoreCase));
                 if (usernameClaim != null)
                     customer = _customerService.GetCustomerByUsername(usernameClaim.Value);
             }
             else
             {
                 //try to get customer by email
-                var emailClaim = userIdentity.FindFirst(claim => claim.Type == ClaimTypes.Email
-                    && claim.Issuer.Equals(GrandCookieAuthenticationDefaults.ClaimsIssuer, StringComparison.OrdinalIgnoreCase));
+                var emailClaim = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Email
+                    && claim.Issuer.Equals(GrandCookieAuthenticationDefaults.ClaimsIssuer, StringComparison.InvariantCultureIgnoreCase));
                 if (emailClaim != null)
                     customer = _customerService.GetCustomerByEmail(emailClaim.Value);
             }
