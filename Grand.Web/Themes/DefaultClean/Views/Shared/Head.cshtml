@@ -1,5 +1,4 @@
 ﻿@using Grand.Core;
-@using Grand.Core.Infrastructure
 @using Grand.Framework.Themes
 @using Grand.Framework.UI
 @using Grand.Services.Helpers;
@@ -9,7 +8,7 @@
 @{
     var supportRtl = workContext.WorkingLanguage.Rtl;
     var themeName = themeContext.WorkingThemeName;
-    
+
     //add browser specific CSS files
     if (supportRtl)
     {
@@ -21,6 +20,7 @@
     Html.AppendCssFileParts("~/Content/bootstrap/bootstrap.min.css");
 
     Html.AppendScriptParts("~/Content/bootstrap/bootstrap.min.js");
+    Html.AppendScriptParts("~/Content/bootstrap/popper.min.js");
     Html.AppendScriptParts("~/Scripts/public.ajaxcart.js");
     Html.AppendScriptParts("~/Scripts/public.common.js");
     Html.AppendScriptParts("~/Scripts/jquery-migrate-1.2.1.min.js");

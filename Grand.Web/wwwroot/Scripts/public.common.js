@@ -360,3 +360,13 @@ $(document).ready(function () {
     });
 });
 
+$(document).ready(function () {
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        if ($(window).width() < 1050 & $(window).width() > 991) {
+            $("a.dropdown-toggle").click(function (e) {
+                e.preventDefault();
+                $(this).unbind(e);
+            });
+        };
+    };
+});

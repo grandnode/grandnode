@@ -24,18 +24,7 @@
 </div>
 @await Component.InvokeAsync("Footer")
 <script>
-    $(document).ready(function () {
-        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-            if ($(window).width() < 1050 & $(window).width() > 991) {
-                $("a.dropdown-toggle").click(function (e) {
-                    e.preventDefault();
-                    $(this).unbind(e);
-                });
-            };
-        };
-    });
     AjaxCart.init('.header-links .cart-qty', '.header-links .wishlist-qty', '.flyout-cart');
-
 </script>
 @await Component.InvokeAsync("EuCookieLaw")
 @await Component.InvokeAsync("Widget", new { widgetZone = "body_end_html_tag_before" })
