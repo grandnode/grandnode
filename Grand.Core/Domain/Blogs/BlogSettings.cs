@@ -34,5 +34,20 @@ namespace Grand.Core.Domain.Blogs
         /// Enable the blog RSS feed link in customers browser address bar
         /// </summary>
         public bool ShowHeaderRssUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to show blog on the home page
+        /// </summary>
+        public bool ShowBlogOnHomePage { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating blog count displayed on the home page
+        /// </summary>
+        public int HomePageBlogCount { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value the maximum size of the text on home page
+        /// </summary>
+        public int MaxTextSizeHomePage { get; set; }
     }
 }

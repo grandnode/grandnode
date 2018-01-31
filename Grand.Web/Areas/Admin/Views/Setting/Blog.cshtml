@@ -104,6 +104,39 @@
                                     @Html.ValidationMessageFor(model => model.ShowHeaderRssUrl)
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.ShowBlogOnHomePage_OverrideForStore, model => model.ShowBlogOnHomePage, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.ShowBlogOnHomePage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.ShowBlogOnHomePage)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.ShowBlogOnHomePage)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.HomePageBlogCount_OverrideForStore, model => model.HomePageBlogCount, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.HomePageBlogCount, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    @Html.GrandEditorFor(model => model.HomePageBlogCount)
+                                    @Html.ValidationMessageFor(model => model.HomePageBlogCount)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.MaxTextSizeHomePage_OverrideForStore, model => model.MaxTextSizeHomePage, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.MaxTextSizeHomePage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    @Html.GrandEditorFor(model => model.MaxTextSizeHomePage)
+                                    @Html.ValidationMessageFor(model => model.MaxTextSizeHomePage)
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

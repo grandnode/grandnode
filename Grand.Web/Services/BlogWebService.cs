@@ -84,6 +84,51 @@ namespace Grand.Web.Services
             this._captchaSettings = captchaSettings;
         }
 
+        public HomePageBlogItemsModel PrepareHomePageBlogItems()
+        {
+            var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_HOMEPAGE_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
+            var cachedModel = _cacheManager.Get(cacheKey, () =>
+            {
+                var model = new HomePageBlogItemsModel();
+
+                var blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id,
+                        null, null, 0, _blogSettings.HomePageBlogCount);
+
+                foreach (var post in blogPosts)
+                {
+                    var item = new HomePageBlogItemsModel.BlogItemModel();
+                    var description = post.GetLocalized(x => x.BodyOverview);
+                    item.SeName = post.GetSeName();
+                    item.Title = post.GetLocalized(x => x.Title);
+                    item.Short = description.Length > _blogSettings.MaxTextSizeHomePage ? description.Substring(0, _blogSettings.MaxTextSizeHomePage): description;
+                    item.CreatedOn = _dateTimeHelper.ConvertToUserTime(post.StartDateUtc ?? post.CreatedOnUtc, DateTimeKind.Utc);
+
+                    //prepare picture model
+                    if (!string.IsNullOrEmpty(post.PictureId))
+                    {
+                        int pictureSize = _mediaSettings.BlogThumbPictureSize;
+                        var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.BLOG_PICTURE_MODEL_KEY, post.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
+                        item.PictureModel = _cacheManager.Get(categoryPictureCacheKey, () =>
+                        {
+                            var picture = _pictureService.GetPictureById(post.PictureId);
+                            var pictureModel = new PictureModel
+                            {
+                                FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
+                                ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
+                                Title = string.Format(_localizationService.GetResource("Media.Blog.ImageLinkTitleFormat"), post.Title),
+                                AlternateText = string.Format(_localizationService.GetResource("Media.Blog.ImageAlternateTextFormat"), post.Title)
+                            };
+                            return pictureModel;
+                        });
+                    }
+                    model.Items.Add(item);
+                }
+                return model;
+            });
+
+            return cachedModel;
+        }
+
         public BlogCommentModel PrepareBlogPostCommentModel(BlogComment blogComment)
         {
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(blogComment.CustomerId);

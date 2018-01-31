@@ -35,5 +35,17 @@ namespace Grand.Web.Areas.Admin.Models.Settings
         [GrandResourceDisplayName("Admin.Configuration.Settings.Blog.ShowHeaderRSSUrl")]
         public bool ShowHeaderRssUrl { get; set; }
         public bool ShowHeaderRssUrl_OverrideForStore { get; set; }
+
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Blog.ShowBlogOnHomePage")]
+        public bool ShowBlogOnHomePage { get; set; }
+        public bool ShowBlogOnHomePage_OverrideForStore { get; set; }
+
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Blog.HomePageBlogCount")]
+        public int HomePageBlogCount { get; set; }
+        public bool HomePageBlogCount_OverrideForStore { get; set; }
+
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Blog.MaxTextSizeHomePage")]
+        public int MaxTextSizeHomePage { get; set; }
+        public bool MaxTextSizeHomePage_OverrideForStore { get; set; }
     }
 }

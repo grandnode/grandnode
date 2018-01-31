@@ -226,6 +226,17 @@ ul.ui-autocomplete {
 .news-list-homepage .card-header img {
     padding-bottom: 1.25rem;
 }
+
+/*blog home-page*/
+.blog-list-homepage .card-header {
+    padding: 1.25rem 1.25rem;
+}
+
+.blog-list-homepage .card-header img {
+    padding-bottom: 1.25rem;
+}
+
+
 /*checkout*/
 .method-name label {
     margin-right: 0;
@@ -1452,6 +1463,7 @@ table {
 .page .product-grid .card,
 .page .select-billing-address .card,
 .page .news-list-homepage .card,
+.page .blog-list-homepage .card,
 .page .subCategoryList .card,
 .page .home-page-product-grid .card,
 .product-grid.bestsellers .card,

@@ -17,6 +17,8 @@
         @await Component.InvokeAsync("HomepageManufacturers")
         @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_before_news" })
         @await Component.InvokeAsync("HomePageNews")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_before_blog" })
+        @await Component.InvokeAsync("HomePageBlog")
         @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_before_poll" })
         @await Component.InvokeAsync("HomePagePolls")
         @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_bottom" })

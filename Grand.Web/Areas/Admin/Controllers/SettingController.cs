@@ -209,6 +209,9 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.NotifyAboutNewBlogComments_OverrideForStore = _settingService.SettingExists(blogSettings, x => x.NotifyAboutNewBlogComments, storeScope);
                 model.NumberOfTags_OverrideForStore = _settingService.SettingExists(blogSettings, x => x.NumberOfTags, storeScope);
                 model.ShowHeaderRssUrl_OverrideForStore = _settingService.SettingExists(blogSettings, x => x.ShowHeaderRssUrl, storeScope);
+                model.ShowBlogOnHomePage_OverrideForStore = _settingService.SettingExists(blogSettings, x => x.ShowBlogOnHomePage, storeScope);
+                model.HomePageBlogCount_OverrideForStore = _settingService.SettingExists(blogSettings, x => x.HomePageBlogCount, storeScope);
+                model.MaxTextSizeHomePage_OverrideForStore = _settingService.SettingExists(blogSettings, x => x.MaxTextSizeHomePage, storeScope);
             }
 
             return View(model);
@@ -256,6 +259,21 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(blogSettings, x => x.ShowHeaderRssUrl, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(blogSettings, x => x.ShowHeaderRssUrl, storeScope);
+
+            if (model.ShowBlogOnHomePage_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(blogSettings, x => x.ShowBlogOnHomePage, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(blogSettings, x => x.ShowBlogOnHomePage, storeScope);
+
+            if (model.HomePageBlogCount_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(blogSettings, x => x.HomePageBlogCount, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(blogSettings, x => x.HomePageBlogCount, storeScope);
+
+            if (model.MaxTextSizeHomePage_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(blogSettings, x => x.MaxTextSizeHomePage, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(blogSettings, x => x.MaxTextSizeHomePage, storeScope);
 
             //now clear cache
             _cacheManager.Clear();

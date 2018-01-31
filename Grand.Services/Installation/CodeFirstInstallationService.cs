@@ -5363,6 +5363,9 @@ namespace Grand.Services.Installation
                 NotifyAboutNewBlogComments = false,
                 NumberOfTags = 15,
                 ShowHeaderRssUrl = false,
+                ShowBlogOnHomePage = false,
+                HomePageBlogCount = 3,
+                MaxTextSizeHomePage = 200
             });
             _settingService.SaveSetting(new NewsSettings
             {

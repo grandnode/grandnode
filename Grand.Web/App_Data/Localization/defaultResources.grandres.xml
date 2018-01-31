@@ -5181,6 +5181,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Blog.Enabled.Hint">
     <Value>Check to enable the blog in your store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Blog.HomePageBlogCount">
+    <Value>Number of blog post to display</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.News.HomePageBlogCount.Hint">
+    <Value>The number of blog post to display on your home page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Blog.NotifyAboutNewBlogComments">
     <Value>Notify about new blog comments</Value>
   </LocaleResource>
@@ -5193,11 +5199,23 @@
   <LocaleResource Name="Admin.Configuration.Settings.Blog.NumberOfTags.Hint">
     <Value>The number of blog tags that appear in the tag cloud.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Blog.MaxTextSizeHomePage">
+    <Value>Maximum size of the text on home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.News.MaxTextSizeHomePage.Hint">
+    <Value>Maximum size of the text on home page</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Blog.PostsPageSize">
     <Value>Posts page size</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Blog.PostsPageSize.Hint">
     <Value>Set the page size for posts.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Blog.ShowBlogOnHomePage">
+    <Value>Show on home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Blog.ShowBlogOnHomePage.Hint">
+    <Value>Check to display your blog posts on your store home page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Blog.ShowHeaderRSSUrl">
     <Value>Display blog RSS feed link in the browser address bar</Value>
@@ -14433,6 +14451,9 @@
   <LocaleResource Name="Blog.MoreInfo">
     <Value>details</Value>
   </LocaleResource>
+  <LocaleResource Name="Blog.Latest">
+    <Value>Latest From Our Blog</Value>
+  </LocaleResource>
   <LocaleResource Name="Blog.RSS">
     <Value>RSS</Value>
   </LocaleResource>
@@ -14447,6 +14468,9 @@
   </LocaleResource>
   <LocaleResource Name="Blog.Tags">
     <Value>Tags</Value>
+  </LocaleResource>
+  <LocaleResource Name="Blog.ViewAll">
+    <Value>View All Blog Posts</Value>
   </LocaleResource>
   <LocaleResource Name="Catalog.OrderBy">
     <Value>Sort by</Value>

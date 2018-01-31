@@ -477,5 +477,30 @@
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Picture.NoPicture">
     <Value>No picture</Value>
   </LocaleResource>
+  
+  <LocaleResource Name="Admin.Configuration.Settings.Blog.ShowBlogOnHomePage">
+    <Value>Show on home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Blog.ShowBlogOnHomePage.Hint">
+    <Value>Check to display your blog posts on your store home page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Blog.HomePageBlogCount">
+    <Value>Number of blog post to display</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.News.HomePageBlogCount.Hint">
+    <Value>The number of blog post to display on your home page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Blog.MaxTextSizeHomePage">
+    <Value>Maximum size of the text on home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.News.MaxTextSizeHomePage.Hint">
+    <Value>Maximum size of the text on home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Blog.Latest">
+    <Value>Latest From Our Blog</Value>
+  </LocaleResource>
+  <LocaleResource Name="Blog.ViewAll">
+    <Value>View All Blog Posts</Value>
+  </LocaleResource>
 </Language>
 
