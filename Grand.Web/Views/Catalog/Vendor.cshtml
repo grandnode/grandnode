@@ -132,14 +132,14 @@
                </div>
            </div>
            @*contact vendor*@
-           @if (Model.Products.Count > 0)
+           @if (Model.Products.Any())
            {
                @await Html.PartialAsync("_CatalogSelectors", Model.PagingFilteringContext)
            }
        </div>
         
         @*product list*@
-        @if (Model.Products.Count > 0)
+        @if (Model.Products.Any())
             {
                 if (Model.PagingFilteringContext.ViewMode == "grid")
                 {

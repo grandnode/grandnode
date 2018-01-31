@@ -1,5 +1,5 @@
 ﻿@model PopularProductTagsModel
-@if (Model.Tags.Count > 0)
+@if (Model.Tags.Any())
 {
     <div id="block-popular-tags" class="block block-popular-tags">
             <h2 class="h5 bg-light p-3 d-lg-none pt-1"><strong>@T("Products.Tags.Popular")</strong><i id="computers-navigator" class="fa fa-angle-down fa-1x float-xs-right" aria-hidden="true"></i></h2>

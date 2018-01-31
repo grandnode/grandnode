@@ -8,7 +8,7 @@
 @using Grand.Web.Models.Catalog;
 @{
     string columnWidth = "";
-    if (Model.Products.Count > 0)
+    if (Model.Products.Any())
     {
         columnWidth = Math.Round((decimal)(90M / Model.Products.Count), 0).ToString() + "%";
     }
@@ -28,7 +28,7 @@
 }
 <div class="page compare-products-page">
         <h2 class="text-xs-center generalTitle">@T("Products.Compare.Title")</h2>
-        @if (Model.Products.Count > 0)
+        @if (Model.Products.Any())
         {
             <a href="#" onclick="setLocation('@Url.RouteUrl("ClearCompareList")')" class="btn btn-sm btn-outline-secondary clear-list">@T("Products.Compare.Clear")</a>
             <div class="table-responsive">

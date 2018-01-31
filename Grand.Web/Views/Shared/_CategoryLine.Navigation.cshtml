@@ -40,7 +40,7 @@
             if (Model.Category.Id == Model.CurrentCategoryId ||
                 Model.Category.SubCategories.Count(BreadCrumbContainsCurrentCategoryId) > 0)
             {
-                if (Model.Category.SubCategories.Count > 0)
+                if (Model.Category.SubCategories.Any())
                 {
             <ul class="sublist">
                 @foreach (var subCategory in Model.Category.SubCategories)

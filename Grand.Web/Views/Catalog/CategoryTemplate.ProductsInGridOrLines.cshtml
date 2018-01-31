@@ -64,7 +64,7 @@
         }
         @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_before_subcategories", additionalData = Model.Id })
         @*subcategories*@
-        @if (Model.SubCategories.Count > 0)
+        @if (Model.SubCategories.Any())
         {
             <div class="categotyItems">
                 <div class="row">
@@ -90,7 +90,7 @@
         @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_before_featured_products", additionalData = Model.Id })
 
         @*featured products*@
-        @if (Model.FeaturedProducts.Count > 0)
+        @if (Model.FeaturedProducts.Any())
         {
             <div class="col-12 product-grid featured-product-grid px-0">
                 <h2 class="h5">
@@ -108,14 +108,14 @@
         }
         @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_after_featured_products", additionalData = Model.Id })
 
-        @if (Model.Products.Count > 0)
+        @if (Model.Products.Any())
         {
             @await Html.PartialAsync("_CatalogSelectors", Model.PagingFilteringContext)
         }
         @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_before_filters", additionalData = Model.Id })
         @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_before_product_list", additionalData = Model.Id })
 
-        @if (Model.Products.Count > 0)
+        @if (Model.Products.Any())
         {
             if (Model.PagingFilteringContext.ViewMode == "grid")
             {

@@ -1,11 +1,10 @@
 ﻿@model IList<ProductDetailsModel.ProductAttributeModel>
 @using System.Text;
-@using System.Globalization;
 @using Grand.Services.Media;
 @using Grand.Core.Domain.Media
 @inject IDownloadService downloadService
 @inject CatalogSettings catalogSettings
-@if (Model.Count > 0)
+@if (Model.Any())
 {
     <div class="attributes">
         <dl>
@@ -273,7 +272,7 @@
         </dl>
     </div>
 }
-@if (Model.Count > 0)
+@if (Model.Any())
 {
     //dynamic update support
     var attributesHaveConditions = Model.Any(x => x.HasCondition);

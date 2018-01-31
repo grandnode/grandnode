@@ -4,9 +4,9 @@
 <div class="order-summary-content mt-3">
     @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_content_before" })
     @await Html.PartialAsync("_OrderReviewData", Model.OrderReviewData)
-    @if (Model.Items.Count > 0)
+    @if (Model.Items.Any())
     {
-        if (Model.Warnings.Count > 0)
+        if (Model.Warnings.Any())
         {
             <div class="message-error">
                 <ul>
@@ -87,7 +87,7 @@
                                                     <a class="btn btn-sm btn-secondary" href="@editCartItemUrl">@T("Common.Edit")</a>
                                                 </div>
                                                 }
-                                        @if (item.Warnings.Count > 0)
+                                        @if (item.Warnings.Any())
                                                 {
                                                 <div class="message-error">
                                                     <ul>
@@ -106,7 +106,7 @@
                     <div class="d-flex justify-content-center col-md-7 m-auto">
                         @if (Model.IsEditable)
                         {
-                            if (item.AllowedQuantities.Count > 0)
+                            if (item.AllowedQuantities.Any())
                             {
                                 <select id="itemqty@(item.Id)" data-qty-id="itemquantity@(item.Id)" name="itemqty@(item.Id)" class="custom-select form-control qty-dropdown">
                                     @foreach (var qty in item.AllowedQuantities)
@@ -215,7 +215,7 @@
                                                         <a class="btn btn-sm btn-secondary" href="@editCartItemUrl">@T("Common.Edit")</a>
                                                     </div>
                                             }
-                                            @if (item.Warnings.Count > 0)
+                                            @if (item.Warnings.Any())
                                             {
                                                     <div class="message-error">
                                                         <ul>
@@ -236,7 +236,7 @@
                         <div class="d-flex justify-content-center col-md-6 m-auto px-0">
                             @if (Model.IsEditable)
                             {
-                                if (item.AllowedQuantities.Count > 0)
+                                if (item.AllowedQuantities.Any())
                                 {
                                     <select id="itemqty@(item.Id)" data-qty-id="itemquantity@(item.Id)" name="itemqty@(item.Id)" class="custom-select form-control qty-dropdown">
                                         @foreach (var qty in item.AllowedQuantities)
@@ -333,7 +333,7 @@
                 </div>
                 }
             </div>
-            @if (Model.IsEditable && Model.Items.Count > 0 && Model.DisplayTaxShippingInfo)
+            @if (Model.IsEditable && Model.Items.Any() && Model.DisplayTaxShippingInfo)
             {
             var inclTax = workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
                 //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here

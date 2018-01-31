@@ -12,12 +12,12 @@
             </h2>
 
             <div class="filter-content viewBox">
-                    @if (Model.NotFilteredItems.Count > 0)
+                @if (Model.NotFilteredItems.Any())
                 {
                         <div class="available-items">
                                 @foreach (var group in notFilteredItemsGroups)
-                    {
-                        var groupList = group.ToList();
+                                {
+                                    var groupList = group.ToList();
                                     <div class="col-12 px-0">
                                         <ul class="group product-spec-group">
                                             <li class="title">
@@ -46,11 +46,11 @@
                                             </li>
                                         </ul>
                                     </div>
-                                }
+                                     }
                             </div>
                     }
             </div>
-            @if (Model.AlreadyFilteredItems.Count > 0)
+            @if (Model.AlreadyFilteredItems.Any())
             {
                 <div class="filtered-items">
                         <ul class="pl-0">

@@ -29,7 +29,7 @@
     }
     @await Component.InvokeAsync("Widget", new { widgetZone = "manufacturerdetails_before_featured_products", additionalData = Model.Id })
     @*featured products*@
-    @if (Model.FeaturedProducts.Count > 0)
+    @if (Model.FeaturedProducts.Any())
     {
         <div class="col-12 px-0 product-grid featured-product-grid">
             <h2 class="h5">
@@ -46,7 +46,7 @@
         </div>
     }
     @await Component.InvokeAsync("Widget", new { widgetZone = "manufacturerdetails_after_featured_products", additionalData = Model.Id })
-    @if (Model.Products.Count > 0)
+    @if (Model.Products.Any())
     {
         @await Html.PartialAsync("_CatalogSelectors", Model.PagingFilteringContext)
     }
@@ -57,7 +57,7 @@
         @await Html.PartialAsync("_FilterPriceBox", Model.PagingFilteringContext.PriceRangeFilter)
     }
     @await Component.InvokeAsync("Widget", new { widgetZone = "manufacturerdetails_before_product_list", additionalData = Model.Id })
-    @if (Model.Products.Count > 0)
+    @if (Model.Products.Any())
             {
                 if (Model.PagingFilteringContext.ViewMode == "grid")
                 {

@@ -340,7 +340,7 @@
         </div>
     </div>
 
-    @if (Model.Items.Count > 0)
+    @if (Model.Items.Any())
     {
         @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_beforeproducts", additionalData = Model.Id })
         <div class="products">
@@ -479,7 +479,7 @@
         </div>
         @await Component.InvokeAsync("Widget", new { widgetZone = "orderdetails_page_afterproducts", additionalData = Model.Id })
         <div class="col-12 text-right options">
-            @if (Model.Items.Count > 0 && Model.DisplayTaxShippingInfo)
+            @if (Model.Items.Any() && Model.DisplayTaxShippingInfo)
             {
                 var inclTax = Model.PricesIncludeTax;
                 <div class="tax-shipping-info">
@@ -553,7 +553,7 @@
                                     </td>
                                 </tr>
                             }
-                            @if (Model.DisplayTaxRates && Model.TaxRates.Count > 0)
+                            @if (Model.DisplayTaxRates && Model.TaxRates.Any())
                             {
                                 foreach (var taxRate in Model.TaxRates)
                                 {
@@ -589,7 +589,7 @@
                                     </td>
                                 </tr>
                             }
-                            @if (Model.GiftCards.Count > 0)
+                            @if (Model.GiftCards.Any())
                             {
                                 foreach (var gc in Model.GiftCards)
                                 {
@@ -629,7 +629,7 @@
     }
     @if (!Model.PrintMode)
     {
-        if (Model.Shipments.Count > 0)
+        if (Model.Shipments.Any())
         {
             <div class="shipments px-0">
                 <h5><strong>@T("Order.Shipments")</strong></h5>
@@ -718,7 +718,7 @@
     }
     @if (!Model.PrintMode)
     {
-        if (Model.OrderNotes.Count > 0)
+        if (Model.OrderNotes.Any())
         {
             <div class="order-notes">
                 <h5>

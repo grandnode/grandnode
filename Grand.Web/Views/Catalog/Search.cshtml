@@ -46,7 +46,7 @@
                         </div>
                     </div>
                     <div class="advanced-search" id="advanced-search-block">
-                        @if (Model.AvailableCategories.Count > 0)
+                        @if (Model.AvailableCategories.Any())
                         {
                             <div class="inputs">
                                 <label asp-for="cid">@T("Search.Category"):</label>
@@ -62,14 +62,14 @@
 
                             </div>
                         }
-                        @if (Model.AvailableManufacturers.Count > 0)
+                        @if (Model.AvailableManufacturers.Any())
                         {
                             <div class="inputs">
                                 <label asp-for="mid">@T("Search.Manufacturer"):</label>
                                 <select asp-for="mid" class="form-control mb-3" asp-items="Model.AvailableManufacturers"></select>
                             </div>
                         }
-                        @if (Model.asv && Model.AvailableVendors.Count > 0)
+                        @if (Model.asv && Model.AvailableVendors.Any())
                         {
                             <div class="inputs">
                                 <label asp-for="vid">@T("Search.Vendor"):</label>
@@ -111,7 +111,7 @@
 @await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_before_results" })
 <div class="search-results">
 
-    @if (Model.Products.Count > 0)
+    @if (Model.Products.Any() > 0)
             {
         <div class="col">
             @await Html.PartialAsync("_CatalogSelectors", Model.PagingFilteringContext)
@@ -131,7 +131,7 @@
         </div>
     }
 
-    @if (Model.Products.Count > 0)
+    @if (Model.Products.Any())
     {
         if (Model.PagingFilteringContext.ViewMode == "grid")
         {

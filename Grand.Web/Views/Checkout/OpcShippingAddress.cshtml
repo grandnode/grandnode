@@ -95,7 +95,7 @@
     {
         <div class="shipping-addresses" id="shipping-addresses-form">
             @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_shipping_address_top" })
-            @if (Model.ExistingAddresses.Count > 0)
+            @if (Model.ExistingAddresses.Any())
             {
                 <div class="section select-shipping-address">
                     <label for="shipping-address-select">@T("Checkout.SelectShippingAddressOrEnterNewOne")</label>

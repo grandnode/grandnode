@@ -69,5 +69,5 @@
 @{
     var rootCategoriesResponsive = Model.Categories.ToList();
     //name it "Categories" if we have only categories. Otherwise, "Menu"
-    var responsiveMenuTitle = (rootCategoriesResponsive.Count > 0 && Model.Topics.Count == 0) ? T("Categories") : T("Menu");
+    var responsiveMenuTitle = (rootCategoriesResponsive.Any() && Model.Topics.Any()) ? T("Categories") : T("Menu");
 }

@@ -114,7 +114,7 @@
         {
             <div class="shipping-addresses" id="shipping-addresses-form">
                 @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_address_top" })
-                @if (Model.ExistingAddresses.Count > 0)
+                @if (Model.ExistingAddresses.Any())
                 {
                     <div class="select-shipping-address">
                         <h5><strong>@T("Checkout.SelectShippingAddress")</strong></h5>
@@ -212,7 +212,7 @@
                 }
                 @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_address_middle" })
                 <div class="new-shipping-address">
-                    @if (Model.ExistingAddresses.Count > 0)
+                    @if (Model.ExistingAddresses.Any())
                     {
                         <h2 class="generalTitle">
                             <strong>@T("Checkout.OrEnterNewAddress")</strong>

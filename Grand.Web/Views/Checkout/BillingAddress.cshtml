@@ -23,7 +23,7 @@
                      </div>
                             
                 }
-                @if(Model.ExistingAddresses.Count > 0)
+                @if(Model.ExistingAddresses.Any())
 {
                     <div class="select-billing-address">
                             <h5><strong>@T("Checkout.SelectBillingAddress")</strong></h5>
@@ -128,7 +128,7 @@
                 }
                 @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_billing_address_middle" })
                 <div class="new-billing-address">
-                                        @if (Model.ExistingAddresses.Count > 0)
+                                        @if (Model.ExistingAddresses.Any())
                                         {
                                             <h5><strong>@T("Checkout.OrEnterNewAddress")</strong></h5>
                     }

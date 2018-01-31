@@ -51,7 +51,7 @@
                     @*//post content*@
                     @Html.Raw(!String.IsNullOrEmpty(item.BodyOverview) ? item.BodyOverview : item.Body)
                     @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_after_post_body", additionalData = item.Id })
-                    @if (item.Tags.Count > 0)
+                    @if (item.Tags.Any())
                     {
                         <div class="tags pb-3">
                             <span>@T("Blog.Tags"):</span>

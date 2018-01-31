@@ -1,5 +1,5 @@
 ﻿@model ManufacturerNavigationModel
-@if (Model.Manufacturers.Count > 0)
+@if (Model.Manufacturers.Any())
 {
     <div id="block-manufacturer-navigation" class="block block-manufacturer-navigation">
         <h2 class="h5 bg-light p-3 d-lg-none"><strong>@T("Manufacturers")</strong><i id="Manufacturers" class="fa fa-angle-down fa-1x float-xs-right"></i></h2>

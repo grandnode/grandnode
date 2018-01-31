@@ -35,7 +35,7 @@
     </div>
 
 
-    @if (Model.Tags.Count > 0)
+    @if (Model.Tags.Any())
     {
         <div class="tags generalMarginSupporter">
             <label>@T("Blog.Tags"):</label>
@@ -80,7 +80,7 @@
                     </div>
             </form>
         </div>
-                    if (Model.Comments.Count > 0)
+                    if (Model.Comments.Any())
                     {
                         <div class="comment-list">
                             <h4 class="generalTitle generalMarginSupporter"><strong>@T("Blog.Comments")</strong></h4>

@@ -256,7 +256,7 @@
             </div>
         }
 
-        @if (Model.NewsletterEnabled || Model.CustomerAttributes.Count > 0)
+        @if (Model.NewsletterEnabled || Model.CustomerAttributes.Any())
         {
             <div class="card mb-3">
                 <h3 class="h5 card-header">@T("Account.Options")</h3>
@@ -274,7 +274,7 @@
                                 <span asp-validation-for="Newsletter"></span>
                             </div>
                         }
-                        @if (Model.CustomerAttributes.Count > 0)
+                        @if (Model.CustomerAttributes.Any())
                         {
                             @await Html.PartialAsync("_CustomerAttributes", Model.CustomerAttributes)
                         }

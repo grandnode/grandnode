@@ -12,7 +12,7 @@
 }
 <div class="page account-page forum-subscriptions-page">
         <h2 class="generalTitle">@T("Account.ForumSubscriptions")</h2>
-        @if (Model.ForumSubscriptions.Count > 0)
+        @if (Model.ForumSubscriptions.Any())
         {
             <div class="description">
                 @T("Account.ForumSubscriptions.Description")

@@ -121,7 +121,7 @@
             <span asp-validation-for="FaxNumber"></span>
         </div>
     }
-    @if (Model.CustomAddressAttributes.Count > 0)
+    @if (Model.CustomAddressAttributes.Any())
     {
         @await Html.PartialAsync("_AddressAttributes", Model.CustomAddressAttributes)
     }

@@ -11,7 +11,7 @@
 }
 <div class="page account-page order-list-page">
         <h2 class="generalTitle">@T("Account.CustomerOrders")</h2>
-        @if (Model.RecurringOrders.Count > 0)
+        @if (Model.RecurringOrders.Any())
         {
             <div class="recurring-payments">
                 <h5>
@@ -91,7 +91,7 @@
                     </div>
                 </form>
             </div>
-            if (Model.CancelRecurringPaymentErrors.Count > 0)
+            if (Model.CancelRecurringPaymentErrors.Any())
             {
                 <div class="message-error">
                     <ul>
@@ -104,7 +104,7 @@
             }
         }
 
-        @if (Model.Orders.Count > 0)
+        @if (Model.Orders.Any())
         {
             <div class="account-order">
                     <div class="row flex-grid">

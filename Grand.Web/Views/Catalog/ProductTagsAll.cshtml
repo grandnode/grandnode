@@ -8,7 +8,7 @@
 @using Grand.Web.Models.Catalog;
 <div class="page product-tags-all-page">
         <h2 class="generalTitle">@T("Products.Tags.All")</h2>
-        @if (Model.Tags.Count > 0)
+        @if (Model.Tags.Any())
         {
             <div class="product-tags-list">
                 @foreach (var item in Model.Tags)

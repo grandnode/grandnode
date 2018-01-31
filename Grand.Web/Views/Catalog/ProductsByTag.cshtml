@@ -19,12 +19,12 @@
 <div class="page product-tag-page">
     <h2 class="generalTitle">@String.Format(T("Products.Tags.ProductsTaggedWith").Text, Model.TagName)</h2>
         @await Component.InvokeAsync("Widget", new { widgetZone = "productsbytag_top", additionalData = Model.Id })
-        @if (Model.Products.Count > 0)
+        @if (Model.Products.Any())
         {
             @await Html.PartialAsync("_CatalogSelectors", Model.PagingFilteringContext)
         }
         @await Component.InvokeAsync("Widget", new { widgetZone = "productsbytag_before_product_list", additionalData = Model.Id })
-            @if (Model.Products.Count > 0)
+            @if (Model.Products.Any())
             {
                 if (Model.PagingFilteringContext.ViewMode == "grid")
                 {

@@ -2,7 +2,7 @@
     var errors = ExternalAuthorizerHelper.RetrieveErrorsToDisplay(true);
 }
 @using Grand.Services.Authentication.External;
-@if (errors != null && errors.Count > 0)
+@if (errors != null && errors.Any())
 {
     <div class="external-auth-errors">
         <ul>

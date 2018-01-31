@@ -14,7 +14,7 @@
             });
         });
     </script>
-    @if (Model.Messages.Count > 0)
+    @if (Model.Messages.Any())
     {
         <form asp-route="PrivateMessagesInbox" method="post">
             <div class="table-responsive">

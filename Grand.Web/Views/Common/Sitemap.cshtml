@@ -13,7 +13,7 @@
     </div>
 </div>
 <div class="d-flex justify-content-between row">
-    @if (Model.Categories.Count > 0)
+    @if (Model.Categories.Any())
     {
         <div class="col-lg-4 col-md-6">
             <h2 class="generalTitle">@T("Sitemap.Categories")</h2>
@@ -45,7 +45,7 @@
             }
             <a class="list-group-item list-group-item-action" href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a>
             <a class="list-group-item list-group-item-action" href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a>
-            @if (Model.Topics.Count > 0)
+            @if (Model.Topics.Any())
             {
                 foreach (var item in Model.Topics)
                 {
@@ -54,7 +54,7 @@
             }
         </div>
     </div>
-    @if (Model.Manufacturers.Count > 0)
+    @if (Model.Manufacturers.Any())
     {
         <div class="col-lg-4 col-md-6">
             <h2 class="generalTitle">@T("Sitemap.Manufacturers")</h2>
@@ -66,7 +66,7 @@
             </div>
         </div>
     }
-    @if (Model.Products.Count > 0)
+    @if (Model.Products.Any())
     {
         <div class="col-lg-4 col-md-6">
             <h2 class="generalTitle">@T("Sitemap.Products")</h2>

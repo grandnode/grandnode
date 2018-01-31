@@ -1,6 +1,6 @@
 ﻿@model BlogPostTagListModel
 @using Grand.Web.Models.Blogs
-@if (Model.Tags.Count > 0)
+@if (Model.Tags.Any())
 {
     <div id="block-popular-blogtags" class="block block-popular-blogtags">
         <h5 class="generalTitle d-none d-lg-block"><strong>@T("Blog.TagCloud")</strong></h5>
