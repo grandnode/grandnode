@@ -502,5 +502,8 @@
   <LocaleResource Name="Blog.ViewAll">
     <Value>View All Blog Posts</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.GiftCardCouponCode.WrongGiftCard">
+    <Value>The gift card you entered couldn't be applied to your order</Value>
+  </LocaleResource>
 </Language>
 

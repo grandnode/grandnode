@@ -1215,7 +1215,6 @@ namespace Grand.Web.Controllers
                     if (isGiftCardValid)
                     {
                         _workContext.CurrentCustomer.ApplyGiftCardCouponCode(giftcardcouponcode);
-                        //_customerService.UpdateCustomer(_workContext.CurrentCustomer);
                         model.GiftCardBox.Message = _localizationService.GetResource("ShoppingCart.GiftCardCouponCode.Applied");
                         model.GiftCardBox.IsApplied = true;
                     }

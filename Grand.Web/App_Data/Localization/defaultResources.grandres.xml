@@ -17590,7 +17590,7 @@
     <Value>Enter gift card code</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.GiftCardCouponCode.WrongGiftCard">
-    <Value>The coupon code you entered couldn't be applied to your order</Value>
+    <Value>The gift card you entered couldn't be applied to your order</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.HeaderQuantity">
     <Value>({0})</Value>
