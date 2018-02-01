@@ -311,12 +311,12 @@ namespace Grand.Services.Installation
                 LastStartUtc = DateTime.MinValue,
                 LastNonSuccessEndUtc = DateTime.MinValue,
                 LastSuccessUtc = DateTime.MinValue,
-                TimeIntervalChoice = TimeIntervalChoice.EVERY_DAYS,
+                TimeIntervalChoice = TimeIntervalChoice.EveryDays,
                 TimeInterval = 1,
                 MinuteOfHour = 1,
                 HourOfDay = 1,
                 DayOfWeek = DayOfWeek.Thursday,
-                MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
                 DayOfMonth = 1
             };
             EngineContext.Current.Resolve<IRepository<ScheduleTask>>().Insert(shtask1);
@@ -330,12 +330,12 @@ namespace Grand.Services.Installation
                 LastStartUtc = DateTime.MinValue,
                 LastNonSuccessEndUtc = DateTime.MinValue,
                 LastSuccessUtc = DateTime.MinValue,
-                TimeIntervalChoice = TimeIntervalChoice.EVERY_DAYS,
+                TimeIntervalChoice = TimeIntervalChoice.EveryDays,
                 TimeInterval = 1,
                 MinuteOfHour = 1,
                 HourOfDay = 1,
                 DayOfWeek = DayOfWeek.Thursday,
-                MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
                 DayOfMonth = 1
             };
             EngineContext.Current.Resolve<IRepository<ScheduleTask>>().Insert(shtask2);

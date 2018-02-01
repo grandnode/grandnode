@@ -13816,10 +13816,10 @@
     <Value>Hour of day</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.LastEnd">
-    <Value>Last end date</Value>
+    <Value>Last no success end date</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.LastEndUtc">
-    <Value>Last end date</Value>
+    <Value>Last no success end date</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.LastStart">
     <Value>Last start date</Value>
@@ -13832,6 +13832,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.lastsuccessutc">
     <Value>Last success date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.LeasedByMachineName">
+    <Value>The name of the machine</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.LeasedByMachineName.hint">
+    <Value>The name of the machine where the task should be run, leave empty if you have only one server.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.MinuteOfHour">
     <Value>Minute of hour</Value>

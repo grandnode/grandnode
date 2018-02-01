@@ -1,10 +1,7 @@
 ﻿using Grand.Framework.Mvc.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Grand.Framework.Mvc.ModelBinding;
 using FluentValidation.Attributes;
 using Grand.Web.Areas.Admin.Validators.Tasks;
-using Grand.Framework;
-using Grand.Framework.Mvc;
 
 namespace Grand.Web.Areas.Admin.Models.Tasks
 {
@@ -12,8 +9,11 @@ namespace Grand.Web.Areas.Admin.Models.Tasks
     public partial class ScheduleTaskModel : BaseGrandEntityModel
     {
         [GrandResourceDisplayName("Admin.System.ScheduleTasks.ScheduleTaskName")]
-        
         public string ScheduleTaskName { get; set; }
+
+        [GrandResourceDisplayName("Admin.System.ScheduleTasks.LeasedByMachineName")]
+        public string LeasedByMachineName { get; set; }
+
         [GrandResourceDisplayName("Admin.System.ScheduleTasks.Type")]
         public string Type { get; set; }
         [GrandResourceDisplayName("Admin.System.ScheduleTasks.Enabled")]

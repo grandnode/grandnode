@@ -6,7 +6,7 @@ namespace Grand.Services.Tasks
     public partial class CustomerReminderLastPurchaseScheduleTask : ScheduleTask, IScheduleTask
     {
         private readonly ICustomerReminderService _customerReminderService;
-
+        private readonly object _lock = new object();
         public CustomerReminderLastPurchaseScheduleTask(ICustomerReminderService customerReminderService)
         {
             this._customerReminderService = customerReminderService;
@@ -14,7 +14,10 @@ namespace Grand.Services.Tasks
 
         public void Execute()
         {
-            _customerReminderService.Task_LastPurchase();
+            lock (_lock)
+            {
+                _customerReminderService.Task_LastPurchase();
+            }
         }
     }
 }

@@ -42,6 +42,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 Id = task.Id,
                 ScheduleTaskName = task.ScheduleTaskName,
+                LeasedByMachineName = task.LeasedByMachineName,
                 Type = task.Type,
                 Enabled = task.Enabled,
                 StopOnError = task.StopOnError,
@@ -99,6 +100,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 model.Id = task.Id;
                 model.ScheduleTaskName = task.ScheduleTaskName;
+                model.LeasedByMachineName = task.LeasedByMachineName;
                 model.Type = task.Type;
                 model.Enabled = task.Enabled;
                 model.StopOnError = task.StopOnError;

@@ -1,19 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Grand.Core.Domain.Tasks
 {
+    /// <summary>
+    /// Month option choice
+    /// </summary>
     public enum MonthOptionChoice
     {
-        ON_SPECIFIC_DAY = 10,
-        ON_THE_FIRST_WEEK_OF_MONTH = 20,
-        ON_THE_SECOND_WEEK_OF_MONTH = 30,
-        ON_THE_THIRD_WEEK_OF_MONTH = 40,
-        ON_THE_FOURTH_WEEK_OF_MONTH = 50,
-        ON_THE_LAST_WEEK_OF_MONTH = 60,
-        ON_THE_LAST_DAY_OF_MONTH = 70
+        /// <summary>
+        /// On specific day
+        /// </summary>
+        OnSpecificDay = 10,
+
+        /// <summary>
+        /// On the first week of month
+        /// </summary>
+        OnTheFirstWeekOfMonth = 20,
+
+        /// <summary>
+        /// On the second week of month
+        /// </summary>
+        OnTheSecondWeekOfMonth = 30,
+
+        /// <summary>
+        /// On the third week of month
+        /// </summary>
+        OnTheThirdWeekOfMonth = 40,
+
+        /// <summary>
+        /// On the fourt week of month
+        /// </summary>
+        OnTheFourtWeekOfMonth = 50,
+
+        /// <summary>
+        /// On the last week of month
+        /// </summary>
+        OnTheLastWeekOfMonth = 60,
+
+        /// <summary>
+        /// On the last day of month
+        /// </summary>
+        OnTheLastDayOfMonth = 70
     }
 }

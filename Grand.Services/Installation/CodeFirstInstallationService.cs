@@ -10452,12 +10452,12 @@ namespace Grand.Services.Installation
                     LastNonSuccessEndUtc = DateTime.MinValue,
                     LastSuccessUtc = DateTime.MinValue,
 
-                    TimeIntervalChoice = TimeIntervalChoice.EVERY_MINUTES,
+                    TimeIntervalChoice = TimeIntervalChoice.EveryMinutes,
                     TimeInterval = 1,
                     MinuteOfHour = 1,
                     HourOfDay = 1,
                     DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
                     DayOfMonth = 1
                 },
                 new ScheduleTask
@@ -10470,12 +10470,12 @@ namespace Grand.Services.Installation
                     LastNonSuccessEndUtc = DateTime.MinValue,
                     LastSuccessUtc = DateTime.MinValue,
 
-                    TimeIntervalChoice = TimeIntervalChoice.EVERY_MINUTES,
+                    TimeIntervalChoice = TimeIntervalChoice.EveryMinutes,
                     TimeInterval = 5,
                     MinuteOfHour = 1,
                     HourOfDay = 1,
                     DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
                     DayOfMonth = 1
                 },
                 new ScheduleTask
@@ -10488,12 +10488,12 @@ namespace Grand.Services.Installation
                     LastNonSuccessEndUtc = DateTime.MinValue,
                     LastSuccessUtc = DateTime.MinValue,
 
-                    TimeIntervalChoice = TimeIntervalChoice.EVERY_MINUTES,
+                    TimeIntervalChoice = TimeIntervalChoice.EveryMinutes,
                     TimeInterval = 10,
                     MinuteOfHour = 1,
                     HourOfDay = 1,
                     DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
                     DayOfMonth = 1
                 },
                 new ScheduleTask
@@ -10506,12 +10506,12 @@ namespace Grand.Services.Installation
                     LastNonSuccessEndUtc = DateTime.MinValue,
                     LastSuccessUtc = DateTime.MinValue,
 
-                    TimeIntervalChoice = TimeIntervalChoice.EVERY_MINUTES,
+                    TimeIntervalChoice = TimeIntervalChoice.EveryMinutes,
                     TimeInterval = 10,
                     MinuteOfHour = 1,
                     HourOfDay = 1,
                     DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
                     DayOfMonth = 1
                 },
                 new ScheduleTask
@@ -10524,12 +10524,12 @@ namespace Grand.Services.Installation
                     LastNonSuccessEndUtc = DateTime.MinValue,
                     LastSuccessUtc = DateTime.MinValue,
 
-                    TimeIntervalChoice = TimeIntervalChoice.EVERY_HOURS,
+                    TimeIntervalChoice = TimeIntervalChoice.EveryHours,
                     TimeInterval = 1,
                     MinuteOfHour = 1,
                     HourOfDay = 1,
                     DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
                     DayOfMonth = 1
                 },
                 new ScheduleTask
@@ -10542,12 +10542,12 @@ namespace Grand.Services.Installation
                     LastNonSuccessEndUtc = DateTime.MinValue,
                     LastSuccessUtc = DateTime.MinValue,
 
-                    TimeIntervalChoice = TimeIntervalChoice.EVERY_HOURS,
+                    TimeIntervalChoice = TimeIntervalChoice.EveryHours,
                     TimeInterval = 1,
                     MinuteOfHour = 1,
                     HourOfDay = 1,
                     DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
                     DayOfMonth = 1
                 },
                 new ScheduleTask
@@ -10560,12 +10560,12 @@ namespace Grand.Services.Installation
                     LastNonSuccessEndUtc = DateTime.MinValue,
                     LastSuccessUtc = DateTime.MinValue,
 
-                    TimeIntervalChoice = TimeIntervalChoice.EVERY_HOURS,
+                    TimeIntervalChoice = TimeIntervalChoice.EveryHours,
                     TimeInterval = 1,
                     MinuteOfHour = 1,
                     HourOfDay = 1,
                     DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
                     DayOfMonth = 1
                 },
                 new ScheduleTask
@@ -10578,12 +10578,12 @@ namespace Grand.Services.Installation
                     LastNonSuccessEndUtc = DateTime.MinValue,
                     LastSuccessUtc = DateTime.MinValue,
 
-                    TimeIntervalChoice = TimeIntervalChoice.EVERY_DAYS,
+                    TimeIntervalChoice = TimeIntervalChoice.EveryDays,
                     TimeInterval = 1,
                     MinuteOfHour = 1,
                     HourOfDay = 1,
                     DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
                     DayOfMonth = 1
                 },
                 new ScheduleTask
@@ -10596,12 +10596,12 @@ namespace Grand.Services.Installation
                     LastNonSuccessEndUtc = DateTime.MinValue,
                     LastSuccessUtc = DateTime.MinValue,
 
-                    TimeIntervalChoice = TimeIntervalChoice.EVERY_DAYS,
+                    TimeIntervalChoice = TimeIntervalChoice.EveryDays,
                     TimeInterval = 1,
                     MinuteOfHour = 1,
                     HourOfDay = 1,
                     DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
                     DayOfMonth = 1
                 },
                 new ScheduleTask
@@ -10614,12 +10614,12 @@ namespace Grand.Services.Installation
                     LastNonSuccessEndUtc = DateTime.MinValue,
                     LastSuccessUtc = DateTime.MinValue,
 
-                    TimeIntervalChoice = TimeIntervalChoice.EVERY_DAYS,
+                    TimeIntervalChoice = TimeIntervalChoice.EveryDays,
                     TimeInterval = 1,
                     MinuteOfHour = 1,
                     HourOfDay = 1,
                     DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
                     DayOfMonth = 1
                 },
                 new ScheduleTask
@@ -10632,12 +10632,12 @@ namespace Grand.Services.Installation
                     LastNonSuccessEndUtc = DateTime.MinValue,
                     LastSuccessUtc = DateTime.MinValue,
 
-                    TimeIntervalChoice = TimeIntervalChoice.EVERY_DAYS,
+                    TimeIntervalChoice = TimeIntervalChoice.EveryDays,
                     TimeInterval = 1,
                     MinuteOfHour = 1,
                     HourOfDay = 1,
                     DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
                     DayOfMonth = 1
                 },
                 new ScheduleTask
@@ -10649,12 +10649,12 @@ namespace Grand.Services.Installation
                     LastStartUtc = DateTime.MinValue,
                     LastNonSuccessEndUtc = DateTime.MinValue,
                     LastSuccessUtc = DateTime.MinValue,
-                    TimeIntervalChoice = TimeIntervalChoice.EVERY_DAYS,
+                    TimeIntervalChoice = TimeIntervalChoice.EveryDays,
                     TimeInterval = 1,
                     MinuteOfHour = 1,
                     HourOfDay = 1,
                     DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
                     DayOfMonth = 1
                 },
                 new ScheduleTask
@@ -10666,12 +10666,12 @@ namespace Grand.Services.Installation
                     LastStartUtc = DateTime.MinValue,
                     LastNonSuccessEndUtc = DateTime.MinValue,
                     LastSuccessUtc = DateTime.MinValue,
-                    TimeIntervalChoice = TimeIntervalChoice.EVERY_DAYS,
+                    TimeIntervalChoice = TimeIntervalChoice.EveryDays,
                     TimeInterval = 1,
                     MinuteOfHour = 1,
                     HourOfDay = 1,
                     DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
                     DayOfMonth = 1
                 },
             };

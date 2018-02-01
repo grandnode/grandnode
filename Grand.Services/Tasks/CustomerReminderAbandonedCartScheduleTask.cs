@@ -6,6 +6,7 @@ namespace Grand.Services.Tasks
     public partial class CustomerReminderAbandonedCartScheduleTask : ScheduleTask, IScheduleTask
     {
         private readonly ICustomerReminderService _customerReminderService;
+        private readonly object _lock = new object();
 
         public CustomerReminderAbandonedCartScheduleTask(ICustomerReminderService customerReminderService)
         {
@@ -14,7 +15,10 @@ namespace Grand.Services.Tasks
 
         public void Execute()
         {
-            _customerReminderService.Task_AbandonedCart();
+            lock (_lock)
+            {
+                _customerReminderService.Task_AbandonedCart();
+            }
         }
     }
 }

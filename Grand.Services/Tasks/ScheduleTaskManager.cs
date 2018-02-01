@@ -1,9 +1,7 @@
 ﻿using Grand.Core.Domain.Tasks;
 using Grand.Core.Infrastructure;
-using Microsoft.Extensions.DependencyModel;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace Grand.Services.Tasks
 {
@@ -25,14 +23,14 @@ namespace Grand.Services.Tasks
             List<IScheduleTask> interfaceCollection = new List<IScheduleTask>();
             foreach (var task in tasks)
             {
-                var _task = ChangeTypeToRightOne(task);
+                var _task = ChangeType(task);
                 if(_task!=null)
                     interfaceCollection.Add(_task);
             }
             return interfaceCollection;
         }
 
-        public IScheduleTask ChangeTypeToRightOne(ScheduleTask scheduleTask)
+        public IScheduleTask ChangeType(ScheduleTask scheduleTask)
         {
             
             IScheduleTask task = null;
@@ -59,6 +57,7 @@ namespace Grand.Services.Tasks
                 task.DayOfWeek = scheduleTask.DayOfWeek;
                 task.MonthOptionChoice = scheduleTask.MonthOptionChoice;
                 task.DayOfMonth = scheduleTask.DayOfMonth;
+                task.LeasedByMachineName = scheduleTask.LeasedByMachineName;
             }
             return task;
         }

@@ -12,6 +12,7 @@ namespace Grand.Services.Tasks
     public partial class KeepAliveScheduleTask : ScheduleTask, IScheduleTask
     {
         private readonly IStoreContext _storeContext;
+        private readonly object _lock = new object();
 
         public KeepAliveScheduleTask(IStoreContext storeContext)
         {
@@ -23,10 +24,13 @@ namespace Grand.Services.Tasks
         /// </summary>
         public void Execute()
         {
-            string url = _storeContext.CurrentStore.Url + "keepalive/index";
-            using (var wc = new HttpClient())
+            lock (_lock)
             {
-                wc.GetStringAsync(url);
+                string url = _storeContext.CurrentStore.Url + "keepalive/index";
+                using (var wc = new HttpClient())
+                {
+                    wc.GetStringAsync(url);
+                }
             }
         }
     }
