@@ -869,23 +869,9 @@ namespace Grand.Services.Customers
             filter = filter & builder.Eq(x => x.IsHasForumTopic, false);
             filter = filter & builder.Eq(x => x.IsSystemAccount, false);
 
-            var customers = _customerRepository.Collection.Find(filter).ToList();
+            var customers = _customerRepository.Collection.DeleteMany(filter);
 
-            int totalRecordsDeleted = 0;
-            foreach (var c in customers)
-            {
-                try
-                {
-                    //delete from database
-                    _customerRepository.Delete(c);
-                    totalRecordsDeleted++;
-                }
-                catch (Exception exc)
-                {
-                    Debug.WriteLine(exc);
-                }
-            }
-            return totalRecordsDeleted;
+            return (int)customers.DeletedCount;
 
         }
 
