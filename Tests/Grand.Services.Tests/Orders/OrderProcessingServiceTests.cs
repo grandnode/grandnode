@@ -112,6 +112,7 @@ namespace Grand.Services.Orders.Tests
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
+            _currencySettings = new CurrencySettings();
 
             var cacheManager = new GrandNullCache();
 
@@ -124,12 +125,13 @@ namespace Grand.Services.Orders.Tests
             _storeService = new Mock<IStoreService>().Object;
             _customerService = new Mock<ICustomerService>().Object;
             _productReservationService = new Mock<IProductReservationService>().Object;
+            _currencyService = new Mock<ICurrencyService>().Object;
 
             _productAttributeParser = new Mock<IProductAttributeParser>().Object;
             _priceCalcService = new PriceCalculationService(_workContext, _storeContext,
                 _discountService, _categoryService, _manufacturerService,
                 _productAttributeParser, _productService, _customerService,
-                cacheManager, _vendorService, _storeService, _shoppingCartSettings, _catalogSettings);
+                cacheManager, _vendorService, _storeService, _currencyService, _shoppingCartSettings, _catalogSettings, _currencySettings);
 
             var tempEventPublisher = new Mock<IEventPublisher>();
             {
@@ -206,8 +208,8 @@ namespace Grand.Services.Orders.Tests
             _orderTotalCalcService = new OrderTotalCalculationService(_workContext, _storeContext,
                 _priceCalcService, _taxService, _shippingService, _paymentService,
                 _checkoutAttributeParser, _discountService, _giftCardService,
-                _genericAttributeService, null, _productService,
-                _taxSettings, _rewardPointsSettings, _shippingSettings, _shoppingCartSettings, _catalogSettings);
+                _genericAttributeService, null, _productService, _currencyService,
+                _taxSettings, _rewardPointsSettings, _shippingSettings, _shoppingCartSettings, _catalogSettings, _currencySettings);
 
             _orderService = new Mock<IOrderService>().Object;
             _webHelper = new Mock<IWebHelper>().Object;
