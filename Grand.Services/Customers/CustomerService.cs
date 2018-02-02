@@ -849,43 +849,27 @@ namespace Grand.Services.Customers
             if (guestRole == null)
                 throw new GrandException("'Guests' role could not be loaded");
 
-            var query = _customerRepository.Table;
+            var builder = Builders<Customer>.Filter;
+            var filter = builder.ElemMatch(x => x.CustomerRoles, role => role.Id == guestRole.Id);
 
             if (createdFromUtc.HasValue)
-                query = query.Where(c => createdFromUtc.Value <= c.CreatedOnUtc);
+                filter = filter & builder.Gte(x => x.LastActivityDateUtc, createdFromUtc.Value);
             if (createdToUtc.HasValue)
-                query = query.Where(c => createdToUtc.Value >= c.CreatedOnUtc);
-            query = query.Where(c => c.CustomerRoles.Any(cr => cr.Id == guestRole.Id));
+                filter = filter & builder.Lte(x => x.LastActivityDateUtc, createdToUtc.Value);
             if (onlyWithoutShoppingCart)
-                query = query.Where(c => !c.ShoppingCartItems.Any());
+                filter = filter & builder.Eq(x => x.HasShoppingCartItems, false);
 
-            //no orders     
-            query = query.Where(c => !c.IsHasOrders);
-            //no blog comments
-            query = query.Where(c => !c.IsHasBlogComments);
+            filter = filter & builder.Eq(x => x.IsHasOrders, false);
+            filter = filter & builder.Eq(x => x.IsHasBlogComments, false);
+            filter = filter & builder.Eq(x => x.IsNewsItem, false);
+            filter = filter & builder.Eq(x => x.IsHasProductReview, false);
+            filter = filter & builder.Eq(x => x.IsHasProductReviewH, false);
+            filter = filter & builder.Eq(x => x.IsHasPoolVoting, false);
+            filter = filter & builder.Eq(x => x.IsHasForumPost, false);
+            filter = filter & builder.Eq(x => x.IsHasForumTopic, false);
+            filter = filter & builder.Eq(x => x.IsSystemAccount, false);
 
-            //no news comments
-            query = query.Where(c => !c.IsNewsItem);
-
-            //no product reviews
-            query = query.Where(c => !c.IsHasProductReview);
-
-            //no product reviews helpfulness
-            query = query.Where(c => !c.IsHasProductReviewH);
-
-            //no poll voting
-            query = query.Where(c => !c.IsHasPoolVoting);
-
-            //no forum posts 
-            query = query.Where(c => !c.IsHasForumPost);
-
-            //no forum topics
-            query = query.Where(c => !c.IsHasForumTopic);
-
-            //don't delete system accounts
-            query = query.Where(c => !c.IsSystemAccount);
-
-            var customers = query.ToList();
+            var customers = _customerRepository.Collection.Find(filter).ToList();
 
             int totalRecordsDeleted = 0;
             foreach (var c in customers)
