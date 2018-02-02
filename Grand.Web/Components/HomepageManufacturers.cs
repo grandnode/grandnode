@@ -4,11 +4,11 @@ using System.Linq;
 
 namespace Grand.Web.ViewComponents
 {
-    public class HomepageManufacturersViewComponent : ViewComponent
+    public class HomePageManufacturersViewComponent : ViewComponent
     {
         private readonly ICatalogWebService _catalogWebService;
 
-        public HomepageManufacturersViewComponent(ICatalogWebService catalogWebService)
+        public HomePageManufacturersViewComponent(ICatalogWebService catalogWebService)
         {
             this._catalogWebService = catalogWebService;
         }

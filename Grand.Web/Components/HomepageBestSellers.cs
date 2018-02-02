@@ -12,7 +12,7 @@ using Grand.Web.Infrastructure.Cache;
 
 namespace Grand.Web.Components
 {
-    public class HomepageBestSellersViewComponent : ViewComponent
+    public class HomePageBestSellersViewComponent : ViewComponent
     {
         #region Fields
         private readonly IProductService _productService;
@@ -28,7 +28,7 @@ namespace Grand.Web.Components
 
         #region Constructors
 
-        public HomepageBestSellersViewComponent(
+        public HomePageBestSellersViewComponent(
             IProductService productService,
             IWorkContext workContext,
             IAclService aclService,
