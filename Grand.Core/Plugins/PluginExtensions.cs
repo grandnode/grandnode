@@ -25,7 +25,7 @@ namespace Grand.Core.Plugins
                 return null;
             }
 
-            string logoUrl = string.Format("{0}/{1}/{2}/logo.jpg", webHelper.GetStoreLocation(), pluginDirectory.Parent.Name, pluginDirectory.Name);
+            string logoUrl = string.Format("{0}{1}/{2}/logo.jpg", webHelper.GetStoreLocation(), pluginDirectory.Parent.Name, pluginDirectory.Name);
             return logoUrl;
         }
     }
