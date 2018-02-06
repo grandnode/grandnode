@@ -763,7 +763,7 @@ namespace Grand.Services.Orders
                 var reservation = _productReservationService.GetProductReservation(reservationId);
                 if (reservation == null)
                 {
-                    warnings.Add("ShoppingCart.Reservation.ReservationDeleted");
+                    warnings.Add(_localizationService.GetResource("ShoppingCart.Reservation.ReservationDeleted"));
                 }
                 else
                 {
