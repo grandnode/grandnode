@@ -812,6 +812,12 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         [Validator(typeof(GenerateCalendarValidator))]
         public partial class GenerateCalendarModel : BaseGrandModel
         {
+
+            public GenerateCalendarModel()
+            {
+                Interval = 1;
+            }
+
             [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.StartDateUtc")]
             [UIHint("Date")]
             public DateTime StartDateUtc { get; set; }

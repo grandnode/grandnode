@@ -39,10 +39,12 @@
                 
                 
             </div>
-            <div class="form-inline">
+            <div class="form-inline" >
                 @Html.GrandLabelFor(model => model.CalendarModel.Interval)
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.CalendarModel.Interval)
+                    <span id="pnlInterval">
+                        @Html.GrandEditorFor(model => model.CalendarModel.Interval)
+                    </span>
                     @Html.GrandDropDownListFor(model => model.CalendarModel.IntervalUnit, ((IntervalUnit)Model.CalendarModel.IntervalUnit).ToSelectList(), new { @class = "form-control input-xsmall", style = "height: 30px;padding: 0px; margin-bottom: 3px; margin-top: 3px; " })
                 </div>
             </div>
@@ -136,12 +138,15 @@
                         $("#pnlResource").show();
                         $("#pnlParameter").hide();
                         $("#pnlQuantity").hide();
+                        $("#pnlInterval").hide();
+                        $("#@Html.FieldIdFor(model => model.CalendarModel.Interval)").data("kendoNumericTextBox").value(1);
                     } else {
                         $("#pnlStartTime").show();
                         $("#pnlEndTime").show();
                         $("#pnlResource").hide();
                         $("#pnlParameter").show();
                         $("#pnlQuantity").show();
+                        $("#pnlInterval").show();
                     }
 
                 }
