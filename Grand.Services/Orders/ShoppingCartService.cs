@@ -479,7 +479,7 @@ namespace Grand.Services.Orders
                     availableStartDateError = true;
                 }
             }
-            if (product.AvailableEndDateTimeUtc.HasValue && !availableStartDateError)
+            if (product.AvailableEndDateTimeUtc.HasValue && !availableStartDateError && !(product.ProductType == ProductType.Auction))
             {
                 DateTime now = DateTime.UtcNow;
                 DateTime availableEndDateTime = DateTime.SpecifyKind(product.AvailableEndDateTimeUtc.Value, DateTimeKind.Utc);
@@ -488,6 +488,11 @@ namespace Grand.Services.Orders
                     warnings.Add(_localizationService.GetResource("ShoppingCart.NotAvailable"));
                 }
             }
+            if (!product.AvailableEndDateTimeUtc.HasValue && product.ProductType == ProductType.Auction)
+            {
+                warnings.Add(_localizationService.GetResource("ShoppingCart.NotAvailable"));
+            }
+
             return warnings;
         }
 

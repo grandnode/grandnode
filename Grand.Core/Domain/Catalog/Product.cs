@@ -483,6 +483,26 @@ namespace Grand.Core.Domain.Catalog
         public DateTime? AvailableEndDateTimeUtc { get; set; }
 
         /// <summary>
+        /// Gets or sets auction start price
+        /// </summary>
+        public decimal StartPrice { get; set; }
+
+        /// <summary>
+        /// Gets or sets current highest bid
+        /// </summary>
+        public decimal HighestBid { get; set; }
+
+        /// <summary>
+        /// Gets or sets current highest bidder customer id
+        /// </summary>
+        public string HighestBidder { get; set; }
+
+        /// <summary>
+        /// Gets or sets auction ended
+        /// </summary>
+        public bool AuctionEnded { get; set; }
+
+        /// <summary>
         /// Gets or sets a display order.
         /// This value is used when sorting associated products (used with "grouped" products)
         /// This value is used when sorting home page products

@@ -42,42 +42,46 @@
             <span class="qty-unit mr-2">
                 @Model.MeasureUnit
             </span>
-        }
+            }
 
-    }
-    {
-    var addToCartText = "";
-    if (!String.IsNullOrEmpty(Model.UpdatedShoppingCartItemId) && Model.UpdateShoppingCartItemType.HasValue && Model.UpdateShoppingCartItemType.Value == ShoppingCartType.ShoppingCart)
-    {
-        addToCartText = T("ShoppingCart.AddToCart.Update").Text;
-    }
-    else
-    {
-        addToCartText = T("ShoppingCart.AddToCart").Text;
-        if (Model.IsReservation)
-        {
-            addToCartText = T("ShoppingCart.Reservation").Text;
         }
-        if (Model.AvailableForPreOrder)
         {
-            addToCartText = T("ShoppingCart.PreOrder").Text;
-        }
-    }
-
-    //when a customer clicks 'Enter' button we submit the "add to cart" button (if visible)
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#@Html.IdFor(model => model.EnteredQuantity)").keydown(function (event) {
-                if (event.keyCode == 13) {
-                    $("#add-to-cart-button-@Model.ProductId").click();
-                    return false;
+            var addToCartText = "";
+            if (!String.IsNullOrEmpty(Model.UpdatedShoppingCartItemId) && Model.UpdateShoppingCartItemType.HasValue && Model.UpdateShoppingCartItemType.Value == ShoppingCartType.ShoppingCart)
+            {
+                addToCartText = T("ShoppingCart.AddToCart.Update").Text;
+            }
+            else
+            {
+                addToCartText = T("ShoppingCart.AddToCart").Text;
+                if (Model.IsReservation)
+                {
+                    addToCartText = T("ShoppingCart.Reservation").Text;
                 }
-            });
-        });
-    </script>
-    <button type="button" id="add-to-cart-button-@Model.ProductId" class="btn btn-success add-to-cart-button" data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;">
-        <span class="fa fa-shopping-cart"></span> <span>@addToCartText</span>
-    </button>
+                if (Model.AvailableForPreOrder)
+                {
+                    addToCartText = T("ShoppingCart.PreOrder").Text;
+                }
+                if (Model.IsAuction)
+                {
+                    addToCartText = T("ShoppingCart.BuyNow").Text;
+                }
+            }
+
+            //when a customer clicks 'Enter' button we submit the "add to cart" button (if visible)
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $("#@Html.IdFor(model => model.EnteredQuantity)").keydown(function (event) {
+                        if (event.keyCode == 13) {
+                            $("#add-to-cart-button-@Model.ProductId").click();
+                            return false;
+                        }
+                    });
+                });
+            </script>
+            <button type="button" id="add-to-cart-button-@Model.ProductId" class="btn btn-success add-to-cart-button" data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;">
+                <span class="fa fa-shopping-cart"></span> <span>@addToCartText</span>
+            </button>
     }
 
     }

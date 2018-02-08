@@ -4362,7 +4362,31 @@ namespace Grand.Services.Installation
                 throw new Exception("Default email account cannot be loaded");
             var messageTemplates = new List<MessageTemplate>
                                {
-                                   new MessageTemplate
+                                    new MessageTemplate
+                                       {
+                                           Name = "AuctionEnded.CustomerNotification",
+                                           Subject = "%Store.Name%. Auction ended.",
+                                           Body = "<p>Hello, %Customer.FullName%!</p><p></p><p>At %Auctions.EndTime% youhave won<a href=\"%Store.URL%%Auctions.ProductSeName%\">%Auctions.ProductName%</a> for% Auctions.Price %.Visit % Store.URL %/ cart to finish checkout process.</ p > ",
+                                           IsActive = true,
+                                           EmailAccountId = eaGeneral.Id,
+                                       },
+                                    new MessageTemplate
+                                       {
+                                           Name = "AuctionEnded.StoreOwnerNotification",
+                                           Subject = "%Store.Name%. Auction ended.",
+                                           Body = "<p>At %Auctions.EndTime% %Customer.FullName% have won <a href=\"%Store.URL%%Auctions.ProductSeName%\">%Auctions.ProductName%</a> for %Auctions.Price%.</p>",
+                                           IsActive = true,
+                                           EmailAccountId = eaGeneral.Id,
+                                       },
+                                    new MessageTemplate
+                                       {
+                                           Name = "BidUp.CustomerNotification",
+                                           Subject = "%Store.Name%. Your offer has been outbid.",
+                                           Body = "<p>Hi %Customer.FullName%!</p><p>Your offer for product <a href=\"%Auctions.ProductSeName%\">%Auctions.ProductName%</a> has been outbid. New price is %Auctions.Price%.<br />Raise a price by raising one's offer. Auction will be ended on %Auctions.EndTime%</p>",
+                                           IsActive = true,
+                                           EmailAccountId = eaGeneral.Id,
+                                       },
+                                    new MessageTemplate
                                        {
                                            Name = "Blog.BlogComment",
                                            Subject = "%Store.Name%. New blog comment.",
@@ -4705,8 +4729,6 @@ namespace Grand.Services.Installation
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
-
-
                                };
             _messageTemplateRepository.Insert(messageTemplates);
         }
@@ -5137,6 +5159,7 @@ namespace Grand.Services.Installation
                 NotifyNewCustomerRegistration = false,
                 HideDownloadableProductsTab = false,
                 HideBackInStockSubscriptionsTab = false,
+                HideAuctionsTab = true,
                 DownloadableProductsValidateUser = false,
                 CustomerNameFormat = CustomerNameFormat.ShowFirstName,
                 GenderEnabled = true,
@@ -10668,6 +10691,23 @@ namespace Grand.Services.Installation
                     LastSuccessUtc = DateTime.MinValue,
                     TimeIntervalChoice = TimeIntervalChoice.EveryDays,
                     TimeInterval = 1,
+                    MinuteOfHour = 1,
+                    HourOfDay = 1,
+                    DayOfWeek  = DayOfWeek.Thursday,
+                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
+                    DayOfMonth = 1
+                },
+                new ScheduleTask
+                {
+                    ScheduleTaskName = "End of the auctions",
+                    Type = "Grand.Services.Tasks.EndAuctionsTask, Grand.Services",
+                    Enabled = false,
+                    StopOnError = false,
+                    LastStartUtc = DateTime.MinValue,
+                    LastNonSuccessEndUtc = DateTime.MinValue,
+                    LastSuccessUtc = DateTime.MinValue,
+                    TimeIntervalChoice = TimeIntervalChoice.EveryHours,
+                    TimeInterval = 10,
                     MinuteOfHour = 1,
                     HourOfDay = 1,
                     DayOfWeek  = DayOfWeek.Thursday,

@@ -14,5 +14,9 @@ namespace Grand.Core.Domain.Orders
         /// Wishlist
         /// </summary>
         Wishlist = 2,
+        /// <summary>
+        /// Auctions
+        /// </summary>
+        Auctions = 3
     }
 }

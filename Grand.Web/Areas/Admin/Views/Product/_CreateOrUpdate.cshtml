@@ -56,27 +56,30 @@
         <li @Html.RenderSelectedTabIndex(10, GetSelectedTabIndex()) id="tab-calendar">
             @T("Admin.Catalog.Products.Calendar")
         </li>
-        <li @Html.RenderSelectedTabIndex(11, GetSelectedTabIndex())>
-            @T("Admin.Catalog.Products.AclStores")
+        <li @Html.RenderSelectedTabIndex(11, GetSelectedTabIndex()) id="tab-bids">
+            @T("Admin.Catalog.Products.Bids")
         </li>
         <li @Html.RenderSelectedTabIndex(12, GetSelectedTabIndex())>
-            @T("Admin.Catalog.Products.RelatedProducts")
+            @T("Admin.Catalog.Products.AclStores")
         </li>
         <li @Html.RenderSelectedTabIndex(13, GetSelectedTabIndex())>
+            @T("Admin.Catalog.Products.RelatedProducts")
+        </li>
+        <li @Html.RenderSelectedTabIndex(14, GetSelectedTabIndex())>
             @T("Admin.Catalog.Products.CrossSells")
         </li>
-        <li @Html.RenderSelectedTabIndex(13, GetSelectedTabIndex()) id="tab-associated-products">
+        <li @Html.RenderSelectedTabIndex(15, GetSelectedTabIndex()) id="tab-associated-products">
             @T("Admin.Catalog.Products.AssociatedProducts")
         </li>
         @if (!String.IsNullOrEmpty(Model.Id))
         {
-            <li @Html.RenderSelectedTabIndex(15, GetSelectedTabIndex())>
+            <li @Html.RenderSelectedTabIndex(16, GetSelectedTabIndex())>
                 @T("Admin.Catalog.Products.ActivityLog")
             </li>
-            <li @Html.RenderSelectedTabIndex(16, GetSelectedTabIndex()) id="tab-purchased-product">
+            <li @Html.RenderSelectedTabIndex(17, GetSelectedTabIndex()) id="tab-purchased-product">
                 @T("Admin.Catalog.Products.PurchasedWithOrders")
             </li>
-            <li @Html.RenderSelectedTabIndex(17, GetSelectedTabIndex())>
+            <li @Html.RenderSelectedTabIndex(18, GetSelectedTabIndex())>
                 @T("Admin.Catalog.Products.Reviews")
             </li>
         }
@@ -116,6 +119,9 @@
     </div>
     <div>
         @Html.Partial("_CreateOrUpdate.Calendar", Model)
+    </div>
+    <div>
+        @Html.Partial("_CreateOrUpdate.Bids", Model)
     </div>
     <div>
         @Html.Partial("_CreateOrUpdate.Acl", Model)

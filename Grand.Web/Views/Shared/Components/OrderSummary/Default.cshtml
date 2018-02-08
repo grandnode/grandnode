@@ -67,6 +67,12 @@
                                                     @Html.Raw(item.AttributeInfo)
                                                 </div>
                                                 }
+                                        @if (!String.IsNullOrEmpty(item.AuctionInfo))
+                                        {
+                                            <div class="attributes small">
+                                                @Html.Raw(item.AuctionInfo)
+                                            </div>
+                                        }
                                         @if (!String.IsNullOrEmpty(item.RecurringInfo))
                                                 {
                                                 <div class="recurring-info">
@@ -194,6 +200,12 @@
                                                     <div class="attributes small">
                                                         @Html.Raw(item.AttributeInfo)
                                                     </div>
+                                            }
+                                            @if (!String.IsNullOrEmpty(item.AuctionInfo))
+                                            {
+                                                <div class="attributes small">
+                                                    @Html.Raw(item.AuctionInfo)
+                                                </div>
                                             }
                                             @if (!String.IsNullOrEmpty(item.RecurringInfo))
                                             {
@@ -460,12 +472,6 @@ else
     @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_content_after" })
 </div>
 <script>
-        //$.fn.digits = function () {
-        //    return this.each(function () {
-        //        $(this).text($(this).text().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
-        //    })
-        //}
-
         $(".mobile-shopping-table .qty-input")
             .keyup(function () {
                 var value = $(this).val();
@@ -479,11 +485,6 @@ else
                 $(tid, container).attr("name", "");
                 $(tid, container).attr("id", "");
 
-                //var total_pm = $(this).parent().parent().parent().parent().find(".table-total p strong");
-                //var total_upm = $(this).parent().parent().parent().parent().find(".table-unit").text().replace(",", "").replace("$", "").replace(",", ".");
-                //var changed_price_m = total_upm * value;
-                //$(total_pm).text("$" + changed_price_m);
-                //$(total_pm).digits();
             })
             .keyup();
 
@@ -500,19 +501,6 @@ else
                 $(dtid, container2).attr("name", "");
                 $(dtid, container2).attr("id", "");
 
-                //var total_p = $(this).parent().parent().parent().find(".table-total");
-                //var total_up = $(this).parent().parent().parent().find(".table-unit").text().replace(",", "").replace("$", "").replace(",", ".");
-                //var changed_price = total_up * dvalue;
-                //$(total_p).text("$" + changed_price);
-                //$(total_p).digits();
             })
             .keyup();
-        //$(".prod-total").each(function () {
-        //    var pt = $(this);
-        //    var wout_cur = pt.text().substr(1).replace(",","");
-        //    var only_cur = pt.text().slice(0, 1);
-        //    var item_val = $(this).parent().parent().parent().find(".qty-input").val();
-        //    var changed_price = item_val * wout_cur;
-        //    console.log(changed_prices);
-        //})
 </script>

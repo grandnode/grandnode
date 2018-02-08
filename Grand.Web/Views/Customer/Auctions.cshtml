@@ -1,0 +1,80 @@
+﻿@model CustomerAuctionsModel
+@using Grand.Web.Models.Customer;
+@{
+    Layout = "_ColumnsTwo";
+    //title
+    Html.AddTitleParts(T("PageTitle.Auctions").Text);
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Auctions })
+}
+
+<div>
+    <h1 class="h2 generalTitle">@T("Account.CustomerAuctions")</h1>
+
+    <div class="row flex-grid">
+        @if (Model.ProductBidList.Any())
+        {
+            @foreach (var item in Model.ProductBidList)
+            {
+                <div class="col-lg-4 col-md-6 col-12">
+                    <div class="card">
+                        <h6 class="card-header">
+                            <strong>
+                                <span>
+                                    @T("Account.CustomerAuctions.ProductName"):
+                                </span>
+                                <span>
+                                    @item.product.Name
+                                </span>
+                            </strong>
+                        </h6>
+                        <div class="card-body small">
+                            <ul class="info">
+                                <li>
+                                    <span>@T("Account.CustomerAuctions.Status"): </span>
+                                    @if ((item.product.AuctionEnded && (item.product.HighestBidder == Model.CustomerId)) || (item.product.HighestBidder == Model.CustomerId && item.product.AvailableEndDateTimeUtc.Value < DateTime.UtcNow))
+                                    {
+                                        @T("Account.CustomerAuctions.Status.Won")
+                                    }
+                                    else if (item.product.AuctionEnded || item.product.AvailableEndDateTimeUtc.Value < DateTime.UtcNow)
+                                    {
+                                        @T("Account.CustomerAuctions.Status.Ended")
+                                    }
+                                    else
+                                    {
+                                        @T("Account.CustomerAuctions.Status.Ongoing")
+                                    }
+                                </li>
+                                <li><span>@T("Account.CustomerAuctions.Highestbid"): </span> @item.bid.Amount</li>
+
+                                @if (item.product.AvailableEndDateTimeUtc.HasValue)
+                                {
+                                    <li><span>@T("Account.CustomerAuctions.AuctionEndTime"): </span>@item.product.AvailableEndDateTimeUtc.Value.ToLocalTime()</li>
+                                }
+                            </ul>
+                        </div>
+                        <div class="card-footer">
+                            <div class="buttons">
+                                @if (!string.IsNullOrEmpty(item.bid.OrderId))
+                                {
+                                    <input type="button" value="@T("Account.CustomerAuctions.OrderDetails")" class="btn btn-sm btn-secondary order-details-button" onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = item.bid.OrderId })')" />
+                                }
+
+                                <input type="button" value="@T("Account.CustomerAuctions.Product")" class="btn btn-sm btn-success order-details-button" onclick="setLocation('@Url.RouteUrl("Product", new { SeName = item.product.SeName })')" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+        }
+        else
+        {
+            <div class="no-data">
+                @T("Account.Auctions.NoAuctions")
+            </div>
+        }
+    </div>
+</div>

@@ -28,6 +28,6 @@ namespace Grand.Web.Services
         CustomerDownloadableProductsModel PrepareDownloadableProducts(string customerId);
         UserAgreementModel PrepareUserAgreement(Guid orderItemId);
         CustomerAvatarModel PrepareAvatar(Customer customer);
-
+        CustomerAuctionsModel PrepareAuctions(Customer customer);
     }
 }

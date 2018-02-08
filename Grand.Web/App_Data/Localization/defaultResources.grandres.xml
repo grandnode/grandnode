@@ -36,6 +36,9 @@
   <LocaleResource Name="Account.AssociatedExternalAuth.YourAccountWillBeLinkedTo.Remove">
     <Value>(remove)</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Auctions.NoAuctions">
+    <Value>You don't have any auctions</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.Avatar">
     <Value>Avatar</Value>
   </LocaleResource>
@@ -143,6 +146,36 @@
   </LocaleResource>
   <LocaleResource Name="Account.CustomerAddresses.NoAddresses">
     <Value>No addresses</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions">
+    <Value>Auctions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions.AuctionEndTime">
+    <Value>Auction end time</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions.Highestbid">
+    <Value>Highest bid</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions.OrderDetails">
+    <Value>Order details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions.Product">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions.ProductName">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions.Status">
+    <Value>Status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions.Status.Ended">
+    <Value>Ended</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions.Status.Ongoing">
+    <Value>Ongoing</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions.Status.Won">
+    <Value>Won</Value>
   </LocaleResource>
   <LocaleResource Name="Account.CustomerInfo">
     <Value>Customer info</Value>
@@ -1035,6 +1068,9 @@
   <LocaleResource Name="Address.SelectState">
     <Value>Select state</Value>
   </LocaleResource>
+  <LocaleResource Name="Addtocart.Auctions.Ongoing">
+    <Value>You have {0} ongoing auctions</Value>
+  </LocaleResource>
   <LocaleResource Name="AddToCart.Attributes">
     <Value>Attributes:</Value>
   </LocaleResource>
@@ -1068,6 +1104,12 @@
   <LocaleResource Name="AddToCart.TotalPrice">
     <Value>Total price</Value>
   </LocaleResource>
+  <LocaleResource Name="AddToCart.Timeleft">
+    <Value>Time left</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.ViewAuctions">
+    <Value>Go to your auctions</Value>
+  </LocaleResource>
   <LocaleResource Name="AddToCart.ViewCart">
     <Value>Go to cart</Value>
   </LocaleResource>
@@ -1079,6 +1121,9 @@
   </LocaleResource>
   <LocaleResource Name="AddToCart.Wishlist.Items">
     <Value>There are {0} in your wishlist.</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.Yourbid">
+    <Value>Your bid</Value>
   </LocaleResource>
   <LocaleResource Name="Admin">
     <Value>Admin</Value>
@@ -2529,6 +2574,27 @@
   <LocaleResource Name="Admin.Catalog.Products.BackToList">
     <Value>back to product list</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Bids">
+    <Value>Bids</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Bids.Amount">
+    <Value>Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Bids.CantDeleteWithOrder">
+    <Value>Cannot delete bid wiht order id</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Bids.CustomerId">
+    <Value>Customer Id</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Bids.Date">
+    <Value>Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Bids.OrderId">
+    <Value>Order Id</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Bids.SaveBeforeEdit">
+    <Value>You need to save before editing this section</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.BundleProducts">
     <Value>Bundle product</Value>
   </LocaleResource>
@@ -2582,6 +2648,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Calendar.WeekDay">
     <Value>Week day</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Cannoteditauction">
+    <Value>Cannot edit ended auctions</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Categories">
     <Value>Category mappings</Value>
@@ -3242,6 +3311,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Sku.Hint">
     <Value>Product stock keeping unit (SKU). Your internal unique identifier that can be used to track this product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.StartPrice">
+    <Value>Start price</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.StockQuantity">
     <Value>Stock quantity</Value>
@@ -16287,6 +16359,9 @@
   <LocaleResource Name="PageTitle.AllProductTags">
     <Value>All product tags</Value>
   </LocaleResource>
+  <LocaleResource Name="PageTitle.Auctions">
+    <Value>Auctions</Value>
+  </LocaleResource>
   <LocaleResource Name="PageTitle.BackInStockSubscriptions">
     <Value>Back in stock subscriptions</Value>
   </LocaleResource>
@@ -16950,6 +17025,9 @@
   <LocaleResource Name="Products.Breadcrumb.Top">
     <Value>Home</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.BuyNowPrice">
+    <Value>Buy now price</Value>
+  </LocaleResource>
   <LocaleResource Name="Products.CallForPrice">
     <Value>Call for pricing</Value>
   </LocaleResource>
@@ -17109,6 +17187,9 @@
   <LocaleResource Name="Products.Price.CatalogPrice">
     <Value>Catalog Price</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.Price.Currentprice">
+    <Value>Current price</Value>
+  </LocaleResource>
   <LocaleResource Name="Products.Price.OldPrice">
     <Value>Old price</Value>
   </LocaleResource>
@@ -17123,6 +17204,9 @@
   </LocaleResource>
   <LocaleResource Name="Products.Price.ReservationPrice">
     <Value>Reservation price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Price.Startprice">
+    <Value>Start price</Value>
   </LocaleResource>
   <LocaleResource Name="Products.Price.TaxShipping.ExclTax">
     <Value><![CDATA[excluding <a href="{0}">shipping</a>]]></Value>
@@ -17490,8 +17574,26 @@
   <LocaleResource Name="ShoppingCart.AssociatedAttributeWarning">
     <Value>{0}. {1}. {2}</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Auctionends">
+    <Value>Auction ends</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Auctionwonon">
+    <Value>Auction won on</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Bid">
+    <Value>Bid</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.BidMustbeHigher">
+    <Value>Bid must be higher</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Bids">
+    <Value>Bids</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart.BuyingDisabled">
     <Value>Buying is disabled for this product</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.BuyNow">
+    <Value>Buy now</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.CannotLoadProduct">
     <Value>Product (Id={0}) cannot be loaded</Value>
@@ -17642,6 +17744,9 @@
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.MinimumQuantity">
     <Value>The minimum quantity allowed for purchase is {0}.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Mustberegisteredtobid">
+    <Value>You must be registered to bid</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.NotAvailable">
     <Value>Product is not available</Value>
@@ -17810,6 +17915,9 @@
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.WishlistDisabled">
     <Value>Wishlist is disabled for this product</Value>
+  </LocaleResource>
+  <LocaleResource Name="shoppingcart.yourbidhasbeenplaced">
+    <Value>Your bid has been placed</Value>
   </LocaleResource>
   <LocaleResource Name="Sitemap">
     <Value>Sitemap</Value>

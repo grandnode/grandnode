@@ -23,6 +23,13 @@
                 @Html.ValidationMessageFor(model => model.CatalogPrice)
             </div>
         </div>
+        <div class="form-group" id="pnlStartPrice">
+            @Html.GrandLabelFor(model => model.StartPrice)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.StartPrice) [@Model.PrimaryStoreCurrencyCode]
+                @Html.ValidationMessageFor(model => model.StartPrice)
+            </div>
+        </div>
         <div class="form-group">
             @Html.GrandLabelFor(model => model.ProductCost)
             <div class="col-md-9 col-sm-9">

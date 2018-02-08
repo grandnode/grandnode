@@ -49,7 +49,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         public int ProductTypeId { get; set; }
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.ProductType")]
         public string ProductTypeName { get; set; }
-
+        public bool AuctionEnded { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.AssociatedToProductName")]
         public string AssociatedToProductId { get; set; }
@@ -289,6 +289,9 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.CatalogPrice")]
         public decimal CatalogPrice { get; set; }
+
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.StartPrice")]
+        public decimal StartPrice { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.ProductCost")]
         public decimal ProductCost { get; set; }
@@ -807,6 +810,16 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public string Parameter { get; set; }
             public string OrderId { get; set; }
             public string Duration { get; set; }
+        }
+
+        public partial class BidModel : BaseGrandEntityModel
+        {
+            public string BidId { get; set; }
+            public DateTime Date { get; set; }
+            public string CustomerId { get; set; }
+            public string Email { get; set; }
+            public string Amount { get; set; }
+            public string OrderId { get; set; }
         }
 
         [Validator(typeof(GenerateCalendarValidator))]

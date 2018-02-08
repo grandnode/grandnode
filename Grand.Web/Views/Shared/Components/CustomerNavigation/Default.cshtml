@@ -25,6 +25,13 @@
                                                                      else
                                                                      {<text>inactive</text>}">@T("Account.CustomerOrders")</a></li>
             }
+            @if (!Model.HideAuctions)
+            {
+                <li><a href="@Url.RouteUrl("CustomerAuctions")" class="@if (Model.SelectedTab == CustomerNavigationEnum.Auctions)
+                                                                     {<text>active</text>}
+                                                                     else
+                                                                     {<text>inactive</text>}">@T("Account.CustomerAuctions")</a></li>
+            }
             @if (!Model.HideReturnRequests)
             { 
                 <li><a href="@Url.RouteUrl("CustomerReturnRequests")" class="@if (Model.SelectedTab == CustomerNavigationEnum.ReturnRequests)

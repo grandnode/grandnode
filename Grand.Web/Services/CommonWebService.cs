@@ -335,7 +335,7 @@ namespace Grand.Web.Services
             if (customer.HasShoppingCartItems)
             {
                 model.ShoppingCartItems = customer.ShoppingCartItems
-                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
                     .LimitPerStore(_storeContext.CurrentStore.Id)
                     .Sum(x => x.Quantity);
 
@@ -627,6 +627,7 @@ namespace Grand.Web.Services
                     "/customer/checkusernameavailability",
                     "/customer/downloadableproducts",
                     "/customer/info",
+                    "/customer/auctions",
                     "/deletepm",
                     "/emailwishlist",
                     "/inboxupdate",

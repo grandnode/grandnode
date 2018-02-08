@@ -156,6 +156,13 @@ namespace Grand.Web.Infrastructure
                             new { productId = @"\w+", shoppingCartTypeId = @"\d+" },
                             new[] { "Grand.Web.Controllers" });
 
+            //add product to bid, use on the product details page
+            routeBuilder.MapLocalizedRoute("AddBid",
+                            "addbid/AddBid/{productId}/{shoppingCartTypeId}",
+                            new { controller = "ShoppingCart", action = "AddBid" },
+                            new { productId = @"\w+", shoppingCartTypeId = @"\d+" },
+                            new[] { "Grand.Web.Controllers" });
+
             //product tags
             routeBuilder.MapLocalizedRoute("ProductsByTag",
                             "producttag/{productTagId}/{SeName}",
@@ -308,6 +315,9 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("CustomerAvatar",
                             "customer/avatar",
                             new { controller = "Customer", action = "Avatar" });
+            routeBuilder.MapLocalizedRoute("CustomerAuctions",
+                            "customer/auctions",
+                            new { controller = "Customer", action = "Auctions" });
             routeBuilder.MapLocalizedRoute("AccountActivation",
                             "customer/activation",
                             new { controller = "Customer", action = "AccountActivation" });

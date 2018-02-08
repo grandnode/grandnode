@@ -1,12 +1,9 @@
 ﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
 using Grand.Core.Domain.Catalog;
-using Grand.Framework.Mvc;
 using Grand.Web.Models.Common;
 using Grand.Web.Models.Media;
 using Grand.Framework.Mvc.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Routing;
 
 namespace Grand.Web.Models.ShoppingCart
 {
@@ -70,6 +67,7 @@ namespace Grand.Web.Models.ShoppingCart
             public bool AllowItemEditing { get; set; }
             public bool DisableRemoval { get; set; }
             public string ReservationInfo { get; set; }
+            public string AuctionInfo { get; set; }
             public string Parameter { get; set; }
             public IList<string> Warnings { get; set; }
 

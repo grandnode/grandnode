@@ -65,6 +65,7 @@ namespace Grand.Web.Services
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IAuctionService _auctionService;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         private readonly MediaSettings _mediaSettings;
@@ -105,6 +106,7 @@ namespace Grand.Web.Services
             IOrderTotalCalculationService orderTotalCalculationService,
             IPriceCalculationService priceCalculationService,
             IGenericAttributeService genericAttributeService,
+            IAuctionService auctionService,
             IHttpContextAccessor httpContextAccessor,
             MediaSettings mediaSettings,
             OrderSettings orderSettings,
@@ -143,6 +145,7 @@ namespace Grand.Web.Services
             this._orderTotalCalculationService = orderTotalCalculationService;
             this._priceCalculationService = priceCalculationService;
             this._genericAttributeService = genericAttributeService;
+            this._auctionService = auctionService;
             this._httpContextAccessor = httpContextAccessor;
 
             this._mediaSettings = mediaSettings;
@@ -444,6 +447,11 @@ namespace Grand.Web.Services
                     {
                         cartItemModel.ReservationInfo += "<br>" + string.Format(_localizationService.GetResource("ShoppingCart.Reservation.Duration"), sci.Duration);
                     }
+                }
+                if (sci.ShoppingCartType == ShoppingCartType.Auctions)
+                {
+                    cartItemModel.DisableRemoval = true;
+                    cartItemModel.AuctionInfo = _localizationService.GetResource("ShoppingCart.auctionwonon") + " " + product.AvailableEndDateTimeUtc;
                 }
 
                 //unit prices
@@ -795,7 +803,7 @@ namespace Grand.Web.Services
             if (customer.HasShoppingCartItems)
             {
                 var cart = customer.ShoppingCartItems
-                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
                     .LimitPerStore(storeId)
                     .ToList();
                 model.TotalProducts = cart.Sum(x=>x.Quantity);
@@ -1084,33 +1092,57 @@ namespace Grand.Web.Services
                 }
             }
             
-            var sci = customer.ShoppingCartItems.FirstOrDefault(x => x.ProductId == product.Id && (string.IsNullOrEmpty(x.AttributesXml) ? "": x.AttributesXml) == attributesXml);
-            model.ItemQuantity = sci.Quantity;
-
-            //unit prices
-            if (product.CallForPrice)
+            if (cartType != ShoppingCartType.Auctions)
             {
-                model.Price = _localizationService.GetResource("Products.CallForPrice");
+                var sci = customer.ShoppingCartItems.FirstOrDefault(x => x.ProductId == product.Id && (string.IsNullOrEmpty(x.AttributesXml) ? "" : x.AttributesXml) == attributesXml);
+                model.ItemQuantity = sci.Quantity;
+
+                //unit prices
+                if (product.CallForPrice)
+                {
+                    model.Price = _localizationService.GetResource("Products.CallForPrice");
+                }
+                else
+                {
+                    decimal taxRate;
+                    decimal shoppingCartUnitPriceWithDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetUnitPrice(sci), out taxRate);
+                    decimal shoppingCartUnitPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartUnitPriceWithDiscountBase, _workContext.WorkingCurrency);
+                    model.Price = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount);
+                    model.DecimalPrice = shoppingCartUnitPriceWithDiscount;
+                    model.TotalPrice = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount * sci.Quantity);
+                }
+
+                //picture
+                model.Picture = PrepareCartItemPicture(product, sci.AttributesXml, _mediaSettings.AddToCartThumbPictureSize, true, model.ProductName);
             }
             else
             {
-                decimal taxRate;
-                decimal shoppingCartUnitPriceWithDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetUnitPrice(sci), out taxRate);
-                decimal shoppingCartUnitPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartUnitPriceWithDiscountBase, _workContext.WorkingCurrency);
-                model.Price = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount);
-                model.DecimalPrice = shoppingCartUnitPriceWithDiscount;
-                model.TotalPrice = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount* sci.Quantity);
+                model.Picture = PrepareCartItemPicture(product, null, _mediaSettings.AddToCartThumbPictureSize, true, model.ProductName);
             }
-
-            //picture
-            model.Picture = PrepareCartItemPicture(product, sci.AttributesXml, _mediaSettings.AddToCartThumbPictureSize, true, model.ProductName);
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(x => x.ShoppingCartType == cartType)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
-            model.TotalItems = cart.Sum(x => x.Quantity);
+            if (cartType != ShoppingCartType.Auctions)
+            {
+                model.TotalItems = cart.Sum(x => x.Quantity);
+            }
+            else
+            {
+                model.TotalItems = 0;
+                var grouped = _auctionService.GetBidsByCustomerId(_workContext.CurrentCustomer.Id).GroupBy(x => x.ProductId);
+                foreach (var item in grouped)
+                {
+                    var p = _productService.GetProductById(item.Key);
+                    if (p != null && p.AvailableEndDateTimeUtc > DateTime.UtcNow)
+                    {
+                        model.TotalItems++;
+                    }
+                }
+            }
+
             if (cartType == ShoppingCartType.ShoppingCart)
             {
                 var subTotalIncludingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal;
@@ -1127,6 +1159,14 @@ namespace Grand.Web.Services
                     model.SubTotalDiscount = _priceFormatter.FormatPrice(-orderSubTotalDiscountAmount, true, _workContext.WorkingCurrency, _workContext.WorkingLanguage, subTotalIncludingTax);
                 }
             }
+            else if (cartType == ShoppingCartType.Auctions)
+            {
+                model.IsAuction = true;
+                model.HighestBidValue = product.HighestBid;
+                model.HighestBid = _priceFormatter.FormatPrice(product.HighestBid);
+                model.EndTime = product.AvailableEndDateTimeUtc;
+            }
+
             return model;
 
         }

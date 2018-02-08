@@ -171,6 +171,7 @@ namespace Grand.Web.Services
                     IsFreeShipping = product.IsFreeShipping,
                     ShowSku = showSku,
                     TaxDisplayType = taxDisplay,
+                    EndTime = product.AvailableEndDateTimeUtc,
                     ShowQty = showQty,
                     MarkAsNew = product.MarkAsNew &&
                         (!product.MarkAsNewStartDateTimeUtc.HasValue || product.MarkAsNewStartDateTimeUtc.Value < DateTime.UtcNow) &&
@@ -308,6 +309,22 @@ namespace Grand.Web.Services
                                 {
                                     decimal catalogPrice = _currencyService.ConvertFromPrimaryStoreCurrency(product.CatalogPrice, currentCurrency);
                                     priceModel.CatalogPrice = _priceFormatter.FormatPrice(catalogPrice);
+                                }
+
+                                //start price for product auction
+                                if (product.StartPrice > 0)
+                                {
+                                    decimal startPrice = _currencyService.ConvertFromPrimaryStoreCurrency(product.StartPrice, currentCurrency);
+                                    priceModel.StartPrice = _priceFormatter.FormatPrice(startPrice);
+                                    priceModel.StartPriceValue = startPrice;
+                                }
+
+                                //highest bid for product auction
+                                if (product.HighestBid > 0)
+                                {
+                                    decimal highestBid = _currencyService.ConvertFromPrimaryStoreCurrency(product.HighestBid, currentCurrency);
+                                    priceModel.HighestBid = _priceFormatter.FormatPrice(highestBid);
+                                    priceModel.HighestBidValue = highestBid;
                                 }
 
                                 //prices
@@ -575,7 +592,9 @@ namespace Grand.Web.Services
                 Gtin = product.Gtin,
                 StockAvailability = product.FormatStockMessage("", _localizationService, _productAttributeParser, _storeContext),
                 HasSampleDownload = product.IsDownload && product.HasSampleDownload,
-                DisplayDiscontinuedMessage = !product.Published && _catalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts
+                DisplayDiscontinuedMessage = (!product.Published && _catalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts) ||
+                (product.ProductType == ProductType.Auction && product.AuctionEnded) || (product.AvailableEndDateTimeUtc.HasValue && product.AvailableEndDateTimeUtc.Value < DateTime.UtcNow)
+
             };
 
             //automatically generate product description?
@@ -856,6 +875,16 @@ namespace Grand.Web.Services
                             model.ProductPrice.IsReservation = true;
                             var priceStr = _priceFormatter.FormatPrice(finalPriceWithDiscount);
                             model.ProductPrice.ReservationPrice = _priceFormatter.FormatReservationProductPeriod(product, priceStr);
+                        }
+                        //auction
+                        if (product.ProductType == ProductType.Auction)
+                        {
+                            model.ProductPrice.IsAuction = true;
+                            model.ProductPrice.HighestBid = _priceFormatter.FormatPrice(product.HighestBid);
+                            model.ProductPrice.HighestBidValue = product.HighestBid;
+                            model.ProductPrice.DisableBuyButton = product.DisableBuyButton;
+                            model.ProductPrice.StartPriceValue = product.StartPrice;
+                            model.ProductPrice.StartPrice = _priceFormatter.FormatPrice(product.StartPrice);
                         }
                     }
                 }
@@ -1327,6 +1356,16 @@ namespace Grand.Web.Services
                 }
 
             }
+            #endregion
+
+            #region Auctions
+
+            model.StartPrice = product.StartPrice;
+            model.HighestBidValue = product.HighestBid;
+            model.AddToCart.IsAuction = true;
+            model.EndTime = product.AvailableEndDateTimeUtc;
+            model.AuctionEnded = product.AuctionEnded;
+
             #endregion
 
             return model;

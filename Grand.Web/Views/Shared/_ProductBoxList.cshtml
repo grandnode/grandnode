@@ -78,7 +78,15 @@
                             <span class="price old-price">@Model.ProductPrice.OldPrice</span>
                         </li>
                     }
-                    <li class="price actual-price">@Model.ProductPrice.Price</li>
+                    @if (Model.ProductType != ProductType.Auction)
+                    {
+                        <li class="price actual-price">@Model.ProductPrice.Price</li>
+                    }
+                    else
+                    {
+                        <li class="price actual-price">@(Model.ProductPrice.HighestBidValue > 0 ? Model.ProductPrice.HighestBid : Model.ProductPrice.StartPrice)</li>
+                    }
+
                     @if (Model.ProductPrice.DisplayTaxShippingInfo)
                     {
                         var inclTax = Model.TaxDisplayType == TaxDisplayType.IncludingTax;
@@ -118,6 +126,19 @@
                             addToCartText = T("ShoppingCart.PreOrder").Text;
                         }
                         <input type="button" value="@(addToCartText)" class="btn btn-primary" onclick="AjaxCart.addproducttocart_catalog('@addtocartlink', '@Model.ShowQty', '@Model.Id');return false;" />
+                    }
+                    else
+                    {
+                        if (Model.ProductType == ProductType.Auction)
+                        {
+                            var addToCartText = T("ShoppingCart.Bids").Text;
+                            <button type="button" class="btn btn-primary" onclick="AjaxCart.addproducttocart_catalog('@addtocartlink', 'false', '@Model.Id');return false;">
+                                <span class="fa fa fa-shopping-cart"></span>
+                                <span class="d-none d-xl-block">@(addToCartText)</span>
+                                <span class="sr-only">AddToCart</span>
+                            </button>
+                        }
+
                     }
                     @if (!Model.ProductPrice.DisableAddToCompareListButton)
                     {

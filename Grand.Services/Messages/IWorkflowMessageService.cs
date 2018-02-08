@@ -470,6 +470,34 @@ namespace Grand.Services.Messages
         int SendCustomerActionEvent_Notification(CustomerAction action, string languageId, Customer customer);
 
         /// <summary>
+        /// Sends auction ended notification to a customer
+        /// </summary>
+        /// <param name="languageId">Message language identifier</param>
+        /// <param name="product">Auction</param>
+        /// <param name="Bid">Bid</param>
+        /// <returns>Queued email identifier</returns>
+        int SendAuctionEndedCustomerNotification(Product product, string languageId, Bid bid);
+
+        /// <summary>
+        /// Sends auction ended notification to a store owner
+        /// </summary>
+        /// <param name="languageId">Message language identifier</param>
+        /// <param name="product">Auction</param>
+        /// <param name="Bid">Bid</param>
+        /// <returns>Queued email identifier</returns>
+        int SendAuctionEndedStoreOwnerNotification(Product product, string languageId, Bid bid);
+
+        /// <summary>
+        /// Send outbid notification to a customer
+        /// </summary>
+        /// <param name="languageId">Message language identifier</param>
+        /// <param name="product">Product</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="Bid">Bid</param>
+        /// <returns>Queued email identifier</returns>
+        int SendOutBidCustomerNotification(Product product, Customer customer, string languageId, Bid bid);
+
+        /// <summary>
         /// Send notification
         /// </summary>
         /// <param name="messageTemplate">Message template</param>

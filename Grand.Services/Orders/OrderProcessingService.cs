@@ -76,6 +76,7 @@ namespace Grand.Services.Orders
         private readonly IReturnRequestService _returnRequestService;
         private readonly IStoreContext _storeContext;
         private readonly IProductReservationService _productReservationService;
+        private readonly IAuctionService _auctionService;
         private readonly ShippingSettings _shippingSettings;
         private readonly PaymentSettings _paymentSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
@@ -88,47 +89,6 @@ namespace Grand.Services.Orders
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="orderService">Order service</param>
-        /// <param name="webHelper">Web helper</param>
-        /// <param name="localizationService">Localization service</param>
-        /// <param name="languageService">Language service</param>
-        /// <param name="productService">Product service</param>
-        /// <param name="paymentService">Payment service</param>
-        /// <param name="logger">Logger</param>
-        /// <param name="orderTotalCalculationService">Order total calculationservice</param>
-        /// <param name="priceCalculationService">Price calculation service</param>
-        /// <param name="priceFormatter">Price formatter</param>
-        /// <param name="productAttributeParser">Product attribute parser</param>
-        /// <param name="productAttributeFormatter">Product attribute formatter</param>
-        /// <param name="giftCardService">Gift card service</param>
-        /// <param name="shoppingCartService">Shopping cart service</param>
-        /// <param name="checkoutAttributeFormatter">Checkout attribute service</param>
-        /// <param name="shippingService">Shipping service</param>
-        /// <param name="shipmentService">Shipment service</param>
-        /// <param name="taxService">Tax service</param>
-        /// <param name="customerService">Customer service</param>
-        /// <param name="discountService">Discount service</param>
-        /// <param name="encryptionService">Encryption service</param>
-        /// <param name="workContext">Work context</param>
-        /// <param name="workflowMessageService">Workflow message service</param>
-        /// <param name="vendorService">Vendor service</param>
-        /// <param name="customerActivityService">Customer activity service</param>
-        /// <param name="currencyService">Currency service</param>
-        /// <param name="affiliateService">Affiliate service</param>
-        /// <param name="eventPublisher">Event published</param>
-        /// <param name="pdfService">PDF service</param>
-        /// <param name="storeContext"></param>
-        /// <param name="productReservationService">Product Reservation service</param>
-        /// <param name="paymentSettings">Payment settings</param>
-        /// <param name="shippingSettings">Shipping settings</param>
-        /// <param name="rewardPointsSettings">Reward points settings</param>
-        /// <param name="orderSettings">Order settings</param>
-        /// <param name="taxSettings">Tax settings</param>
-        /// <param name="localizationSettings">Localization settings</param>
-        /// <param name="currencySettings">Currency settings</param>
         public OrderProcessingService(IOrderService orderService,
             IWebHelper webHelper,
             ILocalizationService localizationService,
@@ -163,6 +123,7 @@ namespace Grand.Services.Orders
             IReturnRequestService returnRequestService,
             IStoreContext storeContext,
             IProductReservationService productReservationService,
+            IAuctionService auctionService,
             ShippingSettings shippingSettings,
             PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
@@ -205,6 +166,7 @@ namespace Grand.Services.Orders
             this._returnRequestService = returnRequestService;
             this._storeContext = storeContext;
             this._productReservationService = productReservationService;
+            this._auctionService = auctionService;
             this._paymentSettings = paymentSettings;
             this._shippingSettings = shippingSettings;
             this._rewardPointsSettings = rewardPointsSettings;
@@ -386,7 +348,7 @@ namespace Grand.Services.Orders
             {
                 //load shopping cart
                 details.Cart = details.Customer.ShoppingCartItems
-                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
                     .LimitPerStore(processPaymentRequest.StoreId)
                     .ToList();
 
@@ -1274,6 +1236,7 @@ namespace Grand.Services.Orders
                     if (!processPaymentRequest.IsRecurringPayment)
                     {
                         List<ProductReservation> reservationsToUpdate = new List<ProductReservation>();
+                        List<Bid> bidsToUpdate = new List<Bid>();
 
                         //move shopping cart items to order items
                         foreach (var sc in details.Cart)
@@ -1468,6 +1431,15 @@ namespace Grand.Services.Orders
                                 }
                             }
 
+                            if (sc.ShoppingCartType == ShoppingCartType.Auctions)
+                            {
+                                var bid = _auctionService.GetBidsByProductId(product.Id).Where(x => x.Amount == product.HighestBid).FirstOrDefault();
+                                if (bid == null)
+                                    throw new ArgumentNullException("bid");
+
+                                bidsToUpdate.Add(bid);
+                            }
+
                             //inventory
                             _productService.AdjustInventory(product, -sc.Quantity, sc.AttributesXml, warehouseId);
                         }
@@ -1488,8 +1460,15 @@ namespace Grand.Services.Orders
                             _productReservationService.UpdateProductReservation(resToUpdate);
                         }
 
+                        foreach (var bid in bidsToUpdate)
+                        {
+                            bid.OrderId = order.Id;
+                            _auctionService.UpdateBid(bid);
+                        }
                         //clear shopping cart
                         _customerService.ClearShoppingCartItem(details.Customer.Id, processPaymentRequest.StoreId, ShoppingCartType.ShoppingCart);
+                        _customerService.ClearShoppingCartItem(details.Customer.Id, processPaymentRequest.StoreId, ShoppingCartType.Auctions);
+
                         //product also purchased
                         _orderService.InsertProductAlsoPurchased(order);
 

@@ -28,6 +28,7 @@ namespace Grand.Web.Models.Catalog
         public bool IsFreeShipping { get; set; }
         public bool ShowSku { get; set; }
         public bool ShowQty { get; set; }
+        public DateTime? EndTime { get; set; }
         public TaxDisplayType TaxDisplayType { get; set; }
 
         //price
@@ -46,6 +47,10 @@ namespace Grand.Web.Models.Catalog
             public string CatalogPrice { get; set; }
             public string Price {get;set;}
             public decimal PriceValue { get; set; }
+            public string StartPrice { get; set; }
+            public decimal StartPriceValue { get; set; }
+            public string HighestBid { get; set; }
+            public decimal HighestBidValue { get; set; }
             public string BasePricePAngV { get; set; }
             public bool DisableBuyButton { get; set; }
             public bool DisableWishlistButton { get; set; }

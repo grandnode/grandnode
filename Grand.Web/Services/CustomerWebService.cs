@@ -52,6 +52,8 @@ namespace Grand.Web.Services
         private readonly IOrderService _orderService;
         private readonly IDownloadService _downloadService;
         private readonly IPictureService _pictureService;
+        private readonly IProductService _productService;
+        private readonly IAuctionService _auctionService;
 
         private readonly CustomerSettings _customerSettings;
         private readonly DateTimeSettings _dateTimeSettings;
@@ -84,7 +86,8 @@ namespace Grand.Web.Services
                     IOrderService orderService,
                     IDownloadService downloadService,
                     IPictureService pictureService,
-
+                    IProductService productService,
+                    IAuctionService auctionService,
                     CustomerSettings customerSettings,
                     DateTimeSettings dateTimeSettings,
                     TaxSettings taxSettings,
@@ -116,7 +119,8 @@ namespace Grand.Web.Services
             this._orderService = orderService;
             this._downloadService = downloadService;
             this._pictureService = pictureService;
-
+            this._productService = productService;
+            this._auctionService = auctionService;
             this._customerSettings = customerSettings;
             this._dateTimeSettings = dateTimeSettings;
             this._taxSettings = taxSettings;
@@ -611,6 +615,7 @@ namespace Grand.Web.Services
                 _returnRequestService.SearchReturnRequests(_storeContext.CurrentStore.Id, _workContext.CurrentCustomer.Id, "", null, 0, 1).Count == 0;
             model.HideDownloadableProducts = _customerSettings.HideDownloadableProductsTab;
             model.HideBackInStockSubscriptions = _customerSettings.HideBackInStockSubscriptionsTab;
+            model.HideAuctions = _customerSettings.HideAuctionsTab;
             if (_vendorSettings.AllowVendorsToEditInfo && _workContext.CurrentVendor != null)
             {
                 model.ShowVendorInfo = true;
@@ -697,7 +702,24 @@ namespace Grand.Web.Services
                 false);
 
             return model;
+        }
 
+        public virtual CustomerAuctionsModel PrepareAuctions(Customer customer)
+        {
+            var model = new CustomerAuctionsModel();
+
+            var customerBids = _auctionService.GetBidsByCustomerId(customer.Id).GroupBy(x => x.ProductId);
+            foreach (var item in customerBids)
+            {
+                var product = _productService.GetProductById(item.Key);
+
+                var highestBid = _auctionService.GetBidsByProductId(product.Id).OrderByDescending(x => x.Amount).FirstOrDefault();
+                model.ProductBidList.Add(new ProductBidTuple { product = product, bid = highestBid });
+            }
+
+            model.CustomerId = customer.Id;
+
+            return model;
         }
 
     }

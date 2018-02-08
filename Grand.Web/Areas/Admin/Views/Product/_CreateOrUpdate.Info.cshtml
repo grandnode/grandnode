@@ -69,6 +69,7 @@
             $('#group-recurring').show();
             $('#group-shipping').show();
             $('#group-tax').show();
+            $('#pnlStartPrice').hide();
             $('#tab-associated-products').hide();
             $('#tab-price-product').show();
             $('#tab-inventory-product').show();
@@ -76,6 +77,7 @@
             $('#tab-purchased-product').show();
             $('#tab-calendar').hide();
             $('#tab-bundle-products').hide();
+            $('#tab-bids').hide();
         } else if (selectedProductTypeId == @(((int) ProductType.GroupedProduct).ToString())) {
             $('#group-required-other-products').hide();
             $('#group-giftcard').hide();
@@ -83,6 +85,7 @@
             $('#group-recurring').hide();
             $('#group-shipping').hide();
             $('#group-tax').hide();
+            $('#pnlStartPrice').hide();
             $('#tab-associated-products').show();
             $('#tab-price-product').hide();
             $('#tab-inventory-product').hide();
@@ -90,6 +93,7 @@
             $('#tab-purchased-product').hide();
             $('#tab-calendar').hide();
             $('#tab-bundle-products').hide();
+            $('#tab-bids').hide();
         } else if (selectedProductTypeId == @(((int) ProductType.Reservation).ToString())){
             $('#group-required-other-products').show();
             $('#group-giftcard').show();
@@ -97,6 +101,7 @@
             $('#group-recurring').show();
             $('#group-shipping').show();
             $('#group-tax').show();
+            $('#pnlStartPrice').hide();
             $('#tab-associated-products').hide();
             $('#tab-price-product').show();
             $('#tab-inventory-product').show();
@@ -104,6 +109,7 @@
             $('#tab-purchased-product').show();
             $('#tab-calendar').show();
             $('#tab-bundle-products').hide();
+            $('#tab-bids').hide();
             $("#@Html.FieldIdFor(model => model.ManageInventoryMethodId)").val("0");
             toggleManageStock();
             $("#@Html.FieldIdFor(model => model.IsShipEnabled)").prop("checked", false);
@@ -117,6 +123,7 @@
             $('#group-recurring').hide();
             $('#group-shipping').show();
             $('#group-tax').show();
+            $('#pnlStartPrice').hide();
             $('#tab-associated-products').hide();
             $('#tab-price-product').show();
             $('#tab-inventory-product').show();
@@ -124,6 +131,16 @@
             $('#tab-purchased-product').show();
             $('#tab-calendar').hide();
             $('#tab-bundle-products').show();
+            $('#tab-bids').hide();
+        } else if (selectedProductTypeId == @(((int) ProductType.Auction).ToString())){
+            $('#tab-bids').show();
+            $('#tab-calendar').hide();
+            $('#tab-bundle-products').hide();
+            $('#tab-attributes-product').hide();
+            $('#group-required-other-products').hide();
+            $('#group-recurring').hide();
+            $('#pnlStartPrice').show();
+            $('#tab-associated-products').hide();
         }
     }
 

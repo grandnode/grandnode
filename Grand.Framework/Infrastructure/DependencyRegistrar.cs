@@ -139,6 +139,7 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<ProductService>().As<IProductService>().InstancePerLifetimeScope();
             builder.RegisterType<CopyProductService>().As<ICopyProductService>().InstancePerLifetimeScope();
             builder.RegisterType<ProductReservationService>().As<IProductReservationService>().InstancePerLifetimeScope();
+            builder.RegisterType<AuctionService>().As<IAuctionService>().InstancePerLifetimeScope();
 
             builder.RegisterType<SpecificationAttributeService>().As<ISpecificationAttributeService>().InstancePerLifetimeScope();
 
@@ -312,7 +313,6 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<EventPublisher>().As<IEventPublisher>().SingleInstance();
             builder.RegisterType<SubscriptionService>().As<ISubscriptionService>().SingleInstance();
 
-
             //TASKS
             builder.RegisterType<QueuedMessagesSendScheduleTask>().InstancePerLifetimeScope();
             builder.RegisterType<ClearCacheScheduleTask>().InstancePerLifetimeScope();
@@ -327,7 +327,7 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<DeleteGuestsScheduleTask>().InstancePerLifetimeScope();
             builder.RegisterType<UpdateExchangeRateScheduleTask>().InstancePerLifetimeScope();
             builder.RegisterType<KeepAliveScheduleTask>().InstancePerLifetimeScope();
-            
+            builder.RegisterType<EndAuctionsTask>().InstancePerLifetimeScope();
         }
 
         /// <summary>

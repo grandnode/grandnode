@@ -22,7 +22,7 @@ namespace Grand.Web.ViewComponents
         public IViewComponentResult Invoke(bool isEditable)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var model = _shoppingCartWebService.PrepareOrderTotals(cart, isEditable);

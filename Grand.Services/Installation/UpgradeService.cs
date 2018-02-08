@@ -717,6 +717,65 @@ namespace Grand.Services.Installation
             settingService.SaveSetting(securitySettings, x => x.AllowNonAsciiCharInHeaders, "", false);
             #endregion
 
+            #region MessageTemplates
+
+            var eaGeneral = EngineContext.Current.Resolve<IRepository<EmailAccount>>().Table.FirstOrDefault();
+            if (eaGeneral == null)
+                throw new Exception("Default email account cannot be loaded");
+            var messageTemplates = new List<MessageTemplate>
+            {
+                new MessageTemplate
+                        {
+                            Name = "AuctionEnded.CustomerNotification",
+                            Subject = "%Store.Name%. Auction ended.",
+                            Body = "<p>Hello, %Customer.FullName%!</p><p></p><p>At %Auctions.EndTime% youhave won<a href=\"%Store.URL%%Auctions.ProductSeName%\">%Auctions.ProductName%</a> for% Auctions.Price %.Visit % Store.URL %/ cart to finish checkout process.</ p > ",
+                            IsActive = true,
+                            EmailAccountId = eaGeneral.Id,
+                        },
+                new MessageTemplate
+                        {
+                            Name = "AuctionEnded.StoreOwnerNotification",
+                            Subject = "%Store.Name%. Auction ended.",
+                            Body = "<p>At %Auctions.EndTime% %Customer.FullName% have won <a href=\"%Store.URL%%Auctions.ProductSeName%\">%Auctions.ProductName%</a> for %Auctions.Price%.</p>",
+                            IsActive = true,
+                            EmailAccountId = eaGeneral.Id,
+                        },
+                new MessageTemplate
+                        {
+                            Name = "BidUp.CustomerNotification",
+                            Subject = "%Store.Name%. Your offer has been outbid.",
+                            Body = "<p>Hi %Customer.FullName%!</p><p>Your offer for product <a href=\"%Auctions.ProductSeName%\">%Auctions.ProductName%</a> has been outbid. New price is %Auctions.Price%.<br />Raise a price by raising one's offer. Auction will be ended on %Auctions.EndTime%</p>",
+                            IsActive = true,
+                            EmailAccountId = eaGeneral.Id,
+                        },
+            };
+            EngineContext.Current.Resolve<IRepository<MessageTemplate>>().Insert(messageTemplates);
+            #endregion
+
+            #region Tasks
+
+            var endtask = new ScheduleTask
+            {
+                ScheduleTaskName = "End of the auctions",
+                Type = "Grand.Services.Tasks.EndAuctionsTask, Grand.Services",
+                Enabled = false,
+                StopOnError = false,
+                LastStartUtc = DateTime.MinValue,
+                LastNonSuccessEndUtc = DateTime.MinValue,
+                LastSuccessUtc = DateTime.MinValue,
+                TimeIntervalChoice = TimeIntervalChoice.EveryMinutes,
+                TimeInterval = 10,
+                MinuteOfHour = 1,
+                HourOfDay = 1,
+                DayOfWeek = DayOfWeek.Monday,
+                MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
+                DayOfMonth = 1
+            };
+            EngineContext.Current.Resolve<IRepository<ScheduleTask>>().Insert(endtask);
+
+
+            #endregion
+
         }
 
         private void InstallStringResources(string filenames)

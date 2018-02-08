@@ -111,8 +111,8 @@
 @await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_before_results" })
 <div class="search-results">
 
-    @if (Model.Products.Any() > 0)
-            {
+    @if (Model.Products.Any())
+    {
         <div class="col">
             @await Html.PartialAsync("_CatalogSelectors", Model.PagingFilteringContext)
         </div>

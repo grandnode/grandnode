@@ -22,6 +22,11 @@ namespace Grand.Core.Domain.Catalog
         /// <summary>
 		/// Bundled product
 		/// </summary>
-		BundledProduct = 20
+		BundledProduct = 20,
+
+        /// <summary>
+        /// Auction
+        /// </summary>
+        Auction = 25
     }
 }

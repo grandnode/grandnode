@@ -518,5 +518,113 @@
     <Value>The name of the machine where the task should be run, leave empty if you have only one server.</Value>
   </LocaleResource>
 
+  <LocaleResource Name="Products.Price.Currentprice">
+    <Value>Current price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.BuyNowPrice">
+    <Value>Buy now price</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.BuyNow">
+    <Value>Buy now</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Bid">
+    <Value>Bid</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Auctionends">
+    <Value>Auction ends</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Mustberegisteredtobid">
+    <Value>You must be registered to bid</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.Yourbid">
+    <Value>Your bid</Value>
+  </LocaleResource>
+  <LocaleResource Name="shoppingcart.yourbidhasbeenplaced">
+    <Value>Your bid has been placed</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.ViewAuctions">
+    <Value>Go to your auctions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Addtocart.Auctions.Ongoing">
+    <Value>You have {0} ongoing auctions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Bids">
+    <Value>Bids</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Bids.SaveBeforeEdit">
+    <Value>You need to save before editing this section</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Bids.Date">
+    <Value>Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Bids.CustomerId">
+    <Value>Customer Id</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Bids.Amount">
+    <Value>Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Bids.CantDeleteWithOrder">
+    <Value>Cannot delete bid wiht order id</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Auctionwonon">
+    <Value>Auction won on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Bids.OrderId">
+    <Value>Order Id</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Cannoteditauction">
+    <Value>Cannot edit ended auctions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Customerauctions">
+    <Value>Auctions</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.Auctions">
+    <Value>Auctions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Auctions.NoAuctions">
+    <Value>You don't have any auctions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions.ProductName">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions.Status">
+    <Value>Status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions.Status.Ended">
+    <Value>Ended</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions.Status.Ongoing">
+    <Value>Ongoing</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions.Status.Won">
+    <Value>Won</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions.AuctionEndTime">
+    <Value>Auction end time</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions.Highestbid">
+    <Value>Highest bid</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions.Product">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions.OrderDetails">
+    <Value>Order details</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Bids">
+    <Value>Bids</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.BidMustbeHigher">
+    <Value>Bid must be higher</Value>
+  </LocaleResource>
+  <LocaleResource Name="products.price.startprice">
+    <Value>Start price</Value>
+  </LocaleResource>
+  <LocaleResource Name="addtocart.timeleft">
+    <Value>Time left</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.StartPrice">
+    <Value>Start price</Value>
+  </LocaleResource>
 </Language>
 

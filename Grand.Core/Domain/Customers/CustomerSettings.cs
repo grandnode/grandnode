@@ -96,6 +96,11 @@ namespace Grand.Core.Domain.Customers
         public bool HideBackInStockSubscriptionsTab { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to hide 'My auctions' tab on 'My account' page
+        /// </summary>
+        public bool HideAuctionsTab { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to validate user when downloading products
         /// </summary>
         public bool DownloadableProductsValidateUser { get; set; }

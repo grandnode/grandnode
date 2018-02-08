@@ -1263,7 +1263,7 @@ namespace Grand.Services.Customers
             var update = updatebuilder.PullFilter(p => p.ShoppingCartItems, p=>p.StoreId == storeId && p.ShoppingCartTypeId == (int)shoppingCartType);
             _customerRepository.Collection.UpdateOneAsync(new BsonDocument("_id", customerId), update);
 
-            if (shoppingCartType == ShoppingCartType.ShoppingCart)
+            if (shoppingCartType == ShoppingCartType.ShoppingCart || shoppingCartType == ShoppingCartType.Auctions)
                 UpdateCustomerLastUpdateCartDate(customerId, DateTime.UtcNow);
             else
                 UpdateCustomerLastUpdateWishList(customerId, DateTime.UtcNow);

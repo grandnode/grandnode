@@ -95,6 +95,7 @@ namespace Grand.Services.Orders.Tests
         private AddressSettings _addressSettings;
         private Store _store;
         private IProductReservationService _productReservationService;
+        private IAuctionService _auctionService;
 
         [TestInitialize()]
         public void TestInitialize()
@@ -126,6 +127,7 @@ namespace Grand.Services.Orders.Tests
             _customerService = new Mock<ICustomerService>().Object;
             _productReservationService = new Mock<IProductReservationService>().Object;
             _currencyService = new Mock<ICurrencyService>().Object;
+            _auctionService = new Mock<IAuctionService>().Object;
 
             _productAttributeParser = new Mock<IProductAttributeParser>().Object;
             _priceCalcService = new PriceCalculationService(_workContext, _storeContext,
@@ -250,7 +252,7 @@ namespace Grand.Services.Orders.Tests
                 _workflowMessageService, _vendorService,
                 _customerActivityService, tempICustomerActionEventService,
                 _currencyService, _affiliateService,
-                _eventPublisher, _pdfService, null, null, _storeContext, _productReservationService,
+                _eventPublisher, _pdfService, null, null, _storeContext, _productReservationService, _auctionService,
                 _shippingSettings, _paymentSettings, _rewardPointsSettings,
                 _orderSettings, _taxSettings, _localizationSettings,
                 _currencySettings);

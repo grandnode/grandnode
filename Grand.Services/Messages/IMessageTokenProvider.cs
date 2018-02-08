@@ -40,6 +40,7 @@ namespace Grand.Services.Messages
         void AddForumPostTokens(IList<Token> tokens, ForumPost forumPost);
         void AddPrivateMessageTokens(IList<Token> tokens, PrivateMessage privateMessage);
         void AddBackInStockTokens(IList<Token> tokens, BackInStockSubscription subscription);
+        void AddAuctionTokens(IList<Token> tokens, Product product, Bid bid);
         string[] GetListOfCampaignAllowedTokens();
         string[] GetListOfAllowedTokens();
         string[] GetListOfCustomerReminderAllowedTokens(CustomerReminderRuleEnum rule);

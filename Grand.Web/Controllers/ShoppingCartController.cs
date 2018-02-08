@@ -71,6 +71,7 @@ namespace Grand.Web.Controllers
         private readonly IProductReservationService _productReservationService;
         private readonly ICacheManager _cacheManager;
         private readonly IPictureService _pictureService;
+        private readonly IAuctionService _auctionService;
         private readonly MediaSettings _mediaSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly CatalogSettings _catalogSettings;
@@ -111,6 +112,7 @@ namespace Grand.Web.Controllers
             IProductReservationService productReservationService,
             ICacheManager cacheManager,
             IPictureService pictureService,
+            IAuctionService auctionService,
             MediaSettings mediaSettings,
             ShoppingCartSettings shoppingCartSettings,
             CatalogSettings catalogSettings, 
@@ -149,6 +151,7 @@ namespace Grand.Web.Controllers
             this._productReservationService = productReservationService;
             this._cacheManager = cacheManager;
             this._pictureService = pictureService;
+            this._auctionService = auctionService;
             this._mediaSettings = mediaSettings;
             this._shoppingCartSettings = shoppingCartSettings;
             this._catalogSettings = catalogSettings;
@@ -524,7 +527,17 @@ namespace Grand.Web.Controllers
                         updatecartitem.ShoppingCartType;
 
             //save item
-            var addToCartWarnings = new List<string>();            
+            var addToCartWarnings = new List<string>();
+
+            if (product.AvailableEndDateTimeUtc.HasValue && product.AvailableEndDateTimeUtc.Value < DateTime.UtcNow)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = _localizationService.GetResource("ShoppingCart.NotAvailable")
+                });
+            }
+
             if (updatecartitem == null)
             {
                 //add to the cart
@@ -648,6 +661,106 @@ namespace Grand.Web.Controllers
             #endregion
         }
 
+        [HttpPost]
+        public virtual IActionResult AddBid(string productId, int shoppingCartTypeId, IFormCollection form)
+        {
+            var customer = _workContext.CurrentCustomer;
+            if (!customer.IsRegistered())
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = _localizationService.GetResource("ShoppingCart.Mustberegisteredtobid")
+                });
+            }
+            decimal bid = 0;
+            foreach (string formKey in form.Keys)
+            {
+                if (formKey.Equals(string.Format("auction_{0}.HighestBidValue", productId), StringComparison.OrdinalIgnoreCase))
+                {
+                    decimal.TryParse(form[formKey], out bid);
+                    break;
+                }
+            }
+
+            Product product = _productService.GetProductById(productId);
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            var warnings = _shoppingCartService.GetStandardWarnings(customer, ShoppingCartType.Auctions, product, "", 0, 1);
+            if (warnings.Any())
+            {
+                string toReturn = "";
+                foreach (var warning in warnings)
+                {
+                    toReturn += warning + "</br>";
+                }
+
+                return Json(new
+                {
+                    success = false,
+                    message = toReturn
+                });
+            }
+
+            if (bid <= product.HighestBid)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = _localizationService.GetResource("ShoppingCart.BidMustBeHigher")
+                });
+            }
+
+            if (!product.AvailableEndDateTimeUtc.HasValue)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = _localizationService.GetResource("ShoppingCart.NotAvailable")
+                });
+            }
+
+            if (product.AvailableEndDateTimeUtc < DateTime.UtcNow)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = _localizationService.GetResource("ShoppingCart.NotAvailable")
+                });
+            }
+
+            var latestbid = _auctionService.GetLatestBid(product.Id);
+            if(latestbid != null)
+            {
+                if(latestbid.CustomerId != _workContext.CurrentCustomer.Id)
+                {
+                    var workflowmessageService = EngineContext.Current.Resolve<IWorkflowMessageService>();
+                    workflowmessageService.SendOutBidCustomerNotification(product, customer, _workContext.WorkingLanguage.Id, latestbid);
+                }
+            }
+
+            _auctionService.InsertBid(new Bid
+            {
+                Date = DateTime.UtcNow,
+                Amount = bid,
+                CustomerId = _workContext.CurrentCustomer.Id,
+                ProductId = productId,
+                StoreId = _storeContext.CurrentStore.Id
+            });
+
+            product.HighestBid = bid;
+            _auctionService.UpdateHighestBid(product, bid, customer.Id);
+            var addtoCartModel = _shoppingCartWebService.PrepareAddToCartModel(product, customer, 1, "", ShoppingCartType.Auctions, null, null, "", "", "");
+
+            return Json(new
+            {
+                success = true,
+                message = _localizationService.GetResource("ShoppingCart.Yourbidhasbeenplaced"),
+                html = this.RenderPartialViewToString("AddToCart", addtoCartModel)
+            });
+        }
+
         //handle product attribute selection event. this way we return new price, overridden gtin/sku/mpn
         //currently we use this method on the product details pages
         [HttpPost]
@@ -673,7 +786,7 @@ namespace Grand.Web.Controllers
 
 
             string price = "";
-            if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices) && !product.CustomerEntersPrice)
+            if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices) && !product.CustomerEntersPrice && product.ProductType != ProductType.Auction)
             {
                 //we do not calculate price of "customer enters price" option is enabled
                 decimal finalPrice = _priceCalculationService.GetUnitPrice(product,
@@ -758,7 +871,7 @@ namespace Grand.Web.Controllers
         public virtual IActionResult CheckoutAttributeChange(IFormCollection form)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
@@ -958,7 +1071,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("HomePage");
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var model = new ShoppingCartModel();
@@ -1010,7 +1123,7 @@ namespace Grand.Web.Controllers
             //updated cart
             _workContext.CurrentCustomer = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id);
             cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var model = new ShoppingCartModel();
@@ -1073,7 +1186,7 @@ namespace Grand.Web.Controllers
         public virtual IActionResult StartCheckout(IFormCollection form)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
@@ -1108,7 +1221,7 @@ namespace Grand.Web.Controllers
         public virtual IActionResult ApplyDiscountCoupon(string discountcouponcode, IFormCollection form)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
@@ -1198,7 +1311,7 @@ namespace Grand.Web.Controllers
                 giftcardcouponcode = giftcardcouponcode.Trim();
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
@@ -1245,7 +1358,7 @@ namespace Grand.Web.Controllers
         public virtual IActionResult GetEstimateShipping(string countryId, string stateProvinceId, string zipPostalCode, IFormCollection form)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
@@ -1279,7 +1392,7 @@ namespace Grand.Web.Controllers
             }
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
@@ -1305,7 +1418,7 @@ namespace Grand.Web.Controllers
             }
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             _shoppingCartWebService.PrepareShoppingCart(model, cart);

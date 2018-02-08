@@ -23,6 +23,7 @@ using Grand.Core.Domain.Common;
 using Microsoft.AspNetCore.Http;
 using System.Net;
 using Grand.Services.Vendors;
+using Grand.Services.Common;
 
 namespace Grand.Services.Messages
 {
@@ -2196,6 +2197,139 @@ namespace Grand.Services.Messages
                 toEmail, toName);
         }
 
+        #endregion
+
+        #region Auction notification
+
+        public virtual int SendAuctionEndedCustomerNotification(Product product, string languageId, Bid bid)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(bid.CustomerId);
+
+            if (string.IsNullOrEmpty(languageId))
+            {
+                languageId = customer.GetAttribute<string>(SystemCustomerAttributeNames.LanguageId);
+            }
+
+            string storeId = bid.StoreId;
+            if (string.IsNullOrEmpty(storeId))
+            {
+                storeId = _storeContext.CurrentStore.Id;
+            }
+
+            languageId = EnsureLanguageIsActive(languageId, storeId);
+
+            var messageTemplate = GetActiveMessageTemplate("AuctionEnded.CustomerNotification", storeId);
+            if (messageTemplate == null)
+                return 0;
+
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+
+            var tokens = new List<Token>();
+            _messageTokenProvider.AddAuctionTokens(tokens, product, bid);
+            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            _messageTokenProvider.AddStoreTokens(tokens, _storeService.GetStoreById(storeId), emailAccount);
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+
+            var toEmail = customer.Email;
+            var toName = customer.GetFullName();
+            return SendNotification(messageTemplate, emailAccount,
+                languageId, tokens,
+                toEmail, toName);
+        }
+
+        public virtual int SendAuctionEndedStoreOwnerNotification(Product product, string languageId, Bid bid)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(bid.CustomerId);
+
+            if (string.IsNullOrEmpty(languageId))
+            {
+                languageId = customer.GetAttribute<string>(SystemCustomerAttributeNames.LanguageId);
+            }
+
+            string storeId = bid.StoreId;
+            if (string.IsNullOrEmpty(storeId))
+            {
+                storeId = _storeContext.CurrentStore.Id;
+            }
+
+            languageId = EnsureLanguageIsActive(languageId, storeId);
+
+            var messageTemplate = GetActiveMessageTemplate("AuctionEnded.StoreOwnerNotification", storeId);
+            if (messageTemplate == null)
+                return 0;
+
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+
+            var tokens = new List<Token>();
+            _messageTokenProvider.AddAuctionTokens(tokens, product, bid);
+            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            _messageTokenProvider.AddStoreTokens(tokens, _storeService.GetStoreById(storeId), emailAccount);
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+
+            var toEmail = emailAccount.Email;
+            var toName = emailAccount.DisplayName;
+            return SendNotification(messageTemplate, emailAccount,
+                languageId, tokens,
+                toEmail, toName);
+        }
+
+
+        /// <summary>
+        /// Send outbid notification to a customer
+        /// </summary>
+        /// <param name="languageId">Message language identifier</param>
+        /// <param name="product">Product</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="Bid">Bid</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual int SendOutBidCustomerNotification(Product product, Customer customer, string languageId, Bid bid)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            if (string.IsNullOrEmpty(languageId))
+            {
+                languageId = customer.GetAttribute<string>(SystemCustomerAttributeNames.LanguageId);
+            }
+
+            string storeId = bid.StoreId;
+            if (string.IsNullOrEmpty(storeId))
+            {
+                storeId = _storeContext.CurrentStore.Id;
+            }
+
+            languageId = EnsureLanguageIsActive(languageId, storeId);
+
+            var messageTemplate = GetActiveMessageTemplate("BidUp.CustomerNotification", storeId);
+            if (messageTemplate == null)
+                return 0;
+
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+
+            var tokens = new List<Token>();
+            _messageTokenProvider.AddAuctionTokens(tokens, product, bid);
+            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            _messageTokenProvider.AddStoreTokens(tokens, _storeService.GetStoreById(storeId), emailAccount);
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+
+            var toEmail = customer.Email;
+            var toName = customer.GetFullName();
+            return SendNotification(messageTemplate, emailAccount,
+                languageId, tokens,
+                toEmail, toName);
+        }
         #endregion
 
         #endregion

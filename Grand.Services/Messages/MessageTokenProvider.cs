@@ -1131,6 +1131,16 @@ namespace Grand.Services.Messages
             _eventPublisher.EntityTokensAdded(subscription, tokens);
         }
 
+        public virtual void AddAuctionTokens(IList<Token> tokens, Product product, Bid bid)
+        {
+            tokens.Add(new Token("Auctions.ProductName", product.Name));
+            tokens.Add(new Token("Auctions.Price", _priceFormatter.FormatPrice(bid.Amount)));
+            tokens.Add(new Token("Auctions.EndTime", product.AvailableEndDateTimeUtc.ToString()));
+            tokens.Add(new Token("Auctions.ProductSeName", product.SeName));
+
+            _eventPublisher.EntityTokensAdded(bid, tokens);
+        }
+
         /// <summary>
         /// Gets list of allowed (supported) message tokens for campaigns
         /// </summary>
@@ -1288,6 +1298,10 @@ namespace Grand.Services.Messages
                 "%PrivateMessage.Text%",
                 "%BackInStockSubscription.ProductName%",
                 "%BackInStockSubscription.ProductUrl%",
+                "%Auctions.ProductName%",
+                "%Auctions.Price%",
+                "%Auctions.EndTime%",
+                "%Auctions.ProductSeName%"
             };
             return allowedTokens.ToArray();
         }

@@ -96,6 +96,10 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ICacheManager _cacheManager;
         private readonly IProductReservationService _productReservationService;
         private readonly MediaSettings _mediaSettings;
+        private readonly IAuctionService _auctionService;
+        private readonly IPriceFormatter _priceFormatter;
+
+
         #endregion
 
         #region Constructors
@@ -143,7 +147,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             IRepository<Product> productRepository,
             ICacheManager cacheManager,
             IProductReservationService productReservationService,
-            MediaSettings mediaSettings)
+            MediaSettings mediaSettings,
+            IAuctionService auctionService,
+            IPriceFormatter priceFormatter)
         {
             this._productService = productService;
             this._productTemplateService = productTemplateService;
@@ -189,6 +195,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._cacheManager = cacheManager;
             this._productReservationService = productReservationService;
             this._mediaSettings = mediaSettings;
+            this._auctionService = auctionService;
+            this._priceFormatter = priceFormatter;
         }
 
         #endregion 
@@ -5757,6 +5765,52 @@ namespace Grand.Web.Areas.Admin.Controllers
                     _productReservationService.DeleteProductReservation(toDelete);
                 else
                     return Json(new DataSourceResult { Errors = _localizationService.GetResource("Admin.Catalog.ProductReservations.CantDeleteWithOrder") });
+            }
+
+            return Json("");
+        }
+
+        #endregion
+
+        #region Bids
+
+        [HttpPost]
+        public IActionResult ListBids(DataSourceRequest command, string productId)
+        {
+            var bids = _auctionService.GetBidsByProductId(productId, command.Page - 1, command.PageSize);
+            var bidsModel = bids
+                .Select(x => new ProductModel.BidModel
+                {
+                    BidId = x.Id,
+                    Amount = _priceFormatter.FormatPrice(x.Amount),
+                    Date = x.Date,
+                    CustomerId = x.CustomerId,
+                    Email = _customerService.GetCustomerById(x.CustomerId)?.Email,
+                    OrderId = x.OrderId
+                }).ToList();
+
+            var gridModel = new DataSourceResult
+            {
+                Data = bidsModel,
+                Total = bids.TotalCount
+            };
+
+            return Json(gridModel);
+        }
+
+        [HttpPost]
+        public IActionResult BidDelete(ProductModel.BidModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var toDelete = _auctionService.GetBid(model.BidId);
+            if (toDelete != null)
+            {
+                if (string.IsNullOrEmpty(toDelete.OrderId))
+                    _auctionService.DeleteBid(toDelete);
+                else
+                    return Json(new DataSourceResult { Errors = _localizationService.GetResource("Admin.Catalog.Products.Bids.CantDeleteWithOrder") });
             }
 
             return Json("");

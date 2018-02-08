@@ -22,6 +22,21 @@
                 <span>@Model.ReservationPrice</span>
             </div>
         }
+        if (Model.IsAuction)
+        {
+            <div>
+                @if (Model.HighestBidValue > 0)
+                {
+                    <label>@T("Products.Price.CurrentPrice"):</label>
+                    <span>@Model.HighestBid</span>
+                }
+                else
+                {
+                    <label>@T("Products.Price.StartPrice"):</label>
+                    <span>@Model.StartPrice</span>
+                }
+            </div>
+        }
         if (!String.IsNullOrWhiteSpace(Model.CatalogPrice))
         {
             @*catalog price*@
@@ -38,20 +53,27 @@
                 <span>@Model.OldPrice</span>
             </div>
         }
-        <div class="generalMarginSupporter @if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
-                    {<text>product-price</text>}
-                    else
-                    {<text>non-discounted-price</text>}">
-            @if (!String.IsNullOrWhiteSpace(Model.OldPrice) || !String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
-            {
-                @*display "Price:" label if we have old price or discounted one*@
-                <label>@T("Products.Price"):</label>
-            }
-            @*render price*@
-            <span @if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount)) { <text> itemprop="price" content="@Model.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)" class="price-value-@(Model.ProductId)" </text>   }>
-                <strong>@Html.Raw(Model.Price)</strong>
-            </span>
-        </div>
+        if (!(Model.IsAuction && Model.DisableBuyButton))
+        {
+            <div class="generalMarginSupporter @if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
+        {<text>product-price</text>}
+        else
+        {<text>non-discounted-price</text>}">
+                @if ((!String.IsNullOrWhiteSpace(Model.OldPrice) || !String.IsNullOrWhiteSpace(Model.PriceWithDiscount)) && Model.IsAuction)
+                {
+                    @*display "Price:" label if we have old price or discounted one*@
+                    <label>@T("Products.Price"):</label>
+                }
+                @*render price*@
+                <span @if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount)) { <text> itemprop="price" content="@Model.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)" class="price-value-@(Model.ProductId)" </text>    }>
+                    @if (Model.IsAuction)
+                    {
+                        <strong>@T("Products.BuyNowPrice"):</strong>
+                    }
+                    <strong>@Html.Raw(Model.Price)</strong>
+                </span>
+            </div>
+        }
         if (!String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
         {
             @*discounted price*@

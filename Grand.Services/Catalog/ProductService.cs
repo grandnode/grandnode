@@ -419,6 +419,7 @@ namespace Grand.Services.Catalog
                 .Set(x => x.ShortDescription, product.ShortDescription)
                 .Set(x => x.ShowOnHomePage, product.ShowOnHomePage)
                 .Set(x => x.Sku, product.Sku)
+                .Set(x => x.StartPrice, product.StartPrice)
                 .Set(x => x.StockQuantity, product.StockQuantity)
                 .Set(x => x.Stores, product.Stores)
                 .Set(x => x.SubjectToAcl, product.SubjectToAcl)

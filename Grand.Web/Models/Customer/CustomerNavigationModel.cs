@@ -13,6 +13,7 @@ namespace Grand.Web.Models.Customer
         public bool HideRewardPoints { get; set; }
         public bool HideChangePassword { get; set; }
         public bool HideAvatar { get; set; }
+        public bool HideAuctions { get; set; }
         public bool HideForumSubscriptions { get; set; }
         public bool ShowVendorInfo { get; set; }
 
@@ -31,6 +32,7 @@ namespace Grand.Web.Models.Customer
         ChangePassword = 70,
         Avatar = 80,
         ForumSubscriptions = 90,
-        VendorInfo = 100
+        VendorInfo = 100,
+        Auctions = 110
     }
 }

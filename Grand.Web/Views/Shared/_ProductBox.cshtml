@@ -70,6 +70,20 @@
                     @Model.ProductPrice.BasePricePAngV
                 </div>
             }
+            @if (Model.EndTime.HasValue)
+            {
+                <div>
+                    @if (Model.EndTime > DateTime.UtcNow)
+                    {
+                        <label class="d-inline-block">@T("AddToCart.Timeleft"): </label>
+                        <div class="d-inline-block" data-countdown="@Model.EndTime.Value.ToLocalTime()"></div>
+                    }
+                    else
+                    {
+                        <label>@T("ShoppingCart.Auctionends"): @Model.EndTime.Value.ToLocalTime()</label>
+                    }
+                </div>
+            }
             @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
             {
                 <div class="col-12 px-0">
@@ -79,11 +93,22 @@
                 </div>
             }
             @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_after", additionalData = Model.Id })
-            <div class="col-12 px-0">
-                <h3 class="h6 card-subtitle mb-3 mt-3">
-                    <span class="price actual-price">@Model.ProductPrice.Price</span>
-                </h3>
-            </div>
+            @if (Model.ProductType != ProductType.Auction)
+            {
+                <div class="col-12 px-0">
+                    <h3 class="h6 card-subtitle mb-3 mt-3">
+                        <span class="price actual-price">@Model.ProductPrice.Price</span>
+                    </h3>
+                </div>
+            }
+            else
+            {
+                <div class="col-12 px-0">
+                    <h3 class="h6 card-subtitle mb-3 mt-3">
+                        <span class="price actual-price">@(Model.ProductPrice.HighestBidValue > 0 ? Model.ProductPrice.HighestBid : Model.ProductPrice.StartPrice)</span>
+                    </h3>
+                </div>
+            }
             @if (Model.ProductPrice.DisplayTaxShippingInfo)
             {
                 var inclTax = Model.TaxDisplayType == TaxDisplayType.IncludingTax;
@@ -123,6 +148,19 @@
                                 }
                                 <span class="sr-only">AddToCart</span>
                             </button>
+                        }
+                        else
+                        {
+                            if (Model.ProductType == ProductType.Auction)
+                            {
+                                var addToCartText = T("ShoppingCart.Bids").Text;
+                                <button type="button" class="btn btn-primary" onclick="AjaxCart.addproducttocart_catalog('@addtocartlink', 'false', '@Model.Id');return false;">
+                                    <span class="fa fa fa-shopping-cart"></span>
+                                        <span class="d-none d-xl-block">@(addToCartText)</span>
+                                    <span class="sr-only">AddToCart</span>
+                                </button>
+                            }
+
                         }
                         @if (!Model.ProductPrice.DisableAddToCompareListButton)
                         {
