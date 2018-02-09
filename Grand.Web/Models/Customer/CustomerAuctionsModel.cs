@@ -1,4 +1,4 @@
-﻿using Grand.Core.Domain.Catalog;
+﻿using System;
 using Grand.Framework.Mvc.Models;
 using System.Collections.Generic;
 
@@ -17,7 +17,13 @@ namespace Grand.Web.Models.Customer
 
     public class ProductBidTuple
     {
-        public Product product { get; set; }
-        public Bid bid { get; set; }
+        public string ProductName { get; set; }
+        public string ProductSeName { get; set; }
+        public string CurrentBidAmount { get; set; }
+        public decimal CurrentBidAmountValue { get; set; }
+        public DateTime EndBidDate { get; set; } 
+        public bool Ended { get; set; }
+        public bool HighestBidder { get; set; }
+        public string OrderId { get; set; }
     }
 }

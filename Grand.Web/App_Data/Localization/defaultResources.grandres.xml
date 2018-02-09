@@ -39,6 +39,12 @@
   <LocaleResource Name="Account.Auctions.NoAuctions">
     <Value>You don't have any auctions</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Auctions.Tab.Ended">
+    <Value>Ended auctions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Auctions.Tab.Ongoing">
+    <Value>Ongoing Auctions</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.Avatar">
     <Value>Avatar</Value>
   </LocaleResource>
@@ -174,8 +180,8 @@
   <LocaleResource Name="Account.CustomerAuctions.Status.Ongoing">
     <Value>Ongoing</Value>
   </LocaleResource>
-  <LocaleResource Name="Account.CustomerAuctions.Status.Won">
-    <Value>Won</Value>
+  <LocaleResource Name="Account.CustomerAuctions.Status.Outbid">
+    <Value>Outbid</Value>
   </LocaleResource>
   <LocaleResource Name="Account.CustomerInfo">
     <Value>Customer info</Value>

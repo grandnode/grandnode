@@ -707,14 +707,43 @@ namespace Grand.Web.Services
         public virtual CustomerAuctionsModel PrepareAuctions(Customer customer)
         {
             var model = new CustomerAuctionsModel();
+            var priceFormatter = EngineContext.Current.Resolve<IPriceFormatter>();
 
             var customerBids = _auctionService.GetBidsByCustomerId(customer.Id).GroupBy(x => x.ProductId);
             foreach (var item in customerBids)
             {
                 var product = _productService.GetProductById(item.Key);
+                if (product != null)
+                {
+                    var bid = new ProductBidTuple();
 
-                var highestBid = _auctionService.GetBidsByProductId(product.Id).OrderByDescending(x => x.Amount).FirstOrDefault();
-                model.ProductBidList.Add(new ProductBidTuple { product = product, bid = highestBid });
+                    //if auction was ended and highest bidder is someone else do not show this record
+                    if ((product.AuctionEnded && product.HighestBidder != customer.Id) || (product.AvailableEndDateTimeUtc < DateTime.UtcNow && product.HighestBidder != customer.Id))
+                        break;
+
+                    bid.EndBidDate = product.AvailableEndDateTimeUtc.HasValue ? product.AvailableEndDateTimeUtc.Value: DateTime.MaxValue;
+                    bid.CurrentBidAmountValue = product.HighestBid;
+                    bid.CurrentBidAmount = priceFormatter.FormatPrice(product.HighestBid);
+
+                    var highestBid = _auctionService.GetBidsByProductId(product.Id).OrderByDescending(x => x.Amount).FirstOrDefault();
+                    if(highestBid!=null)
+                    {
+                        if (highestBid.CustomerId == customer.Id && !string.IsNullOrEmpty(highestBid.OrderId))
+                            bid.OrderId = highestBid.OrderId;
+                    }
+                    // ended means won
+                    if ((product.AuctionEnded && product.HighestBidder == customer.Id) || (product.AvailableEndDateTimeUtc < DateTime.UtcNow && product.HighestBidder == customer.Id))
+                        bid.Ended = true;
+                    else
+                    {
+                        if (product.HighestBidder == customer.Id)
+                            bid.HighestBidder = true;
+                    }
+
+                    bid.ProductName = product.GetLocalized(x => x.Name);
+                    bid.ProductSeName = product.GetSeName();
+                    model.ProductBidList.Add(bid);
+                }
             }
 
             model.CustomerId = customer.Id;

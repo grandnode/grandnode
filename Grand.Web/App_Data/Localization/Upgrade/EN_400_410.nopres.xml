@@ -626,5 +626,18 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.StartPrice">
     <Value>Start price</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Auctions.Tab.Ongoing">
+    <Value>Ongoing Auctions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Auctions.Tab.Ended">
+    <Value>Ended auctions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions.Status.HighestBidder">
+    <Value>Highest bidder</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions.Status.Outbid">
+    <Value>Outbid</Value>
+  </LocaleResource>
+
 </Language>
 
