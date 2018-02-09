@@ -4366,7 +4366,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "AuctionEnded.CustomerNotification",
                                            Subject = "%Store.Name%. Auction ended.",
-                                           Body = "<p>Hello, %Customer.FullName%!</p><p></p><p>At %Auctions.EndTime% youhave won<a href=\"%Store.URL%%Auctions.ProductSeName%\">%Auctions.ProductName%</a> for% Auctions.Price %.Visit % Store.URL %/ cart to finish checkout process.</ p > ",
+                                           Body = "<p>Hello, %Customer.FullName%!</p><p></p><p>At %Auctions.EndTime% you have won <a href=\"%Store.URL%%Auctions.ProductSeName%\">%Auctions.ProductName%</a> for %Auctions.Price%. Visit  <a href=\"%Store.URL%/cart\">cart</a> to finish checkout process. </p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
