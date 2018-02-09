@@ -3093,7 +3093,7 @@ namespace Grand.Services.Orders
                 if (_productService.GetProductById(orderItem.ProductId) != null)
                 {
                     var product = _productService.GetProductById(orderItem.ProductId);
-                    if (product != null && product.ProductType != ProductType.Reservation)
+                    if (product != null && product.ProductType == ProductType.SimpleProduct)
                     {
                         _shoppingCartService.AddToCart(customer, orderItem.ProductId,
                             ShoppingCartType.ShoppingCart, order.StoreId,
