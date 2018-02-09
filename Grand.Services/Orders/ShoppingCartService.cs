@@ -797,7 +797,9 @@ namespace Grand.Services.Orders
                     }
 
                     var reserved = _productReservationService.GetCustomerReservationsHelperBySciId(sciId);
-                    
+                    if(!reserved.Any())
+                        warnings.Add(_localizationService.GetResource("ShoppingCart.Reservation.ReservationDeleted"));
+
                     foreach (var item in reserved)
                     {
                         var reservation = _productReservationService.GetProductReservation(item.ReservationId);
