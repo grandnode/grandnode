@@ -5654,8 +5654,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             DateTime _dateFrom = new DateTime(model.StartDateUtc.Year, model.StartDateUtc.Month, model.StartDateUtc.Day, 0, 0, 0, 0);
             DateTime _dateTo = new DateTime(model.EndDateUtc.Year, model.EndDateUtc.Month, model.EndDateUtc.Day, 23, 59, 59, 999);
             if ((IntervalUnit)model.IntervalUnit == IntervalUnit.Day)
+            {
                 model.Quantity = 1;
-
+                model.Parameter = "";
+            }
             List<DateTime> dates = new List<DateTime>();
             for (DateTime iterator = _dateFrom; iterator <= _dateTo; iterator += new TimeSpan(0, minutesToAdd, 0))
             {

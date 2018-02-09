@@ -829,6 +829,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public GenerateCalendarModel()
             {
                 Interval = 1;
+                Quantity = 1;
             }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.StartDateUtc")]
