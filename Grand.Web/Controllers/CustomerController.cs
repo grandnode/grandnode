@@ -1252,6 +1252,9 @@ namespace Grand.Web.Controllers
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
 
+            if (_customerSettings.HideAuctionsTab)
+                return RedirectToRoute("CustomerInfo");
+
             var model = _customerWebService.PrepareAuctions(_workContext.CurrentCustomer);
 
             return View(model);
