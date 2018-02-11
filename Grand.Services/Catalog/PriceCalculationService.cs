@@ -642,20 +642,27 @@ namespace Grand.Services.Catalog
             appliedDiscounts = new List<AppliedDiscount>();
 
             decimal? finalPrice = null;
-            var combination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
-            if (combination != null)
+
+            if (shoppingCartType == ShoppingCartType.Auctions && product.ProductType == ProductType.Auction)
+                finalPrice = customerEnteredPrice;
+
+            if (!finalPrice.HasValue)
             {
-                if(combination.OverriddenPrice.HasValue)
-                    finalPrice = combination.OverriddenPrice.Value;
-                if(combination.TierPrices.Any())
+                var combination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
+                if (combination != null)
                 {
-                    var storeId = _storeContext.CurrentStore.Id;
-                    var actualTierPrices = combination.TierPrices.Where(x => string.IsNullOrEmpty(x.StoreId) || x.StoreId == storeId)
-                        .Where(x => string.IsNullOrEmpty(x.CustomerRoleId) ||
-                        customer.CustomerRoles.Where(role => role.Active).Select(role => role.Id).Contains(x.CustomerRoleId)).ToList();
-                    var tierPrice = actualTierPrices.LastOrDefault(price => quantity >= price.Quantity);
-                    if (tierPrice != null)
-                        finalPrice = tierPrice.Price;
+                    if (combination.OverriddenPrice.HasValue)
+                        finalPrice = combination.OverriddenPrice.Value;
+                    if (combination.TierPrices.Any())
+                    {
+                        var storeId = _storeContext.CurrentStore.Id;
+                        var actualTierPrices = combination.TierPrices.Where(x => string.IsNullOrEmpty(x.StoreId) || x.StoreId == storeId)
+                            .Where(x => string.IsNullOrEmpty(x.CustomerRoleId) ||
+                            customer.CustomerRoles.Where(role => role.Active).Select(role => role.Id).Contains(x.CustomerRoleId)).ToList();
+                        var tierPrice = actualTierPrices.LastOrDefault(price => quantity >= price.Quantity);
+                        if (tierPrice != null)
+                            finalPrice = tierPrice.Price;
+                    }
                 }
             }
             if(!finalPrice.HasValue)
@@ -672,7 +679,7 @@ namespace Grand.Services.Catalog
                 }
 
                 //get price of a product (with previously calculated price of all attributes)
-                if (product.CustomerEntersPrice && shoppingCartType == ShoppingCartType.Auctions && product.ProductType == ProductType.Auction)
+                if (product.CustomerEntersPrice)
                 {
                     finalPrice = customerEnteredPrice;
                 }

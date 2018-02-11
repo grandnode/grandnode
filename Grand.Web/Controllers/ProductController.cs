@@ -561,6 +561,13 @@ namespace Grand.Web.Controllers
                     comparemessage = "No product found with the specified ID"
                 });
 
+            if(product.ProductType == ProductType.Auction || product.ProductType == ProductType.Reservation)
+                return Json(new
+                {
+                    success = false,
+                    comparemessage = _localizationService.GetResource("Products.ProductCantAddToCompareList")
+                });
+
             if (!_catalogSettings.CompareProductsEnabled)
                 return Json(new
                 {

@@ -776,6 +776,32 @@ namespace Grand.Services.Installation
 
             #endregion
 
+            #region Insert activities
+
+            var _activityLogTypeRepository = EngineContext.Current.Resolve<IRepository<ActivityLogType>>();
+            _activityLogTypeRepository.Insert(new ActivityLogType()
+            {
+                SystemKeyword = "PublicStore.AddNewBid",
+                Enabled = false,
+                Name = "Public store. Add new bid"
+            });
+            _activityLogTypeRepository.Insert(new ActivityLogType()
+            {
+                SystemKeyword = "DeleteBid",
+                Enabled = false,
+                Name = "Delete bid"
+            });
+
+
+            #endregion
+
+            #region Index bid
+
+            EngineContext.Current.Resolve<IRepository<Bid>>().Collection.Indexes.CreateOneAsync(Builders<Bid>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            EngineContext.Current.Resolve<IRepository<Bid>>().Collection.Indexes.CreateOneAsync(Builders<Bid>.IndexKeys.Ascending(x => x.ProductId).Ascending(x => x.CustomerId).Descending(x => x.Date), new CreateIndexOptions() { Name = "ProductCustomer", Unique = false });
+            EngineContext.Current.Resolve<IRepository<Bid>>().Collection.Indexes.CreateOneAsync(Builders<Bid>.IndexKeys.Ascending(x => x.ProductId).Descending(x => x.Date), new CreateIndexOptions() { Name = "ProductDate", Unique = false });
+
+            #endregion
         }
 
         private void InstallStringResources(string filenames)

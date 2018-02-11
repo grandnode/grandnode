@@ -197,6 +197,7 @@ namespace Grand.Services.Catalog
                 Price = product.Price,
                 OldPrice = product.OldPrice,
                 CatalogPrice = product.CatalogPrice,
+                StartPrice = product.StartPrice,
                 ProductCost = product.ProductCost,
                 CustomerEntersPrice = product.CustomerEntersPrice,
                 MinimumCustomerEnteredPrice = product.MinimumCustomerEnteredPrice,

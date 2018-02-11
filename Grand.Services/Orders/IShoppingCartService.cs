@@ -82,7 +82,15 @@ namespace Grand.Services.Orders
         IList<string> GetShoppingCartItemGiftCardWarnings(ShoppingCartType shoppingCartType,
             Product product, string attributesXml);
 
-        
+        /// <summary>
+        /// Validate bid
+        /// </summary>
+        /// <param name="bid"></param>
+        /// <param name="product"></param>
+        /// <param name="customer"></param>
+        /// <returns></returns>
+        IList<string> GetAuctionProductWarning(decimal bid, Product product, Customer customer);
+
         /// <summary>
         /// Validates shopping cart item
         /// </summary>

@@ -39,6 +39,12 @@
   <LocaleResource Name="Account.Auctions.NoAuctions">
     <Value>You don't have any auctions</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Auctions.NoEndedAuctions">
+    <Value>You haven't won any auction.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Auctions.NoOngoingAuctions">
+    <Value>You don't have participate in any auctions.</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.Auctions.Tab.Ended">
     <Value>Ended auctions</Value>
   </LocaleResource>
@@ -176,6 +182,9 @@
   </LocaleResource>
   <LocaleResource Name="Account.CustomerAuctions.Status.Ended">
     <Value>Ended</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions.Status.HighestBidder">
+    <Value>Highest bidder</Value>
   </LocaleResource>
   <LocaleResource Name="Account.CustomerAuctions.Status.Ongoing">
     <Value>Ongoing</Value>
@@ -774,6 +783,9 @@
   <LocaleResource Name="ActivityLog.AddNewWidget">
     <Value>Added a new widget (ID = {0})</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteBid">
+    <Value>Deleted a bid for product ('{0}')</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteCategory">
     <Value>Deleted a category ('{0}')</Value>
   </LocaleResource>
@@ -932,6 +944,9 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.PublicStore.AddProductReview">
     <Value>Added a product review ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.PublicStore.AddToBid">
+    <Value>A new bid has been added ('{0}')</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.PublicStore.AddToCompareList">
     <Value>Added a product to compare list ('{0}')</Value>
@@ -17228,6 +17243,9 @@
   </LocaleResource>
   <LocaleResource Name="Products.ProductAttributes.PriceAdjustment">
     <Value>{0} [{1}]</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.ProductCantAddToCompareList">
+    <Value>This product can't be added to compare list</Value>
   </LocaleResource>
   <LocaleResource Name="Products.ProductHasBeenAddedToCompareList">
     <Value>The product has been added to your product comparison</Value>

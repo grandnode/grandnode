@@ -56,6 +56,7 @@ namespace Grand.Services.Installation
         #region Fields
 
         private readonly IRepository<GrandNodeVersion> _versionRepository;
+        private readonly IRepository<Bid> _bidRepository;
         private readonly IRepository<Address> _addressRepository;
         private readonly IRepository<Affiliate> _affiliateRepository;
         private readonly IRepository<BlogComment> _blogcommentRepository;
@@ -156,6 +157,7 @@ namespace Grand.Services.Installation
 
         public CodeFirstInstallationService(
             IRepository<GrandNodeVersion> versionRepository,
+            IRepository<Bid> bidRepository,
             IRepository<Address> addressRepository,
             IRepository<Affiliate> affiliateRepository,
             IRepository<BlogComment> blogcommentRepository,
@@ -249,6 +251,7 @@ namespace Grand.Services.Installation
             IHostingEnvironment hostingEnvironment)
         {
             this._versionRepository = versionRepository;
+            this._bidRepository = bidRepository;
             this._addressRepository = addressRepository;
             this._affiliateRepository = affiliateRepository;
             this._blogcommentRepository = blogcommentRepository;
@@ -10003,6 +10006,12 @@ namespace Grand.Services.Installation
                                               },
                                           new ActivityLogType
                                               {
+                                                  SystemKeyword = "DeleteBid",
+                                                  Enabled = true,
+                                                  Name = "Delete bid"
+                                              },
+                                          new ActivityLogType
+                                              {
                                                   SystemKeyword = "DeleteCategory",
                                                   Enabled = true,
                                                   Name = "Delete category"
@@ -10259,6 +10268,12 @@ namespace Grand.Services.Installation
                                                   SystemKeyword = "PublicStore.ContactUs",
                                                   Enabled = false,
                                                   Name = "Public store. Use contact us form"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "PublicStore.AddNewBid",
+                                                  Enabled = false,
+                                                  Name = "Public store. Add new bid"
                                               },
                                           new ActivityLogType
                                               {
@@ -11019,6 +11034,11 @@ namespace Grand.Services.Installation
             _productReservationRepository.Collection.Indexes.CreateOneAsync(Builders<ProductReservation>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _productReservationRepository.Collection.Indexes.CreateOneAsync(Builders<ProductReservation>.IndexKeys.Ascending(x => x.ProductId).Ascending(x => x.Date), new CreateIndexOptions() { Name = "ProductReservation", Unique = false });
             _productReservationRepository.Collection.Indexes.CreateOneAsync(Builders<ProductReservation>.IndexKeys.Ascending(x => x.ProductId).Ascending(x => x.Date).Ascending(x=>x.Resource), new CreateIndexOptions() { Name = "ProductReservationRecord", Unique = true });
+
+            //bid
+            _bidRepository.Collection.Indexes.CreateOneAsync(Builders<Bid>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _bidRepository.Collection.Indexes.CreateOneAsync(Builders<Bid>.IndexKeys.Ascending(x => x.ProductId).Ascending(x=>x.CustomerId).Descending(x=>x.Date), new CreateIndexOptions() { Name = "ProductCustomer", Unique = false });
+            _bidRepository.Collection.Indexes.CreateOneAsync(Builders<Bid>.IndexKeys.Ascending(x => x.ProductId).Descending(x => x.Date), new CreateIndexOptions() { Name = "ProductDate", Unique = false });
 
             //ProductReview
             _productReviewRepository.Collection.Indexes.CreateOneAsync(Builders<ProductReview>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });

@@ -638,6 +638,18 @@
   <LocaleResource Name="Account.CustomerAuctions.Status.Outbid">
     <Value>Outbid</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.PublicStore.AddToBid">
+    <Value>A new bid has been added ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteBid">
+    <Value>Deleted a bid for product ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Auctions.NoEndedAuctions">
+    <Value>You haven't won any auction.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Auctions.NoOngoingAuctions">
+    <Value>You don't have participate in any auctions.</Value>
+  </LocaleResource>
 
 </Language>
 

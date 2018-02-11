@@ -381,6 +381,16 @@ namespace Grand.Web.Controllers
                 });
             }
 
+            //you can't add auction product to wishlist
+            if (product.ProductType == ProductType.Auction && (ShoppingCartType)shoppingCartTypeId == ShoppingCartType.Wishlist)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "Auction products couldn't be added to the wishlist"
+                });
+            }
+
             #region Update existing shopping cart item?
             string updatecartitemid = "";
             foreach (string formKey in form.Keys)
@@ -682,12 +692,22 @@ namespace Grand.Web.Controllers
                     break;
                 }
             }
+            if(bid <= 0 )
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = _localizationService.GetResource("ShoppingCart.BidMustBeHigher")
+                });
+            }
 
             Product product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            var warnings = _shoppingCartService.GetStandardWarnings(customer, ShoppingCartType.Auctions, product, "", 0, 1);
+            var warnings = _shoppingCartService.GetStandardWarnings(customer, ShoppingCartType.Auctions, product, "", bid, 1).ToList();
+            warnings.AddRange(_shoppingCartService.GetAuctionProductWarning(bid, product, customer));
+
             if (warnings.Any())
             {
                 string toReturn = "";
@@ -703,54 +723,12 @@ namespace Grand.Web.Controllers
                 });
             }
 
-            if (bid <= product.HighestBid)
-            {
-                return Json(new
-                {
-                    success = false,
-                    message = _localizationService.GetResource("ShoppingCart.BidMustBeHigher")
-                });
-            }
+            //insert new bid
+            _auctionService.NewBid(customer, product, _storeContext.CurrentStore, _workContext.WorkingLanguage, bid);
 
-            if (!product.AvailableEndDateTimeUtc.HasValue)
-            {
-                return Json(new
-                {
-                    success = false,
-                    message = _localizationService.GetResource("ShoppingCart.NotAvailable")
-                });
-            }
+            //activity log
+            _customerActivityService.InsertActivity("PublicStore.AddNewBid", product.Id, _localizationService.GetResource("ActivityLog.PublicStore.AddToBid"), product.Name);
 
-            if (product.AvailableEndDateTimeUtc < DateTime.UtcNow)
-            {
-                return Json(new
-                {
-                    success = false,
-                    message = _localizationService.GetResource("ShoppingCart.NotAvailable")
-                });
-            }
-
-            var latestbid = _auctionService.GetLatestBid(product.Id);
-            if(latestbid != null)
-            {
-                if(latestbid.CustomerId != _workContext.CurrentCustomer.Id)
-                {
-                    var workflowmessageService = EngineContext.Current.Resolve<IWorkflowMessageService>();
-                    workflowmessageService.SendOutBidCustomerNotification(product, customer, _workContext.WorkingLanguage.Id, latestbid);
-                }
-            }
-
-            _auctionService.InsertBid(new Bid
-            {
-                Date = DateTime.UtcNow,
-                Amount = bid,
-                CustomerId = _workContext.CurrentCustomer.Id,
-                ProductId = productId,
-                StoreId = _storeContext.CurrentStore.Id
-            });
-
-            product.HighestBid = bid;
-            _auctionService.UpdateHighestBid(product, bid, customer.Id);
             var addtoCartModel = _shoppingCartWebService.PrepareAddToCartModel(product, customer, 1, "", ShoppingCartType.Auctions, null, null, "", "", "");
 
             return Json(new

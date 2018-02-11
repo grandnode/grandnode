@@ -741,7 +741,35 @@ namespace Grand.Services.Orders
             return warnings;
         }
 
-        
+
+        /// <summary>
+        /// Validate bid 
+        /// </summary>
+        /// <param name="bid"></param>
+        /// <param name="product"></param>
+        /// <param name="customer"></param>
+        /// <returns></returns>
+        public virtual IList<string> GetAuctionProductWarning(decimal bid, Product product, Customer customer)
+        {
+            var warnings = new List<string>();
+            if (bid <= product.HighestBid)
+            {
+                warnings.Add(_localizationService.GetResource("ShoppingCart.BidMustBeHigher"));
+            }
+
+            if (!product.AvailableEndDateTimeUtc.HasValue)
+            {
+                warnings.Add(_localizationService.GetResource("ShoppingCart.NotAvailable"));
+            }
+
+            if (product.AvailableEndDateTimeUtc < DateTime.UtcNow)
+            {
+                warnings.Add(_localizationService.GetResource("ShoppingCart.NotAvailable"));
+            }
+
+            return warnings;
+        }
+
         /// <summary>
         /// Validates shopping cart item for reservation products
         /// </summary>
@@ -750,7 +778,7 @@ namespace Grand.Services.Orders
         /// <param name="startDate">Start date</param>
         /// <param name="endDate">Start date</param>
         /// <returns>Warnings</returns>
-        public IList<string> GetReservationProductWarnings(string reservationId, Product product, DateTime? startDate, DateTime? endDate, string sciId)
+        public virtual IList<string> GetReservationProductWarnings(string reservationId, Product product, DateTime? startDate, DateTime? endDate, string sciId)
         {
             var warnings = new List<string>();
 

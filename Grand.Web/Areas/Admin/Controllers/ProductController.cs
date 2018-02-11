@@ -5809,13 +5809,23 @@ namespace Grand.Web.Areas.Admin.Controllers
             var toDelete = _auctionService.GetBid(model.BidId);
             if (toDelete != null)
             {
+                var product = _productService.GetProductById(toDelete.ProductId);
+                if(product == null)
+                    return Json(new DataSourceResult { Errors = "Product not exists" });
+
                 if (string.IsNullOrEmpty(toDelete.OrderId))
+                {
+                    //activity log
+                    _customerActivityService.InsertActivity("DeleteBid", toDelete.ProductId, _localizationService.GetResource("ActivityLog.DeleteBid"), product.Name);
+
+                    //delete bid
                     _auctionService.DeleteBid(toDelete);
+                    return Json("");
+                }
                 else
                     return Json(new DataSourceResult { Errors = _localizationService.GetResource("Admin.Catalog.Products.Bids.CantDeleteWithOrder") });
             }
-
-            return Json("");
+            return Json(new DataSourceResult { Errors = "Bid not exists" });
         }
 
         #endregion

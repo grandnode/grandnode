@@ -1266,6 +1266,9 @@ namespace Grand.Services.Orders
                             //attributes
                             string attributeDescription = _productAttributeFormatter.FormatAttributes(product, sc.AttributesXml, details.Customer);
 
+                            if(string.IsNullOrEmpty(attributeDescription) && sc.ShoppingCartType == ShoppingCartType.Auctions)
+                                attributeDescription = _localizationService.GetResource("ShoppingCart.auctionwonon") + " " + product.AvailableEndDateTimeUtc;
+
                             var itemWeight = _shippingService.GetShoppingCartItemWeight(sc);
                             var warehouseId = store.DefaultWarehouseId;
                             if (!product.UseMultipleWarehouses)
@@ -1848,6 +1851,8 @@ namespace Grand.Services.Orders
                 //cancel reservations
                 _productReservationService.CancelReservationsByOrderId(order.Id);
 
+                //cancel bid
+                _auctionService.CancelBidByOrder(order.Id);
             }
             //deactivate gift cards
             if (_orderSettings.DeactivateGiftCardsAfterDeletingOrder)
@@ -2254,6 +2259,10 @@ namespace Grand.Services.Orders
             //cancel reservations
             _productReservationService.CancelReservationsByOrderId(order.Id);
 
+            //cancel bid
+            _auctionService.CancelBidByOrder(order.Id);
+
+            //cancel discount
             _discountService.CancelDiscount(order.Id);
 
             _eventPublisher.Publish(new OrderCancelledEvent(order));

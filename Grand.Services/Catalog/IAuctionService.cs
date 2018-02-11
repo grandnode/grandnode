@@ -1,5 +1,8 @@
 ﻿using Grand.Core;
 using Grand.Core.Domain.Catalog;
+using Grand.Core.Domain.Customers;
+using Grand.Core.Domain.Localization;
+using Grand.Core.Domain.Stores;
 using System.Collections.Generic;
 
 namespace Grand.Services.Catalog
@@ -74,5 +77,21 @@ namespace Grand.Services.Catalog
         /// Gets auctions that have to be ended
         /// </summary>
         IList<Product> GetAuctionsToEnd();
+
+        /// <summary>
+        /// New bid
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <param name="product"></param>
+        /// <param name="store"></param>
+        /// <param name="language"></param>
+        /// <param name="amount"></param>
+        void NewBid(Customer customer, Product product, Store store, Language language, decimal amount);
+
+        /// <summary>
+        /// Cancel bid for product
+        /// </summary>
+        /// <param name="orderId">order id</param>
+        void CancelBidByOrder(string orderId);
     }
 }

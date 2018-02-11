@@ -7,6 +7,11 @@ using MongoDB.Driver;
 using System.Linq;
 using Grand.Core;
 using Grand.Core.Caching;
+using Grand.Core.Domain.Customers;
+using Grand.Core.Infrastructure;
+using Grand.Services.Messages;
+using Grand.Core.Domain.Stores;
+using Grand.Core.Domain.Localization;
 
 namespace Grand.Services.Catalog
 {
@@ -127,6 +132,63 @@ namespace Grand.Services.Catalog
 
             _eventPublisher.EntityUpdated(product);
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
+        }
+
+
+        /// <summary>
+        /// New bid
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <param name="product"></param>
+        /// <param name="store"></param>
+        /// <param name="language"></param>
+        /// <param name="amount"></param>
+        public virtual void NewBid(Customer customer, Product product, Store store, Language language, decimal amount)
+        {
+            var latestbid = GetLatestBid(product.Id);
+            if (latestbid != null)
+            {
+                if (latestbid.CustomerId != customer.Id)
+                {
+                    var workflowmessageService = EngineContext.Current.Resolve<IWorkflowMessageService>();
+                    workflowmessageService.SendOutBidCustomerNotification(product, customer, language.Id, latestbid);
+                }
+            }
+
+            InsertBid(new Bid
+            {
+                Date = DateTime.UtcNow,
+                Amount = amount,
+                CustomerId = customer.Id,
+                ProductId = product.Id,
+                StoreId = store.Id
+            });
+
+            product.HighestBid = amount;
+            UpdateHighestBid(product, amount, customer.Id);
+
+        }
+
+        /// <summary>
+        /// Cancel bid
+        /// </summary>
+        /// <param name="OrderId">OrderId</param>
+        public virtual void CancelBidByOrder(string orderId)
+        {
+            var builder = Builders<Bid>.Filter;
+            var filter = builder.Eq(x => x.OrderId, orderId);
+            var bid = _bidRepository.Collection.Find(filter).FirstOrDefault();
+            if (bid != null)
+            {
+                var filterDelete = builder.Eq(x => x.ProductId, bid.ProductId);
+                var result = _bidRepository.Collection.DeleteManyAsync(filterDelete).Result;
+                var product = _productService.GetProductById(bid.ProductId);
+                if (product != null)
+                {
+                    UpdateHighestBid(product, 0, "");
+                    UpdateAuctionEnded(product, false);
+                }
+            }
         }
     }
 }
