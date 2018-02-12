@@ -43,7 +43,7 @@
     <Value>You haven't won any auction.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Auctions.NoOngoingAuctions">
-    <Value>You don't have participate in any auctions.</Value>
+    <Value>You don't participate in any auctions.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Auctions.Tab.Ended">
     <Value>Ended auctions</Value>
@@ -17209,7 +17209,7 @@
     <Value>Catalog Price</Value>
   </LocaleResource>
   <LocaleResource Name="Products.Price.Currentprice">
-    <Value>Current price</Value>
+    <Value>Current bid</Value>
   </LocaleResource>
   <LocaleResource Name="Products.Price.OldPrice">
     <Value>Old price</Value>
