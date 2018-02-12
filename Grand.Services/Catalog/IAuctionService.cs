@@ -71,7 +71,8 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="product"></param>
         /// <param name="ended"></param>
-        void UpdateAuctionEnded(Product product, bool ended);
+        /// <param name="enddate"></param>
+        void UpdateAuctionEnded(Product product, bool ended, bool enddate = false);
 
         /// <summary>
         /// Gets auctions that have to be ended

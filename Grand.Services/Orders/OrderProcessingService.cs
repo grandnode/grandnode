@@ -1440,6 +1440,11 @@ namespace Grand.Services.Orders
                                 bidsToUpdate.Add(bid);
                             }
 
+                            if (product.ProductType == ProductType.Auction && sc.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                            {
+                                _auctionService.UpdateAuctionEnded(product, true, true);
+                                _workflowMessageService.SendAuctionEndedCustomerNotificationBin(product, order.CustomerId, order.CustomerLanguageId, order.StoreId);
+                            }
                             //inventory
                             _productService.AdjustInventory(product, -sc.Quantity, sc.AttributesXml, warehouseId);
                         }

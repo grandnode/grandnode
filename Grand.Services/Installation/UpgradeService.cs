@@ -726,9 +726,25 @@ namespace Grand.Services.Installation
             {
                 new MessageTemplate
                         {
-                            Name = "AuctionEnded.CustomerNotification",
+                            Name = "AuctionEnded.CustomerNotificationWin",
                             Subject = "%Store.Name%. Auction ended.",
                             Body = "<p>Hello, %Customer.FullName%!</p><p></p><p>At %Auctions.EndTime% you have won <a href=\"%Store.URL%%Auctions.ProductSeName%\">%Auctions.ProductName%</a> for %Auctions.Price%. Visit <a href=\"%Store.URL%/cart\">cart</a> to finish checkout process. </p>",
+                            IsActive = true,
+                            EmailAccountId = eaGeneral.Id,
+                        },
+                new MessageTemplate
+                        {
+                            Name = "AuctionEnded.CustomerNotificationLost",
+                            Subject = "%Store.Name%. Auction ended.",
+                            Body = "<p>Hello, %Customer.FullName%!</p><p></p><p>Unfortunately you did not win the bid %Auctions.ProductName%</p> <p>End price:  %Auctions.Price% </p> <p>End date auction %Auctions.EndTime% </p>",
+                            IsActive = true,
+                            EmailAccountId = eaGeneral.Id,
+                        },
+                new MessageTemplate
+                        {
+                            Name = "AuctionEnded.CustomerNotificationBin",
+                            Subject = "%Store.Name%. Auction ended.",
+                            Body = "<p>Hello, %Customer.FullName%!</p><p></p><p>Unfortunately you did not win the bid %Product.Name%</p> <p>Product was bought by option Buy it now for price: %Product.Price% </p>",
                             IsActive = true,
                             EmailAccountId = eaGeneral.Id,
                         },

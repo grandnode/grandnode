@@ -122,11 +122,14 @@ namespace Grand.Services.Catalog
             return products;
         }
 
-        public virtual void UpdateAuctionEnded(Product product, bool ended)
+        public virtual void UpdateAuctionEnded(Product product, bool ended, bool enddate = false)
         {
             var builder = Builders<Product>.Filter;
             var filter = builder.Eq(x => x.Id, product.Id);
-            var update = Builders<Product>.Update.Set(x => x.AuctionEnded, ended);
+            var updateDefinition = Builders<Product>.Update;
+            var update = updateDefinition.Set(x => x.AuctionEnded, ended);
+            if (enddate)
+                update = update.Set(x => x.AvailableEndDateTimeUtc, DateTime.UtcNow);
 
             var result = _productRepository.Collection.UpdateOneAsync(filter, update).Result;
 

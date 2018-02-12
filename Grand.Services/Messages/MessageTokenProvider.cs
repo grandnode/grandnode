@@ -1040,6 +1040,7 @@ namespace Grand.Services.Messages
             tokens.Add(new Token("Product.ShortDescription", product.GetLocalized(x => x.ShortDescription, languageId), true));
             tokens.Add(new Token("Product.SKU", product.Sku));
             tokens.Add(new Token("Product.StockQuantity", product.GetTotalStockQuantity().ToString()));
+            tokens.Add(new Token("Product.Price", _priceFormatter.FormatPrice(product.Price)));
 
             //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
             var productUrl = string.Format("{0}{1}", GetStoreUrl(), product.GetSeName());
