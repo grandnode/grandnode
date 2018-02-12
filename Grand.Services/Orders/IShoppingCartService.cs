@@ -95,7 +95,7 @@ namespace Grand.Services.Orders
         /// Validates shopping cart item
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <param name="shoppingCartType">Shopping cart type</param>
+        /// <param name="shoppingCart">Shopping cart type</param>
         /// <param name="product">Product</param>
         /// <param name="storeId">Store identifier</param>
         /// <param name="attributesXml">Attributes in XML format</param>
@@ -110,14 +110,11 @@ namespace Grand.Services.Orders
         /// <param name="getRequiredProductWarnings">A value indicating whether we should validate required products (products which require other products to be added to the cart)</param>
         /// <param name="getRentalWarnings">A value indicating whether we should validate rental properties</param>
         /// <returns>Warnings</returns>
-        IList<string> GetShoppingCartItemWarnings(Customer customer, ShoppingCartType shoppingCartType,
-            Product product, string storeId,
-            string attributesXml, decimal customerEnteredPrice,
-            DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
-            int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true,
+        IList<string> GetShoppingCartItemWarnings(Customer customer, ShoppingCartItem shoppingCartItem, 
+            Product product, bool automaticallyAddRequiredProductsIfEnabled = true,
             bool getStandardWarnings = true, bool getAttributesWarnings = true,
             bool getGiftCardWarnings = true, bool getRequiredProductWarnings = true,
-            bool getRentalWarnings = true, bool getReservationWarnings = true, string reservationId = "", string sciId = "");
+            bool getRentalWarnings = true, bool getReservationWarnings = true);
 
         /// <summary>
         /// Validates whether this shopping cart is valid
@@ -133,12 +130,11 @@ namespace Grand.Services.Orders
         /// <summary>
         /// Validates shopping cart item for reservation products
         /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="reservationId">Reservation Id</param>
-        /// <param name="startDate">Start date</param>
-        /// <param name="endDate">Start date</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="Product">product</param>
+        /// <param name="shoppingCartItem">ShoppingCartItem</param>
         /// <returns>Warnings</returns>
-        IList<string> GetReservationProductWarnings(string reservationId, Product product, DateTime? startDate, DateTime? endDate, string sciId);
+        IList<string> GetReservationProductWarnings(Customer customer, Product product, ShoppingCartItem shoppingCartItem);
 
 
         /// <summary>

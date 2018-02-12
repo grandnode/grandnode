@@ -374,10 +374,7 @@ namespace Grand.Services.Orders
                 foreach (var sci in details.Cart)
                 {
                     var product = _productService.GetProductById(sci.ProductId);
-                    var sciWarnings = _shoppingCartService.GetShoppingCartItemWarnings(details.Customer, sci.ShoppingCartType,
-                        product, processPaymentRequest.StoreId, sci.AttributesXml,
-                        sci.CustomerEnteredPrice, sci.RentalStartDateUtc, sci.RentalEndDateUtc,
-                        sci.Quantity, false, reservationId: sci.ReservationId);
+                    var sciWarnings = _shoppingCartService.GetShoppingCartItemWarnings(details.Customer, sci, product, false);
                     if (sciWarnings.Any())
                     {
                         var warningsSb = new StringBuilder();

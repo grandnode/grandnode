@@ -498,19 +498,7 @@ namespace Grand.Web.Services
                 }
 
                 //item warnings
-                var itemWarnings = _shoppingCartService.GetShoppingCartItemWarnings(
-                    customer,
-                    sci.ShoppingCartType,
-                    product,
-                    sci.StoreId,
-                    sci.AttributesXml,
-                    sci.CustomerEnteredPrice,
-                    sci.RentalStartDateUtc,
-                    sci.RentalEndDateUtc,
-                    sci.Quantity,
-                    false,
-                    reservationId: sci.ReservationId,
-                    sciId: sci.Id);
+                var itemWarnings = _shoppingCartService.GetShoppingCartItemWarnings(customer, sci, product, false);
                 foreach (var warning in itemWarnings)
                     cartItemModel.Warnings.Add(warning);
 
@@ -726,18 +714,7 @@ namespace Grand.Web.Services
                 }
 
                 //item warnings
-                var itemWarnings = _shoppingCartService.GetShoppingCartItemWarnings(
-                    customer,
-                    sci.ShoppingCartType,
-                    product,
-                    sci.StoreId,
-                    sci.AttributesXml,
-                    sci.CustomerEnteredPrice,
-                    sci.RentalStartDateUtc,
-                    sci.RentalEndDateUtc,
-                    sci.Quantity,
-                    false,
-                    reservationId: sci.ReservationId);
+                var itemWarnings = _shoppingCartService.GetShoppingCartItemWarnings(customer, sci, product, false);
                 foreach (var warning in itemWarnings)
                     cartItemModel.Warnings.Add(warning);
 

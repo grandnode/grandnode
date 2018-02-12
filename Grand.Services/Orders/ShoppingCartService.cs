@@ -656,7 +656,7 @@ namespace Grand.Services.Orders
             var attributeValues = _productAttributeParser.ParseProductAttributeValues(product, attributesXml);
             foreach (var attributeValue in attributeValues)
             {
-                var _productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == attributeValue.ProductAttributeMappingId).FirstOrDefault(); //_productAttributeService.GetProductAttributeMappingById(attributeValue.ProductAttributeMappingId);
+                var _productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == attributeValue.ProductAttributeMappingId).FirstOrDefault(); 
                 if (attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
                 {
                     if (ignoreNonCombinableAttributes && _productAttributeMapping.IsNonCombinable())
@@ -667,9 +667,7 @@ namespace Grand.Services.Orders
                     if (associatedProduct != null)
                     {
                         var totalQty = quantity * attributeValue.Quantity;
-                        var associatedProductWarnings = GetShoppingCartItemWarnings(customer,
-                            shoppingCartType, associatedProduct, _storeContext.CurrentStore.Id,
-                            "", decimal.Zero, null, null, totalQty, false);
+                        var associatedProductWarnings = GetShoppingCartItemWarnings(customer, new ShoppingCartItem() { ShoppingCartType = shoppingCartType, StoreId = _storeContext.CurrentStore.Id, Quantity = totalQty }, associatedProduct, false);
                         foreach (var associatedProductWarning in associatedProductWarnings)
                         {
                             var productAttribute = _productAttributeService.GetProductAttributeById(_productAttributeMapping.ProductAttributeId);
@@ -773,19 +771,18 @@ namespace Grand.Services.Orders
         /// <summary>
         /// Validates shopping cart item for reservation products
         /// </summary>
+        /// <param name="customer">Customer</param>
         /// <param name="product">Product</param>
-        /// <param name="reservationId">Reservation Id</param>
-        /// <param name="startDate">Start date</param>
-        /// <param name="endDate">Start date</param>
+        /// <param name="shoppingCartItem">ShoppingCartItem</param>
         /// <returns>Warnings</returns>
-        public virtual IList<string> GetReservationProductWarnings(string reservationId, Product product, DateTime? startDate, DateTime? endDate, string sciId)
+        public virtual IList<string> GetReservationProductWarnings(Customer customer, Product product, ShoppingCartItem shoppingCartItem)
         {
             var warnings = new List<string>();
 
             if (product.ProductType != ProductType.Reservation)
                 return warnings;
 
-            if (string.IsNullOrEmpty(reservationId) && product.IntervalUnitType != IntervalUnit.Day)
+            if (string.IsNullOrEmpty(shoppingCartItem.ReservationId) && product.IntervalUnitType != IntervalUnit.Day)
             {
                 warnings.Add(_localizationService.GetResource("ShoppingCart.Reservation.NoReservationFound"));
                 return warnings;
@@ -793,7 +790,7 @@ namespace Grand.Services.Orders
 
             if (product.IntervalUnitType != IntervalUnit.Day)
             {
-                var reservation = _productReservationService.GetProductReservation(reservationId);
+                var reservation = _productReservationService.GetProductReservation(shoppingCartItem.ReservationId);
                 if (reservation == null)
                 {
                     warnings.Add(_localizationService.GetResource("ShoppingCart.Reservation.ReservationDeleted"));
@@ -808,25 +805,25 @@ namespace Grand.Services.Orders
             }
             else
             {
-                if (!(startDate.HasValue && endDate.HasValue))
+                if (!(shoppingCartItem.RentalStartDateUtc.HasValue && shoppingCartItem.RentalEndDateUtc.HasValue))
                 {
                     warnings.Add(_localizationService.GetResource("ShoppingCart.Reservation.ChoosebothDates"));
                 }
                 else
                 {
-                    if (startDate.Value >= endDate.Value)
+                    if (shoppingCartItem.RentalStartDateUtc.Value >= shoppingCartItem.RentalEndDateUtc.Value)
                     {
                         warnings.Add(_localizationService.GetResource("ShoppingCart.Reservation.EndDateMustBeLaterThanStartDate"));
                     }
 
-                    if (startDate.Value < DateTime.Now || endDate.Value < DateTime.Now)
+                    if (shoppingCartItem.RentalStartDateUtc.Value < DateTime.Now || shoppingCartItem.RentalEndDateUtc.Value < DateTime.Now)
                     {
                         warnings.Add(_localizationService.GetResource("ShoppingCart.Reservation.ReservationDatesMustBeLaterThanToday"));
                     }
-
-                    if (!string.IsNullOrEmpty(sciId))
+                    
+                    if (customer.ShoppingCartItems.Any(x => x.Id == shoppingCartItem.Id))
                     {
-                        var reserved = _productReservationService.GetCustomerReservationsHelperBySciId(sciId);
+                        var reserved = _productReservationService.GetCustomerReservationsHelperBySciId(shoppingCartItem.Id);
                         if (!reserved.Any())
                             warnings.Add(_localizationService.GetResource("ShoppingCart.Reservation.ReservationDeleted"));
                         else
@@ -870,14 +867,11 @@ namespace Grand.Services.Orders
         /// <param name="getRequiredProductWarnings">A value indicating whether we should validate required products (products which require other products to be added to the cart)</param>
         /// <param name="getRentalWarnings">A value indicating whether we should validate rental properties</param>
         /// <returns>Warnings</returns>
-        public virtual IList<string> GetShoppingCartItemWarnings(Customer customer, ShoppingCartType shoppingCartType,
-            Product product, string storeId,
-            string attributesXml, decimal customerEnteredPrice,
-            DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
-            int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true,
+        public virtual IList<string> GetShoppingCartItemWarnings(Customer customer, ShoppingCartItem shoppingCartItem,
+            Product product, bool automaticallyAddRequiredProductsIfEnabled = true,
             bool getStandardWarnings = true, bool getAttributesWarnings = true,
             bool getGiftCardWarnings = true, bool getRequiredProductWarnings = true,
-            bool getRentalWarnings = true, bool getReservationWarnings = true, string reservationId = "", string sciId = "")
+            bool getRentalWarnings = true, bool getReservationWarnings = true)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -886,23 +880,23 @@ namespace Grand.Services.Orders
             
             //standard properties
             if (getStandardWarnings)
-                warnings.AddRange(GetStandardWarnings(customer, shoppingCartType, product, attributesXml, customerEnteredPrice, quantity));
+                warnings.AddRange(GetStandardWarnings(customer, shoppingCartItem.ShoppingCartType, product, shoppingCartItem.AttributesXml, shoppingCartItem.CustomerEnteredPrice, shoppingCartItem.Quantity));
 
             //selected attributes
             if (getAttributesWarnings)
-                warnings.AddRange(GetShoppingCartItemAttributeWarnings(customer, shoppingCartType, product, quantity, attributesXml));
+                warnings.AddRange(GetShoppingCartItemAttributeWarnings(customer, shoppingCartItem.ShoppingCartType, product, shoppingCartItem.Quantity, shoppingCartItem.AttributesXml));
 
             //gift cards
             if (getGiftCardWarnings)
-                warnings.AddRange(GetShoppingCartItemGiftCardWarnings(shoppingCartType, product, attributesXml));
+                warnings.AddRange(GetShoppingCartItemGiftCardWarnings(shoppingCartItem.ShoppingCartType, product, shoppingCartItem.AttributesXml));
 
             //required products
             if (getRequiredProductWarnings)
-                warnings.AddRange(GetRequiredProductWarnings(customer, shoppingCartType, product, storeId, automaticallyAddRequiredProductsIfEnabled));
+                warnings.AddRange(GetRequiredProductWarnings(customer, shoppingCartItem.ShoppingCartType, product, shoppingCartItem.StoreId, automaticallyAddRequiredProductsIfEnabled));
 
             //reservation products
             if (getReservationWarnings)
-                warnings.AddRange(GetReservationProductWarnings(reservationId, product, rentalStartDate, rentalEndDate, sciId));
+                warnings.AddRange(GetReservationProductWarnings(customer, product, shoppingCartItem));
 
 
             return warnings;
@@ -1221,16 +1215,13 @@ namespace Grand.Services.Orders
             if (shoppingCartItem != null && product.ProductType != ProductType.Reservation)
             {
                 //update existing shopping cart item
-                int newQuantity = shoppingCartItem.Quantity + quantity;
-                warnings.AddRange(GetShoppingCartItemWarnings(customer, shoppingCartType, product,
-                    storeId, attributesXml, 
-                    customerEnteredPrice, rentalStartDate, rentalEndDate,
-                    newQuantity, automaticallyAddRequiredProductsIfEnabled));
+                shoppingCartItem.Quantity = shoppingCartItem.Quantity + quantity;
+                warnings.AddRange(GetShoppingCartItemWarnings(customer, shoppingCartItem, product,
+                    automaticallyAddRequiredProductsIfEnabled));
 
                 if (!warnings.Any())
                 {
                     shoppingCartItem.AttributesXml = attributesXml;
-                    shoppingCartItem.Quantity = newQuantity;
                     shoppingCartItem.UpdatedOnUtc = DateTime.UtcNow;
                     _customerService.UpdateShoppingCartItem(customer.Id, shoppingCartItem);
 
@@ -1241,10 +1232,31 @@ namespace Grand.Services.Orders
             else
             {
                 //new shopping cart item
-                warnings.AddRange(GetShoppingCartItemWarnings(customer, shoppingCartType, product,
-                    storeId, attributesXml, customerEnteredPrice,
-                    rentalStartDate, rentalEndDate, 
-                    quantity, automaticallyAddRequiredProductsIfEnabled, reservationId: reservationId));
+                DateTime now = DateTime.UtcNow;
+                shoppingCartItem = new ShoppingCartItem
+                {
+                    ShoppingCartType = shoppingCartType,
+                    StoreId = storeId,
+                    ProductId = productId,
+                    AttributesXml = attributesXml,
+                    CustomerEnteredPrice = customerEnteredPrice,
+                    Quantity = quantity,
+                    RentalStartDateUtc = rentalStartDate,
+                    RentalEndDateUtc = rentalEndDate,
+                    AdditionalShippingChargeProduct = product.AdditionalShippingCharge,
+                    IsFreeShipping = product.IsFreeShipping,
+                    IsRecurring = product.IsRecurring,
+                    IsShipEnabled = product.IsShipEnabled,
+                    IsTaxExempt = product.IsTaxExempt,
+                    IsGiftCard = product.IsGiftCard,
+                    ShoppingCartTypeId = (int)shoppingCartType,
+                    CreatedOnUtc = now,
+                    UpdatedOnUtc = now,
+                    ReservationId = reservationId,
+                    Parameter = parameter,
+                    Duration = duration
+                };
+                warnings.AddRange(GetShoppingCartItemWarnings(customer, shoppingCartItem, product, automaticallyAddRequiredProductsIfEnabled));
                 if (!warnings.Any())
                 {
                     //maximum items validation
@@ -1272,31 +1284,6 @@ namespace Grand.Services.Orders
                             break;
                     }
 
-                    DateTime now = DateTime.UtcNow;
-                    
-                    shoppingCartItem = new ShoppingCartItem
-                    {
-                        ShoppingCartType = shoppingCartType,
-                        StoreId = storeId,
-                        ProductId = productId,
-                        AttributesXml = attributesXml,
-                        CustomerEnteredPrice = customerEnteredPrice,
-                        Quantity = quantity,
-                        RentalStartDateUtc = rentalStartDate,
-                        RentalEndDateUtc = rentalEndDate,
-                        AdditionalShippingChargeProduct = product.AdditionalShippingCharge,
-                        IsFreeShipping = product.IsFreeShipping,
-                        IsRecurring = product.IsRecurring,
-                        IsShipEnabled = product.IsShipEnabled,
-                        IsTaxExempt = product.IsTaxExempt,
-                        IsGiftCard = product.IsGiftCard,
-                        ShoppingCartTypeId = (int)shoppingCartType,
-                        CreatedOnUtc = now,
-                        UpdatedOnUtc = now,
-                        ReservationId = reservationId,
-                        Parameter = parameter,
-                        Duration = duration
-                    };
                     customer.ShoppingCartItems.Add(shoppingCartItem);
 
                     //updated "HasShoppingCartItems" property used for performance optimization
@@ -1361,27 +1348,23 @@ namespace Grand.Services.Orders
                 if (quantity > 0)
                 {
                     var product = _productService.GetProductById(shoppingCartItem.ProductId);
+                    shoppingCartItem.Quantity = quantity;
+                    shoppingCartItem.AttributesXml = attributesXml;
+                    shoppingCartItem.CustomerEnteredPrice = customerEnteredPrice;
+                    shoppingCartItem.RentalStartDateUtc = rentalStartDate;
+                    shoppingCartItem.RentalEndDateUtc = rentalEndDate;
+                    shoppingCartItem.UpdatedOnUtc = DateTime.UtcNow;
+                    shoppingCartItem.AdditionalShippingChargeProduct = product.AdditionalShippingCharge;
+                    shoppingCartItem.IsFreeShipping = product.IsFreeShipping;
+                    shoppingCartItem.IsRecurring = product.IsRecurring;
+                    shoppingCartItem.IsShipEnabled = product.IsShipEnabled;
+                    shoppingCartItem.IsTaxExempt = product.IsTaxExempt;
+                    shoppingCartItem.IsGiftCard = product.IsGiftCard;
                     //check warnings
-                    warnings.AddRange(GetShoppingCartItemWarnings(customer, shoppingCartItem.ShoppingCartType,
-                        product, shoppingCartItem.StoreId,
-                        attributesXml, customerEnteredPrice, 
-                        rentalStartDate, rentalEndDate, quantity, false, reservationId: reservationId, sciId: sciId));
+                    warnings.AddRange(GetShoppingCartItemWarnings(customer, shoppingCartItem, product, false));
                     if (!warnings.Any())
                     {
                         //if everything is OK, then update a shopping cart item
-                        shoppingCartItem.Quantity = quantity;
-                        shoppingCartItem.AttributesXml = attributesXml;
-                        shoppingCartItem.CustomerEnteredPrice = customerEnteredPrice;
-                        shoppingCartItem.RentalStartDateUtc = rentalStartDate;
-                        shoppingCartItem.RentalEndDateUtc = rentalEndDate;
-                        shoppingCartItem.UpdatedOnUtc = DateTime.UtcNow;
-                        shoppingCartItem.AdditionalShippingChargeProduct = product.AdditionalShippingCharge;
-                        shoppingCartItem.IsFreeShipping = product.IsFreeShipping;
-                        shoppingCartItem.IsRecurring = product.IsRecurring;
-                        shoppingCartItem.IsShipEnabled = product.IsShipEnabled;
-                        shoppingCartItem.IsTaxExempt = product.IsTaxExempt;
-                        shoppingCartItem.IsGiftCard = product.IsGiftCard;
-                        
                         _customerService.UpdateShoppingCartItem(customer.Id, shoppingCartItem);
 
                         //event notification

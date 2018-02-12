@@ -245,17 +245,15 @@ namespace Grand.Web.Controllers
             //if we already have the same product in the cart, then use the total quantity to validate
             var quantityToValidate = shoppingCartItem != null ? shoppingCartItem.Quantity + quantity : quantity;
             var addToCartWarnings = _shoppingCartService
-                .GetShoppingCartItemWarnings(customer, cartType,
-                product, _storeContext.CurrentStore.Id, string.Empty, 
-                decimal.Zero, null, null, quantityToValidate, false, true, false, false, false);
+                .GetShoppingCartItemWarnings(customer, new ShoppingCartItem() { ShoppingCartType = cartType, StoreId = _storeContext.CurrentStore.Id, CustomerEnteredPrice = decimal.Zero,
+                Quantity = quantityToValidate },
+                product, false);
             if (addToCartWarnings.Any())
             {
                 //cannot be added to the cart
-                //let's display standard warnings
                 return Json(new
                 {
-                    success = false,
-                    message = addToCartWarnings.ToArray()
+                    redirect = Url.RouteUrl("Product", new { SeName = product.GetSeName() }),
                 });
             }
 

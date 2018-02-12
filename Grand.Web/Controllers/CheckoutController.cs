@@ -153,18 +153,7 @@ namespace Grand.Web.Controllers
             foreach (ShoppingCartItem sci in cart)
             {
                 var product = productService.GetProductById(sci.ProductId);
-                var sciWarnings = _shoppingCartService.GetShoppingCartItemWarnings(customer,
-                    sci.ShoppingCartType,
-                    product,
-                    sci.StoreId,
-                    sci.AttributesXml,
-                    sci.CustomerEnteredPrice,
-                    sci.RentalStartDateUtc,
-                    sci.RentalEndDateUtc,
-                    sci.Quantity,
-                    false,
-                    sciId: sci.Id,
-                    reservationId: sci.ReservationId);
+                var sciWarnings = _shoppingCartService.GetShoppingCartItemWarnings(customer, sci, product, false);
                 if (sciWarnings.Any())
                     return RedirectToRoute("ShoppingCart");
             }
