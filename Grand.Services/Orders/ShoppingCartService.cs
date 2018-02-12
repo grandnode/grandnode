@@ -824,23 +824,26 @@ namespace Grand.Services.Orders
                         warnings.Add(_localizationService.GetResource("ShoppingCart.Reservation.ReservationDatesMustBeLaterThanToday"));
                     }
 
-                    var reserved = _productReservationService.GetCustomerReservationsHelperBySciId(sciId);
-                    if(!reserved.Any())
-                        warnings.Add(_localizationService.GetResource("ShoppingCart.Reservation.ReservationDeleted"));
-
-                    foreach (var item in reserved)
+                    if (!string.IsNullOrEmpty(sciId))
                     {
-                        var reservation = _productReservationService.GetProductReservation(item.ReservationId);
-                        if (reservation == null)
-                        {
+                        var reserved = _productReservationService.GetCustomerReservationsHelperBySciId(sciId);
+                        if (!reserved.Any())
                             warnings.Add(_localizationService.GetResource("ShoppingCart.Reservation.ReservationDeleted"));
-                            break;
-                        }
-                        else if (!string.IsNullOrEmpty(reservation.OrderId))
-                        {
-                            warnings.Add(_localizationService.GetResource("ShoppingCart.Reservation.AlreadyReserved"));
-                            break;
-                        }
+                        else
+                            foreach (var item in reserved)
+                            {
+                                var reservation = _productReservationService.GetProductReservation(item.ReservationId);
+                                if (reservation == null)
+                                {
+                                    warnings.Add(_localizationService.GetResource("ShoppingCart.Reservation.ReservationDeleted"));
+                                    break;
+                                }
+                                else if (!string.IsNullOrEmpty(reservation.OrderId))
+                                {
+                                    warnings.Add(_localizationService.GetResource("ShoppingCart.Reservation.AlreadyReserved"));
+                                    break;
+                                }
+                            }
                     }
                 }
             }

@@ -163,6 +163,7 @@ namespace Grand.Web.Controllers
                     sci.RentalEndDateUtc,
                     sci.Quantity,
                     false,
+                    sciId: sci.Id,
                     reservationId: sci.ReservationId);
                 if (sciWarnings.Any())
                     return RedirectToRoute("ShoppingCart");
