@@ -2,6 +2,7 @@
 using Grand.Core.Domain.Tasks;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;
+using Grand.Services.Logging;
 using Grand.Services.Messages;
 using Grand.Services.Orders;
 using System;
@@ -20,11 +21,12 @@ namespace Grand.Services.Tasks
         private readonly LocalizationSettings _localizationSettings;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly ICustomerService _customerService;
+        private readonly ILogger _logger;
         private readonly object _lock = new object();
 
         public EndAuctionsTask(IProductService productService, IAuctionService auctionService, IQueuedEmailService queuedEmailService,
             IWorkflowMessageService workflowMessageService, LocalizationSettings localizationService, IShoppingCartService shoppingCartService,
-            ICustomerService customerService)
+            ICustomerService customerService, ILogger logger)
         {
             this._productService = productService;
             this._auctionService = auctionService;
@@ -32,6 +34,7 @@ namespace Grand.Services.Tasks
             this._localizationSettings = localizationService;
             this._shoppingCartService = shoppingCartService;
             this._customerService = customerService;
+            this._logger = logger;
         }
 
         /// <summary>
@@ -48,13 +51,20 @@ namespace Grand.Services.Tasks
                     if (bid == null)
                         throw new ArgumentNullException("bid");
 
-                    _workflowMessageService.SendAuctionEndedCustomerNotification(auctionToEnd, null, bid);
-                    _workflowMessageService.SendAuctionEndedStoreOwnerNotification(auctionToEnd, _localizationSettings.DefaultAdminLanguageId, bid);
-
                     var warnings = _shoppingCartService.AddToCart(_customerService.GetCustomerById(bid.CustomerId), bid.ProductId, Core.Domain.Orders.ShoppingCartType.Auctions,
                         bid.StoreId, customerEnteredPrice: bid.Amount);
 
-                    _auctionService.UpdateAuctionEnded(auctionToEnd, true);
+                    if (!warnings.Any())
+                    {
+                        _workflowMessageService.SendAuctionEndedCustomerNotification(auctionToEnd, null, bid);
+                        _workflowMessageService.SendAuctionEndedStoreOwnerNotification(auctionToEnd, _localizationSettings.DefaultAdminLanguageId, bid);
+                        _auctionService.UpdateAuctionEnded(auctionToEnd, true);
+                    }
+                    else
+                    {
+                        _logger.InsertLog(Core.Domain.Logging.LogLevel.Error, $"EndAuctionTask - Product {auctionToEnd.Name}", string.Join(",", warnings.ToArray()));
+                        throw new ArgumentNullException($"EndAuctionTask - Product: {auctionToEnd.Name} - {string.Join(", ", warnings.ToArray())}");
+                    }
                 }
             }
         }
