@@ -1444,7 +1444,11 @@ namespace Grand.Services.Orders
                             if (product.ProductType == ProductType.Auction && sc.ShoppingCartType == ShoppingCartType.ShoppingCart)
                             {
                                 _auctionService.UpdateAuctionEnded(product, true, true);
+                                _auctionService.UpdateHighestBid(product, product.Price, order.CustomerId);
                                 _workflowMessageService.SendAuctionEndedCustomerNotificationBin(product, order.CustomerId, order.CustomerLanguageId, order.StoreId);
+                                _auctionService.InsertBid(new Bid() { CustomerId = order.CustomerId, OrderId = order.Id, Amount = product.Price, Date = DateTime.UtcNow, ProductId = product.Id,
+                                    StoreId = order.StoreId, Win = true, Bin = true,
+                                });
                             }
                             if (product.ProductType == ProductType.Auction && _orderSettings.UnpublishAuctionProduct)
                             {

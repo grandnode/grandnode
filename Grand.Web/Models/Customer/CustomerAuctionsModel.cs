@@ -21,6 +21,8 @@ namespace Grand.Web.Models.Customer
         public string ProductSeName { get; set; }
         public string CurrentBidAmount { get; set; }
         public decimal CurrentBidAmountValue { get; set; }
+        public string BidAmount { get; set; }
+        public decimal BidAmountValue { get; set; }
         public DateTime EndBidDate { get; set; } 
         public bool Ended { get; set; }
         public bool HighestBidder { get; set; }

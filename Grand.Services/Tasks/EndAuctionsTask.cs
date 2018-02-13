@@ -56,6 +56,8 @@ namespace Grand.Services.Tasks
 
                     if (!warnings.Any())
                     {
+                        bid.Win = true;
+                        _auctionService.UpdateBid(bid);
                         _workflowMessageService.SendAuctionEndedStoreOwnerNotification(auctionToEnd, _localizationSettings.DefaultAdminLanguageId, bid);
                         _workflowMessageService.SendAuctionEndedCustomerNotificationWin(auctionToEnd, null, bid);
                         _workflowMessageService.SendAuctionEndedCustomerNotificationLost(auctionToEnd, null, bid);

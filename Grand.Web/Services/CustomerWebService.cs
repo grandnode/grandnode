@@ -716,32 +716,17 @@ namespace Grand.Web.Services
                 if (product != null)
                 {
                     var bid = new ProductBidTuple();
-
-                    //if auction was ended and highest bidder is someone else do not show this record
-                    if ((product.AuctionEnded && product.HighestBidder != customer.Id) || (product.AvailableEndDateTimeUtc < DateTime.UtcNow && product.HighestBidder != customer.Id))
-                        break;
-
-                    bid.EndBidDate = product.AvailableEndDateTimeUtc.HasValue ? product.AvailableEndDateTimeUtc.Value: DateTime.MaxValue;
-                    bid.CurrentBidAmountValue = product.HighestBid;
-                    bid.CurrentBidAmount = priceFormatter.FormatPrice(product.HighestBid);
-
-                    var highestBid = _auctionService.GetBidsByProductId(product.Id).OrderByDescending(x => x.Amount).FirstOrDefault();
-                    if(highestBid!=null)
-                    {
-                        if (highestBid.CustomerId == customer.Id && !string.IsNullOrEmpty(highestBid.OrderId))
-                            bid.OrderId = highestBid.OrderId;
-                    }
-                    // ended means won
-                    if ((product.AuctionEnded && product.HighestBidder == customer.Id) || (product.AvailableEndDateTimeUtc < DateTime.UtcNow && product.HighestBidder == customer.Id))
-                        bid.Ended = true;
-                    else
-                    {
-                        if (product.HighestBidder == customer.Id)
-                            bid.HighestBidder = true;
-                    }
-
+                    bid.Ended = product.AuctionEnded;
+                    bid.OrderId = item.Where(x => x.Win && x.CustomerId == customer.Id).FirstOrDefault()?.OrderId;
+                    var amount = product.HighestBid;
+                    bid.CurrentBidAmount = priceFormatter.FormatPrice(amount);
+                    bid.CurrentBidAmountValue = amount;
+                    bid.HighestBidder = product.HighestBidder == customer.Id;
+                    bid.EndBidDate = product.AvailableEndDateTimeUtc.HasValue ? product.AvailableEndDateTimeUtc.Value : DateTime.MaxValue;
                     bid.ProductName = product.GetLocalized(x => x.Name);
                     bid.ProductSeName = product.GetSeName();
+                    bid.BidAmountValue = item.Max(x => x.Amount);
+                    bid.BidAmount = priceFormatter.FormatPrice(bid.BidAmountValue);
                     model.ProductBidList.Add(bid);
                 }
             }

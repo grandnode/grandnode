@@ -511,10 +511,9 @@ namespace Grand.Services.Messages
         /// </summary>
         /// <param name="languageId">Message language identifier</param>
         /// <param name="product">Product</param>
-        /// <param name="customer">Customer</param>
         /// <param name="Bid">Bid</param>
         /// <returns>Queued email identifier</returns>
-        int SendOutBidCustomerNotification(Product product, Customer customer, string languageId, Bid bid);
+        int SendOutBidCustomerNotification(Product product, string languageId, Bid bid);
 
         /// <summary>
         /// Send notification

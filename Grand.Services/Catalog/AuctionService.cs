@@ -154,7 +154,7 @@ namespace Grand.Services.Catalog
                 if (latestbid.CustomerId != customer.Id)
                 {
                     var workflowmessageService = EngineContext.Current.Resolve<IWorkflowMessageService>();
-                    workflowmessageService.SendOutBidCustomerNotification(product, customer, language.Id, latestbid);
+                    workflowmessageService.SendOutBidCustomerNotification(product, language.Id, latestbid);
                 }
             }
 

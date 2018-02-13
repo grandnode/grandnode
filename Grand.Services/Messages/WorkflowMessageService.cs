@@ -2391,13 +2391,14 @@ namespace Grand.Services.Messages
         /// </summary>
         /// <param name="languageId">Message language identifier</param>
         /// <param name="product">Product</param>
-        /// <param name="customer">Customer</param>
         /// <param name="Bid">Bid</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendOutBidCustomerNotification(Product product, Customer customer, string languageId, Bid bid)
+        public virtual int SendOutBidCustomerNotification(Product product, string languageId, Bid bid)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
+
+            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(bid.CustomerId);
 
             if (string.IsNullOrEmpty(languageId))
             {

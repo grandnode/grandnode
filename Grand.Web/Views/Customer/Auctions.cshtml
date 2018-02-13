@@ -52,7 +52,12 @@
                                         <span class="text-danger">@T("Account.CustomerAuctions.Status.Outbid")</span>
                                     }
                                 </td>
-                                <td>@item.CurrentBidAmount</td>
+                                <td>@item.CurrentBidAmount
+                                @if (item.CurrentBidAmountValue > item.BidAmountValue)
+                                {
+                                    <small>(@item.BidAmount)</small>
+                                }
+                                </td>
                                 <td>@item.EndBidDate.ToLocalTime()</td>
                             </tr>
                         }
@@ -75,7 +80,7 @@
                                     <th scope="col">@T("Account.CustomerAuctions.ProductName")</th>
                                     <th scope="col">@T("Account.CustomerAuctions.Highestbid")</th>
                                     <th scope="col">@T("Account.CustomerAuctions.AuctionEndTime")</th>
-                                    <th scope="col">@T("Account.CustomerAuctions.OrderDetails")</th>
+                                    <th scope="col">@T("Account.CustomerAuctions.Status")</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -85,12 +90,25 @@
                                         <th scope="row">
                                             <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
                                         </th>
-                                        <td>@item.CurrentBidAmount</td>
+                                        <td>@item.CurrentBidAmount
+                                        @if (item.CurrentBidAmountValue > item.BidAmountValue)
+                                        {
+                                            <small>(@item.BidAmount)</small>
+                                        }
+                                        </td>
                                         <td>@item.EndBidDate.ToLocalTime()</td>
                                         <td>
-                                            @if (!string.IsNullOrEmpty(item.OrderId))
+                                            @if (item.HighestBidder)
                                             {
-                                            <a href="@Url.RouteUrl("OrderDetails", new { orderId = item.OrderId })">@T("Account.CustomerOrders.OrderDetails")</a>
+                                                <span class="text-success">@T("Account.CustomerAuctions.Status.HighestBidder")</span>
+                                                @if (!string.IsNullOrEmpty(item.OrderId))
+                                                {
+                                                    <a href="@Url.RouteUrl("OrderDetails", new { orderId = item.OrderId })">@T("Account.CustomerOrders.OrderDetails")</a>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <span class="text-danger">@T("Account.CustomerAuctions.Status.Outbid")</span>
                                             }
                                         </td>
                                     </tr>

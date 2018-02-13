@@ -31,5 +31,13 @@ namespace Grand.Core.Domain.Catalog
         /// Gets or sets Store Id
         /// </summary>
         public string StoreId { get; set; }
+        /// <summary>
+        /// Gets or sets buy it now
+        /// </summary>
+        public bool Bin { get; set; }
+        /// <summary>
+        /// Gets or sets win bid
+        /// </summary>
+        public bool Win { get; set; }
     }
 }
