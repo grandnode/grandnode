@@ -1431,6 +1431,7 @@ namespace Grand.Services.Orders
                                 }
                             }
 
+                            //auctions
                             if (sc.ShoppingCartType == ShoppingCartType.Auctions)
                             {
                                 var bid = _auctionService.GetBidsByProductId(product.Id).Where(x => x.Amount == product.HighestBid).FirstOrDefault();
@@ -1445,6 +1446,11 @@ namespace Grand.Services.Orders
                                 _auctionService.UpdateAuctionEnded(product, true, true);
                                 _workflowMessageService.SendAuctionEndedCustomerNotificationBin(product, order.CustomerId, order.CustomerLanguageId, order.StoreId);
                             }
+                            if (product.ProductType == ProductType.Auction && _orderSettings.UnpublishAuctionProduct)
+                            {
+                                _productService.UnpublishProduct(product.Id);
+                            }
+
                             //inventory
                             _productService.AdjustInventory(product, -sc.Quantity, sc.AttributesXml, warehouseId);
                         }

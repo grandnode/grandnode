@@ -516,6 +516,17 @@ namespace Grand.Services.Catalog
             });
         }
 
+        public virtual void UnpublishProduct(string productId)
+        {
+            var filter = Builders<Product>.Filter.Eq("Id", productId);
+            var update = Builders<Product>.Update
+                    .Set(x => x.Published, false)
+                    .CurrentDate("UpdateDate");
+            _productRepository.Collection.UpdateOneAsync(filter, update);
+            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productId));
+
+        }
+
         /// <summary>
         /// Get (visible) product number in certain category
         /// </summary>
@@ -1346,8 +1357,6 @@ namespace Grand.Services.Catalog
                                 _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
                                 break;
                             case LowStockActivity.Unpublish:
-                                //product.Published = true;
-                                //UpdateProduct(product);
                                 product.Published = false;
                                 var filter2 = Builders<Product>.Filter.Eq("Id", product.Id);
                                 var update2 = Builders<Product>.Update

@@ -99,6 +99,12 @@ namespace Grand.Services.Catalog
         void UpdateSold(string productId, int qty);
 
         /// <summary>
+        /// Set product as unpublished
+        /// </summary>
+        /// <param name="productId"></param>
+        void UnpublishProduct(string productId);
+
+        /// <summary>
         /// Get (visible) product number in certain category
         /// </summary>
         /// <param name="categoryIds">Category identifiers</param>
