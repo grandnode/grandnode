@@ -165,14 +165,14 @@
                             }
 
                         }
-                        @if (!Model.ProductPrice.DisableAddToCompareListButton)
+                        @if (!Model.ProductPrice.DisableAddToCompareListButton && Model.ProductType == ProductType.SimpleProduct)
                         {
                             <button type="button" value="@T("ShoppingCart.AddToCompareList")" title="@T("ShoppingCart.AddToCompareList")" class="btn btn-secondary" onclick="AjaxCart.addproducttocomparelist('@addtocomparelink');return false;">
                                 <span class="sr-only">AddToCompareList</span>
                                 <span class="fa fa-retweet"></span>
                             </button>
                         }
-                        @if (!Model.ProductPrice.DisableWishlistButton)
+                        @if (!Model.ProductPrice.DisableWishlistButton && Model.ProductType == ProductType.SimpleProduct)
                         {
                             <button type="button" value="@T("ShoppingCart.AddToWishlist")" title="@T("ShoppingCart.AddToWishlist")" class="btn btn-secondary" onclick="AjaxCart.addproducttocart_catalog('@addtowishlistlink', '@Model.ShowQty', '@Model.Id');return false;">
                                 <span class="fa fa-heart-o"></span>

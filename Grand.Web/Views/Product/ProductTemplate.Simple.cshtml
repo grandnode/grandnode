@@ -131,8 +131,11 @@
                                             dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
                                         }
                                     <div class="d-md-inline-flex d-sm-flex product-simple-share my-2">
-                                        @await Html.PartialAsync("_AddToWishlist", Model.AddToCart, dataDictAddToWishlist)
-                                        @await Html.PartialAsync("_CompareProductsButton", Model)
+                                        @if (Model.ProductType == ProductType.SimpleProduct)
+                                        {
+                                            @await Html.PartialAsync("_AddToWishlist", Model.AddToCart, dataDictAddToWishlist)
+                                            @await Html.PartialAsync("_CompareProductsButton", Model)
+                                        }
                                         @await Html.PartialAsync("_ProductEmailAFriendButton", Model)
                                         @await Html.PartialAsync("_ProductAskQuestionButton", Model)
                                     </div>
