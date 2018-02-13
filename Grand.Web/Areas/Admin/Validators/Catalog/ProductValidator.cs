@@ -14,6 +14,8 @@ namespace Grand.Web.Areas.Admin.Validators.Catalog
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Catalog.Products.Fields.Name.Required"));
             if(!commonSettings.AllowEditProductEndedAuction)
                 RuleFor(x => x.AuctionEnded && x.ProductTypeId == (int)ProductType.Auction).Equal(false).WithMessage(localizationService.GetResource("Admin.Catalog.Products.Cannoteditauction"));
+
+            RuleFor(x => x.ProductTypeId == (int)ProductType.Auction && !x.AvailableEndDateTimeUtc.HasValue).Equal(false).WithMessage(localizationService.GetResource("Admin.Catalog.Products.Fields.AvailableEndDateTime.Required"));
         }
     }
 }

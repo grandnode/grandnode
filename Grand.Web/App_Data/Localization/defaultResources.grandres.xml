@@ -2796,6 +2796,9 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.AvailableEndDateTime.Hint">
     <Value>The end of the product's availability in Coordinated Universal Time (UTC).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.AvailableEndDateTime.Required">
+    <Value>Available end date is required</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.AvailableForPreOrder">
     <Value>Available for pre-order</Value>
   </LocaleResource>

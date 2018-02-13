@@ -650,6 +650,8 @@
   <LocaleResource Name="Account.Auctions.NoOngoingAuctions">
     <Value>You don't participate in any auctions.</Value>
   </LocaleResource>
-
+  <LocaleResource Name="Admin.Catalog.Products.Fields.AvailableEndDateTime.Required">
+    <Value>Available end date is required.</Value>
+  </LocaleResource>
 </Language>
 
