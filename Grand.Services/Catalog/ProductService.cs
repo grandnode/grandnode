@@ -367,6 +367,7 @@ namespace Grand.Services.Catalog
                 .Set(x => x.HasTierPrices, product.HasTierPrices)
                 .Set(x => x.HasUserAgreement, product.HasUserAgreement)
                 .Set(x => x.Height, product.Height)
+                .Set(x => x.IncBothDate, product.IncBothDate)
                 .Set(x => x.IsDownload, product.IsDownload)
                 .Set(x => x.IsFreeShipping, product.IsFreeShipping)
                 .Set(x => x.IsGiftCard, product.IsGiftCard)
@@ -1240,17 +1241,27 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="Interval">Interval</param>
         /// <param name="IntervalUnit">Interval unit</param>
-        public virtual void UpdateIntervalProperties(string productId, int interval, IntervalUnit intervalUnit)
+        /// <param name="includeBothDates">Include both dates</param>
+        public virtual void UpdateIntervalProperties(string productId, int interval, IntervalUnit intervalUnit, bool includeBothDates)
         {
             var product = GetProductById(productId);
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            product.Interval = interval;
-            product.IntervalUnitId = (int)intervalUnit;
+            var filter = Builders<Product>.Filter.Eq("Id", product.Id);
+            var update = Builders<Product>.Update
+                    .Set(x => x.Interval, interval)
+                    .Set(x => x.IntervalUnitId, (int)intervalUnit)
+                    .Set(x => x.IncBothDate, includeBothDates)
+                    .CurrentDate("UpdateDate");
+            _productRepository.Collection.UpdateOneAsync(filter, update);
 
-            _productRepository.Update(product);
+            //event notification
             _eventPublisher.EntityUpdated(product);
+
+            //cache
+            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
+
         }
 
         #endregion

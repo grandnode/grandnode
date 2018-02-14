@@ -67,6 +67,7 @@ namespace Grand.Web.Models.Catalog
 
         public int Interval { get; set; }
         public IntervalUnit IntervalUnit { get; set; }
+        public bool IncBothDate { get; set; }
         public List<SelectListItem> Parameters { get; set; }
         public DateTime StartDate { get; set; }
 

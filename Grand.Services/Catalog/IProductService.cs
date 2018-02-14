@@ -299,7 +299,8 @@ namespace Grand.Services.Catalog
         /// <param name="productId">Product Id</param>
         /// <param name="Interval">Interval</param>
         /// <param name="IntervalUnit">Interval unit</param>
-        void UpdateIntervalProperties(string productId, int interval, IntervalUnit intervalUnit);
+        /// <param name="includeBothDates">Include both dates</param>
+        void UpdateIntervalProperties(string productId, int interval, IntervalUnit intervalUnit, bool  includeBothDates);
 
 
         #endregion

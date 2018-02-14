@@ -317,7 +317,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.AvailableWarehouses, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableBasepriceUnits, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableBasepriceBaseUnits, mo => mo.Ignore())
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
+                .ForPath(dest => dest.CalendarModel.IncBothDate, mo => mo.MapFrom(x => x.IncBothDate));
             CreateMap<ProductModel, Product>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
@@ -347,7 +348,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.ProductAttributeMappings, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductAttributeCombinations, mo => mo.Ignore())
                 .ForMember(dest => dest.TierPrices, mo => mo.Ignore())
-                .ForMember(dest => dest.AppliedDiscounts, mo => mo.Ignore());
+                .ForMember(dest => dest.AppliedDiscounts, mo => mo.Ignore())
+                .ForPath(dest => dest.IncBothDate, mo => mo.MapFrom(x => x.CalendarModel.IncBothDate));
 
             //product attributes combination
             CreateMap<ProductAttributeCombination, ProductAttributeCombinationModel>()

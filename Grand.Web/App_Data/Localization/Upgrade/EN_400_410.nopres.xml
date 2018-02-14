@@ -653,5 +653,7 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.AvailableEndDateTime.Required">
     <Value>Available end date is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.IncBothDate">
+    <Value>Include both dates</Value>
+  </LocaleResource>
 </Language>
-

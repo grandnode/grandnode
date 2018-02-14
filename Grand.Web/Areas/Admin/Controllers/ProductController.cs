@@ -525,6 +525,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //reservation
                 model.CalendarModel.Interval = product.Interval;
                 model.CalendarModel.IntervalUnit = product.IntervalUnitId;
+                model.CalendarModel.IncBothDate = product.IncBothDate;
 
                 //product attributes
                 foreach (var productAttribute in _productAttributeService.GetAllProductAttributes())
@@ -5615,7 +5616,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     return Json(new { errors = _localizationService.GetResource("Admin.Catalog.Products.Calendar.CannotChangeInterval") });
                 }
             }
-            _productService.UpdateIntervalProperties(productId, model.Interval, (IntervalUnit)model.IntervalUnit);
+            _productService.UpdateIntervalProperties(productId, model.Interval, (IntervalUnit)model.IntervalUnit, model.IncBothDate);
 
             if (!ModelState.IsValid)
             {

@@ -2862,6 +2862,9 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Friday">
     <Value>Friday</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.IncBothDate">
+    <Value>Include both dates</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Interval">
     <Value>Interval</Value>
   </LocaleResource>

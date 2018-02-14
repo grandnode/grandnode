@@ -510,7 +510,14 @@ namespace Grand.Services.Catalog
                     if (rentalStartDate.HasValue && rentalEndDate.HasValue)
                     {
                         decimal d = 0;
-                        decimal.TryParse((rentalEndDate - rentalStartDate).Value.TotalDays.ToString(), out d);
+                        if (product.IncBothDate)
+                        {
+                            decimal.TryParse(((rentalEndDate - rentalStartDate).Value.TotalDays + 1).ToString(), out d);
+                        }
+                        else
+                        {
+                            decimal.TryParse((rentalEndDate - rentalStartDate).Value.TotalDays.ToString(), out d);
+                        }
                         price = price * d;
                     }
 

@@ -9,8 +9,7 @@
     <div class="form-horizontal">
         <h2>@T("Admin.Catalog.Products.Calendar.Calendarconfiguration")</h2>
         <div class="form-body">
-            <div class="form-group">
-                
+            <div class="form-group">                
                     <div class="form-group">
                         @Html.GrandLabelFor(model => model.CalendarModel.StartDateUtc)
                         <div class="col-md-2 col-sm-2">
@@ -36,8 +35,15 @@
                             </div>
                         </div>
                      </div>
-                
-                
+                    <div class="form-group" id="pnlIncludeBothDates">
+                        @Html.GrandLabelFor(model => model.CalendarModel.IncBothDate)
+                        <div class="col-md-9 col-sm-9">
+                            <label class="mt-checkbox mt-checkbox-outline">
+                                @Html.GrandEditorFor(model => model.CalendarModel.IncBothDate)
+                                <span></span>
+                            </label>
+                        </div>
+                    </div>
             </div>
             <div class="form-inline" >
                 @Html.GrandLabelFor(model => model.CalendarModel.Interval)
@@ -136,6 +142,7 @@
                         $("#pnlStartTime").hide();
                         $("#pnlEndTime").hide();
                         $("#pnlResource").show();
+                        $("#pnlIncludeBothDates").show();
                         $("#pnlParameter").hide();
                         $("#pnlQuantity").hide();
                         $("#pnlInterval").hide();
@@ -144,6 +151,7 @@
                         $("#pnlStartTime").show();
                         $("#pnlEndTime").show();
                         $("#pnlResource").hide();
+                        $("#pnlIncludeBothDates").hide();
                         $("#pnlParameter").show();
                         $("#pnlQuantity").show();
                         $("#pnlInterval").show();
@@ -175,6 +183,7 @@
 
                     var interval = $("#@Html.FieldIdFor(model => model.CalendarModel.Interval)").val();
                     var intervalUnit = $("#@Html.FieldIdFor(model => model.CalendarModel.IntervalUnit)").val();
+                    var incBothDate = $("#@Html.FieldIdFor(model => model.CalendarModel.IncBothDate)").prop("checked");
                     var quantity = $("#@Html.FieldIdFor(model => model.CalendarModel.Quantity)").val();
                     var monday = $("#@Html.FieldIdFor(model => model.CalendarModel.Monday)").prop("checked");
                     var tuesday = $("#@Html.FieldIdFor(model => model.CalendarModel.Tuesday)").prop("checked");
@@ -194,6 +203,7 @@
                         EndTime: hourTo,
                         Interval: interval,
                         IntervalUnit: intervalUnit,
+                        IncBothDate: incBothDate,
                         Quantity: quantity,
                         Monday: monday,
                         Tuesday: tuesday,

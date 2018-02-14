@@ -228,6 +228,10 @@ namespace Grand.Core.Domain.Catalog
         /// </summary>
         public int RecurringTotalCycles { get; set; }
         /// <summary>
+        /// Gets or sets include both dates
+        /// </summary>
+        public bool IncBothDate { get; set; }
+        /// <summary>
         /// Gets or sets Interval
         /// </summary>
         public int Interval { get; set; }

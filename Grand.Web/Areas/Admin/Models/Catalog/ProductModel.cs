@@ -852,6 +852,9 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             public int Interval { get; set; }
             public int IntervalUnit { get; set; }
 
+            [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.IncBothDate")]
+            public bool IncBothDate { get; set; }
+
             [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.Quantity")]
             public int Quantity { get; set; }
 
