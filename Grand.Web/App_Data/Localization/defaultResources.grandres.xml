@@ -2856,6 +2856,9 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.EndDateUtc">
     <Value>End date</Value>
   </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.fields.calendar.enddateutc.hint">
+    <Value>Select the end date of reservations</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.EndTime">
     <Value>To hour</Value>
   </LocaleResource>
@@ -2865,8 +2868,14 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.IncBothDate">
     <Value>Include both dates</Value>
   </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.fields.calendar.incbothdate.hint">
+    <Value>Distinguish if you would like to count reservation from start date or not. Useful when you want to book a course from Friday to Sunday).</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Interval">
     <Value>Interval</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.fields.calendar.interval.hint">
+    <Value>Enter the interval between reservations</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Monday">
     <Value>Monday</Value>
@@ -2874,17 +2883,29 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Parameter">
     <Value>Additional parameter</Value>
   </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.fields.calendar.parameter.hint">
+    <Value>Enter the parameter of reservation</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Quantity">
     <Value>Quantity</Value>
   </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.fields.calendar.quantity.hint">
+    <Value>Enter the amount of time. How many minutes or hours has one reservation </Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Resource">
     <Value>Resource</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.fields.calendar.resource.hint">
+    <Value>Enter the resource of reservation</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Saturday">
     <Value>Saturday</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.StartDateUtc">
     <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.fields.calendar.startdateutc.hint">
+    <Value>Select the start date of reservations</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.StartTime">
     <Value>From hour</Value>
@@ -3341,6 +3362,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.StartPrice">
     <Value>Start price</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.fields.startprice.hint">
+    <Value>Enter the start price of auction</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.StockQuantity">
     <Value>Stock quantity</Value>
@@ -5283,8 +5307,8 @@
   <LocaleResource Name="Admin.Configuration.Settings.Blog.HomePageBlogCount">
     <Value>Number of blog post to display</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.News.HomePageBlogCount.Hint">
-    <Value>The number of blog post to display on your home page.</Value>
+  <LocaleResource Name="admin.configuration.settings.blog.homepageblogcount.hint">
+    <Value>Specify how many items should be shown on homepage</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Blog.NotifyAboutNewBlogComments">
     <Value>Notify about new blog comments</Value>
@@ -5301,8 +5325,8 @@
   <LocaleResource Name="Admin.Configuration.Settings.Blog.MaxTextSizeHomePage">
     <Value>Maximum size of the text on home page</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.News.MaxTextSizeHomePage.Hint">
-    <Value>Maximum size of the text on home page</Value>
+  <LocaleResource Name="admin.configuration.settings.blog.maxtextsizehomepage.hint">
+    <Value>Specify the text size of blog details on homepage</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Blog.PostsPageSize">
     <Value>Posts page size</Value>
@@ -7863,8 +7887,8 @@
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowAnonymousUsersToReviewVendor">
     <Value>Allow anonymous users to write vendor reviews</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowAnonymousUsersToReviewVendor">
-    <Value>Allow anonymous users to write vendor reviews</Value>
+  <LocaleResource Name="admin.configuration.settings.vendor.allowanonymoususerstoreviewvendor.hint">
+    <Value>Check if you want to allow anonymous user reviews</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowCustomersToApplyForVendorAccount">
     <Value>Allow customers to apply for vendor account</Value>
@@ -7899,6 +7923,9 @@
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.NotifyVendorAboutNewVendorReviews">
     <Value>Notify about new vendor reviews</Value>
   </LocaleResource>
+  <LocaleResource Name="admin.configuration.settings.vendor.notifyvendoraboutnewvendorreviews.hint">
+    <Value>Check if you want to notify vendors about new reviews</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.ShowVendorOnProductDetailsPage">
     <Value>Show vendor on product details page</Value>
   </LocaleResource>
@@ -7914,11 +7941,17 @@
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.VendorReviewPossibleOnlyAfterPurchasing">
     <Value>Vendor review possible only after purchasing product from vendor</Value>
   </LocaleResource>
+  <LocaleResource Name="admin.configuration.settings.vendor.vendorreviewpossibleonlyafterpurchasing.hint">
+    <Value>Check if you want to allow reviews only after purchasing products from specified vendor</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.VendorReviews">
     <Value>Vendor reviews</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.VendorReviewsMustBeApproved">
     <Value>Vendor reviews must be approved</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.settings.vendor.vendorreviewsmustbeapproved.hint">
+    <Value>Check if vendor reviews must be approved</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.VendorsBlockItemsToDisplay">
     <Value>Number of vendors to display</Value>
@@ -14307,14 +14340,26 @@
   <LocaleResource Name="Admin.VendorReviews.List.CreatedOnFrom">
     <Value>Created from</Value>
   </LocaleResource>
+  <LocaleResource Name="admin.vendorreviews.list.createdonfrom.hint">
+    <Value>Select the date range</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.VendorReviews.List.CreatedOnTo">
     <Value>Created to</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.vendorreviews.list.createdonto.hint">
+    <Value>Select the date range</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.VendorReviews.List.SearchText">
     <Value>Message</Value>
   </LocaleResource>
+  <LocaleResource Name="admin.vendorreviews.list.searchtext.hint">
+    <Value>Enter the text which you want to search</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.VendorReviews.List.SearchVendor">
     <Value>Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.vendorreviews.list.searchvendor.hint">
+    <Value>Search for vendor</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.VendorReviews.Updated">
     <Value> The vendor review has been updated successfully.</Value>
@@ -14360,6 +14405,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.AllowCustomerReviews">
     <Value>Allow customer reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.vendors.fields.allowcustomerreviews.hint">
+    <Value>Check if you want to allow for vendor reviews</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.AllowCustomersToSelectPageSize">
     <Value>Allow customers to select page size</Value>

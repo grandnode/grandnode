@@ -656,4 +656,119 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.IncBothDate">
     <Value>Include both dates</Value>
   </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.fields.calendar.parameter.hint">
+		<Value>Enter the parameter of reservation</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.catalog.products.fields.calendar.resource.hint">
+		<Value>Enter the resource of reservation</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.catalog.products.fields.calendar.quantity.hint">
+		<Value>Enter the amount of time. How many minutes or hours has one reservation </Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.catalog.products.fields.calendar.interval.hint">
+		<Value>Enter the interval between reservations</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.catalog.products.fields.calendar.incbothdate.hint">
+		<Value>Distinguish if you would like to count reservation from start date or not. Useful when you want to book a course from Friday to Sunday).</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.catalog.products.fields.calendar.enddateutc.hint">
+		<Value>Select the end date of reservations</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.catalog.products.fields.calendar.startdateutc.hint">
+		<Value>Select the start date of reservations</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.catalog.products.fields.startprice.hint">
+		<Value>Enter the start price of auction</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.vendors.fields.allowcustomerreviews.hint">
+		<Value>Check if you want to allow for vendor reviews</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.vendorreviews.list.searchvendor.hint">
+		<Value>Search for vendor</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.vendorreviews.list.searchtext.hint">
+		<Value>Enter the text which you want to search</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.vendorreviews.list.createdonto.hint">
+		<Value>Select the date range</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.vendorreviews.list.createdonfrom.hint">
+		<Value>Select the date range</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.configuration.settings.vendor.vendorreviewpossibleonlyafterpurchasing.hint">
+		<Value>Check if you want to allow reviews only after purchasing products from specified vendor</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.configuration.settings.vendor.notifyvendoraboutnewvendorreviews.hint">
+		<Value>Check if you want to notify vendors about new reviews</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.configuration.settings.vendor.allowanonymoususerstoreviewvendor.hint">
+		<Value>Check if you want to allow anonymous user reviews</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.configuration.settings.vendor.vendorreviewsmustbeapproved.hint">
+		<Value>Check if vendor reviews must be approved</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.configuration.settings.blog.maxtextsizehomepage.hint">
+		<Value>Specify the text size of blog details on homepage</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.configuration.settings.blog.homepageblogcount.hint">
+		<Value>Specify how many items should be shown on homepage</Value>
+	</LocaleResource>
+
+  <LocaleResource Name="admin.catalog.products.fields.calendar.parameter.hint">
+    <Value>Enter the parameter of reservation</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.fields.calendar.resource.hint">
+    <Value>Enter the resource of reservation</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.fields.calendar.quantity.hint">
+    <Value>Enter the amount of time. How many minutes or hours has one reservation </Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.fields.calendar.interval.hint">
+    <Value>Enter the interval between reservations</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.fields.calendar.incbothdate.hint">
+    <Value>Distinguish if you would like to count reservation from start date or not. Useful when you want to book a course from Friday to Sunday).</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.fields.calendar.enddateutc.hint">
+    <Value>Select the end date of reservations</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.fields.calendar.startdateutc.hint">
+    <Value>Select the start date of reservations</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.fields.startprice.hint">
+    <Value>Enter the start price of auction</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.vendors.fields.allowcustomerreviews.hint">
+    <Value>Check if you want to allow for vendor reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.vendorreviews.list.searchvendor.hint">
+    <Value>Search for vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.vendorreviews.list.searchtext.hint">
+    <Value>Enter the text which you want to search</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.vendorreviews.list.createdonto.hint">
+    <Value>Select the date range</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.vendorreviews.list.createdonfrom.hint">
+    <Value>Select the date range</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.settings.vendor.vendorreviewpossibleonlyafterpurchasing.hint">
+    <Value>Check if you want to allow reviews only after purchasing products from specified vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.settings.vendor.notifyvendoraboutnewvendorreviews.hint">
+    <Value>Check if you want to notify vendors about new reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.settings.vendor.allowanonymoususerstoreviewvendor.hint">
+    <Value>Check if you want to allow anonymous user reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.settings.vendor.vendorreviewsmustbeapproved.hint">
+    <Value>Check if vendor reviews must be approved</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.settings.blog.maxtextsizehomepage.hint">
+    <Value>Specify the text size of blog details on homepage</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.settings.blog.homepageblogcount.hint">
+    <Value>Specify how many items should be shown on homepage</Value>
+  </LocaleResource>
 </Language>
