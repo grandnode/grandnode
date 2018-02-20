@@ -5,7 +5,7 @@
 }
 <script type="text/javascript">
     function loadPartialView(arg_value) {
-        var url = '@(storeLocation)/checkout/GetShippingFormPartialView?shippingOption=' + arg_value;
+        var url = '@(storeLocation)checkout/GetShippingFormPartialView?shippingOption=' + arg_value;
         $.ajax({
             url: url,
             success: function (data) {
