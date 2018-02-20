@@ -42,7 +42,6 @@
     $(document).ready(function () {
         $("#schedule-tasks-grid").kendoGrid({
             dataSource: {
-                type: "json",
                 transport: {
                     read: {
                         url: "@Html.Raw(Url.Action("List", "ScheduleTask"))",

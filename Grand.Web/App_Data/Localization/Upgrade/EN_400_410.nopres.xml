@@ -771,4 +771,10 @@
   <LocaleResource Name="admin.configuration.settings.blog.homepageblogcount.hint">
     <Value>Specify how many items should be shown on homepage</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.MachineName">
+    <Value>Machine name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.MachineName.Hint">
+    <Value>Machine name</Value>
+  </LocaleResource>
 </Language>

@@ -14094,6 +14094,12 @@
   <LocaleResource Name="Admin.System.SystemInfo.IsFullTrust.Hint">
     <Value>Is full trust level</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.MachineName">
+    <Value>Machine name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.MachineName.Hint">
+    <Value>Machine name</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.LoadedAssemblies">
     <Value>Loaded assemblies</Value>
   </LocaleResource>

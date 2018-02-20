@@ -2,6 +2,7 @@
 using Grand.Framework.Mvc.ModelBinding;
 using FluentValidation.Attributes;
 using Grand.Web.Areas.Admin.Validators.Tasks;
+using System;
 
 namespace Grand.Web.Areas.Admin.Models.Tasks
 {
@@ -21,11 +22,11 @@ namespace Grand.Web.Areas.Admin.Models.Tasks
         [GrandResourceDisplayName("Admin.System.ScheduleTasks.StopOnError")]
         public bool StopOnError { get; set; }
         [GrandResourceDisplayName("Admin.System.ScheduleTasks.LastStartUtc")]
-        public string LastStartUtc { get; set; }
+        public DateTime? LastStartUtc { get; set; }
         [GrandResourceDisplayName("Admin.System.ScheduleTasks.LastEndUtc")]
-        public string LastEndUtc { get; set; }
+        public DateTime? LastEndUtc { get; set; }
         [GrandResourceDisplayName("Admin.System.ScheduleTasks.LastSuccessUtc")]
-        public string LastSuccessUtc { get; set; }
+        public DateTime? LastSuccessUtc { get; set; }
 
         //Properties below are for FluentScheduler
         [GrandResourceDisplayName("Admin.System.ScheduleTasks.TimeIntervalChoice")]
