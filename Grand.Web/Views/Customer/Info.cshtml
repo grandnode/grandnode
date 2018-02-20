@@ -292,11 +292,11 @@
                         @if (Model.NewsletterEnabled)
                         {
                             <div class="form-group">
-                                <span class="custom-control custom-checkbox">
+                                <label class="custom-control custom-checkbox">
                                     <input class="custom-control-input" asp-for="Newsletter" />
                                     <span class="custom-control-indicator"></span>
                                     <label asp-for="Newsletter" class="custom-control-description">@T("Account.Fields.Newsletter")</label>
-                                </span>
+                                </label>
                             </div>
                         }
 
