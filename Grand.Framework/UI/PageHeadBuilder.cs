@@ -278,7 +278,11 @@ namespace Grand.Framework.UI
                         var src = debugModel ? item.DebugSrc : item.Src;
                         src = urlHelper.Content(src);
                         //check whether this file exists. 
-                        srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src.Remove(0, 1).Replace("/", "\\"));
+                        if(Grand.Core.OperatingSystem.IsWindows())
+                            srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src.Remove(0, 1).Replace("/", "\\"));
+                        else
+                            srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src.Remove(0, 1));
+
                         if (File.Exists(srcPath))
                         {
                             //remove starting /
@@ -291,8 +295,10 @@ namespace Grand.Framework.UI
                         {
                             //if not, it should be stored into /wwwroot directory
                             src = "wwwroot/" + src;
-
-                            srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src.Replace("/", "\\").Replace("\\\\", "\\"));
+                            if(Grand.Core.OperatingSystem.IsWindows())
+                                srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src.Replace("/", "\\").Replace("\\\\", "\\"));
+                            else
+                                srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src);
 
                             if (File.Exists(srcPath))
                                 item.FilePath = srcPath;
@@ -304,12 +310,12 @@ namespace Grand.Framework.UI
                     bundle.OutputFileName = "wwwroot/bundles/" + outputFileName + ".js";
 
                     //save
-                    string configFilePath = _hostingEnvironment.ContentRootPath + "\\" + outputFileName + ".json";
+                    string configFilePath = _hostingEnvironment.ContentRootPath + (Grand.Core.OperatingSystem.IsWindows() ? "\\" : "/") + outputFileName + ".json";
                     bundle.FileName = configFilePath;
 
                     var bundleDirectory = Path.Combine(_hostingEnvironment.WebRootPath, "bundles");
                     var filePaths = Directory.EnumerateFiles(bundleDirectory);
-                    var fileNames = filePaths.Select(x => x.Substring(x.LastIndexOf("\\") + 1));
+                    var fileNames = filePaths.Select(x => x.Substring(x.LastIndexOf((Grand.Core.OperatingSystem.IsWindows() ? "\\" : "/")) + 1));
 
                     if (!fileNames.Contains(outputFileName + ".min.js"))
                     {
@@ -321,7 +327,7 @@ namespace Grand.Framework.UI
                     }
 
                     //render
-                    if (File.Exists(bundleDirectory + "\\" + outputFileName + ".min.js"))
+                    if (File.Exists(bundleDirectory + (Grand.Core.OperatingSystem.IsWindows() ? "\\" : "/") + outputFileName + ".min.js"))
                         result.AppendFormat("<script src=\"{0}\" type=\"{1}\"></script>", urlHelper.Content("~/bundles/" + outputFileName + ".min.js"), "text/javascript");
                     else
                         result.AppendFormat("<script src=\"{0}\" type=\"{1}\"></script>", urlHelper.Content("~/bundles/" + outputFileName + ".js"), "text/javascript");
@@ -433,7 +439,10 @@ namespace Grand.Framework.UI
                         var src = debugModel ? item.DebugSrc : item.Src;
                         src = urlHelper.Content(src);
                         //check whether this file exists 
-                        var srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src.Remove(0, 1).Replace("/", "\\"));
+                        var srcPath = Grand.Core.OperatingSystem.IsWindows() ?
+                            Path.Combine(_hostingEnvironment.ContentRootPath, src.Remove(0, 1).Replace("/", "\\")) :
+                            Path.Combine(_hostingEnvironment.ContentRootPath, src.Remove(0, 1));
+
                         if (File.Exists(srcPath))
                         {
                             //remove starting /
@@ -445,7 +454,11 @@ namespace Grand.Framework.UI
                         {
                             //if not, it should be stored into /wwwroot directory
                             src = "wwwroot/" + src;
-                            srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src.Replace("/", "\\").Replace("\\\\", "\\"));
+                            if(Grand.Core.OperatingSystem.IsWindows())
+                                srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src.Replace("/", "\\").Replace("\\\\", "\\"));
+                            else
+                                srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src);
+
                             if (File.Exists(srcPath))
                                 item.FilePath = srcPath;
                         }
@@ -457,12 +470,12 @@ namespace Grand.Framework.UI
                     bundle.OutputFileName = "wwwroot/bundles/" + outputFileName + ".css";
 
                     //save
-                    string configFilePath = _hostingEnvironment.ContentRootPath + "\\" + outputFileName + ".json";
+                    string configFilePath = _hostingEnvironment.ContentRootPath + (Grand.Core.OperatingSystem.IsWindows() ? "\\" : "/") + outputFileName + ".json";
                     bundle.FileName = configFilePath;
 
                     var bundleDirectory = Path.Combine(_hostingEnvironment.WebRootPath, "bundles");
                     var filePaths = Directory.EnumerateFiles(bundleDirectory);
-                    var fileNames = filePaths.Select(x => x.Substring(x.LastIndexOf("\\") + 1));
+                    var fileNames = filePaths.Select(x => x.Substring(x.LastIndexOf((Grand.Core.OperatingSystem.IsWindows() ? "\\" : "/")) + 1));
 
                     if (!fileNames.Contains(outputFileName + ".min.css"))
                     {
@@ -473,7 +486,7 @@ namespace Grand.Framework.UI
                         }
                     }
                     //render
-                    if (File.Exists(bundleDirectory+"\\"+outputFileName + ".min.css"))
+                    if (File.Exists(bundleDirectory+ (Grand.Core.OperatingSystem.IsWindows() ? "\\" : "/") + outputFileName + ".min.css"))
                         result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"{1}\" />", urlHelper.Content("~/bundles/" + outputFileName + ".min.css"), "text/css");
                     else
                         result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"{1}\" />", urlHelper.Content("~/bundles/" + outputFileName + ".css"), "text/css");
