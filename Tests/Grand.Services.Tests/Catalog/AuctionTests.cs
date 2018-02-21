@@ -32,7 +32,9 @@ namespace Grand.Services.Tests.Catalog
             eventPublisher.Setup(x => x.Publish(new object()));
             _eventPublisher = eventPublisher.Object;
 
-            _productService = new Mock<IProductService>().Object;
+            var productService = new Mock<IProductService>();
+            _productService = productService.Object;
+
             _cacheManager = new Mock<ICacheManager>().Object;
 
             _auctionService = new AuctionService(_bidRepository, _eventPublisher, _productService, _productRepository, _cacheManager);
@@ -227,33 +229,33 @@ namespace Grand.Services.Tests.Catalog
         [TestMethod()]
         public void CanCancelBidByOrder()
         {
-            _productService.InsertProduct(new Product { Name = "test", Sku = "SKU" });
-            var v = _productService.GetProductBySku("SKU");
+            Product cancelProductBid = new Product();
+            cancelProductBid.Name = "CanCancelBidByOrder";
+            cancelProductBid.AvailableEndDateTimeUtc = DateTime.Now.AddDays(5);
+            cancelProductBid.ProductType = ProductType.Auction;
+            cancelProductBid.HighestBid = 10;
+            cancelProductBid.HighestBidder = "H";
+            _productRepository.Insert(cancelProductBid);
 
-
-            Product p = new Product();
-            p.Name = "CanCancelBidByOrder";
-            p.AvailableEndDateTimeUtc = DateTime.Now.AddDays(5);
-            p.ProductType = ProductType.Auction;
-            p.HighestBid = 10;
-            p.HighestBidder = "H";
-            _productRepository.Insert(p);
+            var productService = new Mock<IProductService>();
+            productService.Setup(x => x.GetProductById(cancelProductBid.Id)).Returns(cancelProductBid);
+            var _cancelproductService = productService.Object;
+            var _cancelauctionService = new AuctionService(_bidRepository, _eventPublisher, _cancelproductService, _productRepository, _cacheManager);
 
             Bid bid = new Bid();
             bid.Amount = 1;
             bid.OrderId = "o";
-            bid.ProductId = p.Id;
+            bid.ProductId = cancelProductBid.Id;
             _bidRepository.Insert(bid);
-            var xx = _productService.GetProductById(p.Id);
-            _auctionService.CancelBidByOrder("o");
+            _cancelauctionService.CancelBidByOrder("o");
 
-            var found = _auctionService.GetBidsByProductId("CanCancelBidByOrder");
+            var found = _cancelauctionService.GetBidsByProductId("CanCancelBidByOrder");
             var product = _productRepository.Table.Where(x => x.Name == "CanCancelBidByOrder").FirstOrDefault();
 
             Assert.AreEqual(0, found.Count);
-            //Assert.AreEqual(0, product.HighestBid);
-            //Assert.AreEqual("", product.HighestBidder);
-            //Assert.AreEqual(false, product.AuctionEnded);
+            Assert.AreEqual(0, product.HighestBid);
+            Assert.AreEqual("", product.HighestBidder);
+            Assert.AreEqual(false, product.AuctionEnded);
         }
     }
 }
