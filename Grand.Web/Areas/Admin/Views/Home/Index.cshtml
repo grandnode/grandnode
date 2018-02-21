@@ -104,7 +104,7 @@
                                 </div>
                                 <div class="portlet-body">
                                     <div class="partialContents" data-url="@Url.Action("DashboardActivity")">
-                                        <img src="~/Administration/Images/loading.gif" /> Loading ...
+                                        <img src="~/Administration/images/loading.gif" /> Loading ...
                                     </div>
                                 </div>
                             </div>
@@ -129,7 +129,7 @@
                                     </div>
                                     <div class="portlet-body">
                                         <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardGeneralData", "GoogleAnalytics")">
-                                            <img src="~/Administration/Images/loading.gif" /> Loading ...
+                                            <img src="~/Administration/images/loading.gif" /> Loading ...
                                         </div>
                                     </div>
                                 </div>
@@ -154,7 +154,7 @@
                                     </div>
                                     <div class="portlet-body">
                                         <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardDataBySource", "GoogleAnalytics")">
-                                            <img src="~/Administration/Images/loading.gif" /> Loading ...
+                                            <img src="~/Administration/images/loading.gif" /> Loading ...
                                         </div>
                                     </div>
                                 </div>
@@ -169,7 +169,7 @@
                                     </div>
                                     <div class="portlet-body">
                                         <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardDataByExit", "GoogleAnalytics")">
-                                            <img src="~/Administration/Images/loading.gif" /> Loading ...
+                                            <img src="~/Administration/images/loading.gif" /> Loading ...
                                         </div>
                                     </div>
                                 </div>
@@ -188,7 +188,7 @@
                                     </div>
                                     <div class="portlet-body">
                                         <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardDataByDevice", "GoogleAnalytics")">
-                                            <img src="~/Administration/Images/loading.gif" /> Loading ...
+                                            <img src="~/Administration/images/loading.gif" /> Loading ...
                                         </div>
                                     </div>
                                 </div>
@@ -203,7 +203,7 @@
                                     </div>
                                     <div class="portlet-body">
                                         <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardDataByLocalization", "GoogleAnalytics")">
-                                            <img src="~/Administration/Images/loading.gif" /> Loading ...
+                                            <img src="~/Administration/images/loading.gif" /> Loading ...
                                         </div>
                                     </div>
                                 </div>
@@ -333,7 +333,7 @@
         }
 
         $(".Dashboard_GoogleAnalytics_Data").each(function (index, item) {
-            $(item).html('<img src="Administration/Images/loading.gif" /> Loading ...');
+            $(item).html('<img src="Administration/images/loading.gif" /> Loading ...');
             var url = $(item).data("url") + '?startDate=' + $('#dashboard-report-range').data('daterangepicker').startDate.format('YYYY-MM-DD') + '&endDate=' + $('#dashboard-report-range').data('daterangepicker').endDate.format('YYYY-MM-DD');
             if (url && url.length > 0) {
                 $(item).load(url);

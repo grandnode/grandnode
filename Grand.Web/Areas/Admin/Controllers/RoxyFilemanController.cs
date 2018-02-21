@@ -311,7 +311,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!virtualPath.StartsWith("/"))
                 virtualPath = "/" + virtualPath;
             virtualPath = virtualPath.TrimEnd('/');
-            virtualPath = virtualPath.Replace('/', '\\');
+            if(Grand.Core.OperatingSystem.IsWindows())
+                virtualPath = virtualPath.Replace('/', '\\');
 
             return _hostingEnvironment.WebRootPath + virtualPath;
         }
@@ -489,7 +490,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var rootDirectoryPath = GetFullPath(GetVirtualPath(null));
             var rootDirectory = new DirectoryInfo(rootDirectoryPath);
             if (!rootDirectory.Exists)
-                throw new Exception("Invalid files root directory. Check your configuration.");
+                throw new Exception("Invalid files root directory. Check your configuration - "+ rootDirectoryPath);
 
             var allDirectories = GetDirectories(rootDirectory.FullName);
             allDirectories.Insert(0, rootDirectory.FullName);

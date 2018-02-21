@@ -19,6 +19,9 @@ namespace Grand.Web.Areas.Admin.Models.Common
         [GrandResourceDisplayName("Admin.System.SystemInfo.ASPNETInfo")]
         public string AspNetInfo { get; set; }
 
+        [GrandResourceDisplayName("Admin.System.SystemInfo.MachineName")]
+        public string MachineName { get; set; }
+
 
         [GrandResourceDisplayName("Admin.System.SystemInfo.GrandVersion")]
         public string GrandVersion { get; set; }

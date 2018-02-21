@@ -31,6 +31,7 @@ using Grand.Core.Domain.Logging;
 using Grand.Core.Data;
 using MongoDB.Driver;
 using System.Runtime.InteropServices;
+using Grand.Services.Infrastructure;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -134,7 +135,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.AspNetInfo = RuntimeEnvironment.GetSystemVersion();
             }
             catch (Exception) { }
-            
+
+            var machineNameProvider = EngineContext.Current.Resolve<IMachineNameProvider>();
+            model.MachineName = machineNameProvider.GetMachineName();
+
             model.ServerTimeZone = TimeZoneInfo.Local.StandardName;
             model.ServerLocalTime = DateTime.Now;
             model.UtcTime = DateTime.UtcNow;

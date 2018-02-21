@@ -92,10 +92,8 @@
         @if (!String.IsNullOrEmpty(Model.AttachedDownloadId))
         {
             <div class="form-group">
-                <div class="col-md-3">
-                    @Html.GrandLabelFor(model => model.AttachedDownloadId)
-                </div>
-                <div class="col-md-4">
+                @Html.GrandLabelFor(model => model.AttachedDownloadId)
+                <div class="col-md-9 col-sm-9">
                     @{
                         //Static file attachments do not support URLs yet
                         //A store owner have to upload a file
@@ -136,10 +134,10 @@
             </div>
         </div>
         <div class="form-group">
-                @Html.GrandLabelFor(model => model.SentOn)
+            @Html.GrandLabelFor(model => model.SentOn)
             <div class="col-md-9 col-sm-9">
                 @if (Model.SentOn.HasValue)
-            {
+                {
                     <label class="control-label">@Html.DisplayFor(model => model.SentOn)</label>
                 }
                 else
@@ -149,7 +147,7 @@
             </div>
         </div>
         <div class="form-group">
-                @Html.GrandLabelFor(model => model.EmailAccountName)
+            @Html.GrandLabelFor(model => model.EmailAccountName)
             <div class="col-md-9 col-sm-9">
                 <label class="control-label">@Html.DisplayFor(model => model.EmailAccountName)</label>
             </div>

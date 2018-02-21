@@ -31,6 +31,12 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
+                                        @Html.GrandLabelFor(model => model.MachineName)
+                                        <div class="col-md-9 col-sm-9">
+                                            <label class="control-label">@Html.DisplayFor(model => model.MachineName)</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
                                             @Html.GrandLabelFor(model => model.AspNetInfo)
                                         <div class="col-md-9 col-sm-9">
                                             <label class="control-label">@Html.DisplayFor(model => model.AspNetInfo)</label>
