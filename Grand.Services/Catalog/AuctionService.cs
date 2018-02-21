@@ -169,7 +169,6 @@ namespace Grand.Services.Catalog
 
             product.HighestBid = amount;
             UpdateHighestBid(product, amount, customer.Id);
-
         }
 
         /// <summary>

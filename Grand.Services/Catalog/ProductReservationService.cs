@@ -152,7 +152,6 @@ namespace Grand.Services.Catalog
                 var update = new UpdateDefinitionBuilder<ProductReservation>().Set(x => x.OrderId, "");
                 var result = _productReservationRepository.Collection.UpdateManyAsync(x => x.OrderId == orderId, update).Result;
             }
-
         }
 
         /// <summary>
