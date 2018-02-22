@@ -750,7 +750,7 @@ namespace Grand.Services.Orders
         public virtual IList<string> GetAuctionProductWarning(decimal bid, Product product, Customer customer)
         {
             var warnings = new List<string>();
-            if (bid <= product.HighestBid)
+            if (bid <= product.HighestBid || bid <= product.StartPrice)
             {
                 warnings.Add(_localizationService.GetResource("ShoppingCart.BidMustBeHigher"));
             }
