@@ -139,7 +139,11 @@ namespace Grand.Core.Infrastructure.MongoDB
                 cm.AutoMap();
                 cm.UnmapMember(c => c.PasswordFormat);
             });
-
+            BsonClassMap.RegisterClassMap<ShoppingCartItem>(cm =>
+            {
+                cm.AutoMap();
+                cm.UnmapMember(c => c.ShoppingCartType);
+            });
             BsonClassMap.RegisterClassMap<CustomerAction>(cm =>
             {
                 cm.AutoMap();
