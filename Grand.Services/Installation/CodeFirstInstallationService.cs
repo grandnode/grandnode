@@ -9743,6 +9743,7 @@ namespace Grand.Services.Installation
                                             UsePercentage = false,
                                             DiscountAmount = 10,
                                             RequiresCouponCode = true,
+                                            IsEnabled = true,
                                         },
                                     new Discount
                                         {
@@ -9754,13 +9755,19 @@ namespace Grand.Services.Installation
                                             StartDateUtc = new DateTime(2010,1,1),
                                             EndDateUtc = new DateTime(2020,1,1),
                                             RequiresCouponCode = true,
+                                            IsEnabled = true
                                         },
                                 };
             _discountRepository.Insert(discounts);
-            var coupon = new DiscountCoupon();
-            coupon.CouponCode = "123";
-            coupon.DiscountId = _discountRepository.Table.Where(x => x.Name == "Sample discount with coupon code").FirstOrDefault().Id;
-            _discountCouponRepository.Insert(coupon);
+            var coupon1 = new DiscountCoupon();
+            coupon1.CouponCode = "123";
+            coupon1.DiscountId = _discountRepository.Table.Where(x => x.Name == "Sample discount with coupon code").FirstOrDefault().Id;
+            _discountCouponRepository.Insert(coupon1);
+
+            var coupon2 = new DiscountCoupon();
+            coupon2.CouponCode = "456";
+            coupon2.DiscountId = _discountRepository.Table.Where(x => x.Name == "'20% order total' discount").FirstOrDefault().Id;
+            _discountCouponRepository.Insert(coupon2);
 
         }
 
