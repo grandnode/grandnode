@@ -35,20 +35,6 @@ namespace Grand.Plugin.Payments.PayPalStandard.Models
         public bool PassProductNamesAndTotals { get; set; }
         public bool PassProductNamesAndTotals_OverrideForStore { get; set; }
 
-        [GrandResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.EnableIpn")]
-        public bool EnableIpn { get; set; }
-        public bool EnableIpn_OverrideForStore { get; set; }
 
-        [GrandResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.IpnUrl")]
-        public string IpnUrl { get; set; }
-        public bool IpnUrl_OverrideForStore { get; set; }
-
-        [GrandResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.AddressOverride")]
-        public bool AddressOverride { get; set; }
-        public bool AddressOverride_OverrideForStore { get; set; }
-
-        [GrandResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage")]
-        public bool ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage { get; set; }
-        public bool ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage_OverrideForStore { get; set; }
     }
 }
