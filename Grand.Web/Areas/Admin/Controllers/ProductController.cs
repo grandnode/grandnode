@@ -5786,7 +5786,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     BidId = x.Id,
                     Amount = _priceFormatter.FormatPrice(x.Amount),
-                    Date = x.Date,
+                    Date = _dateTimeHelper.ConvertToUserTime(x.Date, DateTimeKind.Utc),
                     CustomerId = x.CustomerId,
                     Email = _customerService.GetCustomerById(x.CustomerId)?.Email,
                     OrderId = x.OrderId
