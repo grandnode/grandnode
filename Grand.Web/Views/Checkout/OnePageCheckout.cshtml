@@ -42,7 +42,7 @@
             <div class="step-title card card-grey mb-1 text-left p-0 col-12 rounded-0">
                 <div class="card-body p-2">
                     <blockquote class="card-bodyquote">
-                        <span>1. @T("Checkout.BillingAddress")</span>
+                        <span>@billingAddressStepNumber. @T("Checkout.BillingAddress")</span>
                     </blockquote>
                 </div>
             </div>
@@ -71,7 +71,7 @@
                 <div class="step-title card card-grey mb-1 text-left p-0 col-12 rounded-0">
                     <div class="card-body p-2">
                         <blockquote class="card-bodyquote">
-                            <span>2. @T("Checkout.ShippingAddress")</span>
+                            <span>@shippingAddressStepNumber. @T("Checkout.ShippingAddress")</span>
                         </blockquote>
                     </div>
                 </div>
@@ -103,7 +103,7 @@
                     <div class="step-title card card-grey mb-1 text-left p-0 col-12 rounded-0">
                         <div class="card-body p-2">
                             <blockquote class="card-bodyquote">
-                                <span>3. @T("Checkout.ShippingMethod")</span>
+                                <span>@shippingMethodStepNumber. @T("Checkout.ShippingMethod")</span>
                             </blockquote>
                         </div>
                     </div>
@@ -128,7 +128,7 @@
             <div class="step-title card card-grey mb-1 text-left p-0 col-12 rounded-0">
                 <div class="card-body p-2">
                     <blockquote class="card-bodyquote">
-                        <span>4. @T("Checkout.PaymentMethod")</span>
+                        <span>@paymentMethodStepNumber. @T("Checkout.PaymentMethod")</span>
                     </blockquote>
                 </div>
             </div>
@@ -142,7 +142,10 @@
                         PaymentMethod.init('#co-payment-method-form', '@(storeLocation)checkout/OpcSavePaymentMethod/');
                 </script>
                 <div class="col-12 buttons pt-1 pb-1 my-3 px-0" id="payment-method-buttons-container">
-                    <a class="btn btn-secondary" href="#" onclick="Checkout.back(); return false;">@T("Common.Back")</a>
+                    @if (paymentMethodStepNumber > 1)
+                    {
+                        <a class="btn btn-secondary" href="#" onclick="Checkout.back(); return false;">@T("Common.Back")</a>
+                    }
                     <input type="button" class="btn btn-success payment-method-next-step-button" onclick="PaymentMethod.save()" value="@T("Common.Continue")" />
                     <span class="please-wait" id="payment-method-please-wait" style="display: none;">@T("Common.LoadingNextStep")</span>
                 </div>
@@ -152,7 +155,7 @@
             <div class="step-title card card-grey mb-1 text-left p-0 col-12 rounded-0">
                 <div class="card-body p-2">
                     <blockquote class="card-bodyquote">
-                        <span>5. @T("Checkout.PaymentInfo")</span>
+                        <span>@paymentInfoStepNumber. @T("Checkout.PaymentInfo")</span>
                     </blockquote>
                 </div>
             </div>
@@ -176,7 +179,7 @@
             <div class="step-title card card-grey mb-1 text-left p-0 col-12 rounded-0">
                 <div class="card-body p-2">
                     <blockquote class="card-bodyquote">
-                        <span>6. @T("Checkout.ConfirmOrder")</span>
+                        <span>@confirmOrderStepNumber. @T("Checkout.ConfirmOrder")</span>
                     </blockquote>
                 </div>
             </div>
