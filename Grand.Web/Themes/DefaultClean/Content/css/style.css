@@ -136,6 +136,7 @@ i.rotate, span.rotate {
 
 .modal-open {
     overflow: auto;
+    padding-right: 0 !important;
 }
 /*back to top*/
 #back-to-top {
