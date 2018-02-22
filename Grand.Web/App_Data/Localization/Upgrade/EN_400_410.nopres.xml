@@ -777,4 +777,10 @@
   <LocaleResource Name="Admin.System.SystemInfo.MachineName.Hint">
     <Value>Machine name</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Text">
+    <Value>Text</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Text.Hint">
+    <Value>Helpful text field</Value>
+  </LocaleResource>
 </Language>

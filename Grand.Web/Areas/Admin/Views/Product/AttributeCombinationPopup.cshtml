@@ -195,6 +195,13 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                @Html.GrandLabelFor(model => model.Text, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.Text)
+                                    @Html.ValidationMessageFor(model => model.Text)
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 @Html.GrandLabelFor(model => model.Sku, new Dictionary<string, object> { { "class", "col-sm-3" } })
                                 <div class="col-md-9 col-sm-9">
                                     @Html.GrandEditorFor(model => model.Sku)

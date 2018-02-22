@@ -3669,6 +3669,12 @@
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.StockQuantity.Hint">
     <Value>The current stock quantity of this combination.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Text">
+    <Value>Text</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Text.Hint">
+    <Value>Helpful text field</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateAll">
     <Value>Generate all possible combinations</Value>
   </LocaleResource>

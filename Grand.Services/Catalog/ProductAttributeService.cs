@@ -519,6 +519,7 @@ namespace Grand.Services.Catalog
                 .Set("ProductAttributeCombinations.$.StockQuantity", combination.StockQuantity)
                 .Set("ProductAttributeCombinations.$.AllowOutOfStockOrders", combination.AllowOutOfStockOrders)
                 .Set("ProductAttributeCombinations.$.Sku", combination.Sku)
+                .Set("ProductAttributeCombinations.$.Text", combination.Text)
                 .Set("ProductAttributeCombinations.$.ManufacturerPartNumber", combination.ManufacturerPartNumber)
                 .Set("ProductAttributeCombinations.$.Gtin", combination.Gtin)
                 .Set("ProductAttributeCombinations.$.OverriddenPrice", combination.OverriddenPrice)

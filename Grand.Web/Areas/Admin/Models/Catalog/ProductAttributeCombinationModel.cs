@@ -24,6 +24,9 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.AllowOutOfStockOrders")]
         public bool AllowOutOfStockOrders { get; set; }
 
+        [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Text")]
+        public string Text { get; set; }
+
         [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Sku")]
         public string Sku { get; set; }
 

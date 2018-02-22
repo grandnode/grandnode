@@ -5224,6 +5224,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         StockQuantity = model.StockQuantity,
                         AllowOutOfStockOrders = model.AllowOutOfStockOrders,
                         Sku = model.Sku,
+                        Text = model.Text,
                         ManufacturerPartNumber = model.ManufacturerPartNumber,
                         Gtin = model.Gtin,
                         OverriddenPrice = model.OverriddenPrice,
@@ -5254,6 +5255,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 combination.StockQuantity = model.StockQuantity;
                 combination.AllowOutOfStockOrders = model.AllowOutOfStockOrders;
                 combination.Sku = model.Sku;
+                combination.Text = model.Text;
                 combination.ManufacturerPartNumber = model.ManufacturerPartNumber;
                 combination.Gtin = model.Gtin;
                 combination.OverriddenPrice = model.OverriddenPrice;
