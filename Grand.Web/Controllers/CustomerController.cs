@@ -1055,6 +1055,11 @@ namespace Grand.Web.Controllers
                 address.CustomerId = customer.Id;
                 _customerService.UpdateAddress(address);
 
+                if (customer.BillingAddress?.Id == address.Id)
+                    _customerService.UpdateBillingAddress(address);
+                if (customer.ShippingAddress?.Id == address.Id)
+                    _customerService.UpdateShippingAddress(address);
+
                 return RedirectToRoute("CustomerAddresses");
             }
 
