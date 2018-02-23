@@ -588,7 +588,6 @@ namespace Grand.Plugin.Payments.PayPalStandard
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.PDTToken", "PDT Identity Token");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.PDTValidateOrderTotal", "PDT. Validate order total");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.PDTValidateOrderTotal.Hint", "Check if PDT handler should validate order totals.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.PDTValidateOrderTotal.hint", "PDT Validate order total");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.RedirectionTip", "You will be redirected to PayPal site to complete the order.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.UseSandbox", "Use Sandbox");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.UseSandbox.Hint", "Check to enable Sandbox (testing environment).");
