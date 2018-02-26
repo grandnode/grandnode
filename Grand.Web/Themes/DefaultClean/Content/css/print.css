@@ -15,7 +15,9 @@ li {
 a {
 	color: inherit;
 }
-
+.text-center{
+    text-align:center;
+}
 .order-details-page .order-overview {
 	margin: 0 0 25px;
 }
@@ -100,4 +102,8 @@ a {
 .order-details-page td.cart-total-left {
 	width: 100%;
 	font-weight: bold;
+}
+.totals table {
+    width: 20%;
+    float: right;
 }
