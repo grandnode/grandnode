@@ -541,7 +541,7 @@ namespace Grand.Services.Orders
             }
 
             //validate required product attributes (whether they're chosen/selected/entered)
-            var attributes2 = product.ProductAttributeMappings; //_productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+            var attributes2 = product.ProductAttributeMappings; 
             if (ignoreNonCombinableAttributes)
             {
                 attributes2 = attributes2.Where(x => !x.IsNonCombinable()).ToList();
@@ -567,8 +567,11 @@ namespace Grand.Services.Orders
                             {
                                 if (!String.IsNullOrEmpty(str1.Trim()))
                                 {
-                                    found = true;
-                                    break;
+                                    if (a1.ProductAttributeValues.Where(x => x.Id == str1).Any())
+                                    {
+                                        found = true;
+                                        break;
+                                    }
                                 }
                             }
                         }
