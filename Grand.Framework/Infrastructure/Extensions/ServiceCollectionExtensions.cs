@@ -23,6 +23,7 @@ using System.IO;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc.Internal;
 using Grand.Framework.Mvc.Routing;
+using Grand.Core.Domain.Security;
 
 namespace Grand.Framework.Infrastructure.Extensions
 {
@@ -115,6 +116,9 @@ namespace Grand.Framework.Infrastructure.Extensions
                 {
                     Name = ".Grand.Antiforgery"
                 };
+                //whether to allow the use of anti-forgery cookies from SSL protected page on the other store pages which are not
+                options.Cookie.SecurePolicy = EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                    ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
         }
 
@@ -131,6 +135,9 @@ namespace Grand.Framework.Infrastructure.Extensions
                     Name = ".Grand.Session",
                     HttpOnly = true,
                 };
+                //whether to allow the use of session values from SSL protected page on the other store pages which are not
+                options.Cookie.SecurePolicy = EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                    ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
         }
 
@@ -207,6 +214,10 @@ namespace Grand.Framework.Infrastructure.Extensions
                     options.LoginPath = GrandCookieAuthenticationDefaults.LoginPath;
                     options.AccessDeniedPath = GrandCookieAuthenticationDefaults.AccessDeniedPath;
                     options.LogoutPath = GrandCookieAuthenticationDefaults.LogoutPath;
+
+                    //whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
+                    options.Cookie.SecurePolicy = EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                        ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
                 }
             );
 
@@ -227,13 +238,12 @@ namespace Grand.Framework.Infrastructure.Extensions
                     options.LoginPath = GrandCookieAuthenticationDefaults.LoginPath;
                     options.AccessDeniedPath = GrandCookieAuthenticationDefaults.AccessDeniedPath;
                     options.LogoutPath = GrandCookieAuthenticationDefaults.LogoutPath;
+
+                    // whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
+                    options.Cookie.SecurePolicy = EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                     ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
                 }
             );
-
-
-
-
-
         }
 
         /// <summary>
