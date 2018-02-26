@@ -11003,7 +11003,6 @@ namespace Grand.Services.Installation
             //productreseration
             _productReservationRepository.Collection.Indexes.CreateOneAsync(Builders<ProductReservation>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _productReservationRepository.Collection.Indexes.CreateOneAsync(Builders<ProductReservation>.IndexKeys.Ascending(x => x.ProductId).Ascending(x => x.Date), new CreateIndexOptions() { Name = "ProductReservation", Unique = false });
-            _productReservationRepository.Collection.Indexes.CreateOneAsync(Builders<ProductReservation>.IndexKeys.Ascending(x => x.ProductId).Ascending(x => x.Date).Ascending(x=>x.Resource), new CreateIndexOptions() { Name = "ProductReservationRecord", Unique = true });
 
             //bid
             _bidRepository.Collection.Indexes.CreateOneAsync(Builders<Bid>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
