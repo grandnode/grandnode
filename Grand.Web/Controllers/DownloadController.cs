@@ -129,9 +129,16 @@ namespace Grand.Web.Controllers
                     using (var ziparchive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
                     {
                         string fileName = (!String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : product.Id.ToString()) + download.Extension;
-                        System.IO.File.WriteAllBytes(@"App_Data\Download\" + fileName, download.DownloadBinary);
-                        ziparchive.CreateEntryFromFile(@"App_Data\Download\" + fileName, fileName);
-
+                        if (Grand.Core.OperatingSystem.IsWindows())
+                        {
+                            System.IO.File.WriteAllBytes(@"App_Data\Download\" + fileName, download.DownloadBinary);
+                            ziparchive.CreateEntryFromFile(@"App_Data\Download\" + fileName, fileName);
+                        }
+                        else
+                        {
+                            System.IO.File.WriteAllBytes(@"App_Data/Download/" + fileName, download.DownloadBinary);
+                            ziparchive.CreateEntryFromFile(@"App_Data/Download/" + fileName, fileName);
+                        }
                         foreach (var bundle in product.BundleProducts)
                         {
                             var p1 = _productService.GetProductById(bundle.ProductId);
@@ -141,8 +148,16 @@ namespace Grand.Web.Controllers
                                 if(d1!=null && !d1.UseDownloadUrl)
                                 {
                                     fileName = (!String.IsNullOrWhiteSpace(d1.Filename) ? d1.Filename : p1.Id.ToString()) + d1.Extension;
-                                    System.IO.File.WriteAllBytes(@"App_Data\Download\" + fileName, d1.DownloadBinary);
-                                    ziparchive.CreateEntryFromFile(@"App_Data\Download\" + fileName, fileName);
+                                    if (Grand.Core.OperatingSystem.IsWindows())
+                                    {
+                                        System.IO.File.WriteAllBytes(@"App_Data\Download\" + fileName, d1.DownloadBinary);
+                                        ziparchive.CreateEntryFromFile(@"App_Data\Download\" + fileName, fileName);
+                                    }
+                                    else
+                                    {
+                                        System.IO.File.WriteAllBytes(@"App_Data/Download/" + fileName, d1.DownloadBinary);
+                                        ziparchive.CreateEntryFromFile(@"App_Data/Download/" + fileName, fileName);
+                                    }
                                 }
                             }
                         }

@@ -381,42 +381,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                     filePermissionsOk = false;
                 }
             if (filePermissionsOk)
+            {
                 model.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Pass,
                     Text = _localizationService.GetResource("Admin.System.Warnings.FilePermission.OK")
                 });
-
-            //machine key
-            try
-            {
-                //var machineKeySection = ConfigurationManager.GetSection("system.web/machineKey") as MachineKeySection;
-                //var machineKeySpecified = machineKeySection != null &&
-                //    !String.IsNullOrEmpty(machineKeySection.DecryptionKey) &&
-                //    !machineKeySection.DecryptionKey.StartsWith("AutoGenerate",StringComparison.OrdinalIgnoreCase);
-
-                //if (!machineKeySpecified)
-                //{
-                //    model.Add(new SystemWarningModel
-                //    {
-                //        Level = SystemWarningLevel.Warning,
-                //        Text = _localizationService.GetResource("Admin.System.Warnings.MachineKey.NotSpecified")
-                //    });
-                //}
-                //else
-                //{
-                //    model.Add(new SystemWarningModel
-                //    {
-                //        Level = SystemWarningLevel.Pass,
-                //        Text = _localizationService.GetResource("Admin.System.Warnings.MachineKey.Specified")
-                //    });
-                //}
             }
-            catch (Exception exc)
-            {
-                LogException(exc);
-            }
-            
             return View(model);
         }
 
