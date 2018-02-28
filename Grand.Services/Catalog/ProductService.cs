@@ -220,7 +220,7 @@ namespace Grand.Services.Catalog
             var builder = Builders<Product>.Filter;
             var filter = builder.Eq(x => x.Published, true);
             filter = filter & builder.Eq(x => x.ShowOnHomePage, true);
-            var query = _productRepository.Collection.Find(filter).SortBy(x => x.DisplayOrder).SortBy(x=>x.Name);
+            var query = _productRepository.Collection.Find(filter).SortBy(x => x.DisplayOrder).ThenBy(x=>x.Name);
             var products = query.ToList();
             return products;
         }
