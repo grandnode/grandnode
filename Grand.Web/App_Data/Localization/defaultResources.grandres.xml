@@ -17664,6 +17664,9 @@
   <LocaleResource Name="ShoppingCart.AllowedQuantities">
     <Value>Allowed quantities for this product: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.AlreadyHighestBidder">
+    <Value>You are already the highest bidder</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart.AssociatedAttributeWarning">
     <Value>{0}. {1}. {2}</Value>
   </LocaleResource>

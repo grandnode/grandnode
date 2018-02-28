@@ -703,6 +703,15 @@ namespace Grand.Web.Controllers
             if (product == null)
                 throw new ArgumentNullException("product");
 
+            if(product.HighestBidder == customer.Id)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = _localizationService.GetResource("ShoppingCart.AlreadyHighestBidder")
+                });
+            }
+
             var warnings = _shoppingCartService.GetStandardWarnings(customer, ShoppingCartType.Auctions, product, "", bid, 1).ToList();
             warnings.AddRange(_shoppingCartService.GetAuctionProductWarning(bid, product, customer));
 

@@ -786,4 +786,7 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.ChangedWarning">
     <Value>You can't edit the product because has been changed. Please refresh page and try to change again.</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.AlreadyHighestBidder">
+    <Value>You are already the highest bidder</Value>
+  </LocaleResource>
 </Language>
