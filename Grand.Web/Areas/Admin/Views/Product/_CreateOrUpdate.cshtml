@@ -1,6 +1,7 @@
 ﻿@model ProductModel
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
+@Html.HiddenFor(model => model.Ticks)
 
 <script>
     $('body').addClass('page-sidebar-closed');

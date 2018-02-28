@@ -370,7 +370,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         public DateTime? CreatedOn { get; set; }
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.UpdatedOn")]
         public DateTime? UpdatedOn { get; set; }
-
+        public long Ticks { get; set; }
 
         public string PrimaryStoreCurrencyCode { get; set; }
         public string BaseDimensionIn { get; set; }

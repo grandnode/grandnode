@@ -127,7 +127,7 @@ namespace Grand.Services.Catalog
             var builder = Builders<Product>.Filter;
             var filter = builder.Eq(x => x.Id, product.Id);
             var updateDefinition = Builders<Product>.Update;
-            var update = updateDefinition.Set(x => x.AuctionEnded, ended);
+            var update = updateDefinition.Set(x => x.AuctionEnded, ended).CurrentDate("UpdatedOnUtc");
             if (enddate)
                 update = update.Set(x => x.AvailableEndDateTimeUtc, DateTime.UtcNow);
 

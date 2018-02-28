@@ -277,14 +277,12 @@ namespace Grand.Services.Vendors
                     .Set(x => x.ApprovedRatingSum, vendor.ApprovedRatingSum)
                     .Set(x => x.NotApprovedRatingSum, vendor.NotApprovedRatingSum)
                     .Set(x => x.ApprovedTotalReviews, vendor.ApprovedTotalReviews)
-                    .Set(x => x.NotApprovedTotalReviews, vendor.NotApprovedTotalReviews)
-                    .CurrentDate("UpdateDate");
+                    .Set(x => x.NotApprovedTotalReviews, vendor.NotApprovedTotalReviews);
+
             _vendorRepository.Collection.UpdateOneAsync(filter, update);
            
             //event notification
             _eventPublisher.EntityUpdated(vendor);
-
-            //UpdateVendor(vendor);
         }
 
         public virtual void UpdateVendorReview(VendorReview vendorreview)

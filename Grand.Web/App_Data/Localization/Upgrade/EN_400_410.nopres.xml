@@ -783,4 +783,7 @@
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Text.Hint">
     <Value>Helpful text field</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ChangedWarning">
+    <Value>You can't edit the product because has been changed. Please refresh page and try to change again.</Value>
+  </LocaleResource>
 </Language>

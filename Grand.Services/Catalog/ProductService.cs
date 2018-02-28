@@ -427,14 +427,14 @@ namespace Grand.Services.Catalog
                 .Set(x => x.TaxCategoryId, product.TaxCategoryId)
                 .Set(x => x.UnitId, product.UnitId)
                 .Set(x => x.UnlimitedDownloads, product.UnlimitedDownloads)
-                .Set(x => x.UpdatedOnUtc, product.UpdatedOnUtc)
                 .Set(x => x.UseMultipleWarehouses, product.UseMultipleWarehouses)
                 .Set(x => x.UserAgreementText, product.UserAgreementText)
                 .Set(x => x.VendorId, product.VendorId)
                 .Set(x => x.VisibleIndividually, product.VisibleIndividually)
                 .Set(x => x.WarehouseId, product.WarehouseId)
                 .Set(x => x.Weight, product.Weight)
-                .Set(x => x.Width, product.Width);
+                .Set(x => x.Width, product.Width)
+                .CurrentDate("UpdatedOnUtc");
 
             var result = _productRepository.Collection.UpdateOneAsync(filter, update).Result;
 
@@ -487,7 +487,7 @@ namespace Grand.Services.Catalog
             var update = Builders<Product>.Update
                     .Set(x => x.StockQuantity, product.StockQuantity)
                     .Set(x => x.LowStock, ((product.MinStockQuantity > 0 && product.MinStockQuantity >= product.StockQuantity) || product.StockQuantity < 0))
-                    .CurrentDate("UpdateDate");
+                    .CurrentDate("UpdatedOnUtc");
             _productRepository.Collection.UpdateOneAsync(filter, update);
 
             //cache
@@ -522,7 +522,7 @@ namespace Grand.Services.Catalog
             var filter = Builders<Product>.Filter.Eq("Id", productId);
             var update = Builders<Product>.Update
                     .Set(x => x.Published, false)
-                    .CurrentDate("UpdateDate");
+                    .CurrentDate("UpdatedOnUtc");
             _productRepository.Collection.UpdateOneAsync(filter, update);
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productId));
 
@@ -1157,8 +1157,8 @@ namespace Grand.Services.Catalog
                     .Set(x => x.ApprovedRatingSum, product.ApprovedRatingSum)
                     .Set(x => x.NotApprovedRatingSum, product.NotApprovedRatingSum)
                     .Set(x => x.ApprovedTotalReviews, product.ApprovedTotalReviews)
-                    .Set(x => x.NotApprovedTotalReviews, product.NotApprovedTotalReviews)
-                    .CurrentDate("UpdateDate");
+                    .Set(x => x.NotApprovedTotalReviews, product.NotApprovedTotalReviews);
+
             _productRepository.Collection.UpdateOneAsync(filter, update);
 
             //cache
@@ -1175,7 +1175,6 @@ namespace Grand.Services.Catalog
             if (productreview == null)
                 throw new ArgumentNullException("productreview");
 
-            //_productPictureRepository.Update(productPicture);
             var builder = Builders<ProductReview>.Filter;
             var filter = builder.Eq(x => x.Id, productreview.Id);
             var update = Builders<ProductReview>.Update
@@ -1225,8 +1224,8 @@ namespace Grand.Services.Catalog
 
             var filter = Builders<Product>.Filter.Eq("Id", product.Id);
             var update = Builders<Product>.Update
-                    .Set(x => x.HasTierPrices, product.HasTierPrices)
-                    .CurrentDate("UpdateDate");
+                    .Set(x => x.HasTierPrices, product.HasTierPrices);
+
             _productRepository.Collection.UpdateOneAsync(filter, update);
 
             //event notification
@@ -1252,8 +1251,8 @@ namespace Grand.Services.Catalog
             var update = Builders<Product>.Update
                     .Set(x => x.Interval, interval)
                     .Set(x => x.IntervalUnitId, (int)intervalUnit)
-                    .Set(x => x.IncBothDate, includeBothDates)
-                    .CurrentDate("UpdateDate");
+                    .Set(x => x.IncBothDate, includeBothDates);
+
             _productRepository.Collection.UpdateOneAsync(filter, update);
 
             //event notification
@@ -1317,7 +1316,7 @@ namespace Grand.Services.Catalog
                                     .Set(x => x.DisableBuyButton, product.DisableBuyButton)
                                     .Set(x => x.DisableWishlistButton, product.DisableWishlistButton)
                                     .Set(x => x.LowStock, true)
-                                    .CurrentDate("UpdateDate");
+                                    .CurrentDate("UpdatedOnUtc");
                             _productRepository.Collection.UpdateOneAsync(filter, update);
                             //cache
                             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
@@ -1332,7 +1331,7 @@ namespace Grand.Services.Catalog
                             var filter2 = Builders<Product>.Filter.Eq("Id", product.Id);
                             var update2 = Builders<Product>.Update
                                     .Set(x => x.Published, product.Published)
-                                    .CurrentDate("UpdateDate");
+                                    .CurrentDate("UpdatedOnUtc");
                             _productRepository.Collection.UpdateOneAsync(filter2, update2);
                             
                             //cache
@@ -1362,7 +1361,7 @@ namespace Grand.Services.Catalog
                                         .Set(x => x.DisableBuyButton, product.DisableBuyButton)
                                         .Set(x => x.DisableWishlistButton, product.DisableWishlistButton)
                                         .Set(x => x.LowStock, true)
-                                        .CurrentDate("UpdateDate");
+                                        .CurrentDate("UpdatedOnUtc");
                                 _productRepository.Collection.UpdateOneAsync(filter, update);
                                 //cache
                                 _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
@@ -1372,7 +1371,7 @@ namespace Grand.Services.Catalog
                                 var filter2 = Builders<Product>.Filter.Eq("Id", product.Id);
                                 var update2 = Builders<Product>.Update
                                         .Set(x => x.Published, product.Published)
-                                        .CurrentDate("UpdateDate");
+                                        .CurrentDate("UpdatedOnUtc");
                                 _productRepository.Collection.UpdateOneAsync(filter2, update2);
 
                                 //cache
@@ -1500,7 +1499,7 @@ namespace Grand.Services.Catalog
             var filter = Builders<Product>.Filter.Eq("Id", product.Id);
             var update = Builders<Product>.Update
                     .Set(x => x.ProductWarehouseInventory, productInventory)                    
-                    .CurrentDate("UpdateDate");
+                    .CurrentDate("UpdatedOnUtc");
             _productRepository.Collection.UpdateOneAsync(filter, update);
 
             //cache
@@ -1565,7 +1564,8 @@ namespace Grand.Services.Catalog
             filter = filter & builder.ElemMatch(x => x.ProductAttributeCombinations, y => y.Id == combination.Id);
             var update = Builders<Product>.Update
                 .Set("ProductAttributeCombinations.$.StockQuantity", combination.StockQuantity)
-                .Set("ProductAttributeCombinations.$.WarehouseInventory", combination.WarehouseInventory);
+                .Set("ProductAttributeCombinations.$.WarehouseInventory", combination.WarehouseInventory)
+                .CurrentDate("UpdatedOnUtc");
 
             var result = _productRepository.Collection.UpdateManyAsync(filter, update).Result;
 
@@ -1618,7 +1618,7 @@ namespace Grand.Services.Catalog
             var filter = Builders<Product>.Filter.Eq("Id", product.Id);
             var update = Builders<Product>.Update
                     .Set(x => x.ProductWarehouseInventory, productInventory)
-                    .CurrentDate("UpdateDate");
+                    .CurrentDate("UpdatedOnUtc");
             _productRepository.Collection.UpdateOneAsync(filter, update);
 
             //cache
@@ -1673,7 +1673,8 @@ namespace Grand.Services.Catalog
             filter = filter & builder.ElemMatch(x => x.ProductAttributeCombinations, y => y.Id == combination.Id);
             var update = Builders<Product>.Update
                 .Set("ProductAttributeCombinations.$.StockQuantity", combination.StockQuantity)
-                .Set("ProductAttributeCombinations.$.WarehouseInventory", combination.WarehouseInventory);
+                .Set("ProductAttributeCombinations.$.WarehouseInventory", combination.WarehouseInventory)
+                .CurrentDate("UpdatedOnUtc");
 
             var result = _productRepository.Collection.UpdateManyAsync(filter, update).Result;
 
@@ -1721,7 +1722,7 @@ namespace Grand.Services.Catalog
 
                 var update = Builders<Product>.Update
                         .Set(x => x.ProductWarehouseInventory.ElementAt(-1), pwi)
-                        .CurrentDate("UpdateDate");
+                        .CurrentDate("UpdatedOnUtc");
                 _productRepository.Collection.UpdateOneAsync(filter, update);
             }
             //manage stock by attributes
@@ -1747,7 +1748,8 @@ namespace Grand.Services.Catalog
                 filter = filter & builder.ElemMatch(x => x.ProductAttributeCombinations, y => y.Id == combination.Id);
                 var update = Builders<Product>.Update
                     .Set("ProductAttributeCombinations.$.StockQuantity", combination.StockQuantity)
-                    .Set("ProductAttributeCombinations.$.WarehouseInventory", combination.WarehouseInventory);
+                    .Set("ProductAttributeCombinations.$.WarehouseInventory", combination.WarehouseInventory)
+                    .CurrentDate("UpdatedOnUtc");
 
                 var result = _productRepository.Collection.UpdateManyAsync(filter, update).Result;
 
@@ -1815,7 +1817,7 @@ namespace Grand.Services.Catalog
 
                 var update = Builders<Product>.Update
                         .Set(x => x.ProductWarehouseInventory.ElementAt(-1), pwi)
-                        .CurrentDate("UpdateDate");
+                        .CurrentDate("UpdatedOnUtc");
                 _productRepository.Collection.UpdateOneAsync(filter, update);
 
             }
@@ -1848,8 +1850,8 @@ namespace Grand.Services.Catalog
                 filter = filter & builder.ElemMatch(x => x.ProductAttributeCombinations, y => y.Id == combination.Id);
                 var update = Builders<Product>.Update
                     .Set("ProductAttributeCombinations.$.StockQuantity", combination.StockQuantity)
-                    .Set("ProductAttributeCombinations.$.WarehouseInventory", combination.WarehouseInventory);
-
+                    .Set("ProductAttributeCombinations.$.WarehouseInventory", combination.WarehouseInventory)
+                    .CurrentDate("UpdatedOnUtc");
                 var result = _productRepository.Collection.UpdateManyAsync(filter, update).Result;
 
             }

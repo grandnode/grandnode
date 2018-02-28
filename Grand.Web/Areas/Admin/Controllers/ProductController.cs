@@ -1110,6 +1110,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             var model = product.ToModel();
+            model.Ticks = product.UpdatedOnUtc.Ticks;
+
             PrepareProductModel(model, product, false, false);
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
@@ -1142,6 +1144,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List");
 
+            if (model.Ticks!=product.UpdatedOnUtc.Ticks)
+            {
+                ErrorNotification(_localizationService.GetResource("Admin.Catalog.Products.Fields.ChangedWarning"));
+                return RedirectToAction("Edit", new { id = product.Id });
+            }
             if (ModelState.IsValid)
             {
                 //a vendor should have access only to his products

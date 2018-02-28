@@ -2934,6 +2934,9 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.CatalogPrice.hint">
     <Value>The catalog price of the product. If you set an catalog price, this will display alongside the current price on the product page to show the difference in price.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ChangedWarning">
+    <Value>You can't edit the product because has been changed. Please refresh page and try to change again.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.CreatedOn">
     <Value>Created on</Value>
   </LocaleResource>
