@@ -154,15 +154,6 @@ namespace Grand.Framework.Infrastructure.Extensions
         }
 
         /// <summary>
-        /// Configure middleware checking whether requested page is keep alive page
-        /// </summary>
-        /// <param name="application">Builder for configuring an application's request pipeline</param>
-        public static void UseKeepAlive(this IApplicationBuilder application)
-        {
-            application.UseMiddleware<KeepAliveMiddleware>();
-        }
-
-        /// <summary>
         /// Configure middleware checking whether database is installed
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>

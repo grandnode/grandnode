@@ -10519,20 +10519,6 @@ namespace Grand.Services.Installation
                 },
                 new ScheduleTask
                 {
-                    ScheduleTaskName = "Keep alive",
-                    Type = "Grand.Services.Tasks.KeepAliveScheduleTask",
-                    Enabled = true,
-                    StopOnError = false,
-                    TimeIntervalChoice = TimeIntervalChoice.EveryMinutes,
-                    TimeInterval = 5,
-                    MinuteOfHour = 1,
-                    HourOfDay = 1,
-                    DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
-                    DayOfMonth = 1
-                },
-                new ScheduleTask
-                {
                     ScheduleTaskName = "Delete guests",
                     Type = "Grand.Services.Tasks.DeleteGuestsScheduleTask, Grand.Services",
                     Enabled = true,

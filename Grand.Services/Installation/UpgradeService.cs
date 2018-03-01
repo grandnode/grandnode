@@ -769,6 +769,8 @@ namespace Grand.Services.Installation
 
             #region Tasks
 
+            var keepliveTask = EngineContext.Current.Resolve<IRepository<ScheduleTask>>();
+
             var endtask = new ScheduleTask
             {
                 ScheduleTaskName = "End of the auctions",
@@ -783,8 +785,11 @@ namespace Grand.Services.Installation
                 MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
                 DayOfMonth = 1
             };
-            EngineContext.Current.Resolve<IRepository<ScheduleTask>>().Insert(endtask);
+            keepliveTask.Insert(endtask);
 
+            var _keepAliveScheduleTask = keepliveTask.Table.Where(x => x.Type == "Grand.Services.Tasks.KeepAliveScheduleTask").FirstOrDefault();
+            if(_keepAliveScheduleTask !=null)
+                keepliveTask.Delete(_keepAliveScheduleTask);
 
             #endregion
 
