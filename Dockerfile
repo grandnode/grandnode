@@ -38,7 +38,6 @@ RUN ln -s /lib/x86_64-linux-gnu/libdl.so.2 /lib/x86_64-linux-gnu/libdl.so
 
 WORKDIR /app
 COPY --from=build-env /app/Grand.Web/out/ .
-COPY --from=build-env /app/Grand.Web/Plugins/ ./Plugins/
 
 VOLUME /app/App_Data /app/wwwroot /app/Plugins /app/Themes
 
