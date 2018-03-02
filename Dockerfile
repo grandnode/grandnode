@@ -1,4 +1,4 @@
-FROM microsoft/aspnetcore-build:latest AS build-env
+FROM microsoft/aspnetcore-build:2.0 AS build-env
 
 WORKDIR /app
 COPY GrandNode.sln .
@@ -28,10 +28,10 @@ RUN dotnet restore
 
 # Copy everything else and build
 COPY . ./
-RUN dotnet publish -c Release -o out
+RUN dotnet publish Grand.Web -c Release -o out
 
 # Build runtime image
-FROM microsoft/aspnetcore:latest
+FROM microsoft/aspnetcore:2.0
 RUN apt-get update && \
   apt-get -y install libgdiplus
 RUN ln -s /lib/x86_64-linux-gnu/libdl.so.2 /lib/x86_64-linux-gnu/libdl.so
