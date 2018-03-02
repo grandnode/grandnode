@@ -29,6 +29,22 @@ RUN dotnet restore
 # Copy everything else and build
 COPY . ./
 RUN dotnet publish Grand.Web -c Release -o out
+RUN dotnet build Plugins/Grand.Plugin.DiscountRequirements.Standard
+RUN dotnet build Plugins/Grand.Plugin.ExchangeRate.McExchange
+RUN dotnet build Plugins/Grand.Plugin.ExternalAuth.Facebook
+RUN dotnet build Plugins/Grand.Plugin.Feed.GoogleShopping
+RUN dotnet build Plugins/Grand.Plugin.Payments.CashOnDelivery
+RUN dotnet build Plugins/Grand.Plugin.Payments.CheckMoneyOrder
+RUN dotnet build Plugins/Grand.Plugin.Payments.PayInStore
+RUN dotnet build Plugins/Grand.Plugin.Payments.PayPalStandard
+RUN dotnet build Plugins/Grand.Plugin.Shipping.ByWeight
+RUN dotnet build Plugins/Grand.Plugin.Shipping.FixedRateShipping
+RUN dotnet build Plugins/Grand.Plugin.Shipping.ShippingPoint
+RUN dotnet build Plugins/Grand.Plugin.Tax.CountryStateZip
+RUN dotnet build Plugins/Grand.Plugin.Tax.FixedRate
+RUN dotnet build Plugins/Grand.Plugin.Widgets.GoogleAnalytics
+RUN dotnet build Plugins/Grand.Plugin.Widgets.Slider
+
 
 # Build runtime image
 FROM microsoft/aspnetcore:2.0
@@ -38,7 +54,7 @@ RUN ln -s /lib/x86_64-linux-gnu/libdl.so.2 /lib/x86_64-linux-gnu/libdl.so
 
 WORKDIR /app
 COPY --from=build-env /app/Grand.Web/out/ .
-COPY --from=build-env /app/Grand.Web/Plugins/ app/Plugins/
+COPY --from=build-env /app/Grand.Web/Plugins/ ./Plugins/
 
 VOLUME /app/App_Data /app/wwwroot /app/Plugins /app/Themes
 
