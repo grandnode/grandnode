@@ -247,7 +247,8 @@ namespace Grand.Web.Infrastructure
             //login page for checkout as guest
             routeBuilder.MapLocalizedRoute("LoginCheckoutAsGuest",
                             "login/checkoutasguest",
-                            new { controller = "Customer", action = "Login" });
+                            new { controller = "Customer", action = "Login", checkoutAsGuest = true });
+
             //register result page
             routeBuilder.MapLocalizedRoute("RegisterResult",
                             "registerresult/{resultId}",
