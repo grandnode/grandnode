@@ -10,9 +10,6 @@ using Grand.Core.ComponentModel;
 using Grand.Core.Configuration;
 using System.Runtime.Loader;
 
-//Contributor: Umbraco (http://www.umbraco.com). Thanks a lot! 
-//SEE THIS POST for full details of what this does - http://shazwazza.com/post/Developing-a-plugin-framework-in-ASPNET-with-medium-trust.aspx
-
 namespace Grand.Core.Plugins
 {
     /// <summary>
@@ -22,9 +19,9 @@ namespace Grand.Core.Plugins
     {
         #region Const
 
-        private const string InstalledPluginsFilePath = "~/App_Data/InstalledPlugins.txt";
-        private const string PluginsPath = "~/Plugins";
-        private const string ShadowCopyPath = "~/Plugins/bin";
+        public const string InstalledPluginsFilePath = "~/App_Data/InstalledPlugins.txt";
+        public const string PluginsPath = "~/Plugins";
+        public const string ShadowCopyPath = "~/Plugins/bin";
 
         #endregion
 

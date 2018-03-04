@@ -142,6 +142,9 @@
     <None Update="App_Data\Pdf\FreeSerif.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="App_Data\TempUploads\Index.htm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="App_Data\Upgrade\UpgradeScript_380_390.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

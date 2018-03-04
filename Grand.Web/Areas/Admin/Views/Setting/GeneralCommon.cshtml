@@ -122,3 +122,56 @@
     <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
     
 }
+
+<div class="modal-dialog" id="importfile-window" style="display:none; padding: 0 10px;">
+    @using (Html.BeginForm("UploadTheme", "Plugin", null, FormMethod.Post, false, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        <ul class="common-list">
+            <li>
+                <strong>NOTE: It can take up to several minutes.</strong>
+            </li>
+            <li>
+                <strong>NOTE: DO NOT click twice.</strong>
+            </li>
+        </ul>
+        <div class="form-group">
+            <div class="col-md-2" style="margin-top: 7px; height: 34px; padding-left: 25px;">
+                <label class="control-label">
+                    Zip file
+                </label>
+            </div>
+            <div class="col-md-10">
+                <input id="importfiledialog" name="zippedFile" class="form-control" type="file">
+            </div>
+        </div>
+        <div class="form-group">
+            &nbsp;
+        </div>
+        <div class="form-group">
+            <div class="col-md-2">
+                &nbsp;
+            </div>
+            <div class="col-md-10 text-right mt-10">
+                <input id="importfilesubmit" class="btn blue" value="@T("Admin.Configuration.Themes.Upload")" type="submit">
+            </div>
+        </div>
+    }
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#importfile").click(function (e) {
+            e.preventDefault();
+            var window = $("#importfile-window");
+            if (!window.data("kendoWindow")) {
+                window.kendoWindow({
+                    modal: true,
+                    title: "@T("Admin.Configuration.Themes.Upload")",
+                    actions: ["Close"]
+                });
+            }
+            window.data('kendoWindow').center().open();
+        });
+    });
+</script>

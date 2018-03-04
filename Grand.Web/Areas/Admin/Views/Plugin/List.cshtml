@@ -1,5 +1,5 @@
 ﻿@model PluginListModel
-@{    
+@{
     //page title
     ViewBag.Title = T("Admin.Configuration.Plugins.Local").Text;
 }
@@ -17,18 +17,19 @@
                     </div>
                     <div class="actions btn-group btn-group-devided">
                         <a href="@Url.Action("ReloadList")" class="btn default">@T("Admin.Configuration.Plugins.ReloadList")</a>
+                        <input type="button" id="importfile" class="btn btn-success" value="@T("Admin.Configuration.Plugins.Upload")" />
                     </div>
                 </div>
                 <div class="portlet-body form">
                     <div class="note note-info">
-                            <h4>@T("Admin.Configuration.Plugins.Description"):</h4>
-                            <ol>
-                                <li>@T("Admin.Configuration.Plugins.Description.Step1")</li>
-                                <li>@T("Admin.Configuration.Plugins.Description.Step2")</li>
-                                <li>@T("Admin.Configuration.Plugins.Description.Step3")</li>
-                                <li>@T("Admin.Configuration.Plugins.Description.Step4")</li>
-                                <li>@T("Admin.Configuration.Plugins.Description.Step5")</li>
-                            </ol>
+                        <h4>@T("Admin.Configuration.Plugins.Description"):</h4>
+                        <ol>
+                            <li>@T("Admin.Configuration.Plugins.Description.Step1")</li>
+                            <li>@T("Admin.Configuration.Plugins.Description.Step2")</li>
+                            <li>@T("Admin.Configuration.Plugins.Description.Step3")</li>
+                            <li>@T("Admin.Configuration.Plugins.Description.Step4")</li>
+                            <li>@T("Admin.Configuration.Plugins.Description.Step5")</li>
+                        </ol>
                         <p>
                             You can download more grandnode plugins on our <a href="http://www.grandnode.com/extensions?utm_source=admin-panel&utm_medium=plugins&utm_campaign=admin-panel" target="_blank">extensions directory</a>
                         </p>
@@ -67,9 +68,25 @@
         </div>
     </div>
 
+    @*import resources form*@
 
     <script type="text/javascript">
         $(document).ready(function () {
+
+            //import plugin
+            $("#importfile").click(function (e) {
+                e.preventDefault();
+                var window = $("#importfile-window");
+                if (!window.data("kendoWindow")) {
+                    window.kendoWindow({
+                        modal: true,
+                        title: "@T("Admin.Configuration.Plugins.Upload")",
+                        actions: ["Close"]
+                    });
+                }
+                window.data('kendoWindow').center().open();
+            });
+
             //install a plugin
             $("#plugins-grid").on("click", ".install-plugin-link", function (e) {
                 $("html, body").animate({ scrollTop: 0 }, 400);
@@ -83,115 +100,148 @@
                 showThrobber('@Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(T("Admin.Configuration.Plugins.Fields.Uninstall.Progress").Text))');
                 return true;
             });
-        });
+
+    });
     </script>
 
-
-                <script>
-                    $(document).ready(function() {
-                        $("#plugins-grid").kendoGrid({
-                            dataSource: {
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("ListSelect", "Plugin"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: additionalData
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors"
-                                },
-                                error: function(e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
-                            },
-                            pageable: {
-                                refresh: true,
-                                numeric: false,
-                                previousNext: false,
-                                info: false
-                            },
-                            editable: {
-                                confirmation: false,
-                                mode: "inline"
-                            },
-                            scrollable: false,
-                            columns: [
-                                {
-                                    field: "Group",
-                                    title: "@T("Admin.Configuration.Plugins.Fields.Group")"
-                                }, {
-                                    field: "LogoUrl",
-                                    title: "@T("Admin.Configuration.Plugins.Fields.Logo")",
-                                    width: 100,
-                                    template: '<img src="#=LogoUrl#" />',
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" }
-                                }, {
-                                    field: "FriendlyName",
-                                    title: "@T("Admin.Configuration.Plugins.Info")",
-                                    template: '<b>#:FriendlyName#</b>' +
-                                        '<br />@T("Admin.Configuration.Plugins.Fields.Version"): #:Version#' +
-                                        '<br />@T("Admin.Configuration.Plugins.Fields.Author"): #:Author#' +
-                                        '<br />@T("Admin.Configuration.Plugins.Fields.SystemName"): #:SystemName#' +
-                                        '<br />@T("Admin.Configuration.Plugins.Fields.DisplayOrder"): #:DisplayOrder#' +
-                                        '<br />@T("Admin.Configuration.Plugins.Fields.Installed"): # if(Installed) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} # ' +
-                                        '# if(CanChangeEnabled) {# <br />@T("Admin.Configuration.Plugins.Fields.IsEnabled"):  # if(IsEnabled) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} # #} #' +
-                                        //allow configuration only when a plugin has a configuration URL specified
-                                        '<br /># if(ConfigurationUrl && ConfigurationUrl.length > 0) {# <a class="btn default" href="#=ConfigurationUrl#">@T("Admin.Configuration.Plugins.Fields.Configure")</a>&nbsp;&nbsp;&nbsp; #} #' +
-                                        '<a class="btn default" href="javascript:OpenWindow(\'@Url.Content("~/Admin/Plugin/EditPopup")?systemName=#=SystemName#&btnId=btnRefresh&formId=plugins-form\', 800, 500, true);">@T("Admin.Common.Edit")</a>',
-                                }, {
-                                    field: "Installed",
-                                    title: "@T("Admin.Configuration.Plugins.Fields.Installation")",
-                                    template: '# if(Installed) {# <input type="submit" name="uninstall-plugin-link-#=SystemName#" class="btn red" value="@T("Admin.Configuration.Plugins.Fields.Uninstall")" /> #} else {#  <input type="submit" name="install-plugin-link-#=SystemName#" class="btn green" value="@T("Admin.Configuration.Plugins.Fields.Install")" /> #} #',
-                                    headerAttributes: {style: "text-align:center" },
-                                    attributes: { style: "text-align:center" }
-                                }
-                            ]
-                        });
-                    });
-                </script>
-                <input type="submit" id="btnRefresh" style="display: none" />
-                <script type="text/javascript">
-                    $(document).ready(function () {
-                        $('#btnRefresh').click(function () {
-                            //refresh grid
-                            var grid = $("#plugins-grid").data('kendoGrid');
-                            grid.dataSource.read();
-
-                            //return false to don't reload a page
-                            return false;
-                        });
-                    });
-                </script>
-                <script type="text/javascript">
-                    $(document).ready(function () {
-                        //search button
-                        $('#search-plugins').click(function () {
-                            //search
-                            var grid = $('#plugins-grid').data('kendoGrid');
-                            grid.dataSource.read();
-
-                            return false;
-                        });
-                    });
-
-                    function additionalData() {
-                        var data = {
-                            SearchLoadModeId: $('#SearchLoadModeId').val(),
-                            SearchGroup: $('#SearchGroup').val()
-                        };
-                        addAntiForgeryToken(data);
-                        return data;
+    <script>
+        $(document).ready(function() {
+            $("#plugins-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("ListSelect", "Plugin"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: additionalData
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    numeric: false,
+                    previousNext: false,
+                    info: false
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [
+                    {
+                        field: "Group",
+                        title: "@T("Admin.Configuration.Plugins.Fields.Group")"
+                    }, {
+                        field: "LogoUrl",
+                        title: "@T("Admin.Configuration.Plugins.Fields.Logo")",
+                        width: 100,
+                        template: '<img src="#=LogoUrl#" />',
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" }
+                    }, {
+                        field: "FriendlyName",
+                        title: "@T("Admin.Configuration.Plugins.Info")",
+                        template: '<b>#:FriendlyName#</b>' +
+                            '<br />@T("Admin.Configuration.Plugins.Fields.Version"): #:Version#' +
+                            '<br />@T("Admin.Configuration.Plugins.Fields.Author"): #:Author#' +
+                            '<br />@T("Admin.Configuration.Plugins.Fields.SystemName"): #:SystemName#' +
+                            '<br />@T("Admin.Configuration.Plugins.Fields.DisplayOrder"): #:DisplayOrder#' +
+                            '<br />@T("Admin.Configuration.Plugins.Fields.Installed"): # if(Installed) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} # ' +
+                            '# if(CanChangeEnabled) {# <br />@T("Admin.Configuration.Plugins.Fields.IsEnabled"):  # if(IsEnabled) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} # #} #' +
+                            //allow configuration only when a plugin has a configuration URL specified
+                            '<br /># if(ConfigurationUrl && ConfigurationUrl.length > 0) {# <a class="btn default" href="#=ConfigurationUrl#">@T("Admin.Configuration.Plugins.Fields.Configure")</a>&nbsp;&nbsp;&nbsp; #} #' +
+                            '<a class="btn default" href="javascript:OpenWindow(\'@Url.Content("~/Admin/Plugin/EditPopup")?systemName=#=SystemName#&btnId=btnRefresh&formId=plugins-form\', 800, 500, true);">@T("Admin.Common.Edit")</a>',
+                    }, {
+                        field: "Installed",
+                        title: "@T("Admin.Configuration.Plugins.Fields.Installation")",
+                        template: '# if(Installed) {# <input type="submit" name="uninstall-plugin-link-#=SystemName#" class="btn red" value="@T("Admin.Configuration.Plugins.Fields.Uninstall")" /> #} else {#  <input type="submit" name="install-plugin-link-#=SystemName#" class="btn green" value="@T("Admin.Configuration.Plugins.Fields.Install")" /> <input type="submit" name="remove-plugin-link-#=SystemName#" class="btn" value="@T("Admin.Configuration.Plugins.Fields.Remove")" />#} #',
+                        headerAttributes: {style: "text-align:center" },
+                        attributes: { style: "text-align:center" }
                     }
+                ]
+            });
+        });
+    </script>
+    <input type="submit" id="btnRefresh" style="display: none" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //search button
+            $('#search-plugins').click(function () {
+                //search
+                var grid = $('#plugins-grid').data('kendoGrid');
+                grid.dataSource.read();
 
-                </script>
+                return false;
+            });
+
+            $('#btnRefresh').click(function () {
+                //refresh grid
+                var grid = $("#plugins-grid").data('kendoGrid');
+                grid.dataSource.read();
+
+                //return false to don't reload a page
+                return false;
+            });
+        });
+        function additionalData() {
+            var data = {
+                SearchLoadModeId: $('#SearchLoadModeId').val(),
+                SearchGroup: $('#SearchGroup').val()
+            };
+            addAntiForgeryToken(data);
+            return data;
+        }
+
+    </script>
 }
+
+
+<div class="modal-dialog" id="importfile-window" style="display:none; padding: 0 10px;">
+    @using (Html.BeginForm("UploadPlugin", "Plugin", null, FormMethod.Post, false, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        <ul class="common-list">
+            <li>
+                <strong>NOTE: It can take up to several minutes.</strong>
+            </li>
+            <li>
+                <strong>NOTE: DO NOT click twice.</strong>
+            </li>
+        </ul>
+        <div class="form-group">
+            <div class="col-md-2" style="margin-top: 7px; height: 34px; padding-left: 25px;">
+                <label class="control-label">
+                    Zip file
+                </label>
+            </div>
+            <div class="col-md-10">
+                <input id="importfiledialog" name="zippedFile" class="form-control" type="file">
+            </div>
+        </div>
+        <div class="form-group">
+            &nbsp;
+        </div>
+            <div class="form-group">
+                <div class="col-md-2">
+                    &nbsp;
+                </div>
+                <div class="col-md-10 text-right mt-10">
+                    <input id="importfilesubmit" class="btn blue" value="@T("Admin.Configuration.Plugins.Upload")" type="submit">
+                </div>
+            </div>
+    }
+</div>

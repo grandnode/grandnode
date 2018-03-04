@@ -789,4 +789,34 @@
   <LocaleResource Name="ShoppingCart.AlreadyHighestBidder">
     <Value>You are already the highest bidder</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Upload">
+    <Value>Upload</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint">
+    <Value>Select .zip archive with one plugin inside. Directory will be overwritten if already exists.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Uploaded">
+    <Value>Plugin uploaded</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Themes.Upload">
+    <Value>Upload theme</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Themes.Uploaded">
+    <Value>Theme uploaded</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.UploadNewTheme">
+    <Value>UploadedNewTheme</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.UploadNewPlugin">
+    <Value>UploadedNewPlugin</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Themes.Failed">
+    <Value>Failed to upload theme. Make sure you are not uploading already existing one. If so, try deleting it manualy before resubmitting.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Fields.Remove">
+    <Value>Remove</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Removed">
+    <Value>Plugin removed</Value>
+  </LocaleResource>
 </Language>
