@@ -4269,23 +4269,6 @@ namespace Grand.Services.Installation
             backgroundTaskUser.CustomerRoles.Add(crGuests);
             _customerRepository.Insert(backgroundTaskUser);
 
-
-            //webapi user
-            var webApiUser = new Customer
-            {
-                Email = "webapi@webapi.com",
-                CustomerGuid = Guid.NewGuid(),
-                PasswordFormat = PasswordFormat.Clear,
-                AdminComment = "WebApi system guest record used for requests from webapi.",
-                Active = true,
-                IsSystemAccount = true,
-                SystemName = SystemCustomerNames.WebApi,
-                CreatedOnUtc = DateTime.UtcNow,
-                LastActivityDateUtc = DateTime.UtcNow,
-            };
-            webApiUser.CustomerRoles.Add(crGuests);
-            _customerRepository.Insert(webApiUser);
-
         }
 
         protected virtual void HashDefaultCustomerPassword(string defaultUserEmail, string defaultUserPassword)
