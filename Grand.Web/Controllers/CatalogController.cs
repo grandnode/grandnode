@@ -473,6 +473,7 @@ namespace Grand.Web.Controllers
                 keywords: term,
                 categoryIds: categoryIds,
                 searchSku: _catalogSettings.SearchBySku,
+                searchDescriptions: _catalogSettings.SearchByDescription,
                 languageId: _workContext.WorkingLanguage.Id,
                 visibleIndividuallyOnly: true,
                 pageSize: productNumber);

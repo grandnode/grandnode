@@ -197,6 +197,10 @@ namespace Grand.Core.Domain.Catalog
         /// </summary>
         public bool SearchBySku { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether search by description is enabled
+        /// </summary>
+        public bool SearchByDescription { get; set; }
 
         /// <summary>
         /// Gets or sets a number of products to return when using "autocomplete" feature
