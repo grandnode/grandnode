@@ -81,7 +81,7 @@ namespace Grand.Services.Media
             BlobContinuationToken continuationToken = null;
             
             string filter = string.Format("{0}", picture.Id);
-            var files = container_thumb.ListBlobsSegmentedAsync(filter, false, BlobListingDetails.All, int.MaxValue, continuationToken, null, null).Result;
+            var files = container_thumb.ListBlobsSegmentedAsync(filter, true, BlobListingDetails.All, int.MaxValue, continuationToken, null, null).Result;
 
             foreach (var ff in files.Results)
             {
