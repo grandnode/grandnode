@@ -58,6 +58,7 @@
     Html.AppendCssFileParts("~/Administration/font-awesome/css/font-awesome.min.css", excludeFromBundle: true);
 
     //js
+    Html.AppendScriptParts(string.Format("~/Scripts/kendo/{0}/cultures/kendo.culture.{1}.min.js", kendoVersion, System.Globalization.CultureInfo.CurrentCulture.Name), excludeFromBundle: true);
     Html.AppendScriptParts(string.Format("~/Scripts/kendo/{0}/kendo.all.min.js", kendoVersion), excludeFromBundle: true);
     Html.AppendScriptParts("~/Scripts/admin.common.js", excludeFromBundle: true);
     Html.AppendScriptParts("~/Scripts/jquery-ui-1.10.3.custom.min.js", excludeFromBundle: true);
@@ -100,6 +101,11 @@
     @Html.GrandHeadCustom()
     @Html.GrandCssFiles(this.Url, ResourceLocation.Head)
     @Html.GrandScripts(this.Url, ResourceLocation.Head)
+    <script type="text/javascript">
+        $(document).ready(function () {
+            kendo.culture("@System.Globalization.CultureInfo.CurrentCulture.Name");
+        });
+    </script>
 </head>
 <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white">
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_header_before" })

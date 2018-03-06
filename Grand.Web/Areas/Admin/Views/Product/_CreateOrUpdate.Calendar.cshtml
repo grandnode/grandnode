@@ -167,11 +167,11 @@
 
                     var datepickerFrom = $("#@Html.FieldIdFor(model => model.CalendarModel.StartDateUtc)").data("kendoDatePicker");
                     var dateFrom = datepickerFrom.value();
-                    dateFrom = kendo.toString(dateFrom, "MM/dd/yyyy");
+                    dateFrom = kendo.toString(dateFrom, "@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern");
 
                     var datepickerTo = $("#@Html.FieldIdFor(model => model.CalendarModel.EndDateUtc)").data("kendoDatePicker");
                     var dateTo = datepickerTo.value();
-                    dateTo = kendo.toString(dateTo, "MM/dd/yyyy");
+                    dateTo = kendo.toString(dateTo, "@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern");
 
                     var timeFrom = $("#@Html.FieldIdFor(model => model.CalendarModel.StartTime)").data("kendoTimePicker");
                     var hourFrom = timeFrom.value();

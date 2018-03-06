@@ -410,9 +410,10 @@ namespace Grand.Framework
                 //whether there is a cached value
                 if (_cachedCurrency != null)
                     return _cachedCurrency;
-                
-                //return primary store currency when we're in admin area/mode
-                if (this.IsAdmin)
+
+                //return primary store currency when we're you are in admin panel
+                var adminAreaUrl = _httpContextAccessor.HttpContext.Request.Path.StartsWithSegments(new PathString("/Admin"));
+                if(adminAreaUrl)
                 {
                     var primaryStoreCurrency =  _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
                     if (primaryStoreCurrency != null)
@@ -508,11 +509,6 @@ namespace Grand.Framework
                 _cachedTaxDisplayType = null;
             }
         }
-
-        /// <summary>
-        /// Gets or sets value indicating whether we're in admin area
-        /// </summary>
-        public virtual bool IsAdmin { get; set; }
 
         #endregion
     }

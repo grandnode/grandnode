@@ -11,13 +11,15 @@ using Grand.Core.Http;
 using Grand.Core.Infrastructure;
 using Grand.Services.Authentication;
 using Grand.Services.Security;
-using Grand.Framework.Globalization;
 using Grand.Framework.Mvc.Routing;
 using StackExchange.Profiling;
 using StackExchange.Profiling.Storage;
 using Microsoft.Extensions.Caching.Memory;
 using Grand.Services.Logging;
 using System.Threading.Tasks;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
+using System.Collections.Generic;
 
 namespace Grand.Framework.Infrastructure.Extensions
 {
@@ -172,7 +174,22 @@ namespace Grand.Framework.Infrastructure.Extensions
             if (!DataSettingsHelper.DatabaseIsInstalled())
                 return;
 
-            application.UseMiddleware<CultureMiddleware>();
+            var lang = EngineContext.Current.Resolve<Grand.Services.Localization.ILanguageService>().GetAllLanguages();
+            var supportedCultures = new List<CultureInfo>();
+            foreach (var item in lang)
+            {
+                supportedCultures.Add(new CultureInfo(item.LanguageCulture));
+            }
+
+            application.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("en-US"),
+                // Formatting numbers, dates, etc.
+                SupportedCultures = supportedCultures,
+                // UI strings that we have localized.
+                SupportedUICultures = supportedCultures
+            });
+
         }
 
         /// <summary>
@@ -220,7 +237,7 @@ namespace Grand.Framework.Infrastructure.Extensions
                 {
                     //use memory cache provider for storing each result
                     Storage = new MemoryCacheStorage(memoryCache, TimeSpan.FromMinutes(60)),
-                    
+
                     //determine who can access the MiniProfiler results
                     ResultsAuthorize = request =>
                         !EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore ||

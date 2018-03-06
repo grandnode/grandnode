@@ -121,7 +121,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     createdOnFromValue, createdToFromValue, model.SearchText, _workContext.CurrentVendor.Id, command.Page - 1, command.PageSize);
             }
             //admin
-            else if (_workContext.IsAdmin)
+            else if (_workContext.CurrentCustomer.IsAdmin())
             {
                 vendorReviews = _vendorService.GetAllVendorReviews("", null,
                     createdOnFromValue, createdToFromValue, model.SearchText, model.SearchVendorId, command.Page - 1, command.PageSize);
