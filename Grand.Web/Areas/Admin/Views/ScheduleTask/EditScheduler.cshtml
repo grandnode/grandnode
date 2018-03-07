@@ -142,7 +142,7 @@
                             <div class="form-group">
                                 @Html.GrandLabelFor(model => model.LeasedByMachineName)
                                 <div class="col-md-9 col-sm-9">
-                                    <label class="control-label"> @Html.DisplayFor(model => model.LeasedByMachineName) </label>
+                                    @Html.GrandEditorFor(model => model.LeasedByMachineName)
                                 </div>
                             </div>
 
@@ -151,7 +151,8 @@
                                 <div class="col-md-9 col-sm-9">
                                     <label class="control-label"> @Html.DisplayFor(model => model.Type) </label>
                                 </div>
-                            </div>                            <div class="form-group">
+                            </div>                            
+                            <div class="form-group">
                                 @Html.GrandLabelFor(model => model.Enabled)
                                 <div class="col-md-9 col-sm-9">
                                     <label class="mt-checkbox mt-checkbox-outline">

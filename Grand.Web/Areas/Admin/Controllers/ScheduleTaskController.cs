@@ -125,6 +125,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 var scheduleTask = _scheduleTaskService.GetTaskById(model.Id);
                 scheduleTask.Enabled = model.Enabled;
+                scheduleTask.LeasedByMachineName = model.LeasedByMachineName;
                 scheduleTask.StopOnError = model.StopOnError;
                 scheduleTask.TimeIntervalChoice = (TimeIntervalChoice)model.TimeIntervalChoice;
                 scheduleTask.TimeInterval = model.TimeInterval;
