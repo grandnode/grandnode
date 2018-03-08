@@ -4,10 +4,13 @@ using System.Net;
 
 namespace Grand.Core.Caching
 {
+    /// <summary>
+    /// Represents Redis connection wrapper
+    /// </summary>
     public interface IRedisConnectionWrapper : IDisposable
     {
         /// <summary>
-        /// Obtain an interactive connection to a database inside redis
+        /// Obtain an interactive connection to a database inside Redis
         /// </summary>
         /// <param name="db">Database number; pass null to use the default value</param>
         /// <returns>Redis cache database</returns>
@@ -29,7 +32,7 @@ namespace Grand.Core.Caching
         /// <summary>
         /// Delete all the keys of the database
         /// </summary>
-        /// <param name="db">Database number; pass null to use the default value<</param>
+        /// <param name="db">Database number; pass null to use the default value</param>
         void FlushDatabase(int? db = null);
 
     }
