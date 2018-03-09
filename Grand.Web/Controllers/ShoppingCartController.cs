@@ -687,6 +687,10 @@ namespace Grand.Web.Controllers
                 if (formKey.Equals(string.Format("auction_{0}.HighestBidValue", productId), StringComparison.OrdinalIgnoreCase))
                 {
                     decimal.TryParse(form[formKey], out bid);
+                    if(bid == 0)
+                        decimal.TryParse(form[formKey],NumberStyles.AllowDecimalPoint, CultureInfo.GetCultureInfo("en-US").NumberFormat, out bid);
+
+                    bid = Math.Round(bid, 2);
                     break;
                 }
             }
