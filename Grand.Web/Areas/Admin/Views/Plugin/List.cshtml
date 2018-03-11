@@ -168,7 +168,7 @@
                     }, {
                         field: "Installed",
                         title: "@T("Admin.Configuration.Plugins.Fields.Installation")",
-                        template: '# if(Installed) {# <input type="submit" name="uninstall-plugin-link-#=SystemName#" class="btn red" value="@T("Admin.Configuration.Plugins.Fields.Uninstall")" /> #} else {#  <input type="submit" name="install-plugin-link-#=SystemName#" class="btn green" value="@T("Admin.Configuration.Plugins.Fields.Install")" /> <input type="submit" name="remove-plugin-link-#=SystemName#" class="btn" value="@T("Admin.Configuration.Plugins.Fields.Remove")" />#} #',
+                        template: '# if(Installed) {# <input type="submit" name="uninstall-plugin-link-#=SystemName#" class="btn red uninstall-plugin-link" value="@T("Admin.Configuration.Plugins.Fields.Uninstall")" /> #} else {#  <input type="submit" name="install-plugin-link-#=SystemName#" class="btn green install-plugin-link" value="@T("Admin.Configuration.Plugins.Fields.Install")" /> <input type="submit" name="remove-plugin-link-#=SystemName#" class="btn" value="@T("Admin.Configuration.Plugins.Fields.Remove")" />#} #',
                         headerAttributes: {style: "text-align:center" },
                         attributes: { style: "text-align:center" }
                     }
