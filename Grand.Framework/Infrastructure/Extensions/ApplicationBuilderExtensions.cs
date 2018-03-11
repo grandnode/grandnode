@@ -244,5 +244,15 @@ namespace Grand.Framework.Infrastructure.Extensions
                 });
             }
         }
+
+        /// <summary>
+        /// Configures wethere use or not the Header X-Powered-By and its value.
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void UsePoweredBy(this IApplicationBuilder application)
+        {
+            application.UseMiddleware<PoweredByMiddleware>();
+        }
+
     }
 }

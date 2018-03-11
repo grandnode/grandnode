@@ -111,6 +111,9 @@ namespace Grand.Framework.Infrastructure
 
             //use request localization
             application.UseRequestLocalization();
+
+            //use powered by
+            application.UsePoweredBy();
         }
 
         /// <summary>

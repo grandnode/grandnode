@@ -51,7 +51,7 @@ using Grand.Framework.Mvc.Routing;
 using Grand.Framework.Themes;
 using Grand.Framework.UI;
 using MongoDB.Driver;
-using Grand.Service.Authentication;
+using Grand.Core.Http;
 
 namespace Grand.Framework.Infrastructure
 {
@@ -73,7 +73,9 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<WebHelper>().As<IWebHelper>().InstancePerLifetimeScope();
             //user agent helper
             builder.RegisterType<UserAgentHelper>().As<IUserAgentHelper>().InstancePerLifetimeScope();
-            
+            //powered by
+            builder.RegisterType<PoweredByMiddlewareOptions>().As<IPoweredByMiddlewareOptions>().SingleInstance();
+
             //data layer
             var dataSettingsManager = new DataSettingsManager();
             var dataProviderSettings = dataSettingsManager.LoadSettings();
