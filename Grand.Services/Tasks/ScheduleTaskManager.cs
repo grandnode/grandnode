@@ -32,14 +32,17 @@ namespace Grand.Services.Tasks
 
         public IScheduleTask ChangeType(ScheduleTask scheduleTask)
         {
-            
             IScheduleTask task = null;
             var type2 = System.Type.GetType(scheduleTask.Type);
             if (type2 != null)
             {
-                object instance;
-                instance = EngineContext.Current.Resolve(type2);
-                task = instance as IScheduleTask;
+                try
+                {
+                    object instance;
+                    instance = EngineContext.Current.Resolve(type2);
+                    task = instance as IScheduleTask;
+                }
+                catch { return null; }
             }
             if (task != null)
             {
