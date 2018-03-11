@@ -294,11 +294,7 @@ namespace Grand.Core
         /// <returns>The physical path. E.g. "c:\inetpub\wwwroot\bin"</returns>
         public static string MapPath(string path)
         {
-            if(OperatingSystem.IsWindows())
-                path = path.Replace("~/", "").TrimStart('/').Replace('/', '\\');
-            else
-                path = path.Replace("~/", "").TrimStart('/');
-
+            path = path.Replace("~/", "").TrimStart('/');
             return Path.Combine(BaseDirectory, path);
         }
 
