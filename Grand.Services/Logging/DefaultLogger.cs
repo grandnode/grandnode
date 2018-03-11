@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Grand.Core;
 using Grand.Core.Data;
-using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Logging;
 using MongoDB.Driver;
@@ -20,7 +19,6 @@ namespace Grand.Services.Logging
         private readonly IRepository<Log> _logRepository;
         private readonly IWebHelper _webHelper;
         private readonly IDataProvider _dataProvider;
-        private readonly CommonSettings _commonSettings;
         
         #endregion
         
@@ -33,38 +31,13 @@ namespace Grand.Services.Logging
         /// <param name="webHelper">Web helper</param>
         /// <param name="dbContext">DB context</param>
         /// <param name="dataProvider">WeData provider</param>
-        /// <param name="commonSettings">Common settings</param>
         public DefaultLogger(IRepository<Log> logRepository, 
             IWebHelper webHelper,
-            IDataProvider dataProvider, 
-            CommonSettings commonSettings)
+            IDataProvider dataProvider)
         {
             this._logRepository = logRepository;
             this._webHelper = webHelper;
             this._dataProvider = dataProvider;
-            this._commonSettings = commonSettings;
-        }
-
-        #endregion
-
-        #region Utitilities
-
-        /// <summary>
-        /// Gets a value indicating whether this message should not be logged
-        /// </summary>
-        /// <param name="message">Message</param>
-        /// <returns>Result</returns>
-        protected virtual bool IgnoreLog(string message)
-        {
-            if (!_commonSettings.IgnoreLogWordlist.Any())
-                return false;
-
-            if (String.IsNullOrWhiteSpace(message))
-                return false;
-
-            return _commonSettings
-                .IgnoreLogWordlist
-                .Any(x => message.IndexOf(x, StringComparison.OrdinalIgnoreCase) >= 0);
         }
 
         #endregion
@@ -190,14 +163,6 @@ namespace Grand.Services.Logging
         /// <returns>A log item</returns>
         public virtual Log InsertLog(LogLevel logLevel, string shortMessage, string fullMessage = "", Customer customer = null)
         {
-
-            if (_commonSettings.TurnOffLog)
-                return null;
-
-            //check ignore word/phrase list?
-            if (IgnoreLog(shortMessage) || IgnoreLog(fullMessage))
-                return null;
-
             var log = new Log
             {
                 LogLevelId = (int)logLevel,
