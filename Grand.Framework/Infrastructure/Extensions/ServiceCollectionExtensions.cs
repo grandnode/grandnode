@@ -54,14 +54,9 @@ namespace Grand.Framework.Infrastructure.Extensions
 
             if (DataSettingsHelper.DatabaseIsInstalled())
             {
-                //implement schedule tasks
-                //database is already installed, so start scheduled tasks
-
-                var scheduleTasks = ScheduleTaskManager.Instance.LoadScheduleTasks();       //load records from db to collection
-                JobManager.Initialize(new RegistryGrandNode(scheduleTasks));                //init registry and start scheduled tasks
-
                 //log application start
-                EngineContext.Current.Resolve<ILogger>().Information("Application started", null, null);
+                var logger = EngineContext.Current.Resolve<ILogger>();
+                logger.Information("Application started", null, null);
             }
 
             return serviceProvider;
@@ -248,8 +243,11 @@ namespace Grand.Framework.Infrastructure.Extensions
                     options.LogoutPath = GrandCookieAuthenticationDefaults.LogoutPath;
 
                     // whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
-                    options.Cookie.SecurePolicy = EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
-                     ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
+                    if (DataSettingsHelper.DatabaseIsInstalled())
+                    {
+                        options.Cookie.SecurePolicy = EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                         ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
+                    }
                 }
             );
         }

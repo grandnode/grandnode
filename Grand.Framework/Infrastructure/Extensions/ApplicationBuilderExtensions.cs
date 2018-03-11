@@ -203,7 +203,6 @@ namespace Grand.Framework.Infrastructure.Extensions
                 return;
 
             application.UseMiddleware<AuthenticationMiddleware>();
-
         }
 
         /// <summary>
