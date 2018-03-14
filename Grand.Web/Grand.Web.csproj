@@ -148,6 +148,9 @@
     <None Update="App_Data\Upgrade\UpgradeScript_380_390.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="logs\stdout\Index.htm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Themes\DefaultClean\Content\css\font-awesome.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
