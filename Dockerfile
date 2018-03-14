@@ -22,6 +22,9 @@ COPY Plugins/Grand.Plugin.Tax.CountryStateZip/Grand.Plugin.Tax.CountryStateZip.c
 COPY Plugins/Grand.Plugin.Tax.FixedRate/Grand.Plugin.Tax.FixedRate.csproj Plugins/Grand.Plugin.Tax.FixedRate/Grand.Plugin.Tax.FixedRate.csproj
 COPY Plugins/Grand.Plugin.Widgets.GoogleAnalytics/Grand.Plugin.Widgets.GoogleAnalytics.csproj Plugins/Grand.Plugin.Widgets.GoogleAnalytics/Grand.Plugin.Widgets.GoogleAnalytics.csproj
 COPY Plugins/Grand.Plugin.Widgets.Slider/Grand.Plugin.Widgets.Slider.csproj Plugins/Grand.Plugin.Widgets.Slider/Grand.Plugin.Widgets.Slider.csproj
+COPY Tests/Grand.Core.Tests/Grand.Core.Tests.csproj Tests/Grand.Core.Tests/Grand.Core.Tests.csproj
+COPY Tests/Grand.Services.Tests/Grand.Services.Tests.csproj Tests/Grand.Services.Tests/Grand.Services.Tests.csproj
+RUN dotnet restore
 
 # Copy everything else and build
 COPY . ./
