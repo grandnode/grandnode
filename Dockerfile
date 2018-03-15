@@ -59,3 +59,4 @@ COPY --from=build-env /app/Grand.Web/Plugins/ ./Plugins/
 VOLUME /app/App_Data /app/wwwroot /app/Plugins /app/Themes
 
 ENTRYPOINT ["dotnet", "Grand.Web.dll"]
+
