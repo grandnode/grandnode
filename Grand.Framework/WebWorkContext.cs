@@ -204,13 +204,6 @@ namespace Grand.Framework
 
                 if (customer == null || customer.Deleted || !customer.Active)
                 {
-                    //check whether request is made by a search engine, in this case return built-in customer record for search engines
-                    if (_userAgentHelper.IsSearchEngine())
-                        customer = _customerService.GetCustomerBySystemName(SystemCustomerNames.SearchEngine);
-                }
-
-                if (customer == null || customer.Deleted || !customer.Active)
-                {
                     //try to get registered user
                     customer = _authenticationService.GetAuthenticatedCustomer();
                 }
@@ -245,6 +238,13 @@ namespace Grand.Framework
                                 customer = customerByCookie;
                         }
                     }
+                }
+
+                if (customer == null || customer.Deleted || !customer.Active)
+                {
+                    //check whether request is made by a search engine, in this case return built-in customer record for search engines
+                    if (_userAgentHelper.IsSearchEngine())
+                        customer = _customerService.GetCustomerBySystemName(SystemCustomerNames.SearchEngine);
                 }
 
                 if (customer == null || customer.Deleted || !customer.Active)
