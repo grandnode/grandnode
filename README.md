@@ -30,12 +30,12 @@ Forums: [http://www.grandnode.com/boards/](http://www.grandnode.com/boards/)
 
 ## Development status ## 
 
-The latest stable version is 4.00
-Active development version: 4.10 (branch [develop](https://github.com/grandnode/grandnode/tree/develop))
+The latest stable version is 4.10
+Active development version: 4.20 (branch [develop](https://github.com/grandnode/grandnode/tree/develop))
 
-[Roadmap for 4.10](https://github.com/grandnode/grandnode/milestone/2)
+[Roadmap for 4.20](https://github.com/grandnode/grandnode/milestone/3)
 
-[Tickets linked to 4.10](https://github.com/grandnode/grandnode/issues)
+[Tickets linked to 4.20](https://github.com/grandnode/grandnode/issues)
 
 ## How to contribute code ##
 
