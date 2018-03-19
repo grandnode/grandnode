@@ -78,7 +78,7 @@
                         @if (Model.EndTime > DateTime.UtcNow)
                         {
                             <label class="d-inline-block">@T("AddToCart.Timeleft"): </label>
-                            <div class="d-inline-block" data-countdown="@Model.EndTime.Value.ToLocalTime().ToString("yyyy-MM-dd mm:HH")"></div>
+                            <div class="d-inline-block" data-countdown="@Model.EndTime.Value.ToLocalTime().ToString("yyyy-MM-dd HH:mm")"></div>
                         }
                             else
                             {
