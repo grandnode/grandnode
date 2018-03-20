@@ -311,8 +311,6 @@ namespace Grand.Services.Security
             if (String.IsNullOrEmpty(permissionRecordSystemName))
                 return false;
 
-            //return true;
-
             var customerRoles = customer.CustomerRoles.Where(cr => cr.Active);            
             foreach (var role in customerRoles)
                 if (Authorize(permissionRecordSystemName, role))

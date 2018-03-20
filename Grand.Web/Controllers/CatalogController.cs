@@ -126,20 +126,20 @@ namespace Grand.Web.Controllers
             if (category == null)
                 return InvokeHttp404();
 
+            var customer = _workContext.CurrentCustomer;
+
             //Check whether the current user has a "Manage catalog" permission
             //It allows him to preview a category before publishing
-            if (!category.Published && !_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+            if (!category.Published && !_permissionService.Authorize(StandardPermissionProvider.ManageCategories, customer))
                 return InvokeHttp404();
 
             //ACL (access control list)
-            if (!_aclService.Authorize(category))
+            if (!_aclService.Authorize(category, customer))
                 return InvokeHttp404();
 
             //Store mapping
             if (!_storeMappingService.Authorize(category))
                 return InvokeHttp404();
-
-            var customer = _workContext.CurrentCustomer;
 
             //'Continue shopping' URL
             _genericAttributeService.SaveAttribute(customer, 
@@ -148,7 +148,7 @@ namespace Grand.Web.Controllers
                 _storeContext.CurrentStore.Id);
 
             //display "edit" (manage) link
-            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel, customer) && _permissionService.Authorize(StandardPermissionProvider.ManageCategories, customer))
                 DisplayEditLink(Url.Action("Edit", "Category", new { id = category.Id, area = "Admin" }));
 
             //activity log
@@ -174,20 +174,20 @@ namespace Grand.Web.Controllers
             if (manufacturer == null)
                 return InvokeHttp404();
 
+            var customer = _workContext.CurrentCustomer;
+
             //Check whether the current user has a "Manage catalog" permission
             //It allows him to preview a manufacturer before publishing
-            if (!manufacturer.Published && !_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+            if (!manufacturer.Published && !_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers, customer))
                 return InvokeHttp404();
 
             //ACL (access control list)
-            if (!_aclService.Authorize(manufacturer))
+            if (!_aclService.Authorize(manufacturer, customer))
                 return InvokeHttp404();
 
             //Store mapping
             if (!_storeMappingService.Authorize(manufacturer))
                 return InvokeHttp404();
-
-            var customer = _workContext.CurrentCustomer;
 
             //'Continue shopping' URL
             _genericAttributeService.SaveAttribute(customer, 
@@ -196,7 +196,7 @@ namespace Grand.Web.Controllers
                 _storeContext.CurrentStore.Id);
             
             //display "edit" (manage) link
-            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel, customer) && _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers, customer))
                 DisplayEditLink(Url.Action("Edit", "Manufacturer", new { id = manufacturer.Id, area = "Admin" }));
             
             //activity log
