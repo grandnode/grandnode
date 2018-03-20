@@ -1035,12 +1035,14 @@ namespace Grand.Services.Messages
 
         public virtual void AddProductTokens(IList<Token> tokens, Product product, string languageId)
         {
+            var defaultCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+
             tokens.Add(new Token("Product.ID", product.Id.ToString()));
             tokens.Add(new Token("Product.Name", product.GetLocalized(x => x.Name, languageId)));
             tokens.Add(new Token("Product.ShortDescription", product.GetLocalized(x => x.ShortDescription, languageId), true));
             tokens.Add(new Token("Product.SKU", product.Sku));
             tokens.Add(new Token("Product.StockQuantity", product.GetTotalStockQuantity().ToString()));
-            tokens.Add(new Token("Product.Price", _priceFormatter.FormatPrice(product.Price)));
+            tokens.Add(new Token("Product.Price", _priceFormatter.FormatPrice(product.Price, true, defaultCurrency)));
 
             //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
             var productUrl = string.Format("{0}{1}", GetStoreUrl(), product.GetSeName());
@@ -1134,8 +1136,9 @@ namespace Grand.Services.Messages
 
         public virtual void AddAuctionTokens(IList<Token> tokens, Product product, Bid bid)
         {
+            var defaultCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
             tokens.Add(new Token("Auctions.ProductName", product.Name));
-            tokens.Add(new Token("Auctions.Price", _priceFormatter.FormatPrice(bid.Amount)));
+            tokens.Add(new Token("Auctions.Price", _priceFormatter.FormatPrice(bid.Amount, true, defaultCurrency)));
             tokens.Add(new Token("Auctions.EndTime", product.AvailableEndDateTimeUtc.ToString()));
             tokens.Add(new Token("Auctions.ProductSeName", product.SeName));
 
