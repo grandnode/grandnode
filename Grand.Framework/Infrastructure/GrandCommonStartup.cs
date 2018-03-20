@@ -104,7 +104,8 @@ namespace Grand.Framework.Infrastructure
             });
             
             //check whether database is installed
-            application.UseInstallUrl();
+            if(!grandConfig.IgnoreInstallUrlMiddleware)
+                application.UseInstallUrl();
 
             //use HTTP session
             application.UseSession();
@@ -113,7 +114,8 @@ namespace Grand.Framework.Infrastructure
             application.UseRequestLocalization();
 
             //use powered by
-            application.UsePoweredBy();
+            if (!grandConfig.IgnoreUsePoweredByMiddleware)
+                application.UsePoweredBy();
         }
 
         /// <summary>
