@@ -352,11 +352,8 @@ namespace Grand.Services.Customers
         {
             if (string.IsNullOrWhiteSpace(email))
                 return null;
-            var query = from c in _customerRepository.Table
-                        where c.Email == email.ToLower()
-                        select c;
-            var customer = query.FirstOrDefault();
-            return customer;
+            var filter = Builders<Customer>.Filter.Eq(x => x.Email, email.ToLower());
+            return _customerRepository.Collection.Find(filter).FirstOrDefault();
         }
 
         /// <summary>
