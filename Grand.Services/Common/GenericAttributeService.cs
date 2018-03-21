@@ -63,10 +63,9 @@ namespace Grand.Services.Common
             string keyGroup = entity.GetType().Name;
 
             var collection = _baseRepository.Database.GetCollection<GenericAttributeBaseEntity>(keyGroup);
-            var query = _baseRepository.Database.GetCollection<GenericAttributeBaseEntity>(keyGroup).AsQueryable();
+            var query = _baseRepository.Database.GetCollection<GenericAttributeBaseEntity>(keyGroup).Find(new BsonDocument("_id", entity.Id)).FirstOrDefault();
 
-            var props = query.Where(x => x.Id == entity.Id).SelectMany(x => x.GenericAttributes)
-                .Where(x => string.IsNullOrEmpty(storeId) || x.StoreId == storeId).ToList();
+            var props = query.GenericAttributes.Where(x => string.IsNullOrEmpty(storeId) || x.StoreId == storeId);
 
             var prop = props.FirstOrDefault(ga =>
                 ga.Key.Equals(key, StringComparison.OrdinalIgnoreCase)); //should be culture invariant
