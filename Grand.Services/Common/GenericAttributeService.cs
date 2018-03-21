@@ -117,9 +117,9 @@ namespace Grand.Services.Common
             if (entity == null)
                 throw new ArgumentNullException("entity");
 
-            var collection = _genericattributeBaseEntitRepository.Database.GetCollection<GenericAttributeBaseEntity>(entity.GetType().Name).AsQueryable();
+            var collection = _genericattributeBaseEntitRepository.Database.GetCollection<GenericAttributeBaseEntity>(entity.GetType().Name).Find(new BsonDocument("_id", entity.Id)).FirstOrDefault();
 
-            var props = collection.Where(x => x.Id == entity.Id).SelectMany(x => x.GenericAttributes).ToList();
+            var props = collection.GenericAttributes;
             if (props == null)
                 return default(TPropType);
             props = props.Where(x => x.StoreId == storeId).ToList();
