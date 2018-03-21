@@ -336,11 +336,9 @@ namespace Grand.Services.Customers
             if (customerGuid == Guid.Empty)
                 return null;
 
-            var query = from c in _customerRepository.Table
-                        where c.CustomerGuid == customerGuid
-                        select c;
-            var customer = query.FirstOrDefault();
-            return customer;
+            var filter = Builders<Customer>.Filter.Eq(x => x.CustomerGuid, customerGuid);
+            return _customerRepository.Collection.Find(filter).FirstOrDefault();
+
         }
 
         /// <summary>
@@ -366,11 +364,8 @@ namespace Grand.Services.Customers
             if (string.IsNullOrWhiteSpace(systemName))
                 return null;
 
-            var query = from c in _customerRepository.Table
-                        where c.SystemName == systemName
-                        select c;
-            var customer = query.FirstOrDefault();
-            return customer;
+            var filter = Builders<Customer>.Filter.Eq(x => x.SystemName, systemName);
+            return _customerRepository.Collection.Find(filter).FirstOrDefault();
         }
 
         /// <summary>
@@ -383,11 +378,9 @@ namespace Grand.Services.Customers
             if (string.IsNullOrWhiteSpace(username))
                 return null;
 
-            var query = from c in _customerRepository.Table
-                        where c.Username == username.ToLower()
-                        select c;
-            var customer = query.FirstOrDefault();
-            return customer;
+            var filter = Builders<Customer>.Filter.Eq(x => x.Username, username.ToLower());
+            return _customerRepository.Collection.Find(filter).FirstOrDefault();
+
         }
         
         /// <summary>
@@ -466,14 +459,12 @@ namespace Grand.Services.Customers
         /// <returns>List of customer passwords</returns>
         public virtual IList<CustomerHistoryPassword> GetPasswords(string customerId, int passwordsToReturn)
         {
-            var query = from c in _customerHistoryPasswordProductRepository.Table
-                        where c.CustomerId == customerId
-                        select c;
-            query = query.OrderByDescending(password => password.CreatedOnUtc).Take(passwordsToReturn);
-            return query.ToList();
+            var filter = Builders<CustomerHistoryPassword>.Filter.Eq(x => x.CustomerId, customerId);
+            return _customerHistoryPasswordProductRepository.Collection.Find(filter)
+                    .SortByDescending(password => password.CreatedOnUtc)
+                    .Limit(passwordsToReturn)
+                    .ToList();
         }
-
-
         /// <summary>
         /// Updates the customer
         /// </summary>
@@ -516,7 +507,6 @@ namespace Grand.Services.Customers
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
 
         }
-
         /// <summary>
         /// Updates the customer - last activity date
         /// </summary>
@@ -536,7 +526,6 @@ namespace Grand.Services.Customers
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
 
         }
-
         /// Updates the customer - last activity date
         /// </summary>
         /// <param name="customer">Customer</param>
@@ -554,7 +543,6 @@ namespace Grand.Services.Customers
             //event notification
             _eventPublisher.EntityUpdated(customer);
         }
-
         /// <summary>
         /// Updates the customer - last activity date
         /// </summary>
@@ -571,7 +559,6 @@ namespace Grand.Services.Customers
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
 
         }
-
         /// <summary>
         /// Updates the customer - password
         /// </summary>
@@ -587,7 +574,6 @@ namespace Grand.Services.Customers
                 .Set(x => x.Password, customer.Password);
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
         }
-
         public virtual void UpdateCustomerinAdminPanel(Customer customer)
         {
             if (customer == null)
@@ -616,7 +602,6 @@ namespace Grand.Services.Customers
             _eventPublisher.EntityUpdated(customer);
 
         }
-
         public virtual void UpdateFreeShipping(string customerId, bool freeShipping)
         {
             var builder = Builders<Customer>.Filter;
@@ -625,7 +610,6 @@ namespace Grand.Services.Customers
                 .Set(x => x.FreeShipping, freeShipping);
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
         }
-
         public virtual void UpdateAffiliate(Customer customer)
         {
             if (customer == null)
@@ -657,8 +641,7 @@ namespace Grand.Services.Customers
             var update = Builders<Customer>.Update
                 .Set(x => x.IsNewsItem, true);
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
-        }
-        
+        }        
         public virtual void UpdateHasForumTopic(string customerId)
         {
             var builder = Builders<Customer>.Filter;
@@ -715,7 +698,6 @@ namespace Grand.Services.Customers
                 .Set(x => x.IsHasPoolVoting, true);
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
         }
-
         public virtual void UpdateCustomerLastPurchaseDate(string customerId, DateTime date)
         {
             var builder = Builders<Customer>.Filter;
@@ -742,7 +724,6 @@ namespace Grand.Services.Customers
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
 
         }
-
         public virtual void UpdateHasVendorReview(string customerId)
         {
             var builder = Builders<Customer>.Filter;
@@ -923,11 +904,8 @@ namespace Grand.Services.Customers
             string key = string.Format(CUSTOMERROLES_BY_SYSTEMNAME_KEY, systemName);
             return _cacheManager.Get(key, () =>
             {
-                var query = from cr in _customerRoleRepository.Table
-                            where cr.SystemName == systemName
-                            select cr;
-                var customerRole = query.FirstOrDefault();
-                return customerRole;
+                var filter = Builders<CustomerRole>.Filter.Eq(x => x.SystemName, systemName);
+                return _customerRoleRepository.Collection.Find(filter).FirstOrDefault();
             });
         }
 
@@ -1094,12 +1072,8 @@ namespace Grand.Services.Customers
             string key = string.Format(CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleId);
             return _cacheManager.Get(key, () =>
             {
-                var query = from cr in _customerRoleProductRepository.Table
-                            where (cr.CustomerRoleId == customerRoleId)
-                            orderby cr.DisplayOrder
-                            select cr;
-                var customerRoles = query.ToList();
-                return customerRoles;
+                var filter = Builders<CustomerRoleProduct>.Filter.Eq(x => x.CustomerRoleId, customerRoleId);
+                return _customerRoleProductRepository.Collection.Find(filter).SortBy(x => x.DisplayOrder).ToList();
             });
         }
 
@@ -1111,12 +1085,11 @@ namespace Grand.Services.Customers
         /// <returns>Customer role product</returns>
         public virtual CustomerRoleProduct GetCustomerRoleProduct(string customerRoleId, string productId)
         {
-            var query = from cr in _customerRoleProductRepository.Table
-                        where cr.CustomerRoleId == customerRoleId && cr.ProductId == productId
-                        orderby cr.DisplayOrder
-                        select cr;
-            var customerRoles = query.ToList();
-            return query.FirstOrDefault();
+            var filters = Builders<CustomerRoleProduct>.Filter;
+            var filter = filters.Eq(x => x.CustomerRoleId, customerRoleId);
+            filter = filter & filters.Eq(x => x.ProductId, productId);
+
+            return _customerRoleProductRepository.Collection.Find(filter).SortBy(x => x.DisplayOrder).FirstOrDefault();
         }
 
         /// <summary>
