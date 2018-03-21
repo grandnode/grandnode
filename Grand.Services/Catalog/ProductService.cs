@@ -1023,30 +1023,32 @@ namespace Grand.Services.Catalog
         public virtual IList<Product> GetAssociatedProducts(string parentGroupedProductId,
             string storeId = "", string vendorId = "", bool showHidden = false)
         {
-            var query = from p in _productRepository.Table
-                        select p;
 
-            query = query.Where(x => x.ParentGroupedProductId == parentGroupedProductId);
+            var builder = Builders<Product>.Filter;
+            var filter = FilterDefinition<Product>.Empty;
+
+            filter = filter & builder.Where(p => p.ParentGroupedProductId == parentGroupedProductId);
+
             if (!showHidden)
             {
-                query = query.Where(x => x.Published);
+                filter = filter & builder.Where(p => p.Published);
             }
             if (!showHidden)
             {
                 var nowUtc = DateTime.UtcNow;
                 //available dates
-                query = query.Where(p =>
-                    (!p.AvailableStartDateTimeUtc.HasValue || p.AvailableStartDateTimeUtc.Value < nowUtc) &&
-                    (!p.AvailableEndDateTimeUtc.HasValue || p.AvailableEndDateTimeUtc.Value > nowUtc));
+                filter = filter & builder.Where(p =>
+                    (p.AvailableStartDateTimeUtc == null || p.AvailableStartDateTimeUtc < nowUtc) &&
+                    (p.AvailableEndDateTimeUtc == null || p.AvailableEndDateTimeUtc > nowUtc));
+
             }
             //vendor filtering
             if (!String.IsNullOrEmpty(vendorId))
             {
-                query = query.Where(p => p.VendorId == vendorId);
+                filter = filter & builder.Where(p => p.VendorId == vendorId);
             }
-            query = query.OrderBy(x => x.DisplayOrder);
 
-            var products = query.ToList();
+            var products = _productRepository.Collection.Find(filter).SortBy(x => x.DisplayOrder).ToList();
 
             //ACL mapping
             if (!showHidden)
@@ -1111,12 +1113,8 @@ namespace Grand.Services.Catalog
                 return null;
 
             sku = sku.Trim();
-
-            var query = from p in _productRepository.Table
-                        where p.Sku == sku
-                        select p;
-            var product = query.FirstOrDefault();
-            return product;
+            var filter = Builders<Product>.Filter.Eq(x => x.Sku, sku);
+            return _productRepository.Collection.Find(filter).FirstOrDefault();
         }
 
         /// <summary>
@@ -1132,7 +1130,7 @@ namespace Grand.Services.Catalog
             int notApprovedRatingSum = 0;
             int approvedTotalReviews = 0;
             int notApprovedTotalReviews = 0;
-            var reviews = _productReviewRepository.Table.Where(x => x.ProductId == product.Id); 
+            var reviews = _productReviewRepository.Collection.Find(new BsonDocument("ProductId", product.Id)).ToList();
             foreach (var pr in reviews)
             {
                 if (pr.IsApproved)
