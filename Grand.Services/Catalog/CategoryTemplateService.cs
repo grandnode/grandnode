@@ -4,6 +4,8 @@ using System.Linq;
 using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
 using Grand.Services.Events;
+using MongoDB.Driver;
+using MongoDB.Bson;
 
 namespace Grand.Services.Catalog
 {
@@ -58,12 +60,8 @@ namespace Grand.Services.Catalog
         /// <returns>Category templates</returns>
         public virtual IList<CategoryTemplate> GetAllCategoryTemplates()
         {
-            var query = from pt in _categoryTemplateRepository.Table
-                        orderby pt.DisplayOrder
-                        select pt;
-
-            var templates = query.ToList();
-            return templates;
+            //return templates;
+            return _categoryTemplateRepository.Collection.Find(new BsonDocument()).SortBy(x => x.DisplayOrder).ToList();
         }
  
         /// <summary>
