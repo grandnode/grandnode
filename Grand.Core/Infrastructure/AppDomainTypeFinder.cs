@@ -5,7 +5,6 @@ using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Runtime.Loader;
-using Microsoft.Extensions.DependencyModel;
 
 namespace Grand.Core.Infrastructure
 {
@@ -144,11 +143,11 @@ namespace Grand.Core.Infrastructure
         }
 
         /// <summary>Gets the assemblies related to the current implementation.</summary>
-        /// <returns>A list of assemblies that should be loaded by the Nop factory.</returns>
+        /// <returns>A list of assemblies that should be loaded by the Grand factory.</returns>
         public virtual IList<Assembly> GetAssemblies()
         {
-            var addedAssemblyNames = new List<string>();
-            var assemblies = new List<Assembly>();
+            var addedAssemblyNames = new List<string>() { "Grand.Core" };
+            var assemblies = new List<Assembly>() { typeof(Grand.Core.BaseEntity).GetTypeInfo().Assembly };
 
             if (LoadAppDomainAssemblies)
                 AddAssembliesInAppDomain(addedAssemblyNames, assemblies);

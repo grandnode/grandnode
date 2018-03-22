@@ -172,28 +172,6 @@ namespace Grand.Core
             return true;
         }
 
-        public static TypeConverter GetGrandCustomTypeConverter(Type type)
-        {
-            //we can't use the following code in order to register our custom type descriptors
-            //TypeDescriptor.AddAttributes(typeof(List<int>), new TypeConverterAttribute(typeof(GenericListTypeConverter<int>)));
-            //so we do it manually here
-
-            if (type == typeof(List<int>))
-                return new GenericListTypeConverter<int>();
-            if (type == typeof(List<decimal>))
-                return new GenericListTypeConverter<decimal>();
-            if (type == typeof(List<string>))
-                return new GenericListTypeConverter<string>();
-            if (type == typeof(ShippingOption))
-                return new ShippingOptionTypeConverter();
-            if (type == typeof(List<ShippingOption>) || type == typeof(IList<ShippingOption>))
-                return new ShippingOptionListTypeConverter();
-            if (type == typeof(Dictionary<int, int>))
-                return new GenericDictionaryTypeConverter<int, int>();
-
-            return TypeDescriptor.GetConverter(type);
-        }
-
         /// <summary>
         /// Converts a value to a destination type.
         /// </summary>
@@ -218,14 +196,17 @@ namespace Grand.Core
             {
                 var sourceType = value.GetType();
 
-                TypeConverter destinationConverter = GetGrandCustomTypeConverter(destinationType);
-                TypeConverter sourceConverter = GetGrandCustomTypeConverter(sourceType);
+                var destinationConverter = TypeDescriptor.GetConverter(destinationType);
                 if (destinationConverter != null && destinationConverter.CanConvertFrom(value.GetType()))
                     return destinationConverter.ConvertFrom(null, culture, value);
+
+                var sourceConverter = TypeDescriptor.GetConverter(sourceType);
                 if (sourceConverter != null && sourceConverter.CanConvertTo(destinationType))
                     return sourceConverter.ConvertTo(null, culture, value, destinationType);
-                if (destinationType.GetTypeInfo().IsEnum && value is int)
+
+                if (destinationType.IsEnum && value is int)
                     return Enum.ToObject(destinationType, (int)value);
+
                 if (!destinationType.IsInstanceOfType(value))
                     return Convert.ChangeType(value, destinationType, culture);
             }
@@ -261,16 +242,7 @@ namespace Grand.Core
             return result.TrimStart();
         }
 
-        /// <summary>
-        /// Set Telerik (Kendo UI) culture
-        /// </summary>
-        public static void SetTelerikCulture()
-        {
-            var culture = new CultureInfo("en-US");
-            CultureInfo.CurrentCulture = culture;
-            CultureInfo.CurrentUICulture = culture;
-        }
-
+        
         /// <summary>
         /// Get difference in years
         /// </summary>
