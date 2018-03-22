@@ -9,6 +9,7 @@ using Grand.Core.Domain.Directory;
 using Grand.Services.Events;
 using MongoDB.Driver.Linq;
 using Grand.Services.Localization;
+using MongoDB.Driver;
 
 namespace Grand.Services.Directory
 {
@@ -101,26 +102,20 @@ namespace Grand.Services.Directory
 
             return _cacheManager.Get(key, () =>
             {
-                var query = _countryRepository.Table;
+                var builder = Builders<Country>.Filter;
+                var filter = builder.Empty;
 
                 if (!showHidden)
-                    query = query.Where(c => c.Published);
-                query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name);
+                    filter = filter & builder.Where(c => c.Published);
 
                 if (!showHidden && !_catalogSettings.IgnoreStoreLimitations)
                 {
                     //Store mapping
-                    var currentStoreId = _storeContext.CurrentStore.Id;
-                    query = from p in query
-                            where !p.LimitedToStores || p.Stores.Contains(currentStoreId)
-                            select p;
-
-                    //only distinct entities (group by ID)
-                    query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name);
+                    var currentStoreId = new List<string> { _storeContext.CurrentStore.Id };
+                    filter = filter & (builder.AnyIn(x => x.Stores, currentStoreId) | builder.Where(x => !x.LimitedToStores));
                 }
-
-                var countries = query.ToList();
-                if (String.IsNullOrEmpty(languageId))
+                var countries = _countryRepository.Collection.Find(filter).SortBy(x => x.DisplayOrder).ThenBy(x=>x.Name).ToList();
+                if (!string.IsNullOrEmpty(languageId))
                 {
                     //we should sort countries by localized names when they have the same display order
                     countries = countries
@@ -202,11 +197,8 @@ namespace Grand.Services.Directory
             if (String.IsNullOrEmpty(twoLetterIsoCode))
                 return null;
 
-            var query = from c in _countryRepository.Table
-                        where c.TwoLetterIsoCode == twoLetterIsoCode
-                        select c;
-            var country = query.FirstOrDefault();
-            return country;
+            var filter = Builders<Country>.Filter.Eq(x => x.TwoLetterIsoCode, twoLetterIsoCode);
+            return _countryRepository.Collection.Find(filter).FirstOrDefault();
         }
 
         /// <summary>
@@ -219,11 +211,8 @@ namespace Grand.Services.Directory
             if (String.IsNullOrEmpty(threeLetterIsoCode))
                 return null;
 
-            var query = from c in _countryRepository.Table
-                        where c.ThreeLetterIsoCode == threeLetterIsoCode
-                        select c;
-            var country = query.FirstOrDefault();
-            return country;
+            var filter = Builders<Country>.Filter.Eq(x => x.ThreeLetterIsoCode, threeLetterIsoCode);
+            return _countryRepository.Collection.Find(filter).FirstOrDefault();
         }
 
         /// <summary>
