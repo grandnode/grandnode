@@ -40,6 +40,7 @@ namespace Grand.Core
             this.PageIndex = pageIndex;
             this.AddRange(range.Take(pageSize));
         }
+
         public PagedList(IMongoCollection<T> source, FilterDefinition<T> filterdefinition, SortDefinition<T> sortdefinition, int pageIndex, int pageSize)
         {
             TotalCount = (int)source.Count(filterdefinition);
@@ -53,6 +54,7 @@ namespace Grand.Core
             this.PageSize = pageSize;
             this.PageIndex = pageIndex;
         }
+
         public PagedList(IEnumerable<T> source, int pageIndex, int pageSize, int totalCount)
         {
             Init(source, pageIndex, pageSize, totalCount);
