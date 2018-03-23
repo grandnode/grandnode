@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,6 +10,7 @@ using Grand.Core.Data;
 using Grand.Core.Domain.Localization;
 using Grand.Services.Events;
 using Grand.Services.Logging;
+using MongoDB.Driver;
 
 namespace Grand.Services.Localization
 {
@@ -158,12 +158,8 @@ namespace Grand.Services.Localization
         /// <returns>Locale string resources</returns>
         public virtual IList<LocaleStringResource> GetAllResources(string languageId)
         {
-            var query = from l in _lsrRepository.Table
-                        orderby l.ResourceName
-                        where l.LanguageId == languageId
-                        select l;
-            var locales = query.ToList();
-            return locales;
+            var filter = Builders<LocaleStringResource>.Filter.Eq(x => x.LanguageId, languageId);
+            return _lsrRepository.Collection.Find(filter).ToList();
         }
 
         /// <summary>
@@ -174,7 +170,8 @@ namespace Grand.Services.Localization
         {
             if (localeStringResource == null)
                 throw new ArgumentNullException("localeStringResource");
-            
+
+            localeStringResource.ResourceName = localeStringResource.ResourceName.ToLowerInvariant();
             _lsrRepository.Insert(localeStringResource);
 
             //cache
@@ -193,6 +190,7 @@ namespace Grand.Services.Localization
             if (localeStringResource == null)
                 throw new ArgumentNullException("localeStringResource");
 
+            localeStringResource.ResourceName = localeStringResource.ResourceName.ToLowerInvariant();
             _lsrRepository.Update(localeStringResource);
 
             //cache
@@ -200,35 +198,6 @@ namespace Grand.Services.Localization
 
             //event notification
             _eventPublisher.EntityUpdated(localeStringResource);
-        }
-
-        /// <summary>
-        /// Gets all locale string resources by language identifier
-        /// </summary>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Locale string resources</returns>
-        public virtual Dictionary<string, KeyValuePair<string,string>> GetAllResourceValues(string languageId)
-        {
-            string key = string.Format(LOCALSTRINGRESOURCES_ALL_KEY, languageId);
-            return _cacheManager.Get(key, () =>
-            {
-                //we use no tracking here for performance optimization
-                //anyway records are loaded only for read-only operations
-                var query = from l in _lsrRepository.Table
-                            orderby l.ResourceName
-                            where l.LanguageId == languageId
-                            select l;
-                var locales = query.ToList();
-                //format: <name, <id, value>>
-                var dictionary = new Dictionary<string, KeyValuePair<string, string>>();
-                foreach (var locale in locales)
-                {
-                    var resourceName = locale.ResourceName.ToLowerInvariant();
-                    if (!dictionary.ContainsKey(resourceName))
-                        dictionary.Add(resourceName, new KeyValuePair<string, string>(locale.Id, locale.ResourceValue));
-                }
-                return dictionary;
-            });
         }
 
         /// <summary>
@@ -262,12 +231,31 @@ namespace Grand.Services.Localization
             resourceKey = resourceKey.Trim().ToLowerInvariant();
             if (_localizationSettings.LoadAllLocaleRecordsOnStartup)
             {
-                //load all records (we know they are cached)
-                var resources = GetAllResourceValues(languageId);                
-                if (resources.ContainsKey(resourceKey))
-                {
-                    result = resources[resourceKey].Value;
-                }
+                //load all records (cached)
+                string key = string.Format(LOCALSTRINGRESOURCES_ALL_KEY, languageId);
+                var resources = _cacheManager.Get(key, () => {
+                    try
+                    {
+                        var res = _lsrRepository.Table.Where(x => x.LanguageId == languageId).ToDictionary(x => x.ResourceName.ToLowerInvariant());
+                        return res;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error(ex.Message, ex);
+                        var dictionary = new Dictionary<string, LocaleStringResource>();
+                        var locales = GetAllResources(languageId);
+                        foreach (var locale in locales)
+                        {
+                            var resourceName = locale.ResourceName.ToLowerInvariant();
+                            if (!dictionary.ContainsKey(resourceName))
+                                dictionary.Add(resourceName.ToLowerInvariant(), locale);
+                            else
+                                _lsrRepository.Delete(locale);
+                        }
+                        return dictionary;
+                    }
+                });
+                result = resources[resourceKey.ToLowerInvariant()]?.ResourceValue;
             }
             else
             {
@@ -275,11 +263,10 @@ namespace Grand.Services.Localization
                 string key = string.Format(LOCALSTRINGRESOURCES_BY_RESOURCENAME_KEY, languageId, resourceKey);
                 string lsr = _cacheManager.Get(key, () =>
                 {
-                    var query = from l in _lsrRepository.Table
-                                where l.ResourceName == resourceKey
-                                && l.LanguageId == languageId
-                                select l.ResourceValue;
-                    return query.FirstOrDefault();
+                    var builder = Builders<LocaleStringResource>.Filter;
+                    var filter = builder.Eq(x => x.LanguageId, languageId);
+                    filter = filter & builder.Eq(x=>x.ResourceName, resourceKey.ToLowerInvariant());
+                    return _lsrRepository.Collection.Find(filter).FirstOrDefault()?.ResourceValue;
                 });
 
                 if (lsr != null) 
@@ -379,6 +366,7 @@ namespace Grand.Services.Localization
 
                     if (resource != null)
                     {
+                        resource.ResourceName = resource.ResourceName.ToLowerInvariant();
                         resource.ResourceValue = value;
                         _lsrRepository.Update(resource);
                     }
@@ -389,7 +377,7 @@ namespace Grand.Services.Localization
                             new LocaleStringResource
                             {
                                 LanguageId = language.Id,
-                                ResourceName = name,
+                                ResourceName = name.ToLowerInvariant(),
                                 ResourceValue = value
                             });
                         _lsrRepository.Insert(lsr);
@@ -432,7 +420,7 @@ namespace Grand.Services.Localization
                     new LocaleStringResource
                     {
                         LanguageId = language.Id,
-                        ResourceName = name,
+                        ResourceName = name.ToLowerInvariant(),
                         ResourceValue = value
                      });
                 _lsrRepository.Insert(lsr);

@@ -58,13 +58,6 @@ namespace Grand.Services.Localization
         void UpdateLocaleStringResource(LocaleStringResource localeStringResource);
 
         /// <summary>
-        /// Gets all locale string resources by language identifier
-        /// </summary>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Locale string resources</returns>
-        Dictionary<string, KeyValuePair<string, string>> GetAllResourceValues(string languageId);
-
-        /// <summary>
         /// Gets a resource string based on the specified ResourceKey property.
         /// </summary>
         /// <param name="resourceKey">A string representing a ResourceKey.</param>
