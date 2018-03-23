@@ -255,7 +255,8 @@ namespace Grand.Services.Localization
                         return dictionary;
                     }
                 });
-                result = resources[resourceKey.ToLowerInvariant()]?.ResourceValue;
+                if (resources.ContainsKey(resourceKey.ToLowerInvariant()))
+                    result = resources[resourceKey.ToLowerInvariant()].ResourceValue;
             }
             else
             {

@@ -121,17 +121,20 @@ namespace Grand.Web.Controllers
             var product = _productService.GetProductById(productId);
             if (product == null)
                 return InvokeHttp404();
+
+            var customer = _workContext.CurrentCustomer;
+
             //published?
             if (!_catalogSettings.AllowViewUnpublishedProductPage)
             {
                 //Check whether the current user has a "Manage catalog" permission
                 //It allows him to preview a product before publishing
-                if (!product.Published && !_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                if (!product.Published && !_permissionService.Authorize(StandardPermissionProvider.ManageProducts, customer))
                     return InvokeHttp404();
             }
 
             //ACL (access control list)
-            if (!_aclService.Authorize(product))
+            if (!_aclService.Authorize(product, customer))
                 return InvokeHttp404();
 
             //Store mapping
@@ -152,7 +155,6 @@ namespace Grand.Web.Controllers
 
                 return RedirectToRoute("Product", new { SeName = parentGroupedProduct.GetSeName() });
             }
-            var customer = _workContext.CurrentCustomer;
             //update existing shopping cart item?
             ShoppingCartItem updatecartitem = null;
             if (_shoppingCartSettings.AllowCartItemEditing && !String.IsNullOrEmpty(updatecartitemid))
@@ -183,8 +185,8 @@ namespace Grand.Web.Controllers
             _recentlyViewedProductsService.AddProductToRecentlyViewedList(customer.Id, product.Id);
 
             //display "edit" (manage) link
-            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) &&
-                _permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel, customer) &&
+                _permissionService.Authorize(StandardPermissionProvider.ManageProducts, customer))
             {
                 //a vendor should have access only to his products
                 if (_workContext.CurrentVendor == null || _workContext.CurrentVendor.Id == product.VendorId)

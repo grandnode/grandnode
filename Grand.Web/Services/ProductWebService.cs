@@ -1022,7 +1022,7 @@ namespace Grand.Web.Services
                 if (attribute.ShouldHaveValues())
                 {
                     //values
-                    var attributeValues = attribute.ProductAttributeValues; //_productAttributeService.GetProductAttributeValues(attribute.Id);
+                    var attributeValues = attribute.ProductAttributeValues; 
                     foreach (var attributeValue in attributeValues)
                     {
                         var valueModel = new ProductDetailsModel.ProductAttributeValueModel
