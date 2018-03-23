@@ -15,6 +15,9 @@ using Grand.Services.ExportImport.Help;
 using Grand.Core.Domain.Media;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.StaticFiles;
+using Grand.Services.Vendors;
+using Grand.Services.Shipping;
+using Grand.Services.Tax;
 
 namespace Grand.Services.ExportImport
 {
@@ -34,7 +37,14 @@ namespace Grand.Services.ExportImport
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
-
+        private readonly IVendorService _vendorService;
+        private readonly ICategoryTemplateService _categoryTemplateService;
+        private readonly IManufacturerTemplateService _manufacturerTemplateService;
+        private readonly IProductTemplateService _productTemplateService;
+        private readonly IDownloadService _downloadService;
+        private readonly IShippingService _shippingService;
+        private readonly ITaxCategoryService _taxService;
+        private readonly IMeasureService _measureService;
         #endregion
 
         #region Ctor
@@ -47,7 +57,15 @@ namespace Grand.Services.ExportImport
             IStoreContext storeContext,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             ICountryService countryService,
-            IStateProvinceService stateProvinceService)
+            IStateProvinceService stateProvinceService,
+            IVendorService vendorService,
+            ICategoryTemplateService categoryTemplateService,
+            IManufacturerTemplateService manufacturerTemplateService,
+            IProductTemplateService productTemplateService,
+            IDownloadService downloadService,
+            IShippingService shippingService,
+            ITaxCategoryService taxService,
+            IMeasureService measureService)
         {
             this._productService = productService;
             this._categoryService = categoryService;
@@ -58,6 +76,14 @@ namespace Grand.Services.ExportImport
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
+            this._vendorService = vendorService;
+            this._categoryTemplateService = categoryTemplateService;
+            this._manufacturerTemplateService = manufacturerTemplateService;
+            this._productTemplateService = productTemplateService;
+            this._downloadService = downloadService;
+            this._shippingService = shippingService;
+            this._taxService = taxService;
+            this._measureService = measureService;
         }
 
         #endregion
@@ -153,6 +179,11 @@ namespace Grand.Services.ExportImport
 
                 var manager = new PropertyManager<Product>(properties.ToArray());
 
+                var templates = _productTemplateService.GetAllProductTemplates();
+                var deliveryDates = _shippingService.GetAllDeliveryDates();
+                var taxes = _taxService.GetAllTaxCategories();
+                var warehouses = _shippingService.GetAllWarehouses();
+                var units = _measureService.GetAllMeasureUnits();
 
                 int iRow = 2;
                 while (true)
@@ -179,9 +210,19 @@ namespace Grand.Services.ExportImport
                     var isNew = product == null;
 
                     product = product ?? new Product();
-
+                    
                     if (isNew)
+                    {
                         product.CreatedOnUtc = DateTime.UtcNow;
+                        product.ProductTemplateId = templates.FirstOrDefault()?.Id;
+                        product.DeliveryDateId = deliveryDates.FirstOrDefault()?.Id;
+                        product.TaxCategoryId = taxes.FirstOrDefault()?.Id;
+                        product.WarehouseId = warehouses.FirstOrDefault()?.Id;
+                        product.UnitId = units.FirstOrDefault().Id;
+                        if (!string.IsNullOrEmpty(productid))
+                            product.Id = productid;
+                    }
+
 
 
                     foreach (var property in manager.GetProperties)
@@ -192,7 +233,9 @@ namespace Grand.Services.ExportImport
                                 product.ProductTypeId = property.IntValue;
                                 break;
                             case "parentgroupedproductid":
-                                product.ParentGroupedProductId = property.StringValue;
+                                var parentgroupedproductid = property.StringValue;
+                                if(_productService.GetProductById(parentgroupedproductid)!=null)
+                                    product.ParentGroupedProductId = property.StringValue;
                                 break;
                             case "visibleindividually":
                                 product.VisibleIndividually = property.BooleanValue;
@@ -207,10 +250,14 @@ namespace Grand.Services.ExportImport
                                 product.FullDescription = property.StringValue;
                                 break;
                             case "vendorid":
-                                product.VendorId = property.StringValue;
+                                var vendorid = property.StringValue;
+                                if(_vendorService.GetVendorById(vendorid) != null)
+                                    product.VendorId = property.StringValue;
                                 break;
                             case "producttemplateid":
-                                product.ProductTemplateId = property.StringValue;
+                                var templateid = property.StringValue;
+                                if(templates.FirstOrDefault(x => x.Id == templateid) != null)
+                                    product.ProductTemplateId = property.StringValue;
                                 break;
                             case "showonhomepage":
                                 product.ShowOnHomePage = property.BooleanValue;
@@ -261,7 +308,9 @@ namespace Grand.Services.ExportImport
                                 product.IsDownload = property.BooleanValue;
                                 break;
                             case "downloadid":
-                                product.DownloadId = property.StringValue;
+                                var downloadid = property.StringValue;
+                                if (_downloadService.GetDownloadById(downloadid) != null)
+                                    product.DownloadId = downloadid;
                                 break;
                             case "unlimiteddownloads":
                                 product.UnlimitedDownloads = property.BooleanValue;
@@ -276,7 +325,9 @@ namespace Grand.Services.ExportImport
                                 product.HasSampleDownload = property.BooleanValue;
                                 break;
                             case "sampledownloadid":
-                                product.SampleDownloadId = property.StringValue;
+                                var sampledownloadid = property.StringValue;
+                                if (_downloadService.GetDownloadById(sampledownloadid) != null)
+                                    product.SampleDownloadId = property.StringValue;
                                 break;
                             case "hasuseragreement":
                                 product.HasUserAgreement = property.BooleanValue;
@@ -296,10 +347,10 @@ namespace Grand.Services.ExportImport
                             case "recurringtotalcycles":
                                 product.RecurringTotalCycles = property.IntValue;
                                 break;
-                            case "Interval":
+                            case "interval":
                                 product.Interval = property.IntValue;
                                 break;
-                            case "IntervalUnitId":
+                            case "intervalunitId":
                                 product.IntervalUnitId = property.IntValue;
                                 break;
                             case "isshipenabled":
@@ -315,13 +366,17 @@ namespace Grand.Services.ExportImport
                                 product.AdditionalShippingCharge = property.DecimalValue;
                                 break;
                             case "deliverydateId":
-                                product.DeliveryDateId = property.StringValue;
+                                var deliverydateid = property.StringValue;
+                                if(deliveryDates.FirstOrDefault(x=>x.Id == deliverydateid) != null)
+                                    product.DeliveryDateId = deliverydateid;
                                 break;
                             case "istaxexempt":
                                 product.IsTaxExempt = property.BooleanValue;
                                 break;
                             case "taxcategoryid":
-                                product.TaxCategoryId = property.StringValue;
+                                var taxcategoryid = property.StringValue;
+                                if(taxes.FirstOrDefault(x=>x.Id == taxcategoryid) != null)
+                                    product.TaxCategoryId = property.StringValue;
                                 break;
                             case "istelecommunicationsorbroadcastingorelectronicservices":
                                 product.IsTelecommunicationsOrBroadcastingOrElectronicServices = property.BooleanValue;
@@ -333,7 +388,9 @@ namespace Grand.Services.ExportImport
                                 product.UseMultipleWarehouses = property.BooleanValue;
                                 break;
                             case "warehouseid":
-                                product.WarehouseId = property.StringValue;
+                                var warehouseid = property.StringValue;
+                                if(warehouses.FirstOrDefault(x=>x.Id == warehouseid) != null)
+                                    product.WarehouseId = property.StringValue;
                                 break;
                             case "stockquantity":
                                 product.StockQuantity = property.IntValue;
@@ -395,6 +452,9 @@ namespace Grand.Services.ExportImport
                             case "catalogprice":
                                 product.CatalogPrice = property.DecimalValue;
                                 break;
+                            case "startprice":
+                                product.StartPrice = property.DecimalValue;
+                                break;
                             case "productcost":
                                 product.ProductCost = property.DecimalValue;
                                 break;
@@ -432,7 +492,9 @@ namespace Grand.Services.ExportImport
                                 product.MarkAsNewEndDateTimeUtc = property.DateTimeNullable;
                                 break;
                             case "unitid":
-                                product.UnitId = property.StringValue;
+                                var unitid = property.StringValue;
+                                if(units.FirstOrDefault(x=>x.Id == unitid) != null)
+                                    product.UnitId = property.StringValue;
                                 break;
                             case "weight":
                                 product.Weight = property.DecimalValue;
@@ -746,6 +808,7 @@ namespace Grand.Services.ExportImport
                     }
                 }
                 var manager = new PropertyManager<Manufacturer>(properties.ToArray());
+                var templates = _manufacturerTemplateService.GetAllManufacturerTemplates();
 
                 var iRow = 2;
 
@@ -767,7 +830,12 @@ namespace Grand.Services.ExportImport
                     manufacturer = manufacturer ?? new Manufacturer();
 
                     if (isNew)
+                    {
                         manufacturer.CreatedOnUtc = DateTime.UtcNow;
+                        manufacturer.ManufacturerTemplateId = templates.FirstOrDefault()?.Id;
+                        if (!string.IsNullOrEmpty(manufacturerid))
+                            manufacturer.Id = manufacturerid;
+                    }
 
                     string sename = string.Empty;
                     string picture = string.Empty;
@@ -782,7 +850,9 @@ namespace Grand.Services.ExportImport
                                 manufacturer.Description = property.StringValue;
                                 break;
                             case "manufacturertemplateid":
-                                manufacturer.ManufacturerTemplateId = property.StringValue;
+                                var manufacturerTemplateId = property.StringValue;
+                                if(templates.FirstOrDefault(x => x.Id == manufacturerTemplateId) != null)
+                                    manufacturer.ManufacturerTemplateId = property.StringValue;
                                 break;
                             case "metakeywords":
                                 manufacturer.MetaKeywords = property.StringValue;
@@ -881,6 +951,7 @@ namespace Grand.Services.ExportImport
                     }
                 }
                 var manager = new PropertyManager<Category>(properties.ToArray());
+                var templates = _categoryTemplateService.GetAllCategoryTemplates();
 
                 while (true)
                 {
@@ -901,7 +972,13 @@ namespace Grand.Services.ExportImport
                     category = category ?? new Category();
 
                     if (isNew)
+                    {
                         category.CreatedOnUtc = DateTime.UtcNow;
+                        category.CategoryTemplateId = templates.FirstOrDefault()?.Id;
+                        if (!string.IsNullOrEmpty(categoryid))
+                            category.Id = categoryid;
+
+                    }
 
                     string sename = string.Empty;
                     string picture = string.Empty;
@@ -917,7 +994,9 @@ namespace Grand.Services.ExportImport
                                 category.Description = property.StringValue;
                                 break;
                             case "categorytemplateid":
-                                category.CategoryTemplateId = property.StringValue;
+                                var categorytemplateid = property.StringValue;
+                                if(templates.FirstOrDefault(x => x.Id == categorytemplateid) != null)
+                                    category.CategoryTemplateId = property.StringValue;
                                 break;
                             case "metakeywords":
                                 category.MetaKeywords = property.StringValue;
