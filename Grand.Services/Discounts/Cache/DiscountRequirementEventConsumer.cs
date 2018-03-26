@@ -14,10 +14,6 @@ namespace Grand.Services.Discounts.Cache
         IConsumer<EntityUpdated<Discount>>,
         IConsumer<EntityDeleted<Discount>>
 
-        //discount requirements
-        //IConsumer<EntityInserted<DiscountRequirement>>,
-        //IConsumer<EntityUpdated<DiscountRequirement>>,
-        //IConsumer<EntityDeleted<DiscountRequirement>>
     {
         /// <summary>
         /// Key for discount requirement of a certain discount
@@ -32,7 +28,6 @@ namespace Grand.Services.Discounts.Cache
 
         public DiscountRequirementEventConsumer()
         {
-            //TODO inject static cache manager using constructor
             this._cacheManager = EngineContext.Current.Resolve<ICacheManager>();
         }
 
@@ -46,20 +41,5 @@ namespace Grand.Services.Discounts.Cache
             _cacheManager.RemoveByPattern(DISCOUNT_REQUIREMENT_PATTERN_KEY);
         }
 
-        //discount requirements
-        /*
-        public void HandleEvent(EntityInserted<DiscountRequirement> eventMessage)
-        {
-            _cacheManager.RemoveByPattern(DISCOUNT_REQUIREMENT_PATTERN_KEY);
-        }
-        public void HandleEvent(EntityUpdated<DiscountRequirement> eventMessage)
-        {
-            _cacheManager.RemoveByPattern(DISCOUNT_REQUIREMENT_PATTERN_KEY);
-        }
-        public void HandleEvent(EntityDeleted<DiscountRequirement> eventMessage)
-        {
-            _cacheManager.RemoveByPattern(DISCOUNT_REQUIREMENT_PATTERN_KEY);
-        }
-        */
     }
 }
