@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Grand.Core;
 using Grand.Core.Data;
 using Grand.Services.Customers;
+using Microsoft.AspNetCore.Http;
 
 namespace Grand.Framework.Mvc.Filters
 {
@@ -63,7 +64,7 @@ namespace Grand.Framework.Mvc.Filters
                     return;
 
                 //only in GET requests
-                if (context.HttpContext.Request.Method.ToLower() != "get")
+                if (!HttpMethods.IsGet(context.HttpContext.Request.Method))
                     return;
 
                 //get current IP address

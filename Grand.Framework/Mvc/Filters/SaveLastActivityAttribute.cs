@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Net;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Grand.Core;
@@ -60,7 +61,7 @@ namespace Grand.Framework.Mvc.Filters
                     return;
 
                 //only in GET requests
-                if (context.HttpContext.Request.Method.ToLower() != "get")
+                if (!HttpMethods.IsGet(context.HttpContext.Request.Method)) 
                     return;
 
                 //update last activity date
