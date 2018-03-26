@@ -191,8 +191,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.IsApproved = vendorReview.IsApproved;
             }
         }
-        
-        
+
+        [NonAction]
         protected virtual void PrepareVendorAddressModel(VendorModel model, Vendor vendor)
         {
 
@@ -233,6 +233,26 @@ namespace Grand.Web.Areas.Admin.Controllers
             else
                 model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "" });
         }
+
+        [NonAction]
+        protected virtual void PrepareStore(VendorModel model)
+        {
+            model.AvailableStores.Add(new SelectListItem
+            {
+                Text = "[None]",
+                Value = ""
+            });
+            
+            foreach (var s in _storeService.GetAllStores())
+            {
+                model.AvailableStores.Add(new SelectListItem
+                {
+                    Text = s.Name,
+                    Value = s.Id.ToString()
+                });
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -294,6 +314,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             //default value
             model.Active = true;
 
+            //stores
+            PrepareStore(model);
+
             //prepare address model
             PrepareVendorAddressModel(model, null);
 
@@ -342,6 +365,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             PrepareVendorAddressModel(model, null);
             //discounts
             PrepareDiscountModel(model, null, true);
+            //stores
+            PrepareStore(model);
+
             //If we got this far, something failed, redisplay form
             return View(model);
         }
@@ -383,6 +409,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //prepare address model
             PrepareVendorAddressModel(model, vendor);
+            //stores
+            PrepareStore(model);
 
             return View(model);
         }
@@ -468,6 +496,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                     Email = c.Email
                 })
                 .ToList();
+            //stores
+            PrepareStore(model);
 
             return View(model);
         }

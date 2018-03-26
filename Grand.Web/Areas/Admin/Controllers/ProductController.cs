@@ -343,6 +343,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             model.AvailableStores = _storeService
                 .GetAllStores()
+                .Where(x => (_workContext.CurrentVendor == null ? true: !string.IsNullOrEmpty(_workContext.CurrentVendor.StoreId) ? x.Id == _workContext.CurrentVendor.StoreId ? true: false : true)
+                )
                 .Select(s => s.ToModel())
                 .ToList();
             if (!excludeProperties)
@@ -738,6 +740,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.Published = true;
                 model.VisibleIndividually = true;
             }
+            if(_workContext.CurrentVendor != null && !string.IsNullOrEmpty(_workContext.CurrentVendor.StoreId))
+            {
+                model.LimitedToStores = true;
+                model.SelectedStoreIds = new string[] { _workContext.CurrentVendor.StoreId };
+            }
         }
 
         [NonAction]
@@ -902,8 +909,15 @@ namespace Grand.Web.Areas.Admin.Controllers
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             foreach (var s in _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
-
+            {
+                if (_workContext.CurrentVendor != null && !string.IsNullOrEmpty(_workContext.CurrentVendor.StoreId))
+                {
+                    if(s.Id == _workContext.CurrentVendor.StoreId)
+                        model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+                }
+                else
+                    model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+            }
             //warehouses
             model.AvailableWarehouses.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             foreach (var wh in _shippingService.GetAllWarehouses())
@@ -1041,6 +1055,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (_workContext.CurrentVendor != null)
                 {
                     model.VendorId = _workContext.CurrentVendor.Id;
+                    if (!string.IsNullOrEmpty(_workContext.CurrentVendor.StoreId))
+                    {
+                        model.LimitedToStores = true;
+                        model.SelectedStoreIds = new string[] { _workContext.CurrentVendor.StoreId };
+                    }
                 }
                 //vendors cannot edit "Show on home page" property
                 if (_workContext.CurrentVendor != null && model.ShowOnHomePage)
@@ -1155,6 +1174,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (_workContext.CurrentVendor != null)
                 {
                     model.VendorId = _workContext.CurrentVendor.Id;
+                    if (!string.IsNullOrEmpty(_workContext.CurrentVendor.StoreId))
+                    {
+                        model.LimitedToStores = true;
+                        model.SelectedStoreIds = new string[] { _workContext.CurrentVendor.StoreId };
+                    }
                 }
                 //vendors cannot edit "Show on home page" property
                 if (_workContext.CurrentVendor != null && model.ShowOnHomePage != product.ShowOnHomePage)

@@ -8,6 +8,8 @@ using Grand.Framework.Localization;
 using System.ComponentModel.DataAnnotations;
 using System;
 using Grand.Web.Areas.Admin.Models.Common;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Grand.Web.Areas.Admin.Models.Stores;
 
 namespace Grand.Web.Areas.Admin.Models.Vendors
 {
@@ -23,6 +25,7 @@ namespace Grand.Web.Areas.Admin.Models.Vendors
             Locales = new List<VendorLocalizedModel>();
             AssociatedCustomers = new List<AssociatedCustomerInfo>();
             Address = new AddressModel();
+            AvailableStores = new List<SelectListItem>();
         }
 
         [GrandResourceDisplayName("Admin.Vendors.Fields.Name")]
@@ -40,6 +43,10 @@ namespace Grand.Web.Areas.Admin.Models.Vendors
         [UIHint("Picture")]
         [GrandResourceDisplayName("Admin.Vendors.Fields.Picture")]
         public string PictureId { get; set; }
+
+        [GrandResourceDisplayName("Admin.Vendors.Fields.Store")]
+        public string StoreId { get; set; }
+        public List<SelectListItem> AvailableStores { get; set; }
 
         [GrandResourceDisplayName("Admin.Vendors.Fields.AdminComment")]
         

@@ -43,6 +43,11 @@ namespace Grand.Core.Domain.Vendors
         public string Description { get; set; }
 
         /// <summary>
+        /// Gets or sets the store identifier
+        /// </summary>
+        public string StoreId { get; set; }
+
+        /// <summary>
         /// Gets or sets the admin comment
         /// </summary>
         public string AdminComment { get; set; }
