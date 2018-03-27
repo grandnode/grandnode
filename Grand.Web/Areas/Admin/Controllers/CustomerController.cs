@@ -2082,6 +2082,30 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [HttpPost]
+        public IActionResult DeleteCart(string id, string customerId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            var customer = _customerService.GetCustomerById(customerId);
+            if (customer == null)
+                throw new ArgumentException("No customer found with the specified id", "customerId");
+
+            var cart = customer.ShoppingCartItems.FirstOrDefault(a => a.Id == id);
+            if (cart == null)
+                //No customer found with the specified id
+                return Content("No customer found with the specified cart id");
+
+            EngineContext.Current.Resolve<IShoppingCartService>()
+                .DeleteShoppingCartItem(_workContext.CurrentCustomer.Id, cart, ensureOnlyActiveCheckoutAttributes: true);
+
+            _customerService.UpdateCustomerinAdminPanel(customer);
+
+            return new NullJsonResult();
+        }
+
+
         #endregion
 
         #region Customer Product Price
