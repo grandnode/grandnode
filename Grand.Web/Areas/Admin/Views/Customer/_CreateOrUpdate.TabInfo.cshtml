@@ -104,12 +104,12 @@
                             {
                                 var aear = Model.AssociatedExternalAuthRecords[i];
                                 <text>
-        {
-            AuthMethodName: "@(Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(aear.AuthMethodName)))",
-            Email: "@(Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(aear.Email)))",
-            ExternalIdentifier: "@(Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(aear.ExternalIdentifier)))"
-        }
-    </text>
+                                {
+                                    AuthMethodName: "@aear.AuthMethodName",
+                                    Email: "@aear.Email",
+                                    ExternalIdentifier: "@aear.ExternalIdentifier"
+                                }
+                                 </text>
                                 if (i != Model.AssociatedExternalAuthRecords.Count - 1)
                                 {
                                     <text>,</text>
