@@ -1,12 +1,11 @@
 ﻿@model CheckoutAttributeModel
 
-@using Grand.Core.Domain.Catalog;
-
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 
 <script>
     $(document).ready(function () {
+        $("#checkoutattribute-edit").show();
         $("#checkoutattribute-edit").kendoTabStrip({
             animation: {
                 open: {
@@ -18,12 +17,12 @@
     });
 </script>
 
-<div id="checkoutattribute-edit">
+<div id="checkoutattribute-edit" style="display:none">
     <ul>
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
             @T("Admin.Catalog.Attributes.CheckoutAttributes.Info")
         </li>
-        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex()) id="tab-checkoutAttributesValues">
             @T("Admin.Catalog.Attributes.CheckoutAttributes.Values")
         </li>
         <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
