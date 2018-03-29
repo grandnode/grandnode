@@ -1050,7 +1050,8 @@ namespace Grand.Services.ExportImport
                                 picture = property.StringValue;
                                 break;
                             case "parentcategoryid":
-                                category.ParentCategoryId = property.StringValue;
+                                if(!string.IsNullOrEmpty(property.StringValue) && property.StringValue!="0")
+                                    category.ParentCategoryId = property.StringValue;
                                 break;
 
                         }
