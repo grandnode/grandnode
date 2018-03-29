@@ -309,7 +309,7 @@ namespace Grand.Web.Controllers
             if (customer == null)
                 return RedirectToRoute("HomePage");
 
-            var model = _customerWebService.PreparePasswordRecovery();
+            var model = _customerWebService.PreparePasswordRecoveryConfirmModel(customer, token);
 
             return View(model);
         }
