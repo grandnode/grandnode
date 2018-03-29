@@ -881,6 +881,12 @@ namespace Grand.Services.ExportImport
                             case "published":
                                 manufacturer.Published = property.BooleanValue;
                                 break;
+                            case "showonhomepage":
+                                manufacturer.ShowOnHomePage = property.BooleanValue;
+                                break;
+                            case "includeintopmenu":
+                                manufacturer.IncludeInTopMenu = property.BooleanValue;
+                                break;
                             case "displayorder":
                                 manufacturer.DisplayOrder = property.IntValue;
                                 break;
@@ -1032,7 +1038,7 @@ namespace Grand.Services.ExportImport
                                 category.ShowOnHomePage = property.BooleanValue;
                                 break;
                             case "includeintopmenu":
-                                category.ShowOnHomePage = property.BooleanValue;
+                                category.IncludeInTopMenu = property.BooleanValue;
                                 break;
                             case "showonsearchbox":
                                 category.ShowOnSearchBox = property.BooleanValue;
