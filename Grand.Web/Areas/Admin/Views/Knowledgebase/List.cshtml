@@ -1,0 +1,80 @@
+﻿@{
+    //page title
+    ViewBag.Title = T("Admin.ContentManagement.Knowledgebase.Manage").Text;
+}
+@Html.AntiForgeryToken()
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light form-fit">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-forumbee"></i>
+                    @T("Admin.ContentManagement.Knowledgebase.Manage")
+                </div>
+                <div class="actions btn-group btn-group-devided">
+                    <a href="@Url.Action("CreateCategory")" class="btn blue">@T("Admin.ContentManagement.Knowledgebase.CreateKnowledgebaseCategory")</a>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal">
+                    <div class="form-body">
+                        <div class="portlet-body">
+                            <div id="categories-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $("#categories-grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("CategoryList", "Knowledgebase"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors"
+                },
+                error: function(e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                numeric: false,
+                previousNext: false,
+                info: false
+            },
+            //details grid
+            detailInit: detailInit,
+            scrollable: false,
+            columns: [
+                {
+                    field: "Name",
+                    title: "@T("Admin.ContentManagement.Forums.ForumGroup.Fields.Name")",
+                    width: 300
+                }, {
+                    field: "DisplayOrder",
+                    title: "@T("Admin.ContentManagement.Forums.ForumGroup.Fields.DisplayOrder")",
+                    width: 100
+                }
+            ]
+        });
+    });
+
+</script>

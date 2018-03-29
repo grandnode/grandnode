@@ -1,9 +1,13 @@
-﻿
-
-var Reservation = {
+﻿var Reservation = {
     availableDates: [],
+    availableDatesFrom: [],
+    availableDatesTo: [],
     currentMonth: -1,
     currentYear: -1,
+    currentMonthFrom: -1,
+    currentYearFrom: -1,
+    currentMonthTo: -1,
+    currentYearTo: -1,
     _parameter: "",
     noReservationsMessage: "",
     productId: "",
@@ -22,7 +26,17 @@ var Reservation = {
         this.startDateMonth = startDateMonth;
         this.startDateYear = startDateYear;
 
-        this.fillAvailableDates(startDateYear, startDateMonth, Reservation._parameter, false);
+        if (document.getElementById("reservationDatepicker") != null) {
+            this.fillAvailableDates(startDateYear, startDateMonth, Reservation._parameter, false);
+        }
+
+        if (document.getElementById("reservationDatepickerFrom") != null) {
+            this.fillAvailableDatesFrom(startDateYear, startDateMonth);
+        }
+        
+        if (document.getElementById("reservationDatepickerTo") != null) {
+            this.fillAvailableDatesTo(startDateYear, startDateMonth);
+        }
 
         $("#reservationDatepicker").datepicker({
             onSelect: this.onDatePickerDateChange,
@@ -39,14 +53,24 @@ var Reservation = {
         $("#reservationDatepickerFrom").datepicker({
             firstDay: 1,
             defaultDate: this.startDate,
-            onSelect: this.onDatePickerSelect
+            onSelect: this.onDatePickerSelect,
+            beforeShowDay: this.daysToMarkFrom,
+            onChangeMonthYear: function (year, month, inst) {
+                Reservation.fillAvailableDatesFrom(year, month);
+            },
+            defaultDate: this.startDate
         }
         );
 
         $("#reservationDatepickerTo").datepicker({
             firstDay: 1,
             defaultDate: this.startDate,
-            onSelect: this.onDatePickerSelect
+            onSelect: this.onDatePickerSelect,
+            beforeShowDay: this.daysToMarkTo,
+            onChangeMonthYear: function (year, month, inst) {
+                Reservation.fillAvailableDatesTo(year, month);
+            },
+            defaultDate: this.startDate
         }
         );
 
@@ -78,27 +102,42 @@ var Reservation = {
         }
         );
 
-        $("#reservationDatepickerFrom").datepicker({
-            firstDay: 1,
-            defaultDate: this.startDate,
-            onSelect: this.onDatePickerSelect
-        }
-        );
-
-        $("#reservationDatepickerTo").datepicker({
-            firstDay: 1,
-            defaultDate: this.startDate,
-            onSelect: this.onDatePickerSelect
-        }
-        );
-
         this.onDatePickerDateChange();
-        
     },
 
     daysToMark: function daysToMark(date) {
         for (i = 0; i < Reservation.availableDates.length; i++) {
             var splitResults = Reservation.availableDates[i].Date.split("-");
+            var year = splitResults[0];
+            var month = splitResults[1];
+            var day = splitResults[2].substring(0, 2);
+
+            if (date.getYear() + 1900 == year && date.getMonth() + 1 == month && date.getDate() == day) {
+                return [true, '', ""];
+            }
+        }
+
+        return [false, '', ""];
+    },
+
+    daysToMarkTo: function daysToMark(date) {
+        for (i = 0; i < Reservation.availableDatesTo.length; i++) {
+            var splitResults = Reservation.availableDatesTo[i].Date.split("-");
+            var year = splitResults[0];
+            var month = splitResults[1];
+            var day = splitResults[2].substring(0, 2);
+
+            if (date.getYear() + 1900 == year && date.getMonth() + 1 == month && date.getDate() == day) {
+                return [true, '', ""];
+            }
+        }
+
+        return [false, '', ""];
+    },
+
+    daysToMarkFrom: function daysToMark(date) {
+        for (i = 0; i < Reservation.availableDatesFrom.length; i++) {
+            var splitResults = Reservation.availableDatesFrom[i].Date.split("-");
             var year = splitResults[0];
             var month = splitResults[1];
             var day = splitResults[2].substring(0, 2);
@@ -161,9 +200,61 @@ var Reservation = {
             if (reload) {
                 Reservation._parameter = parameter;
                 $("#reservationDatepicker").datepicker("destroy");
-                Reservation.reload(new Date(year, month-1, 1), Reservation.currentYear, Reservation.currentMonth);
+                Reservation.reload(new Date(year, month - 1, 1), Reservation.currentYear, Reservation.currentMonth);
                 $("#reservationDatepicker").datepicker("refresh");
             }
+        }).fail(function () {
+            alert("Error");
+        });
+    },
+
+    fillAvailableDatesFrom: function fillAvailableDatesFrom(year, month) {
+        var postData = {
+            productId: Reservation.productId,
+            month: month,
+            year: year,
+            parameter: null
+        };
+
+        addAntiForgeryToken(postData);
+
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url: Reservation.ajaxUrl,
+            dataType: 'json',
+            data: postData,
+            async: false
+        }).done(function (data) {
+            Reservation.currentMonthFrom = month;
+            Reservation.currentYearFrom = year;
+            Reservation.availableDatesFrom = Reservation.availableDatesFrom.concat(data);
+        }).fail(function () {
+            alert("Error");
+        });
+    },
+
+    fillAvailableDatesTo: function fillAvailableDatesTo(year, month) {
+        var postData = {
+            productId: Reservation.productId,
+            month: month,
+            year: year,
+            parameter: null
+        };
+
+        addAntiForgeryToken(postData);
+
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url: Reservation.ajaxUrl,
+            dataType: 'json',
+            data: postData,
+            async: false
+        }).done(function (data) {
+            Reservation.currentMonthTo = month;
+            Reservation.currentYearTo = year;
+            Reservation.availableDatesTo = Reservation.availableDatesTo.concat(data);
         }).fail(function () {
             alert("Error");
         });

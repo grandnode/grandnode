@@ -52,6 +52,7 @@ using Grand.Framework.Themes;
 using Grand.Framework.UI;
 using MongoDB.Driver;
 using Grand.Core.Http;
+using Grand.Services.Knowledgebase;
 
 namespace Grand.Framework.Infrastructure
 {
@@ -278,6 +279,7 @@ namespace Grand.Framework.Infrastructure
             }
 
             builder.RegisterType<ForumService>().As<IForumService>().InstancePerLifetimeScope();
+            builder.RegisterType<KnowledgebaseService>().As<IKnowledgebaseService>().InstancePerLifetimeScope();
             builder.RegisterType<PollService>().As<IPollService>().InstancePerLifetimeScope();
             builder.RegisterType<BlogService>().As<IBlogService>().InstancePerLifetimeScope();
             builder.RegisterType<WidgetService>().As<IWidgetService>().InstancePerLifetimeScope();

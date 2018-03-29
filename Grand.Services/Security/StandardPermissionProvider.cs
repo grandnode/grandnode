@@ -41,6 +41,7 @@ namespace Grand.Services.Security
         public static readonly PermissionRecord ManageWidgets = new PermissionRecord { Name = "Admin area. Manage Widgets", SystemName = "ManageWidgets", Category = "Content Management" };
         public static readonly PermissionRecord ManageTopics = new PermissionRecord { Name = "Admin area. Manage Topics", SystemName = "ManageTopics", Category = "Content Management" };
         public static readonly PermissionRecord ManageForums = new PermissionRecord { Name = "Admin area. Manage Forums", SystemName = "ManageForums", Category = "Content Management" };
+        public static readonly PermissionRecord ManageKnowledgebase = new PermissionRecord { Name = "Admin area. Manage Knowledgebase", SystemName = "ManageKnowledgebase", Category = "Content Management" };
         public static readonly PermissionRecord ManageMessageTemplates = new PermissionRecord { Name = "Admin area. Manage Message Templates", SystemName = "ManageMessageTemplates", Category = "Content Management" };
         public static readonly PermissionRecord ManageCountries = new PermissionRecord { Name = "Admin area. Manage Countries", SystemName = "ManageCountries", Category = "Configuration" };
         public static readonly PermissionRecord ManageLanguages = new PermissionRecord { Name = "Admin area. Manage Languages", SystemName = "ManageLanguages", Category = "Configuration" };
@@ -105,6 +106,7 @@ namespace Grand.Services.Security
                 ManageWidgets,
                 ManageTopics,
                 ManageForums,
+                ManageKnowledgebase,
                 ManageMessageTemplates,
                 ManageCountries,
                 ManageLanguages,
@@ -170,6 +172,7 @@ namespace Grand.Services.Security
                         ManageWidgets,
                         ManageTopics,
                         ManageForums,
+                        ManageKnowledgebase,
                         ManageMessageTemplates,
                         ManageCountries,
                         ManageLanguages,
