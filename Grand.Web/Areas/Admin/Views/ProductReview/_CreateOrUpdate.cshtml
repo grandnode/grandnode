@@ -18,7 +18,7 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.CustomerInfo)
             <div class="col-md-9 col-sm-9">
-                <label class="control-label">@Html.ActionLink(Model.CustomerInfo, "Edit", "Customer", new { id = Model.CustomerId }, new { })</label> 
+                <label class="control-label">@Html.ActionLink(Model.CustomerInfo, "Edit", "Customer", new { id = Model.CustomerId }, new { })</label>
             </div>
         </div>
         <div class="form-group">
@@ -36,9 +36,23 @@
             </div>
         </div>
         <div class="form-group">
+            @Html.GrandLabelFor(model => model.ReplyText)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandTextAreaFor(model => model.ReplyText, new { style = "Height: 100px;" })
+                @Html.ValidationMessageFor(model => model.ReplyText)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Signature)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Signature)
+                @Html.ValidationMessageFor(model => model.Signature)
+            </div>
+        </div>
+        <div class="form-group">
             @Html.GrandLabelFor(model => model.Rating)
             <div class="col-md-9 col-sm-9">
-                <label class="control-label">@Html.DisplayFor(model => model.Rating)</label> 
+                <label class="control-label">@Html.DisplayFor(model => model.Rating)</label>
             </div>
         </div>
         <div class="form-group">

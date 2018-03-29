@@ -1398,6 +1398,8 @@ namespace Grand.Web.Services
                     AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !customer.IsGuest(),
                     Title = pr.Title,
                     ReviewText = pr.ReviewText,
+                    ReplyText = pr.ReplyText,
+                    Signature = pr.Signature,
                     Rating = pr.Rating,
                     Helpfulness = new ProductReviewHelpfulnessModel
                     {
