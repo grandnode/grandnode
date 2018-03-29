@@ -24,27 +24,11 @@ namespace Grand.Services.Security
         AclRecord GetAclRecordById(string aclRecordId);
         
         /// <summary>
-        /// Gets ACL records
-        /// </summary>
-        /// <typeparam name="T">Type</typeparam>
-        /// <param name="entity">Entity</param>
-        /// <returns>ACL records</returns>
-        IList<AclRecord> GetAclRecords<T>(T entity) where T : BaseEntity, IAclSupported;
-
-        /// <summary>
         /// Inserts an ACL record
         /// </summary>
         /// <param name="aclRecord">ACL record</param>
         void InsertAclRecord(AclRecord aclRecord);
         
-        /// <summary>
-        /// Inserts an ACL record
-        /// </summary>
-        /// <typeparam name="T">Type</typeparam>
-        /// <param name="customerRoleId">Customer role id</param>
-        /// <param name="entity">Entity</param>
-        void InsertAclRecord<T>(T entity, string customerRoleId) where T : BaseEntity, IAclSupported;
-
         /// <summary>
         /// Updates the ACL record
         /// </summary>

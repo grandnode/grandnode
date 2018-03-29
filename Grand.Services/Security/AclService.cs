@@ -101,29 +101,7 @@ namespace Grand.Services.Security
             return _aclRecordRepository.GetById(aclRecordId);
         }
 
-        /// <summary>
-        /// Gets ACL records
-        /// </summary>
-        /// <typeparam name="T">Type</typeparam>
-        /// <param name="entity">Entity</param>
-        /// <returns>ACL records</returns>
-        public virtual IList<AclRecord> GetAclRecords<T>(T entity) where T : BaseEntity, IAclSupported
-        {
-            if (entity == null)
-                throw new ArgumentNullException("entity");
-
-            string entityId = entity.Id;
-            string entityName = typeof(T).Name;
-
-            var query = from ur in _aclRecordRepository.Table
-                        where ur.EntityId == entityId &&
-                        ur.EntityName == entityName
-                        select ur;
-            var aclRecords = query.ToList();
-            return aclRecords;
-        }
-
-
+        
         /// <summary>
         /// Inserts an ACL record
         /// </summary>
@@ -140,33 +118,6 @@ namespace Grand.Services.Security
 
             //event notification
             _eventPublisher.EntityInserted(aclRecord);
-        }
-
-        /// <summary>
-        /// Inserts an ACL record
-        /// </summary>
-        /// <typeparam name="T">Type</typeparam>
-        /// <param name="customerRoleId">Customer role id</param>
-        /// <param name="entity">Entity</param>
-        public virtual void InsertAclRecord<T>(T entity, string customerRoleId) where T : BaseEntity, IAclSupported
-        {
-            if (entity == null)
-                throw new ArgumentNullException("entity");
-
-            if (String.IsNullOrEmpty(customerRoleId))
-                throw new ArgumentOutOfRangeException("customerRoleId");
-
-            string entityId = entity.Id;
-            string entityName = typeof(T).Name;
-
-            var aclRecord = new AclRecord
-            {
-                EntityId = entityId,
-                EntityName = entityName,
-                CustomerRoleId = customerRoleId
-            };
-
-            InsertAclRecord(aclRecord);
         }
 
         /// <summary>
@@ -213,12 +164,12 @@ namespace Grand.Services.Security
             if (customer == null)
                 return false;
 
+            if (!entity.SubjectToAcl)
+                return true;
+
             if (_catalogSettings.IgnoreAcl)
                 return true;
 
-            if (!entity.SubjectToAcl)
-                return true;
-            
             foreach (var role1 in customer.CustomerRoles.Where(cr => cr.Active))
                 foreach (var role2Id in entity.CustomerRoles)
                     if (role1.Id == role2Id)
