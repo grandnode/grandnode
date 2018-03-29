@@ -953,7 +953,7 @@ namespace Grand.Services.ExportImport
                                 category.ShowOnHomePage = property.BooleanValue;
                                 break;
                             case "includeintopmenu":
-                                category.ShowOnHomePage = property.BooleanValue;
+                                category.IncludeInTopMenu = property.BooleanValue;
                                 break;
                             case "showonsearchbox":
                                 category.ShowOnSearchBox = property.BooleanValue;
