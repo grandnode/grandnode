@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Grand.Core.Domain.Customers;
 using Grand.Services.Customers;
-using Grand.Service.Authentication;
 
 namespace Grand.Services.Authentication
 {

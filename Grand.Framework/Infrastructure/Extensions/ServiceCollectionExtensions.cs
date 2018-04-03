@@ -8,13 +8,10 @@ using Grand.Core.Configuration;
 using Grand.Core.Data;
 using Grand.Core.Infrastructure;
 using Grand.Services.Logging;
-using Grand.Services.Tasks;
 using Grand.Framework.FluentValidation;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Themes;
-using Grand.Service.Authentication;
 using FluentValidation.AspNetCore;
-using FluentScheduler;
 using System.Linq;
 using Grand.Core.Plugins;
 using Grand.Services.Authentication.External;
@@ -24,6 +21,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc.Internal;
 using Grand.Framework.Mvc.Routing;
 using Grand.Core.Domain.Security;
+using Grand.Services.Authentication;
 
 namespace Grand.Framework.Infrastructure.Extensions
 {

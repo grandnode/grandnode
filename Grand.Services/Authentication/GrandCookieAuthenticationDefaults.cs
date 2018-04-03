@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Grand.Service.Authentication
+namespace Grand.Services.Authentication
 {
     public static class GrandCookieAuthenticationDefaults
     {
