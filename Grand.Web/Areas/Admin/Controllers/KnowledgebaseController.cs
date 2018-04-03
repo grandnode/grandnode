@@ -1,4 +1,5 @@
-﻿using Grand.Framework.Kendoui;
+﻿using Grand.Core.Domain.Knowledgebase;
+using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
 using Grand.Services.Knowledgebase;
 using Grand.Services.Localization;
@@ -39,20 +40,53 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View();
         }
 
-        [HttpPost]
-        public IActionResult CategoryList(DataSourceRequest command)
+        public IActionResult CategoryList()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
                 return AccessDeniedView();
 
             var categories = _knowledgebaseService.GetKnowledgebaseCategories();
-            var gridModel = new DataSourceResult
-            {
-                Data = categories,
-                Total = categories.Count
-            };
+            var articles = _knowledgebaseService.GetKnowledgebaseArticles();
+            List<TreeNode> nodeList = new List<TreeNode>();
 
-            return Json(gridModel);
+            foreach (var category in categories)
+            {
+                if (string.IsNullOrEmpty(category.ParentCategoryId))
+                {
+                    var newNode = new TreeNode
+                    {
+                        id = category.Id,
+                        text = category.Name,
+                        isCategory = true,
+                        nodes = new List<TreeNode>()
+                    };
+
+                    FillChildNodes(newNode, categories);
+
+                    nodeList.Add(newNode);
+                }
+            }
+
+            return Json(nodeList);
+        }
+
+        public void FillChildNodes(TreeNode parentNode, List<KnowledgebaseCategory> categories)
+        {
+            var children = categories.Where(x => x.ParentCategoryId == parentNode.id);
+            foreach (var child in children)
+            {
+                var newNode = new TreeNode
+                {
+                    id = child.Id,
+                    text = child.Name,
+                    isCategory = true,
+                    nodes = new List<TreeNode>()
+                };
+
+                FillChildNodes(newNode, categories);
+
+                parentNode.nodes.Add(newNode);
+            }
         }
 
         public IActionResult CreateCategory()
@@ -60,7 +94,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
                 return AccessDeniedView();
 
-            return View(new KnowledgebaseCategoryModel { DisplayOrder = 1, ParentCategoryId = 0 });
+            return View(new KnowledgebaseCategoryModel { ParentCategoryId = "" });
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
@@ -136,5 +170,16 @@ namespace Grand.Web.Areas.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Deleted"));
             return RedirectToAction("List");
         }
+    }
+
+    public class TreeNode
+    {
+        public string text { get; set; }
+
+        public string id { get; set; }
+
+        public List<TreeNode> nodes { get; set; }
+
+        public bool isCategory { get; set; }
     }
 }

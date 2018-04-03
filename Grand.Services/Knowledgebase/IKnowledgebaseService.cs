@@ -37,5 +37,36 @@ namespace Grand.Services.Knowledgebase
         /// </summary>
         /// <param name="kc"></param>
         void DeleteKnowledgebaseCategory(KnowledgebaseCategory kc);
+
+        /// <summary>
+        /// Gets knowledgebase article
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>knowledgebase article</returns>
+        KnowledgebaseArticle GetKnowledgebaseArticle(string id);
+
+        /// <summary>
+        /// Gets knowledgebase articles
+        /// </summary>
+        /// <returns>List of knowledgebase articles</returns>
+        List<KnowledgebaseArticle> GetKnowledgebaseArticles();
+
+        /// <summary>
+        /// Inserts knowledgebase article
+        /// </summary>
+        /// <param name="ka"></param>
+        void InsertKnowledgebaseArticle(KnowledgebaseArticle ka);
+
+        /// <summary>
+        /// Updates knowledgebase article
+        /// </summary>
+        /// <param name="ka"></param>
+        void UpdateKnowledgebaseArticle(KnowledgebaseArticle ka);
+
+        /// <summary>
+        /// Deletes knowledgebase article
+        /// </summary>
+        /// <param name="ka"></param>
+        void DeleteKnowledgebaseArticle(KnowledgebaseArticle ka);
     }
 }

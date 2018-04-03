@@ -11,16 +11,20 @@ namespace Grand.Services.Knowledgebase
     public class KnowledgebaseService : IKnowledgebaseService
     {
         private IRepository<KnowledgebaseCategory> _knowledgebaseCategoryRepository;
+        private IRepository<KnowledgebaseArticle> _knowledgebaseArticleRepository;
         private readonly IEventPublisher _eventPublisher;
 
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="knowledgebaseCategoryRepository"></param>
+        /// <param name="knowledgebaseArticleRepository"></param>
         /// <param name="eventPublisher"></param>
-        public KnowledgebaseService(IRepository<KnowledgebaseCategory> knowledgebaseCategoryRepository, IEventPublisher eventPublisher)
+        public KnowledgebaseService(IRepository<KnowledgebaseCategory> knowledgebaseCategoryRepository,
+            IRepository<KnowledgebaseArticle> knowledgebaseArticleRepository, IEventPublisher eventPublisher)
         {
             this._knowledgebaseCategoryRepository = knowledgebaseCategoryRepository;
+            this._knowledgebaseArticleRepository = knowledgebaseArticleRepository;
             this._eventPublisher = eventPublisher;
         }
 
@@ -71,6 +75,55 @@ namespace Grand.Services.Knowledgebase
         public List<KnowledgebaseCategory> GetKnowledgebaseCategories()
         {
             return _knowledgebaseCategoryRepository.Table.ToList();
+        }
+
+        /// <summary>
+        /// Gets knowledgebase article
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>knowledgebase article</returns>
+        public KnowledgebaseArticle GetKnowledgebaseArticle(string id)
+        {
+            return _knowledgebaseArticleRepository.Table.Where(x => x.Id == id).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Gets knowledgebase articles
+        /// </summary>
+        /// <returns>List of knowledgebase articles</returns>
+        public List<KnowledgebaseArticle> GetKnowledgebaseArticles()
+        {
+            return _knowledgebaseArticleRepository.Table.ToList();
+        }
+
+        /// <summary>
+        /// Inserts knowledgebase article
+        /// </summary>
+        /// <param name="ka"></param>
+        public void InsertKnowledgebaseArticle(KnowledgebaseArticle ka)
+        {
+            _knowledgebaseArticleRepository.Insert(ka);
+            _eventPublisher.EntityInserted(ka);
+        }
+
+        /// <summary>
+        /// Edits knowledgebase article
+        /// </summary>
+        /// <param name="ka"></param>
+        public void UpdateKnowledgebaseArticle(KnowledgebaseArticle ka)
+        {
+            _knowledgebaseArticleRepository.Update(ka);
+            _eventPublisher.EntityUpdated(ka);
+        }
+
+        /// <summary>
+        /// Deletes knowledgebase article
+        /// </summary>
+        /// <param name="id"></param>
+        public void DeleteKnowledgebaseArticle(KnowledgebaseArticle ka)
+        {
+            _knowledgebaseArticleRepository.Delete(ka);
+            _eventPublisher.EntityDeleted(ka);
         }
     }
 }

@@ -4,12 +4,17 @@ using System.Text;
 
 namespace Grand.Core.Domain.Knowledgebase
 {
-    public class KnowledgebaseCategory : BaseEntity
+    public class KnowledgebaseArticle : BaseEntity
     {
         /// <summary>
-        /// Gets or sets name of the category
+        /// Gets or sets title of the article
         /// </summary>
-        public string Name { get; set; }
+        public string Title { get; set; }
+
+        /// <summary>
+        /// Gets or sets content of the article
+        /// </summary>
+        public string Content { get; set; }
 
         /// <summary>
         /// Gets or sets parent category Id
