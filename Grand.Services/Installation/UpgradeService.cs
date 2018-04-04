@@ -829,6 +829,8 @@ namespace Grand.Services.Installation
 
         private void From410To420()
         {
+            var _settingService = EngineContext.Current.Resolve<ISettingService>();
+
             #region Install String resources
             InstallStringResources("410_420.nopres.xml");
             #endregion
@@ -841,6 +843,14 @@ namespace Grand.Services.Installation
                 e.ResourceName = e.ResourceName.ToLowerInvariant();
                 _localeStringResource.Update(e);
             });
+
+            #endregion
+            #region Admin area settings
+
+            var adminareasettings = EngineContext.Current.Resolve<AdminAreaSettings>();
+            adminareasettings.AdminLayout = "Default";
+            adminareasettings.KendoLayout = "custom";
+            _settingService.SaveSetting(adminareasettings);
 
             #endregion
 

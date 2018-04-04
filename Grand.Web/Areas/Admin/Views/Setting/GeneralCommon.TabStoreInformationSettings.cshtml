@@ -1,6 +1,24 @@
 ﻿@model GeneralCommonSettingsModel
+@using Grand.Framework.Extensions;
+
 <div class="form-horizontal">
     <div class="form-body">
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.GrandLabelFor(model => model.Layout, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                @Html.GrandDropDownListFor(model => model.Layout, ((Grand.Web.Areas.Admin.Helpers.AdminLayout)Model.Layout).ToSelectList())
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.GrandLabelFor(model => model.GridLayout, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                @Html.GrandDropDownListFor(model => model.GridLayout, ((Grand.Web.Areas.Admin.Helpers.KendoLayout)Model.GridLayout).ToSelectList())
+            </div>
+        </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.StoreClosed_OverrideForStore, model => model.StoreInformationSettings.StoreClosed, Model.ActiveStoreScopeConfiguration)
@@ -23,21 +41,21 @@
                 <div class="row">
                     <ul class="clearer" style="list-style: none;" id="theme-selection-block">
                         @foreach (var theme in Model.StoreInformationSettings.AvailableStoreThemes)
-                        {
-                            <li style="float: left; width: 210px;">
-                                <p style="float: left; padding-top: 55px;">
-                                    <input type="radio" name="@Html.FieldNameFor(x => x.StoreInformationSettings.DefaultStoreTheme)" value="@theme.ThemeName" id="id_image_@theme.ThemeName"
-                                           @if (theme.ThemeName == Model.StoreInformationSettings.DefaultStoreTheme) { <text> checked="checked" </text>      }>
-                                </p>
-                                <p style="float: left;">
-                                    <label for="id_image_@theme.ThemeName">
-                                        <img src="@Url.Content(theme.PreviewImageUrl)" alt="@theme.PreviewText" title="@theme.PreviewText" width="175">
-                                        <br />
-                                        <label style="text-align:center;font-weight:bold;width:170px;">@theme.ThemeTitle</label>
-                                    </label>
-                                </p>
-                            </li>
-                        }
+                    {
+                        <li style="float: left; width: 210px;">
+                            <p style="float: left; padding-top: 55px;">
+                                <input type="radio" name="@Html.FieldNameFor(x => x.StoreInformationSettings.DefaultStoreTheme)" value="@theme.ThemeName" id="id_image_@theme.ThemeName"
+                                       @if (theme.ThemeName == Model.StoreInformationSettings.DefaultStoreTheme) { <text> checked="checked" </text> }>
+                            </p>
+                            <p style="float: left;">
+                                <label for="id_image_@theme.ThemeName">
+                                    <img src="@Url.Content(theme.PreviewImageUrl)" alt="@theme.PreviewText" title="@theme.PreviewText" width="175">
+                                    <br />
+                                    <label style="text-align:center;font-weight:bold;width:170px;">@theme.ThemeTitle</label>
+                                </label>
+                            </p>
+                        </li>
+                }
                     </ul>
                 </div>
                 @Html.ValidationMessageFor(model => model.StoreInformationSettings.DefaultStoreTheme)

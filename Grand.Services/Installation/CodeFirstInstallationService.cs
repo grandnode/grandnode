@@ -5049,6 +5049,8 @@ namespace Grand.Services.Installation
                 RichEditorAdditionalSettings = null,
                 RichEditorAllowJavaScript = false,
                 UseIsoDateTimeConverterInJson = true,
+                AdminLayout = "Default",
+                KendoLayout = "custom",
             });
 
             _settingService.SaveSetting(new CatalogSettings
