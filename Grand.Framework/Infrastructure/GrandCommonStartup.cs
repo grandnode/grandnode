@@ -8,7 +8,6 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Net.Http.Headers;
 using Grand.Core.Configuration;
 using Grand.Core.Infrastructure;
-using Grand.Framework.Compression;
 using Grand.Framework.Infrastructure.Extensions;
 
 namespace Grand.Framework.Infrastructure
@@ -64,8 +63,6 @@ namespace Grand.Framework.Infrastructure
             {
                 //gzip by default
                 application.UseResponseCompression();
-                //workaround with "vary" header
-                application.UseMiddleware<ResponseCompressionVaryWorkaroundMiddleware>();
             }
 
             //static files
