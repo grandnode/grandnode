@@ -1,0 +1,20 @@
+﻿<Language>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.ReplyText">
+    <Value>Reply text</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.ReplyText.Hint">
+    <Value>The reply text by a store owner.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.Signature">
+    <Value>Signature</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.Signature.Hint">
+    <Value>Signature by a store owner.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.Store">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.Store.hint">
+    <Value>A store name for which products of vendor will be available.</Value>
+  </LocaleResource>
+</Language>

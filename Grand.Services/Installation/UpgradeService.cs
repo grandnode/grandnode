@@ -46,6 +46,7 @@ namespace Grand.Services.Installation
         private const string version_390 = "3.90";
         private const string version_400 = "4.00";
         private const string version_410 = "4.10";
+        private const string version_420 = "4.20";
 
         #endregion
 
@@ -89,6 +90,11 @@ namespace Grand.Services.Installation
             {
                 From400To410();
                 fromversion = version_410;
+            }
+            if (fromversion == version_410)
+            {
+                From410To420();
+                fromversion = version_420;
             }
             if (fromversion == toversion)
             {
@@ -821,6 +827,24 @@ namespace Grand.Services.Installation
             #endregion
         }
 
+        private void From410To420()
+        {
+            #region Install String resources
+            InstallStringResources("410_420.nopres.xml");
+            #endregion
+            #region Update string resources
+
+            var _localeStringResource = EngineContext.Current.Resolve<IRepository<LocaleStringResource>>();
+
+            var filter = new BsonDocument();
+            var result = _localeStringResource.Collection.Find(filter).ForEachAsync((e) => {
+                e.ResourceName = e.ResourceName.ToLowerInvariant();
+                _localeStringResource.Update(e);
+            });
+
+            #endregion
+
+        }
         private void InstallStringResources(string filenames)
         {
             //'English' language            

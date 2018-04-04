@@ -133,6 +133,9 @@
     <None Update="App_Data\Localization\Upgrade\EN_380_390.nopres.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="App_Data\Localization\Upgrade\EN_410_420.nopres.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="App_Data\Localization\Upgrade\EN_400_410.nopres.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
