@@ -1,10 +1,8 @@
 ﻿using Grand.Core.Plugins;
 using Microsoft.Extensions.DependencyModel;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace Grand.Core.Infrastructure
 {
@@ -14,13 +12,13 @@ namespace Grand.Core.Infrastructure
         static AppDomain()
         {
             CurrentDomain = new AppDomain();
-
         }
 
         private List<Assembly> assemblies;
 
         public Assembly[] GetAssemblies()
         {
+            
             if (assemblies == null)
             {
                 assemblies = new List<Assembly>();
@@ -33,6 +31,7 @@ namespace Grand.Core.Infrastructure
                         assemblies.Add(assembly);
                     }
                 }
+                
                 var plugins = PluginManager.ReferencedPlugins.ToList();
                 foreach (var item in plugins)
                 {
