@@ -31,8 +31,6 @@ namespace Grand.Framework.Infrastructure
             //add options feature
             services.AddOptions();
             
-            var grandConfig = services.BuildServiceProvider().GetService<GrandConfig>();
-
             //add memory cache
             services.AddMemoryCache();
 
