@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Grand.Core.Domain.Knowledgebase
 {
-    public class KnowledgebaseCategory : BaseEntity
+    public class KnowledgebaseCategory : BaseEntity, ITreeNode
     {
         /// <summary>
         /// Gets or sets name of the category
@@ -15,6 +15,11 @@ namespace Grand.Core.Domain.Knowledgebase
         /// Gets or sets parent category Id
         /// </summary>
         public string ParentCategoryId { get; set; }
+
+        /// <summary>
+        /// Gets or sets display order
+        /// </summary>
+        public int DisplayOrder { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance creation

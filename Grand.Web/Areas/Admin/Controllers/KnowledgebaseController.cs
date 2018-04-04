@@ -40,7 +40,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View();
         }
 
-        public IActionResult CategoryList()
+        public IActionResult NodeList()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
                 return AccessDeniedView();
@@ -49,19 +49,23 @@ namespace Grand.Web.Areas.Admin.Controllers
             var articles = _knowledgebaseService.GetKnowledgebaseArticles();
             List<TreeNode> nodeList = new List<TreeNode>();
 
-            foreach (var category in categories)
+            List<ITreeNode> list = new List<ITreeNode>();
+            list.AddRange(categories);
+            list.AddRange(articles);
+
+            foreach (var node in list)
             {
-                if (string.IsNullOrEmpty(category.ParentCategoryId))
+                if (string.IsNullOrEmpty(node.ParentCategoryId))
                 {
                     var newNode = new TreeNode
                     {
-                        id = category.Id,
-                        text = category.Name,
-                        isCategory = true,
+                        id = node.Id,
+                        text = node.Name,
+                        isCategory = node.GetType() == typeof(KnowledgebaseCategory),
                         nodes = new List<TreeNode>()
                     };
 
-                    FillChildNodes(newNode, categories);
+                    FillChildNodes(newNode, list);
 
                     nodeList.Add(newNode);
                 }
@@ -70,20 +74,20 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(nodeList);
         }
 
-        public void FillChildNodes(TreeNode parentNode, List<KnowledgebaseCategory> categories)
+        public void FillChildNodes(TreeNode parentNode, List<ITreeNode> nodes)
         {
-            var children = categories.Where(x => x.ParentCategoryId == parentNode.id);
+            var children = nodes.Where(x => x.ParentCategoryId == parentNode.id);
             foreach (var child in children)
             {
                 var newNode = new TreeNode
                 {
                     id = child.Id,
                     text = child.Name,
-                    isCategory = true,
+                    isCategory = child.GetType() == typeof(KnowledgebaseCategory),
                     nodes = new List<TreeNode>()
                 };
 
-                FillChildNodes(newNode, categories);
+                FillChildNodes(newNode, nodes);
 
                 parentNode.nodes.Add(newNode);
             }
@@ -94,7 +98,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
                 return AccessDeniedView();
 
-            return View(new KnowledgebaseCategoryModel { ParentCategoryId = "" });
+            var model = new KnowledgebaseCategoryModel();
+            model.Categories = _knowledgebaseService.GetKnowledgebaseCategories();
+            return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
@@ -128,6 +134,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             var model = knowledgebaseCategory.ToModel();
+            model.Categories = _knowledgebaseService.GetKnowledgebaseCategories();
             return View(model);
         }
 
@@ -168,6 +175,91 @@ namespace Grand.Web.Areas.Admin.Controllers
             _knowledgebaseService.DeleteKnowledgebaseCategory(knowledgebaseCategory);
 
             SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Deleted"));
+            return RedirectToAction("List");
+        }
+
+        public IActionResult CreateArticle()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
+                return AccessDeniedView();
+
+            var model = new KnowledgebaseArticleModel();
+            model.Categories = _knowledgebaseService.GetKnowledgebaseCategories();
+            return View(model);
+        }
+
+        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        public IActionResult CreateArticle(KnowledgebaseArticleModel model, bool continueEditing)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
+                return AccessDeniedView();
+
+            if (ModelState.IsValid)
+            {
+                var knowledgebaseArticle = model.ToEntity();
+                knowledgebaseArticle.CreatedOnUtc = DateTime.UtcNow;
+                knowledgebaseArticle.UpdatedOnUtc = DateTime.UtcNow;
+                _knowledgebaseService.InsertKnowledgebaseArticle(knowledgebaseArticle);
+
+                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Added"));
+                return continueEditing ? RedirectToAction("EditArticle", new { knowledgebaseArticle.Id }) : RedirectToAction("List");
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        public IActionResult EditArticle(string id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
+                return AccessDeniedView();
+
+            var knowledgebaseArticle = _knowledgebaseService.GetKnowledgebaseArticle(id);
+            if (knowledgebaseArticle == null)
+                return RedirectToAction("List");
+
+            var model = knowledgebaseArticle.ToModel();
+            model.Categories = _knowledgebaseService.GetKnowledgebaseCategories();
+            return View(model);
+        }
+
+        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        public IActionResult EditArticle(KnowledgebaseArticleModel model, bool continueEditing)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
+                return AccessDeniedView();
+
+            var knowledgebaseArticle = _knowledgebaseService.GetKnowledgebaseArticle(model.Id);
+            if (knowledgebaseArticle == null)
+                return RedirectToAction("List");
+
+            if (ModelState.IsValid)
+            {
+                knowledgebaseArticle = model.ToEntity(knowledgebaseArticle);
+                knowledgebaseArticle.UpdatedOnUtc = DateTime.UtcNow;
+                _knowledgebaseService.UpdateKnowledgebaseArticle(knowledgebaseArticle);
+
+                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Updated"));
+                return continueEditing ? RedirectToAction("EditArticle", new { id = knowledgebaseArticle.Id }) : RedirectToAction("List");
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult DeleteArticle(string id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
+                return AccessDeniedView();
+
+            var knowledgebaseArticle = _knowledgebaseService.GetKnowledgebaseArticle(id);
+            if (knowledgebaseArticle == null)
+                return RedirectToAction("List");
+
+            _knowledgebaseService.DeleteKnowledgebaseArticle(knowledgebaseArticle);
+
+            SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Deleted"));
             return RedirectToAction("List");
         }
     }

@@ -526,8 +526,8 @@
 			}
 
 			// Add expand, collapse or empty spacer icons
-			var classList = [];
-			if (node.nodes) {
+            var classList = [];
+            if (node.nodes && node.nodes.length > 0) {
 				classList.push('expand-icon');
 				if (node.state.expanded) {
 					classList.push(_this.options.collapseIcon);
@@ -601,7 +601,7 @@
 				$.each(node.tags, function addTag(id, tag) {
 					treeItem
 						.append($(_this.template.badge)
-							.append(tag)
+                            .append("<a class=\"btn btn-xs btn-default fa fa-pencil\" href=\"" + tag + "\"></a>")
 						);
 				});
 			}
@@ -692,7 +692,7 @@
 		indent: '<span class="indent"></span>',
 		icon: '<span class="icon"></span>',
 		link: '<a href="#" style="color:inherit;"></a>',
-		badge: '<span class="badge"></span>'
+        badge: '<span class="pull-right"></span>'
 	};
 
 	Tree.prototype.css = '.treeview .list-group-item{cursor:pointer}.treeview span.indent{margin-left:10px;margin-right:10px}.treeview span.icon{width:12px;margin-right:5px}.treeview .node-disabled{color:silver;cursor:not-allowed}'

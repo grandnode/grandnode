@@ -541,6 +541,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
             //knowledgebase
             CreateMap<KnowledgebaseCategory, KnowledgebaseCategoryModel>();
             CreateMap<KnowledgebaseCategoryModel, KnowledgebaseCategory>();
+            CreateMap<KnowledgebaseArticle, KnowledgebaseArticleModel>();
+            CreateMap<KnowledgebaseArticleModel, KnowledgebaseArticle>();
 
             //blogs
             CreateMap<BlogPost, BlogPostModel>()

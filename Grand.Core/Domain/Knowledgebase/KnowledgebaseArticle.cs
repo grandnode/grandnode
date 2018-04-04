@@ -4,12 +4,12 @@ using System.Text;
 
 namespace Grand.Core.Domain.Knowledgebase
 {
-    public class KnowledgebaseArticle : BaseEntity
+    public class KnowledgebaseArticle : BaseEntity, ITreeNode
     {
         /// <summary>
         /// Gets or sets title of the article
         /// </summary>
-        public string Title { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets content of the article
@@ -20,6 +20,11 @@ namespace Grand.Core.Domain.Knowledgebase
         /// Gets or sets parent category Id
         /// </summary>
         public string ParentCategoryId { get; set; }
+
+        /// <summary>
+        /// Gets or sets display order
+        /// </summary>
+        public int DisplayOrder { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance creation

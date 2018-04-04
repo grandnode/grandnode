@@ -16,13 +16,15 @@
                 <div class="actions btn-group btn-group-devided">
                     <a href="@Url.Action("CreateCategory")" class="btn blue">@T("Admin.ContentManagement.Knowledgebase.CreateKnowledgebaseCategory")</a>
                 </div>
+                <div class="actions btn-group btn-group-devided">
+                    <a href="@Url.Action("CreateArticle")" class="btn yellow">@T("Admin.ContentManagement.Knowledgebase.CreateKnowledgebaseArticle")</a>
+                </div>
             </div>
             <div class="portlet-body form">
                 <div class="form-horizontal">
                     <div class="form-body">
                         <div class="portlet-body">
-                            <div id="default-tree"></div>
-                            <div id="categories-grid"></div>
+                            <div id="tree"></div>
                         </div>
                     </div>
                 </div>
@@ -56,10 +58,19 @@
     $(document).ready(function () {
         $.ajax({
             cache: false,
-            url: "@(Url.Action("CategoryList", "Knowledgebase"))",
+            url: "@(Url.Action("NodeList", "Knowledgebase"))",
             dataType: 'json',
             success: function (data) {
-                createTree(data);
+                $('#tree').treeview({
+                    data: createTree(data),
+                    collapseIcon: "fa fa-folder-open",
+                    expandIcon: "fa fa-folder",
+                    emptyIcon: "fa fa-folder-open",
+                    backColor: "#e9ecef",
+                    showTags: true,
+                    levels: 0,
+                    enableLinks: true
+                });
             },
             error: function () {
                 alert('Error');
@@ -67,42 +78,26 @@
         });
     });
 
-    function createTree(originalArray) {
-        var myTree = [];
+    function createTree(data) {
+        markAsArticle(data);
+        return data;
+    }
 
-        //for (var i = 0; i < originalArray.length; i++) {
-        //    if (!originalArray[i].ParentCategoryId) {
-        //        myTree.push({
-        //            text: originalArray[i].Name,
-        //            nodes: [],
-        //            selectable: false,
-        //            id: originalArray[i].Id
-        //        });
-        //    } else {
-        //        var found = false;
-        //        for (var j = 0; j < myTree.length; j++) {
-        //            if (myTree[j].id == originalArray[i].ParentCategoryId) {
-        //                found = true;
-        //                myTree[j].nodes.push({
-        //                    text: originalArray[i].Name,
-        //                    nodes: [],
-        //                    selectable: false,
-        //                    id: originalArray[i].Id
-        //                });
-        //            }
-        //        }
+    function markAsArticle(nodes) {
+        for (var i = 0; i < nodes.length; i++){
+            if (!nodes[i].isCategory) {
+                nodes[i].backColor = "#ffffff";
+                nodes[i].tags = ['@Url.Action("EditArticle")' + '/' + nodes[i].id];
+            } else {
+                nodes[i].tags = ['@Url.Action("EditCategory")' + '/' + nodes[i].id];
+            }
 
-        //        if (!found) {
-        //            alert('nie znaleziono dla ' + originalArray[i].Name);
-        //        }
-        //    }
-        //}
+            nodes[i].href = "link";
+            nodes[i].selectable = false;
 
-        $('#default-tree').treeview({
-            data: originalArray,
-            collapseIcon: "fa fa-folder-open",
-            expandIcon: "fa fa-folder",
-            emptyIcon: "fa fa-ban"
-        });
+            if (nodes[i].nodes.length > 0) {
+                markAsArticle(nodes[i].nodes);
+            }
+        }
     }
 </script>
