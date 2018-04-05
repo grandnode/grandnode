@@ -11,7 +11,7 @@
 
 @using (Html.BeginForm())
 {
-    @Html.AntiForgeryToken()
+    <antiforgery-token />
 
     <div class="row">
         <div class="col-md-12">
@@ -403,7 +403,7 @@
 @*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
 @using (Html.BeginForm("PdfPackagingSlipSelected", "Order", FormMethod.Post, new { id = "pdf-packaging-slip-selected-form" }))
 {
-    @Html.AntiForgeryToken()
+    <antiforgery-token />
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 }
 <script type="text/javascript">

@@ -15,7 +15,7 @@
     @Html.HiddenFor(model => model.CustomerReminderId)
     @Html.HiddenFor(model => model.ConditionId)
 
-    @Html.AntiForgeryToken()
+    <antiforgery-token />
     
        if (ViewBag.RefreshPage == true)
        {

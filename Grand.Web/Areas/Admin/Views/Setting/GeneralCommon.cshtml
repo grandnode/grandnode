@@ -5,7 +5,7 @@
 }
 @using (Html.BeginForm())
 {
-    @Html.AntiForgeryToken()
+    <antiforgery-token />
     @Html.ValidationSummary(false)
 
     <div class="row">
@@ -126,7 +126,7 @@
 <div class="modal-dialog" id="importfile-window" style="display:none; padding: 0 10px;">
     @using (Html.BeginForm("UploadTheme", "Plugin", null, FormMethod.Post, false, new { enctype = "multipart/form-data" }))
     {
-        @Html.AntiForgeryToken()
+        <antiforgery-token />
         <ul class="common-list">
             <li>
                 <strong>NOTE: It can take up to several minutes.</strong>

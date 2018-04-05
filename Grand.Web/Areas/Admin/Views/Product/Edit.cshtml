@@ -5,7 +5,7 @@
 }
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "product-form" }))
 {
-    @Html.AntiForgeryToken()
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -45,7 +45,7 @@
 <div id="copyproduct-window" style="display:none;">
             @using (Html.BeginForm("CopyProduct", "Product"))
             {
-                @Html.AntiForgeryToken()
+                <antiforgery-token />
                 @Html.HiddenFor(model => model.CopyProductModel.Id)
                         <div class="form-horizontal">
                             <div class="form-body">

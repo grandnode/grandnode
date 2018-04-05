@@ -5,7 +5,7 @@
 }
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "discount-form" }))
 {
-    @Html.AntiForgeryToken()
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">

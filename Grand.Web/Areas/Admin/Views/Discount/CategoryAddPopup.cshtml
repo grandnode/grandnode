@@ -13,7 +13,7 @@
 }
 @using (Html.BeginForm())
 {
-    @Html.AntiForgeryToken()
+    <antiforgery-token />
     
     
        if (ViewBag.RefreshPage == true)

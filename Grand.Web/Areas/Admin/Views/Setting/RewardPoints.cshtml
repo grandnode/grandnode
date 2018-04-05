@@ -6,7 +6,7 @@
 }
 @using (Html.BeginForm())
 {
-    @Html.AntiForgeryToken()
+    <antiforgery-token />
     @Html.ValidationSummary(false)
 
 

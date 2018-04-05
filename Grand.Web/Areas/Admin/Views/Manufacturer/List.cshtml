@@ -6,7 +6,7 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Manufacturers").Text;
 }
-@Html.AntiForgeryToken()
+<antiforgery-token />
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light form-fit">
@@ -153,7 +153,7 @@
 <div class="modal-dialog" id="importexcel-window" style="display:none; padding: 0 10px;">
     @using (Html.BeginForm("ImportFromXlsx", "Manufacturer", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
-        @Html.AntiForgeryToken()
+        <antiforgery-token />
         <em>@T("Admin.Catalog.Manufacturer.List.ImportFromExcelTip")</em>
         <div class="form-group">
             &nbsp;

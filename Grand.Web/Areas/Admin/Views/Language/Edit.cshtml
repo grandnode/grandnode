@@ -5,7 +5,7 @@
 }
 @using (Html.BeginForm())
 {
-    @Html.AntiForgeryToken()
+    <antiforgery-token />
 
     <div class="row">
         <div class="col-md-12">
@@ -42,7 +42,7 @@
 
     @using (Html.BeginForm("ImportXml", "Language", new { id = Model.Id }, FormMethod.Post, false, new { enctype = "multipart/form-data" }))
     {
-        @Html.AntiForgeryToken()
+        <antiforgery-token />
         <ul class="common-list">
             <li>
                 <strong>NOTE: It can take up to several minutes.</strong>

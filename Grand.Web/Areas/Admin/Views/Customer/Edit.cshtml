@@ -5,7 +5,7 @@
 }
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "customer-form" }))
 {
-    @Html.AntiForgeryToken()
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -47,7 +47,7 @@
 <div id="sendemail-window" style="display:none;">
     @using (Html.BeginForm("SendEmail", "Customer", new {id = Model.Id}))
     {
-        @Html.AntiForgeryToken()
+        <antiforgery-token />
         <div class="form-horizontal">
             <div class="form-body">
                 <div class="form-group">
@@ -111,7 +111,7 @@
 <div id="sendprivatemessage-window" style="display:none;">
     @using (Html.BeginForm("SendPm", "Customer", new { id = Model.Id }))
     {
-    @Html.AntiForgeryToken()
+    <antiforgery-token />
     <div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">

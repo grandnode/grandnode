@@ -6,7 +6,7 @@
     //page title
     ViewBag.Title = string.Format(T("Admin.Orders.Products.AddNew.Title1").Text, Model.OrderNumber);
 }
-@Html.AntiForgeryToken()
+<antiforgery-token />
 
 <div class="row">
     <div class="col-md-12">

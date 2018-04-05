@@ -17,7 +17,7 @@
     @Html.HiddenFor(model => model.CustomerReminderId)
     @Html.HiddenFor(model => model.ConditionId)
 
-    @Html.AntiForgeryToken()
+    <antiforgery-token />
 
     <div class="row">
         <div class="col-md-12">

@@ -1,7 +1,7 @@
 ﻿@model Grand.Framework.Mvc.Models.DeleteConfirmationModel
 @using (Html.BeginForm(Model.ActionName, Model.ControllerName, new { id = Model.Id }))
 {
-    @Html.AntiForgeryToken()
+    <antiforgery-token />
     <div>
         <p>
             @T("Admin.Common.DeleteConfirmation")

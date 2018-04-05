@@ -8,7 +8,7 @@
 }
 @using (Html.BeginForm())
 {
-    @Html.AntiForgeryToken()
+    <antiforgery-token />
    
     <div class="row">
         <div class="col-md-12">
@@ -220,7 +220,7 @@
 <div id="importcsv-window" style="display:none;">
     @using (Html.BeginForm("ImportCsv", "NewsLetterSubscription", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
-        @Html.AntiForgeryToken()
+        <antiforgery-token />
         <table style="text-align:left;">
             <tr>
                 <td>

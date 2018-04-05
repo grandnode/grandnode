@@ -9,7 +9,7 @@
 }
 @using (Html.BeginForm(@*"List","Product", FormMethod.Post*@))
 {
-    @Html.AntiForgeryToken()
+    <antiforgery-token />
 
     <div class="row">
         <div class="col-md-12">
@@ -369,7 +369,7 @@
 <div class="modal-dialog" id="importexcel-window" style="display:none; padding: 0 10px;">
     @using (Html.BeginForm("ImportExcel", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
-        @Html.AntiForgeryToken()
+        <antiforgery-token />
 
         <em>@T("Admin.Catalog.Products.List.ImportFromExcelTip")</em>
         <div class="form-group">
@@ -417,7 +417,7 @@
 @*export selected (XML). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
 @using (Html.BeginForm("ExportXmlSelected", "Product", FormMethod.Post, new { id = "export-xml-selected-form" }))
 {
-    @Html.AntiForgeryToken()
+    <antiforgery-token />
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 }
 <script type="text/javascript">
@@ -436,7 +436,7 @@
 @*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
 @using (Html.BeginForm("ExportExcelSelected", "Product", FormMethod.Post, new { id = "export-excel-selected-form" }))
 {
-    @Html.AntiForgeryToken()
+    <antiforgery-token />
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 }
 <script type="text/javascript">

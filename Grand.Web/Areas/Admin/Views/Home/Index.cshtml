@@ -17,7 +17,7 @@
     var ordersToday = orderReportService.GetOrderPeriodReport(0);
     var ordersAmount = EngineContext.Current.Resolve<Grand.Services.Catalog.IPriceFormatter>().FormatPrice(ordersToday.Amount, true, false);
 }
-@Html.AntiForgeryToken()
+<antiforgery-token />
 <div class="page-bar" style="height:43px;">
     <div class="page-toolbar">
         <div id="dashboard-report-range" class="pull-right tooltips btn btn-fit-height green" data-placement="top" data-original-title="Change dashboard date range">

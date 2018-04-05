@@ -10,7 +10,7 @@
 }
 @using (Html.BeginForm())
 {
-    @Html.AntiForgeryToken()
+    <antiforgery-token />
     @Html.ValidationSummary(false)
    
         <div class="col-md-12">
