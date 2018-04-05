@@ -11,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Grand.Core.Domain.Localization;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -19,12 +21,69 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
         private readonly IKnowledgebaseService _knowledgebaseService;
+        private readonly ILanguageService _languageService;
 
-        public KnowledgebaseController(ILocalizationService localizationService, IPermissionService permissionService, IKnowledgebaseService knowledgebaseService)
+        public KnowledgebaseController(ILocalizationService localizationService, IPermissionService permissionService,
+            IKnowledgebaseService knowledgebaseService, ILanguageService languageService)
         {
             this._localizationService = localizationService;
             this._permissionService = permissionService;
             this._knowledgebaseService = knowledgebaseService;
+            this._languageService = languageService;
+        }
+
+        [NonAction]
+        protected virtual List<LocalizedProperty> UpdateLocales(KnowledgebaseCategoryModel model)
+        {
+            List<LocalizedProperty> localized = new List<LocalizedProperty>();
+
+            foreach (var local in model.Locales)
+            {
+                if (!(String.IsNullOrEmpty(local.Name)))
+                    localized.Add(new LocalizedProperty()
+                    {
+                        LanguageId = local.LanguageId,
+                        LocaleKey = "Name",
+                        LocaleValue = local.Name,
+                    });
+
+                if (!(String.IsNullOrEmpty(local.Description)))
+                    localized.Add(new LocalizedProperty()
+                    {
+                        LanguageId = local.LanguageId,
+                        LocaleKey = "Description",
+                        LocaleValue = local.Description,
+                    });
+            }
+
+            return localized;
+        }
+
+        [NonAction]
+        protected virtual List<LocalizedProperty> UpdateLocales(KnowledgebaseArticleModel model)
+        {
+            List<LocalizedProperty> localized = new List<LocalizedProperty>();
+
+            foreach (var local in model.Locales)
+            {
+                if (!(String.IsNullOrEmpty(local.Name)))
+                    localized.Add(new LocalizedProperty()
+                    {
+                        LanguageId = local.LanguageId,
+                        LocaleKey = "Name",
+                        LocaleValue = local.Name,
+                    });
+
+                if (!(String.IsNullOrEmpty(local.Content)))
+                    localized.Add(new LocalizedProperty()
+                    {
+                        LanguageId = local.LanguageId,
+                        LocaleKey = "Content",
+                        LocaleValue = local.Content,
+                    });
+            }
+
+            return localized;
         }
 
         public IActionResult Index()
@@ -99,7 +158,18 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new KnowledgebaseCategoryModel();
-            model.Categories = _knowledgebaseService.GetKnowledgebaseCategories();
+            model.Categories.Add(new SelectListItem { Text = "[None]", Value = "" });
+            var categories = _knowledgebaseService.GetKnowledgebaseCategories();
+            foreach (var category in categories)
+            {
+                model.Categories.Add(new SelectListItem
+                {
+                    Value = category.Id,
+                    Text = category.GetFormattedBreadCrumb(categories)
+                });
+            }
+
+            AddLocales(_languageService, model.Locales);
             return View(model);
         }
 
@@ -114,10 +184,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                 var knowledgebaseCategory = model.ToEntity();
                 knowledgebaseCategory.CreatedOnUtc = DateTime.UtcNow;
                 knowledgebaseCategory.UpdatedOnUtc = DateTime.UtcNow;
+                knowledgebaseCategory.Locales = UpdateLocales(model);
+
                 _knowledgebaseService.InsertKnowledgebaseCategory(knowledgebaseCategory);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Added"));
                 return continueEditing ? RedirectToAction("EditCategory", new { knowledgebaseCategory.Id }) : RedirectToAction("List");
+
             }
 
             //If we got this far, something failed, redisplay form
@@ -134,7 +207,22 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             var model = knowledgebaseCategory.ToModel();
-            model.Categories = _knowledgebaseService.GetKnowledgebaseCategories();
+            model.Categories.Add(new SelectListItem { Text = "[None]", Value = "" });
+            var categories = _knowledgebaseService.GetKnowledgebaseCategories();
+            foreach (var category in categories)
+            {
+                model.Categories.Add(new SelectListItem
+                {
+                    Value = category.Id,
+                    Text = category.GetFormattedBreadCrumb(categories)
+                });
+            }
+
+            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            {
+                locale.Name = knowledgebaseCategory.GetLocalized(x => x.Name, languageId, false, false);
+                locale.Description = knowledgebaseCategory.GetLocalized(x => x.Description, languageId, false, false);
+            });
             return View(model);
         }
 
@@ -152,6 +240,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 knowledgebaseCategory = model.ToEntity(knowledgebaseCategory);
                 knowledgebaseCategory.UpdatedOnUtc = DateTime.UtcNow;
+                UpdateLocales( model);
                 _knowledgebaseService.UpdateKnowledgebaseCategory(knowledgebaseCategory);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Updated"));
@@ -184,7 +273,18 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new KnowledgebaseArticleModel();
-            model.Categories = _knowledgebaseService.GetKnowledgebaseCategories();
+            model.Categories.Add(new SelectListItem { Text = "[None]", Value = "" });
+            var categories = _knowledgebaseService.GetKnowledgebaseCategories();
+            foreach (var category in categories)
+            {
+                model.Categories.Add(new SelectListItem
+                {
+                    Value = category.Id,
+                    Text = category.GetFormattedBreadCrumb(categories)
+                });
+            }
+
+            AddLocales(_languageService, model.Locales);
             return View(model);
         }
 
@@ -199,6 +299,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 var knowledgebaseArticle = model.ToEntity();
                 knowledgebaseArticle.CreatedOnUtc = DateTime.UtcNow;
                 knowledgebaseArticle.UpdatedOnUtc = DateTime.UtcNow;
+                knowledgebaseArticle.Locales = UpdateLocales(model);
                 _knowledgebaseService.InsertKnowledgebaseArticle(knowledgebaseArticle);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Added"));
@@ -219,7 +320,22 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             var model = knowledgebaseArticle.ToModel();
-            model.Categories = _knowledgebaseService.GetKnowledgebaseCategories();
+            model.Categories.Add(new SelectListItem { Text = "[None]", Value = "" });
+            var categories = _knowledgebaseService.GetKnowledgebaseCategories();
+            foreach (var category in categories)
+            {
+                model.Categories.Add(new SelectListItem
+                {
+                    Value = category.Id,
+                    Text = category.GetFormattedBreadCrumb(categories)
+                });
+            }
+
+            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            {
+                locale.Name = knowledgebaseArticle.GetLocalized(x => x.Name, languageId, false, false);
+                locale.Content = knowledgebaseArticle.GetLocalized(x => x.Content, languageId, false, false);
+            });
             return View(model);
         }
 
@@ -237,6 +353,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 knowledgebaseArticle = model.ToEntity(knowledgebaseArticle);
                 knowledgebaseArticle.UpdatedOnUtc = DateTime.UtcNow;
+                UpdateLocales(model);
                 _knowledgebaseService.UpdateKnowledgebaseArticle(knowledgebaseArticle);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Updated"));

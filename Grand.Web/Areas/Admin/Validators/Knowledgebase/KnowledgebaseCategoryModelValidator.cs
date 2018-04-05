@@ -3,6 +3,7 @@ using Grand.Framework.Validators;
 using Grand.Services.Knowledgebase;
 using Grand.Services.Localization;
 using Grand.Web.Areas.Admin.Models.Knowledgebase;
+using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Validators.Knowledgebase
 {
@@ -14,9 +15,17 @@ namespace Grand.Web.Areas.Admin.Validators.Knowledgebase
             RuleFor(x => x.ParentCategoryId).Must(x =>
             {
                 var category = knowledgebaseService.GetKnowledgebaseCategory(x);
-                if (category != null)
+                if (category != null || string.IsNullOrEmpty(x))
                 {
                     return true;
+                }
+                else
+                {
+                    var categories = knowledgebaseService.GetKnowledgebaseCategories();
+                    if (!categories.Any())
+                    {
+                        return true;
+                    }
                 }
 
                 return false;

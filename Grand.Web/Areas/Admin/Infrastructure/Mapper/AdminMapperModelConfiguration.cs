@@ -539,10 +539,18 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore());
 
             //knowledgebase
-            CreateMap<KnowledgebaseCategory, KnowledgebaseCategoryModel>();
-            CreateMap<KnowledgebaseCategoryModel, KnowledgebaseCategory>();
-            CreateMap<KnowledgebaseArticle, KnowledgebaseArticleModel>();
-            CreateMap<KnowledgebaseArticleModel, KnowledgebaseArticle>();
+            CreateMap<KnowledgebaseCategory, KnowledgebaseCategoryModel>()
+                .ForMember(dest => dest.Locales, mo => mo.Ignore());
+            CreateMap<KnowledgebaseCategoryModel, KnowledgebaseCategory>()
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
+                .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore());
+            CreateMap<KnowledgebaseArticle, KnowledgebaseArticleModel>()
+                .ForMember(dest => dest.Locales, mo => mo.Ignore());
+            CreateMap<KnowledgebaseArticleModel, KnowledgebaseArticle>()
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
+                .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore());
 
             //blogs
             CreateMap<BlogPost, BlogPostModel>()

@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Grand.Core.Domain.Localization;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Grand.Core.Domain.Knowledgebase
 {
-    public class KnowledgebaseArticle : BaseEntity, ITreeNode
+    public class KnowledgebaseArticle : BaseEntity, ITreeNode, ILocalizedEntity
     {
         /// <summary>
         /// Gets or sets title of the article
@@ -27,6 +28,11 @@ namespace Grand.Core.Domain.Knowledgebase
         public int DisplayOrder { get; set; }
 
         /// <summary>
+        /// Gets or sets published
+        /// </summary>
+        public bool Published { get; set; }
+
+        /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
@@ -35,5 +41,10 @@ namespace Grand.Core.Domain.Knowledgebase
         /// Gets or sets the date and time of instance update
         /// </summary>
         public DateTime UpdatedOnUtc { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of locales
+        /// </summary>
+        public IList<LocalizedProperty> Locales { get; set; }
     }
 }
