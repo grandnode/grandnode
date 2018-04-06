@@ -1,6 +1,6 @@
 ﻿@model ReturnRequestActionModel
 @Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
+<input asp-for="Id" type="hidden" />
 
 @(Html.LocalizedEditor<ReturnRequestActionModel, ReturnRequestActionLocalizedModel>("returnrequestaction-localized",
     @<div class="form-horizontal">

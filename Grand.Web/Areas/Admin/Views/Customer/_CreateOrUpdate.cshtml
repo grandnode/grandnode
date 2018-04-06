@@ -1,6 +1,6 @@
 ﻿@model CustomerModel
 @Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
+<input asp-for="Id" type="hidden" />
 @{
     //resources for product tags input
     Html.AppendCssFileParts("~/Content/tagEditor/jquery.tag-editor.css", excludeFromBundle: true);

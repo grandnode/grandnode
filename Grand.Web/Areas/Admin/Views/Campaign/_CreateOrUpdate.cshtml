@@ -1,7 +1,7 @@
 ﻿@model CampaignModel
 
 @Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
+<input asp-for="Id" type="hidden" />
 
 <div id="campaign-edit" style="display:none">
     <ul>

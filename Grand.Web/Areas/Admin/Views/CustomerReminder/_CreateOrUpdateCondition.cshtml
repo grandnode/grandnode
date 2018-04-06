@@ -1,6 +1,6 @@
 ﻿@model CustomerReminderModel.ConditionModel
 <div asp-validation-summary="All"></div>
-@Html.HiddenFor(model => model.Id)
+<input asp-for="Id" type="hidden" />
 @Html.HiddenFor(model => model.CustomerReminderId)
 
 <script type="text/javascript">

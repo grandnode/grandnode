@@ -1,7 +1,7 @@
 ﻿@model ReturnRequestModel
 @using Grand.Core.Domain.Orders;
 @Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
+<input asp-for="Id" type="hidden" />
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">

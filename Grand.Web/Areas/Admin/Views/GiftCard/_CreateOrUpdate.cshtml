@@ -1,7 +1,7 @@
 ﻿@model GiftCardModel
 @using Grand.Core.Domain.Catalog;
 @Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
+<input asp-for="Id" type="hidden" />
 
 <script>
     $(document).ready(function() {

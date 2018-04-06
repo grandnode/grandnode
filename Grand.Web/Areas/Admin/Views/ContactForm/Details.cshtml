@@ -6,7 +6,7 @@
 @using (Html.BeginForm())
 {
     <antiforgery-token />
-    @Html.HiddenFor(model => model.Id)
+    <input asp-for="Id" type="hidden" />
 
     <div class="row">
         <div class="col-md-12">

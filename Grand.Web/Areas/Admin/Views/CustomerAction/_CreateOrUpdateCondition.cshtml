@@ -1,6 +1,6 @@
 ﻿@model CustomerActionConditionModel
 <div asp-validation-summary="All"></div>
-@Html.HiddenFor(model => model.Id)
+<input asp-for="Id" type="hidden" />
 @Html.HiddenFor(model => model.CustomerActionId)
 <script type="text/javascript">
     $(document).ready(function () {

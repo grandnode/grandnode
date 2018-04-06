@@ -1,6 +1,6 @@
 ﻿@model StateProvinceModel
 @Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
+<input asp-for="Id" type="hidden" />
 @Html.HiddenFor(model => model.CountryId)
 @if (ViewBag.RefreshPage == true)
 {

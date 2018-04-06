@@ -25,7 +25,7 @@
         });
     </script>
 }
-@Html.HiddenFor(model => model.Id)
+<input asp-for="Id" type="hidden" />
 @Html.HiddenFor(model => model.FirstNameEnabled)
 @Html.HiddenFor(model => model.FirstNameRequired)
 @Html.HiddenFor(model => model.LastNameEnabled)

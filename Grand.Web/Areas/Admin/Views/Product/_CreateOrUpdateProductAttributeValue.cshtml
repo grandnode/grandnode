@@ -5,7 +5,7 @@
     Html.AddCssFileParts("~/Content/farbtastic/farbtastic.css");
 }
 @Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
+<input asp-for="Id" type="hidden" />
 @Html.HiddenFor(model => model.ProductAttributeMappingId)
 @Html.HiddenFor(model => model.DisplayColorSquaresRgb)
 @Html.HiddenFor(model => model.DisplayImageSquaresPicture)

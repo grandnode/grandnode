@@ -1,6 +1,6 @@
 ﻿@model PredefinedProductAttributeValueModel
 @Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
+<input asp-for="Id" type="hidden" />
 @Html.HiddenFor(model => model.ProductAttributeId)
 
 @if (ViewBag.RefreshPage == true)
