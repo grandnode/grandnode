@@ -18,6 +18,7 @@ using Grand.Services.Stores;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Core.Domain.Localization;
+using System.Globalization;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -176,15 +177,15 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ApplyRate(string currencyCode, decimal rate)
+        public IActionResult ApplyRate(string currencyCode, string rate)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
-
+            var _rate = decimal.Parse(rate, CultureInfo.InvariantCulture.NumberFormat);
             var currency = _currencyService.GetCurrencyByCode(currencyCode);
             if (currency != null)
             {
-                currency.Rate = rate;
+                currency.Rate = _rate;
                 currency.UpdatedOnUtc = DateTime.UtcNow;
                 _currencyService.UpdateCurrency(currency);
             }
