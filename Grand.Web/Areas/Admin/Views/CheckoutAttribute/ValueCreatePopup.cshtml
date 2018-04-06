@@ -8,8 +8,10 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Values.AddNew").Text;
 }
-@using (Html.BeginForm())
-{
+<form asp-controller="CheckoutAttribute" asp-action="ValueCreatePopup"
+      asp-route-checkoutAttributeId="@Context.Request.Query["checkoutAttributeId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
     <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
@@ -29,6 +31,4 @@
             </div>
         </div>
     </div>
-
-
-}
+</form>
