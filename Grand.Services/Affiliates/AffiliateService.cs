@@ -65,7 +65,7 @@ namespace Grand.Services.Affiliates
         {
             if (String.IsNullOrWhiteSpace(friendlyUrlName))
                 return null;
-            //var query = _affiliateRepository.Table;
+
             var query = from a in _affiliateRepository.Table
                         orderby a.Id
                         where a.FriendlyUrlName.ToLower().Contains(friendlyUrlName.ToLower())
