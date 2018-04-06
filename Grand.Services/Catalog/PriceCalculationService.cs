@@ -165,7 +165,7 @@ namespace Grand.Services.Catalog
             foreach (var productCategory in product.ProductCategories)
             {
                 var category = _categoryService.GetCategoryById(productCategory.CategoryId);
-                if (category.AppliedDiscounts.Any())
+                if (category!=null && category.AppliedDiscounts.Any())
                 {
                     foreach (var appliedDiscount in category.AppliedDiscounts)
                     {
@@ -201,7 +201,7 @@ namespace Grand.Services.Catalog
             foreach (var productManufacturer in product.ProductManufacturers)
             {
                 var manufacturer = _manufacturerService.GetManufacturerById(productManufacturer.ManufacturerId);
-                if (manufacturer.AppliedDiscounts.Any())
+                if (manufacturer !=null && manufacturer.AppliedDiscounts.Any())
                 {
                     foreach (var appliedDiscount in manufacturer.AppliedDiscounts)
                     {
@@ -289,7 +289,7 @@ namespace Grand.Services.Catalog
                     if (!(string.IsNullOrEmpty(storeID)))
                     {
                         var store = _storeService.GetStoreById(storeID);
-                        if (store.AppliedDiscounts.Any())
+                        if (store!=null && store.AppliedDiscounts.Any())
                         {
                             foreach (var appliedDiscount in store.AppliedDiscounts)
                             {
