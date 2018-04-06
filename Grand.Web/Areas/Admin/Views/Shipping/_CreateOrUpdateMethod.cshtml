@@ -1,5 +1,5 @@
 ﻿@model ShippingMethodModel
-@Html.ValidationSummary(true)
+<div asp-validation-summary="All"></div>
 @Html.HiddenFor(model => model.Id)
 @(Html.LocalizedEditor<ShippingMethodModel, ShippingMethodLocalizedModel>("shipping-method-localized",
                 @<div class="form-horizontal">

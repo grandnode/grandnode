@@ -3,7 +3,7 @@
     Html.AddScriptParts("~/Scripts/farbtastic.js");
     Html.AddCssFileParts("~/Content/farbtastic/farbtastic.css");
 }
-@Html.ValidationSummary(true)
+<div asp-validation-summary="All"></div>
 @Html.HiddenFor(model => model.Id)
 @(Html.LocalizedEditor<DeliveryDateModel, DeliveryDateLocalizedModel>("delivery-date-localized",
                 @<div class="form-horizontal">

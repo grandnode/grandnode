@@ -1,8 +1,7 @@
 ﻿@model BannerModel
 
-@Html.ValidationSummary(true)
+<div asp-validation-summary="All"></div>
 @Html.HiddenFor(model => model.Id)
-
 
 @(Html.LocalizedEditor<BannerModel, BannerLocalizedModel>("banner-localized",
     @<div class="form-horizontal">

@@ -1,5 +1,5 @@
 ﻿@model PickupPointModel
-@Html.ValidationSummary(true)
+<div asp-validation-summary="All"></div>
 @Html.HiddenFor(model => model.Id)
 <div class="form-horizontal">
     <div class="form-body">
