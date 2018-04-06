@@ -1,8 +1,6 @@
 ﻿@model AffiliateListModel
-    @{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
+@inject AdminAreaSettings adminAreaSettings
+@{
     //page title
     ViewBag.Title = T("Admin.Affiliates").Text;
 }
@@ -23,42 +21,42 @@
                 <div class="form-horizontal">
                     <div class="form-body">
                         <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchFirstName)
+                            <admin-label asp-for="SearchFirstName" />
                             <div class="col-md-9 col-sm-9">
-                                @Html.GrandEditorFor(model => model.SearchFirstName)
+                                <admin-input asp-for="SearchFirstName" />
                             </div>
                         </div>
                         <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchLastName)
+                            <admin-label asp-for="SearchLastName" />
                             <div class="col-md-9 col-sm-9">
-                                @Html.GrandEditorFor(model => model.SearchLastName)
+                                <admin-input asp-for="SearchLastName" />
                             </div>
                         </div>
                         <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchFriendlyUrlName)
+                            <admin-label asp-for="SearchFriendlyUrlName" />
                             <div class="col-md-9 col-sm-9">
-                                @Html.GrandEditorFor(model => model.SearchFriendlyUrlName)
+                                <admin-input asp-for="SearchFriendlyUrlName" />
                             </div>
                         </div>
                         <div class="form-group">
-                                @Html.GrandLabelFor(model => model.LoadOnlyWithOrders)
+                            <admin-label asp-for="LoadOnlyWithOrders" />
                             <div class="col-md-9 col-sm-9">
                                 <label class="mt-checkbox mt-checkbox-outline">
-                                    @Html.GrandEditorFor(model => model.LoadOnlyWithOrders)
+                                    <admin-input asp-for="LoadOnlyWithOrders" />
                                     <span></span>
                                 </label>
                             </div>
                         </div>
                         <div class="form-group" id="pnlOrdersCreatedFromUtc">
-                                @Html.GrandLabelFor(model => model.OrdersCreatedFromUtc)
+                            <admin-label asp-for="OrdersCreatedFromUtc" />
                             <div class="col-md-9 col-sm-9">
-                                @Html.GrandEditorFor(model => model.OrdersCreatedFromUtc)
+                                <admin-input asp-for="OrdersCreatedFromUtc" />
                             </div>
                         </div>
                         <div class="form-group" id="pnlOrdersCreatedToUtc">
-                                @Html.GrandLabelFor(model => model.OrdersCreatedToUtc)
+                            <admin-label asp-for="OrdersCreatedToUtc" />
                             <div class="col-md-9 col-sm-9">
-                                @Html.GrandEditorFor(model => model.OrdersCreatedToUtc)
+                                <admin-input asp-for="OrdersCreatedToUtc" />
                             </div>
                         </div>
                     </div>
@@ -121,14 +119,14 @@
                         // Cancel the changes
                         this.cancelChanges();
                     },
-                    pageSize: @(defaultGridPageSize),
+                    pageSize: @(adminAreaSettings.DefaultGridPageSize),
                     serverPaging: true,
                     serverFiltering: true,
                     serverSorting: true
                 },
                 pageable: {
                     refresh: true,
-                    pageSizes: [@(gridPageSizes)]
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
                 },
                 editable: {
                     confirmation: false,
@@ -203,4 +201,3 @@
     }
 
 </script>
-        

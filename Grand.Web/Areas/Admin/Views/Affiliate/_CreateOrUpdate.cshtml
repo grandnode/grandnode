@@ -1,11 +1,10 @@
 ﻿@model AffiliateModel
-@Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
-
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $("#affiliate-edit").kendoTabStrip({
-            animation:  {
+            animation: {
                 open: {
                     effects: "fadeIn"
                 }
@@ -42,7 +41,6 @@
         </div>
     }
 </div>
-
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "affiliate-edit");
@@ -52,6 +50,5 @@
         @eventBlock
     }
 }
-
 @*save selected tab index*@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
