@@ -3,8 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.Promotions.Banners.AddNew").Text;
 }
-@using (Html.BeginForm())
-{
+<form asp-controller="Banner" asp-action="Create" method="post">
     <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
@@ -12,7 +11,7 @@
                 <div class="portlet-title">
                     <div class="caption">
                         <i class="fa fa-tag"></i>
-                       @T("Admin.Promotions.Banners.AddNew")
+                        @T("Admin.Promotions.Banners.AddNew")
                         <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Promotions.Banners.BackToList").Text, "List")</small>
                     </div>
                     <div class="actions">
@@ -29,4 +28,4 @@
             </div>
         </div>
     </div>
-}
+</form>
