@@ -1,8 +1,7 @@
 ﻿@model CategoryListModel
-@{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+@inject AdminAreaSettings adminAreaSettings
 
+@{
     //page title
     ViewBag.Title = T("Admin.Catalog.Categories.Manage").Text;
 }
@@ -34,15 +33,15 @@
                 <div class="form-horizontal">
                     <div class="form-body">
                         <div class="form-group">
-                            @Html.GrandLabelFor(model => model.SearchCategoryName)
+                            <admin-label asp-for="SearchCategoryName" />
                             <div class="col-md-4 col-sm-6">
-                                @Html.GrandEditorFor(model => model.SearchCategoryName)
+                                <admin-input asp-for="SearchCategoryName" />
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.GrandLabelFor(model => model.SearchStoreId)
+                            <admin-label asp-for="SearchStoreId" />
                             <div class="col-md-4 col-sm-6">
-                                @Html.GrandDropDownListFor(model => model.SearchStoreId, Model.AvailableStores)
+                                <admin-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
                             </div>
                         </div>
                     </div>
@@ -57,7 +56,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="portlet-body">
                 <div id="categories-grid"></div>
             </div>
@@ -86,14 +84,14 @@
                     // Cancel the changes
                     this.cancelChanges();
                 },
-                pageSize: @(defaultGridPageSize),
+                pageSize: @(adminAreaSettings.DefaultGridPageSize),
                 serverPaging: true,
                 serverFiltering: true,
                 serverSorting: true
             },
             pageable: {
                 refresh: true,
-                pageSizes: [@(gridPageSizes)]
+                pageSizes: [@(adminAreaSettings.GridPageSizes)]
             },
             editable: {
                 confirmation: false,
@@ -151,7 +149,6 @@
         return data;
     }
 </script>
-
 @*import categories form*@
 <div class="modal-dialog" id="importexcel-window" style="display:none; padding: 0 10px;">
     @using (Html.BeginForm("ImportFromXlsx", "Category", FormMethod.Post, new { enctype = "multipart/form-data" }))
@@ -184,7 +181,6 @@
         </div>
     }
 </div>
-
 <script type="text/javascript">
         $(document).ready(function () {
             $("#importexcel").click(function (e) {

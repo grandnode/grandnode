@@ -3,8 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Categories.EditCategoryDetails").Text;
 }
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "category-form" }))
-{
+<form asp-controller="Category" asp-action="Edit" method="post" id="category-form">
     <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
@@ -33,5 +32,5 @@
             </div>
         </div>
     </div>
-}
+</form>
 @Html.DeleteConfirmation("category-delete")
