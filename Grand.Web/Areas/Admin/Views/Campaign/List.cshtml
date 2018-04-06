@@ -3,7 +3,6 @@
     ViewBag.Title = T("Admin.Promotions.Campaigns").Text;
 }
 <antiforgery-token />
-
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light form-fit">
@@ -31,57 +30,57 @@
 </div>
 
 <script>
-    $(document).ready(function () {
-        $("#campaigns-grid").kendoGrid({
-            dataSource: {
-                transport: {
-                    read: {
-                        url: "@Html.Raw(Url.Action("List", "Campaign"))",
-                        type: "POST",
-                        dataType: "json",
-                        data: addAntiForgeryToken
-                    }
-                },
-                schema: {
-                    data: "Data",
-                    total: "Total",
-                    errors: "Errors"
-                },
-                error: function(e) {
-                    display_kendoui_grid_error(e);
-                    // Cancel the changes
-                    this.cancelChanges();
-                },
-                serverPaging: true,
-                serverFiltering: true,
-                serverSorting: true
+$(document).ready(function () {
+    $("#campaigns-grid").kendoGrid({
+        dataSource: {
+            transport: {
+                read: {
+                    url: "@Html.Raw(Url.Action("List", "Campaign"))",
+                    type: "POST",
+                    dataType: "json",
+                    data: addAntiForgeryToken
+                }
             },
-            pageable: {
-                refresh: true,
-                numeric: false,
-                previousNext: false,
-                info: false
+            schema: {
+                data: "Data",
+                total: "Total",
+                errors: "Errors"
             },
-            editable: {
-                confirmation: false,
-                mode: "inline"
+            error: function(e) {
+                display_kendoui_grid_error(e);
+                // Cancel the changes
+                this.cancelChanges();
             },
-            scrollable: false,
-            columns: [{
-                field: "Name",
-                title: "@T("Admin.Promotions.Campaigns.Fields.Name")"
-            }, {
-                field: "CreatedOn",
-                title: "@T("Admin.Promotions.Campaigns.Fields.CreatedOn")",
-                width: 200,
-                type: "date",
-                format: "{0:G}"
-            }, {
-                field: "Id",
-                title: "@T("Admin.Common.Edit")",
-                width: 100,
-                template: '<a class="btn btn-sm btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
-            }]
-        });
+            serverPaging: true,
+            serverFiltering: true,
+            serverSorting: true
+        },
+        pageable: {
+            refresh: true,
+            numeric: false,
+            previousNext: false,
+            info: false
+        },
+        editable: {
+            confirmation: false,
+            mode: "inline"
+        },
+        scrollable: false,
+        columns: [{
+            field: "Name",
+            title: "@T("Admin.Promotions.Campaigns.Fields.Name")"
+        }, {
+            field: "CreatedOn",
+            title: "@T("Admin.Promotions.Campaigns.Fields.CreatedOn")",
+            width: 200,
+            type: "date",
+            format: "{0:G}"
+        }, {
+            field: "Id",
+            title: "@T("Admin.Common.Edit")",
+            width: 100,
+            template: '<a class="btn btn-sm btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
+        }]
     });
+});
 </script>

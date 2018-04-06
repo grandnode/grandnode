@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Grand.Framework.TagHelpers.Admin
@@ -21,6 +23,7 @@ namespace Grand.Framework.TagHelpers.Admin
         private const string RenderFormControlClassAttributeName = "asp-render-form-control-class";
         private const string TemplateAttributeName = "asp-template";
         private const string PostfixAttributeName = "asp-postfix";
+        private const string PostSelectItem = "asp-selectitem";
 
         private readonly IHtmlHelper _htmlHelper;
 
@@ -53,6 +56,9 @@ namespace Grand.Framework.TagHelpers.Admin
         /// </summary>
         [HtmlAttributeName(TemplateAttributeName)]
         public string Template { set; get; }
+
+        [HtmlAttributeName(PostSelectItem)]
+        public IList<SelectListItem> SelectItems { set; get; }
 
         /// <summary>
         /// Postfix
@@ -124,6 +130,33 @@ namespace Grand.Framework.TagHelpers.Admin
 
             var viewEngine = GetPrivateFieldValue(_htmlHelper, "_viewEngine") as IViewEngine;
             var bufferScope = GetPrivateFieldValue(_htmlHelper, "_bufferScope") as IViewBufferScope;
+            if(SelectItems!=null)
+            {
+                if (SelectItems.Any())
+                {
+                    if (_htmlHelper.ViewData.ContainsKey("SelectList"))
+                    {
+                        _htmlHelper.ViewData["SelectList"] = SelectItems;
+                    }
+                    else
+                    {
+                        _htmlHelper.ViewData.Add("SelectList", SelectItems);
+                    }
+                }
+                else
+                {
+                    if (_htmlHelper.ViewData.ContainsKey("SelectList"))
+                    {
+                        _htmlHelper.ViewData["SelectList"] = new List<SelectListItem>();
+                    }
+                    else
+                    {
+                        _htmlHelper.ViewData.Add("SelectList", new List<SelectListItem>());
+                    }
+                    
+                }
+
+            }
             var templateBuilder = new TemplateBuilder(
                 viewEngine,
                 bufferScope,

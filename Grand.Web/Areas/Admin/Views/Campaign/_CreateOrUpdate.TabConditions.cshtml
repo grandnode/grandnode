@@ -1,77 +1,76 @@
 ﻿@model CampaignModel
 
-
-
 <div class="col-md-12">
     <div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.CustomerCreatedDateFrom)
+                <admin-label asp-for="CustomerCreatedDateFrom" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.CustomerCreatedDateFrom)
+                    <admin-input asp-for="CustomerCreatedDateFrom" />
                     <text>@T("Admin.Promotions.Campaigns.Fields.CustomerCreatedDateTo")</text>
-                    @Html.GrandEditorFor(model => model.CustomerCreatedDateTo)
-                    @Html.ValidationMessageFor(model => model.CustomerCreatedDateFrom)
-                    @Html.ValidationMessageFor(model => model.CustomerCreatedDateTo)
+                    <admin-input asp-for="CustomerCreatedDateTo" />
+                    <span asp-validation-for="CustomerCreatedDateFrom"></span>
+                    <span asp-validation-for="CustomerCreatedDateTo"></span>
                 </div>
             </div>
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.CustomerLastActivityDateFrom)
+                <admin-label asp-for="CustomerLastActivityDateFrom" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.CustomerLastActivityDateFrom)
+                    <admin-input asp-for="CustomerLastActivityDateFrom" />
                     <text>@T("Admin.Promotions.Campaigns.Fields.CustomerLastActivityDateTo")</text>
-                    @Html.GrandEditorFor(model => model.CustomerLastActivityDateTo)
-                    @Html.ValidationMessageFor(model => model.CustomerLastActivityDateFrom)
-                    @Html.ValidationMessageFor(model => model.CustomerLastActivityDateTo)
+                    <admin-input asp-for="CustomerLastActivityDateTo" />
+                    <span asp-validation-for="CustomerLastActivityDateFrom"></span>
+                    <span asp-validation-for="CustomerLastActivityDateTo"></span>
                 </div>
             </div>
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.CustomerLastPurchaseDateFrom)
+                <admin-label asp-for="CustomerLastPurchaseDateFrom" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.CustomerLastPurchaseDateFrom)
+                    <admin-input asp-for="CustomerLastPurchaseDateFrom" />
                     <text>@T("Admin.Promotions.Campaigns.Fields.CustomerLastPurchaseDateTo")</text>
-                    @Html.GrandEditorFor(model => model.CustomerLastPurchaseDateTo)
-                    @Html.ValidationMessageFor(model => model.CustomerLastPurchaseDateFrom)
-                    @Html.ValidationMessageFor(model => model.CustomerLastPurchaseDateTo)
+                    <admin-input asp-for="CustomerLastPurchaseDateTo" />
+                    <span asp-validation-for="CustomerLastPurchaseDateFrom"></span>
+                    <span asp-validation-for="CustomerLastPurchaseDateTo"></span>
                 </div>
             </div>
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.CustomerHasOrders)
+                <admin-label asp-for="CustomerHasOrders" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandDropDownListFor(model => model.CustomerHasOrders, ((Grand.Core.Domain.Messages.CampaignCondition)Model.CustomerHasOrders).ToSelectList())
-                    @Html.ValidationMessageFor(model => model.CustomerHasOrders)
+                    <admin-select asp-for="CustomerHasOrders" asp-items="((Grand.Core.Domain.Messages.CampaignCondition)Model.CustomerHasOrders).ToSelectList()" />
+                    <span asp-validation-for="CustomerHasOrders"></span>
                 </div>
             </div>
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.CustomerHasShoppingCart)
+                <admin-label asp-for="CustomerHasShoppingCart" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandDropDownListFor(model => model.CustomerHasShoppingCart, ((Grand.Core.Domain.Messages.CampaignCondition)Model.CustomerHasShoppingCart).ToSelectList())
-                    @Html.ValidationMessageFor(model => model.CustomerHasShoppingCart)
+                    <admin-select asp-for="CustomerHasShoppingCart" asp-items="((Grand.Core.Domain.Messages.CampaignCondition)Model.CustomerHasShoppingCart).ToSelectList()" />
+                    <span asp-validation-for="CustomerHasShoppingCart"></span>
                 </div>
             </div>
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.CustomerTags)
+                <admin-label asp-for="CustomerTags" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.EditorFor(model => model.CustomerTags, new { SelectList = Model.AvailableCustomerTags })
+                    @*@Html.EditorFor(model => model.CustomerTags, new { SelectList = Model.AvailableCustomerTags })*@
+                    <admin-input asp-for="CustomerTags" asp-template="MultiSelect" asp-selectitem="Model.AvailableCustomerTags" />
                 </div>
             </div>
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.CustomerRoles)
+                <admin-label asp-for="CustomerRoles" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.EditorFor(model => model.CustomerRoles, new { SelectList = Model.AvailableCustomerRoles })
+                    <admin-input asp-for="CustomerRoles" asp-template="MultiSelect" asp-selectitem="Model.AvailableCustomerRoles" />
                 </div>
             </div>
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.NewsletterCategories)
+                <admin-label asp-for="NewsletterCategories" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.EditorFor(model => model.NewsletterCategories, new { SelectList = Model.AvailableNewsletterCategories })
+                    <admin-input asp-for="NewsletterCategories" asp-template="MultiSelect" asp-selectitem="Model.AvailableNewsletterCategories" />
                 </div>
             </div>
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.StoreId)
+                <admin-label asp-for="StoreId" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandDropDownListFor(model => model.StoreId, Model.AvailableStores)
-                    @Html.ValidationMessageFor(model => model.StoreId)
+                    <admin-select asp-for="StoreId" asp-items="Model.AvailableStores" />
+                    <span asp-validation-for="StoreId"></span>
                 </div>
             </div>
         </div>
