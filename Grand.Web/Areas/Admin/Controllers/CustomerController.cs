@@ -2199,7 +2199,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult ProductAddPopup(string customerId, string btnId, string formId, CustomerModel.AddProductModel model)
+        public IActionResult ProductAddPopup(string customerId, CustomerModel.AddProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -2220,8 +2220,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
             return View(model);
         }
         public IActionResult UpdateProductPrice(CustomerModel.ProductPriceModel model)

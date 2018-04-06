@@ -1,9 +1,6 @@
 ﻿@model CustomerModel
 @inject AdminAreaSettings adminAreaSettings
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
-
     <strong>@T("Admin.Customers.Customers.ProductPrice")</strong>
     <div class="panel panel-default">
         <div class="panel-body">
@@ -55,14 +52,14 @@
                         // Cancel the changes
                         this.cancelChanges();
                     },
-                    pageSize: @(defaultGridPageSize),
+                    pageSize: @(adminAreaSettings.DefaultGridPageSize),
                     serverPaging: true,
                     serverFiltering: true,
                     serverSorting: true
                 },
                 pageable: {
                     refresh: true,
-                    pageSizes: [@(gridPageSizes)]
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
                 },
                 editable: {
                     confirmation: false,

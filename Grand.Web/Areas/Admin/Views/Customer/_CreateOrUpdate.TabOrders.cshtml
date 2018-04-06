@@ -1,22 +1,11 @@
 ﻿@model CustomerModel
-@using Grand.Core.Domain.Orders;
-@using Grand.Services.Customers;
-@using System.Text;
-
-
-
-
+@inject AdminAreaSettings adminAreaSettings
 @{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
     <div class="panel panel-default">
         <div class="panel-body">
             <div id="order-grid"></div>
         </div>
     </div>
-
-
     <script>
         $(document).ready(function () {
             $("#order-grid").kendoGrid({
@@ -39,14 +28,14 @@
                         // Cancel the changes
                         this.cancelChanges();
                     },
-                    pageSize: @(defaultGridPageSize),
+                    pageSize: @(adminAreaSettings.DefaultGridPageSize),
                     serverPaging: true,
                     serverFiltering: true,
                     serverSorting: true
                 },
                 pageable: {
                     refresh: true,
-                    pageSizes: [@(gridPageSizes)]
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
                 },
                 editable: {
                     confirmation: false,

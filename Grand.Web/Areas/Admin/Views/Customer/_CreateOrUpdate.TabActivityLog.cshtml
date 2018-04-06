@@ -81,70 +81,68 @@
                 <div id="contactform-grid"></div>
             </div>
         </div>
-
-
         <script>
-                    $(document).ready(function () {
-                        $("#contactform-grid").kendoGrid({
-                            dataSource: {
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("ContactFormList", "Customer", new { customerId = Model.Id }))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors"
-                                },
-                                error: function(e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                pageSize: @(defaultGridPageSize),
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
-                            },
-                            pageable: {
-                                refresh: true,
-                                pageSizes: [@(gridPageSizes)]
-                            },
-                            scrollable: false,
-                            columns: [{
-                                field: "CreatedOn",
-                                title: "@T("Admin.System.ContactForm.Fields.CreatedOn")",
-                                width: 100,
-                                type: "date",
-                                format: "{0:G}"
-                            }, {
-                                field: "Store",
-                                title: "@T("Admin.System.ContactForm.Fields.Store")",
-                                width: 100
-                            }, {
-                                field: "Email",
-                                title: "@T("Admin.System.ContactForm.Fields.FullName")",
-                                width: 150
-                            }, {
-                                field: "IpAddress",
-                                title: "@T("Admin.System.ContactForm.Fields.IpAddress")",
-                                width: 50
-                            }, {
-                                field: "Subject",
-                                title: "@T("Admin.System.ContactForm.Fields.Subject")",
-                                width: 300
-                            }, {
-                                field: "Id",
-                                title: "@T("Admin.Common.View")",
-                                width: 30,
-                                template: '<a href="@Url.Content("~/Admin/ContactForm/Details/")#=Id#">@T("admin.common.view")</a>'
-                            }]
-                        });
-                    });
+            $(document).ready(function () {
+                $("#contactform-grid").kendoGrid({
+                    dataSource: {
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("ContactFormList", "Customer", new { customerId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors"
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        pageSize: @(defaultGridPageSize),
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        pageSizes: [@(gridPageSizes)]
+                    },
+                    scrollable: false,
+                    columns: [{
+                        field: "CreatedOn",
+                        title: "@T("Admin.System.ContactForm.Fields.CreatedOn")",
+                        width: 100,
+                        type: "date",
+                        format: "{0:G}"
+                    }, {
+                        field: "Store",
+                        title: "@T("Admin.System.ContactForm.Fields.Store")",
+                        width: 100
+                    }, {
+                        field: "Email",
+                        title: "@T("Admin.System.ContactForm.Fields.FullName")",
+                        width: 150
+                    }, {
+                        field: "IpAddress",
+                        title: "@T("Admin.System.ContactForm.Fields.IpAddress")",
+                        width: 50
+                    }, {
+                        field: "Subject",
+                        title: "@T("Admin.System.ContactForm.Fields.Subject")",
+                        width: 300
+                    }, {
+                        field: "Id",
+                        title: "@T("Admin.Common.View")",
+                        width: 30,
+                        template: '<a href="@Url.Content("~/Admin/ContactForm/Details/")#=Id#">@T("admin.common.view")</a>'
+                    }]
+                });
+            });
         </script>
     }
 }
