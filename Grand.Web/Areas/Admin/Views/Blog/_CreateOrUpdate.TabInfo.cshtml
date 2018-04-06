@@ -1,16 +1,9 @@
 ﻿@model BlogPostModel
-
-@using System.Text;
-@using Grand.Services.Blogs
-
-
-
-
+@inject  IBlogService blogService
 
 <script type="text/javascript">
         @{
-        //TODO move to Model
-        var blogTags = EngineContext.Current.Resolve<IBlogService>().GetAllBlogPostTags("", true);
+        var blogTags = blogService.GetAllBlogPostTags("", true);
         var blogTagsSb = new StringBuilder();
         blogTagsSb.Append("var initialBlogTags = [");
         for (int i = 0; i < blogTags.Count; i++)
@@ -48,92 +41,92 @@
             @<div class="form-horizontal">
                 <div class="form-body">
                     <div class="form-group">
-                        @Html.GrandLabelFor(model => model.Locales[item].Title)
+                        <admin-label asp-for="@Model.Locales[item].Title" />
                         <div class="col-md-9 col-sm-9">
-                            @Html.GrandEditorFor(model => model.Locales[item].Title)
-                            @Html.ValidationMessageFor(model => model.Locales[item].Title)
+                            <admin-input asp-for="@Model.Locales[item].Title" />
+                            <span asp-validation-for="@Model.Locales[item].Title"></span>
                         </div>
                     </div>
                     <div class="form-group">
-                        @Html.GrandLabelFor(model => model.Locales[item].BodyOverview)
+                        <admin-label asp-for="@Model.Locales[item].BodyOverview" />
                         <div class="col-md-9 col-sm-9">
-                            @Html.GrandTextAreaFor(model => model.Locales[item].BodyOverview, new { style = "Height: 100px;" })
-                            @Html.ValidationMessageFor(model => model.Locales[item].BodyOverview)
+                            <admin-textarea asp-for="@Model.Locales[item].BodyOverview"></admin-textarea>
+                            <span asp-validation-for="@Model.Locales[item].BodyOverview"></span>
                         </div>
                     </div>
                     <div class="form-group">
-                        @Html.GrandLabelFor(model => model.Locales[item].Body)
+                        <admin-label asp-for="Locales[item].Body" />
                         <div class="col-md-9 col-sm-9">
-                            @Html.EditorFor(x => x.Locales[item].Body, "RichEditor")
-                            @Html.ValidationMessageFor(model => model.Locales[item].Body)
+                            <admin-input asp-for="@Model.Locales[item].Body" asp-template="RichEditor" />
+                            <span asp-validation-for="Locales[item].Body"></span>
                         </div>
                     </div>
-                    @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                    <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
                 </div>
             </div>
             ,
             @<div class="form-horizontal">
                 <div class="form-body">
                     <div class="form-group">
-                        @Html.GrandLabelFor(model => model.Title)
+                        <admin-label asp-for="Title" />
                         <div class="col-md-9 col-sm-9">
-                            @Html.GrandEditorFor(model => model.Title)
-                            @Html.ValidationMessageFor(model => model.Title)
+                            <admin-input asp-for="Title" />
+                            <span asp-validation-for="Title"></span>
                         </div>
                     </div>
                     <div class="form-group">
-                        @Html.GrandLabelFor(model => model.BodyOverview)
+                        <admin-label asp-for="BodyOverview" />
                         <div class="col-md-9 col-sm-9">
-                            @Html.GrandTextAreaFor(model => model.BodyOverview, new { style = "Height: 100px;" })
-                            @Html.ValidationMessageFor(model => model.BodyOverview)
+                            <admin-textarea asp-for="BodyOverview"></admin-textarea>
+                            <span asp-validation-for="BodyOverview"></span>
                         </div>
                     </div>
                     <div class="form-group">
-                        @Html.GrandLabelFor(model => model.Body)
+                        <admin-label asp-for="Body" />
                         <div class="col-md-9 col-sm-9">
-                            @Html.EditorFor(x => x.Body, "RichEditor")
-                            @Html.ValidationMessageFor(model => model.Body)
+                            <admin-input asp-for="Body" asp-template="RichEditor" />
+                            <span asp-validation-for="Body"></span>
                         </div>
                     </div>
                 </div>
             </div>
             ))
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.PictureId)
+            <admin-label asp-for="PictureId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.PictureId)
-                @Html.ValidationMessageFor(model => model.PictureId)
+                <admin-input asp-for="PictureId" />
+                <span asp-validation-for="PictureId"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.AllowComments)
+            <admin-label asp-for="AllowComments" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.EditorFor(model => model.AllowComments)
+                    <admin-input asp-for="AllowComments" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.AllowComments)
+                <span asp-validation-for="AllowComments"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.Tags)
+            <admin-label asp-for="Tags" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.Tags)
-                @Html.ValidationMessageFor(model => model.Tags)
+                <admin-input asp-for="Tags" />
+                <span asp-validation-for="Tags"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.StartDate)
+            <admin-label asp-for="StartDate" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.StartDate)
-                @Html.ValidationMessageFor(model => model.StartDate)
+                <admin-input asp-for="StartDate" />
+                <span asp-validation-for="StartDate"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.EndDate)
+            <admin-label asp-for="EndDate" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.EndDate)
-                @Html.ValidationMessageFor(model => model.EndDate)
+                <admin-input asp-for="EndDate" />
+                <span asp-validation-for="EndDate"></span>
             </div>
         </div>
     </div>

@@ -1,20 +1,10 @@
 ﻿@model BlogPostModel
 
-@using System.Text;
-@using Grand.Services.Blogs
-
-
-
-
 <script type="text/javascript">
         $(document).ready(function () {
-
             $("#@Html.FieldIdFor(model => model.LimitedToStores)").click(toggleStoreMapping);
-
             toggleStoreMapping();
         });
-
-
         function toggleStoreMapping() {
             if ($('#@Html.FieldIdFor(model => model.LimitedToStores)').is(':checked')) {
                 $('#pnl-available-stores').show();
@@ -23,7 +13,6 @@
                 $('#pnl-available-stores').hide();
             }
         }
-
 </script>
 <div class="form-horizontal">
     <div class="form-body">

@@ -1,10 +1,7 @@
 ﻿@model BlogPostModel
-
-@using System.Text;
-@using Grand.Services.Blogs
+@inject IEventPublisher eventPublisher
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
-
 <script>
     $(document).ready(function () {
         $("#blog-post-edit").show();
@@ -40,20 +37,17 @@
         @Html.Partial("_CreateOrUpdate.TabStores", Model)
     </div>
 </div>
-
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "blog-post-edit");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock
     }
 }
-
 @*save selected tab index*@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
-
 @{
     //resources for product tags input
     Html.AppendCssFileParts("~/Content/tagEditor/jquery.tag-editor.css", excludeFromBundle: true);
