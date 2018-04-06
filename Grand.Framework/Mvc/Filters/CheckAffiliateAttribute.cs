@@ -72,7 +72,7 @@ namespace Grand.Framework.Mvc.Filters
 
                 //update affiliate identifier
                 _workContext.CurrentCustomer.AffiliateId = affiliate.Id;
-                _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+                _customerService.UpdateAffiliate(_workContext.CurrentCustomer);
             }
 
             #endregion
