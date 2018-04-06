@@ -1,4 +1,5 @@
-﻿using Grand.Core.Domain.Knowledgebase;
+﻿using Grand.Core;
+using Grand.Core.Domain.Knowledgebase;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -68,5 +69,12 @@ namespace Grand.Services.Knowledgebase
         /// </summary>
         /// <param name="ka"></param>
         void DeleteKnowledgebaseArticle(KnowledgebaseArticle ka);
+
+        /// <summary>
+        /// Gets knowledgebase articles by category id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>IPagedList<KnowledgebaseArticle></returns>
+        IPagedList<KnowledgebaseArticle> GetKnowledgebaseArticlesByCategoryId(string id, int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
     }
 }

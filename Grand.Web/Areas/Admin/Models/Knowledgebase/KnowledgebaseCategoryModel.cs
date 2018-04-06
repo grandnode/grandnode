@@ -40,6 +40,20 @@ namespace Grand.Web.Areas.Admin.Models.Knowledgebase
         public List<SelectListItem> Categories { get; set; }
 
         public IList<KnowledgebaseCategoryLocalizedModel> Locales { get; set; }
+
+
+        public partial class ActivityLogModel : BaseGrandEntityModel
+        {
+            [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.ActivityLogType")]
+            public string ActivityLogTypeName { get; set; }
+            [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.ActivityLog.Comment")]
+            public string Comment { get; set; }
+            [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.ActivityLog.CreatedOn")]
+            public DateTime CreatedOn { get; set; }
+            [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.ActivityLog.Customer")]
+            public string CustomerId { get; set; }
+            public string CustomerEmail { get; set; }
+        }
     }
 
     public class KnowledgebaseCategoryLocalizedModel : ILocalizedModelLocal

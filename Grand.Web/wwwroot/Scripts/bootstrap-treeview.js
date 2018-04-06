@@ -601,7 +601,7 @@
 				$.each(node.tags, function addTag(id, tag) {
 					treeItem
 						.append($(_this.template.badge)
-                            .append("<a class=\"btn btn-xs btn-default fa fa-pencil\" href=\"" + tag + "\"></a>")
+                            .append("<a class=\"btn btn-sm btn-default\" href=\"" + tag + "\"><i class=\"fa fa-pencil\"></i>Edit</a>")
 						);
 				});
 			}

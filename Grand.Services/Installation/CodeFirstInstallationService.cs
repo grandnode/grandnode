@@ -336,7 +336,8 @@ namespace Grand.Services.Installation
             this._customerActionType = customerActionType;
             this._customerActionHistory = customerActionHistory;
             this._customerReminder = customerReminder;
-            this._customerReminderHistoryRepository = customerReminderHistoryRepository; ;
+            this._customerReminderHistoryRepository = customerReminderHistoryRepository;
+            ;
             this._banner = banner;
             this._popupArchive = popupArchive;
             this._genericAttributeService = genericAttributeService;
@@ -5311,7 +5312,7 @@ namespace Grand.Services.Installation
                 MinimumOrderPlacementInterval = 30,
                 DeactivateGiftCardsAfterDeletingOrder = false,
                 CompleteOrderWhenDelivered = true,
-                UserCanCancelUnpaidOrder = false,   
+                UserCanCancelUnpaidOrder = false,
             });
 
             _settingService.SaveSetting(new ShippingSettings
@@ -5670,7 +5671,7 @@ namespace Grand.Services.Installation
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
 
             //sample pictures
-            var sampleImagesPath = GetSamplesPath(); 
+            var sampleImagesPath = GetSamplesPath();
 
             var categoryTemplateInGridAndLines = _categoryTemplateRepository
                 .Table.FirstOrDefault(pt => pt.Name == "Products in Grid or Lines");
@@ -5986,7 +5987,7 @@ namespace Grand.Services.Installation
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
             var downloadService = EngineContext.Current.Resolve<IDownloadService>();
 
-            var sampleImagesPath = GetSamplesPath(); 
+            var sampleImagesPath = GetSamplesPath();
 
             var manufacturerTemplateInGridAndLines =
                 _manufacturerTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Products in Grid or Lines");
@@ -6084,7 +6085,7 @@ namespace Grand.Services.Installation
 
             //pictures
             var sampleImagesPath = GetSamplesPath();
-            
+
             //downloads
             var sampleDownloadsPath = GetSamplesPath();
 
@@ -10413,6 +10414,42 @@ namespace Grand.Services.Installation
                                                   Enabled = true,
                                                   Name = "Send PM"
                                               },
+                                            new ActivityLogType
+                                              {
+                                                  SystemKeyword = "UpdateKnowledgebaseCategory",
+                                                  Enabled = true,
+                                                  Name = "Update knowledgebase category"
+                                              },
+                                            new ActivityLogType
+                                              {
+                                                  SystemKeyword = "CreateKnowledgebaseCategory",
+                                                  Enabled = true,
+                                                  Name = "Create knowledgebase category"
+                                              },
+                                            new ActivityLogType
+                                              {
+                                                  SystemKeyword = "DeleteKnowledgebaseCategory",
+                                                  Enabled = true,
+                                                  Name = "Delete knowledgebase category"
+                                              },
+                                            new ActivityLogType
+                                              {
+                                                  SystemKeyword = "CreateKnowledgebaseArticle",
+                                                  Enabled = true,
+                                                  Name = "Create knowledgebase article"
+                                              },
+                                            new ActivityLogType
+                                              {
+                                                  SystemKeyword = "UpdateKnowledgebaseArticle",
+                                                  Enabled = true,
+                                                  Name = "Update knowledgebase article"
+                                              },
+                                            new ActivityLogType
+                                              {
+                                                  SystemKeyword = "DeleteKnowledgebaseArticle",
+                                                  Enabled = true,
+                                                  Name = "Delete knowledgebase category"
+                                              },
                                       };
             _activityLogTypeRepository.Insert(activityLogTypes);
         }
@@ -10891,7 +10928,7 @@ namespace Grand.Services.Installation
             //Language
             _languageRepository.Collection.Indexes.CreateOneAsync(Builders<Language>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _lsrRepository.Collection.Indexes.CreateOneAsync(Builders<LocaleStringResource>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _lsrRepository.Collection.Indexes.CreateOneAsync(Builders<LocaleStringResource>.IndexKeys.Ascending(x => x.LanguageId).Ascending(x=>x.ResourceName), new CreateIndexOptions() { Name = "Language" });
+            _lsrRepository.Collection.Indexes.CreateOneAsync(Builders<LocaleStringResource>.IndexKeys.Ascending(x => x.LanguageId).Ascending(x => x.ResourceName), new CreateIndexOptions() { Name = "Language" });
             _lsrRepository.Collection.Indexes.CreateOneAsync(Builders<LocaleStringResource>.IndexKeys.Ascending(x => x.ResourceName), new CreateIndexOptions() { Name = "ResourceName" });
 
             //Currency
@@ -10911,7 +10948,7 @@ namespace Grand.Services.Installation
 
             //customer product price
             _customerProductPriceRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerProductPrice>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _customerProductPriceRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerProductPrice>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x=>x.ProductId), new CreateIndexOptions() { Name = "CustomerProduct", Unique = true });
+            _customerProductPriceRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerProductPrice>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x => x.ProductId), new CreateIndexOptions() { Name = "CustomerProduct", Unique = true });
 
             //customer tag history
             _customerTagProductRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerTagProduct>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
@@ -10919,7 +10956,7 @@ namespace Grand.Services.Installation
 
             //customer history password
             _customerHistoryPasswordRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerHistoryPassword>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _customerHistoryPasswordRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerHistoryPassword>.IndexKeys.Ascending(x => x.CustomerId).Descending(x=>x.CreatedOnUtc), new CreateIndexOptions() { Name = "CustomerId", Unique = false });
+            _customerHistoryPasswordRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerHistoryPassword>.IndexKeys.Ascending(x => x.CustomerId).Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CustomerId", Unique = false });
 
             //address
             _addressRepository.Collection.Indexes.CreateOneAsync(Builders<Address>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
@@ -10937,7 +10974,7 @@ namespace Grand.Services.Installation
 
             //category
             _categoryRepository.Collection.Indexes.CreateOneAsync(Builders<Category>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _categoryRepository.Collection.Indexes.CreateOneAsync(Builders<Category>.IndexKeys.Ascending(x => x.DisplayOrder).Ascending(x=>x.ShowOnHomePage), new CreateIndexOptions() { Name = "DisplayOrder_1", Unique = false });
+            _categoryRepository.Collection.Indexes.CreateOneAsync(Builders<Category>.IndexKeys.Ascending(x => x.DisplayOrder).Ascending(x => x.ShowOnHomePage), new CreateIndexOptions() { Name = "DisplayOrder_1", Unique = false });
             _categoryRepository.Collection.Indexes.CreateOneAsync(Builders<Category>.IndexKeys.Ascending(x => x.ParentCategoryId).Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "ParentCategoryId_1_DisplayOrder_1", Unique = false });
 
             //manufacturer
@@ -10975,7 +11012,7 @@ namespace Grand.Services.Installation
 
             //bid
             _bidRepository.Collection.Indexes.CreateOneAsync(Builders<Bid>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _bidRepository.Collection.Indexes.CreateOneAsync(Builders<Bid>.IndexKeys.Ascending(x => x.ProductId).Ascending(x=>x.CustomerId).Descending(x=>x.Date), new CreateIndexOptions() { Name = "ProductCustomer", Unique = false });
+            _bidRepository.Collection.Indexes.CreateOneAsync(Builders<Bid>.IndexKeys.Ascending(x => x.ProductId).Ascending(x => x.CustomerId).Descending(x => x.Date), new CreateIndexOptions() { Name = "ProductCustomer", Unique = false });
             _bidRepository.Collection.Indexes.CreateOneAsync(Builders<Bid>.IndexKeys.Ascending(x => x.ProductId).Descending(x => x.Date), new CreateIndexOptions() { Name = "ProductDate", Unique = false });
 
             //ProductReview

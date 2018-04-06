@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Grand.Core;
 using Grand.Core.Data;
 using Grand.Core.Domain.Knowledgebase;
 using Grand.Services.Events;
@@ -124,6 +125,17 @@ namespace Grand.Services.Knowledgebase
         {
             _knowledgebaseArticleRepository.Delete(ka);
             _eventPublisher.EntityDeleted(ka);
+        }
+
+        /// <summary>
+        /// Gets knowledgebase articles by category id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>IPagedList<KnowledgebaseArticle></returns>
+        public IPagedList<KnowledgebaseArticle> GetKnowledgebaseArticlesByCategoryId(string id, int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
+        {
+            var articles = _knowledgebaseArticleRepository.Table.Where(x => x.ParentCategoryId == id).ToList();
+            return new PagedList<KnowledgebaseArticle>(articles, pageIndex, pageSize);
         }
     }
 }
