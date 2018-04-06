@@ -1,103 +1,99 @@
 ﻿@model CountryModel
 
-
-
-
-
 @(Html.LocalizedEditor<CountryModel, CountryLocalizedModel>("country-info-localized",
     @<div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.Locales[item].Name)
+                <admin-label asp-for="@Model.Locales[item].Name" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.Locales[item].Name)
-                    @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                    <admin-input asp-for="@Model.Locales[item].Name" />
+                    <span asp-validation-for="@Model.Locales[item].Name"></span>
                 </div>
             </div>
-            @Html.HiddenFor(model => model.Locales[item].LanguageId)
+            <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
         </div>
     </div>
-                ,
+    ,
     @<div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.Name)
+                <admin-label asp-for="Name" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.Name)
-                    @Html.ValidationMessageFor(model => model.Name)
+                    <admin-input asp-for="Name" />
+                    <span asp-validation-for="Name"></span>
                 </div>
             </div>
         </div>
     </div>
-            ))
+    ))
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.AllowsBilling)
+            <admin-label asp-for="AllowsBilling" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.AllowsBilling)
+                    <admin-input asp-for="AllowsBilling" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.AllowsBilling)
+                <span asp-validation-for="AllowsBilling"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.AllowsShipping)
+            <admin-label asp-for="AllowsShipping" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.AllowsShipping)
+                    <admin-input asp-for="AllowsShipping" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.AllowsShipping)
+                <span asp-validation-for="AllowsShipping"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.TwoLetterIsoCode)
+            <admin-label asp-for="TwoLetterIsoCode" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.TwoLetterIsoCode)
-                @Html.ValidationMessageFor(model => model.TwoLetterIsoCode)
+                <admin-input asp-for="TwoLetterIsoCode" />
+                <span asp-validation-for="TwoLetterIsoCode"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.ThreeLetterIsoCode)
+            <admin-label asp-for="ThreeLetterIsoCode" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.ThreeLetterIsoCode)
-                @Html.ValidationMessageFor(model => model.ThreeLetterIsoCode)
+                <admin-input asp-for="ThreeLetterIsoCode" />
+                <span asp-validation-for="ThreeLetterIsoCode"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.NumericIsoCode)
+            <admin-label asp-for="NumericIsoCode" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.NumericIsoCode)
-                @Html.ValidationMessageFor(model => model.NumericIsoCode)
+                <admin-input asp-for="NumericIsoCode" />
+                <span asp-validation-for="NumericIsoCode"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.SubjectToVat)
+            <admin-label asp-for="SubjectToVat" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.SubjectToVat)
+                    <admin-input asp-for="SubjectToVat" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.SubjectToVat)
+                <span asp-validation-for="SubjectToVat"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.Published)
+            <admin-label asp-for="Published" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.Published)
+                    <admin-input asp-for="Published" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.Published)
+                <span asp-validation-for="Published"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.DisplayOrder)
+            <admin-label asp-for="DisplayOrder" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.DisplayOrder)
-                @Html.ValidationMessageFor(model => model.DisplayOrder)
+                <admin-input asp-for="DisplayOrder" />
+                <span asp-validation-for="DisplayOrder"></span>
             </div>
         </div>
     </div>

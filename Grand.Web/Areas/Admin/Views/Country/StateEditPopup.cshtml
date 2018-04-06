@@ -1,13 +1,12 @@
-﻿@{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
-}
-@model StateProvinceModel
+﻿@model StateProvinceModel
 @{
-    //page title
+    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
     ViewBag.Title = T("Admin.Configuration.Countries.States.EditStateDetails").Text;
 }
-@using (Html.BeginForm())
-{
+<form asp-controller="Country" asp-action="StateEditPopup"
+      asp-route-countryId="@Context.Request.Query["countryId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
     <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
@@ -27,4 +26,4 @@
             </div>
         </div>
     </div>
-}
+</form>

@@ -1,5 +1,5 @@
 ﻿@model CountryModel
-
+@inject IEventPublisher eventPublisher
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 <script>
@@ -14,8 +14,6 @@
         });
     });
 </script>
-
-
 <div id="country-edit">
     <ul>
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
@@ -41,13 +39,12 @@
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "country-edit");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock
     }
 }
-
 
 @*save selected tab index*@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
