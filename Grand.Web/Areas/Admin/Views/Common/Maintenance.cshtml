@@ -24,22 +24,22 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.DeleteGuests.StartDate)
+                                <admin-label asp-for="DeleteGuests.StartDate" />
                                 <div class="col-md-4 col-sm-4">
-                                    @Html.GrandEditorFor(model => model.DeleteGuests.StartDate)
+                                    <admin-input asp-for="DeleteGuests.StartDate" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.DeleteGuests.EndDate)
+                                <admin-label asp-for="DeleteGuests.EndDate" />
                                 <div class="col-md-4 col-sm-4">
-                                    @Html.GrandEditorFor(model => model.DeleteGuests.EndDate)
+                                    <admin-input asp-for="DeleteGuests.EndDate" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.DeleteGuests.OnlyWithoutShoppingCart)
+                                <admin-label asp-for="DeleteGuests.OnlyWithoutShoppingCart" />
                                 <div class="col-md-4 col-sm-4">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.DeleteGuests.OnlyWithoutShoppingCart)
+                                        <admin-input asp-for="DeleteGuests.OnlyWithoutShoppingCart" />
                                         <span></span>
                                     </label>
                                 </div>
@@ -71,15 +71,15 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                    @Html.GrandLabelFor(model => model.DeleteExportedFiles.StartDate):
+                                <admin-label asp-for="DeleteExportedFiles.StartDate" />:
                                 <div class="col-md-4 col-sm-4">
-                                    @Html.GrandEditorFor(model => model.DeleteExportedFiles.StartDate)
+                                    <admin-input asp-for="DeleteExportedFiles.StartDate" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                    @Html.GrandLabelFor(model => model.DeleteExportedFiles.EndDate):
+                                 <admin-label asp-for="DeleteExportedFiles.EndDate" />:
                                 <div class="col-md-4 col-sm-4">
-                                    @Html.GrandEditorFor(model => model.DeleteExportedFiles.EndDate)
+                                    <admin-input asp-for="DeleteExportedFiles.EndDate" />
                                 </div>
                             </div>
                             <div class="form-actions">
