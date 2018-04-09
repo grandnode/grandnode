@@ -1,7 +1,5 @@
 ﻿@model CustomerReminderModel.ConditionModel
 
-
-
 <script type="text/javascript">
             $(document).ready(function () {
                 $("#@Html.FieldIdFor(model => model.ConditionTypeId)").change(toggleConditionType);
@@ -95,36 +93,35 @@
 
 </script>
 
-
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.Name)
+            <admin-label asp-for="Name" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.Name)
-                @Html.ValidationMessageFor(model => model.Name)
+                <admin-input asp-for="Name" />
+                <span asp-validation-for="Name"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.ConditionTypeId)
+            <admin-label asp-for="ConditionTypeId" />
             <div class="col-md-9 col-sm-9">
                 @if (!String.IsNullOrEmpty(Model.Id))
                 {
-                    @Html.GrandDropDownListFor(model => model.ConditionTypeId, Model.ConditionType, new { @disabled = "disabled" })
+                    <admin-select asp-for="ConditionTypeId" asp-items="Model.ConditionType" disabled/>
                 }
                 else
                 {
-                    @Html.GrandDropDownListFor(model => model.ConditionTypeId, Model.ConditionType)
+                    <admin-select asp-for="ConditionTypeId" asp-items="Model.ConditionType" />
                 }
-                @Html.ValidationMessageFor(model => model.ConditionTypeId)
-                @Html.HiddenFor(x => x.ConditionTypeId)
+                <span asp-validation-for="ConditionTypeId"></span>
+                <input asp-for="ConditionTypeId" type="hidden" />
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.ConditionId)
+            <admin-label asp-for="ConditionId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.ConditionId, ((Grand.Core.Domain.Customers.CustomerReminderConditionEnum)Model.ConditionId).ToSelectList())
-                @Html.ValidationMessageFor(model => model.ConditionId)
+                <admin-select asp-for="ConditionId" asp-items="((Grand.Core.Domain.Customers.CustomerReminderConditionEnum)Model.ConditionId).ToSelectList()" />
+                <span asp-validation-for="ConditionId"></span>
             </div>
         </div>
     </div>

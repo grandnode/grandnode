@@ -1,6 +1,5 @@
 ﻿@model CustomerReminderModel.ConditionModel
 
-
     @if (String.IsNullOrEmpty(Model.Id))
     {
         <div class="note note-info">
@@ -114,7 +113,6 @@
             }]
         });
     });
-
 
         function crDropDownEditorCA(container, options) {
         $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:CustomerAttributeName"/>')

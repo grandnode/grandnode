@@ -4,8 +4,7 @@
     ViewBag.Title = T("Admin.Customers.CustomerReminder.AddLevel").Text;
 }
 
-@using(Html.BeginForm())
-{
+<form asp-controller="CustomerReminder" asp-action="AddLevel" method="post" id="customer-reminder-level-form">
     <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
@@ -13,7 +12,7 @@
                 <div class="portlet-title">
                     <div class="caption">
                         <i class="fa fa-sitemap"></i>
-                        @T("Admin.Customers.CustomerReminder.AddLevel") - @Model.Name 
+                        @T("Admin.Customers.CustomerReminder.AddLevel") - @Model.Name
                         <small>@Html.ActionLink("(" + T("Admin.Customers.CustomerReminder.BackToAction") + ")", "Edit", new { Id = Model.CustomerReminderId })</small>
                     </div>
                     <div class="actions">
@@ -29,6 +28,4 @@
             </div>
         </div>
     </div>
-
-
-}
+</form>

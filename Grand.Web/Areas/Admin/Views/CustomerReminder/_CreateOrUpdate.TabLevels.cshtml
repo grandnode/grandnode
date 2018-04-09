@@ -1,7 +1,4 @@
 ﻿@model CustomerReminderModel
-
-
-
 @{
 
     if (String.IsNullOrEmpty(Model.Id))
@@ -12,9 +9,7 @@
     }
     if (!String.IsNullOrEmpty(Model.Id))
     {
-        var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-        var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
+        
         <div class="panel panel-default">
             <div class="panel-body">
                 <div id="levels-grid"></div>
