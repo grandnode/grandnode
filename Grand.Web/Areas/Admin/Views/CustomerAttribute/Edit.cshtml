@@ -4,9 +4,7 @@
     //page title
     ViewBag.Title = T("Admin.Customers.CustomerAttributes.EditAttributeDetails").Text;
 }
-
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "customerattribute-form" }))
-{
+<form asp-controller="CustomerAttribute" asp-action="Edit" method="post" id="customerattribute-form">
     <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
@@ -31,6 +29,5 @@
             </div>
         </div>
     </div>
-
-}
+</form>
 @Html.DeleteConfirmation("customerattribute-delete")

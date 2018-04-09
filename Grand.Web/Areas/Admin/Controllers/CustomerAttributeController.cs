@@ -272,7 +272,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ValueCreatePopup(string btnId, string formId, CustomerAttributeValueModel model)
+        public IActionResult ValueCreatePopup(CustomerAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -296,8 +296,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
 
@@ -334,7 +332,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ValueEditPopup(string btnId, string formId, CustomerAttributeValueModel model)
+        public IActionResult ValueEditPopup(CustomerAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -354,8 +352,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _customerAttributeService.UpdateCustomerAttributeValue(cav);
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
 

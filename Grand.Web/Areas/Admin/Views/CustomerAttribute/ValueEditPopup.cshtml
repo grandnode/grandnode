@@ -8,8 +8,10 @@
     //page title
     ViewBag.Title = T("Admin.Customers.CustomerAttributes.Values.EditValueDetails").Text;
 }
-@using (Html.BeginForm())
-{
+<form asp-controller="CustomerAttribute" asp-action="ValueEditPopup"
+      asp-route-customerAttributeId="@Context.Request.Query["customerAttributeId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
     <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
@@ -29,4 +31,4 @@
             </div>
         </div>
     </div>
-}
+</form>

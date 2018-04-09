@@ -1,12 +1,11 @@
 ﻿@model CustomerAttributeValueModel
-@Html.ValidationSummary(false)
+<div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
-@Html.HiddenFor(model => model.CustomerAttributeId)
-
+<input asp-for="CustomerAttributeId" type="hidden" />
 @if (ViewBag.RefreshPage == true)
 {
     <script type="text/javascript">
-        try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
+        try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
         catch (e){} 
         window.close();
     </script>
@@ -16,23 +15,23 @@
 @<div class="form-horizontal">
      <div class="form-body">
          <div class="form-group">
-             @Html.GrandLabelFor(model => model.Locales[item].Name)
+             <admin-label asp-for="@Model.Locales[item].Name" />
              <div class="col-md-9 col-sm-9">
-                 @Html.GrandEditorFor(model => model.Locales[item].Name)
-                 @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                 <admin-input asp-for="@Model.Locales[item].Name" />
+                 <span asp-validation-for="@Model.Locales[item].Name"></span>
              </div>
          </div>
-        @Html.HiddenFor(model => model.Locales[item].LanguageId)
+        <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
      </div>
 </div>
 ,
 @<div class="form-horizontal">
      <div class="form-body">
          <div class="form-group">
-             @Html.GrandLabelFor(model => model.Name)
+             <admin-label asp-for="Name" />
              <div class="col-md-9 col-sm-9">
-                 @Html.GrandEditorFor(model => model.Name)
-                 @Html.ValidationMessageFor(model => model.Name)
+                 <admin-input asp-for="Name" />
+                 <span asp-validation-for="Name"></span>
              </div>
          </div>
      </div>
@@ -41,17 +40,20 @@
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.IsPreSelected)
+            <admin-label asp-for="IsPreSelected" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.IsPreSelected)
-                @Html.ValidationMessageFor(model => model.IsPreSelected)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    <admin-input asp-for="IsPreSelected" />
+                    <span></span>
+                </label>
+                <span asp-validation-for="IsPreSelected"></span>
             </div>
         </div>
         <dic class="form-group">
-            @Html.GrandLabelFor(model => model.DisplayOrder)
+            <admin-label asp-for="DisplayOrder" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.DisplayOrder)
-                @Html.ValidationMessageFor(model => model.DisplayOrder)
+                <admin-input asp-for="DisplayOrder" />
+                <span asp-validation-for="DisplayOrder"></span>
             </div>
         </dic>
     </div>
