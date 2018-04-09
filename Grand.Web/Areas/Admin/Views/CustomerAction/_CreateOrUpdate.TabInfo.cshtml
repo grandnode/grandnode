@@ -4,38 +4,38 @@
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.Name)
+            <admin-label asp-for="Name" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.Name)
-                @Html.ValidationMessageFor(model => model.Name)
+                <admin-input asp-for="Name" />
+                <span asp-validation-for="Name"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.Active)
+            <admin-label asp-for="Active" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.Active)
+                    <admin-input asp-for="Active" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.Active)
+                <span asp-validation-for="Active"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.StartDateTimeUtc)
+            <admin-label asp-for="StartDateTimeUtc" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.StartDateTimeUtc)
-                @Html.ValidationMessageFor(model => model.StartDateTimeUtc)
+                <admin-input asp-for="StartDateTimeUtc" />
+                <span asp-validation-for="StartDateTimeUtc"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.EndDateTimeUtc)
+            <admin-label asp-for="EndDateTimeUtc" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.EndDateTimeUtc)
-                @Html.ValidationMessageFor(model => model.EndDateTimeUtc)
+                <admin-input asp-for="EndDateTimeUtc" />
+                <span asp-validation-for="EndDateTimeUtc"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.ActionTypeId)
+            <admin-label asp-for="ActionTypeId" />
             <div class="col-md-9 col-sm-9">
                 @if (Model.ConditionCount > 0)
                 {
@@ -43,9 +43,9 @@
                 }
                 else
                 {
-                    @Html.GrandDropDownListFor(model => model.ActionTypeId, Model.ActionType)
+                    <admin-select asp-for="ActionTypeId" asp-items="Model.ActionType" />
                 }
-                @Html.ValidationMessageFor(model => model.ActionTypeId)
+                <span asp-validation-for="ActionTypeId"></span>
                 <div class="note note-info margin-top-10">
                     <p>@T("admin.customers.actiontype.helpText.AddToCart")</p>
                     <p>@T("admin.customers.actiontype.helpText.AddOrder")</p>
@@ -56,10 +56,10 @@
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.ConditionId)
+            <admin-label asp-for="ConditionId" />
             <div class="col-md-9 col-sm-9">
                 @Html.GrandDropDownListFor(model => model.ConditionId, ((Grand.Core.Domain.Customers.CustomerActionConditionEnum)Model.ConditionId).ToSelectList())
-                @Html.ValidationMessageFor(model => model.ConditionId)
+                <span asp-validation-for="ConditionId"></span>
                 <div class="note note-info margin-top-10">
                     <p>@T("admin.customers.actiontype.helpText.OneOfThem")</p>
                     <p>@T("admin.customers.actiontype.helpText.AllOfThem")</p>

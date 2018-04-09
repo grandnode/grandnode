@@ -1,7 +1,9 @@
 ﻿@model CustomerActionConditionModel
+@inject IEventPublisher eventPublisher
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
-@Html.HiddenFor(model => model.CustomerActionId)
+<input asp-for="CustomerActionId" type="hidden" />
+
 <script type="text/javascript">
     $(document).ready(function () {
         $("#customeractioncondition-edit").show();
@@ -61,7 +63,7 @@
         </li>
     </ul>
     <div>
-       @Html.Partial("_ConditionInfo", Model)
+        @Html.Partial("_ConditionInfo", Model)
     </div>
     <div>
         @Html.Partial("_ConditionProduct", Model)
@@ -107,7 +109,7 @@
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "customeractioncondition-edit");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock

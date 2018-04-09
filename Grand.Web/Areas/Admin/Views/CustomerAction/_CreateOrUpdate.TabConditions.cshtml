@@ -1,28 +1,24 @@
 ﻿@model CustomerActionModel
+@inject AdminAreaSettings adminAreaSettings
 @{
-if (String.IsNullOrEmpty(Model.Id))
-{
-    <div class="note note-info">
-        @T("Admin.Customers.CustomerAction.SaveBeforeEdit")
-    </div>
-}
-
-if (!String.IsNullOrEmpty(Model.Id))
-{
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div id="conditions-grid"></div>
+    if (String.IsNullOrEmpty(Model.Id))
+    {
+        <div class="note note-info">
+            @T("Admin.Customers.CustomerAction.SaveBeforeEdit")
         </div>
-        <div class="panel-footer">
-            <input type="submit" id="btnAddNewCondition" name="btnAddNewCondition" value="@T("Admin.Customers.CustomerAction.Conditions.AddNew")" onclick="javascript:setLocation('@(Url.Action("AddCondition", "CustomerAction", new { customerActionId = Model.Id }))'); return false;" class="btn default" />
+    }
+
+    if (!String.IsNullOrEmpty(Model.Id))
+    {
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="conditions-grid"></div>
+            </div>
+            <div class="panel-footer">
+                <input type="submit" id="btnAddNewCondition" name="btnAddNewCondition" value="@T("Admin.Customers.CustomerAction.Conditions.AddNew")" onclick="javascript:setLocation('@(Url.Action("AddCondition", "CustomerAction", new { customerActionId = Model.Id }))'); return false;" class="btn default" />
+            </div>
         </div>
-    </div>
-
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
-
-    <script>
+        <script>
         $(document).ready(function () {
             $("#conditions-grid").kendoGrid({
                 dataSource: {
@@ -94,7 +90,7 @@ if (!String.IsNullOrEmpty(Model.Id))
                 }]
             });
         });
-    </script>
+        </script>
 
     }
 

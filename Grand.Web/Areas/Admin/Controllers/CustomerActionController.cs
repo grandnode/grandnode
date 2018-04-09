@@ -680,7 +680,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult ProductAddPopup(string btnId, CustomerActionConditionModel.AddProductToConditionModel model)
+        public IActionResult ProductAddPopup(CustomerActionConditionModel.AddProductToConditionModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
@@ -705,7 +705,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }
             }
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
             return View(model);
         }
         #endregion
@@ -764,7 +763,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult CategoryAddPopup(string btnId, CustomerActionConditionModel.AddCategoryConditionModel model)
+        public IActionResult CategoryAddPopup(CustomerActionConditionModel.AddCategoryConditionModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
@@ -788,9 +787,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     }
                 }
             }
-
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
             return View(model);
         }
 
@@ -843,7 +840,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult ManufacturerAddPopup(string btnId, CustomerActionConditionModel.AddManufacturerConditionModel model)
+        public IActionResult ManufacturerAddPopup(CustomerActionConditionModel.AddManufacturerConditionModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
@@ -868,9 +865,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
                 }
             }
-
-            ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
+            ViewBag.RefreshPage = true;            
             return View(model);
         }
 
