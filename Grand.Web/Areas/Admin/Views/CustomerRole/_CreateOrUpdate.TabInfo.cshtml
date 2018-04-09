@@ -1,78 +1,74 @@
 ﻿@model CustomerRoleModel
-
-
-
-
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.Name)
+            <admin-label asp-for="Name" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.Name)
-                @Html.ValidationMessageFor(model => model.Name)
+                <admin-input asp-for="Name" />
+                <span asp-validation-for="Name"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.SystemName)
+            <admin-label asp-for="SystemName" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.SystemName)
-                @Html.ValidationMessageFor(model => model.SystemName)
+                <admin-input asp-for="SystemName" />
+                <span asp-validation-for="SystemName"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.FreeShipping)
-            <div class="col-md-9 col-sm-9">
-                <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.FreeShipping)
-                    <span></span>
-                </label>
-                @Html.ValidationMessageFor(model => model.FreeShipping)
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.GrandLabelFor(model => model.TaxExempt)
+            <admin-label asp-for="FreeShipping" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.TaxExempt)
+                    <admin-input asp-for="FreeShipping" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.TaxExempt)
+                <span asp-validation-for="FreeShipping"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.Active)
+            <admin-label asp-for="TaxExempt" />
+            <div class="col-md-9 col-sm-9">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    <admin-input asp-for="TaxExempt" />
+                    <span></span>
+                </label>
+                <span asp-validation-for="TaxExempt"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="Active" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
                     @Html.EditorFor(model => model.Active)
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.Active)
+                <span asp-validation-for="Active"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.EnablePasswordLifetime)
+            <admin-label asp-for="EnablePasswordLifetime" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
                     @Html.EditorFor(model => model.EnablePasswordLifetime)
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.EnablePasswordLifetime)
+                <span asp-validation-for="EnablePasswordLifetime"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.IsSystemRole)
+            <admin-label asp-for="IsSystemRole" />
             <div class="col-md-9 col-sm-9">
                 <label class="control-label"> @Model.IsSystemRole.ToString()</label>
-                @Html.HiddenFor(model => model.IsSystemRole)
-                @Html.ValidationMessageFor(model => model.IsSystemRole)
+                <input asp-for="IsSystemRole" type="hidden" />
+                <span asp-validation-for="IsSystemRole"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.PurchasedWithProductId)
+            <admin-label asp-for="PurchasedWithProductId" />
             <div class="col-md-9 col-sm-9">
-                @Html.HiddenFor(model => model.PurchasedWithProductId)
+                <input asp-for="PurchasedWithProductId" type="hidden" />
                 <span id="purchased-with-product-name">@Model.PurchasedWithProductName</span>
-                @Html.ValidationMessageFor(model => model.PurchasedWithProductId)
+                <span asp-validation-for="PurchasedWithProductId"></span>
                 <input type="submit" value=@T("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Choose") onclick="javascript:OpenWindow('@(Url.Action("AssociateProductToCustomerRolePopup", "CustomerRole", new { productIdInput = Html.FieldIdFor(model => model.PurchasedWithProductId), productNameInput = "purchased-with-product-name", btnId = "btnRefreshPurchasedWithProduct" }))', 800, 800, true); return false;" class="btn default" />
                 <input type="submit" id="purchased-with-product-name-remove" value=@T("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Remove") class="btn default" />
                 <input type="submit" id="btnRefreshPurchasedWithProduct" style="display: none" />
