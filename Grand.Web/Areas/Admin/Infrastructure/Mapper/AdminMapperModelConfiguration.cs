@@ -540,13 +540,16 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
 
             //knowledgebase
             CreateMap<KnowledgebaseCategory, KnowledgebaseCategoryModel>()
-                .ForMember(dest => dest.Locales, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore());
+
             CreateMap<KnowledgebaseCategoryModel, KnowledgebaseCategory>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore());
             CreateMap<KnowledgebaseArticle, KnowledgebaseArticleModel>()
-                .ForMember(dest => dest.Locales, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore());
             CreateMap<KnowledgebaseArticleModel, KnowledgebaseArticle>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())

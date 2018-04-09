@@ -15,8 +15,6 @@
                 </div>
                 <div class="actions btn-group btn-group-devided">
                     <a href="@Url.Action("CreateCategory")" class="btn blue">@T("Admin.ContentManagement.Knowledgebase.CreateKnowledgebaseCategory")</a>
-                </div>
-                <div class="actions btn-group btn-group-devided">
                     <a href="@Url.Action("CreateArticle")" class="btn yellow">@T("Admin.ContentManagement.Knowledgebase.CreateKnowledgebaseArticle")</a>
                 </div>
             </div>
@@ -32,33 +30,6 @@
         </div>
     </div>
 </div>
-
-<style>
-    .treeview .list-group-item {
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-    }
-
-    .treeview span.indent {
-        margin-left: 10px;
-        margin-right: 10px;
-    }
-
-    .treeview span.icon {
-        width: 12px;
-        margin-right: 5px;
-    }
-
-    .treeview .node-disabled {
-        color: silver;
-        cursor: not-allowed;
-    }
-
-    .treeview .list-group-item span.pull-right {
-        margin-left: auto;
-    }
-</style>
 
 <script>
     $(document).ready(function () {

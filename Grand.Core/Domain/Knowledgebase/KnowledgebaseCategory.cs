@@ -7,6 +7,12 @@ namespace Grand.Core.Domain.Knowledgebase
 {
     public class KnowledgebaseCategory : BaseEntity, ITreeNode, ILocalizedEntity
     {
+        public KnowledgebaseCategory()
+        {
+            CustomerRoles = new List<string>();
+            Locales = new List<LocalizedProperty>();
+        }
+
         /// <summary>
         /// Gets or sets name of the category
         /// </summary>
@@ -46,5 +52,11 @@ namespace Grand.Core.Domain.Knowledgebase
         /// Gets or sets the collection of locales
         /// </summary>
         public IList<LocalizedProperty> Locales { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the entity is subject to ACL
+        /// </summary>
+        public bool SubjectToAcl { get; set; }
+        public IList<string> CustomerRoles { get; set; }
     }
 }

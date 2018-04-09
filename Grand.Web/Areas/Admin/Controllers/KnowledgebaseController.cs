@@ -168,13 +168,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
 
         [HttpPost]
-        public IActionResult ListActivityLog(DataSourceRequest command, string categoryId)
+        public IActionResult ListCategoryActivityLog(DataSourceRequest command, string categoryId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
                 return Content("");
 
-            var activityLog = _customerActivityService.GetCategoryActivities(null, null, categoryId, command.Page - 1, command.PageSize);
-            //TODO replace this method with new one
+            var activityLog = _customerActivityService.GetKnowledgebaseCategoryActivities(null, null, categoryId, command.Page - 1, command.PageSize);
 
             var gridModel = new DataSourceResult
             {
@@ -182,6 +181,37 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     var customer = _customerService.GetCustomerById(x.CustomerId);
                     var m = new KnowledgebaseCategoryModel.ActivityLogModel
+                    {
+                        Id = x.Id,
+                        ActivityLogTypeName = _customerActivityService.GetActivityTypeById(x.ActivityLogTypeId)?.Name,
+                        Comment = x.Comment,
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
+                        CustomerId = x.CustomerId,
+                        CustomerEmail = customer != null ? customer.Email : "null"
+                    };
+
+                    return m;
+                }),
+                Total = activityLog.TotalCount
+            };
+
+            return Json(gridModel);
+        }
+
+        [HttpPost]
+        public IActionResult ListArticleActivityLog(DataSourceRequest command, string articleId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
+                return Content("");
+
+            var activityLog = _customerActivityService.GetKnowledgebaseArticleActivities(null, null, articleId, command.Page - 1, command.PageSize);
+
+            var gridModel = new DataSourceResult
+            {
+                Data = activityLog.Select(x =>
+                {
+                    var customer = _customerService.GetCustomerById(x.CustomerId);
+                    var m = new KnowledgebaseArticleModel.ActivityLogModel
                     {
                         Id = x.Id,
                         ActivityLogTypeName = _customerActivityService.GetActivityTypeById(x.ActivityLogTypeId)?.Name,
@@ -235,6 +265,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 });
             }
 
+            model.AvailableCustomerRoles = _customerService
+            .GetAllCustomerRoles(true)
+            .Select(cr => cr.ToModel())
+            .ToList();
+
             AddLocales(_languageService, model.Locales);
             return View(model);
         }
@@ -251,12 +286,18 @@ namespace Grand.Web.Areas.Admin.Controllers
                 knowledgebaseCategory.CreatedOnUtc = DateTime.UtcNow;
                 knowledgebaseCategory.UpdatedOnUtc = DateTime.UtcNow;
                 knowledgebaseCategory.Locales = UpdateLocales(model);
+                knowledgebaseCategory.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
 
                 _knowledgebaseService.InsertKnowledgebaseCategory(knowledgebaseCategory);
 
                 _customerActivityService.InsertActivity("CreateKnowledgebaseCategory", knowledgebaseCategory.Id,
                     _localizationService.GetResource("ActivityLog.CreateKnowledgebaseCategory"), knowledgebaseCategory.Name);
 
+                model.AvailableCustomerRoles = _customerService
+                .GetAllCustomerRoles(true)
+                .Select(cr => cr.ToModel())
+                .ToList();
+                
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Added"));
                 return continueEditing ? RedirectToAction("EditCategory", new { knowledgebaseCategory.Id }) : RedirectToAction("List");
             }
@@ -292,6 +333,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.Description = knowledgebaseCategory.GetLocalized(x => x.Description, languageId, false, false);
             });
 
+            model.AvailableCustomerRoles = _customerService
+            .GetAllCustomerRoles(true)
+            .Select(cr => cr.ToModel())
+            .ToList();
+            model.SelectedCustomerRoleIds = knowledgebaseCategory.CustomerRoles.ToArray();
+
             return View(model);
         }
 
@@ -309,11 +356,18 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 knowledgebaseCategory = model.ToEntity(knowledgebaseCategory);
                 knowledgebaseCategory.UpdatedOnUtc = DateTime.UtcNow;
-                UpdateLocales(model);
+                knowledgebaseCategory.Locales = UpdateLocales(model);
+                knowledgebaseCategory.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
+
                 _knowledgebaseService.UpdateKnowledgebaseCategory(knowledgebaseCategory);
 
                 _customerActivityService.InsertActivity("UpdateKnowledgebaseCategory", knowledgebaseCategory.Id,
                     _localizationService.GetResource("ActivityLog.UpdateKnowledgebaseCategory"), knowledgebaseCategory.Name);
+
+                model.AvailableCustomerRoles = _customerService
+                .GetAllCustomerRoles(true)
+                .Select(cr => cr.ToModel())
+                .ToList();
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Updated"));
                 return continueEditing ? RedirectToAction("EditCategory", new { id = knowledgebaseCategory.Id }) : RedirectToAction("List");
@@ -359,6 +413,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 });
             }
 
+            model.AvailableCustomerRoles = _customerService
+            .GetAllCustomerRoles(true)
+            .Select(cr => cr.ToModel())
+            .ToList();
+
             if (!string.IsNullOrEmpty(parentCategoryId))
                 model.ParentCategoryId = parentCategoryId;
 
@@ -378,10 +437,17 @@ namespace Grand.Web.Areas.Admin.Controllers
                 knowledgebaseArticle.CreatedOnUtc = DateTime.UtcNow;
                 knowledgebaseArticle.UpdatedOnUtc = DateTime.UtcNow;
                 knowledgebaseArticle.Locales = UpdateLocales(model);
+                knowledgebaseArticle.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
+
                 _knowledgebaseService.InsertKnowledgebaseArticle(knowledgebaseArticle);
 
                 _customerActivityService.InsertActivity("CreateKnowledgebaseArticle", knowledgebaseArticle.Id,
                     _localizationService.GetResource("ActivityLog.CreateKnowledgebaseArticle"), knowledgebaseArticle.Name);
+
+                model.AvailableCustomerRoles = _customerService
+                .GetAllCustomerRoles(true)
+                .Select(cr => cr.ToModel())
+                .ToList();
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Added"));
                 return continueEditing ? RedirectToAction("EditArticle", new { knowledgebaseArticle.Id }) : RedirectToAction("List");
@@ -417,6 +483,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.Name = knowledgebaseArticle.GetLocalized(x => x.Name, languageId, false, false);
                 locale.Content = knowledgebaseArticle.GetLocalized(x => x.Content, languageId, false, false);
             });
+
+            model.AvailableCustomerRoles = _customerService
+            .GetAllCustomerRoles(true)
+            .Select(cr => cr.ToModel())
+            .ToList();
+            model.SelectedCustomerRoleIds = knowledgebaseArticle.CustomerRoles.ToArray();
+
             return View(model);
         }
 
@@ -434,11 +507,18 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 knowledgebaseArticle = model.ToEntity(knowledgebaseArticle);
                 knowledgebaseArticle.UpdatedOnUtc = DateTime.UtcNow;
-                UpdateLocales(model);
+                knowledgebaseArticle.Locales = UpdateLocales(model);
+                knowledgebaseArticle.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
+
                 _knowledgebaseService.UpdateKnowledgebaseArticle(knowledgebaseArticle);
 
                 _customerActivityService.InsertActivity("UpdateKnowledgebaseArticle", knowledgebaseArticle.Id,
                     _localizationService.GetResource("ActivityLog.UpdateKnowledgebaseArticle"), knowledgebaseArticle.Name);
+
+                model.AvailableCustomerRoles = _customerService
+                .GetAllCustomerRoles(true)
+                .Select(cr => cr.ToModel())
+                .ToList();
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Updated"));
                 return continueEditing ? RedirectToAction("EditArticle", new { id = knowledgebaseArticle.Id }) : RedirectToAction("List");

@@ -1,4 +1,4 @@
-﻿@model KnowledgebaseCategoryModel
+﻿@model KnowledgebaseArticleModel
 
 @{
 var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>
@@ -17,7 +17,7 @@ var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.Admin
             dataSource: {
                 transport: {
                     read: {
-                        url: "@Html.Raw(Url.Action("ListCategoryActivityLog", "Knowledgebase", new { categoryId = Model.Id }))",
+                        url: "@Html.Raw(Url.Action("ListArticleActivityLog", "Knowledgebase", new { articleId = Model.Id }))",
                         type: "POST",
                         dataType: "json",
                         data: addAntiForgeryToken
@@ -49,19 +49,19 @@ var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.Admin
             scrollable: false,
             columns: [{
                 field: "ActivityLogTypeName",
-                title: "@T("Admin.Catalog.Categories.ActivityLog.ActivityLogType")",
+                title: "@T("Admin.Catalog.Articles.ActivityLog.ActivityLogType")",
                 width: 200,
             }, {
                 field: "CustomerId",
-                title: "@T("Admin.Catalog.Categories.ActivityLog.Customer")",
+                title: "@T("Admin.Catalog.Articles.ActivityLog.Customer")",
                 width: 200,
                 template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerEmail#</a>'
             }, {
                 field: "Comment",
-                title: "@T("Admin.Catalog.Categories.ActivityLog.Comment")"
+                title: "@T("Admin.Catalog.Articles.ActivityLog.Comment")"
             }, {
                 field: "CreatedOn",
-                title: "@T("Admin.Catalog.Categories.ActivityLog.CreatedOn")",
+                title: "@T("Admin.Catalog.Articles.ActivityLog.CreatedOn")",
                 width: 200,
                 type: "date",
                 format: "{0:G}"

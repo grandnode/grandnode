@@ -121,6 +121,30 @@ namespace Grand.Services.Logging
             DateTime? createdOnTo = null, string categoryId = "", int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
+        /// Gets knowledgebase category activity log items
+        /// </summary>
+        /// <param name="createdOnFrom">Log item creation from; null to load all records</param>
+        /// <param name="createdOnTo">Log item creation to; null to load all records</param>
+        /// <param name="categoryId">Category identifier</param>        
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Activity log items</returns>
+        IPagedList<ActivityLog> GetKnowledgebaseCategoryActivities(DateTime? createdOnFrom = null,
+            DateTime? createdOnTo = null, string categoryId = "", int pageIndex = 0, int pageSize = int.MaxValue);
+
+        /// <summary>
+        /// Gets knowledgebase article activity log items
+        /// </summary>
+        /// <param name="createdOnFrom">Log item creation from; null to load all records</param>
+        /// <param name="createdOnTo">Log item creation to; null to load all records</param>
+        /// <param name="categoryId">Category identifier</param>        
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Activity log items</returns>
+        IPagedList<ActivityLog> GetKnowledgebaseArticleActivities(DateTime? createdOnFrom = null,
+            DateTime? createdOnTo = null, string categoryId = "", int pageIndex = 0, int pageSize = int.MaxValue);
+
+        /// <summary>
         /// Gets manufacturer activity log items
         /// </summary>
         /// <param name="createdOnFrom">Log item creation from; null to load all records</param>

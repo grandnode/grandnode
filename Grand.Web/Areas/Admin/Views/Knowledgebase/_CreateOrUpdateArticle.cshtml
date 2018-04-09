@@ -1,70 +1,55 @@
 ﻿@model KnowledgebaseArticleModel
 
-@Html.ValidationSummary(true)
+@Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 
-@(Html.LocalizedEditor<KnowledgebaseArticleModel, KnowledgebaseArticleLocalizedModel>("knowledbasearticle-info-localized",
-        @<div class="form-horizontal">
-            <div class="form-body">
-                <div class="form-group">
-                    @Html.GrandLabelFor(model => model.Locales[item].Name)
-                    <div class="col-md-9 col-sm-9">
-                        @Html.GrandEditorFor(model => model.Locales[item].Name)
-                        @Html.ValidationMessageFor(model => model.Locales[item].Name)
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.GrandLabelFor(model => model.Locales[item].Content)
-                    <div class="col-md-9 col-sm-9">
-                        @Html.EditorFor(model => model.Locales[item].Content, "RichEditor")
-                        @Html.ValidationMessageFor(model => model.Locales[item].Content)
-                    </div>
-                </div>
-                @Html.HiddenFor(model => model.Locales[item].LanguageId)
-            </div>
-        </div>
-            ,
-            @<div class="form-horizontal">
-                <div class="form-body">
-                    <div class="form-group">
-                        @Html.GrandLabelFor(model => model.Name)
-                        <div class="col-md-9 col-sm-9">
-                            @Html.GrandEditorFor(model => model.Name)
-                            @Html.ValidationMessageFor(model => model.Name)
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        @Html.GrandLabelFor(model => model.Content)
-                        <div class="col-md-9 col-sm-9">
-                            @Html.EditorFor(x => x.Content, "RichEditor")
-                            @Html.ValidationMessageFor(model => model.Content)
-                        </div>
-                    </div>
-                </div>
-            </div>
-            ))
-<div class="form-horizontal">
-    <div class="form-body">
-        <div class="form-group">
-            @Html.GrandLabelFor(model => model.ParentCategoryId)
-            <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.ParentCategoryId, Model.Categories)
-                @Html.ValidationMessageFor(model => model.ParentCategoryId)
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.GrandLabelFor(model => model.DisplayOrder)
-            <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.DisplayOrder)
-                @Html.ValidationMessageFor(model => model.DisplayOrder)
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.GrandLabelFor(model => model.Published)
-            <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.Published)
-                @Html.ValidationMessageFor(model => model.Published)
-            </div>
-        </div>
+<script>
+    $(document).ready(function() {
+        $('#knowledgebasearticle-edit').show();
+        $("#knowledgebasearticle-edit").kendoTabStrip({
+            animation:  {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
+
+<div id="knowledgebasearticle-edit" style="display:none">
+    <ul>
+        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+            @T("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Info")
+        </li>
+        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+            @T("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Acl")
+        </li>
+        <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+            @T("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.ActivityLog")
+        </li>
+    </ul>
+    <div>
+        @Html.Partial("_CreateOrUpdateArticle.TabInfo", Model)
+    </div>
+    <div>
+        @Html.Partial("_CreateOrUpdateArticle.TabAcl", Model)
+    </div>
+    <div>
+        @Html.Partial("_CreateOrUpdateArticle.TabActivityLog", Model)
     </div>
 </div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "knowledgebasearticle-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+
+@*save selected tab index*@
+<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">

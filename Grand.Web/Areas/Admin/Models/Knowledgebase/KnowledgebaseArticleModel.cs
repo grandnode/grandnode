@@ -2,8 +2,10 @@
 using Grand.Framework.Localization;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
+using Grand.Web.Areas.Admin.Models.Customers;
 using Grand.Web.Areas.Admin.Validators.Knowledgebase;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Knowledgebase
@@ -15,6 +17,7 @@ namespace Grand.Web.Areas.Admin.Models.Knowledgebase
         {
             Categories = new List<SelectListItem>();
             Locales = new List<KnowledgebaseArticleLocalizedModel>();
+            AvailableCustomerRoles = new List<CustomerRoleModel>();
         }
 
         [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.Name")]
@@ -35,6 +38,27 @@ namespace Grand.Web.Areas.Admin.Models.Knowledgebase
         public List<SelectListItem> Categories { get; set; }
 
         public IList<KnowledgebaseArticleLocalizedModel> Locales { get; set; }
+
+        [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.SubjectToAcl")]
+        public bool SubjectToAcl { get; set; }
+
+        [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.AclCustomerRoles")]
+        public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }
+
+        public string[] SelectedCustomerRoleIds { get; set; }
+
+        public partial class ActivityLogModel : BaseGrandEntityModel
+        {
+            [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.ActivityLogType")]
+            public string ActivityLogTypeName { get; set; }
+            [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.ActivityLog.Comment")]
+            public string Comment { get; set; }
+            [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.ActivityLog.CreatedOn")]
+            public DateTime CreatedOn { get; set; }
+            [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.ActivityLog.Customer")]
+            public string CustomerId { get; set; }
+            public string CustomerEmail { get; set; }
+        }
     }
 
     public class KnowledgebaseArticleLocalizedModel : ILocalizedModelLocal

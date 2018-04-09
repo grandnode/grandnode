@@ -232,3 +232,28 @@ a span.username {
 .mt-checkbox.mt-checkbox-outline:hover > input:not([disabled]):checked ~ span, .mt-checkbox.mt-checkbox-outline:hover > input:not([disabled]) ~ span, .mt-checkbox.mt-checkbox-outline > input:checked ~ span, .mt-checkbox.mt-checkbox-outline > input:focus ~ span, .mt-checkbox.mt-checkbox-outline > span, .mt-checkbox.mt-radio-outline:hover > input:not([disabled]):checked ~ span, .mt-checkbox.mt-radio-outline:hover > input:not([disabled]) ~ span, .mt-checkbox.mt-radio-outline > input:checked ~ span, .mt-checkbox.mt-radio-outline > input:focus ~ span, .mt-checkbox.mt-radio-outline > span, .mt-radio.mt-checkbox-outline:hover > input:not([disabled]):checked ~ span, .mt-radio.mt-checkbox-outline:hover > input:not([disabled]) ~ span, .mt-radio.mt-checkbox-outline > input:checked ~ span, .mt-radio.mt-checkbox-outline > input:focus ~ span, .mt-radio.mt-checkbox-outline > span, .mt-radio.mt-radio-outline:hover > input:not([disabled]):checked ~ span, .mt-radio.mt-radio-outline:hover > input:not([disabled]) ~ span, .mt-radio.mt-radio-outline > input:checked ~ span, .mt-radio.mt-radio-outline > input:focus ~ span, .mt-radio.mt-radio-outline > span {
     background-color: #ffffff;
 }
+
+.treeview .list-group-item {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.treeview span.indent {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.treeview span.icon {
+    width: 12px;
+    margin-right: 5px;
+}
+
+.treeview .node-disabled {
+    color: silver;
+    cursor: not-allowed;
+}
+
+.treeview .list-group-item span.pull-right {
+    margin-left: auto;
+}

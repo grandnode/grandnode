@@ -18384,13 +18384,37 @@
   <LocaleResource Name="ActivityLog.UpdateKnowledgebaseCategory">
     <Value>Update knowledgebase category</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteKnowledgebaseArticle">
+    <Value>Delete knowledgebase article</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.CreateKnowledgebaseArticle">
     <Value>Create knowledgebase article</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.UpdateKnowledgebaseArticle">
     <Value>Update knowledgebase article</Value>
   </LocaleResource>
-  <LocaleResource Name="ActivityLog.DeleteKnowledgebaseArticle">
-    <Value>Delete knowledgebase article</Value>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Info">
+    <Value>Info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.ActivityLog">
+    <Value>Activity log</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Articles.ActivityLog.ActivityLogType">
+    <Value>Activity log type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Articles.ActivityLog.Customer">
+    <Value>Customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Articles.ActivityLog.Comment">
+    <Value>Comment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Articles.ActivityLog.CreatedOn">
+    <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Acl">
+    <Value>Access control list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Acl">
+    <Value>Access control list</Value>
   </LocaleResource>
 </Language>
