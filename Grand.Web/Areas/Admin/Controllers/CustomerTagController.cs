@@ -386,7 +386,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult ProductAddPopup(string btnId, CustomerTagProductModel.AddProductModel model)
+        public IActionResult ProductAddPopup(CustomerTagProductModel.AddProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -413,7 +413,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //a vendor should have access only to his products
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
             return View(model);
         }
 
