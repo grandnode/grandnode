@@ -1,6 +1,5 @@
 ﻿@model Grand.Framework.Mvc.Models.DeleteConfirmationModel
-@using (Html.BeginForm(Model.ActionName, Model.ControllerName, new { id = Model.Id }))
-{
+<form asp-controller="@Model.ControllerName" asp-action="@Model.ActionName" method="post" asp-route-id="@Model.Id">
     <antiforgery-token />
     <div>
         <p>
@@ -11,4 +10,4 @@
             <input type="submit" class="k-button" value="@T("Admin.Common.Delete")" />
         </div>
     </div>
-}
+</form>
