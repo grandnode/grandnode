@@ -50,7 +50,6 @@
             <div class="form-group">
                 <admin-label asp-for="CustomerTags" />
                 <div class="col-md-9 col-sm-9">
-                    @*@Html.EditorFor(model => model.CustomerTags, new { SelectList = Model.AvailableCustomerTags })*@
                     <admin-input asp-for="CustomerTags" asp-template="MultiSelect" asp-selectitem="Model.AvailableCustomerTags" />
                 </div>
             </div>

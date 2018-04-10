@@ -1,8 +1,5 @@
 ﻿@model ShippingMethodRestrictionModel
 
-
-
-
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
@@ -22,55 +19,54 @@
                 else
                 {
                     <script type="text/javascript">
-                                            $(document).ready(function () {
-                                                @foreach (var sm in Model.AvailableShippingMethods)
-                                                {
-                                                <text>
-                                                $('#selectroleall-@(sm.Id)').click(function () {
-                                                    $('.restrictrole_@(sm.Id)').prop('checked', $(this).is(':checked')).change();
-                                                });
+                        $(document).ready(function () {
+                            @foreach (var sm in Model.AvailableShippingMethods)
+                            {
+                            <text>
+                            $('#selectroleall-@(sm.Id)').click(function () {
+                                $('.restrictrole_@(sm.Id)').prop('checked', $(this).is(':checked')).change();
+                            });
 
-                                                </text>
-                                                }
-                                            });
+                            </text>
+                            }
+                        });
                     </script>
-
-                        <table class="table table-bordered table-striped table-hover table-hover">
-                            <tbody>
-                                <tr>
+                    <table class="table table-bordered table-striped table-hover table-hover">
+                        <tbody>
+                            <tr>
+                                <th scope="col">
+                                    <strong>@T("Admin.Configuration.Shipping.Restrictions.Role")</strong>
+                                </th>
+                                @foreach (var sm in Model.AvailableShippingMethods)
+                                {
                                     <th scope="col">
-                                        <strong>@T("Admin.Configuration.Shipping.Restrictions.Role")</strong>
+                                        <strong>@sm.Name</strong>
+                                        <label class='mt-checkbox mt-checkbox-outline'><input type="checkbox" id="selectroleall-@(sm.Id)" /><span></span></label>
                                     </th>
+                                }
+                            </tr>
+                            @{
+                                bool altRow = true;
+                            }
+                            @foreach (var c in Model.AvailableCustomerRoles)
+                            {
+                                altRow = !altRow;
+                                <tr class="@(altRow ? "altrowstyle" : "rowstyle")">
+                                    <td>
+                                        <span>@c.Name</span>
+                                    </td>
                                     @foreach (var sm in Model.AvailableShippingMethods)
                                     {
-                                        <th scope="col">
-                                            <strong>@sm.Name</strong>
-                                            <label class='mt-checkbox mt-checkbox-outline'><input type="checkbox" id="selectroleall-@(sm.Id)" /><span></span></label>
-</th>
+                                        var restricted = Model.RestictedRole.ContainsKey(c.Id) && Model.RestictedRole[c.Id][sm.Id];
+                                        <td style="text-align:center">
+                                            <label class='mt-checkbox mt-checkbox-outline'><input id="restrictrole_@(sm.Id)" class="restrictrole_@(sm.Id)" type="checkbox" value="@(c.Id)" name="restrictrole_@(sm.Id)" @(restricted ? " checked=checked" : null) /><span></span></label>
+                                        </td>
                                     }
                                 </tr>
-                                @{
-                                    bool altRow = true;
-                                }
-                                @foreach (var c in Model.AvailableCustomerRoles)
-                                {
-                                    altRow = !altRow;
-                                    <tr class="@(altRow ? "altrowstyle" : "rowstyle")">
-                                        <td>
-                                            <span>@c.Name</span>
-                                        </td>
-                                        @foreach (var sm in Model.AvailableShippingMethods)
-                                        {
-                                            var restricted = Model.RestictedRole.ContainsKey(c.Id) && Model.RestictedRole[c.Id][sm.Id];
-                                            <td style="text-align:center">
-                                                <label class='mt-checkbox mt-checkbox-outline'><input id="restrictrole_@(sm.Id)" class="restrictrole_@(sm.Id)" type="checkbox" value="@(c.Id)" name="restrictrole_@(sm.Id)" @(restricted ? " checked=checked" : null) /><span></span></label>
-</td>
-                                        }
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                                    }
+                            }
+                        </tbody>
+                    </table>
+                }
             </div>
         </div>
     </div>

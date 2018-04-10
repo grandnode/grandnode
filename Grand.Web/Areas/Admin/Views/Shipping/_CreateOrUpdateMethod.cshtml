@@ -2,52 +2,52 @@
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 @(Html.LocalizedEditor<ShippingMethodModel, ShippingMethodLocalizedModel>("shipping-method-localized",
-                @<div class="form-horizontal">
-                     <div class="form-body">
-                         <div class="form-group">
-                             @Html.GrandLabelFor(model => model.Locales[item].Name)
-                             <div class="col-md-9 col-sm-9">
-                                 @Html.GrandEditorFor(model => model.Locales[item].Name)
-                                 @Html.ValidationMessageFor(model => model.Locales[item].Name)
-                             </div>
-                         </div>
-                         <div class="form-group">
-                             @Html.GrandLabelFor(model => model.Locales[item].Description)
-                             <div class="col-md-9 col-sm-9">
-                                 @Html.GrandTextAreaFor(model => model.Locales[item].Description)
-                                 @Html.ValidationMessageFor(model => model.Locales[item].Description)
-                             </div>
-                         </div>
-                         @Html.HiddenFor(model => model.Locales[item].LanguageId)
-                     </div>
+    @<div class="form-horizontal">
+            <div class="form-body">
+                <div class="form-group">
+                    <admin-label asp-for="@Model.Locales[item].Name" />
+                    <div class="col-md-9 col-sm-9">
+                        <admin-input asp-for="@Model.Locales[item].Name" />
+                        <span asp-validation-for="@Model.Locales[item].Name"></span>
+                    </div>
                 </div>
-                ,
-                @<div class="form-horizontal">
-                     <div class="form-body">
-                         <div class="form-group">
-                             @Html.GrandLabelFor(model => model.Name)
-                             <div class="col-md-9 col-sm-9">
-                                 @Html.GrandEditorFor(model => model.Name)
-                                 @Html.ValidationMessageFor(model => model.Name)
-                             </div>
-                         </div>
-                         <div class="form-group">
-                             @Html.GrandLabelFor(model => model.Description)
-                             <div class="col-md-9 col-sm-9">
-                                 @Html.GrandTextAreaFor(model => model.Description)
-                                 @Html.ValidationMessageFor(model => model.Description)
-                             </div>
-                         </div>
-                     </div>
+                <div class="form-group">
+                    <admin-label asp-for="@Model.Locales[item].Description" />
+                    <div class="col-md-9 col-sm-9">
+                        <admin-textarea asp-for="@Model.Locales[item].Description"></admin-textarea>
+                        <span asp-validation-for="@Model.Locales[item].Description"></span>
+                    </div>
                 </div>
-            ))
+                <input asp-for="@Model.Locales[item].LanguageId" type="hidden" />
+            </div>
+    </div>
+    ,
+    @<div class="form-horizontal">
+            <div class="form-body">
+                <div class="form-group">
+                    <admin-label asp-for="Name" />
+                    <div class="col-md-9 col-sm-9">
+                        <admin-input asp-for="Name" />
+                        <span asp-validation-for="Name"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <admin-label asp-for="Description" />
+                    <div class="col-md-9 col-sm-9">
+                        <admin-textarea asp-for="Description"></admin-textarea>
+                        <span asp-validation-for="Description"></span>
+                    </div>
+                </div>
+            </div>
+    </div>
+))
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.DisplayOrder)
+            <admin-label asp-for="DisplayOrder" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.DisplayOrder)
-                @Html.ValidationMessageFor(model => model.DisplayOrder)
+                <admin-input asp-for="DisplayOrder" />
+                <span asp-validation-for="DisplayOrder"></span>
             </div>
         </div>
     </div>

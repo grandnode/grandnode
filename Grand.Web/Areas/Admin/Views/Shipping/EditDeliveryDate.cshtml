@@ -3,8 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Shipping.DeliveryDates.EditDeliveryDateDetails").Text;
 }
-@using (Html.BeginForm())
-{
+<form asp-controller="Shipping" asp-action="EditDeliveryDate" method="post">
     <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
@@ -29,6 +28,5 @@
             </div>
         </div>
     </div>
-
-}
+</form>
 @Html.DeleteConfirmation("DeleteDeliveryDate", "delivery-date-delete")

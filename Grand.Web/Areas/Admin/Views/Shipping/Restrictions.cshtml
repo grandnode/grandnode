@@ -1,12 +1,11 @@
 ﻿@model ShippingMethodRestrictionModel
+@inject IEventPublisher eventPublisher
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Shipping.Restrictions").Text;
 }
-@using (Html.BeginForm())
-{
+<form asp-controller="Shipping" asp-action="Restrictions" method="post">
     <antiforgery-token />
-
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -20,7 +19,6 @@
                     </div>
                 </div>
                 <div class="portlet-body form">
-
                     <script type="text/javascript">
                         $(document).ready(function () {
                             $('#shippingrestriction-edit').show();
@@ -34,7 +32,6 @@
                             });
                         });
                     </script>
-
                     <div id="shippingrestriction-edit" style="display:none">
                         <ul>
                             <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
@@ -51,24 +48,20 @@
                             @Html.Partial("Restrictions.TabRole", Model)
                         </div>
                     </div>
-
-                   @{
-                       //custom tabs
-                       var eventMessage = new AdminTabStripCreated(this.Html, "shippingrestriction-edit");
-                       EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
-                       foreach (var eventBlock in eventMessage.BlocksToRender)
-                       {
+                    @{
+                        //custom tabs
+                        var eventMessage = new AdminTabStripCreated(this.Html, "shippingrestriction-edit");
+                        eventPublisher.Publish(eventMessage);
+                        foreach (var eventBlock in eventMessage.BlocksToRender)
+                        {
                             @eventBlock
-                       }
-                     }
-
+                        }
+                    }
 
                     @*save selected tab index*@
                     <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
-
                 </div>
             </div>
         </div>
     </div>
-
-}
+</form>

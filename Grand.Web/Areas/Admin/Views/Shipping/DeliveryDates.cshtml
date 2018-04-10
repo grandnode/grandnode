@@ -3,7 +3,6 @@
     ViewBag.Title = T("Admin.Configuration.Shipping.DeliveryDates").Text;
 }
 <antiforgery-token />
-
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light form-fit">
@@ -30,7 +29,7 @@
     </div>
 </div>
 
-<script>
+<script  type="text/javascript">
     $(document).ready(function () {
         $("#deliverydate-grid").kendoGrid({
             dataSource: {
