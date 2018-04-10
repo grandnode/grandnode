@@ -1,21 +1,20 @@
 ﻿@model DashboardModel
-@using Grand.Services.Security
+@inject Grand.Services.Security.IPermissionService permissionService
+@inject Grand.Core.Domain.Customers.CustomerSettings customerSettings
+@inject Grand.Services.Customers.ICustomerService customerService
+@inject Grand.Services.Orders.IOrderReportService orderReportService
+@inject Grand.Services.Catalog.IPriceFormatter priceFormatter
 @{
     //page title
     ViewBag.Title = T("Admin.Dashboard").Text;
 
-    var permissionService = EngineContext.Current.Resolve<IPermissionService>();
-    var canManageOrders = permissionService.Authorize(StandardPermissionProvider.ManageOrders);
-    var canManageCustomers = permissionService.Authorize(StandardPermissionProvider.ManageCustomers);
-    var canManageProducts = permissionService.Authorize(StandardPermissionProvider.ManageProducts);
-    var customerSettings = EngineContext.Current.Resolve<Grand.Core.Domain.Customers.CustomerSettings>();
-    var customerService = EngineContext.Current.Resolve<Grand.Services.Customers.ICustomerService>();
-    var orderReportService = EngineContext.Current.Resolve<Grand.Services.Orders.IOrderReportService>();
-    var customersOnline = customerService.GetOnlineCustomers(DateTime.UtcNow.AddMinutes(-customerSettings.OnlineCustomerMinutes),
-    null, 1, 1).TotalCount;
+    var canManageOrders = permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageOrders);
+    var canManageCustomers = permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageCustomers);
+    var canManageProducts = permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageProducts);
+    var customersOnline = customerService.GetOnlineCustomers(DateTime.UtcNow.AddMinutes(-customerSettings.OnlineCustomerMinutes), null, 1, 1).TotalCount;
     var customersShoppingCart = customerService.GetCountOnlineShoppingCart(DateTime.UtcNow.AddMinutes(-customerSettings.OnlineShoppingCartMinutes));
     var ordersToday = orderReportService.GetOrderPeriodReport(0);
-    var ordersAmount = EngineContext.Current.Resolve<Grand.Services.Catalog.IPriceFormatter>().FormatPrice(ordersToday.Amount, true, false);
+    var ordersAmount = priceFormatter.FormatPrice(ordersToday.Amount, true, false);
 }
 <antiforgery-token />
 <div class="page-bar" style="height:43px;">
@@ -312,10 +311,7 @@
         }
     }();
 
-
-    //jQuery(document).ready(function () {
     Dashboard.init();
-    //});
 
     $('#dashboard-report-range').on('apply.daterangepicker', function (ev, picker) {
         var chartOrderTime = $('#order-time-char').data('kendoChart');
