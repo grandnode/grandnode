@@ -1,7 +1,7 @@
 ﻿@model SpecificationAttributeModel
-@Html.ValidationSummary(false)
+@inject IEventPublisher eventPublisher
+<div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
-
 <script>
     $(document).ready(function () {
         $('#specificationattribute-edit').show();
@@ -15,7 +15,6 @@
         });
     });
 </script>
-
 
 <div id="specificationattribute-edit" style="display:none">
     <ul>
@@ -36,7 +35,7 @@
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "specificationattribute-edit");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock
