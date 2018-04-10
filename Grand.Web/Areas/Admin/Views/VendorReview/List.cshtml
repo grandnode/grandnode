@@ -1,9 +1,7 @@
 ﻿@model VendorReviewListModel
-@using Grand.Core
 @inject IWorkContext workContext
+@inject AdminAreaSettings adminAreaSettings
 @{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
 
     //page title
     ViewBag.Title = T("Admin.VendorReviews").Text;
@@ -89,14 +87,14 @@ $(document).ready(function () {
                 // Cancel the changes
                 this.cancelChanges();
             },
-            pageSize: @(defaultGridPageSize),
+            pageSize: @(adminAreaSettings.DefaultGridPageSize),
             serverPaging: true,
             serverFiltering: true,
             serverSorting: true
         },
         pageable: {
             refresh: true,
-            pageSizes: [@(gridPageSizes)]
+            pageSizes: [@(adminAreaSettings.GridPageSizes)]
         },
         scrollable: false,
         dataBound: onDataBound,
@@ -106,7 +104,7 @@ $(document).ready(function () {
             headerAttributes: { style: "text-align:center" },
             attributes: { style: "text-align:center" },
             template: "<label class='mt-checkbox mt-checkbox-outline'><input type='checkbox' value='#=Ids#' class='checkboxGroups'/><span></span></label>",
-            width: 60
+            width: 50
         },
         {
             field: "VendorName",
