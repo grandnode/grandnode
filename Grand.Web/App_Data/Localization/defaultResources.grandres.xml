@@ -9315,6 +9315,9 @@
   <LocaleResource Name="Admin.ContentManagement.Topics.List.SearchStore.Hint">
     <Value>Search by a specific store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.NoStoresDefined">
+    <Value>No stores defined</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.ContentManagement.Topics.Stores">
     <Value>Stores</Value>
   </LocaleResource>

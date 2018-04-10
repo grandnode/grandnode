@@ -29,4 +29,7 @@
   <LocaleResource Name="Admin.Configuration.Settings.GridLayout.hint">
     <Value>Allow to set administrator layout for tabs and grids</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.NoStoresDefined">
+    <Value>No stores defined</Value>
+  </LocaleResource>
 </Language>

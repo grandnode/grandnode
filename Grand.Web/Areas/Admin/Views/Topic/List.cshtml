@@ -21,9 +21,9 @@
                 <div class="form-horizontal">
                     <div class="form-body">
                         <div class="form-group">
-                            @Html.GrandLabelFor(model => model.SearchStoreId)
+                            <admin-label asp-for="SearchStoreId" />
                             <div class="col-md-4 col-sm-6">
-                                @Html.GrandDropDownListFor(model => model.SearchStoreId, Model.AvailableStores)
+                                <admin-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
                             </div>
                         </div>
                     </div>
