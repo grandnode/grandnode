@@ -5,45 +5,45 @@
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-                @Html.GrandLabelFor(model => model.Email)
+                <admin-label asp-for="Email" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.Email)
-                @Html.ValidationMessageFor(model => model.Email)
+                <admin-input asp-for="Email" />
+                <span asp-validation-for="Email"></span>
             </div>
         </div>
         <div class="form-group">
-                @Html.GrandLabelFor(model => model.DisplayName)
+                <admin-label asp-for="DisplayName" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.DisplayName)
-                @Html.ValidationMessageFor(model => model.DisplayName)
+                <admin-input asp-for="DisplayName" />
+                <span asp-validation-for="DisplayName"></span>
             </div>
         </div>
         <div class="form-group">
-                @Html.GrandLabelFor(model => model.Host)
+                <admin-label asp-for="Host" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.Host)
-                @Html.ValidationMessageFor(model => model.Host)
+                <admin-input asp-for="Host" />
+                <span asp-validation-for="Host"></span>
             </div>
         </div>
         <div class="form-group">
-                @Html.GrandLabelFor(model => model.Port)
+                <admin-label asp-for="Port" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.Port)
-                @Html.ValidationMessageFor(model => model.Port)
+                <admin-input asp-for="Port" />
+                <span asp-validation-for="Port"></span>
             </div>
         </div>
         <div class="form-group">
-                @Html.GrandLabelFor(model => model.Username)
+                <admin-label asp-for="Username" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.Username)
-                @Html.ValidationMessageFor(model => model.Username)
+                <admin-input asp-for="Username" />
+                <span asp-validation-for="Username"></span>
             </div>
         </div>
         <div class="form-group">
-                @Html.GrandLabelFor(model => model.Password)
+                <admin-label asp-for="Password" />
             <div class="col-md-9 col-sm-9">
                 @Html.PasswordFor(model => model.Password)
-                @Html.ValidationMessageFor(model => model.Password)
+                <span asp-validation-for="Password"></span>
                 @if (!String.IsNullOrEmpty(Model.Id))
                 {
                     <input type="submit" name="changepassword" class="btn default" value="@T("Admin.Configuration.EmailAccounts.Fields.Password.Change")" />
@@ -51,23 +51,23 @@
             </div>
         </div>
         <div class="form-group">
-                @Html.GrandLabelFor(model => model.EnableSsl)
+                <admin-label asp-for="EnableSsl" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.EnableSsl)
+                    <admin-input asp-for="EnableSsl" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.EnableSsl)
+                <span asp-validation-for="EnableSsl"></span>
             </div>
         </div>
         <div class="form-group">
-                @Html.GrandLabelFor(model => model.UseDefaultCredentials)
+                <admin-label asp-for="UseDefaultCredentials" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.UseDefaultCredentials)
+                    <admin-input asp-for="UseDefaultCredentials" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.UseDefaultCredentials)
+                <span asp-validation-for="UseDefaultCredentials"></span>
             </div>
         </div>
         @if (!String.IsNullOrEmpty(Model.Id))
@@ -78,9 +78,9 @@
                     </div>
             </div>
             <div class="form-group">
-                    @Html.GrandLabelFor(model => model.SendTestEmailTo)
+                    <admin-label asp-for="SendTestEmailTo" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.SendTestEmailTo)
+                    <admin-input asp-for="SendTestEmailTo" />
                 </div>
             </div>
             <div class="form-group">
