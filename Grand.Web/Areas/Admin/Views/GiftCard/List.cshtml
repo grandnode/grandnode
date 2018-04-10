@@ -1,13 +1,11 @@
 ﻿@model GiftCardListModel
-@{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+@inject AdminAreaSettings adminAreaSettings
 
+@{
     //page title
     ViewBag.Title = T("Admin.GiftCards").Text;
 }
 <antiforgery-token />
-
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light form-fit">
@@ -60,8 +58,7 @@
     </div>
 </div>
 
-
-    <script>
+<script>
         $(document).ready(function () {
             $("#giftcards-grid").kendoGrid({
                 dataSource: {
@@ -83,14 +80,14 @@
                         // Cancel the changes
                         this.cancelChanges();
                     },
-                    pageSize: @(defaultGridPageSize),
+                    pageSize: @(adminAreaSettings.DefaultGridPageSize),
                     serverPaging: true,
                     serverFiltering: true,
                     serverSorting: true
                 },
                 pageable: {
                     refresh: true,
-                    pageSizes: [@(gridPageSizes)]
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
                 },
                 editable: {
                     confirmation: false,
@@ -130,9 +127,8 @@
                 }]
             });
         });
-    </script>
-
-    <script type="text/javascript">
+</script>
+<script type="text/javascript">
 
         $(document).ready(function () {
 
@@ -161,4 +157,4 @@
             return data;
         }
 
-    </script>
+</script>

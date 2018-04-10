@@ -1,12 +1,11 @@
 ﻿@model GiftCardModel
-@using Grand.Core.Domain.Catalog;
-@Html.ValidationSummary(false)
+@inject IEventPublisher eventPublisher
+<div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
-
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $("#giftcard-edit").kendoTabStrip({
-            animation:  {
+            animation: {
                 open: {
                     effects: "fadeIn"
                 }
@@ -37,16 +36,14 @@
         </div>
     }
 </div>
-
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "giftcard-edit");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock
     }
 }
-
 @*save selected tab index*@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
