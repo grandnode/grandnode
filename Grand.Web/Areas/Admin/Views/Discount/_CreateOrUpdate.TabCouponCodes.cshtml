@@ -1,16 +1,14 @@
 ﻿@model DiscountModel
-@{ 
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-}
+@inject AdminAreaSettings adminAreaSettings
+ 
 @if (!String.IsNullOrEmpty(Model.Id))
 {
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div id="couponcode-grid"></div>
-            </div>            
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="couponcode-grid"></div>
         </div>
-        <script>
+    </div>
+    <script>
             $(document).ready(function () {
                 $("#couponcode-grid").kendoGrid({
                     dataSource: {
@@ -56,14 +54,14 @@
                             // Cancel the changes
                             this.cancelChanges();
                         },
-                        pageSize: @(defaultGridPageSize),
+                        pageSize: @(adminAreaSettings.DefaultGridPageSize),
                         serverPaging: true,
                         serverFiltering: true,
                         serverSorting: true
                     },
                     pageable: {
                         refresh: true,
-                        pageSizes: [@(gridPageSizes)]
+                        pageSizes: [@(adminAreaSettings.GridPageSizes)]
                     },
                     toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }, { name: "save", text: "@T("Admin.Common.Save")" }, { name: "cancel", text: "@T("Admin.Common.Cancel")" }],
                     editable: {
@@ -92,12 +90,12 @@
                     }]
                 });
             });
-        </script>
-        
-    }
-    else
-    {
-        <div class="note note-info">
-            @T("Admin.Promotions.Discounts.CouponCodes.SaveBeforeEdit")
-        </div>
-    }
+    </script>
+
+}
+else
+{
+    <div class="note note-info">
+        @T("Admin.Promotions.Discounts.CouponCodes.SaveBeforeEdit")
+    </div>
+}

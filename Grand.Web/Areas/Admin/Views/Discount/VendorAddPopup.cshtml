@@ -1,18 +1,17 @@
-﻿@{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
-}
-@model DiscountModel.AddVendorToDiscountModel
+﻿@model DiscountModel.AddVendorToDiscountModel
+@inject AdminAreaSettings adminAreaSettings
 @{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
+    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
     //page title
     ViewBag.Title = T("Admin.Promotions.Discounts.AppliedToVendors.AddNew").Text;
 }
-@using (Html.BeginForm())
-{
-    <antiforgery-token />
 
+<form asp-controller="Discount" asp-action="VendorAddPopup" method="post"
+      asp-route-DiscountId="@Context.Request.Query["DiscountId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
+
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -26,15 +25,15 @@
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchVendorName, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <admin-label asp-for="SearchVendorName" class="col-sm-3 control-label" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.SearchVendorName)
+                                    <admin-input asp-for="SearchVendorName" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchVendorEmail, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <admin-label asp-for="SearchVendorEmail" class="col-sm-3 control-label" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.SearchVendorEmail)
+                                    <admin-input asp-for="SearchVendorEmail" />
                                 </div>
                             </div>
                             <div class="form-actions">
@@ -56,18 +55,14 @@
     </div>
 
 
-    if (ViewBag.RefreshPage == true)
+    @if (ViewBag.RefreshPage == true)
     {
         <script type="text/javascript">
-            try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
+            try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
             catch (e){}
             window.close();
         </script>
     }
-
-
-
-
     <script>
         $(document).ready(function () {
             $("#vendors-grid").kendoGrid({
@@ -90,14 +85,14 @@
                         // Cancel the changes
                         this.cancelChanges();
                     },
-                    pageSize: @(defaultGridPageSize),
+                    pageSize: @(adminAreaSettings.DefaultGridPageSize),
                     serverPaging: true,
                     serverFiltering: true,
                     serverSorting: true
                 },
                 pageable: {
                     refresh: true,
-                    pageSizes: [@(gridPageSizes)]
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
                 },
                 editable: {
                     confirmation: false,
@@ -176,4 +171,4 @@
 
     </script>
 
-}
+</form>

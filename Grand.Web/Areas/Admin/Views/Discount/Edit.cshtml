@@ -3,8 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.Promotions.Discounts.EditDiscountDetails").Text;
 }
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "discount-form" }))
-{
+<form asp-controller="Discount" asp-action="Edit" method="post" id="discount-form">
     <antiforgery-token />
     
     <div class="row">
@@ -30,7 +29,5 @@
             </div>
         </div>
     </div>
-
-
-}
+</form>
 @Html.DeleteConfirmation("discount-delete")

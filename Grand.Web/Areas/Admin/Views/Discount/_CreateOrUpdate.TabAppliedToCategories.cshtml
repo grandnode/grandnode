@@ -1,10 +1,4 @@
 ﻿@model DiscountModel
-@using Grand.Core.Domain.Discounts;
-@using Grand.Framework.UI;
-
-
-
-
 @{
     if (!String.IsNullOrEmpty(Model.Id))
     {
@@ -18,8 +12,6 @@
                 <input type="submit" id="btnRefreshCategories" style="display: none" />
             </div>
         </div>
-
-
         <script>
             $(document).ready(function () {
                 $("#categories-grid").kendoGrid({

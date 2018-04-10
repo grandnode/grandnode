@@ -620,7 +620,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult ProductAddPopup(string btnId, string formId, DiscountModel.AddProductToDiscountModel model)
+        public IActionResult ProductAddPopup(DiscountModel.AddProductToDiscountModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -646,8 +646,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
             return View(model);
         }
 
@@ -734,7 +732,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult CategoryAddPopup(string btnId, string formId, DiscountModel.AddCategoryToDiscountModel model)
+        public IActionResult CategoryAddPopup(DiscountModel.AddCategoryToDiscountModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -757,10 +755,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     }
                 }
             }
-
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
             return View(model);
         }
 
@@ -841,7 +836,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult ManufacturerAddPopup(string btnId, string formId, DiscountModel.AddManufacturerToDiscountModel model)
+        public IActionResult ManufacturerAddPopup(DiscountModel.AddManufacturerToDiscountModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -864,10 +859,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     }
                 }
             }
-
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
             return View(model);
         }
 
@@ -955,7 +947,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult VendorAddPopup(string btnId, string formId, DiscountModel.AddVendorToDiscountModel model)
+        public IActionResult VendorAddPopup(DiscountModel.AddVendorToDiscountModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -978,10 +970,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     }
                 }
             }
-
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
             return View(model);
         }
 
@@ -1060,7 +1049,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult StoreAddPopup(string btnId, string formId, DiscountModel.AddStoreToDiscountModel model)
+        public IActionResult StoreAddPopup(DiscountModel.AddStoreToDiscountModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -1083,10 +1072,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     }
                 }
             }
-
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
             return View(model);
         }
 

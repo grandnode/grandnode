@@ -1,29 +1,26 @@
-﻿@{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
-}
-
-@model DiscountModel.AddProductToDiscountModel
-
+﻿@model DiscountModel.AddProductToDiscountModel
+@inject AdminAreaSettings adminAreaSettings
 @{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
+    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
     //page title
     ViewBag.Title = T("Admin.Promotions.Discounts.AppliedToProducts.AddNew").Text;
 }
-@using (Html.BeginForm())
-{
-    <antiforgery-token />    
-    
-       if (ViewBag.RefreshPage == true)
-       {
+
+<form asp-controller="Discount" asp-action="ProductAddPopup" method="post"
+      asp-route-DiscountId="@Context.Request.Query["DiscountId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
+
+    <antiforgery-token />
+
+    @if (ViewBag.RefreshPage == true)
+    {
         <script type="text/javascript">
-            try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
-            catch (e){} 
+            try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
+            catch (e){}
             window.close();
         </script>
     }
-
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -34,41 +31,40 @@
                     </div>
                 </div>
                 <div class="portlet-body form">
-
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchProductName, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <admin-label asp-for="SearchProductName" class="col-sm-3 control-label" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.SearchProductName)
+                                    <admin-input asp-for="SearchProductName" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchCategoryId, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <admin-label asp-for="SearchCategoryId" class="col-sm-3 control-label" />
                                 <div class="col-md-9 col-sm-9">
                                     @Html.GrandDropDownListFor(model => model.SearchCategoryId, Model.AvailableCategories)
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchManufacturerId, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <admin-label asp-for="SearchManufacturerId" class="col-sm-3 control-label" />
                                 <div class="col-md-9  col-sm-9">
                                     @Html.GrandDropDownListFor(model => model.SearchManufacturerId, Model.AvailableManufacturers)
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchStoreId, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <admin-label asp-for="SearchStoreId" class="col-sm-3 control-label" />
                                 <div class="col-md-9 col-sm-9">
                                     @Html.GrandDropDownListFor(model => model.SearchStoreId, Model.AvailableStores)
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchVendorId, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <admin-label asp-for="SearchVendorId" class="col-sm-3 control-label" />
                                 <div class="col-md-9 col-sm-9">
                                     @Html.GrandDropDownListFor(model => model.SearchVendorId, Model.AvailableVendors)
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchProductTypeId, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <admin-label asp-for="SearchProductTypeId" class="col-sm-3 control-label" />
                                 <div class="col-md-9 col-sm-9">
                                     @Html.GrandDropDownListFor(model => model.SearchProductTypeId, Model.AvailableProductTypes)
                                 </div>
@@ -79,7 +75,7 @@
                                         <button class="btn btn-success filter-submit" id="search-products">
                                             <i class="fa fa-search"></i> @T("Admin.Common.Search")
                                         </button>
-                                        <button class="btn btn-success" type="submit" name="save" ><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                                        <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
                                     </div>
                                 </div>
                             </div>
@@ -91,10 +87,8 @@
         </div>
     </div>
 
-
-                <div id="products-grid"></div>
-
-                <script>
+    <div id="products-grid"></div>
+    <script>
                 $(document).ready(function () {
                     $("#products-grid").kendoGrid({
                         dataSource: {
@@ -116,14 +110,14 @@
                                 // Cancel the changes
                                 this.cancelChanges();
                             },
-                            pageSize: @(defaultGridPageSize),
+                            pageSize: @(adminAreaSettings.DefaultGridPageSize),
                             serverPaging: true,
                             serverFiltering: true,
                             serverSorting: true
                         },
                         pageable: {
                             refresh: true,
-                            pageSizes: [@(gridPageSizes)]
+                            pageSizes: [@(adminAreaSettings.GridPageSizes)]
                         },
                         editable: {
                             confirmation: false,
@@ -150,55 +144,52 @@
                         }]
                     });
                 });
-                </script>
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#search-products').click(function() {
+                var grid = $('#products-grid').data('kendoGrid');
+                grid.dataSource.page(1); //new search. Set page size to 1
+                //grid.dataSource.read(); we already loaded the grid above using "page" function
+                //clear selected checkboxes
+                $('.checkboxGroups').prop('checked', false).change();
+                return false;
+            });
 
-                <script type="text/javascript">
-                    $(document).ready(function() {
-                        $('#search-products').click(function() {
-                            var grid = $('#products-grid').data('kendoGrid');
-                            grid.dataSource.page(1); //new search. Set page size to 1
-                            //grid.dataSource.read(); we already loaded the grid above using "page" function
-                            //clear selected checkboxes
-                            $('.checkboxGroups').prop('checked', false).change();
-                            return false;
-                        });
+            $("#@Html.FieldIdFor(model => model.SearchProductName)").keydown(function(event) {
+                if (event.keyCode == 13) {
+                    $("#search-products").click();
+                    return false;
+                }
+            });
 
-                        $("#@Html.FieldIdFor(model => model.SearchProductName)").keydown(function(event) {
-                            if (event.keyCode == 13) {
-                                $("#search-products").click();
-                                return false;
-                            }
-                        });
+            //wire up checkboxes
+            $('#mastercheckbox').click(function() {
+                $('.checkboxGroups').prop('checked', $(this).is(':checked')).change();
+            });
 
-                        //wire up checkboxes
-                        $('#mastercheckbox').click(function() {
-                            $('.checkboxGroups').prop('checked', $(this).is(':checked')).change();
-                        });
+            $('#products-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function(e) {
+                updateMasterCheckbox();
+            });
+        });
 
-                        $('#products-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function(e) {
-                            updateMasterCheckbox();
-                        });
-                    });
+        function additionalData() {
+            var data = {
+                SearchProductName: $('#@Html.FieldIdFor(model => model.SearchProductName)').val(),
+                SearchCategoryId: $('#SearchCategoryId').val(),
+                SearchManufacturerId: $('#SearchManufacturerId').val(),
+                SearchStoreId: $('#SearchStoreId').val(),
+                SearchVendorId: $('#SearchVendorId').val(),
+                SearchProductTypeId: $('#SearchProductTypeId').val()
+            };
+            addAntiForgeryToken(data);
+            return data;
+        }
 
-                    function additionalData() {
-                        var data = {
-                            SearchProductName: $('#@Html.FieldIdFor(model => model.SearchProductName)').val(),
-                            SearchCategoryId: $('#SearchCategoryId').val(),
-                            SearchManufacturerId: $('#SearchManufacturerId').val(),
-                            SearchStoreId: $('#SearchStoreId').val(),
-                            SearchVendorId: $('#SearchVendorId').val(),
-                            SearchProductTypeId: $('#SearchProductTypeId').val()
-                        };
-                        addAntiForgeryToken(data);
-                        return data;
-                    }
-
-                    function updateMasterCheckbox() {
-                        var numChkBoxes = $('#products-grid input[type=checkbox][id!=mastercheckbox]').length;
-                        var numChkBoxesChecked = $('#products-grid input[type=checkbox][id!=mastercheckbox]:checked').length;
-                        $('#mastercheckbox').prop('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
-                    }
-
-                </script>
-
-}
+        function updateMasterCheckbox() {
+            var numChkBoxes = $('#products-grid input[type=checkbox][id!=mastercheckbox]').length;
+            var numChkBoxesChecked = $('#products-grid input[type=checkbox][id!=mastercheckbox]:checked').length;
+            $('#mastercheckbox').prop('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+        }
+    </script>
+</form>
