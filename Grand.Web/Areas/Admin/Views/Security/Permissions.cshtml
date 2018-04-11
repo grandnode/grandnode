@@ -3,10 +3,8 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.ACL").Text;
 }
-@using (Html.BeginForm())
-{
+<form asp-controller="Security" asp-action="Permissions" method="post">
     <antiforgery-token />
-
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -20,15 +18,10 @@
                     </div>
                 </div>
                 <div class="portlet-body form">
-
-
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group">
                                 <div class="col-md-12 col-sm-12">
-
-
-
                                     @if (Model.AvailablePermissions.Count == 0)
                                     {
                                         <text>No permissions defined</text>
@@ -43,59 +36,56 @@
                                             $(document).ready(function () {
                                                 @foreach (var cr in Model.AvailableCustomerRoles)
                                                 {
-                                <text>
-                                                $('#selectall-@(cr.Id)').click(function () {
-                                                    $('.allow_@(cr.Id)').prop('checked', $(this).is(':checked')).change();
-                                                });
-
-                                                </text>
+                                                    <text>
+                                                    $('#selectall-@(cr.Id)').click(function () {
+                                                        $('.allow_@(cr.Id)').prop('checked', $(this).is(':checked')).change();
+                                                    });
+                                                    </text>
                                                 }
                                             });
                                         </script>
-                                            <table class="table table-bordered table-striped table-hover">
-                                                <tbody>
-                                                    <tr>
+                                        <table class="table table-bordered table-striped table-hover">
+                                            <tbody>
+                                                <tr>
+                                                    <th scope="col">
+                                                        <strong>@T("Admin.Configuration.ACL.Permission")</strong>
+                                                    </th>
+                                                    @foreach (var cr in Model.AvailableCustomerRoles)
+                                                    {
                                                         <th scope="col">
-                                                            <strong>@T("Admin.Configuration.ACL.Permission")</strong>
+                                                            <strong>@cr.Name</strong>
+                                                            <label class='mt-checkbox mt-checkbox-outline'><input type="checkbox" id="selectall-@(cr.Id)" /><span></span></label>
                                                         </th>
+                                                    }
+                                                </tr>
+                                                @{
+                                                    bool altRow = true;
+                                                }
+                                                @foreach (var pr in Model.AvailablePermissions)
+                                                {
+                                                    altRow = !altRow;
+                                                    <tr class="@(altRow ? "altrowstyle" : "rowstyle")">
+                                                        <td>
+                                                            <span>@pr.Name</span>
+                                                        </td>
                                                         @foreach (var cr in Model.AvailableCustomerRoles)
                                                         {
-                                                            <th scope="col">
-                                                                <strong>@cr.Name</strong>
-                                                                <label class='mt-checkbox mt-checkbox-outline'><input type="checkbox" id="selectall-@(cr.Id)" /><span></span></label>
-</th>
+                                                            var allowed = Model.Allowed.ContainsKey(pr.SystemName) && Model.Allowed[pr.SystemName][cr.Id];
+                                                            <td style="text-align:center">
+                                                                <label class='mt-checkbox mt-checkbox-outline'><input class="allow_@(cr.Id)" type="checkbox" value="@(pr.SystemName)" name="allow_@(cr.Id)" @(allowed ? " checked=checked" : null) /><span></span></label>
+                                                            </td>
                                                         }
                                                     </tr>
-                                                    @{
-                                                        bool altRow = true;
-                                                    }
-                                                    @foreach (var pr in Model.AvailablePermissions)
-                                                    {
-                                                        altRow = !altRow;
-                                                        <tr class="@(altRow ? "altrowstyle" : "rowstyle")">
-                                                            <td>
-                                                                <span>@pr.Name</span>
-                                                            </td>
-                                                            @foreach (var cr in Model.AvailableCustomerRoles)
-                                                            {
-                                                                var allowed = Model.Allowed.ContainsKey(pr.SystemName) && Model.Allowed[pr.SystemName][cr.Id];
-                                                                <td style="text-align:center">
-                                                                    <label class='mt-checkbox mt-checkbox-outline'><input class="allow_@(cr.Id)" type="checkbox" value="@(pr.SystemName)" name="allow_@(cr.Id)" @(allowed ? " checked=checked" : null) /><span></span></label>
-</td>
-                                                            }
-                                                        </tr>
-                                                    }
-                                                </tbody>
-                                            </table>
-                                                        }
+                                                }
+                                            </tbody>
+                                        </table>
+                                    }
                                 </div>
                             </div>
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </div>
     </div>
-}
+</form>
