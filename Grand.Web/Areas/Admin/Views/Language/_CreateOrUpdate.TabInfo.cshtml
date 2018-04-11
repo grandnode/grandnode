@@ -1,9 +1,5 @@
 ﻿@model LanguageModel
 
-
-
-
-
 <script type="text/javascript">
         function toggleFlags() {
             $('#pnlAllFlags').toggle();
@@ -18,14 +14,14 @@
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.Name)
+            <admin-label asp-for="Name" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.Name)
-                @Html.ValidationMessageFor(model => model.Name)
+                <admin-input asp-for="Name" />
+                <span asp-validation-for="Name"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.LanguageCulture)
+            <admin-label asp-for="LanguageCulture" />
             <div class="col-md-9 col-sm-9">
                 @{
                     var cultures = System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.SpecificCultures)
@@ -36,22 +32,22 @@
                             Text = string.Format("{0}. {1}", x.EnglishName, x.IetfLanguageTag)
                         });
                 }
-                @Html.GrandDropDownListFor(model => model.LanguageCulture, cultures)
-                @Html.ValidationMessageFor(model => model.LanguageCulture)
+                <admin-select asp-for="LanguageCulture" asp-items="cultures" />
+                <span asp-validation-for="LanguageCulture"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.UniqueSeoCode)
+            <admin-label asp-for="UniqueSeoCode" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.UniqueSeoCode)
-                @Html.ValidationMessageFor(model => model.UniqueSeoCode)
+                <admin-input asp-for="UniqueSeoCode" />
+                <span asp-validation-for="UniqueSeoCode"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.FlagImageFileName)
+            <admin-label asp-for="FlagImageFileName" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.FlagImageFileName)
-                @Html.ValidationMessageFor(model => model.FlagImageFileName)
+                <admin-input asp-for="FlagImageFileName" />
+                <span asp-validation-for="FlagImageFileName"></span>
                 <br />
                 <a id="displayAllFlags" href="javascript:toggleFlags();">@T("Admin.Common.Show")</a>
                 <div id="pnlAllFlags" style="display: none">
@@ -65,37 +61,37 @@
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.Rtl)
+            <admin-label asp-for="Rtl" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.Rtl)
+                    <admin-input asp-for="Rtl" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.Rtl)
+                <span asp-validation-for="Rtl"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.DefaultCurrencyId)
+            <admin-label asp-for="DefaultCurrencyId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.DefaultCurrencyId, Model.AvailableCurrencies)
-                @Html.ValidationMessageFor(model => model.DefaultCurrencyId)
+                <admin-select asp-for="DefaultCurrencyId" asp-items="Model.AvailableCurrencies" />
+                <span asp-validation-for="DefaultCurrencyId"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.Published)
+            <admin-label asp-for="Published" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.Published)
+                    <admin-input asp-for="Published" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.Published)
+                <span asp-validation-for="Published"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.DisplayOrder)
+            <admin-label asp-for="DisplayOrder" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.DisplayOrder)
-                @Html.ValidationMessageFor(model => model.DisplayOrder)
+                <admin-input asp-for="DisplayOrder" />
+                <span asp-validation-for="DisplayOrder"></span>
             </div>
         </div>
     </div>

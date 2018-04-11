@@ -1,7 +1,7 @@
 ﻿@model LanguageModel
+@inject IEventPublisher eventPublisher
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
-
 <script>
     $(document).ready(function () {
         $("#language-edit").show();
@@ -24,7 +24,7 @@
             @T("Admin.Configuration.Languages.Stores")
         </li>
         <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
-            @T("Admin.Configuration.Languages.Resources")            
+            @T("Admin.Configuration.Languages.Resources")
         </li>
     </ul>
     <div>
@@ -37,17 +37,15 @@
         @Html.Partial("_CreateOrUpdate.TabResources", Model)
     </div>
 </div>
-
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "language-edit");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock
     }
 }
-
 
 @*save selected tab index*@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">

@@ -1,8 +1,5 @@
 ﻿@model LanguageModel
-
-
-
-
+@inject AdminAreaSettings adminAreaSettings
 <div class="panel panel-default">
     @if (String.IsNullOrEmpty(Model.Id))
     {
@@ -13,15 +10,15 @@
     <div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.Search.ResourceName)
+                <admin-label asp-for="Search.ResourceName" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.Search.ResourceName)
+                    <admin-input asp-for="Search.ResourceName" />
                 </div>
             </div>
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.Search.ResourceValue)
+                <admin-label asp-for="Search.ResourceValue" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.Search.ResourceValue)
+                    <admin-input asp-for="Search.ResourceValue" />
                 </div>
             </div>
             <div class="form-group">
@@ -41,10 +38,6 @@
 
 @if (!String.IsNullOrEmpty(Model.Id))
 {
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
-
     <script>
             $(document).ready(function() {
                 $("#resources-grid").kendoGrid({
@@ -75,14 +68,6 @@
                                 dataType: "json",
                                 data: addAntiForgeryToken
                             },
-                            //parameterMap: function(data, operation) {
-                            //    if (operation != "read") {
-                            //        return data;
-                            //    } else {
-                            //        //for some reasons only such "Filter" data be parsed
-                            //        return JSON.stringify(data);
-                            //    }
-                            //}
                         },
                         schema: {
                             data: "Data",
@@ -107,14 +92,14 @@
                             // Cancel the changes
                             this.cancelChanges();
                         },
-                        pageSize: @(defaultGridPageSize),
+                        pageSize: @(adminAreaSettings.DefaultGridPageSize),
                         serverPaging: true,
                         serverFiltering: false,
                         serverSorting: false
                     },
                     pageable: {
                         refresh: true,
-                        pageSizes: [@(gridPageSizes)]
+                        pageSizes: [@(adminAreaSettings.GridPageSizes)]
                     },
                     toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
                     editable: {
@@ -158,7 +143,7 @@
             });
 
     </script>
-        <script type="text/javascript">
+    <script type="text/javascript">
             $(document).ready(function() {
                 $('#search-resources').click(function() {
                     var grid = $('#resources-grid').data('kendoGrid');
@@ -183,6 +168,6 @@
                     return false;
                 }
             });
-        </script>
+    </script>
 
 }

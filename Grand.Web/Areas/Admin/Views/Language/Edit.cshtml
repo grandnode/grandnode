@@ -3,10 +3,8 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Languages.EditLanguageDetails").Text;
 }
-@using (Html.BeginForm())
-{
+<form asp-controller="Language" asp-action="Edit" method="post" >
     <antiforgery-token />
-
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -32,50 +30,46 @@
             </div>
         </div>
     </div>
-
-}
+</form>
 @Html.DeleteConfirmation("language-delete")
 
-@*import resources form*@
-
-<div class="modal-dialog" id="importxml-window" style="display:none; padding: 0 10px;">
-
-    @using (Html.BeginForm("ImportXml", "Language", new { id = Model.Id }, FormMethod.Post, false, new { enctype = "multipart/form-data" }))
-    {
-        <antiforgery-token />
-        <ul class="common-list">
-            <li>
-                <strong>NOTE: It can take up to several minutes.</strong>
-            </li>
-            <li>
-                <strong>NOTE: DO NOT click twice.</strong>
-            </li>
-        </ul>
-        <div class="form-group">
-            <div class="col-md-2" style="margin-top: 7px; height: 34px; padding-left: 25px;">
-                <label class="control-label">
-                    Xml file
-                </label>
+    @*import resources form*@
+    <div class="modal-dialog" id="importxml-window" style="display:none; padding: 0 10px;">
+        <form asp-controller="Language" asp-action="ImportXml" method="post" enctype="multipart/form-data" asp-route-id="Id">
+            <input type="hidden" asp-for="Id" />
+            <antiforgery-token />
+            <ul class="common-list">
+                <li>
+                    <strong>NOTE: It can take up to several minutes.</strong>
+                </li>
+                <li>
+                    <strong>NOTE: DO NOT click twice.</strong>
+                </li>
+            </ul>
+            <div class="form-group">
+                <div class="col-md-2" style="margin-top: 7px; height: 34px; padding-left: 25px;">
+                    <label class="control-label">
+                        Xml file
+                    </label>
+                </div>
+                <div class="col-md-10">
+                    <input id="importxmlfile" name="importxmlfile" class="form-control" type="file">
+                </div>
             </div>
-            <div class="col-md-10">
-                <input id="importxmlfile" name="importxmlfile" class="form-control" type="file">
-            </div>
-        </div>
-        <div class="form-group">
-            &nbsp;
-        </div>
-        <div class="form-group">
-            <div class="col-md-2">
+            <div class="form-group">
                 &nbsp;
             </div>
-            <div class="col-md-10 text-right mt-10">
-                <input id="importxmlsubmit" class="btn blue" value="@T("Admin.Configuration.Languages.Import")" type="submit">
+            <div class="form-group">
+                <div class="col-md-2">
+                    &nbsp;
+                </div>
+                <div class="col-md-10 text-right mt-10">
+                    <input id="importxmlsubmit" class="btn blue" value="@T("Admin.Configuration.Languages.Import")" type="submit">
+                </div>
             </div>
-        </div>
-    }
-</div>
-
-<script type="text/javascript">
+        </form>
+    </div>
+    <script type="text/javascript">
     $(document).ready(function () {
         $("#importxml").click(function (e) {
             e.preventDefault();
@@ -90,4 +84,4 @@
             window.data('kendoWindow').center().open();
         });
     });
-</script>
+    </script>
