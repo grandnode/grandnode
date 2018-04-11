@@ -3,8 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.ContentManagement.News.NewsItems.AddNew").Text;
 }
-@using (Html.BeginForm())
-{
+<form asp-controller="News" asp-action="Create" method="post">
     <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
@@ -28,4 +27,4 @@
             </div>
         </div>
     </div>
-}
+</form>

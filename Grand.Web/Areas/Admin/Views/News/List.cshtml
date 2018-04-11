@@ -1,13 +1,11 @@
 ﻿@model NewsItemListModel
+@inject AdminAreaSettings adminAreaSettings
 @{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
+ 
     //page title
     ViewBag.Title = T("Admin.ContentManagement.News.NewsItems").Text;
 }
 <antiforgery-token />
-
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light form-fit">
@@ -19,15 +17,14 @@
                 <div class="actions btn-group btn-group-devided">
                     <a href="@Url.Action("Create")" class="btn green"><i class="fa fa-plus"></i><span class="hidden-xs"> @T("Admin.Common.AddNew") </span></a>
                 </div>
-
             </div>
             <div class="portlet-body form">
                 <div class="form-horizontal">
                     <div class="form-body">
                         <div class="form-group">
-                            @Html.GrandLabelFor(model => model.SearchStoreId)
+                            <admin-label asp-for="SearchStoreId" />
                             <div class="col-md-4 col-sm-6">
-                                @Html.GrandDropDownListFor(model => model.SearchStoreId, Model.AvailableStores)
+                                <admin-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
                             </div>
                         </div>
                     </div>
@@ -54,7 +51,6 @@
         </div>
     </div>
 </div>
-
 <script>
     $(document).ready(function () {
         $("#newsitem-grid").kendoGrid({
@@ -77,14 +73,14 @@
                     // Cancel the changes
                     this.cancelChanges();
                 },
-                pageSize: @(defaultGridPageSize),
+                pageSize: @(adminAreaSettings.DefaultGridPageSize),
                 serverPaging: true,
                 serverFiltering: true,
                 serverSorting: true
             },
             pageable: {
                 refresh: true,
-                pageSizes: [@(gridPageSizes)]
+                pageSizes: [@(adminAreaSettings.GridPageSizes)]
             },
             editable: {
                 confirmation: false,
@@ -155,4 +151,3 @@
         return data;
     }
 </script>
-      

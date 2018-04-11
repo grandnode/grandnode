@@ -1,14 +1,10 @@
-﻿@{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
+﻿@inject AdminAreaSettings adminAreaSettings
+@{
     int? filterByNewsItemId = ViewBag.FilterByNewsItemId;
-    
     //page title
     ViewBag.Title = T("Admin.ContentManagement.News.Comments").Text;
 }
 <antiforgery-token />
-
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light form-fit">
@@ -30,20 +26,18 @@
         </div>
     </div>
 </div>
-
-
-    @{
-        string readUrl = "";
-        if (filterByNewsItemId.HasValue)
-        {
-            readUrl = Url.Action("Comments", "News", new { filterByNewsItemId = filterByNewsItemId.Value });
-        }
-        else
-        {
-            readUrl = Url.Action("Comments", "News");
-        }
+@{
+    string readUrl = "";
+    if (filterByNewsItemId.HasValue)
+    {
+        readUrl = Url.Action("Comments", "News", new { filterByNewsItemId = filterByNewsItemId.Value });
     }
-    <script>
+    else
+    {
+        readUrl = Url.Action("Comments", "News");
+    }
+}
+<script>
         $(document).ready(function () {
             $("#comments-grid").kendoGrid({
                 dataSource: {
@@ -80,14 +74,14 @@
                         // Cancel the changes
                         this.cancelChanges();
                     },
-                    pageSize: @(defaultGridPageSize),
+                    pageSize: @(adminAreaSettings.DefaultGridPageSize),
                     serverPaging: true,
                     serverFiltering: true,
                     serverSorting: true
                 },
                 pageable: {
                     refresh: true,
-                    pageSizes: [@(gridPageSizes)]
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
                 },
                 editable: {
                     confirmation: false,
@@ -124,4 +118,4 @@
                 }]
             });
         });
-    </script>
+</script>
