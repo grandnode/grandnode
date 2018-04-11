@@ -1,77 +1,77 @@
 ﻿@model ReturnRequestModel
 @using Grand.Core.Domain.Orders;
-@Html.ValidationSummary(false)
+<div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.ReturnNumber)
+            <admin-label asp-for="ReturnNumber" />
             <div class="col-md-9 col-sm-9">
                 <label class="control-label">@Model.ReturnNumber</label>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.OrderId)
+            <admin-label asp-for="OrderId" />
             <div class="col-md-9 col-sm-9">
                 <label class="control-label">@Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Order", new { id = Model.OrderId }, new { })</label>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.CustomerId)
+            <admin-label asp-for="CustomerId" />
             <div class="col-md-9 col-sm-9">
-               <label class="control-label"> @Html.ActionLink(Model.CustomerInfo, "Edit", "Customer", new { id = Model.CustomerId }, new { }) </label>
+                <label class="control-label"> @Html.ActionLink(Model.CustomerInfo, "Edit", "Customer", new { id = Model.CustomerId }, new { }) </label>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.ProductName)
+            <admin-label asp-for="ProductName" />
             <div class="col-md-9 col-sm-9">
                 <label class="control-label">@Html.ActionLink(Model.ProductName, "Edit", "Product", new { id = Model.ProductId }, new { }) </label>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.Quantity)
+            <admin-label asp-for="Quantity" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.Quantity)
-                @Html.ValidationMessageFor(model => model.Quantity)
+                <admin-input asp-for="Quantity" />
+                <span asp-validation-for="Quantity"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.ReturnRequestStatusId)
+            <admin-label asp-for="ReturnRequestStatusId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.ReturnRequestStatusId, ((ReturnRequestStatus)Model.ReturnRequestStatusId).ToSelectList())
-                @Html.ValidationMessageFor(model => model.ReturnRequestStatusId)
+                <admin-select asp-for="ReturnRequestStatusId" asp-items="((ReturnRequestStatus)Model.ReturnRequestStatusId).ToSelectList()" />
+                <span asp-validation-for="ReturnRequestStatusId"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.ReasonForReturn)
+            <admin-label asp-for="ReasonForReturn" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.ReasonForReturn)
-                @Html.ValidationMessageFor(model => model.ReasonForReturn)
+                <admin-input asp-for="ReasonForReturn" />
+                <span asp-validation-for="ReasonForReturn"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.RequestedAction)
+            <admin-label asp-for="RequestedAction" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.RequestedAction)
-                @Html.ValidationMessageFor(model => model.RequestedAction)
+                <admin-input asp-for="RequestedAction" />
+                <span asp-validation-for="RequestedAction"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.CustomerComments)
+            <admin-label asp-for="CustomerComments" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandTextAreaFor(model => model.CustomerComments, new { style = "Height: 100px;" })
-                @Html.ValidationMessageFor(model => model.CustomerComments)
+                <admin-textarea asp-for="CustomerComments"></admin-textarea>
+                <span asp-validation-for="CustomerComments"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.StaffNotes)
+            <admin-label asp-for="StaffNotes" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandTextAreaFor(model => model.StaffNotes, new { style = "Height: 150px;" })
-                @Html.ValidationMessageFor(model => model.StaffNotes)
+                <admin-textarea asp-for="StaffNotes"></admin-textarea>
+                <span asp-validation-for="StaffNotes"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.CreatedOn)
+            <admin-label asp-for="CreatedOn" />
             <div class="col-md-9 col-sm-9">
                 <label class="control-label">@Html.DisplayFor(model => model.CreatedOn)</label>
             </div>
