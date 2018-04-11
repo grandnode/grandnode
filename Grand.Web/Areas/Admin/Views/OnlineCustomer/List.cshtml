@@ -1,7 +1,5 @@
-﻿@{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
+﻿@inject AdminAreaSettings adminAreaSettings
+@{
     //page title
     ViewBag.Title = T("Admin.Customers.OnlineCustomers").Text;
 }
@@ -12,7 +10,7 @@
             <div class="portlet-title">
                 <div class="caption">
                     <i class="fa fa-users"></i>
-                   @T("Admin.Customers.OnlineCustomers")
+                    @T("Admin.Customers.OnlineCustomers")
                 </div>
             </div>
             <div class="portlet-body form">
@@ -21,7 +19,6 @@
         </div>
     </div>
 </div>
-
 <script>
     $(document).ready(function () {
         $("#onlinecustomers-grid").kendoGrid({
@@ -44,14 +41,14 @@
                     // Cancel the changes
                     this.cancelChanges();
                 },
-                pageSize: @(defaultGridPageSize),
+                pageSize: @(adminAreaSettings.DefaultGridPageSize),
                 serverPaging: true,
                 serverFiltering: true,
                 serverSorting: true
             },
             pageable: {
                 refresh: true,
-                pageSizes: [@(gridPageSizes)]
+                pageSizes: [@(adminAreaSettings.GridPageSizes)]
             },
             editable: {
                 confirmation: false,
@@ -81,4 +78,3 @@
         });
     });
 </script>
-        
