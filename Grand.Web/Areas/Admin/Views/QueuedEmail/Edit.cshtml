@@ -3,17 +3,15 @@
     //page title
     ViewBag.Title = T("Admin.System.QueuedEmails.EditQueuedEmailDetails").Text;
 }
-@using (Html.BeginForm())
-{
+<form asp-controller="QueuedEmail" asp-action="Edit" method="post">
     <antiforgery-token />
-
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
                 <div class="portlet-title">
                     <div class="caption">
                         <i class="fa fa-envelope"></i>
-                        @T("Admin.System.QueuedEmails.EditQueuedEmailDetails") 
+                        @T("Admin.System.QueuedEmails.EditQueuedEmailDetails")
                         <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.System.QueuedEmails.BackToList").Text, "List")</small>
                     </div>
                     <div class="actions">
@@ -31,8 +29,5 @@
             </div>
         </div>
     </div>
-
-
-
-}
+</form>
 @Html.DeleteConfirmation("queuedEmail-delete")
