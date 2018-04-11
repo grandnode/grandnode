@@ -30,7 +30,6 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("BlogPost", "{SeName}", new { controller = "Blog", action = "BlogPost" });
 
             routeBuilder.MapLocalizedRoute("Topic", "{SeName}", new { controller = "Topic", action = "TopicDetails" });
-            
         }
 
         public int Priority

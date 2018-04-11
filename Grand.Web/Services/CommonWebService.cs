@@ -38,6 +38,7 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Hosting;
 using Grand.Services.Stores;
+using Grand.Core.Domain.Knowledgebase;
 
 namespace Grand.Web.Services
 {
@@ -71,6 +72,7 @@ namespace Grand.Web.Services
         private readonly ForumSettings _forumSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly BlogSettings _blogSettings;
+        private readonly KnowledgebaseSettings _knowledgebaseSettings;
         private readonly NewsSettings _newsSettings;
         private readonly VendorSettings _vendorSettings;
         private readonly CommonSettings _commonSettings;
@@ -104,6 +106,7 @@ namespace Grand.Web.Services
             ForumSettings forumSettings,
             CatalogSettings catalogSettings,
             BlogSettings blogSettings,
+            KnowledgebaseSettings knowledgebaseSettings,
             NewsSettings newsSettings,
             VendorSettings vendorSettings,
             CommonSettings commonSettings,
@@ -139,6 +142,7 @@ namespace Grand.Web.Services
             this._forumSettings = forumSettings;
             this._catalogSettings = catalogSettings;
             this._blogSettings = blogSettings;
+            this._knowledgebaseSettings = knowledgebaseSettings;
             this._newsSettings = newsSettings;
             this._vendorSettings = vendorSettings;
             this._commonSettings = commonSettings;
@@ -394,6 +398,7 @@ namespace Grand.Web.Services
                 YoutubeLink = _storeInformationSettings.YoutubeLink,
                 GooglePlusLink = _storeInformationSettings.GooglePlusLink,
                 BlogEnabled = _blogSettings.Enabled,
+                KnowledgebaseEnabled = _knowledgebaseSettings.Enabled,
                 CompareProductsEnabled = _catalogSettings.CompareProductsEnabled,
                 ForumEnabled = _forumSettings.ForumsEnabled,
                 NewsEnabled = _newsSettings.Enabled,

@@ -1,0 +1,29 @@
+﻿@using Grand.Web.Views.Knowledgebase
+@model Grand.Web.Models.Knowledgebase.KnowledgebaseHomePageModel
+@if (Model.Categories.Any())
+{
+    <h5 class="generalTitle d-none d-lg-block"><strong>@T("Knowledgebase.Categories")</strong></h5>
+
+    <div class="viewBox">
+        <ul class="list">
+            @foreach (var category in Model.Categories)
+            {
+                @CategoryTreeHtmlHelper.ShowSubItems(category)
+            }
+        </ul>
+    </div>
+}
+
+@*@helper PrintCategory(KnowledgebaseCategoryModel category)
+{
+<li>
+    <label>category.Name</label>
+
+    <ul class="sublist">
+        <li>
+            PrintCategory(category)
+        </li>
+    </ul>
+</li>
+}*@
+

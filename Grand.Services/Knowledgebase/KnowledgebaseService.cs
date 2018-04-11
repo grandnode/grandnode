@@ -137,5 +137,32 @@ namespace Grand.Services.Knowledgebase
             var articles = _knowledgebaseArticleRepository.Table.Where(x => x.ParentCategoryId == id).ToList();
             return new PagedList<KnowledgebaseArticle>(articles, pageIndex, pageSize);
         }
+
+        /// <summary>
+        /// Gets public(published etc) knowledgebase categories
+        /// </summary>
+        /// <returns>List of public knowledgebase categories</returns>
+        public List<KnowledgebaseCategory> GetPublicKnowledgebaseCategories()
+        {
+            return _knowledgebaseCategoryRepository.Table.Where(x => x.Published).OrderBy(x => x.DisplayOrder).ToList();
+        }
+
+        /// <summary>
+        /// Gets public(published etc) knowledgebase articles
+        /// </summary>
+        /// <returns>List of public knowledgebase articles</returns>
+        public List<KnowledgebaseArticle> GetPublicKnowledgebaseArticles()
+        {
+            return _knowledgebaseArticleRepository.Table.Where(x => x.Published).OrderBy(x => x.DisplayOrder).ToList();
+        }
+
+        /// <summary>
+        /// Gets public(published etc) knowledgebase articles for category id
+        /// </summary>
+        /// <returns>List of public knowledgebase articles</returns>
+        public List<KnowledgebaseArticle> GetPublicKnowledgebaseArticlesByCategory(string categoryId)
+        {
+            return _knowledgebaseArticleRepository.Table.Where(x => x.ParentCategoryId == categoryId && x.Published).OrderBy(x => x.DisplayOrder).ToList();
+        }
     }
 }

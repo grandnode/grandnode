@@ -29,6 +29,7 @@ namespace Grand.Web.Models.Common
         public bool AllowCustomersToApplyForVendorAccount { get; set; }
         public bool DisplayTaxShippingInfoFooter { get; set; }
         public bool HidePoweredByGrandNode { get; set; }
+        public bool KnowledgebaseEnabled { get; set; }
 
         public string WorkingLanguageId { get; set; }
 

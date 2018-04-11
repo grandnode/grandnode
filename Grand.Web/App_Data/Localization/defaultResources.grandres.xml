@@ -15206,7 +15206,7 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ManageInventoryMethod.ManageStockByBundleProducts">
     <Value>Track inventory by bundle products</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ProductSortingEnum.BestSellers">
     <Value>Best Sellers</Value>
   </LocaleResource>
@@ -17171,7 +17171,7 @@
   </LocaleResource>
   <LocaleResource Name="Products.Duration">
     <Value>Duration</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Products.EmailAFriend">
     <Value>Email a friend</Value>
   </LocaleResource>
@@ -18416,5 +18416,44 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Acl">
     <Value>Access control list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Knowledgebase">
+    <Value>Knowledgebase</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.Knowledgebase">
+    <Value>Knowledgebase</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.Description.Hint">
+    <Value>Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.Displayorder.Hint">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.Published.Hint">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.SubjectToAcl">
+    <Value>Subject to ACL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.SubjectToAcl.Hint">
+    <Value>Indicates whether to use ACL or not</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.Content.Hint">
+    <Value>Article content</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.Displayorder.Hint">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.Published.Hint">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.SubjectToAcl">
+    <Value>Subject to ACL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.SubjectToAcl.Hint">
+    <Value>Indicates whether to use ACL or not</Value>
+  </LocaleResource>
+  <LocaleResource Name="Knowledgebase.Categories">
+    <Value>Categories</Value>
   </LocaleResource>
 </Language>

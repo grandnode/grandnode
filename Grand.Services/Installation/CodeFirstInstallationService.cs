@@ -48,6 +48,7 @@ using Grand.Services.Security;
 using Grand.Core.Caching;
 using Grand.Services.Events;
 using Microsoft.AspNetCore.Hosting;
+using Grand.Core.Domain.Knowledgebase;
 
 namespace Grand.Services.Installation
 {
@@ -5008,6 +5009,7 @@ namespace Grand.Services.Installation
                         "passwordrecovery",
                         "subscribenewsletter",
                         "blog",
+                        "knowledgebase",
                         "boards",
                         "inboxupdate",
                         "sentupdate",
@@ -5393,6 +5395,12 @@ namespace Grand.Services.Installation
                 HomePageBlogCount = 3,
                 MaxTextSizeHomePage = 200
             });
+
+            _settingService.SaveSetting(new KnowledgebaseSettings
+            {
+                Enabled = false
+            });
+
             _settingService.SaveSetting(new NewsSettings
             {
                 Enabled = true,

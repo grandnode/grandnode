@@ -517,7 +517,6 @@
   <LocaleResource Name="Admin.System.ScheduleTasks.LeasedByMachineName.hint">
     <Value>The name of the machine where the task should be run, leave empty if you have only one server.</Value>
   </LocaleResource>
-
   <LocaleResource Name="Products.Price.Currentprice">
     <Value>Current bid</Value>
   </LocaleResource>
@@ -1007,5 +1006,14 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.UpdateKnowledgebaseArticle">
     <Value>Update knowledgebase category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Knowledgebase">
+    <Value>Knowledgebase</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.Knowledgebase">
+    <Value>Knowledgebase</Value>
+  </LocaleResource>
+  <LocaleResource Name="Knowledgebase.Categories">
+    <Value>Categories</Value>
   </LocaleResource>
 </Language>

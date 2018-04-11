@@ -113,6 +113,12 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("Blog",
                             "blog",
                             new { controller = "Blog", action = "List" });
+
+            //knowledgebase
+            routeBuilder.MapLocalizedRoute("Knowledgebase",
+                            "knowledgebase",
+                            new { controller = "Knowledgebase", action = "List" });
+
             //news
             routeBuilder.MapLocalizedRoute("NewsArchive",
                             "news",

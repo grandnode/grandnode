@@ -1,0 +1,21 @@
+﻿@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Knowledgebase").Text);
+    Html.AppendScriptParts("~/Scripts/bootstrap-treeview.js");
+}
+
+@Html.AntiForgeryToken()
+
+@section left {
+    @await Component.InvokeAsync("KnowledgebaseCategories")
+}
+
+<h1 class="h2 generalTitle">
+    @T("Knowledgebase")
+</h1>
+
+<script>
+
+</script>

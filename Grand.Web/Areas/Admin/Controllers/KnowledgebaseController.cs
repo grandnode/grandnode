@@ -144,6 +144,25 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(nodeList);
         }
 
+        public void FillChildNodes(TreeNode parentNode, List<ITreeNode> nodes)
+        {
+            var children = nodes.Where(x => x.ParentCategoryId == parentNode.id);
+            foreach (var child in children)
+            {
+                var newNode = new TreeNode
+                {
+                    id = child.Id,
+                    text = child.Name,
+                    isCategory = child.GetType() == typeof(KnowledgebaseCategory),
+                    nodes = new List<TreeNode>()
+                };
+
+                FillChildNodes(newNode, nodes);
+
+                parentNode.nodes.Add(newNode);
+            }
+        }
+
         public IActionResult ArticleList(DataSourceRequest command, string parentCategoryId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
@@ -227,25 +246,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             };
 
             return Json(gridModel);
-        }
-
-        public void FillChildNodes(TreeNode parentNode, List<ITreeNode> nodes)
-        {
-            var children = nodes.Where(x => x.ParentCategoryId == parentNode.id);
-            foreach (var child in children)
-            {
-                var newNode = new TreeNode
-                {
-                    id = child.Id,
-                    text = child.Name,
-                    isCategory = child.GetType() == typeof(KnowledgebaseCategory),
-                    nodes = new List<TreeNode>()
-                };
-
-                FillChildNodes(newNode, nodes);
-
-                parentNode.nodes.Add(newNode);
-            }
         }
 
         public IActionResult CreateCategory()
@@ -546,16 +546,5 @@ namespace Grand.Web.Areas.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Deleted"));
             return RedirectToAction("List");
         }
-    }
-
-    public class TreeNode
-    {
-        public string text { get; set; }
-
-        public string id { get; set; }
-
-        public List<TreeNode> nodes { get; set; }
-
-        public bool isCategory { get; set; }
     }
 }

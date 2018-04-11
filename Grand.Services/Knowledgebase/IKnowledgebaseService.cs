@@ -22,6 +22,12 @@ namespace Grand.Services.Knowledgebase
         List<KnowledgebaseCategory> GetKnowledgebaseCategories();
 
         /// <summary>
+        /// Gets public(published etc) knowledgebase categories
+        /// </summary>
+        /// <returns>List of public knowledgebase categories</returns>
+        List<KnowledgebaseCategory> GetPublicKnowledgebaseCategories();
+
+        /// <summary>
         /// Inserts knowledgebase category
         /// </summary>
         /// <param name="kc"></param>
@@ -51,6 +57,18 @@ namespace Grand.Services.Knowledgebase
         /// </summary>
         /// <returns>List of knowledgebase articles</returns>
         List<KnowledgebaseArticle> GetKnowledgebaseArticles();
+
+        /// <summary>
+        /// Gets public(published etc) knowledgebase articles
+        /// </summary>
+        /// <returns>List of public knowledgebase articles</returns>
+        List<KnowledgebaseArticle> GetPublicKnowledgebaseArticles();
+
+        /// <summary>
+        /// Gets public(published etc) knowledgebase articles for category id
+        /// </summary>
+        /// <returns>List of public knowledgebase articles</returns>
+        List<KnowledgebaseArticle> GetPublicKnowledgebaseArticlesByCategory(string categoryId);
 
         /// <summary>
         /// Inserts knowledgebase article
