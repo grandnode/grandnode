@@ -1,8 +1,8 @@
 ﻿@model RecurringPaymentModel
-@using Grand.Core.Domain.Catalog;
-@Html.ValidationSummary(false)
+@inject IEventPublisher eventPublisher
+<div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
-<script>
+<script type="text/javascript">
     $(document).ready(function () {
         $("#recurringpayment-edit").kendoTabStrip({
             animation: {
@@ -34,7 +34,7 @@
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "recurringpayment-edit");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock

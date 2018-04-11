@@ -1,65 +1,64 @@
 ﻿@model RecurringPaymentModel
 @using Grand.Core.Domain.Catalog;
 
-
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.InitialOrderId)
+            <admin-label asp-for="InitialOrderId" />
             <div class="col-md-9 col-sm-9">
                 @Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Order", new { id = Model.InitialOrderId }, new { })
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.CustomerEmail)
+            <admin-label asp-for="CustomerEmail" />
             <div class="col-md-9 col-sm-9">
                 @Html.ActionLink(Model.CustomerEmail, "Edit", "Customer", new { id = Model.CustomerId }, new { })
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.CycleLength)
+            <admin-label asp-for="CycleLength" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.CycleLength)
-                @Html.ValidationMessageFor(model => model.CycleLength)
+                <admin-input asp-for="CycleLength" />
+                <span asp-validation-for="CycleLength"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.CyclePeriodId)
+            <admin-label asp-for="CyclePeriodId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.CyclePeriodId, ((RecurringProductCyclePeriod)Model.CyclePeriodId).ToSelectList())
-                @Html.ValidationMessageFor(model => model.CyclePeriodId)
+                <admin-select asp-for="CyclePeriodId" asp-items="((RecurringProductCyclePeriod)Model.CyclePeriodId).ToSelectList()" />
+                <span asp-validation-for="CyclePeriodId"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.TotalCycles)
+            <admin-label asp-for="TotalCycles" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.TotalCycles)
-                @Html.ValidationMessageFor(model => model.TotalCycles)
+                <admin-input asp-for="TotalCycles" />
+                <span asp-validation-for="TotalCycles"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.CyclesRemaining)
+            <admin-label asp-for="CyclesRemaining" />
             <div class="col-md-9 col-sm-9">
                 @Model.CyclesRemaining
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.PaymentType)
+            <admin-label asp-for="PaymentType" />
             <div class="col-md-9 col-sm-9">
                 @Model.PaymentType
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.StartDate)
+            <admin-label asp-for="StartDate" />
             <div class="col-md-9 col-sm-9">
                 @Model.StartDate
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.IsActive)
+            <admin-label asp-for="IsActive" />
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.IsActive)
-                @Html.ValidationMessageFor(model => model.IsActive)
+                <admin-input asp-for="IsActive" />
+                <span asp-validation-for="IsActive"></span>
             </div>
         </div>
     </div>
