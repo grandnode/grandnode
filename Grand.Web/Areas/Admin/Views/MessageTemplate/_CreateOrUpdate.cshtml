@@ -1,10 +1,7 @@
 ﻿@model MessageTemplateModel
-
-@Html.ValidationSummary(false)
+@inject IEventPublisher eventPublisher
+<div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
-
-@using Grand.Core.Domain.Messages;
-
 <script>
     $(document).ready(function () {
         $("#template-edit").show();
@@ -34,16 +31,14 @@
         @Html.Partial("_CreateOrUpdate.TabStores", Model)
     </div>
 </div>
-
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "template-edit");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock
     }
 }
-
 @*save selected tab index*@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">

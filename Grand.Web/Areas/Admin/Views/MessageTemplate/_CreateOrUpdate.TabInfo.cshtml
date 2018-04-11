@@ -1,36 +1,35 @@
 ﻿@model MessageTemplateModel
-@using Grand.Core.Domain.Messages;
 
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.AllowedTokens)
+            <admin-label asp-for="AllowedTokens" />
             <div class="col-md-9 col-sm-9">
-                @Html.DisplayFor(model => model.AllowedTokens)
+                @Model.AllowedTokens
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.Name)
+            <admin-label asp-for="Name" />
             <div class="col-md-9 col-sm-9">
                 @if (!String.IsNullOrEmpty(Model.Id))
                 {
                     <label class="control-label">@Model.Name</label>
-                        @Html.HiddenFor(model => model.Name)
+                        <input asp-for="Name" type="hidden" />
                 }
                 else
                 {
-                    @Html.GrandEditorFor(model => model.Name)
+                    <admin-input asp-for="Name" />
                 }
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.IsActive)
+            <admin-label asp-for="IsActive" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.EditorFor(model => model.IsActive)
+                    <admin-input asp-for="IsActive" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.IsActive)
+                <span asp-validation-for="IsActive"></span>
             </div>
         </div>
     </div>
@@ -39,24 +38,24 @@
     @<div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.Locales[item].BccEmailAddresses)
+                <admin-label asp-for="@Model.Locales[item].BccEmailAddresses" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.Locales[item].BccEmailAddresses)
-                    @Html.ValidationMessageFor(model => model.Locales[item].BccEmailAddresses)
+                    <admin-input asp-for="@Model.Locales[item].BccEmailAddresses" />
+                    <span asp-validation-for="@Model.Locales[item].BccEmailAddresses"></span>
                 </div>
             </div>
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.Locales[item].Subject)
+                <admin-label asp-for="@Model.Locales[item].Subject" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.Locales[item].Subject)
-                    @Html.ValidationMessageFor(model => model.Locales[item].Subject)
+                    <admin-input asp-for="@Model.Locales[item].Subject" />
+                    <span asp-validation-for="@Model.Locales[item].Subject"></span>
                 </div>
             </div>
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.Locales[item].Body)
+                <admin-label asp-for="@Model.Locales[item].Body" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.EditorFor(model => model.Locales[item].Body, "RichEditor")
-                    @Html.ValidationMessageFor(model => model.Locales[item].Body)
+                    <admin-input asp-for="@Model.Locales[item].Body" asp-template="RichEditor" />
+                    <span asp-validation-for="@Model.Locales[item].Body"></span>
                 </div>
             </div>
             @if (!String.IsNullOrEmpty(Model.Id))
@@ -69,37 +68,37 @@
                 </div>
             }
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.Locales[item].EmailAccountId)
+                <admin-label asp-for="@Model.Locales[item].EmailAccountId" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandDropDownListFor(model => model.Locales[item].EmailAccountId, new SelectList(Model.AvailableEmailAccounts, "Id", "DisplayName", Model.Locales[item].EmailAccountId))
-                    @Html.ValidationMessageFor(model => model.Locales[item].EmailAccountId)
+                    <admin-select asp-for="@Model.Locales[item].EmailAccountId" asp-items="@{new SelectList(Model.AvailableEmailAccounts, "Id", "DisplayName", Model.Locales[item].EmailAccountId)}" />
+                    <span asp-validation-for="Locales[item].EmailAccountId"></span>
                 </div>
             </div>
-            @Html.HiddenFor(model => model.Locales[item].LanguageId)
+            <input asp-for="@Model.Locales[item].LanguageId" type="hidden" />
         </div>
     </div>
     ,
     @<div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.BccEmailAddresses)
+                <admin-label asp-for="BccEmailAddresses" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.BccEmailAddresses)
-                    @Html.ValidationMessageFor(model => model.BccEmailAddresses)
+                    <admin-input asp-for="BccEmailAddresses" />
+                    <span asp-validation-for="BccEmailAddresses"></span>
                 </div>
             </div>
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.Subject)
+                <admin-label asp-for="Subject" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.Subject)
-                    @Html.ValidationMessageFor(model => model.Subject)
+                    <admin-input asp-for="Subject" />
+                    <span asp-validation-for="Subject"></span>
                 </div>
             </div>
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.Body)
+                <admin-label asp-for="Body" />
                 <div class="col-md-9 col-sm-9">
                     @Html.EditorFor(model => model.Body, "RichEditor")
-                    @Html.ValidationMessageFor(model => model.Body)
+                    <span asp-validation-for="Body"></span>
                 </div>
             </div>
             @if (!String.IsNullOrEmpty(Model.Id))
@@ -114,10 +113,10 @@
                 </div>
             }
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.EmailAccountId)
+                <admin-label asp-for="EmailAccountId" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandDropDownListFor(model => model.EmailAccountId, new SelectList(Model.AvailableEmailAccounts, "Id", "DisplayName"))
-                    @Html.ValidationMessageFor(model => model.EmailAccountId)
+                    <admin-select asp-for="EmailAccountId" asp-items="@{new SelectList(Model.AvailableEmailAccounts, "Id", "DisplayName")}" />
+                    <span asp-validation-for="EmailAccountId"></span>
                 </div>
             </div>
         </div>
@@ -126,30 +125,30 @@
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.SendImmediately)
+            <admin-label asp-for="SendImmediately" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
                     @Html.EditorFor(model => model.SendImmediately)
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.SendImmediately)
+                <span asp-validation-for="SendImmediately"></span>
             </div>
         </div>
         <div class="form-group" id="pnl-send-after">
-            @Html.GrandLabelFor(model => model.DelayBeforeSend)
+            <admin-label asp-for="DelayBeforeSend" />
             <div class="col-md-9 col-sm-9">
                 <div class="col-md-3 col-sm-3">
-                    @Html.GrandEditorFor(model => model.DelayBeforeSend)
-                    @Html.ValidationMessageFor(model => model.DelayBeforeSend)
+                    <admin-input asp-for="DelayBeforeSend" />
+                    <span asp-validation-for="DelayBeforeSend"></span>
                 </div>
                 <div class="col-md-3 col-sm-3">
-                    @Html.GrandDropDownListFor(model => model.DelayPeriodId, ((MessageDelayPeriod)Model.DelayPeriodId).ToSelectList())
-                    @Html.ValidationMessageFor(model => model.DelayPeriodId)
+                    <admin-select asp-for="DelayPeriodId" asp-items="((Grand.Core.Domain.Messages.MessageDelayPeriod)Model.DelayPeriodId).ToSelectList()" />
+                    <span asp-validation-for="DelayPeriodId"></span>
                 </div>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.AttachedDownloadId)
+            <admin-label asp-for="AttachedDownloadId" />
             <div class="col-md-9 col-sm-9">
                 @{
                     //Static file attachments do not support URLs yet
@@ -158,12 +157,12 @@
                     ViewData["Grand.DownloadEditor.DisableUrl"] = true;
                 }
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.EditorFor(model => model.HasAttachedDownload) @T("Admin.ContentManagement.MessageTemplates.Fields.AttachedDownload.Exists")
+                    <admin-input asp-for="HasAttachedDownload" />@T("Admin.ContentManagement.MessageTemplates.Fields.AttachedDownload.Exists")
                     <span></span>
                 </label>
                 <div id="pnlAttachedDownload">
-                    @Html.EditorFor(model => model.AttachedDownloadId)
-                    @Html.ValidationMessageFor(model => model.AttachedDownloadId)
+                    <admin-input asp-for="AttachedDownloadId" />
+                    <span asp-validation-for="AttachedDownloadId"></span>
                 </div>
             </div>
         </div>
