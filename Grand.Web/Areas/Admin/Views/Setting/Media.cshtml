@@ -3,11 +3,9 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Media").Text;
 }
-@using (Html.BeginForm())
-{
+<form asp-controller="Setting" asp-action="Media" method="post">
     <antiforgery-token />
-    @Html.ValidationSummary(false)
-
+    <div asp-validation-summary="All"></div>
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -25,7 +23,7 @@
                 <div class="portlet-body">
                     <div class="form-horizontal">
                         <div class="form-body">
-                            @await Component.InvokeAsync("StoreScopeConfiguration") 
+                            @await Component.InvokeAsync("StoreScopeConfiguration")
                         </div>
                     </div>
                 </div>
@@ -34,7 +32,7 @@
                         <div class="form-body">
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
-                                    @Html.GrandLabelFor(model => model.PicturesStoredIntoDatabase, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="PicturesStoredIntoDatabase" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <div class="note note-info">
@@ -55,134 +53,134 @@
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.AvatarPictureSize_OverrideForStore, model => model.AvatarPictureSize, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.AvatarPictureSize, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="AvatarPictureSize" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandEditorFor(model => model.AvatarPictureSize)
-                                    @Html.ValidationMessageFor(model => model.AvatarPictureSize)
+                                    <admin-input asp-for="AvatarPictureSize" />
+                                    <span asp-validation-for="AvatarPictureSize"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ProductThumbPictureSize_OverrideForStore, model => model.ProductThumbPictureSize, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.ProductThumbPictureSize, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="ProductThumbPictureSize" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandEditorFor(model => model.ProductThumbPictureSize)
-                                    @Html.ValidationMessageFor(model => model.ProductThumbPictureSize)
+                                    <admin-input asp-for="ProductThumbPictureSize" />
+                                    <span asp-validation-for="ProductThumbPictureSize"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ProductDetailsPictureSize_OverrideForStore, model => model.ProductDetailsPictureSize, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.ProductDetailsPictureSize, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="ProductDetailsPictureSize" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandEditorFor(model => model.ProductDetailsPictureSize)
-                                    @Html.ValidationMessageFor(model => model.ProductDetailsPictureSize)
+                                    <admin-input asp-for="ProductDetailsPictureSize" />
+                                    <span asp-validation-for="ProductDetailsPictureSize"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ProductThumbPictureSizeOnProductDetailsPage_OverrideForStore, model => model.ProductThumbPictureSizeOnProductDetailsPage, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.ProductThumbPictureSizeOnProductDetailsPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="ProductThumbPictureSizeOnProductDetailsPage" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandEditorFor(model => model.ProductThumbPictureSizeOnProductDetailsPage)
-                                    @Html.ValidationMessageFor(model => model.ProductThumbPictureSizeOnProductDetailsPage)
+                                    <admin-input asp-for="ProductThumbPictureSizeOnProductDetailsPage" />
+                                    <span asp-validation-for="ProductThumbPictureSizeOnProductDetailsPage"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.AssociatedProductPictureSize_OverrideForStore, model => model.AssociatedProductPictureSize, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.AssociatedProductPictureSize, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="AssociatedProductPictureSize" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandEditorFor(model => model.AssociatedProductPictureSize)
-                                    @Html.ValidationMessageFor(model => model.AssociatedProductPictureSize)
+                                    <admin-input asp-for="AssociatedProductPictureSize" />
+                                    <span asp-validation-for="AssociatedProductPictureSize"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.CategoryThumbPictureSize_OverrideForStore, model => model.CategoryThumbPictureSize, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.CategoryThumbPictureSize, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="CategoryThumbPictureSize" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandEditorFor(model => model.CategoryThumbPictureSize)
-                                    @Html.ValidationMessageFor(model => model.CategoryThumbPictureSize)
+                                    <admin-input asp-for="CategoryThumbPictureSize" />
+                                    <span asp-validation-for="CategoryThumbPictureSize"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ManufacturerThumbPictureSize_OverrideForStore, model => model.ManufacturerThumbPictureSize, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.ManufacturerThumbPictureSize, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="ManufacturerThumbPictureSize" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandEditorFor(model => model.ManufacturerThumbPictureSize)
-                                    @Html.ValidationMessageFor(model => model.ManufacturerThumbPictureSize)
+                                    <admin-input asp-for="ManufacturerThumbPictureSize" />
+                                    <span asp-validation-for="ManufacturerThumbPictureSize"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.VendorThumbPictureSize_OverrideForStore, model => model.VendorThumbPictureSize, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.VendorThumbPictureSize, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="VendorThumbPictureSize" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandEditorFor(model => model.VendorThumbPictureSize)
-                                    @Html.ValidationMessageFor(model => model.VendorThumbPictureSize)
+                                    <admin-input asp-for="VendorThumbPictureSize" />
+                                    <span asp-validation-for="VendorThumbPictureSize"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.CartThumbPictureSize_OverrideForStore, model => model.CartThumbPictureSize, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.CartThumbPictureSize, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="CartThumbPictureSize" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandEditorFor(model => model.CartThumbPictureSize)
-                                    @Html.ValidationMessageFor(model => model.CartThumbPictureSize)
+                                    <admin-input asp-for="CartThumbPictureSize" />
+                                    <span asp-validation-for="CartThumbPictureSize"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.MiniCartThumbPictureSize_OverrideForStore, model => model.MiniCartThumbPictureSize, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.MiniCartThumbPictureSize, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="MiniCartThumbPictureSize" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandEditorFor(model => model.MiniCartThumbPictureSize)
-                                    @Html.ValidationMessageFor(model => model.MiniCartThumbPictureSize)
+                                    <admin-input asp-for="MiniCartThumbPictureSize" />
+                                    <span asp-validation-for="MiniCartThumbPictureSize"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.MaximumImageSize_OverrideForStore, model => model.MaximumImageSize, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.MaximumImageSize, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="MaximumImageSize" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandEditorFor(model => model.MaximumImageSize)
-                                    @Html.ValidationMessageFor(model => model.MaximumImageSize)
+                                    <admin-input asp-for="MaximumImageSize" />
+                                    <span asp-validation-for="MaximumImageSize"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.MultipleThumbDirectories_OverrideForStore, model => model.MultipleThumbDirectories, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.MultipleThumbDirectories, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="MultipleThumbDirectories" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.MultipleThumbDirectories)
+                                        <admin-input asp-for="MultipleThumbDirectories" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.MultipleThumbDirectories)
+                                    <span asp-validation-for="MultipleThumbDirectories"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.DefaultImageQuality_OverrideForStore, model => model.DefaultImageQuality, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.DefaultImageQuality, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="DefaultImageQuality" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandEditorFor(model => model.DefaultImageQuality)
-                                    @Html.ValidationMessageFor(model => model.DefaultImageQuality)
+                                    <admin-input asp-for="DefaultImageQuality" />
+                                    <span asp-validation-for="DefaultImageQuality"></span>
                                 </div>
                             </div>
                         </div>
@@ -191,4 +189,4 @@
             </div>
         </div>
     </div>
-}
+</form>

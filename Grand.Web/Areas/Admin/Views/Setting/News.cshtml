@@ -3,11 +3,9 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.News").Text;
 }
-@using (Html.BeginForm())
-{
+<form asp-controller="Setting" asp-action="News" method="post">
     <antiforgery-token />
-    @Html.ValidationSummary(false)
-
+    <div asp-validation-summary="All"></div>
 
     <div class="row">
         <div class="col-md-12">
@@ -26,7 +24,7 @@
                 <div class="portlet-body">
                     <div class="form-horizontal">
                         <div class="form-body">
-                            @await Component.InvokeAsync("StoreScopeConfiguration") 
+                            @await Component.InvokeAsync("StoreScopeConfiguration")
                         </div>
                     </div>
                 </div>
@@ -36,86 +34,86 @@
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.Enabled_OverrideForStore, model => model.Enabled, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.Enabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="Enabled" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.EditorFor(model => model.Enabled)
+                                        <admin-input asp-for="Enabled" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.Enabled)
+                                    <span asp-validation-for="Enabled"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore, model => model.AllowNotRegisteredUsersToLeaveComments, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.AllowNotRegisteredUsersToLeaveComments, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="AllowNotRegisteredUsersToLeaveComments" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.EditorFor(model => model.AllowNotRegisteredUsersToLeaveComments)
+                                        <admin-input asp-for="AllowNotRegisteredUsersToLeaveComments" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.AllowNotRegisteredUsersToLeaveComments)
+                                    <span asp-validation-for="AllowNotRegisteredUsersToLeaveComments"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.NotifyAboutNewNewsComments_OverrideForStore, model => model.NotifyAboutNewNewsComments, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.NotifyAboutNewNewsComments, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="NotifyAboutNewNewsComments" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.EditorFor(model => model.NotifyAboutNewNewsComments)
+                                        <admin-input asp-for="NotifyAboutNewNewsComments" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.NotifyAboutNewNewsComments)
+                                    <span asp-validation-for="NotifyAboutNewNewsComments"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ShowNewsOnMainPage_OverrideForStore, model => model.ShowNewsOnMainPage, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.ShowNewsOnMainPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="ShowNewsOnMainPage" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.EditorFor(model => model.ShowNewsOnMainPage)
+                                        <admin-input asp-for="ShowNewsOnMainPage" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.ShowNewsOnMainPage)
+                                    <span asp-validation-for="ShowNewsOnMainPage"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.MainPageNewsCount_OverrideForStore, model => model.MainPageNewsCount, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.MainPageNewsCount, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="MainPageNewsCount" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.EditorFor(model => model.MainPageNewsCount)
-                                    @Html.ValidationMessageFor(model => model.MainPageNewsCount)
+                                    <admin-input asp-for="MainPageNewsCount" />
+                                    <span asp-validation-for="MainPageNewsCount"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.NewsArchivePageSize_OverrideForStore, model => model.NewsArchivePageSize, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.NewsArchivePageSize, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="NewsArchivePageSize" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.EditorFor(model => model.NewsArchivePageSize)
-                                    @Html.ValidationMessageFor(model => model.NewsArchivePageSize)
+                                    <admin-input asp-for="NewsArchivePageSize" />
+                                    <span asp-validation-for="NewsArchivePageSize"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ShowHeaderRssUrl_OverrideForStore, model => model.ShowHeaderRssUrl, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.ShowHeaderRssUrl, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="ShowHeaderRssUrl" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.EditorFor(model => model.ShowHeaderRssUrl)
+                                        <admin-input asp-for="ShowHeaderRssUrl" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.ShowHeaderRssUrl)
+                                    <span asp-validation-for="ShowHeaderRssUrl"></span>
                                 </div>
                             </div>
                         </div>
@@ -124,5 +122,4 @@
             </div>
         </div>
     </div>
-
-}
+</form>

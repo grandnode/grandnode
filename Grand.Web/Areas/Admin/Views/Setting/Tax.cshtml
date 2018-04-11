@@ -3,9 +3,9 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Tax").Text;
 }
-@using (Html.BeginForm())
-{
+<form asp-controller="Setting" asp-action="Tax" method="post">
     <antiforgery-token />
+    <div asp-validation-summary="All"></div>
     <script type="text/javascript">
         $(document).ready(function () {
 
@@ -69,9 +69,6 @@
             }
         }
     </script>
-
-    @Html.ValidationSummary(false)
-
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -89,7 +86,7 @@
                 <div class="portlet-body">
                     <div class="form-horizontal">
                         <div class="form-body">
-                            @await Component.InvokeAsync("StoreScopeConfiguration") 
+                            @await Component.InvokeAsync("StoreScopeConfiguration")
                         </div>
                     </div>
                 </div>
@@ -99,112 +96,112 @@
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.PricesIncludeTax_OverrideForStore, model => model.PricesIncludeTax, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.PricesIncludeTax, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="PricesIncludeTax" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.PricesIncludeTax)
+                                        <admin-input asp-for="PricesIncludeTax" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.PricesIncludeTax)
+                                    <span asp-validation-for="PricesIncludeTax"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.AllowCustomersToSelectTaxDisplayType_OverrideForStore, model => model.AllowCustomersToSelectTaxDisplayType, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.AllowCustomersToSelectTaxDisplayType, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="AllowCustomersToSelectTaxDisplayType" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.AllowCustomersToSelectTaxDisplayType)
+                                        <admin-input asp-for="AllowCustomersToSelectTaxDisplayType" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.AllowCustomersToSelectTaxDisplayType)
+                                    <span asp-validation-for="AllowCustomersToSelectTaxDisplayType"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlTaxDisplayType">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.TaxDisplayType_OverrideForStore, model => model.TaxDisplayType, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.TaxDisplayType, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="TaxDisplayType" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandDropDownListFor(model => model.TaxDisplayType, Model.TaxDisplayTypeValues)
-                                    @Html.ValidationMessageFor(model => model.TaxDisplayType)
+                                    <admin-select asp-for="TaxDisplayType" asp-items="Model.TaxDisplayTypeValues" />
+                                    <span asp-validation-for="TaxDisplayType"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxSuffix_OverrideForStore, model => model.DisplayTaxSuffix, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.DisplayTaxSuffix, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="DisplayTaxSuffix" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.DisplayTaxSuffix)
+                                        <admin-input asp-for="DisplayTaxSuffix" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.DisplayTaxSuffix)
+                                    <span asp-validation-for="DisplayTaxSuffix"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxRates_OverrideForStore, model => model.DisplayTaxRates, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.DisplayTaxRates, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="DisplayTaxRates" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.DisplayTaxRates)
+                                        <admin-input asp-for="DisplayTaxRates" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.DisplayTaxRates)
+                                    <span asp-validation-for="DisplayTaxRates"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.HideZeroTax_OverrideForStore, model => model.HideZeroTax, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.HideZeroTax, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="HideZeroTax" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.HideZeroTax)
+                                        <admin-input asp-for="HideZeroTax" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.HideZeroTax)
+                                    <span asp-validation-for="HideZeroTax"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.HideTaxInOrderSummary_OverrideForStore, model => model.HideTaxInOrderSummary, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.HideTaxInOrderSummary, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="HideTaxInOrderSummary" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.HideTaxInOrderSummary)
+                                        <admin-input asp-for="HideTaxInOrderSummary" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.HideTaxInOrderSummary)
+                                    <span asp-validation-for="HideTaxInOrderSummary"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ForceTaxExclusionFromOrderSubtotal_OverrideForStore, model => model.ForceTaxExclusionFromOrderSubtotal, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.ForceTaxExclusionFromOrderSubtotal, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="ForceTaxExclusionFromOrderSubtotal" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.ForceTaxExclusionFromOrderSubtotal)
+                                        <admin-input asp-for="ForceTaxExclusionFromOrderSubtotal" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.ForceTaxExclusionFromOrderSubtotal)
+                                    <span asp-validation-for="ForceTaxExclusionFromOrderSubtotal"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.TaxBasedOn_OverrideForStore, model => model.TaxBasedOn, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.TaxBasedOn, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="TaxBasedOn" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandDropDownListFor(model => model.TaxBasedOn, Model.TaxBasedOnValues)
-                                    @Html.ValidationMessageFor(model => model.TaxBasedOn)
+                                    <admin-select asp-for="TaxBasedOn" asp-items="Model.TaxBasedOnValues" />
+                                    <span asp-validation-for="TaxBasedOn"></span>
                                 </div>
                             </div>
                             <div class="form-horizontal portlet light bg-inverse form-fit">
@@ -216,167 +213,165 @@
                                 </div>
                                 <div class="form-group">
                                     <div id="pnlDefaultTaxAddress">
-                                        @Html.EditorFor(x => x.DefaultTaxAddress, "Address")
+                                        <admin-input asp-for="DefaultTaxAddress" asp-template="Address" />
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ShippingIsTaxable_OverrideForStore, model => model.ShippingIsTaxable, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.ShippingIsTaxable, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="ShippingIsTaxable" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.ShippingIsTaxable)
+                                        <admin-input asp-for="ShippingIsTaxable" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.ShippingIsTaxable)
+                                    <span asp-validation-for="ShippingIsTaxable"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlShippingPriceIncludesTax">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ShippingPriceIncludesTax_OverrideForStore, model => model.ShippingPriceIncludesTax, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.ShippingPriceIncludesTax, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="ShippingPriceIncludesTax" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.ShippingPriceIncludesTax)
+                                        <admin-input asp-for="ShippingPriceIncludesTax" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.ShippingPriceIncludesTax)
+                                    <span asp-validation-for="ShippingPriceIncludesTax"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.DefaultTaxCategoryId_OverrideForStore, model => model.DefaultTaxCategoryId, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.DefaultTaxCategoryId, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="DefaultTaxCategoryId" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandDropDownListFor(model => model.DefaultTaxCategoryId, Model.TaxCategories)
-                                    @Html.ValidationMessageFor(model => model.DefaultTaxCategoryId)
+                                    <admin-select asp-for="DefaultTaxCategoryId" asp-items="Model.TaxCategories" />
+                                    <span asp-validation-for="DefaultTaxCategoryId"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlShippingTaxClass">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ShippingTaxClassId_OverrideForStore, model => model.ShippingTaxClassId, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.ShippingTaxClassId, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="ShippingTaxClassId" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandDropDownListFor(model => model.ShippingTaxClassId, Model.TaxCategories)
-                                    @Html.ValidationMessageFor(model => model.ShippingTaxClassId)
+                                    <admin-select asp-for="ShippingTaxClassId" asp-items="Model.TaxCategories" />
+                                    <span asp-validation-for="ShippingTaxClassId"></span>
                                 </div>
                             </div>
-
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.PaymentMethodAdditionalFeeIsTaxable_OverrideForStore, model => model.PaymentMethodAdditionalFeeIsTaxable, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.PaymentMethodAdditionalFeeIsTaxable, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="PaymentMethodAdditionalFeeIsTaxable" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.PaymentMethodAdditionalFeeIsTaxable)
+                                        <admin-input asp-for="PaymentMethodAdditionalFeeIsTaxable" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.PaymentMethodAdditionalFeeIsTaxable)
+                                    <span asp-validation-for="PaymentMethodAdditionalFeeIsTaxable"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlPaymentMethodAdditionalFeeIncludesTax">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.PaymentMethodAdditionalFeeIncludesTax_OverrideForStore, model => model.PaymentMethodAdditionalFeeIncludesTax, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.PaymentMethodAdditionalFeeIncludesTax, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="PaymentMethodAdditionalFeeIncludesTax" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.PaymentMethodAdditionalFeeIncludesTax)
+                                        <admin-input asp-for="PaymentMethodAdditionalFeeIncludesTax" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.PaymentMethodAdditionalFeeIncludesTax)
+                                    <span asp-validation-for="PaymentMethodAdditionalFeeIncludesTax"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlPaymentMethodAdditionalFeeTaxClass">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.PaymentMethodAdditionalFeeTaxClassId_OverrideForStore, model => model.PaymentMethodAdditionalFeeTaxClassId, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.PaymentMethodAdditionalFeeTaxClassId, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="PaymentMethodAdditionalFeeTaxClassId" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandDropDownListFor(model => model.PaymentMethodAdditionalFeeTaxClassId, Model.PaymentMethodAdditionalFeeTaxCategories)
-                                    @Html.ValidationMessageFor(model => model.PaymentMethodAdditionalFeeTaxClassId)
+                                    <admin-select asp-for="PaymentMethodAdditionalFeeTaxClassId" asp-items="Model.PaymentMethodAdditionalFeeTaxCategories" />
+                                    <span asp-validation-for="PaymentMethodAdditionalFeeTaxClassId"></span>
                                 </div>
                             </div>
-
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.EuVatEnabled_OverrideForStore, model => model.EuVatEnabled, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.EuVatEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="EuVatEnabled" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.EuVatEnabled)
+                                        <admin-input asp-for="EuVatEnabled" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.EuVatEnabled)
+                                    <span asp-validation-for="EuVatEnabled"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlEuVatShopCountry">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.EuVatShopCountryId_OverrideForStore, model => model.EuVatShopCountryId, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.EuVatShopCountryId, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="EuVatShopCountryId" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandDropDownListFor(model => model.EuVatShopCountryId, Model.EuVatShopCountries)
-                                    @Html.ValidationMessageFor(model => model.EuVatShopCountryId)
+                                    <admin-select asp-for="EuVatShopCountryId" asp-items="Model.EuVatShopCountries" />
+                                    <span asp-validation-for="EuVatShopCountryId"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlEuVatAllowVATExemption">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.EuVatAllowVatExemption_OverrideForStore, model => model.EuVatAllowVatExemption, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.EuVatAllowVatExemption, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="EuVatAllowVatExemption" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.EuVatAllowVatExemption)
+                                        <admin-input asp-for="EuVatAllowVatExemption" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.EuVatAllowVatExemption)
+                                    <span asp-validation-for="EuVatAllowVatExemption"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlEuVatAssumeValid">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.EuVatAssumeValid_OverrideForStore, model => model.EuVatAssumeValid, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.EuVatAssumeValid, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="EuVatAssumeValid" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.EuVatAssumeValid)
+                                        <admin-input asp-for="EuVatAssumeValid" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.EuVatAssumeValid)
+                                    <span asp-validation-for="EuVatAssumeValid"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlEuVatUseWebService">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.EuVatUseWebService_OverrideForStore, model => model.EuVatUseWebService, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.EuVatUseWebService, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="EuVatUseWebService" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.EuVatUseWebService)
+                                        <admin-input asp-for="EuVatUseWebService" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.EuVatUseWebService)
+                                    <span asp-validation-for="EuVatUseWebService"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlEuVatEmailAdminWhenNewVATSubmitted">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore, model => model.EuVatEmailAdminWhenNewVatSubmitted, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.EuVatEmailAdminWhenNewVatSubmitted, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="EuVatEmailAdminWhenNewVatSubmitted" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.EuVatEmailAdminWhenNewVatSubmitted)
+                                        <admin-input asp-for="EuVatEmailAdminWhenNewVatSubmitted" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.EuVatEmailAdminWhenNewVatSubmitted)
+                                    <span asp-validation-for="EuVatEmailAdminWhenNewVatSubmitted"></span>
                                 </div>
                             </div>
                         </div>
@@ -385,4 +380,4 @@
             </div>
         </div>
     </div>
-}
+</form>

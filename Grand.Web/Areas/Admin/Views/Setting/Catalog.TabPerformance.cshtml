@@ -1,101 +1,96 @@
 ﻿@model CatalogSettingsModel
 
-
-
-
-
-
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.IgnoreAcl_OverrideForStore, model => model.IgnoreAcl, Model.ActiveStoreScopeConfiguration)
-                @Html.GrandLabelFor(model => model.IgnoreAcl, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="IgnoreAcl" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.IgnoreAcl)
+                    <admin-input asp-for="IgnoreAcl" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.IgnoreAcl)
+                <span asp-validation-for="IgnoreAcl"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.IgnoreStoreLimitations_OverrideForStore, model => model.IgnoreStoreLimitations, Model.ActiveStoreScopeConfiguration)
-                @Html.GrandLabelFor(model => model.IgnoreStoreLimitations, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="IgnoreStoreLimitations" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.IgnoreStoreLimitations)
+                    <admin-input asp-for="IgnoreStoreLimitations" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.IgnoreStoreLimitations)
+                <span asp-validation-for="IgnoreStoreLimitations"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.IgnoreDiscounts_OverrideForStore, model => model.IgnoreDiscounts, Model.ActiveStoreScopeConfiguration)
-                @Html.GrandLabelFor(model => model.IgnoreDiscounts, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="IgnoreDiscounts" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.IgnoreDiscounts)
+                    <admin-input asp-for="IgnoreDiscounts" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.IgnoreDiscounts)
+                <span asp-validation-for="IgnoreDiscounts"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.IgnoreFeaturedProducts_OverrideForStore, model => model.IgnoreFeaturedProducts, Model.ActiveStoreScopeConfiguration)
-                @Html.GrandLabelFor(model => model.IgnoreFeaturedProducts, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="IgnoreFeaturedProducts" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.IgnoreFeaturedProducts)
+                    <admin-input asp-for="IgnoreFeaturedProducts" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.IgnoreFeaturedProducts)
+                <span asp-validation-for="IgnoreFeaturedProducts"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.IgnoreFilterableSpecAttributeOption_OverrideForStore, model => model.IgnoreFilterableSpecAttributeOption, Model.ActiveStoreScopeConfiguration)
-                @Html.GrandLabelFor(model => model.IgnoreFilterableSpecAttributeOption, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="IgnoreFilterableSpecAttributeOption" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.IgnoreFilterableSpecAttributeOption)
+                    <admin-input asp-for="IgnoreFilterableSpecAttributeOption" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.IgnoreFilterableSpecAttributeOption)
+                <span asp-validation-for="IgnoreFilterableSpecAttributeOption"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.IgnoreFilterableAvailableStartEndDateTime_OverrideForStore, model => model.IgnoreFilterableAvailableStartEndDateTime, Model.ActiveStoreScopeConfiguration)
-                @Html.GrandLabelFor(model => model.IgnoreFilterableAvailableStartEndDateTime, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="IgnoreFilterableAvailableStartEndDateTime" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.IgnoreFilterableAvailableStartEndDateTime)
+                    <admin-input asp-for="IgnoreFilterableAvailableStartEndDateTime" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.IgnoreFilterableAvailableStartEndDateTime)
+                <span asp-validation-for="IgnoreFilterableAvailableStartEndDateTime"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.CacheProductPrices_OverrideForStore, model => model.CacheProductPrices, Model.ActiveStoreScopeConfiguration)
-                @Html.GrandLabelFor(model => model.CacheProductPrices, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="CacheProductPrices" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.CacheProductPrices)
+                    <admin-input asp-for="CacheProductPrices" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.CacheProductPrices)
+                <span asp-validation-for="CacheProductPrices"></span>
             </div>
         </div>
     </div>

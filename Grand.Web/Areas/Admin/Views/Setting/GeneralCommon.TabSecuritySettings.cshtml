@@ -1,17 +1,8 @@
 ﻿@model GeneralCommonSettingsModel
 
-
-
-
-
-
-
-
 <script type="text/javascript">
     $(document).ready(function () {
-
         $("#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)").click(toggleReCaptcha);
-
         toggleReCaptcha();
     });
 
@@ -52,12 +43,12 @@
     <div class="form-body">
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.SecuritySettings.EncryptionKey, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="SecuritySettings.EncryptionKey" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <div class="input-group">
-                    @Html.GrandEditorFor(model => model.SecuritySettings.EncryptionKey)
-                    @Html.ValidationMessageFor(model => model.SecuritySettings.EncryptionKey)
+                    <admin-input asp-for="SecuritySettings.EncryptionKey" />
+                    <span asp-validation-for="SecuritySettings.EncryptionKey"></span>
                     <span class="input-group-btn">
                         <input type="submit" name="changeencryptionkey" value="@T("Admin.Common.Change")" id="changeencryptionkey" class="btn default" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
                     </span>
@@ -66,59 +57,59 @@
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.SecuritySettings.AdminAreaAllowedIpAddresses, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="SecuritySettings.AdminAreaAllowedIpAddresses" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
-                @Html.GrandEditorFor(model => model.SecuritySettings.AdminAreaAllowedIpAddresses)
-                @Html.ValidationMessageFor(model => model.SecuritySettings.AdminAreaAllowedIpAddresses)
+                <admin-input asp-for="SecuritySettings.AdminAreaAllowedIpAddresses" />
+                <span asp-validation-for="SecuritySettings.AdminAreaAllowedIpAddresses"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.SecuritySettings.ForceSslForAllPages, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="SecuritySettings.ForceSslForAllPages" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.SecuritySettings.ForceSslForAllPages)
+                    <admin-input asp-for="SecuritySettings.ForceSslForAllPages" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.SecuritySettings.ForceSslForAllPages)
+                <span asp-validation-for="SecuritySettings.ForceSslForAllPages"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.SecuritySettings.EnableXsrfProtectionForAdminArea, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="SecuritySettings.EnableXsrfProtectionForAdminArea" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.SecuritySettings.EnableXsrfProtectionForAdminArea)
+                    <admin-input asp-for="SecuritySettings.EnableXsrfProtectionForAdminArea" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.SecuritySettings.EnableXsrfProtectionForAdminArea)
+                <span asp-validation-for="SecuritySettings.EnableXsrfProtectionForAdminArea"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.SecuritySettings.EnableXsrfProtectionForPublicStore, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="SecuritySettings.EnableXsrfProtectionForPublicStore" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.SecuritySettings.EnableXsrfProtectionForPublicStore)
+                    <admin-input asp-for="SecuritySettings.EnableXsrfProtectionForPublicStore" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.SecuritySettings.EnableXsrfProtectionForPublicStore)
+                <span asp-validation-for="SecuritySettings.EnableXsrfProtectionForPublicStore"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.SecuritySettings.HoneypotEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="SecuritySettings.HoneypotEnabled" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.SecuritySettings.HoneypotEnabled)
+                    <admin-input asp-for="SecuritySettings.HoneypotEnabled" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.SecuritySettings.HoneypotEnabled)
+                <span asp-validation-for="SecuritySettings.HoneypotEnabled"></span>
             </div>
         </div>
         <div class="form-group">
@@ -133,161 +124,161 @@
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.SecuritySettings.CaptchaEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="SecuritySettings.CaptchaEnabled" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.SecuritySettings.CaptchaEnabled)
+                    <admin-input asp-for="SecuritySettings.CaptchaEnabled" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaEnabled)
+                <span asp-validation-for="SecuritySettings.CaptchaEnabled"></span>
             </div>
         </div>
         <div class="form-group" id="ssCaptchaShowOnLoginPagepnl">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.SecuritySettings.CaptchaShowOnLoginPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="SecuritySettings.CaptchaShowOnLoginPage" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.SecuritySettings.CaptchaShowOnLoginPage)
+                    <admin-input asp-for="SecuritySettings.CaptchaShowOnLoginPage" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnLoginPage)
+                <span asp-validation-for="SecuritySettings.CaptchaShowOnLoginPage"></span>
             </div>
         </div>
         <div class="form-group" id="ssCaptchaShowOnRegistrationPagepnl">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.SecuritySettings.CaptchaShowOnRegistrationPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="SecuritySettings.CaptchaShowOnRegistrationPage" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.SecuritySettings.CaptchaShowOnRegistrationPage)
+                    <admin-input asp-for="SecuritySettings.CaptchaShowOnRegistrationPage" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnRegistrationPage)
+                <span asp-validation-for="SecuritySettings.CaptchaShowOnRegistrationPage"></span>
             </div>
         </div>
         <div class="form-group" id="ssCaptchaShowOnContactUsPagepnl">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.SecuritySettings.CaptchaShowOnContactUsPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="SecuritySettings.CaptchaShowOnContactUsPage" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.SecuritySettings.CaptchaShowOnContactUsPage)
+                    <admin-input asp-for="SecuritySettings.CaptchaShowOnContactUsPage" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnContactUsPage)
+                <span asp-validation-for="SecuritySettings.CaptchaShowOnContactUsPage"></span>
             </div>
         </div>
         <div class="form-group" id="ssCaptchaShowOnEmailWishlistToFriendPagepnl">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.SecuritySettings.CaptchaShowOnEmailWishlistToFriendPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="SecuritySettings.CaptchaShowOnEmailWishlistToFriendPage" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.SecuritySettings.CaptchaShowOnEmailWishlistToFriendPage)
+                    <admin-input asp-for="SecuritySettings.CaptchaShowOnEmailWishlistToFriendPage" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnEmailWishlistToFriendPage)
+                <span asp-validation-for="SecuritySettings.CaptchaShowOnEmailWishlistToFriendPage"></span>
             </div>
         </div>
         <div class="form-group" id="ssCaptchaShowOnEmailProductToFriendPagepnl">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.SecuritySettings.CaptchaShowOnEmailProductToFriendPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="SecuritySettings.CaptchaShowOnEmailProductToFriendPage" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.SecuritySettings.CaptchaShowOnEmailProductToFriendPage)
+                    <admin-input asp-for="SecuritySettings.CaptchaShowOnEmailProductToFriendPage" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnEmailProductToFriendPage)
+                <span asp-validation-for="SecuritySettings.CaptchaShowOnEmailProductToFriendPage"></span>
             </div>
         </div>
         <div class="form-group" id="ssCaptchaShowOnAskQuestionPagepnl">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.SecuritySettings.CaptchaShowOnAskQuestionPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="SecuritySettings.CaptchaShowOnAskQuestionPage" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.SecuritySettings.CaptchaShowOnAskQuestionPage)
+                    <admin-input asp-for="SecuritySettings.CaptchaShowOnAskQuestionPage" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnAskQuestionPage)
+                <span asp-validation-for="SecuritySettings.CaptchaShowOnAskQuestionPage"></span>
             </div>
         </div>
         <div class="form-group" id="ssCaptchaShowOnBlogCommentPagepnl">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.SecuritySettings.CaptchaShowOnBlogCommentPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="SecuritySettings.CaptchaShowOnBlogCommentPage" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.SecuritySettings.CaptchaShowOnBlogCommentPage)
+                    <admin-input asp-for="SecuritySettings.CaptchaShowOnBlogCommentPage" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnBlogCommentPage)
+                <span asp-validation-for="SecuritySettings.CaptchaShowOnBlogCommentPage"></span>
             </div>
         </div>
         <div class="form-group" id="ssCaptchaShowOnNewsCommentPagepnl">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.SecuritySettings.CaptchaShowOnNewsCommentPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="SecuritySettings.CaptchaShowOnNewsCommentPage" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.SecuritySettings.CaptchaShowOnNewsCommentPage)
+                    <admin-input asp-for="SecuritySettings.CaptchaShowOnNewsCommentPage" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnNewsCommentPage)
+                <span asp-validation-for="SecuritySettings.CaptchaShowOnNewsCommentPage"></span>
             </div>
         </div>
         <div class="form-group" id="ssCaptchaShowOnProductReviewPagepnl">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.SecuritySettings.CaptchaShowOnProductReviewPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="SecuritySettings.CaptchaShowOnProductReviewPage" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.SecuritySettings.CaptchaShowOnProductReviewPage)
+                    <admin-input asp-for="SecuritySettings.CaptchaShowOnProductReviewPage" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnProductReviewPage)
+                <span asp-validation-for="SecuritySettings.CaptchaShowOnProductReviewPage"></span>
             </div>
         </div>
         <div class="form-group" id="ssCaptchaShowOnApplyVendorPagepnl">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.SecuritySettings.CaptchaShowOnApplyVendorPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="SecuritySettings.CaptchaShowOnApplyVendorPage" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.SecuritySettings.CaptchaShowOnApplyVendorPage)
+                    <admin-input asp-for="SecuritySettings.CaptchaShowOnApplyVendorPage" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnApplyVendorPage)
+                <span asp-validation-for="SecuritySettings.CaptchaShowOnApplyVendorPage"></span>
             </div>
         </div>
         <div class="form-group" id="ssReCaptchaVersionpnl">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.SecuritySettings.ReCaptchaVersion, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="SecuritySettings.ReCaptchaVersion" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
-                @Html.GrandDropDownListFor(model => model.SecuritySettings.ReCaptchaVersion, Model.SecuritySettings.AvailableReCaptchaVersions)
-                @Html.ValidationMessageFor(model => model.SecuritySettings.ReCaptchaVersion)
+                <admin-select asp-for="SecuritySettings.ReCaptchaVersion" asp-items="Model.SecuritySettings.AvailableReCaptchaVersions" />
+                <span asp-validation-for="SecuritySettings.ReCaptchaVersion"></span>
             </div>
         </div>
         <div class="form-group" id="ssReCaptchaPublicKeypnl">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.SecuritySettings.ReCaptchaPublicKey, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="SecuritySettings.ReCaptchaPublicKey" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
-                @Html.GrandEditorFor(model => model.SecuritySettings.ReCaptchaPublicKey)
-                @Html.ValidationMessageFor(model => model.SecuritySettings.ReCaptchaPublicKey)
+                <admin-input asp-for="SecuritySettings.ReCaptchaPublicKey" />
+                <span asp-validation-for="SecuritySettings.ReCaptchaPublicKey"></span>
             </div>
         </div>
         <div class="form-group" id="ssReCaptchaPrivateKeypnl">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.SecuritySettings.ReCaptchaPrivateKey, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="SecuritySettings.ReCaptchaPrivateKey" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
-                @Html.GrandEditorFor(model => model.SecuritySettings.ReCaptchaPrivateKey)
-                @Html.ValidationMessageFor(model => model.SecuritySettings.ReCaptchaPrivateKey)
+                <admin-input asp-for="SecuritySettings.ReCaptchaPrivateKey" />
+                <span asp-validation-for="SecuritySettings.ReCaptchaPrivateKey"></span>
             </div>
         </div>
     </div>

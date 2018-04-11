@@ -1,13 +1,12 @@
 ﻿@model GeneralCommonSettingsModel
+@inject IEventPublisher eventPublisher
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.GeneralCommon").Text;
 }
-@using (Html.BeginForm())
-{
+<form asp-controller="Setting" asp-action="GeneralCommon" method="post">
     <antiforgery-token />
-    @Html.ValidationSummary(false)
-
+    <div asp-validation-summary="All"></div>
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -25,7 +24,7 @@
                 <div class="portlet-body">
                     <div class="form-horizontal">
                         <div class="form-body">
-                            @await Component.InvokeAsync("StoreScopeConfiguration") 
+                            @await Component.InvokeAsync("StoreScopeConfiguration")
                         </div>
                     </div>
                 </div>
@@ -82,18 +81,16 @@
                             @Html.Partial("GeneralCommon.TabTopMenuSettings", Model)
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
 
-
-    <script>
+    <script type="text/javascript">
         $(document).ready(function () {
             $("#generalsettings-edit").show();
             $("#generalsettings-edit").kendoTabStrip({
-                animation:  {
+                animation: {
                     open: {
                         effects: "fadeIn"
                     }
@@ -103,29 +100,23 @@
         });
     </script>
 
-  
-
-    {
+    @{
         //custom tabs
         var eventMessage = new AdminTabStripCreated(this.Html, "generalsettings-edit");
-        EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+        eventPublisher.Publish(eventMessage);
         foreach (var eventBlock in eventMessage.BlocksToRender)
         {
             @eventBlock
         }
     }
 
-
-    
-    
     @*save selected tab index*@
     <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
-    
-}
+
+</form>
 
 <div class="modal-dialog" id="importfile-window" style="display:none; padding: 0 10px;">
-    @using (Html.BeginForm("UploadTheme", "Plugin", null, FormMethod.Post, false, new { enctype = "multipart/form-data" }))
-    {
+    <form asp-controller="Plugin" asp-action="UploadTheme" method="post">
         <antiforgery-token />
         <ul class="common-list">
             <li>
@@ -156,7 +147,7 @@
                 <input id="importfilesubmit" class="btn blue" value="@T("Admin.Configuration.Themes.Upload")" type="submit">
             </div>
         </div>
-    }
+    </form>
 </div>
 
 <script type="text/javascript">

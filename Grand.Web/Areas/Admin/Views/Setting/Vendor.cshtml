@@ -3,99 +3,93 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Vendor").Text;
 }
-
 <script type="text/javascript">
-        $(document).ready(function () {
+    $(document).ready(function () {
 
-            $("#@Html.FieldIdFor(model => model.AddressSettings.CountryEnabled)").click(toggleVendorCountryFormField);
-            $("#@Html.FieldIdFor(model => model.AddressSettings.StateProvinceEnabled)").click(toggleVendorStateProvinceFormField);
-            $("#@Html.FieldIdFor(model => model.AddressSettings.CompanyEnabled)").click(toggleVendorRequiredFormField);
-            $("#@Html.FieldIdFor(model => model.AddressSettings.StreetAddressEnabled)").click(toggleVendorRequiredFormField);
-            $("#@Html.FieldIdFor(model => model.AddressSettings.StreetAddress2Enabled)").click(toggleVendorRequiredFormField);
-            $("#@Html.FieldIdFor(model => model.AddressSettings.ZipPostalCodeEnabled)").click(toggleVendorRequiredFormField);
-            $("#@Html.FieldIdFor(model => model.AddressSettings.CityEnabled)").click(toggleVendorRequiredFormField);
-            $("#@Html.FieldIdFor(model => model.AddressSettings.PhoneEnabled)").click(toggleVendorRequiredFormField);
-            $("#@Html.FieldIdFor(model => model.AddressSettings.FaxEnabled)").click(toggleVendorRequiredFormField);
+        $("#@Html.FieldIdFor(model => model.AddressSettings.CountryEnabled)").click(toggleVendorCountryFormField);
+        $("#@Html.FieldIdFor(model => model.AddressSettings.StateProvinceEnabled)").click(toggleVendorStateProvinceFormField);
+        $("#@Html.FieldIdFor(model => model.AddressSettings.CompanyEnabled)").click(toggleVendorRequiredFormField);
+        $("#@Html.FieldIdFor(model => model.AddressSettings.StreetAddressEnabled)").click(toggleVendorRequiredFormField);
+        $("#@Html.FieldIdFor(model => model.AddressSettings.StreetAddress2Enabled)").click(toggleVendorRequiredFormField);
+        $("#@Html.FieldIdFor(model => model.AddressSettings.ZipPostalCodeEnabled)").click(toggleVendorRequiredFormField);
+        $("#@Html.FieldIdFor(model => model.AddressSettings.CityEnabled)").click(toggleVendorRequiredFormField);
+        $("#@Html.FieldIdFor(model => model.AddressSettings.PhoneEnabled)").click(toggleVendorRequiredFormField);
+        $("#@Html.FieldIdFor(model => model.AddressSettings.FaxEnabled)").click(toggleVendorRequiredFormField);
 
 
-            toggleVendorCountryFormField();
+        toggleVendorCountryFormField();
+        toggleVendorStateProvinceFormField();
+        toggleVendorRequiredFormField();
+    });
+
+    function toggleVendorCountryFormField() {
+        if ($('#@Html.FieldIdFor(model => model.AddressSettings.CountryEnabled)').is(':checked')) {
+            $('#pnlVendorCountryRequired').show();
+            $('#pnlVendorStateProvinceEnabled').show();
             toggleVendorStateProvinceFormField();
-            toggleVendorRequiredFormField();
-        });
+        } else {
+            $('#pnlVendorCountryRequired').hide();
+            $('#pnlVendorStateProvinceEnabled').hide();
+            toggleVendorStateProvinceFormField();
+        }
+    }
 
-        function toggleVendorCountryFormField() {
-            if ($('#@Html.FieldIdFor(model => model.AddressSettings.CountryEnabled)').is(':checked')) {
-                $('#pnlVendorCountryRequired').show();
-                $('#pnlVendorStateProvinceEnabled').show();
-                toggleVendorStateProvinceFormField();
-            } else {
-                $('#pnlVendorCountryRequired').hide();
-                $('#pnlVendorStateProvinceEnabled').hide();
-                toggleVendorStateProvinceFormField();
-            }
+    function toggleVendorStateProvinceFormField() {
+        if ($('#@Html.FieldIdFor(model => model.AddressSettings.CountryEnabled)').is(':checked') &&
+            $('#@Html.FieldIdFor(model => model.AddressSettings.StateProvinceEnabled)').is(':checked')) {
+            $('#pnlVendorStateProvinceRequired').show();
+        } else {
+            $('#pnlVendorStateProvinceRequired').hide();
+        }
+    }
+
+    function toggleVendorRequiredFormField() {
+        if ($('#@Html.FieldIdFor(model => model.AddressSettings.CompanyEnabled)').is(':checked')) {
+            $('#pnlVendorCompanyRequired').show();
+        } else {
+            $('#pnlVendorCompanyRequired').hide();
         }
 
-        function toggleVendorStateProvinceFormField() {
-            if ($('#@Html.FieldIdFor(model => model.AddressSettings.CountryEnabled)').is(':checked') &&
-                $('#@Html.FieldIdFor(model => model.AddressSettings.StateProvinceEnabled)').is(':checked')) {
-                $('#pnlVendorStateProvinceRequired').show();
-            } else {
-                $('#pnlVendorStateProvinceRequired').hide();
-            }
+        if ($('#@Html.FieldIdFor(model => model.AddressSettings.StreetAddressEnabled)').is(':checked')) {
+            $('#pnlVendorStreetAddressRequired').show();
+        } else {
+            $('#pnlVendorStreetAddressRequired').hide();
         }
 
-        function toggleVendorRequiredFormField() {
-            if ($('#@Html.FieldIdFor(model => model.AddressSettings.CompanyEnabled)').is(':checked')) {
-                $('#pnlVendorCompanyRequired').show();
-            } else {
-                $('#pnlVendorCompanyRequired').hide();
-            }
-
-            if ($('#@Html.FieldIdFor(model => model.AddressSettings.StreetAddressEnabled)').is(':checked')) {
-                $('#pnlVendorStreetAddressRequired').show();
-            } else {
-                $('#pnlVendorStreetAddressRequired').hide();
-            }
-
-            if ($('#@Html.FieldIdFor(model => model.AddressSettings.StreetAddress2Enabled)').is(':checked')) {
-                $('#pnlVendorStreetAddress2Required').show();
-            } else {
-                $('#pnlVendorStreetAddress2Required').hide();
-            }
-
-            if ($('#@Html.FieldIdFor(model => model.AddressSettings.ZipPostalCodeEnabled)').is(':checked')) {
-                $('#pnlVendorZipPostalCodeRequired').show();
-            } else {
-                $('#pnlVendorZipPostalCodeRequired').hide();
-            }
-
-            if ($('#@Html.FieldIdFor(model => model.AddressSettings.CityEnabled)').is(':checked')) {
-                $('#pnlVendorCityRequired').show();
-            } else {
-                $('#pnlVendorCityRequired').hide();
-            }
-
-            if ($('#@Html.FieldIdFor(model => model.AddressSettings.PhoneEnabled)').is(':checked')) {
-                $('#pnlVendorPhoneRequired').show();
-            } else {
-                $('#pnlVendorPhoneRequired').hide();
-            }
-
-            if ($('#@Html.FieldIdFor(model => model.AddressSettings.FaxEnabled)').is(':checked')) {
-                $('#pnlVendorFaxRequired').show();
-            } else {
-                $('#pnlVendorFaxRequired').hide();
-            }
+        if ($('#@Html.FieldIdFor(model => model.AddressSettings.StreetAddress2Enabled)').is(':checked')) {
+            $('#pnlVendorStreetAddress2Required').show();
+        } else {
+            $('#pnlVendorStreetAddress2Required').hide();
         }
 
+        if ($('#@Html.FieldIdFor(model => model.AddressSettings.ZipPostalCodeEnabled)').is(':checked')) {
+            $('#pnlVendorZipPostalCodeRequired').show();
+        } else {
+            $('#pnlVendorZipPostalCodeRequired').hide();
+        }
+
+        if ($('#@Html.FieldIdFor(model => model.AddressSettings.CityEnabled)').is(':checked')) {
+            $('#pnlVendorCityRequired').show();
+        } else {
+            $('#pnlVendorCityRequired').hide();
+        }
+
+        if ($('#@Html.FieldIdFor(model => model.AddressSettings.PhoneEnabled)').is(':checked')) {
+            $('#pnlVendorPhoneRequired').show();
+        } else {
+            $('#pnlVendorPhoneRequired').hide();
+        }
+
+        if ($('#@Html.FieldIdFor(model => model.AddressSettings.FaxEnabled)').is(':checked')) {
+            $('#pnlVendorFaxRequired').show();
+        } else {
+            $('#pnlVendorFaxRequired').hide();
+        }
+    }
 </script>
-
-@using (Html.BeginForm())
-{
+<form asp-controller="Setting" asp-action="Vendor" method="post">
     <antiforgery-token />
-
-    @Html.ValidationSummary(false)
-
+    <div asp-validation-summary="All"></div>
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -113,7 +107,7 @@
                 <div class="portlet-body">
                     <div class="form-horizontal">
                         <div class="form-body">
-                            @await Component.InvokeAsync("StoreScopeConfiguration") 
+                            @await Component.InvokeAsync("StoreScopeConfiguration")
                         </div>
                     </div>
                 </div>
@@ -123,155 +117,155 @@
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.VendorsBlockItemsToDisplay_OverrideForStore, model => model.VendorsBlockItemsToDisplay, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.VendorsBlockItemsToDisplay, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="VendorsBlockItemsToDisplay" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandEditorFor(model => model.VendorsBlockItemsToDisplay)
-                                    @Html.ValidationMessageFor(model => model.VendorsBlockItemsToDisplay)
+                                    <admin-input asp-for="VendorsBlockItemsToDisplay" />
+                                    <span asp-validation-for="VendorsBlockItemsToDisplay"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ShowVendorOnProductDetailsPage_OverrideForStore, model => model.ShowVendorOnProductDetailsPage, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.ShowVendorOnProductDetailsPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="ShowVendorOnProductDetailsPage" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.EditorFor(model => model.ShowVendorOnProductDetailsPage)
+                                        <admin-input asp-for="ShowVendorOnProductDetailsPage" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.ShowVendorOnProductDetailsPage)
+                                    <span asp-validation-for="ShowVendorOnProductDetailsPage"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.AllowCustomersToContactVendors_OverrideForStore, model => model.AllowCustomersToContactVendors, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.AllowCustomersToContactVendors, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="AllowCustomersToContactVendors" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
                                         @Html.EditorFor(model => model.AllowCustomersToContactVendors)
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.AllowCustomersToContactVendors)
+                                    <span asp-validation-for="AllowCustomersToContactVendors"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.AllowCustomersToApplyForVendorAccount_OverrideForStore, model => model.AllowCustomersToApplyForVendorAccount, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.AllowCustomersToApplyForVendorAccount, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="AllowCustomersToApplyForVendorAccount" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.EditorFor(model => model.AllowCustomersToApplyForVendorAccount)
+                                        <admin-input asp-for="AllowCustomersToApplyForVendorAccount" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.AllowCustomersToApplyForVendorAccount)
+                                    <span asp-validation-for="AllowCustomersToApplyForVendorAccount"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.AllowSearchByVendor_OverrideForStore, model => model.AllowSearchByVendor, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.AllowSearchByVendor, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="AllowSearchByVendor" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.EditorFor(model => model.AllowSearchByVendor)
+                                        <admin-input asp-for="AllowSearchByVendor" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.AllowSearchByVendor)
+                                    <span asp-validation-for="AllowSearchByVendor"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.AllowVendorsToEditInfo_OverrideForStore, model => model.AllowVendorsToEditInfo, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.AllowVendorsToEditInfo, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="AllowVendorsToEditInfo" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.EditorFor(model => model.AllowVendorsToEditInfo)
+                                        <admin-input asp-for="AllowVendorsToEditInfo" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.AllowVendorsToEditInfo)
+                                    <span asp-validation-for="AllowVendorsToEditInfo"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.NotifyStoreOwnerAboutVendorInformationChange_OverrideForStore, model => model.NotifyStoreOwnerAboutVendorInformationChange, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.NotifyStoreOwnerAboutVendorInformationChange, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="NotifyStoreOwnerAboutVendorInformationChange" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.EditorFor(model => model.NotifyStoreOwnerAboutVendorInformationChange)
+                                        <admin-input asp-for="NotifyStoreOwnerAboutVendorInformationChange" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.NotifyStoreOwnerAboutVendorInformationChange)
+                                    <span asp-validation-for="NotifyStoreOwnerAboutVendorInformationChange"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.TermsOfServiceEnabled_OverrideForStore, model => model.TermsOfServiceEnabled, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.TermsOfServiceEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="TermsOfServiceEnabled" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.EditorFor(model => model.TermsOfServiceEnabled)
+                                        <admin-input asp-for="TermsOfServiceEnabled" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.TermsOfServiceEnabled)
+                                    <span asp-validation-for="TermsOfServiceEnabled"></span>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.VendorReviewsMustBeApproved_OverrideForStore, model => model.VendorReviewsMustBeApproved, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.VendorReviewsMustBeApproved, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="VendorReviewsMustBeApproved" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.VendorReviewsMustBeApproved)
+                                        <admin-input asp-for="VendorReviewsMustBeApproved" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.VendorReviewsMustBeApproved)
+                                    <span asp-validation-for="VendorReviewsMustBeApproved"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.AllowAnonymousUsersToReviewVendor_OverrideForStore, model => model.AllowAnonymousUsersToReviewVendor, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.AllowAnonymousUsersToReviewVendor, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="AllowAnonymousUsersToReviewVendor" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.AllowAnonymousUsersToReviewVendor)
+                                        <admin-input asp-for="AllowAnonymousUsersToReviewVendor" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.AllowAnonymousUsersToReviewVendor)
+                                    <span asp-validation-for="AllowAnonymousUsersToReviewVendor"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.NotifyVendorAboutNewVendorReviews_OverrideForStore, model => model.NotifyVendorAboutNewVendorReviews, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.NotifyVendorAboutNewVendorReviews, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="NotifyVendorAboutNewVendorReviews" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.NotifyVendorAboutNewVendorReviews)
+                                        <admin-input asp-for="NotifyVendorAboutNewVendorReviews" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.NotifyVendorAboutNewVendorReviews)
+                                    <span asp-validation-for="NotifyVendorAboutNewVendorReviews"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.VendorReviewPossibleOnlyAfterPurchasing_OverrideForStore, model => model.VendorReviewPossibleOnlyAfterPurchasing, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.VendorReviewPossibleOnlyAfterPurchasing, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="VendorReviewPossibleOnlyAfterPurchasing" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.VendorReviewPossibleOnlyAfterPurchasing)
+                                        <admin-input asp-for="VendorReviewPossibleOnlyAfterPurchasing" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.VendorReviewPossibleOnlyAfterPurchasing)
+                                    <span asp-validation-for="VendorReviewPossibleOnlyAfterPurchasing"></span>
                                 </div>
                             </div>
 
@@ -284,201 +278,200 @@
                         <div class="form-horizontal panel-body">
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
-                                    @Html.GrandLabelFor(model => model.AddressSettings.CompanyEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="AddressSettings.CompanyEnabled" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.AddressSettings.CompanyEnabled)
+                                        <admin-input asp-for="AddressSettings.CompanyEnabled" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.AddressSettings.CompanyEnabled)
+                                    <span asp-validation-for="AddressSettings.CompanyEnabled"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlVendorCompanyRequired">
                                 <div class="col-md-4 col-sm-4 text-right">
-                                    @Html.GrandLabelFor(model => model.AddressSettings.CompanyRequired, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="AddressSettings.CompanyRequired" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.AddressSettings.CompanyRequired)
+                                        <admin-input asp-for="AddressSettings.CompanyRequired" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.AddressSettings.CompanyRequired)
+                                    <span asp-validation-for="AddressSettings.CompanyRequired"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
-                                    @Html.GrandLabelFor(model => model.AddressSettings.StreetAddressEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="AddressSettings.StreetAddressEnabled" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.AddressSettings.StreetAddressEnabled)
+                                        <admin-input asp-for="AddressSettings.StreetAddressEnabled" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.AddressSettings.StreetAddressEnabled)
+                                    <span asp-validation-for="AddressSettings.StreetAddressEnabled"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlVendorStreetAddressRequired">
                                 <div class="col-md-4 col-sm-4 text-right">
-                                    @Html.GrandLabelFor(model => model.AddressSettings.StreetAddressRequired, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="AddressSettings.StreetAddressRequired" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.AddressSettings.StreetAddressRequired)
+                                        <admin-input asp-for="AddressSettings.StreetAddressRequired" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.AddressSettings.StreetAddressRequired)
+                                    <span asp-validation-for="AddressSettings.StreetAddressRequired"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
-                                    @Html.GrandLabelFor(model => model.AddressSettings.StreetAddress2Enabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="AddressSettings.StreetAddress2Enabled" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.AddressSettings.StreetAddress2Enabled)
+                                        <admin-input asp-for="AddressSettings.StreetAddress2Enabled" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.AddressSettings.StreetAddress2Enabled)
+                                    <span asp-validation-for="AddressSettings.StreetAddress2Enabled"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlVendorStreetAddress2Required">
                                 <div class="col-md-4 col-sm-4 text-right">
-                                    @Html.GrandLabelFor(model => model.AddressSettings.StreetAddress2Required, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="AddressSettings.StreetAddress2Required" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.AddressSettings.StreetAddress2Required)
+                                        <admin-input asp-for="AddressSettings.StreetAddress2Required" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.AddressSettings.StreetAddress2Required)
+                                    <span asp-validation-for="AddressSettings.StreetAddress2Required"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
-                                    @Html.GrandLabelFor(model => model.AddressSettings.ZipPostalCodeEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="AddressSettings.ZipPostalCodeEnabled" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.AddressSettings.ZipPostalCodeEnabled)
+                                        <admin-input asp-for="AddressSettings.ZipPostalCodeEnabled" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.AddressSettings.ZipPostalCodeEnabled)
+                                    <span asp-validation-for="AddressSettings.ZipPostalCodeEnabled"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlVendorZipPostalCodeRequired">
                                 <div class="col-md-4 col-sm-4 text-right">
-                                    @Html.GrandLabelFor(model => model.AddressSettings.ZipPostalCodeRequired, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="AddressSettings.ZipPostalCodeRequired" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.AddressSettings.ZipPostalCodeRequired)
+                                        <admin-input asp-for="AddressSettings.ZipPostalCodeRequired" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.AddressSettings.ZipPostalCodeRequired)
+                                    <span asp-validation-for="AddressSettings.ZipPostalCodeRequired"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
-                                    @Html.GrandLabelFor(model => model.AddressSettings.CityEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="AddressSettings.CityEnabled" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.AddressSettings.CityEnabled)
+                                        <admin-input asp-for="AddressSettings.CityEnabled" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.AddressSettings.CityEnabled)
+                                    <span asp-validation-for="AddressSettings.CityEnabled"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlVendorCityRequired">
                                 <div class="col-md-4 col-sm-4 text-right">
-                                    @Html.GrandLabelFor(model => model.AddressSettings.CityRequired, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="AddressSettings.CityRequired" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.AddressSettings.CityRequired)
+                                        <admin-input asp-for="AddressSettings.CityRequired" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.AddressSettings.CityRequired)
+                                    <span asp-validation-for="AddressSettings.CityRequired"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
-                                    @Html.GrandLabelFor(model => model.AddressSettings.CountryEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="AddressSettings.CountryEnabled" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.AddressSettings.CountryEnabled)
+                                        <admin-input asp-for="AddressSettings.CountryEnabled" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.AddressSettings.CountryEnabled)
+                                    <span asp-validation-for="AddressSettings.CountryEnabled"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlVendorStateProvinceEnabled">
                                 <div class="col-md-4 col-sm-4 text-right">
-                                    @Html.GrandLabelFor(model => model.AddressSettings.StateProvinceEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="AddressSettings.StateProvinceEnabled" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.AddressSettings.StateProvinceEnabled)
+                                        <admin-input asp-for="AddressSettings.StateProvinceEnabled" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.AddressSettings.StateProvinceEnabled)
+                                    <span asp-validation-for="AddressSettings.StateProvinceEnabled"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
-                                    @Html.GrandLabelFor(model => model.AddressSettings.PhoneEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="AddressSettings.PhoneEnabled" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.AddressSettings.PhoneEnabled)
+                                        <admin-input asp-for="AddressSettings.PhoneEnabled" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.AddressSettings.PhoneEnabled)
+                                    <span asp-validation-for="AddressSettings.PhoneEnabled"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlVendorPhoneRequired">
                                 <div class="col-md-4 col-sm-4 text-right">
-                                    @Html.GrandLabelFor(model => model.AddressSettings.PhoneRequired, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="AddressSettings.PhoneRequired" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.AddressSettings.PhoneRequired)
+                                        <admin-input asp-for="AddressSettings.PhoneRequired" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.AddressSettings.PhoneRequired)
+                                    <span asp-validation-for="AddressSettings.PhoneRequired"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
-                                    @Html.GrandLabelFor(model => model.AddressSettings.FaxEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="AddressSettings.FaxEnabled" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.AddressSettings.FaxEnabled)
+                                        <admin-input asp-for="AddressSettings.FaxEnabled" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.AddressSettings.FaxEnabled)
+                                    <span asp-validation-for="AddressSettings.FaxEnabled"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlVendorFaxRequired">
                                 <div class="col-md-4 col-sm-4 text-right">
-                                    @Html.GrandLabelFor(model => model.AddressSettings.FaxRequired, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="AddressSettings.FaxRequired" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.AddressSettings.FaxRequired)
+                                        <admin-input asp-for="AddressSettings.FaxRequired" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.AddressSettings.FaxRequired)
+                                    <span asp-validation-for="AddressSettings.FaxRequired"></span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>                
+                </div>
             </div>
         </div>
     </div>
-
-}
+</form>

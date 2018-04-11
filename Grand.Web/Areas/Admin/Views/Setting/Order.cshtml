@@ -1,13 +1,12 @@
 ﻿@model OrderSettingsModel
+@inject IEventPublisher eventPublisher
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Order").Text;
 }
-@using (Html.BeginForm())
-{
+<form asp-controller="Setting" asp-action="Order" method="post">
     <antiforgery-token />
-    @Html.ValidationSummary(false)
-
+    <div asp-validation-summary="All"></div>
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -25,7 +24,7 @@
                 <div class="portlet-body">
                     <div class="form-horizontal">
                         <div class="form-body">
-                            @await Component.InvokeAsync("StoreScopeConfiguration") 
+                            @await Component.InvokeAsync("StoreScopeConfiguration")
                         </div>
                     </div>
                 </div>
@@ -50,12 +49,11 @@
             </div>
         </div>
     </div>
-
-    <script>
+    <script type="text/javascript">
         $(document).ready(function () {
             $("#ordersettings-edit").show();
             $("#ordersettings-edit").kendoTabStrip({
-                animation:  {
+                animation: {
                     open: {
                         effects: "fadeIn"
                     }
@@ -65,18 +63,17 @@
         });
     </script>
 
-
-    {
+    @{
         //custom tabs
         var eventMessage = new AdminTabStripCreated(this.Html, "ordersettings-edit");
-        EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+        eventPublisher.Publish(eventMessage);
         foreach (var eventBlock in eventMessage.BlocksToRender)
         {
-            @eventBlock
+           @eventBlock
         }
     }
 
+        @*save selected tab index*@
+        <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+</form>
 
-    @*save selected tab index*@
-    <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
-}

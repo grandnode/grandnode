@@ -3,11 +3,9 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.ShoppingCart").Text;
 }
-@using (Html.BeginForm())
-{
+<form asp-controller="Setting" asp-action="ShoppingCart" method="post">
     <antiforgery-token />
-    @Html.ValidationSummary(false)
-
+    <div asp-validation-summary="All"></div>
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -25,7 +23,7 @@
                 <div class="portlet-body">
                     <div class="form-horizontal">
                         <div class="form-body">
-                            @await Component.InvokeAsync("StoreScopeConfiguration") 
+                            @await Component.InvokeAsync("StoreScopeConfiguration")
                         </div>
                     </div>
                 </div>
@@ -35,223 +33,223 @@
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.DisplayCartAfterAddingProduct_OverrideForStore, model => model.DisplayCartAfterAddingProduct, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.DisplayCartAfterAddingProduct, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="DisplayCartAfterAddingProduct" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.DisplayCartAfterAddingProduct)
+                                        <admin-input asp-for="DisplayCartAfterAddingProduct" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.DisplayCartAfterAddingProduct)
+                                    <span asp-validation-for="DisplayCartAfterAddingProduct"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.DisplayWishlistAfterAddingProduct_OverrideForStore, model => model.DisplayWishlistAfterAddingProduct, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.DisplayWishlistAfterAddingProduct, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="DisplayWishlistAfterAddingProduct" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.DisplayWishlistAfterAddingProduct)
+                                        <admin-input asp-for="DisplayWishlistAfterAddingProduct" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.DisplayWishlistAfterAddingProduct)
+                                    <span asp-validation-for="DisplayWishlistAfterAddingProduct"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.AllowOutOfStockItemsToBeAddedToWishlist_OverrideForStore, model => model.AllowOutOfStockItemsToBeAddedToWishlist, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.AllowOutOfStockItemsToBeAddedToWishlist, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="AllowOutOfStockItemsToBeAddedToWishlist" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.AllowOutOfStockItemsToBeAddedToWishlist)
+                                        <admin-input asp-for="AllowOutOfStockItemsToBeAddedToWishlist" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.AllowOutOfStockItemsToBeAddedToWishlist)
+                                    <span asp-validation-for="AllowOutOfStockItemsToBeAddedToWishlist"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.MaximumShoppingCartItems_OverrideForStore, model => model.MaximumShoppingCartItems, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.MaximumShoppingCartItems, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="MaximumShoppingCartItems" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandEditorFor(model => model.MaximumShoppingCartItems)
-                                    @Html.ValidationMessageFor(model => model.MaximumShoppingCartItems)
+                                    <admin-input asp-for="MaximumShoppingCartItems" />
+                                    <span asp-validation-for="MaximumShoppingCartItems"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.MaximumWishlistItems_OverrideForStore, model => model.MaximumWishlistItems, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.MaximumWishlistItems, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="MaximumWishlistItems" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandEditorFor(model => model.MaximumWishlistItems)
-                                    @Html.ValidationMessageFor(model => model.MaximumWishlistItems)
+                                    <admin-input asp-for="MaximumWishlistItems" />
+                                    <span asp-validation-for="MaximumWishlistItems"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.MoveItemsFromWishlistToCart_OverrideForStore, model => model.MoveItemsFromWishlistToCart, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.MoveItemsFromWishlistToCart, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="MoveItemsFromWishlistToCart" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.MoveItemsFromWishlistToCart)
+                                        <admin-input asp-for="MoveItemsFromWishlistToCart" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.MoveItemsFromWishlistToCart)
+                                    <span asp-validation-for="MoveItemsFromWishlistToCart"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ShowProductImagesOnShoppingCart_OverrideForStore, model => model.ShowProductImagesOnShoppingCart, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.ShowProductImagesOnShoppingCart, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="ShowProductImagesOnShoppingCart" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.ShowProductImagesOnShoppingCart)
+                                        <admin-input asp-for="ShowProductImagesOnShoppingCart" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.ShowProductImagesOnShoppingCart)
+                                    <span asp-validation-for="ShowProductImagesOnShoppingCart"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ShowProductImagesOnWishList_OverrideForStore, model => model.ShowProductImagesOnWishList, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.ShowProductImagesOnWishList, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="ShowProductImagesOnWishList" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.ShowProductImagesOnWishList)
+                                        <admin-input asp-for="ShowProductImagesOnWishList" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.ShowProductImagesOnWishList)
+                                    <span asp-validation-for="ShowProductImagesOnWishList"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ShowDiscountBox_OverrideForStore, model => model.ShowDiscountBox, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.ShowDiscountBox, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="ShowDiscountBox" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.ShowDiscountBox)
+                                        <admin-input asp-for="ShowDiscountBox" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.ShowDiscountBox)
+                                    <span asp-validation-for="ShowDiscountBox"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ShowGiftCardBox_OverrideForStore, model => model.ShowGiftCardBox, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.ShowGiftCardBox, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="ShowGiftCardBox" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.ShowGiftCardBox)
+                                        <admin-input asp-for="ShowGiftCardBox" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.ShowGiftCardBox)
+                                    <span asp-validation-for="ShowGiftCardBox"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.CrossSellsNumber_OverrideForStore, model => model.CrossSellsNumber, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.CrossSellsNumber, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="CrossSellsNumber" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandEditorFor(model => model.CrossSellsNumber)
-                                    @Html.ValidationMessageFor(model => model.CrossSellsNumber)
+                                    <admin-input asp-for="CrossSellsNumber" />
+                                    <span asp-validation-for="CrossSellsNumber"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.EmailWishlistEnabled_OverrideForStore, model => model.EmailWishlistEnabled, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.EmailWishlistEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="EmailWishlistEnabled" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.EmailWishlistEnabled)
+                                        <admin-input asp-for="EmailWishlistEnabled" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.EmailWishlistEnabled)
+                                    <span asp-validation-for="EmailWishlistEnabled"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlAllowAnonymousUsersToEmailWishlist">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.AllowAnonymousUsersToEmailWishlist_OverrideForStore, model => model.AllowAnonymousUsersToEmailWishlist, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.AllowAnonymousUsersToEmailWishlist, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="AllowAnonymousUsersToEmailWishlist" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.AllowAnonymousUsersToEmailWishlist)
+                                        <admin-input asp-for="AllowAnonymousUsersToEmailWishlist" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.AllowAnonymousUsersToEmailWishlist)
+                                    <span asp-validation-for="AllowAnonymousUsersToEmailWishlist"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.MiniShoppingCartEnabled_OverrideForStore, model => model.MiniShoppingCartEnabled, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.MiniShoppingCartEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="MiniShoppingCartEnabled" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.MiniShoppingCartEnabled)
+                                        <admin-input asp-for="MiniShoppingCartEnabled" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.MiniShoppingCartEnabled)
+                                    <span asp-validation-for="MiniShoppingCartEnabled"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlMiniShoppingCartProductNumber">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.MiniShoppingCartProductNumber_OverrideForStore, model => model.MiniShoppingCartProductNumber, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.MiniShoppingCartProductNumber, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="MiniShoppingCartProductNumber" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandEditorFor(model => model.MiniShoppingCartProductNumber)
-                                    @Html.ValidationMessageFor(model => model.MiniShoppingCartProductNumber)
+                                    <admin-input asp-for="MiniShoppingCartProductNumber" />
+                                    <span asp-validation-for="MiniShoppingCartProductNumber"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="pnlShowProductImagesInMiniShoppingCart">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ShowProductImagesInMiniShoppingCart_OverrideForStore, model => model.ShowProductImagesInMiniShoppingCart, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.ShowProductImagesInMiniShoppingCart, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="ShowProductImagesInMiniShoppingCart" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.ShowProductImagesInMiniShoppingCart)
+                                        <admin-input asp-for="ShowProductImagesInMiniShoppingCart" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.ShowProductImagesInMiniShoppingCart)
+                                    <span asp-validation-for="ShowProductImagesInMiniShoppingCart"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.AllowCartItemEditing_OverrideForStore, model => model.AllowCartItemEditing, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.AllowCartItemEditing, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="AllowCartItemEditing" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.AllowCartItemEditing)
+                                        <admin-input asp-for="AllowCartItemEditing" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.AllowCartItemEditing)
+                                    <span asp-validation-for="AllowCartItemEditing"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.CartsSharedBetweenStores_OverrideForStore, model => model.CartsSharedBetweenStores, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.CartsSharedBetweenStores, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="CartsSharedBetweenStores" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.CartsSharedBetweenStores)
+                                        <admin-input asp-for="CartsSharedBetweenStores" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.CartsSharedBetweenStores)
+                                    <span asp-validation-for="CartsSharedBetweenStores"></span>
                                 </div>
                             </div>
                         </div>
@@ -291,7 +289,4 @@
         }
 
     </script>
-
-
-
-}
+</form>
