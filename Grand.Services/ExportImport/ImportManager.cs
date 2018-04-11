@@ -900,7 +900,7 @@ namespace Grand.Services.ExportImport
                     {
                         var _picture = LoadPicture(picture, manufacturer.Name,
                             isNew ? "" : manufacturer.PictureId);
-                        if (picture != null)
+                        if (_picture != null)
                             manufacturer.PictureId = _picture.Id;
                     }
                     manufacturer.UpdatedOnUtc = DateTime.UtcNow;
