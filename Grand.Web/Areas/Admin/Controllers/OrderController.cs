@@ -1589,7 +1589,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("partialrefundorder")]
-        public IActionResult PartiallyRefundOrderPopup(string btnId, string formId, string id, bool online, OrderModel model)
+        public IActionResult PartiallyRefundOrderPopup(string id, bool online, OrderModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1623,9 +1623,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (errors.Count == 0)
                 {
                     //success
-                    ViewBag.RefreshPage = true;
-                    ViewBag.btnId = btnId;
-                    ViewBag.formId = formId;
+                    ViewBag.RefreshPage = true;                    
 
                     PrepareOrderDetailsModel(model, order);
                     return View(model);
@@ -2255,7 +2253,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("uploadlicense")]
-        public IActionResult UploadLicenseFilePopup(string btnId, string formId, OrderModel.UploadLicenseModel model)
+        public IActionResult UploadLicenseFilePopup(OrderModel.UploadLicenseModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2283,15 +2281,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             LogEditOrder(order.Id);
             //success
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
 
             return View(model);
         }
 
         [HttpPost, ActionName("UploadLicenseFilePopup")]
         [FormValueRequired("deletelicense")]
-        public IActionResult DeleteLicenseFilePopup(string btnId, string formId, OrderModel.UploadLicenseModel model)
+        public IActionResult DeleteLicenseFilePopup(OrderModel.UploadLicenseModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2316,8 +2312,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //success
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
 
             return View(model);
         }
@@ -2441,10 +2435,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             #region Product attributes
 
-            var attributes = product.ProductAttributeMappings; //_productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+            var attributes = product.ProductAttributeMappings; 
             foreach (var attribute in attributes)
             {
-                //string controlId = string.Format("product_attribute_{0}_{1}", attribute.ProductAttributeId, attribute.Id);
                 string controlId = string.Format("product_attribute_{0}", attribute.Id);
                 switch (attribute.AttributeControlType)
                 {
