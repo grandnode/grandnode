@@ -1,11 +1,4 @@
 ﻿@model PaymentMethodRestrictionModel
-
-
-
-
-
-
-
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
@@ -49,7 +42,7 @@
                                         <th scope="col">
                                             <strong>@pm.FriendlyName</strong>
                                             <label class='mt-checkbox mt-checkbox-outline'><input type="checkbox" id="selectroleall-@(systemNameWithoutDot)" /><span></span></label>
-</th>
+                                        </th>
                                     }
                                 </tr>
                                 @{
@@ -69,13 +62,13 @@
                                             var systemNameWithoutDot = pm.SystemName.Replace(".", "");
                                             <td style="text-align:center">
                                                 <label class='mt-checkbox mt-checkbox-outline'><input class="restrictrole_@(systemNameWithoutDot)" type="checkbox" value="@(c.Id)" name="restrictrole_@(pm.SystemName)" @(resticted ? " checked=checked" : null) /><span></span></label>
-</td>
+                                            </td>
                                         }
                                     </tr>
                                 }
                             </tbody>
                         </table>
-                                    }
+                }
             </div>
         </div>
     </div>
