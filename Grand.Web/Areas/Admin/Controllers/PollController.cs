@@ -359,7 +359,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult PollAnswerCreatePopup(string btnId, string formId, PollAnswerModel model)
+        public IActionResult PollAnswerCreatePopup(PollAnswerModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
@@ -375,10 +375,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 pa.Locales = UpdateOptionLocales(pa, model);
                 poll.PollAnswers.Add(pa);
                 _pollService.UpdatePoll(poll);
-
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
 
@@ -408,7 +405,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult PollAnswerEditPopup(string btnId, string formId, PollAnswerModel model)
+        public IActionResult PollAnswerEditPopup(PollAnswerModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
@@ -431,8 +428,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _pollService.UpdatePoll(poll);
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
 

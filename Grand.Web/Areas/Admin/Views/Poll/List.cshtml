@@ -1,12 +1,9 @@
-﻿@{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
+﻿@inject AdminAreaSettings adminAreaSettings
+@{
     //page title
     ViewBag.Title = T("Admin.ContentManagement.Polls").Text;
 }
 <antiforgery-token />
-
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light form-fit">
@@ -18,7 +15,6 @@
                 <div class="actions btn-group btn-group-devided">
                     <a href="@Url.Action("Create")" class="btn green"><i class="fa fa-plus"></i><span class="hidden-xs"> @T("Admin.Common.AddNew") </span></a>
                 </div>
-
             </div>
             <div class="portlet-body form">
                 <div class="form-horizontal">
@@ -33,83 +29,82 @@
     </div>
 </div>
 
-
-            <script>
-                $(document).ready(function () {
-                    $("#polls-grid").kendoGrid({
-                        dataSource: {
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("List", "Poll"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
-                                }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors"
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            pageSize: @(defaultGridPageSize),
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            pageSizes: [@(gridPageSizes)]
-                        },
-                        editable: {
-                            confirmation: false,
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [{
-                            field: "Name",
-                            title: "@T("Admin.ContentManagement.Polls.Fields.Name")",
-                            width: 400,
-                        }, {
-                            field: "DisplayOrder",
-                            title: "@T("Admin.ContentManagement.Polls.Fields.DisplayOrder")",
-                            width: 200,
-                        }, {
-                            field: "Published",
-                            title: "@T("Admin.ContentManagement.Polls.Fields.Published")",
-                            width: 100,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '# if(Published) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
-                        }, {
-                            field: "ShowOnHomePage",
-                            title: "@T("Admin.ContentManagement.Polls.Fields.ShowOnHomePage")",
-                            width: 100,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '# if(ShowOnHomePage) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
-                        }, {
-                            field: "StartDate",
-                            title: "@T("Admin.ContentManagement.Polls.Fields.StartDate")",
-                            width: 150,
-                            type: "date",
-                            format: "{0:G}"
-                        }, {
-                            field: "EndDate",
-                            title: "@T("Admin.ContentManagement.Polls.Fields.EndDate")",
-                            width: 150,
-                            type: "date",
-                            format: "{0:G}"
-                        }, {
-                            field: "Id",
-                            title: "@T("Admin.Common.Edit")",
-                            width: 100,
-                            template: '<a class="btn btn-sm btn-default"  href="Edit/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
-                        }]
-                    });
-                });
-            </script>
+<script>
+    $(document).ready(function () {
+        $("#polls-grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("List", "Poll"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors"
+                },
+                error: function(e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                pageSize: @(adminAreaSettings.DefaultGridPageSize),
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: [@(adminAreaSettings.GridPageSizes)]
+            },
+            editable: {
+                confirmation: false,
+                mode: "inline"
+            },
+            scrollable: false,
+            columns: [{
+                field: "Name",
+                title: "@T("Admin.ContentManagement.Polls.Fields.Name")",
+                width: 400,
+            }, {
+                field: "DisplayOrder",
+                title: "@T("Admin.ContentManagement.Polls.Fields.DisplayOrder")",
+                width: 200,
+            }, {
+                field: "Published",
+                title: "@T("Admin.ContentManagement.Polls.Fields.Published")",
+                width: 100,
+                headerAttributes: { style: "text-align:center" },
+                attributes: { style: "text-align:center" },
+                template: '# if(Published) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+            }, {
+                field: "ShowOnHomePage",
+                title: "@T("Admin.ContentManagement.Polls.Fields.ShowOnHomePage")",
+                width: 100,
+                headerAttributes: { style: "text-align:center" },
+                attributes: { style: "text-align:center" },
+                template: '# if(ShowOnHomePage) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+            }, {
+                field: "StartDate",
+                title: "@T("Admin.ContentManagement.Polls.Fields.StartDate")",
+                width: 150,
+                type: "date",
+                format: "{0:G}"
+            }, {
+                field: "EndDate",
+                title: "@T("Admin.ContentManagement.Polls.Fields.EndDate")",
+                width: 150,
+                type: "date",
+                format: "{0:G}"
+            }, {
+                field: "Id",
+                title: "@T("Admin.Common.Edit")",
+                width: 100,
+                template: '<a class="btn btn-sm btn-default"  href="Edit/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
+            }]
+        });
+    });
+</script>
