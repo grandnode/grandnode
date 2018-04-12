@@ -567,11 +567,8 @@ namespace Grand.Services.Orders
                             {
                                 if (!String.IsNullOrEmpty(str1.Trim()))
                                 {
-                                    if (a1.ProductAttributeValues.Where(x => x.Id == str1).Any())
-                                    {
-                                        found = true;
-                                        break;
-                                    }
+                                    found = true;
+                                    break;
                                 }
                             }
                         }
