@@ -1,12 +1,9 @@
 ﻿@model BestsellersReportModel
+@inject AdminAreaSettings adminAreaSettings
 @{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.SalesReport.Bestsellers").Text;
 }
-
 <antiforgery-token />
 <div class="row">
     <div class="col-md-12">
@@ -16,7 +13,7 @@
                     <i class="fa fa-list-alt"></i>
                     @T("Admin.SalesReport.Bestsellers")
                 </div>
-               
+
             </div>
             <div class="portlet-body form">
                 <div class="form-horizontal">
@@ -25,45 +22,45 @@
                             <div class="form-horizontal">
                                 <div class="form-body">
                                     <div class="form-group">
-                                        @Html.GrandLabelFor(model => model.StartDate)
+                                        <admin-label asp-for="StartDate" />
                                         <div class="col-md-9 col-sm-9">
-                                            @Html.GrandEditorFor(model => model.StartDate)
+                                            <admin-input asp-for="StartDate" />
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        @Html.GrandLabelFor(model => model.EndDate)
+                                        <admin-label asp-for="EndDate" />
                                         <div class="col-md-9 col-sm-9">
-                                            @Html.GrandEditorFor(model => model.EndDate)
+                                            <admin-input asp-for="EndDate" />
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        @Html.GrandLabelFor(model => model.StoreId)
+                                        <admin-label asp-for="StoreId" />
                                         <div class="col-md-9 col-sm-9">
-                                            @Html.GrandDropDownListFor(model => model.StoreId, Model.AvailableStores)
+                                            <admin-select asp-for="StoreId" asp-items="Model.AvailableStores" />
                                         </div>
                                     </div>
                                     <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-                                        @Html.GrandLabelFor(model => model.OrderStatusId)
+                                        <admin-label asp-for="OrderStatusId" />
                                         <div class="col-md-9 col-sm-9">
-                                            @Html.GrandDropDownListFor(model => model.OrderStatusId, Model.AvailableOrderStatuses)
+                                            <admin-select asp-for="OrderStatusId" asp-items="Model.AvailableOrderStatuses" />
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        @Html.GrandLabelFor(model => model.PaymentStatusId)
+                                        <admin-label asp-for="PaymentStatusId" />
                                         <div class="col-md-9 col-sm-9">
-                                            @Html.GrandDropDownListFor(model => model.PaymentStatusId, Model.AvailablePaymentStatuses)
+                                            <admin-select asp-for="PaymentStatusId" asp-items="Model.AvailablePaymentStatuses" />
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        @Html.GrandLabelFor(model => model.BillingCountryId)
+                                        <admin-label asp-for="BillingCountryId" />
                                         <div class="col-md-9 col-sm-9">
-                                            @Html.GrandDropDownListFor(model => model.BillingCountryId, Model.AvailableCountries)
+                                            <admin-select asp-for="BillingCountryId" asp-items="Model.AvailableCountries" />
                                         </div>
                                     </div>
                                     <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-                                        @Html.GrandLabelFor(model => model.VendorId)
+                                        <admin-label asp-for="VendorId" />
                                         <div class="col-md-9 col-sm-9">
-                                            @Html.GrandDropDownListFor(model => model.VendorId, Model.AvailableVendors)
+                                            <admin-select asp-for="VendorId" asp-items="Model.AvailableVendors" />
                                         </div>
                                     </div>
                                 </div>
@@ -88,8 +85,6 @@
     </div>
 </div>
 
-            
-
 <script>
     $(document).ready(function () {
         $("#salesreport-grid").kendoGrid({
@@ -112,14 +107,14 @@
                     // Cancel the changes
                     this.cancelChanges();
                 },
-                pageSize: @(defaultGridPageSize),
+                pageSize: @(adminAreaSettings.DefaultGridPageSize),
                 serverPaging: true,
                 serverFiltering: true,
                 serverSorting: true
             },
             pageable: {
                 refresh: true,
-                pageSizes: [@(gridPageSizes)]
+                pageSizes: [@(adminAreaSettings.GridPageSizes)]
             },
             editable: {
                 confirmation: false,
@@ -144,7 +139,6 @@
         });
     });
 </script>
-
 <script type="text/javascript">
 
     $(document).ready(function () {
@@ -173,4 +167,3 @@
     }
 
 </script>
-        

@@ -1,13 +1,10 @@
-﻿@{
+﻿@model OrderModel.UploadLicenseModel
+@{
     Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
-}
-@model OrderModel.UploadLicenseModel
-@{    
     //page title
     ViewBag.Title = T("Admin.Orders.Products.License.UploadFile").Text;
 }
-@using (Html.BeginForm())
-{
+<form asp-controller="Order" asp-action="UploadLicenseFilePopup" method="post">
     <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
@@ -22,27 +19,23 @@
                     <input type="submit" name="uploadlicense" value="@T("Admin.Common.Save")" id="uploadlicense" class="btn green" />
                     @if (!String.IsNullOrEmpty(Model.LicenseDownloadId))
                     {
-                    <input type="submit" name="deletelicense" value="@T("Admin.Common.Delete")" id="deletelicense" class="btn red" />
+                        <input type="submit" name="deletelicense" value="@T("Admin.Common.Delete")" id="deletelicense" class="btn red" />
                     }
                 </div>
             </div>
         </div>
     </div>
-
-
-
-    @Html.ValidationSummary(false)
-    
-    if (ViewBag.RefreshPage == true)
+    <div asp-validation-summary="All"></div>
+    @if (ViewBag.RefreshPage == true)
     {
-    <script type="text/javascript">
-        try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
-        catch (e){} 
+        <script type="text/javascript">
+        try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
+        catch (e){}
         window.close();
-    </script>
+        </script>
     }
 
-    @Html.HiddenFor(model => model.OrderId)
-    @Html.HiddenFor(model => model.OrderItemId)
-    @Html.EditorFor(model => model.LicenseDownloadId)
-}
+    <input asp-for="OrderId" type="hidden" />
+    <input asp-for="OrderItemId" type="hidden" />
+    <admin-input asp-for="LicenseDownloadId" />
+</form>

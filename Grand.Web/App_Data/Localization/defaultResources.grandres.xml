@@ -11487,8 +11487,8 @@
   <LocaleResource Name="Admin.Orders.Fields.GiftCardInfo.Hint">
     <Value>Applied gift card.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Orders.Fields.ID">
-    <Value>Order ID</Value>
+  <LocaleResource Name="Admin.Orders.Fields.Id">
+    <Value>Id</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.ID.Hint">
     <Value>The unique ID of this order.</Value>

@@ -6,7 +6,7 @@
             @if (Model.ShippingAddress != null)
             {
                 <div class="form-group">
-                    @Html.GrandLabelFor(model => model.ShippingAddress)
+                    <admin-label asp-for="ShippingAddress" />
                     <div class="col-md-9 col-sm-9">
                         <table class="table table-bordered table-striped table-hover">
                             @if (Model.ShippingAddress.FirstNameEnabled || Model.ShippingAddress.LastNameEnabled)
@@ -157,7 +157,7 @@
             @if (Model.PickupAddress != null)
             {
                 <div class="form-group">
-                    @Html.GrandLabelFor(model => model.PickupAddress)
+                    <admin-label asp-for="PickupAddress" />
                     <div class="col-md-9 col-sm-9">
                         <table class="table table-bordered table-striped table-hover">
                             @if (!String.IsNullOrEmpty(Model.PickupAddress.Address1))
@@ -210,7 +210,7 @@
             }
 
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.ShippingMethod)
+                <admin-label asp-for="ShippingMethod" />
                 <div class="col-md-9 col-sm-9">
                     <label class="control-label" id="lblShippingMethod">@Model.ShippingMethod</label>
                     @if (!Model.IsLoggedInAsVendor)
@@ -253,7 +253,7 @@
             @if (!Model.IsLoggedInAsVendor)
             {
                 <div class="form-group">
-                    @Html.GrandLabelFor(model => model.ShippingStatus)
+                    <admin-label asp-for="ShippingStatus" />
                     <div class="col-md-9 col-sm-9">
                         <label class="control-label">@Model.ShippingStatus</label> 
                     </div>

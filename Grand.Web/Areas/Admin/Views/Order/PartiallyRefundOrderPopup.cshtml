@@ -1,15 +1,16 @@
 ﻿@{
     Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
-}
-@model OrderModel
-@{    
     //page title
     ViewBag.Title = T("Admin.Orders.Fields.PartialRefund").Text;
 }
-@using (Html.BeginForm())
-{
-    <antiforgery-token />
+@model OrderModel
 
+<form asp-controller="Order" asp-action="PartiallyRefundOrderPopup" method="post"
+      asp-route-OrderId="@Context.Request.Query["OrderId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]"
+      >
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -28,9 +29,9 @@
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.AmountToRefund)
+                                <admin-label asp-for="AmountToRefund" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.AmountToRefund): &nbsp;&nbsp;&nbsp; <span style="white-space: nowrap">
+                                    <admin-input asp-for="AmountToRefund" />: &nbsp;&nbsp;&nbsp; <span style="white-space: nowrap">
                                         @string.Format(T("Admin.Orders.Fields.PartialRefund.AmountToRefund.Max").Text, Model.MaxAmountToRefund.ToString("G29"), Model.PrimaryStoreCurrencyCode)
                                     </span>
                                 </div>
@@ -45,15 +46,13 @@
         </div>
     </div>
 
-
-    @Html.ValidationSummary(false)
-    
-    if (ViewBag.RefreshPage == true)
+    <div asp-validation-summary="All"></div>
+    @if (ViewBag.RefreshPage == true)
     {
-    <script type="text/javascript">
-        try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
-        catch (e){} 
-        window.close();
-    </script>
+        <script type="text/javascript">
+            try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
+            catch (e){}
+            window.close();
+        </script>
     }
-}
+</form>

@@ -1,10 +1,10 @@
 ﻿@model OrderModel
+@inject IEventPublisher eventPublisher
 @{
     //page title
     ViewBag.Title = T("Admin.Orders.EditOrderDetails").Text;
 }
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "order-form" }))
-{
+<form asp-controller="Order" asp-action="Edit" method="post" id = "order-form">
     <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
@@ -27,11 +27,11 @@
                             <input type="submit" id="btnRefreshPage" style="display: none" />
                             <script type="text/javascript">
                                 $(document).ready(function () {
-                                $('#btnRefreshPage').click(function () {
-                                //refresh page
-                                location.reload();
+                                    $('#btnRefreshPage').click(function () {
+                                        //refresh page
+                                        location.reload();
+                                    });
                                 });
-                            });
                             </script>
                         </div>
                     </div>
@@ -77,20 +77,16 @@
                             </div>
                         }
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
-
-
-    @Html.ValidationSummary(false)
-
+    <div asp-validation-summary="All"></div>
     <script>
         $(document).ready(function () {
             $('#order-edit').show();
             $("#order-edit").kendoTabStrip({
-                animation:  {
+                animation: {
                     open: {
                         effects: "fadeIn"
                     }
@@ -100,10 +96,10 @@
         });
     </script>
 
-    {
+    @{
         //custom tabs
         var eventMessage = new AdminTabStripCreated(this.Html, "order-edit");
-        EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+        eventPublisher.Publish(eventMessage);
         foreach (var eventBlock in eventMessage.BlocksToRender)
         {
             @eventBlock
@@ -113,6 +109,5 @@
 
     @*save selected tab index*@
     <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
-
-}
+</form>
 @Html.DeleteConfirmation("order-delete")
