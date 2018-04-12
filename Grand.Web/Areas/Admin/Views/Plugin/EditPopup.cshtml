@@ -1,15 +1,13 @@
-﻿@{
+﻿@model PluginModel
+@{
     Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
-}
-@model PluginModel
-@{    
     //page title
     ViewBag.Title = T("Admin.Configuration.Plugins.EditDetails").Text;
 }
-@using (Html.BeginForm())
-{
-    <antiforgery-token />
 
+<form asp-controller="Plugin" asp-action="EditPopup" method="post" asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -30,5 +28,4 @@
             </div>
         </div>
     </div>
-
-}
+</form>
