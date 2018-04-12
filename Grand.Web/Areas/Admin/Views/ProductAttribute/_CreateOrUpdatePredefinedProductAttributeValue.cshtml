@@ -1,7 +1,7 @@
 ﻿@model PredefinedProductAttributeValueModel
-@Html.ValidationSummary(false)
+<div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
-@Html.HiddenFor(model => model.ProductAttributeId)
+<input asp-for="ProductAttributeId" type="hidden" />
 
 @if (ViewBag.RefreshPage == true)
 {
@@ -15,23 +15,23 @@
 @<div class="form-horizontal">
      <div class="form-body">
          <div class="form-group">
-             @Html.GrandLabelFor(model => model.Locales[item].Name, new Dictionary<string, object> { { "class", "col-sm-3" } })
+             <admin-label asp-for="@Model.Locales[item].Name" class="col-sm-3" />
              <div class="col-md-9 col-sm-9">
-                 @Html.GrandEditorFor(model => model.Locales[item].Name)
-                 @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                 <admin-input asp-for="@Model.Locales[item].Name" />
+                 <span asp-validation-for="@Model.Locales[item].Name"></span>
              </div>
          </div>
-         @Html.HiddenFor(model => model.Locales[item].LanguageId)
+         <input asp-for="@Model.Locales[item].LanguageId" type="hidden" />
      </div>
 </div>
 ,
 @<div class="form-horizontal">
      <div class="form-group">
          <div class="form-group">
-             @Html.GrandLabelFor(model => model.Name, new Dictionary<string, object> { { "class", "col-sm-3" } })
+             <admin-label asp-for="Name" class="col-sm-3" />
              <div class="col-md-9 col-sm-9">
-                 @Html.GrandEditorFor(model => model.Name)
-                 @Html.ValidationMessageFor(model => model.Name)
+                 <admin-input asp-for="Name" />
+                 <span asp-validation-for="Name"></span>
              </div>
          </div>
      </div>
@@ -40,40 +40,42 @@
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.PriceAdjustment, new Dictionary<string, object> { { "class", "col-sm-3" } })
+            <admin-label asp-for="PriceAdjustment" class="col-sm-3" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.PriceAdjustment)
-                @Html.ValidationMessageFor(model => model.PriceAdjustment)
+                <admin-input asp-for="PriceAdjustment" />
+                <span asp-validation-for="PriceAdjustment"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.WeightAdjustment, new Dictionary<string, object> { { "class", "col-sm-3" } })
+            <admin-label asp-for="WeightAdjustment" class="col-sm-3" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.WeightAdjustment)
-                @Html.ValidationMessageFor(model => model.WeightAdjustment)
+                <admin-input asp-for="WeightAdjustment" />
+                <span asp-validation-for="WeightAdjustment"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.Cost, new Dictionary<string, object> { { "class", "col-sm-3" } })
+            <admin-label asp-for="Cost" class="col-sm-3" />
             <div class="col-sm-9 col-md-9">
-                @Html.GrandEditorFor(model => model.Cost)
-                @Html.ValidationMessageFor(model => model.Cost)
+                <admin-input asp-for="Cost" />
+                <span asp-validation-for="Cost"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.IsPreSelected, new Dictionary<string, object> { { "class", "col-sm-3" } })
+            <admin-label asp-for="IsPreSelected" class="col-sm-3" />
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.IsPreSelected)
-                @Html.ValidationMessageFor(model => model.IsPreSelected)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    <admin-input asp-for="IsPreSelected" />
+                    <span></span>
+                </label>
+                <span asp-validation-for="IsPreSelected"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.DisplayOrder, new Dictionary<string, object> { { "class", "col-sm-3" } })
+            <admin-label asp-for="DisplayOrder" class="col-sm-3" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.DisplayOrder)
-                @Html.ValidationMessageFor(model => model.DisplayOrder)
+                <admin-input asp-for="DisplayOrder" />
+                <span asp-validation-for="DisplayOrder"></span>
             </div>
         </div>
     </div>
 </div>
-

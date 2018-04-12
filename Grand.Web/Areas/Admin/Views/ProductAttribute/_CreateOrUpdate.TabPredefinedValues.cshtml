@@ -1,8 +1,6 @@
 ﻿@model ProductAttributeModel
-
 @{
-
-    if (!String.IsNullOrEmpty(Model.Id))
+    if (!string.IsNullOrEmpty(Model.Id))
     {
         <div class="note note-info">
             @T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Hint")
@@ -16,7 +14,7 @@
                 <input type="submit" id="btnRefresh" style="display:none" />
             </div>
         </div>
-        <script>
+        <script type="text/javascript">
             $(document).ready(function() {
                 $("#productattributevalues-grid").kendoGrid({
                     dataSource: {
@@ -123,6 +121,4 @@
             @T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.SaveBeforeEdit")
         </div>
     }
-
-
 }
