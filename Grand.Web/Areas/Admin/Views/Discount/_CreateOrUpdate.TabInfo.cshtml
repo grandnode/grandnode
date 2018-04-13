@@ -131,7 +131,7 @@
         <div class="form-group">
             <admin-label asp-for="DiscountTypeId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.DiscountTypeId, ((DiscountType)Model.DiscountTypeId).ToSelectList())
+                <admin-select asp-for="DiscountTypeId" asp-items="((DiscountType)Model.DiscountTypeId).ToSelectList()" />
                 <span asp-validation-for="DiscountTypeId"></span>
             </div>
         </div>
@@ -179,7 +179,7 @@
         <div class="form-group" id="pnlDiscountPluginName">
             <admin-label asp-for="DiscountPluginName" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.DiscountPluginName, Model.AvailableDiscountAmountProviders)
+                <admin-select asp-for="DiscountPluginName" asp-items="Model.AvailableDiscountAmountProviders" />
                 <span asp-validation-for="DiscountPluginName"></span>
             </div>
         </div>
@@ -230,7 +230,7 @@
         <div class="form-group">
             <admin-label asp-for="DiscountLimitationId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.DiscountLimitationId, ((DiscountLimitationType)Model.DiscountLimitationId).ToSelectList())
+                <admin-select asp-for="DiscountLimitationId" asp-items="((DiscountLimitationType)Model.DiscountLimitationId).ToSelectList()" />
                 <span asp-validation-for="DiscountLimitationId"></span>
             </div>
         </div>
@@ -244,7 +244,7 @@
         <div class="form-group" id="pnlMaximumDiscountedQuantity">
             <admin-label asp-for="MaximumDiscountedQuantity" />
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.MaximumDiscountedQuantity)
+                <admin-input asp-for="MaximumDiscountedQuantity" />
                 <span asp-validation-for="MaximumDiscountedQuantity"></span>
             </div>
         </div>

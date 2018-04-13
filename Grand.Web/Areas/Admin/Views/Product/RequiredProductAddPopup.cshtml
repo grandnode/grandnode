@@ -5,8 +5,6 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.Fields.RequiredProductIds.Choose").Text;
 }
-@using (Html.BeginForm())
-{
     <antiforgery-token />
 
     <div class="row">
@@ -176,4 +174,3 @@
             window.close();
         }
     </script>
-}

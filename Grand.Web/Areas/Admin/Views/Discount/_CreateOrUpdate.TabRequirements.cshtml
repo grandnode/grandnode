@@ -187,7 +187,7 @@
                 <div class="form-group">
                     <admin-label asp-for="AddDiscountRequirement" />
                     <div class="col-md-9 col-sm-9">
-                        @Html.GrandDropDownListFor(model => model.AddDiscountRequirement, Model.AvailableDiscountRequirementRules)
+                        <admin-select asp-for="AddDiscountRequirement" asp-items="Model.AvailableDiscountRequirementRules" />
                         <span asp-validation-for="AddDiscountRequirement"></span>
                     </div>
                 </div>

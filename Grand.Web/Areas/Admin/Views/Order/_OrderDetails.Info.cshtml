@@ -90,7 +90,7 @@
                     <input type="submit" name="btnChangeOrderStatus" value="@T("Admin.Orders.Fields.OrderStatus.Change")" onclick="toggleChangeOrderStatus(true);return false;" id="btnChangeOrderStatus" class="btn green" />
                     <div id="pnlChangeOrderStatus">
                         <div class="note note-info">@T("Admin.Orders.Fields.OrderStatus.Change.ForAdvancedUsers")</div>
-                        @Html.GrandDropDownListFor(model => model.OrderStatusId, ((OrderStatus)Model.OrderStatusId).ToSelectList())
+                        <admin-select asp-for="OrderStatusId" asp-items="((OrderStatus)Model.OrderStatusId).ToSelectList()" />
                         <div class="form-actions btn-group btn-group-devided">
                             <input type="submit" name="btnSaveOrderStatus" value="@T("Admin.Common.Save")" id="btnSaveOrderStatus" class="btn default" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
                             <input type="submit" name="btnCancelOrderStatus" value="@T("Admin.Common.Cancel")" onclick="toggleChangeOrderStatus(false);return false;" id="btnCancelOrderStatus" class="btn default" />
@@ -355,68 +355,68 @@
                                 <admin-label asp-for="OrderSubtotalInclTaxValue" />
                                 <div class="col-md-4 col-sm-6">
                                     <label class="control-label"> @T("Admin.Orders.Fields.Edit.InclTax") </label>
-                                    @Html.GrandEditorFor(model => model.OrderSubtotalInclTaxValue)
+                                    <admin-input asp-for="OrderSubtotalInclTaxValue" />
                                 </div>
                                 <div class="col-md-4 col-sm-6">
                                     <label class="control-label">@T("Admin.Orders.Fields.Edit.ExclTax") </label>
-                                    @Html.GrandEditorFor(model => model.OrderSubtotalExclTaxValue)
+                                    <admin-input asp-for="OrderSubtotalExclTaxValue" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <admin-label asp-for="OrderSubTotalDiscountInclTaxValue" />
                                 <div class="col-md-4 col-sm-6">
                                     <label class="control-label">@T("Admin.Orders.Fields.Edit.InclTax") </label>
-                                    @Html.GrandEditorFor(model => model.OrderSubTotalDiscountInclTaxValue)
+                                    <admin-input asp-for="OrderSubTotalDiscountInclTaxValue" />
                                 </div>
                                 <div class="col-md-4 col-sm-6">
                                     <label class="control-label">@T("Admin.Orders.Fields.Edit.ExclTax") </label>
-                                    @Html.EditorFor(model => model.OrderSubTotalDiscountExclTaxValue)
+                                    <admin-input asp-for="OrderSubTotalDiscountExclTaxValue" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <admin-label asp-for="OrderShippingInclTaxValue" />
                                 <div class="col-md-4 col-sm-6">
                                     <label class="control-label">@T("Admin.Orders.Fields.Edit.InclTax") </label>
-                                    @Html.EditorFor(model => model.OrderShippingInclTaxValue)
+                                    <admin-input asp-for="OrderShippingInclTaxValue" />
                                 </div>
                                 <div class="col-md-4 col-sm-6">
                                     <label class="control-label">@T("Admin.Orders.Fields.Edit.ExclTax")</label> 
-                                    @Html.EditorFor(model => model.OrderShippingExclTaxValue)
+                                    <admin-input asp-for="OrderShippingExclTaxValue" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <admin-label asp-for="PaymentMethodAdditionalFeeInclTaxValue" />
                                 <div class="col-md-4 col-sm-6">
                                     <label class="control-label"> @T("Admin.Orders.Fields.Edit.InclTax") </label>
-                                    @Html.EditorFor(model => model.PaymentMethodAdditionalFeeInclTaxValue)
+                                    <admin-input asp-for="PaymentMethodAdditionalFeeInclTaxValue" />
                                 </div>
                                 <div class="col-md-4 col-sm-6">
                                     <label class="control-label"> @T("Admin.Orders.Fields.Edit.ExclTax") </label>
-                                    @Html.EditorFor(model => model.PaymentMethodAdditionalFeeExclTaxValue)
+                                    <admin-input asp-for="PaymentMethodAdditionalFeeExclTaxValue" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <admin-label asp-for="TaxRatesValue" />
                                 <div class="col-md-8">
-                                    @Html.GrandEditorFor(model => model.TaxRatesValue)
+                                    <admin-input asp-for="TaxRatesValue" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <admin-label asp-for="TaxValue" />
                                 <div class="col-md-8">
-                                    @Html.GrandEditorFor(model => model.TaxValue)
+                                    <admin-input asp-for="TaxValue" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <admin-label asp-for="OrderTotalDiscountValue" />
                                 <div class="col-md-8">
-                                    @Html.GrandEditorFor(model => model.OrderTotalDiscountValue)
+                                    <admin-input asp-for="OrderTotalDiscountValue" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <admin-label asp-for="OrderTotalValue" />
                                 <div class="col-md-8">
-                                    @Html.GrandEditorFor(model => model.OrderTotalValue)
+                                    <admin-input asp-for="OrderTotalValue" />
                                 </div>
                             </div>
                         </div>
@@ -437,7 +437,7 @@
                     <admin-label asp-for="CardType" />
                     <div class="col-md-9 col-sm-9">
                         <label class="control-label" id="lblCardType">@Model.CardType</label>
-                        @Html.GrandEditorFor(model => model.CardType)
+                        <admin-input asp-for="CardType" />
                     </div>
                 </div>
             }
@@ -447,7 +447,7 @@
                     <admin-label asp-for="CardName" />
                     <div class="col-md-9 col-sm-9">
                         <label class="control-label" id="lblCardName">@Model.CardName</label>
-                        @Html.GrandEditorFor(model => model.CardName)
+                        <admin-input asp-for="CardName" />
                     </div>
                 </div>
             }
@@ -457,7 +457,7 @@
                     <admin-label asp-for="CardNumber" />
                     <div class="col-md-9 col-sm-9">
                         <label class="control-label" id="lblCardNumber">@Model.CardNumber</label>
-                        @Html.GrandEditorFor(model => model.CardNumber)
+                        <admin-input asp-for="CardNumber" />
                     </div>
                 </div>
             }
@@ -467,7 +467,7 @@
                     <admin-label asp-for="CardCvv2" />
                     <div class="col-md-9 col-sm-9">
                         <label class="control-label" id="lblCardCvv2">@Model.CardCvv2</label>
-                        @Html.GrandEditorFor(model => model.CardCvv2)
+                        <admin-input asp-for="CardCvv2" />
                     </div>
                 </div>
             }
@@ -477,7 +477,7 @@
                     <admin-label asp-for="CardExpirationMonth" />
                     <div class="col-md-9 col-sm-9">
                         <label class="control-label" id="lblCardExpirationMonth">@Model.CardExpirationMonth</label>
-                        @Html.GrandEditorFor(model => model.CardExpirationMonth)
+                        <admin-input asp-for="CardExpirationMonth" />
                     </div>
                 </div>
             }
@@ -487,7 +487,7 @@
                     <admin-label asp-for="CardExpirationYear" />
                     <div class="col-md-9 col-sm-9">
                         <label class="control-label" id="lblCardExpirationYear">@Model.CardExpirationYear</label>
-                        @Html.GrandEditorFor(model => model.CardExpirationYear)
+                        <admin-input asp-for="CardExpirationYear" />
                     </div>
                 </div>
             }

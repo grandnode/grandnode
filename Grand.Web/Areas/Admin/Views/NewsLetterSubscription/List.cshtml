@@ -4,8 +4,7 @@
     //page title
     ViewBag.Title = T("Admin.Promotions.newsLetterSubscriptions").Text;
 }
-@using (Html.BeginForm())
-{
+<form asp-controller="NewsletterSubscription" asp-action="List" method="post">
     <antiforgery-token />
 
     <div class="row">
@@ -212,29 +211,30 @@
             return data;
         }
     </script>
-}
-@*import emails form*@
-<div id="importcsv-window" style="display:none;">
-    <form asp-controller="NewsLetterSubscription" asp-action="ImportCsv" method="post" enctype="multipart/form-data">
-        <antiforgery-token />
-        <table style="text-align:left;">
-            <tr>
-                <td>
-                    @T("Admin.Common.CsvFile"):
-                </td>
-                <td>
-                    <input type="file" id="importcsvfile" name="importcsvfile" />
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <input type="submit" class="k-button" value="@T("Admin.Common.ImportFromCsv")" />
-                </td>
-            </tr>
-        </table>
-    </form>
-</div>
-<script type="text/javascript">
+</form>
+
+    @*import emails form*@
+    <div id="importcsv-window" style="display:none;">
+        <form asp-controller="NewsLetterSubscription" asp-action="ImportCsv" method="post" enctype="multipart/form-data">
+            <antiforgery-token />
+            <table style="text-align:left;">
+                <tr>
+                    <td>
+                        @T("Admin.Common.CsvFile"):
+                    </td>
+                    <td>
+                        <input type="file" id="importcsvfile" name="importcsvfile" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input type="submit" class="k-button" value="@T("Admin.Common.ImportFromCsv")" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <script type="text/javascript">
     $(document).ready(function () {
         $("#importcsv").click(function (e) {
             e.preventDefault();
@@ -250,4 +250,4 @@
             window.data('kendoWindow').center().open();
         });
     });
-</script>
+    </script>

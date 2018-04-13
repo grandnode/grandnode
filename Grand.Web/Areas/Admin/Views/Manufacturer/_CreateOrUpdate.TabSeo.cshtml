@@ -40,28 +40,28 @@
             <div class="form-group">
                 <admin-label asp-for="MetaKeywords" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(x => x.MetaKeywords)
+                    <admin-input asp-for="MetaKeywords" />
                     <span asp-validation-for="MetaKeywords"></span>
                 </div>
             </div>
             <div class="form-group">
                 <admin-label asp-for="MetaDescription" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandTextAreaFor(x => x.MetaDescription)
+                    <admin-textarea asp-for="MetaDescription"></admin-textarea>
                     <span asp-validation-for="MetaDescription"></span>
                 </div>
             </div>
             <div class="form-group">
                 <admin-label asp-for="MetaTitle" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(x => x.MetaTitle)
+                    <admin-input asp-for="MetaTitle" />
                     <span asp-validation-for="MetaTitle"></span>
                 </div>
             </div>
             <div class="form-group">
                 <admin-label asp-for="SeName" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(x => x.SeName)
+                    <admin-input asp-for="SeName" />
                     <span asp-validation-for="SeName"></span>
                 </div>
             </div>

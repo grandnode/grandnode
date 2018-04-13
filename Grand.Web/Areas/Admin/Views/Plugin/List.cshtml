@@ -38,13 +38,13 @@
                             <div class="form-group">
                                 <admin-label asp-for="SearchLoadModeId" />
                                 <div class="col-md-4 col-sm-6">
-                                    @Html.GrandDropDownListFor(model => model.SearchLoadModeId, Model.AvailableLoadModes)
+                                    <admin-select asp-for="SearchLoadModeId" asp-items="Model.AvailableLoadModes" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <admin-label asp-for="SearchGroup" />
                                 <div class="col-md-4 col-sm-6">
-                                    @Html.GrandDropDownListFor(model => model.SearchGroup, Model.AvailableGroups)
+                                    <admin-select asp-for="SearchGroup" asp-items="Model.AvailableGroups" />
                                 </div>
                             </div>
                         </div>

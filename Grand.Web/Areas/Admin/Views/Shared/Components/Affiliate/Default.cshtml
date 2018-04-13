@@ -4,33 +4,33 @@
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.StartDate)
+            <admin-label asp-for="StartDate" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.StartDate)
+                <admin-input asp-for="StartDate" />
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.EndDate)
+            <admin-label asp-for="EndDate" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.EndDate)
+                <admin-input asp-for="EndDate" />
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.OrderStatusId)
+            <admin-label asp-for="OrderStatusId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.OrderStatusId, Model.AvailableOrderStatuses)
+                <admin-select asp-for="OrderStatusId" asp-items="Model.AvailableOrderStatuses" />
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.PaymentStatusId)
+            <admin-label asp-for="PaymentStatusId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.PaymentStatusId, Model.AvailablePaymentStatuses)
+                <admin-select asp-for="PaymentStatusId" asp-items="Model.AvailablePaymentStatuses" />
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.ShippingStatusId)
+            <admin-label asp-for="ShippingStatusId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.ShippingStatusId, Model.AvailableShippingStatuses)
+                <admin-select asp-for="ShippingStatusId" asp-items="Model.AvailableShippingStatuses" />
             </div>
         </div>
     </div>

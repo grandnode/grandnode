@@ -75,7 +75,7 @@
         <div class="form-group">
             <admin-label asp-for="Body" />
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.Body, "RichEditor")
+                <admin-input asp-for="Body" asp-template="RichEditor" />
                 <span asp-validation-for="Body"></span>
             </div>
         </div>

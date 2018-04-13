@@ -1,13 +1,15 @@
-﻿@{
+﻿@model ProductModel.ProductAttributeValueModel
+@{
     Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
-}
-@model ProductModel.ProductAttributeValueModel
-@{    
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.AddNew").Text;
 }
-@using (Html.BeginForm())
-{
+<form asp-controller="Product" asp-action="ProductAttributeValueCreatePopup" method="post"
+      asp-route-ProductId="@Context.Request.Query["ProductId"]"
+      asp-route-productAttributeMappingId="@Context.Request.Query["ProductAttributeMappingId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]"
+      >
     <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
@@ -27,5 +29,4 @@
             </div>
         </div>
     </div>
-
-}
+</form>

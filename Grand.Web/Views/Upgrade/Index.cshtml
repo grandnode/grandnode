@@ -28,13 +28,10 @@
                     </div>
                 </div>
             </div>
-            
-            using (Html.BeginForm("Index", "Upgrade", FormMethod.Post, new { id = "upgrade-form" }))
-            {
+            <form asp-controller="Upgrade" asp-action="Index"  method="post" id="upgrade-form">
                 <div class="btn-group my-3">
                     <input type="submit" name="run-upgrade" class="btn btn-success upgrade-page" value="@T("UpgradeSystem.RunUpgrade")">
                 </div>
-
                 <script type="text/javascript">
                     $(document).ready(function () {
                         $('#upgrade-form').submit(function () {
@@ -48,8 +45,7 @@
                         });
                     });
                 </script>
-
-            }
+            </form>
         }
         else
         {

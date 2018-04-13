@@ -39,7 +39,7 @@
             <admin-label asp-for="Active" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.EditorFor(model => model.Active)
+                    <admin-input asp-for="Active" />
                     <span></span>
                 </label>
                 <span asp-validation-for="Active"></span>
@@ -49,7 +49,7 @@
             <admin-label asp-for="EnablePasswordLifetime" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.EditorFor(model => model.EnablePasswordLifetime)
+                    <admin-input asp-for="EnablePasswordLifetime" />
                     <span></span>
                 </label>
                 <span asp-validation-for="EnablePasswordLifetime"></span>

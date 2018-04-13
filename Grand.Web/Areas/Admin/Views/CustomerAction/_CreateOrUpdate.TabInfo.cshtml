@@ -1,6 +1,5 @@
 ﻿@model CustomerActionModel
 
-
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
@@ -39,7 +38,7 @@
             <div class="col-md-9 col-sm-9">
                 @if (Model.ConditionCount > 0)
                 {
-                    @Html.GrandDropDownListFor(model => model.ActionTypeId, Model.ActionType, new { @disabled = "disabled" })
+                    <admin-select asp-for="ActionTypeId" asp-items="Model.ActionType" disabled/>
                 }
                 else
                 {
@@ -58,7 +57,7 @@
         <div class="form-group">
             <admin-label asp-for="ConditionId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.ConditionId, ((Grand.Core.Domain.Customers.CustomerActionConditionEnum)Model.ConditionId).ToSelectList())
+                <admin-select asp-for="ConditionId" asp-items="((Grand.Core.Domain.Customers.CustomerActionConditionEnum)Model.ConditionId).ToSelectList()" />
                 <span asp-validation-for="ConditionId"></span>
                 <div class="note note-info margin-top-10">
                     <p>@T("admin.customers.actiontype.helpText.OneOfThem")</p>

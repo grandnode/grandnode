@@ -6,8 +6,10 @@
     ViewBag.Title = T("Admin.Catalog.Products.RelatedProducts.AddNew").Text;
 }
 
-@using (Html.BeginForm())
-{
+<form asp-controller="Product" asp-action="RelatedProductAddPopup"
+      asp-route-productId="@Context.Request.Query["productId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
     <antiforgery-token />
 
     <div class="row">
@@ -75,13 +77,13 @@
             </div>
         </div>
     </div>
-    if (ViewBag.RefreshPage == true)
+    @if (ViewBag.RefreshPage == true)
     {
-        <script type="text/javascript">
+    <script type="text/javascript">
             try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
             catch (e){}
             window.close();
-        </script>
+    </script>
     }
     <script>
         $(document).ready(function () {
@@ -189,4 +191,4 @@
             $('#mastercheckbox').prop('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
         }
     </script>
-}
+</form>

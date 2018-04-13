@@ -144,7 +144,7 @@
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.EditorFor(model => model.AllowCustomersToContactVendors)
+                                        <admin-input asp-for="AllowCustomersToContactVendors" />
                                         <span></span>
                                     </label>
                                     <span asp-validation-for="AllowCustomersToContactVendors"></span>

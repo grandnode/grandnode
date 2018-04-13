@@ -47,13 +47,13 @@
                             <div class="form-group">
                                 <admin-label asp-for="SearchCustomerRoleIds" class="control-label col-md-4 col-sm-4" />
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.EditorFor(model => model.SearchCustomerRoleIds, new { SelectList = Model.AvailableCustomerRoles })
+                                    <admin-input asp-for="SearchCustomerRoleIds" asp-template="MultiSelect" asp-selectitem="Model.AvailableCustomerRoles" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <admin-label asp-for="SearchCustomerTagIds" class="control-label col-md-4 col-sm-4" />
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.EditorFor(model => model.SearchCustomerTagIds, new { SelectList = Model.AvailableCustomerTags })
+                                    <admin-input asp-for="SearchCustomerTagIds" asp-template="MultiSelect" asp-selectitem="Model.AvailableCustomerTags" />
                                 </div>
                             </div>
                             <div class="form-group">

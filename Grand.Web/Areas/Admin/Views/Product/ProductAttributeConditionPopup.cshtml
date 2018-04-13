@@ -7,13 +7,12 @@
 }
 
 @*we add enctype = "multipart/form-data" because "File upload" attribute control type requires it*@
-@using (Html.BeginForm("ProductAttributeConditionPopup", "Product",
-        new { productAttributeMappingId = Model.ProductAttributeMappingId, btnId = ViewBag.btnId, formId = ViewBag.formId },
-        FormMethod.Post,
-        false,
-        new Dictionary<string, Object> { { "enctype", "multipart/form-data" } })
-    )
-{
+<form asp-controller="Product" asp-action="ProductAttributeConditionPopup" enctype="multipart/form-data" method="post"
+      asp-route-ProductId="@Context.Request.Query["ProductId"]"
+      asp-route-productAttributeMappingId="@Context.Request.Query["ProductAttributeMappingId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
+
     <antiforgery-token />
     <div asp-validation-summary="All"></div>
     <input asp-for="ProductId" type="hidden" />    
@@ -56,8 +55,7 @@
                                             <div class="form-group" id="pnlBasepriceUnit">
                                                 <admin-label asp-for="SelectedProductAttributeId" class="col-sm-3 control-label"/>
                                                 <div class="col-md-9 col-sm-9">
-                                                    @Html.GrandDropDownListFor(model => model.SelectedProductAttributeId, attributesList)
-
+                                                    <admin-select asp-for="SelectedProductAttributeId" asp-items="@(attributesList)" />
                                                     <script type="text/javascript">
                                                         $(document).ready(function() {
                                                             $("#@Html.FieldIdFor(model => model.SelectedProductAttributeId)").change(toggleProductAttributes);
@@ -190,4 +188,4 @@
             }
         </script>
 
-}
+</form>
