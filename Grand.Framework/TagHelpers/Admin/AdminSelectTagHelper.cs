@@ -32,7 +32,7 @@ namespace Grand.Framework.TagHelpers.Admin
             output.TagMode = TagMode.StartTagAndEndTag;
             var classValue = output.Attributes.ContainsName("class")
                                 ? $"{output.Attributes["class"].Value}"
-                                : "form-control";
+                                : "form-control k-input";
             output.Attributes.SetAttribute("class", classValue);
             
         }

@@ -47,8 +47,8 @@ namespace Grand.Framework.TagHelpers.Admin
 
             //merge classes
             var classValue = output.Attributes.ContainsName("class")
-                ? $"{output.Attributes["class"].Value} form-control"
-                : "form-control";
+                ? $"{output.Attributes["class"].Value}"
+                : "form-control k-input";
             output.Attributes.SetAttribute("class", classValue);
 
             //add disabled attribute
