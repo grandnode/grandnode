@@ -2,7 +2,7 @@
 @inject AdminAreaSettings adminAreaSettings
 @if (!String.IsNullOrEmpty(Model.Id))
 {
-    @Html.HiddenFor(x => x.AuctionEnded)
+    <input asp-for="AuctionEnded" type="hidden" />
 
     <div class="panel panel-default">
         <div class="panel-body">

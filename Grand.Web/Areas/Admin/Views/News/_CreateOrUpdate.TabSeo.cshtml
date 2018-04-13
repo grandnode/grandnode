@@ -47,7 +47,7 @@
             <div class="form-group">
                 <admin-label asp-for="MetaDescription" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandTextAreaFor(x => x.MetaDescription)
+                    <admin-textarea asp-for="MetaDescription"></admin-textarea>
                     <span asp-validation-for="MetaDescription"></span>
                 </div>
             </div>

@@ -21,7 +21,7 @@
         <div class="form-group">
             <admin-label asp-for="Description" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandTextAreaFor(model => model.Description)
+                <admin-textarea asp-for="Description"></admin-textarea>
                 <span asp-validation-for="Description"></span>
             </div>
         </div>
