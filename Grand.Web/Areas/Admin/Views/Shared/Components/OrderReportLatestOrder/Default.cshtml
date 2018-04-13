@@ -1,9 +1,4 @@
-﻿@{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
-}
-<div id="latest-orders-grid"></div>
+﻿<div id="latest-orders-grid"></div>
 <script>
     $(document).ready(function () {
         $("#latest-orders-grid").kendoGrid({

@@ -3,8 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.System.Maintenance").Text;
 }
-@using (Html.BeginForm())
-{
+<form asp-controller="Common" asp-action="Maintenance" method="post">
     <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
@@ -115,6 +114,4 @@
             </div>
         </div>
     </div>
-
-
-}
+</form>

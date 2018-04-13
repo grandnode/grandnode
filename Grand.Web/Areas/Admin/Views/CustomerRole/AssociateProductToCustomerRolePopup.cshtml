@@ -6,8 +6,12 @@
     ViewBag.Title = T("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Choose").Text;
 }
 
-@using (Html.BeginForm())
-{
+<form asp-controller="CustomerRole" asp-action="AssociateProductToCustomerRolePopup" method="post"
+      asp-route-CustomerRoleId="@Context.Request.Query["CustomerRoleId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-productIdInput="@Context.Request.Query["productIdInput"]"
+      asp-route-productNameInput="@Context.Request.Query["productNameInput"]"
+      >
     <antiforgery-token />
 
     <div class="row">
@@ -77,17 +81,17 @@
     </div>
 
 
-    if (ViewBag.RefreshPage == true)
+    @if (ViewBag.RefreshPage == true)
     {
-        <script type="text/javascript">
+    <script type="text/javascript">
     try {
-        window.opener.document.getElementById('@(ViewBag.productIdInput)').value = '@(ViewBag.productId)';
-        window.opener.document.getElementById('@(ViewBag.productNameInput)').innerHTML = '@(ViewBag.productName)';
-        window.opener.document.getElementById('@(ViewBag.btnId)').click();
+            window.opener.document.getElementById('@(Context.Request.Query["productIdInput"])').value = '@(ViewBag.productId)';
+            window.opener.document.getElementById('@(Context.Request.Query["productNameInput"])').innerHTML = '@(ViewBag.productName)';
+            window.opener.document.getElementById('@(Context.Request.Query["btnId"])').click();
     }
     catch (e){}
     window.close();
-        </script>
+    </script>
     }
 
     <input asp-for="AssociatedToProductId" type="hidden" />
@@ -186,4 +190,4 @@
             $('#save').click();
         }
     </script>
-}
+</form>
