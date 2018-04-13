@@ -1,8 +1,8 @@
 ﻿@model ProductModel
-@Html.ValidationSummary(false)
+@inject IEventPublisher eventPublisher
+<div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
-@Html.HiddenFor(model => model.Ticks)
-
+<input asp-for="Ticks" type="hidden" />
 <script>
     $('body').addClass('page-sidebar-closed');
     $('.page-sidebar-menu').addClass('page-sidebar-menu-closed');
@@ -16,7 +16,7 @@
                 open: {
                     effects: "fadeIn"
                 }
-            },            
+            },
             tabPosition: tabPos,
             select: tabstrip_on_tab_select
         });
@@ -84,7 +84,6 @@
                 @T("Admin.Catalog.Products.Reviews")
             </li>
         }
-        
 
     </ul>
     <div>
@@ -150,16 +149,14 @@
         </div>
     }
 </div>
-
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "product-edit");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock
     }
 }
-
 @*save selected tab index*@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">

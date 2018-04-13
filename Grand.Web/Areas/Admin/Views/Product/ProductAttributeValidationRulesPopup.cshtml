@@ -1,9 +1,7 @@
-﻿@{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
-}
+﻿@model ProductModel.ProductAttributeMappingModel
 @using Grand.Core.Domain.Catalog
-@model ProductModel.ProductAttributeMappingModel
 @{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules").Text;
 
@@ -22,42 +20,41 @@
                     </div>
                 </div>
                 <div class="portlet-body form">
-
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group" @(attributeControlType != AttributeControlType.TextBox && attributeControlType != AttributeControlType.MultilineTextbox ? Html.Raw("style='display: none;'") : null)>
-                                @Html.GrandLabelFor(model => model.ValidationMinLength, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <admin-label asp-for="ValidationMinLength" class="col-sm-3 control-label" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.EditorFor(model => model.ValidationMinLength)
-                                    @Html.ValidationMessageFor(model => model.ValidationMinLength)
+                                    <admin-input asp-for="ValidationMinLength" />
+                                    <span asp-validation-for="ValidationMinLength"></span>
                                 </div>
                             </div>
                             <div class="form-group" @(attributeControlType != AttributeControlType.TextBox && attributeControlType != AttributeControlType.MultilineTextbox ? Html.Raw("style='display: none;'") : null)>
-                                @Html.GrandLabelFor(model => model.ValidationMaxLength, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <admin-label asp-for="ValidationMaxLength" class="col-sm-3 control-label" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.ValidationMaxLength)
-                                    @Html.ValidationMessageFor(model => model.ValidationMaxLength)
+                                    <admin-input asp-for="ValidationMaxLength" />
+                                    <span asp-validation-for="ValidationMaxLength"></span>
                                 </div>
                             </div>
                             <div class="form-group" @(attributeControlType != AttributeControlType.FileUpload ? Html.Raw("style='display: none;'") : null)>
-                                @Html.GrandLabelFor(model => model.ValidationFileAllowedExtensions, new Dictionary<string, object> { { "class", "col-sm-3" } }))
+                                <admin-label asp-for="ValidationFileAllowedExtensions" class="col-sm-3 control-label" />)
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.EditorFor(model => model.ValidationFileAllowedExtensions)
-                                    @Html.ValidationMessageFor(model => model.ValidationFileAllowedExtensions)
+                                    <admin-input asp-for="ValidationFileAllowedExtensions" />
+                                    <span asp-validation-for="ValidationFileAllowedExtensions"></span>
                                 </div>
                             </div>
                             <div class="form-group" @(attributeControlType != AttributeControlType.FileUpload ? Html.Raw("style='display: none;'") : null)>
-                                @Html.GrandLabelFor(model => model.ValidationFileMaximumSize, new Dictionary<string, object> { { "class", "col-sm-3" } }))
+                                <admin-label asp-for="ValidationFileMaximumSize" class="col-sm-3 control-label" />)
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.EditorFor(model => model.ValidationFileMaximumSize)
-                                    @Html.ValidationMessageFor(model => model.ValidationFileMaximumSize)
+                                    <admin-input asp-for="ValidationFileMaximumSize" />
+                                    <span asp-validation-for="ValidationFileMaximumSize"></span>
                                 </div>
                             </div>
                             <div class="form-group" @(attributeControlType != AttributeControlType.TextBox && attributeControlType != AttributeControlType.MultilineTextbox ? Html.Raw("style='display: none;'") : null)>
-                                @Html.GrandLabelFor(model => model.DefaultValue, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <admin-label asp-for="DefaultValue" class="col-sm-3 control-label" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.DefaultValue)
-                                    @Html.ValidationMessageFor(model => model.DefaultValue)
+                                    <admin-input asp-for="DefaultValue" />
+                                    <span asp-validation-for="DefaultValue"></span>
                                 </div>
                             </div>
                             <div class="form-actions">
@@ -68,27 +65,24 @@
                                 </div>
                             </div>
                         </div>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-                               
-
-    if (ViewBag.RefreshPage == true)
+    @if (ViewBag.RefreshPage == true)
     {
-    <script type="text/javascript">
+        <script type="text/javascript">
         try {
             window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();
         } catch (e) {
         }
         window.close();
-    </script>
+        </script>
     }
-    if (!Model.ValidationRulesAllowed)
+    @if (!Model.ValidationRulesAllowed)
     {
         <div class="note note-danger">>This attribute type cannot have validation rules</div>
     }
-                                
 }

@@ -4,8 +4,10 @@
     //page title
     ViewBag.Title = string.Format(T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.EditAttributeDetails").Text, Model.ProductAttributeName, Model.ProductName);
 }
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "productattribute-form" }))
-{
+<form asp-controller="Product" asp-action="EditAttributeValues" id="productattribute-form" 
+      asp-route-ProductId="@Context.Request.Query["ProductId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
     <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
@@ -145,5 +147,4 @@
             });
         });
     </script>
-           
-}
+</form>

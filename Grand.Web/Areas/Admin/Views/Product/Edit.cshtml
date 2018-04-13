@@ -3,8 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.EditProductDetails").Text;
 }
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "product-form" }))
-{
+<form asp-controller="Product" asp-action="Edit" method="post" id="product-form">
     <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
@@ -37,46 +36,44 @@
             </div>
         </div>
     </div>
+</form>
 
-}
-@Html.DeleteConfirmation("product-delete")
-
-@*copy product form*@
-<div id="copyproduct-window" style="display:none;">
-            @using (Html.BeginForm("CopyProduct", "Product"))
-            {
-                <antiforgery-token />
-                @Html.HiddenFor(model => model.CopyProductModel.Id)
-                        <div class="form-horizontal">
-                            <div class="form-body">
-                                <div class="form-group">
-                                    @Html.GrandLabelFor(model => model.CopyProductModel.Name, new Dictionary<string, object> { { "class", "col-sm-4 col-md-4 control-label" } }, false)
-                                    <div class="col-md-8 col-sm-8">
-                                        @Html.GrandEditorFor(model => model.CopyProductModel.Name)
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    @Html.GrandLabelFor(model => model.CopyProductModel.Published, new Dictionary<string, object> { { "class", "col-sm-4 col-md-4 control-label" } }, false)
-                                    <div class="col-md-8 col-sm-8">
-                                        @Html.EditorFor(model => model.CopyProductModel.Published)
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    @Html.GrandLabelFor(model => model.CopyProductModel.CopyImages, new Dictionary<string, object> { { "class", "col-sm-4 col-md-4 control-label" } }, false)
-                                    <div class="col-md-8 col-sm-8">
-                                        @Html.GrandEditorFor(model => model.CopyProductModel.CopyImages)
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-actions">
-                                <div class="col-md-offset-3 col-sm-offset-3 col-md-6 col-sm-6">
-                                    <input type="submit" class="btn green" value="@T("Admin.Catalog.Products.Copy")" />
-                                </div>
-                            </div>
+    @Html.DeleteConfirmation("product-delete")
+    @*copy product form*@
+    <div id="copyproduct-window" style="display:none;">
+        <form asp-controller="Product" asp-action="CopyProduct" method="post">
+            <antiforgery-token />
+            <input asp-for="CopyProductModel.Id" type="hidden" />
+            <div class="form-horizontal">
+                <div class="form-body">
+                    <div class="form-group">
+                        <admin-label asp-for="CopyProductModel.Name" class="control-label col-md-4 col-sm-4" />
+                        <div class="col-md-8 col-sm-8">
+                            <admin-input asp-for="CopyProductModel.Name" />
                         </div>
-            }
-</div>
-<script type="text/javascript">
+                    </div>
+                    <div class="form-group">
+                        <admin-label asp-for="CopyProductModel.Published" class="control-label col-md-4 col-sm-4" />
+                        <div class="col-md-8 col-sm-8">
+                            <admin-input asp-for="CopyProductModel.Published" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <admin-label asp-for="CopyProductModel.CopyImages" class="control-label col-md-4 col-sm-4" />
+                        <div class="col-md-8 col-sm-8">
+                            <admin-input asp-for="CopyProductModel.CopyImages" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <div class="col-md-offset-3 col-sm-offset-3 col-md-6 col-sm-6">
+                        <input type="submit" class="btn green" value="@T("Admin.Catalog.Products.Copy")" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script type="text/javascript">
     $(document).ready(function () {
         $("#copyproduct").click(function (e) {
             e.preventDefault();
@@ -92,4 +89,4 @@
             window.data('kendoWindow').center().open();
         });
     });
-</script>
+    </script>

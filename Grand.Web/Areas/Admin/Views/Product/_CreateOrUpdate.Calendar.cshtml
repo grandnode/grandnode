@@ -1,77 +1,74 @@
 ﻿@model ProductModel
-@{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-}
+@inject AdminAreaSettings adminAreaSettings
 @using Grand.Core.Domain.Catalog;
 @if (!String.IsNullOrEmpty(Model.Id))
 {
     <div class="form-horizontal">
         <h2>@T("Admin.Catalog.Products.Calendar.Calendarconfiguration")</h2>
         <div class="form-body">
-            <div class="form-group">                
-                    <div class="form-group">
-                        @Html.GrandLabelFor(model => model.CalendarModel.StartDateUtc)
-                        <div class="col-md-2 col-sm-2">
-                            @Html.GrandEditorFor(model => model.CalendarModel.StartDateUtc)
+            <div class="form-group">
+                <div class="form-group">
+                    <admin-label asp-for="CalendarModel.StartDateUtc" />
+                    <div class="col-md-2 col-sm-2">
+                        <admin-input asp-for="CalendarModel.StartDateUtc" />
+                    </div>
+                    <div class="col-md-6" id="pnlStartTime">
+                        <label class="col-md-2 control-label">@T("Admin.Catalog.Products.Fields.Calendar.StartTime")</label>
+                        <div class="col-md-3 col-sm-3">
+                            <admin-input asp-for="CalendarModel.StartTime" />
                         </div>
-                        <div class="col-md-6" id="pnlStartTime">
-                            <label class="col-md-2 control-label">@T("Admin.Catalog.Products.Fields.Calendar.StartTime")</label>
-                            <div class="col-md-3 col-sm-3">
-                                @Html.GrandEditorFor(model => model.CalendarModel.StartTime)
-                            </div>
-                        </div>
+                    </div>
 
+                </div>
+                <div class="form-group">
+                    <admin-label asp-for="CalendarModel.EndDateUtc" />
+                    <div class="col-md-2 col-sm-2">
+                        <admin-input asp-for="CalendarModel.EndDateUtc" />
                     </div>
-                    <div class="form-group" >
-                        @Html.GrandLabelFor(model => model.CalendarModel.EndDateUtc)
-                        <div class="col-md-2 col-sm-2">
-                            @Html.GrandEditorFor(model => model.CalendarModel.EndDateUtc)
-                        </div>
-                        <div class="col-md-6" id="pnlEndTime">
-                            <label class="col-md-2 control-label">@T("Admin.Catalog.Products.Fields.Calendar.EndTime")</label>
-                            <div class="col-md-3 col-sm-3">
-                                @Html.GrandEditorFor(model => model.CalendarModel.EndTime)
-                            </div>
-                        </div>
-                     </div>
-                    <div class="form-group" id="pnlIncludeBothDates">
-                        @Html.GrandLabelFor(model => model.CalendarModel.IncBothDate)
-                        <div class="col-md-9 col-sm-9">
-                            <label class="mt-checkbox mt-checkbox-outline">
-                                @Html.GrandEditorFor(model => model.CalendarModel.IncBothDate)
-                                <span></span>
-                            </label>
+                    <div class="col-md-6" id="pnlEndTime">
+                        <label class="col-md-2 control-label">@T("Admin.Catalog.Products.Fields.Calendar.EndTime")</label>
+                        <div class="col-md-3 col-sm-3">
+                            <admin-input asp-for="CalendarModel.EndTime" />
                         </div>
                     </div>
+                </div>
+                <div class="form-group" id="pnlIncludeBothDates">
+                    <admin-label asp-for="CalendarModel.IncBothDate" />
+                    <div class="col-md-9 col-sm-9">
+                        <label class="mt-checkbox mt-checkbox-outline">
+                            <admin-input asp-for="CalendarModel.IncBothDate" />
+                            <span></span>
+                        </label>
+                    </div>
+                </div>
             </div>
-            <div class="form-inline" >
-                @Html.GrandLabelFor(model => model.CalendarModel.Interval)
+            <div class="form-inline">
+                <admin-label asp-for="CalendarModel.Interval" />
                 <div class="col-md-9 col-sm-9">
                     <span id="pnlInterval">
-                        @Html.GrandEditorFor(model => model.CalendarModel.Interval)
+                        <admin-input asp-for="CalendarModel.Interval" />
                     </span>
-                    @Html.GrandDropDownListFor(model => model.CalendarModel.IntervalUnit, ((IntervalUnit)Model.CalendarModel.IntervalUnit).ToSelectList(), new { @class = "form-control input-xsmall", style = "height: 30px;padding: 0px; margin-bottom: 3px; margin-top: 3px; " })
+                    <admin-select asp-for="CalendarModel.IntervalUnit" asp-items="((IntervalUnit)Model.CalendarModel.IntervalUnit).ToSelectList()" class = "form-control input-xsmall" style = "height: 30px;padding: 0px; margin-bottom: 3px; margin-top: 3px; "/>
                 </div>
             </div>
             <div class="form-group" id="pnlQuantity">
-                @Html.GrandLabelFor(model => model.CalendarModel.Quantity)
+                <admin-label asp-for="CalendarModel.Quantity" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.CalendarModel.Quantity)
+                    <admin-input asp-for="CalendarModel.Quantity" />
                 </div>
             </div>
-        
+
             <div class="form-group" id="pnlResource">
-                @Html.GrandLabelFor(model => model.CalendarModel.Resource)
+                <admin-label asp-for="CalendarModel.Resource" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.CalendarModel.Resource)
+                    <admin-input asp-for="CalendarModel.Resource" />
                 </div>
             </div>
 
             <div class="form-group" id="pnlParameter">
-                @Html.GrandLabelFor(model => model.CalendarModel.Parameter)
+                <admin-label asp-for="CalendarModel.Parameter" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.CalendarModel.Parameter)
+                    <admin-input asp-for="CalendarModel.Parameter" />
                 </div>
             </div>
             <div class="portlet light bordered">
@@ -82,37 +79,37 @@
                     <div class="form-group">
                         <div class="mt-checkbox-inline">
                             <label class="mt-checkbox">
-                                @Html.GrandEditorFor(model => model.CalendarModel.Monday)
+                                <admin-input asp-for="CalendarModel.Monday" />
                                 @T("Admin.Catalog.Products.Fields.Calendar.Monday")
                                 <span></span>
                             </label>
                             <label class="mt-checkbox">
-                                @Html.GrandEditorFor(model => model.CalendarModel.Tuesday)
+                                <admin-input asp-for="CalendarModel.Tuesday" />
                                 @T("Admin.Catalog.Products.Fields.Calendar.Tuesday")
                                 <span></span>
                             </label>
                             <label class="mt-checkbox">
-                                @Html.GrandEditorFor(model => model.CalendarModel.Wednesday)
+                                <admin-input asp-for="CalendarModel.Wednesday" />
                                 @T("Admin.Catalog.Products.Fields.Calendar.Wednesday")
                                 <span></span>
                             </label>
                             <label class="mt-checkbox">
-                                @Html.GrandEditorFor(model => model.CalendarModel.Thursday)
+                                <admin-input asp-for="CalendarModel.Thursday" />
                                 @T("Admin.Catalog.Products.Fields.Calendar.Thursday")
                                 <span></span>
                             </label>
                             <label class="mt-checkbox">
-                                @Html.GrandEditorFor(model => model.CalendarModel.Friday)
+                                <admin-input asp-for="CalendarModel.Friday" />
                                 @T("Admin.Catalog.Products.Fields.Calendar.Friday")
                                 <span></span>
                             </label>
                             <label class="mt-checkbox">
-                                @Html.GrandEditorFor(model => model.CalendarModel.Saturday)
+                                <admin-input asp-for="CalendarModel.Saturday" />
                                 @T("Admin.Catalog.Products.Fields.Calendar.Saturday")
                                 <span></span>
                             </label>
                             <label class="mt-checkbox">
-                                @Html.GrandEditorFor(model => model.CalendarModel.Sunday)
+                                <admin-input asp-for="CalendarModel.Sunday" />
                                 @T("Admin.Catalog.Products.Fields.Calendar.Sunday")
                                 <span></span>
                             </label>
@@ -295,14 +292,14 @@
                     // Cancel the changes
                     this.cancelChanges();
                 },
-                pageSize: @(defaultGridPageSize),
+                pageSize: @(adminAreaSettings.DefaultGridPageSize),
                 serverPaging: true,
                 serverFiltering: true,
                 serverSorting: true
             },
             pageable: {
                 refresh: true,
-                pageSizes: [@(gridPageSizes)]
+                pageSizes: [@(adminAreaSettings.GridPageSizes)]
             },
             editable: {
                 confirmation: false,

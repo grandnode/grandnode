@@ -1,16 +1,12 @@
 ﻿@using Grand.Core.Domain.Catalog
 @model ProductListModel
+@inject AdminAreaSettings adminAreaSettings
 @{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.Manage").Text;
 }
-@using (Html.BeginForm(@*"List","Product", FormMethod.Post*@))
-{
+<form asp-controller="Product" asp-action="List" method="post" >
     <antiforgery-token />
-
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -65,34 +61,34 @@
                     <div class="form-horizontal">
                         <div class="form-body col-md-6">
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchProductName, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="SearchProductName" class="control-label col-md-4 col-sm-4"/>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandEditorFor(model => model.SearchProductName)
+                                    <admin-input asp-for="SearchProductName" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchProductTypeId, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="SearchProductTypeId" class="control-label col-md-4 col-sm-4"/>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandDropDownListFor(model => model.SearchProductTypeId, Model.AvailableProductTypes)
+                                    <admin-select asp-for="SearchProductTypeId" asp-items="Model.AvailableProductTypes" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchPublishedId, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="SearchPublishedId" class="control-label col-md-4 col-sm-4"/>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandDropDownListFor(model => model.SearchPublishedId, Model.AvailablePublishedOptions)
+                                    <admin-select asp-for="SearchPublishedId" asp-items="Model.AvailablePublishedOptions" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchWarehouseId, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="SearchWarehouseId" class="control-label col-md-4 col-sm-4"/>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandDropDownListFor(model => model.SearchWarehouseId, Model.AvailableWarehouses)
+                                    <admin-select asp-for="SearchWarehouseId" asp-items="Model.AvailableWarehouses" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.GoDirectlyToSku, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="GoDirectlyToSku" class="control-label col-md-4 col-sm-4"/>
                                 <div class="col-md-8 col-sm-8">
                                     <div class="input-group" style="text-align:left">
-                                        @Html.GrandEditorFor(model => model.GoDirectlyToSku)
+                                        <admin-input asp-for="GoDirectlyToSku" />
                                         <span class="input-group-btn">
                                             <input type="submit" id="go-to-product-by-sku" name="go-to-product-by-sku" class="btn default" value="@T("Admin.Common.Go")" />
                                         </span>
@@ -102,36 +98,36 @@
                         </div>
                         <div class="form-body col-md-6">
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchCategoryId, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="SearchCategoryId" class="control-label col-md-4 col-sm-4"/>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandDropDownListFor(model => model.SearchCategoryId, Model.AvailableCategories)
+                                    <admin-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchIncludeSubCategories, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="SearchIncludeSubCategories" class="control-label col-md-4 col-sm-4"/>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.SearchIncludeSubCategories)
+                                        <admin-input asp-for="SearchIncludeSubCategories" />
                                         <span></span>
                                     </label>
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchManufacturerId, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="SearchManufacturerId" class="control-label col-md-4 col-sm-4"/>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandDropDownListFor(model => model.SearchManufacturerId, Model.AvailableManufacturers)
+                                    <admin-select asp-for="SearchManufacturerId" asp-items="Model.AvailableManufacturers" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchStoreId, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="SearchStoreId" class="control-label col-md-4 col-sm-4"/>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandDropDownListFor(model => model.SearchStoreId, Model.AvailableStores)
+                                    <admin-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
                                 </div>
                             </div>
                             <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-                                @Html.GrandLabelFor(model => model.SearchVendorId, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="SearchVendorId" class="control-label col-md-4 col-sm-4"/>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandDropDownListFor(model => model.SearchVendorId, Model.AvailableVendors)
+                                    <admin-select asp-for="SearchVendorId" asp-items="Model.AvailableVendors" />
                                 </div>
                             </div>
                         </div>
@@ -175,14 +171,14 @@
                         // Cancel the changes
                         this.cancelChanges();
                     },
-                    pageSize: @(defaultGridPageSize),
+                    pageSize: @(adminAreaSettings.DefaultGridPageSize),
                     serverPaging: true,
                     serverFiltering: true,
                     serverSorting: true
                 },
                 pageable: {
                     refresh: true,
-                    pageSizes: [@(gridPageSizes)]
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
                 },
                 editable: {
                     confirmation: false,
@@ -364,41 +360,40 @@
             $('#mastercheckbox').prop('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
         }
     </script>
-}
-@*import products form*@
-<div class="modal-dialog" id="importexcel-window" style="display:none; padding: 0 10px;">
-    @using (Html.BeginForm("ImportExcel", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
-    {
-        <antiforgery-token />
+</form>
 
-        <em>@T("Admin.Catalog.Products.List.ImportFromExcelTip")</em>
-        <div class="form-group">
-            &nbsp;
-        </div>
-        <div class="form-group">
-            <div class="col-md-2" style="margin-top: 2px; height: 34px; padding-left: 25px;">
-                <label class="control-label">
-                    @T("Admin.Common.ExcelFile")
-                </label>
-            </div>
-            <div class="col-md-10">
-                <input type="file" id="importexcelfile" name="importexcelfile" />
-            </div>
-        </div>
-        <div class="form-group">
-            &nbsp;
-        </div>
-        <div class="form-group">
-            <div class="col-md-2">
+    @*import products form*@
+<div class="modal-dialog" id="importexcel-window" style="display:none; padding: 0 10px;">
+        <form asp-controller="Product" asp-action="ImportExcel" method="post" enctype="multipart/form-data">
+            <antiforgery-token />
+            <em>@T("Admin.Catalog.Products.List.ImportFromExcelTip")</em>
+            <div class="form-group">
                 &nbsp;
             </div>
-            <div class="col-md-10 text-right mt-10">
-                <input type="submit" class="k-button" value="@T("Admin.Common.ImportFromExcel")" />
+            <div class="form-group">
+                <div class="col-md-2" style="margin-top: 2px; height: 34px; padding-left: 25px;">
+                    <label class="control-label">
+                        @T("Admin.Common.ExcelFile")
+                    </label>
+                </div>
+                <div class="col-md-10">
+                    <input type="file" id="importexcelfile" name="importexcelfile" />
+                </div>
             </div>
-        </div>
-    }
+            <div class="form-group">
+                &nbsp;
+            </div>
+            <div class="form-group">
+                <div class="col-md-2">
+                    &nbsp;
+                </div>
+                <div class="col-md-10 text-right mt-10">
+                    <input type="submit" class="k-button" value="@T("Admin.Common.ImportFromExcel")" />
+                </div>
+            </div>
+        </form>
 </div>
-<script type="text/javascript">
+    <script type="text/javascript">
         $(document).ready(function () {
             $("#importexcel").click(function (e) {
                 e.preventDefault();
@@ -413,14 +408,14 @@
                 window.data('kendoWindow').center().open();
             });
         });
-</script>
-@*export selected (XML). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
-@using (Html.BeginForm("ExportXmlSelected", "Product", FormMethod.Post, new { id = "export-xml-selected-form" }))
-{
-    <antiforgery-token />
-    <input type="hidden" id="selectedIds" name="selectedIds" value="" />
-}
-<script type="text/javascript">
+    </script>
+    @*export selected (XML). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
+    <form asp-controller="Product" asp-action="ExportXmlSelected" method="post" id = "export-xml-selected-form">
+        <antiforgery-token />
+        <input type="hidden" id="selectedIds" name="selectedIds" value="" />
+    </form>
+
+    <script type="text/javascript">
 
         $(document).ready(function () {
             $('#exportxml-selected').click(function (e) {
@@ -432,15 +427,13 @@
             });
         });
 
-</script>
-@*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
-@using (Html.BeginForm("ExportExcelSelected", "Product", FormMethod.Post, new { id = "export-excel-selected-form" }))
-{
-    <antiforgery-token />
-    <input type="hidden" id="selectedIds" name="selectedIds" value="" />
-}
-<script type="text/javascript">
-
+    </script>
+    @*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
+    <form asp-controller="Product" asp-action="ExportExcelSelected" method="post" id = "export-excel-selected-form">
+        <antiforgery-token />
+        <input type="hidden" id="selectedIds" name="selectedIds" value="" />
+    </form>
+    <script type="text/javascript">
         $(document).ready(function () {
             $('#exportexcel-selected').click(function (e) {
                 e.preventDefault();
@@ -450,5 +443,4 @@
                 return false;
             });
         });
-
-</script>
+    </script>

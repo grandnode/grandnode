@@ -1,14 +1,12 @@
 ﻿@model ProductModel
-@{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-}
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div id="reviews-grid"></div>
-        </div>
+@inject AdminAreaSettings adminAreaSettings
+ 
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div id="reviews-grid"></div>
     </div>
-    <script>
+</div>
+<script>
         $(document).ready(function () {
             $("#reviews-grid").kendoGrid({
                 dataSource: {
@@ -30,14 +28,14 @@
                         // Cancel the changes
                         this.cancelChanges();
                     },
-                    pageSize: @(defaultGridPageSize),
+                    pageSize: @(adminAreaSettings.DefaultGridPageSize),
                     serverPaging: true,
                     serverFiltering: true,
                     serverSorting: true
                 },
                 pageable: {
                     refresh: true,
-                    pageSizes: [@(gridPageSizes)]
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
                 },
                 editable: {
                     confirmation: false,
@@ -83,4 +81,4 @@
                 }]
             });
         });
-    </script>
+</script>

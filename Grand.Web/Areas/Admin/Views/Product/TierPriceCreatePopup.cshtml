@@ -7,8 +7,10 @@
     ViewBag.Title = T("Admin.Catalog.Products.TierPrices.AddNew").Text;
 }
 
-@using (Html.BeginForm())
-{
+<form asp-controller="Product" asp-action="TierPriceCreatePopup"
+      asp-route-ProductId="@Context.Request.Query["ProductId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
     <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
@@ -28,7 +30,4 @@
             </div>
         </div>
     </div>
-
-
-
-}
+</form>

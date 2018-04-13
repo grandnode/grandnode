@@ -1,17 +1,15 @@
 ﻿@model ProductModel
-@{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-}
+@inject AdminAreaSettings adminAreaSettings
+
 <div class="note note-info">
     @T("Admin.Catalog.Products.PurchasedWithOrders.Hint")
 </div>
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div id="purchased-with-orders-grid"></div>
-        </div>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div id="purchased-with-orders-grid"></div>
     </div>
-    <script>
+</div>
+<script>
         $(document).ready(function () {
             $("#purchased-with-orders-grid").kendoGrid({
                 dataSource: {
@@ -33,14 +31,14 @@
                         // Cancel the changes
                         this.cancelChanges();
                     },
-                    pageSize: @(defaultGridPageSize),
+                    pageSize: @(adminAreaSettings.DefaultGridPageSize),
                     serverPaging: true,
                     serverFiltering: true,
                     serverSorting: true
                 },
                 pageable: {
                     refresh: true,
-                    pageSizes: [@(gridPageSizes)]
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
                 },
                 editable: {
                     confirmation: false,
@@ -56,7 +54,7 @@
                     title: "@T("Admin.Orders.Fields.CustomerEmail")",
                     width: 200
                 },
-                    @if (!Model.IsLoggedInAsVendor)
+                @if (!Model.IsLoggedInAsVendor)
                 {
                     <text>{
                         field: "OrderStatus",
@@ -88,4 +86,4 @@
                 }]
             });
         });
-    </script>
+</script>
