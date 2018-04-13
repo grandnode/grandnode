@@ -305,7 +305,7 @@ namespace Grand.Services.ExportImport
             {
                 xmlWriter.WriteStartElement("Product");
 
-                xmlWriter.WriteElementString("ProductId", null, product.Id.ToString());
+                xmlWriter.WriteElementString("ProductId", null, product.Id);
                 xmlWriter.WriteElementString("ProductTypeId", null, product.ProductTypeId.ToString());
                 xmlWriter.WriteElementString("ParentGroupedProductId", null, product.ParentGroupedProductId);
                 xmlWriter.WriteElementString("VisibleIndividually", null, product.VisibleIndividually.ToString());
@@ -314,7 +314,7 @@ namespace Grand.Services.ExportImport
                 xmlWriter.WriteElementString("FullDescription", null, product.FullDescription);
                 xmlWriter.WriteElementString("AdminComment", null, product.AdminComment);
                 xmlWriter.WriteElementString("VendorId", null, product.VendorId);
-                xmlWriter.WriteElementString("ProductTemplateId", null, product.ProductTemplateId.ToString());
+                xmlWriter.WriteElementString("ProductTemplateId", null, product.ProductTemplateId);
                 xmlWriter.WriteElementString("ShowOnHomePage", null, product.ShowOnHomePage.ToString());
                 xmlWriter.WriteElementString("MetaKeywords", null, product.MetaKeywords);
                 xmlWriter.WriteElementString("MetaDescription", null, product.MetaDescription);
@@ -400,8 +400,6 @@ namespace Grand.Services.ExportImport
                 xmlWriter.WriteElementString("CreatedOnUtc", null, product.CreatedOnUtc.ToString());
                 xmlWriter.WriteElementString("UpdatedOnUtc", null, product.UpdatedOnUtc.ToString());
 
-
-
                 xmlWriter.WriteStartElement("ProductDiscounts");
                 
                 foreach (var appliedDiscount in product.AppliedDiscounts)
@@ -435,7 +433,7 @@ namespace Grand.Services.ExportImport
                 xmlWriter.WriteEndElement();
 
                 xmlWriter.WriteStartElement("ProductAttributes");
-                var productAttributMappings = product.ProductAttributeMappings; //_productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+                var productAttributMappings = product.ProductAttributeMappings; 
                 foreach (var productAttributeMapping in productAttributMappings)
                 {
                     xmlWriter.WriteStartElement("ProductAttributeMapping");
@@ -497,36 +495,27 @@ namespace Grand.Services.ExportImport
                     xmlWriter.WriteEndElement();
                 }
                 xmlWriter.WriteEndElement();
-
-
-
-
-
-
-
-
-
                 xmlWriter.WriteStartElement("ProductPictures");
                 var productPictures = product.ProductPictures;
                 foreach (var productPicture in productPictures)
                 {
                     xmlWriter.WriteStartElement("ProductPicture");
-                    xmlWriter.WriteElementString("ProductPictureId", null, productPicture.Id.ToString());
-                    xmlWriter.WriteElementString("PictureId", null, productPicture.PictureId.ToString());
+                    xmlWriter.WriteElementString("ProductPictureId", null, productPicture.Id);
+                    xmlWriter.WriteElementString("PictureId", null, productPicture.PictureId);
                     xmlWriter.WriteElementString("DisplayOrder", null, productPicture.DisplayOrder.ToString());
                     xmlWriter.WriteEndElement();
                 }
                 xmlWriter.WriteEndElement();
                 
                 xmlWriter.WriteStartElement("ProductCategories");
-                var productCategories = product.ProductCategories; //_categoryService.GetProductCategoriesByProductId(product.Id);
+                var productCategories = product.ProductCategories; 
                 if (productCategories != null)
                 {
                     foreach (var productCategory in productCategories)
                     {
                         xmlWriter.WriteStartElement("ProductCategory");
-                        xmlWriter.WriteElementString("ProductCategoryId", null, productCategory.Id.ToString());
-                        xmlWriter.WriteElementString("CategoryId", null, productCategory.CategoryId.ToString());
+                        xmlWriter.WriteElementString("ProductCategoryId", null, productCategory.Id);
+                        xmlWriter.WriteElementString("CategoryId", null, productCategory.CategoryId);
                         xmlWriter.WriteElementString("IsFeaturedProduct", null, productCategory.IsFeaturedProduct.ToString());
                         xmlWriter.WriteElementString("DisplayOrder", null, productCategory.DisplayOrder.ToString());
                         xmlWriter.WriteEndElement();
@@ -535,14 +524,14 @@ namespace Grand.Services.ExportImport
                 xmlWriter.WriteEndElement();
 
                 xmlWriter.WriteStartElement("ProductManufacturers");
-                var productManufacturers = product.ProductManufacturers; // _manufacturerService.GetProductManufacturersByProductId(product.Id);
+                var productManufacturers = product.ProductManufacturers; 
                 if (productManufacturers != null)
                 {
                     foreach (var productManufacturer in productManufacturers)
                     {
                         xmlWriter.WriteStartElement("ProductManufacturer");
-                        xmlWriter.WriteElementString("ProductManufacturerId", null, productManufacturer.Id.ToString());
-                        xmlWriter.WriteElementString("ManufacturerId", null, productManufacturer.ManufacturerId.ToString());
+                        xmlWriter.WriteElementString("ProductManufacturerId", null, productManufacturer.Id);
+                        xmlWriter.WriteElementString("ManufacturerId", null, productManufacturer.ManufacturerId);
                         xmlWriter.WriteElementString("IsFeaturedProduct", null, productManufacturer.IsFeaturedProduct.ToString());
                         xmlWriter.WriteElementString("DisplayOrder", null, productManufacturer.DisplayOrder.ToString());
                         xmlWriter.WriteEndElement();
@@ -555,8 +544,8 @@ namespace Grand.Services.ExportImport
                 foreach (var productSpecificationAttribute in productSpecificationAttributes)
                 {
                     xmlWriter.WriteStartElement("ProductSpecificationAttribute");
-                    xmlWriter.WriteElementString("ProductSpecificationAttributeId", null, productSpecificationAttribute.Id.ToString());
-                    xmlWriter.WriteElementString("SpecificationAttributeOptionId", null, productSpecificationAttribute.SpecificationAttributeOptionId.ToString());
+                    xmlWriter.WriteElementString("ProductSpecificationAttributeId", null, productSpecificationAttribute.Id);
+                    xmlWriter.WriteElementString("SpecificationAttributeOptionId", null, productSpecificationAttribute.SpecificationAttributeOptionId);
                     xmlWriter.WriteElementString("CustomValue", null, productSpecificationAttribute.CustomValue);
                     xmlWriter.WriteElementString("AllowFiltering", null, productSpecificationAttribute.AllowFiltering.ToString());
                     xmlWriter.WriteElementString("ShowOnProductPage", null, productSpecificationAttribute.ShowOnProductPage.ToString());
@@ -672,8 +661,8 @@ namespace Grand.Services.ExportImport
                 new PropertyByName<Product>("Length", p => p.Length),
                 new PropertyByName<Product>("Width", p => p.Width),
                 new PropertyByName<Product>("Height", p => p.Height),
-                new PropertyByName<Product>("CategoryIds", p =>  string.Join(";", p.ProductCategories.Select(n => n.CategoryId.ToString()).ToArray())),
-                new PropertyByName<Product>("ManufacturerIds", p=>  string.Join(";", p.ProductManufacturers.Select(n => n.ManufacturerId.ToString()).ToArray())),
+                new PropertyByName<Product>("CategoryIds", p =>  string.Join(";", p.ProductCategories.Select(n => n.CategoryId).ToArray())),
+                new PropertyByName<Product>("ManufacturerIds", p=>  string.Join(";", p.ProductManufacturers.Select(n => n.ManufacturerId).ToArray())),
                 new PropertyByName<Product>("Picture1", p => GetPictures(p)[0]),
                 new PropertyByName<Product>("Picture2", p => GetPictures(p)[1]),
                 new PropertyByName<Product>("Picture3", p => GetPictures(p)[2])
@@ -1106,7 +1095,6 @@ namespace Grand.Services.ExportImport
                 {
                     var worksheet = xlPackage.Workbook.Worksheets.Add(typeof(T).Name);
                     var manager = new PropertyManager<T>(properties);
-                    //manager.WriteCaption(worksheet, )
                     manager.WriteCaption(worksheet, SetCaptionStyle);
 
                     var row = 2;
