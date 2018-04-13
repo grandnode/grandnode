@@ -18,6 +18,5 @@ namespace Grand.Web.Models.Catalog
             public string CurrentCategoryId { get; set; }
             public CategorySimpleModel Category { get; set; }
         }
-
     }
 }

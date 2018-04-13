@@ -1,0 +1,20 @@
+﻿@model Grand.Web.Models.Knowledgebase.KnowledgebaseArticleModel
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Knowledgebase").Text);
+}
+
+@Html.AntiForgeryToken()
+
+@section left {
+    @await Component.InvokeAsync("KnowledgebaseCategories", new Grand.Web.Models.Knowledgebase.KnowledgebaseHomePageModel { CurrentCategoryId = Model.ParentCategoryId })
+}
+
+<h1 class="h2 generalTitle">
+    @Model.Name
+    <a class=" fa fa-home pull-right" href="@Url.RouteUrl("Knowledgebase")"></a>
+</h1>
+
+@Html.Raw(@Model.Content)

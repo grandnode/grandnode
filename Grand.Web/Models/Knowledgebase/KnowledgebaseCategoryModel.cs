@@ -12,6 +12,8 @@ namespace Grand.Web.Models.Knowledgebase
 
         public string Description { get; set; }
 
+        public bool IsCurrent { get; set; }
+
         public List<KnowledgebaseCategoryModel> Children { get; set; }
     }
 }

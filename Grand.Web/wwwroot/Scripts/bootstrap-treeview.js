@@ -581,8 +581,8 @@
 					);
 			}
 
-			// Add text
-			if (_this.options.enableLinks) {
+            // Add text
+            if (_this.options.enableLinks) {
 				// Add hyperlink
 				treeItem
 					.append($(_this.template.link)

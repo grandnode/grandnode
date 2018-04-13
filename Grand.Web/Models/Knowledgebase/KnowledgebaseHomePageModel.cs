@@ -11,6 +11,8 @@ namespace Grand.Web.Models.Knowledgebase
     {
         public List<KnowledgebaseArticleModel> Articles { get; set; }
         public List<KnowledgebaseCategoryModel> Categories { get; set; }
+        public string CurrentCategoryId { get; set; }
+        public string CurrentCategoryDescription { get; set; }
 
         public KnowledgebaseHomePageModel()
         {

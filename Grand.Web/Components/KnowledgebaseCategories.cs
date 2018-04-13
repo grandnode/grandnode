@@ -1,5 +1,6 @@
 ﻿using Grand.Core.Domain.Knowledgebase;
 using Grand.Services.Knowledgebase;
+using Grand.Services.Localization;
 using Grand.Web.Models.Knowledgebase;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -20,12 +21,10 @@ namespace Grand.Web.ViewComponents
             this._knowledgebaseSettings = knowledgebaseSettings;
         }
 
-        public IViewComponentResult Invoke()
+        public IViewComponentResult Invoke(KnowledgebaseHomePageModel model)
         {
             if (!_knowledgebaseSettings.Enabled)
                 return Content("");
-
-            var model = new KnowledgebaseHomePageModel();
 
             var categories = _knowledgebaseService.GetPublicKnowledgebaseCategories();
 
@@ -36,11 +35,12 @@ namespace Grand.Web.ViewComponents
                     var newNode = new KnowledgebaseCategoryModel
                     {
                         Id = category.Id,
-                        Name = category.Name,
-                        Children = new List<KnowledgebaseCategoryModel>()
+                        Name = category.GetLocalized(y => y.Name),
+                        Children = new List<KnowledgebaseCategoryModel>(),
+                        IsCurrent = model.CurrentCategoryId == category.Id
                     };
 
-                    FillChildNodes(newNode, categories);
+                    FillChildNodes(newNode, categories, model.CurrentCategoryId);
 
                     model.Categories.Add(newNode);
                 }
@@ -49,7 +49,7 @@ namespace Grand.Web.ViewComponents
             return View(model);
         }
 
-        public void FillChildNodes(KnowledgebaseCategoryModel parentNode, List<KnowledgebaseCategory> nodes)
+        public void FillChildNodes(KnowledgebaseCategoryModel parentNode, List<KnowledgebaseCategory> nodes, string currentCategoryId)
         {
             var children = nodes.Where(x => x.ParentCategoryId == parentNode.Id);
             foreach (var child in children)
@@ -57,11 +57,12 @@ namespace Grand.Web.ViewComponents
                 var newNode = new KnowledgebaseCategoryModel
                 {
                     Id = child.Id,
-                    Name = child.Name,
-                    Children = new List<KnowledgebaseCategoryModel>()
+                    Name = child.GetLocalized(y => y.Name),
+                    Children = new List<KnowledgebaseCategoryModel>(),
+                    IsCurrent = currentCategoryId == child.Id
                 };
 
-                FillChildNodes(newNode, nodes);
+                FillChildNodes(newNode, nodes, currentCategoryId);
 
                 parentNode.Children.Add(newNode);
             }

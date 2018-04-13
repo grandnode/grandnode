@@ -4870,6 +4870,16 @@ namespace Grand.Services.Installation
                                            Body = "<p>Put your terms of service information here. You can edit this in the admin site.</p>",
                                            TopicTemplateId = defaultTopicTemplate.Id
                                        },
+                                                                      new Topic
+                                       {
+                                           SystemName = "KnowledgebaseHomePage",
+                                           IncludeInSitemap = false,
+                                           IsPasswordProtected = false,
+                                           DisplayOrder = 1,
+                                           Title = "",
+                                           Body = "<p>Knowledgebase homepage. You can edit this in the admin site.</p>",
+                                           TopicTemplateId = defaultTopicTemplate.Id
+                                       },
                                };
             _topicRepository.Insert(topics);
 

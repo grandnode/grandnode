@@ -4,16 +4,19 @@ using System.Linq;
 using System.Text;
 using Grand.Core;
 using Grand.Core.Data;
+using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Knowledgebase;
 using Grand.Services.Events;
+using MongoDB.Driver;
 
 namespace Grand.Services.Knowledgebase
 {
     public class KnowledgebaseService : IKnowledgebaseService
     {
-        private IRepository<KnowledgebaseCategory> _knowledgebaseCategoryRepository;
-        private IRepository<KnowledgebaseArticle> _knowledgebaseArticleRepository;
+        private readonly IRepository<KnowledgebaseCategory> _knowledgebaseCategoryRepository;
+        private readonly IRepository<KnowledgebaseArticle> _knowledgebaseArticleRepository;
         private readonly IEventPublisher _eventPublisher;
+        private readonly CommonSettings _commonSettings;
 
         /// <summary>
         /// Ctor
@@ -22,11 +25,12 @@ namespace Grand.Services.Knowledgebase
         /// <param name="knowledgebaseArticleRepository"></param>
         /// <param name="eventPublisher"></param>
         public KnowledgebaseService(IRepository<KnowledgebaseCategory> knowledgebaseCategoryRepository,
-            IRepository<KnowledgebaseArticle> knowledgebaseArticleRepository, IEventPublisher eventPublisher)
+            IRepository<KnowledgebaseArticle> knowledgebaseArticleRepository, IEventPublisher eventPublisher, CommonSettings commonSettings)
         {
             this._knowledgebaseCategoryRepository = knowledgebaseCategoryRepository;
             this._knowledgebaseArticleRepository = knowledgebaseArticleRepository;
             this._eventPublisher = eventPublisher;
+            this._commonSettings = commonSettings;
         }
 
         /// <summary>
@@ -163,6 +167,36 @@ namespace Grand.Services.Knowledgebase
         public List<KnowledgebaseArticle> GetPublicKnowledgebaseArticlesByCategory(string categoryId)
         {
             return _knowledgebaseArticleRepository.Table.Where(x => x.ParentCategoryId == categoryId && x.Published).OrderBy(x => x.DisplayOrder).ToList();
+        }
+
+        /// <summary>
+        /// Gets public(published etc) knowledgebase articles for keyword
+        /// </summary>
+        /// <returns>List of public knowledgebase articles</returns>
+        public List<KnowledgebaseArticle> GetPublicKnowledgebaseArticlesByKeyword(string keyword)
+        {
+            var builder = Builders<KnowledgebaseArticle>.Filter;
+            var filter = FilterDefinition<KnowledgebaseArticle>.Empty;
+            filter = filter & builder.Where(x => x.Published);
+
+            if (_commonSettings.UseFullTextSearch)
+            {
+                keyword = "\"" + keyword + "\"";
+                keyword = keyword.Replace("+", "\" \"");
+                keyword = keyword.Replace(" ", "\" \"");
+                filter = filter & builder.Text(keyword);
+            }
+            else
+            {
+                filter = filter & builder.Where(p => p.Locales.Any(x => x.LocaleValue != null && x.LocaleValue.ToLower().Contains(keyword.ToLower()))
+                || p.Name.ToLower().Contains(keyword.ToLower()) || p.Content.ToLower().Contains(keyword.ToLower()));
+            }
+
+            var toReturn = _knowledgebaseArticleRepository.Collection.Aggregate().Match(filter);
+            return toReturn.ToList();
+
+            //return _knowledgebaseArticleRepository.Table.Where(x => x.Published && (x.Name.ToLower().Contains(keyword.ToLower()) || x.Content.ToLower().Contains(keyword.ToLower())))
+            //.OrderBy(x => x.DisplayOrder).ToList();
         }
     }
 }

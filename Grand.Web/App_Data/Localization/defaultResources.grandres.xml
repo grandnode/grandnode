@@ -18456,4 +18456,16 @@
   <LocaleResource Name="Knowledgebase.Categories">
     <Value>Categories</Value>
   </LocaleResource>
+  <LocaleResource Name="Knowledgebase.Search">
+    <Value>Search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Knowledgebase.SearchPlaceholder">
+    <Value>Search in knowledgebase...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Knowledgebase.Backtohomepage">
+    <Value>Back to knowledgebase homepage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Knowledgebase.Notfound">
+    <Value>No articles were found that matched your criteria</Value>
+  </LocaleResource>
 </Language>

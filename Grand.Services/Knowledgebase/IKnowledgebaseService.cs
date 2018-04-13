@@ -71,6 +71,12 @@ namespace Grand.Services.Knowledgebase
         List<KnowledgebaseArticle> GetPublicKnowledgebaseArticlesByCategory(string categoryId);
 
         /// <summary>
+        /// Gets public(published etc) knowledgebase articles for keyword
+        /// </summary>
+        /// <returns>List of public knowledgebase articles</returns>
+        List<KnowledgebaseArticle> GetPublicKnowledgebaseArticlesByKeyword(string keyword);
+
+        /// <summary>
         /// Inserts knowledgebase article
         /// </summary>
         /// <param name="ka"></param>

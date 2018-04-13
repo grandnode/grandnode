@@ -12,5 +12,7 @@ namespace Grand.Web.Models.Knowledgebase
         public string Name { get; set; }
 
         public string Content { get; set; }
+
+        public string ParentCategoryId { get; set; }
     }
 }
