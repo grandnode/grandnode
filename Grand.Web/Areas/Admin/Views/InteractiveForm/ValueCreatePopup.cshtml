@@ -1,15 +1,15 @@
-﻿@{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
-}
-
-@model InteractiveFormAttributeValueModel
-
+﻿@model InteractiveFormAttributeValueModel
 @{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
     //page title
     ViewBag.Title = T("Admin.Promotions.InteractiveForms.Attribute.Values.AddNew").Text;
 }
-@using (Html.BeginForm())
-{
+<form asp-controller="InteractiveForm" asp-action="ValueCreatePopup"
+      asp-route-form="@Context.Request.Query["form"]"
+      asp-route-aId="@Context.Request.Query["aId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]"
+      >
     <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
@@ -29,6 +29,4 @@
             </div>
         </div>
     </div>
-
-
-}
+</form>

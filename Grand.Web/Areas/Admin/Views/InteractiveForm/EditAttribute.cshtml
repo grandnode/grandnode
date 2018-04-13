@@ -3,8 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.Promotions.InteractiveForms.EditAttribute").Text;
 }
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "attribute-form" }))
-{
+<form asp-controller="InteractiveForm" asp-action="ValueCreatePopup" method="post" id="attribute-form">
     <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
@@ -28,6 +27,4 @@
             </div>
         </div>
     </div>
-
-
-}
+</form>
