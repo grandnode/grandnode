@@ -35,12 +35,12 @@
                 <div class="form-group">
                     @if (Model.ForumEditor == EditorType.BBCodeEditor)
                     {
-                    <div class="col-12 text-sm-right">
-                        @Html.BBCodeEditor("Text")
-                    </div>
+                        <div class="col-12 text-sm-right">
+                            @Html.BBCodeEditor("Text")
+                        </div>
                     }
-                    @Html.TextAreaFor(model => model.Text, new { @class = "form-control card-text", TextMode = "MultiLine" })
-                    @Html.ValidationMessageFor(model => model.Text)
+                    <textarea asp-for="Text" class="form-control card-text" ></textarea>
+                    <span asp-validation-for="Text"></span>
                 </div>
                 @if (Model.IsCustomerAllowedToSubscribe)
                 {

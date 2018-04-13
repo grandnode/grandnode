@@ -33,7 +33,7 @@
             }
             <div class="col-12 newsletter-validation">
                 <span id="subscribe-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
-                @Html.ValidationMessageFor(x => x.NewsletterEmail)
+                <span asp-validation-for="NewsletterEmail"></span>
             </div>
         </div>
         <script type="text/javascript">
