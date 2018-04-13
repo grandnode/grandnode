@@ -1530,7 +1530,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 .Select(x => new ProductModel.ProductCategoryModel
                 {
                     Id = x.Id,
-                    Category = _categoryService.GetCategoryById(x.CategoryId).GetFormattedBreadCrumb(_categoryService),
+                    Category = _categoryService.GetCategoryById(x.CategoryId)?.GetFormattedBreadCrumb(_categoryService),
                     ProductId = product.Id,
                     CategoryId = x.CategoryId,
                     IsFeaturedProduct = x.IsFeaturedProduct,
@@ -1595,6 +1595,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             var productCategory = product.ProductCategories.Where(x => x.Id == model.Id).FirstOrDefault();
             if (productCategory == null)
                 throw new ArgumentException("No product category mapping found with the specified id");
+
+            if(product.ProductCategories.Where(x => x.Id != model.Id && x.CategoryId == model.CategoryId).Any())
+                return Json(new DataSourceResult { Errors = "This category is already mapped with this product" });
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -1735,6 +1738,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             var productManufacturer = product.ProductManufacturers.Where(x => x.Id == model.Id).FirstOrDefault();
             if (productManufacturer == null)
                 throw new ArgumentException("No product manufacturer mapping found with the specified id");
+
+            if (product.ProductManufacturers.Where(x => x.Id != model.Id && x.ManufacturerId == model.ManufacturerId).Any())
+                return Json(new DataSourceResult { Errors = "This manufacturer is already mapped with this product" });
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
