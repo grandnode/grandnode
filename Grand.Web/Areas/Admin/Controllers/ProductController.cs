@@ -449,14 +449,16 @@ namespace Grand.Web.Areas.Admin.Controllers
             var productTagsToRemove = new List<string>();
             foreach (var existingProductTag in existingProductTags)
             {
+                var existingProductTagText = _productTagService.GetProductTagById(existingProductTag);
                 bool found = false;
                 foreach (string newProductTag in productTags)
                 {
-                    if (existingProductTag.Equals(newProductTag, StringComparison.OrdinalIgnoreCase))
-                    {
-                        found = true;
-                        break;
-                    }
+                    if (existingProductTagText != null)
+                        if (existingProductTagText.Name.Equals(newProductTag, StringComparison.OrdinalIgnoreCase))
+                        {
+                            found = true;
+                            break;
+                        }
                 }
                 if (!found)
                 {
