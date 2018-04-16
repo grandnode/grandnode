@@ -43,10 +43,10 @@ namespace Grand.Web.Areas.Admin.Models.Knowledgebase
 
         public IList<KnowledgebaseCategoryLocalizedModel> Locales { get; set; }
 
-        [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.SubjectToAcl")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.SubjectToAcl")]
         public bool SubjectToAcl { get; set; }
 
-        [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.AclCustomerRoles")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.AclCustomerRoles")]
         public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }
 
         public string[] SelectedCustomerRoleIds { get; set; }

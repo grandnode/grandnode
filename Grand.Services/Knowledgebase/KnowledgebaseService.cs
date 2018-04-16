@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using Grand.Core;
 using Grand.Core.Data;
+using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Knowledgebase;
+using Grand.Services.Customers;
 using Grand.Services.Events;
 using MongoDB.Driver;
 
@@ -17,6 +19,8 @@ namespace Grand.Services.Knowledgebase
         private readonly IRepository<KnowledgebaseArticle> _knowledgebaseArticleRepository;
         private readonly IEventPublisher _eventPublisher;
         private readonly CommonSettings _commonSettings;
+        private readonly CatalogSettings _catalogSettings;
+        private readonly IWorkContext _workContext;
 
         /// <summary>
         /// Ctor
@@ -25,12 +29,15 @@ namespace Grand.Services.Knowledgebase
         /// <param name="knowledgebaseArticleRepository"></param>
         /// <param name="eventPublisher"></param>
         public KnowledgebaseService(IRepository<KnowledgebaseCategory> knowledgebaseCategoryRepository,
-            IRepository<KnowledgebaseArticle> knowledgebaseArticleRepository, IEventPublisher eventPublisher, CommonSettings commonSettings)
+            IRepository<KnowledgebaseArticle> knowledgebaseArticleRepository, IEventPublisher eventPublisher, CommonSettings commonSettings,
+            CatalogSettings catalogSettings, IWorkContext workContext)
         {
             this._knowledgebaseCategoryRepository = knowledgebaseCategoryRepository;
             this._knowledgebaseArticleRepository = knowledgebaseArticleRepository;
             this._eventPublisher = eventPublisher;
             this._commonSettings = commonSettings;
+            this._catalogSettings = catalogSettings;
+            this._workContext = workContext;
         }
 
         /// <summary>
@@ -148,7 +155,19 @@ namespace Grand.Services.Knowledgebase
         /// <returns>List of public knowledgebase categories</returns>
         public List<KnowledgebaseCategory> GetPublicKnowledgebaseCategories()
         {
-            return _knowledgebaseCategoryRepository.Table.Where(x => x.Published).OrderBy(x => x.DisplayOrder).ToList();
+            var builder = Builders<KnowledgebaseCategory>.Filter;
+            var filter = FilterDefinition<KnowledgebaseCategory>.Empty;
+            filter = filter & builder.Where(x => x.Published);
+
+            if (!_catalogSettings.IgnoreAcl)
+            {
+                var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
+                filter = filter & (builder.AnyIn(x => x.CustomerRoles, allowedCustomerRolesIds) | builder.Where(x => !x.SubjectToAcl));
+            }
+
+            var builderSort = Builders<KnowledgebaseCategory>.Sort.Ascending(x => x.DisplayOrder);
+            var toReturn = _knowledgebaseCategoryRepository.Collection.Aggregate().Match(filter).Sort(builderSort);
+            return toReturn.ToList();
         }
 
         /// <summary>
@@ -157,7 +176,19 @@ namespace Grand.Services.Knowledgebase
         /// <returns>List of public knowledgebase articles</returns>
         public List<KnowledgebaseArticle> GetPublicKnowledgebaseArticles()
         {
-            return _knowledgebaseArticleRepository.Table.Where(x => x.Published).OrderBy(x => x.DisplayOrder).ToList();
+            var builder = Builders<KnowledgebaseArticle>.Filter;
+            var filter = FilterDefinition<KnowledgebaseArticle>.Empty;
+            filter = filter & builder.Where(x => x.Published);
+
+            if (!_catalogSettings.IgnoreAcl)
+            {
+                var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
+                filter = filter & (builder.AnyIn(x => x.CustomerRoles, allowedCustomerRolesIds) | builder.Where(x => !x.SubjectToAcl));
+            }
+
+            var builderSort = Builders<KnowledgebaseArticle>.Sort.Ascending(x => x.DisplayOrder);
+            var toReturn = _knowledgebaseArticleRepository.Collection.Aggregate().Match(filter).Sort(builderSort);
+            return toReturn.ToList();
         }
 
         /// <summary>
@@ -166,7 +197,20 @@ namespace Grand.Services.Knowledgebase
         /// <returns>List of public knowledgebase articles</returns>
         public List<KnowledgebaseArticle> GetPublicKnowledgebaseArticlesByCategory(string categoryId)
         {
-            return _knowledgebaseArticleRepository.Table.Where(x => x.ParentCategoryId == categoryId && x.Published).OrderBy(x => x.DisplayOrder).ToList();
+            var builder = Builders<KnowledgebaseArticle>.Filter;
+            var filter = FilterDefinition<KnowledgebaseArticle>.Empty;
+            filter = filter & builder.Where(x => x.Published);
+            filter = filter & builder.Where(x => x.ParentCategoryId == categoryId);
+
+            if (!_catalogSettings.IgnoreAcl)
+            {
+                var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
+                filter = filter & (builder.AnyIn(x => x.CustomerRoles, allowedCustomerRolesIds) | builder.Where(x => !x.SubjectToAcl));
+            }
+
+            var builderSort = Builders<KnowledgebaseArticle>.Sort.Ascending(x => x.DisplayOrder);
+            var toReturn = _knowledgebaseArticleRepository.Collection.Aggregate().Match(filter).Sort(builderSort);
+            return toReturn.ToList();
         }
 
         /// <summary>
@@ -192,11 +236,15 @@ namespace Grand.Services.Knowledgebase
                 || p.Name.ToLower().Contains(keyword.ToLower()) || p.Content.ToLower().Contains(keyword.ToLower()));
             }
 
-            var toReturn = _knowledgebaseArticleRepository.Collection.Aggregate().Match(filter);
-            return toReturn.ToList();
+            if (!_catalogSettings.IgnoreAcl)
+            {
+                var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
+                filter = filter & (builder.AnyIn(x => x.CustomerRoles, allowedCustomerRolesIds) | builder.Where(x => !x.SubjectToAcl));
+            }
 
-            //return _knowledgebaseArticleRepository.Table.Where(x => x.Published && (x.Name.ToLower().Contains(keyword.ToLower()) || x.Content.ToLower().Contains(keyword.ToLower())))
-            //.OrderBy(x => x.DisplayOrder).ToList();
+            var builderSort = Builders<KnowledgebaseArticle>.Sort.Ascending(x => x.DisplayOrder);
+            var toReturn = _knowledgebaseArticleRepository.Collection.Aggregate().Match(filter).Sort(builderSort);
+            return toReturn.ToList();
         }
     }
 }

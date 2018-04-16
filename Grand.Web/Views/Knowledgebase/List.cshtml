@@ -15,7 +15,7 @@
 
 <h1 class="h2 generalTitle">
     @T("Knowledgebase")
-    <a class=" fa fa-home pull-right" href="@Url.RouteUrl("Knowledgebase")"></a>
+    <a class=" fa fa-home pull-right" title=@T("Knowledgebase.Backtohomepage") data-toggle="tooltip" data-placement="right" href="@Url.RouteUrl("Knowledgebase")"></a>
 </h1>
 
 @if (string.IsNullOrEmpty(Model.CurrentCategoryId))
@@ -54,6 +54,12 @@ else
     }
     else
     {
-        <div class="error-label red">@T("Knowledgebase.Notfound")</div> 
+        <div class="error-label red">@T("Knowledgebase.Notfound")</div>
     }
 }
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>

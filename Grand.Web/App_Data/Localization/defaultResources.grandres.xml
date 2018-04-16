@@ -18468,4 +18468,16 @@
   <LocaleResource Name="Knowledgebase.Notfound">
     <Value>No articles were found that matched your criteria</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.AclCustomerRoles">
+    <Value>Acl Customer Roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.AclCustomerRoles">
+    <Value>Acl Customer Roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.AclCustomerRoles.Hint">
+    <Value>Acl(Access control list) Customer Roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.AclCustomerRoles.Hint">
+    <Value>Acl(Access control list) Customer Roles</Value>
+  </LocaleResource>
 </Language>
