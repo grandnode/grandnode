@@ -77,7 +77,8 @@
                 schema: {
                     data: "Data",
                     total: "Total",
-                    errors: "Errors"
+                    errors: "Errors",
+                    
                 },
                 error: function(e) {
                     display_kendoui_grid_error(e);
@@ -100,23 +101,22 @@
             scrollable: false,
             columns: [{
                 field: "Breadcrumb",
-                title: "@T("Admin.Catalog.Categories.Fields.Name")"
+                title: "@T("Admin.Catalog.Categories.Fields.Name")",
+                template: '<a class="k-link" href="Edit/#=Id#">#=Breadcrumb#</a>',
+                width: 300,
             }, {
                 field: "Published",
                 title: "@T("Admin.Catalog.Categories.Fields.Published")",
-                width: 100,
+                width: 50,
                 headerAttributes: { style: "text-align:center" },
                 attributes: { style: "text-align:center" },
                 template: '# if(Published) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
             }, {
                 field: "DisplayOrder",
+                headerAttributes: { style: "text-align:center" },
+                attributes: { style: "text-align:center" },
                 title: "@T("Admin.Catalog.Categories.Fields.DisplayOrder")",
-                width: 120
-            }, {
-                field: "Id",
-                title: "@T("Admin.Common.Edit")",
-                width: 80,
-                template: '<a class="btn btn-sm btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
+                width: 50
             }]
         });
     });
