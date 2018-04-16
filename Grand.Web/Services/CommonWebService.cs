@@ -478,6 +478,7 @@ namespace Grand.Web.Services
                     BlogEnabled = _blogSettings.Enabled,
                     ForumEnabled = _forumSettings.ForumsEnabled,
                     NewsEnabled = _newsSettings.Enabled,
+                    KnowledgebaseEnabled = _knowledgebaseSettings.Enabled
                 };
                 //categories
                 if (_commonSettings.SitemapIncludeCategories)

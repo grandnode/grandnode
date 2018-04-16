@@ -601,7 +601,7 @@
 				$.each(node.tags, function addTag(id, tag) {
 					treeItem
 						.append($(_this.template.badge)
-                            .append("<a class=\"btn btn-sm btn-default\" href=\"" + tag + "\"><i class=\"fa fa-pencil\"></i>Edit</a>")
+                            .append("<a onclick=\"foo(event);\" class=\"btn btn-sm btn-default\" href=\"" + tag + "\"><i class=\"fa fa-pencil\"></i>Edit</a>")
 						);
 				});
 			}
@@ -614,7 +614,11 @@
 				return _this.buildTree(node.nodes, level);
 			}
 		});
-	};
+    };
+
+    window.foo = function (e) {
+        e.stopPropagation();
+    }
 
 	// Define any node level style override for
 	// 1. selectedNode
