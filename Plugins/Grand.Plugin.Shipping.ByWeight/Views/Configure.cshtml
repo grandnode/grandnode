@@ -1,23 +1,20 @@
-﻿@{
-    Layout = "_ConfigurePlugin";
-
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
-}
-@model ShippingByWeightListModel
+﻿@model ShippingByWeightListModel
+@inject AdminAreaSettings adminAreaSettings
 @using Grand.Plugin.Shipping.ByWeight.Models;
-@using Grand.Framework;
-@using Grand.Core.Infrastructure;
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "shipping-byweight-form" }))
-{
-    @Html.AntiForgeryToken()
+@using Grand.Core.Domain.Common;
+@{
+    Layout = "_ConfigurePlugin";
+}
+<form asp-controller="ShippingByWeight" asp-action="Configure" method="post" id="shipping-byweight-form">
+    <antiforgery-token />
     <div class="note note-info">
         <strong>@T("Plugins.Shipping.ByWeight.Formula"):</strong>
         @T("Plugins.Shipping.ByWeight.Formula.Value")
     </div>
 
-    var addNewUrl = Url.Action("AddPopup", "ShippingByWeight", new { btnId = "btnRefresh", formId = "shipping-byweight-form" });
+    @{
+        var addNewUrl = Url.Action("AddPopup", "ShippingByWeight", new { btnId = "btnRefresh", formId = "shipping-byweight-form" });
+    }
 
     <div class="panel panel-default">
         <div class="panel-body">
@@ -28,100 +25,97 @@
             <input type="submit" id="btnRefresh" style="display: none" />
         </div>
     </div>
-
-
-
-    <script>
-                    $(document).ready(function () {
-                        $("#shipping-byweight-grid").kendoGrid({
-                            dataSource: {
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("RatesList", "ShippingByWeight"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    },
-                                    destroy: {
-                                        url: "@Html.Raw(Url.Action("RateDelete", "ShippingByWeight"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors",
-                                    model: {
-                                        id: "Id"
-                                    }
-                                },
-                                requestEnd: function (e) {
-                                    if (e.type == "update") {
-                                        this.read();
-                                    }
-                                },
-                                error: function (e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                pageSize: @(defaultGridPageSize),
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
-                            },
-                            pageable: {
-                                refresh: true,
-                                pageSizes: [@(gridPageSizes)]
-                            },
-                            editable: {
-                                confirmation: false,
-                                mode: "inline"
-                            },
-                            scrollable: false,
-                            columns: [{
-                                field: "StoreName",
-                                title: "@T("Plugins.Shipping.ByWeight.Fields.Store")",
-                                width: 300
-                            }, {
-                                field: "WarehouseName",
-                                title: "@T("Plugins.Shipping.ByWeight.Fields.Warehouse")",
-                                width: 300
-                            }, {
-                                field: "CountryName",
-                                title: "@T("Plugins.Shipping.ByWeight.Fields.Country")",
-                                width: 200
-                            }, {
-                                field: "StateProvinceName",
-                                title: "@T("Plugins.Shipping.ByWeight.Fields.StateProvince")",
-                                width: 200
-                            }, {
-                                field: "Zip",
-                                title: "@T("Plugins.Shipping.ByWeight.Fields.Zip")",
-                                width: 200
-                            }, {
-                                field: "ShippingMethodName",
-                                title: "@T("Plugins.Shipping.ByWeight.Fields.ShippingMethod")",
-                                width: 200
-                            }, {
-                                field: "DataHtml",
-                                title: "@T("Plugins.Shipping.ByWeight.Fields.DataHtml")",
-                                width: 200,
-                                encoded: false
-                            }, {
-                                field: "Id",
-                                title: "@T("Admin.Common.Edit")",
-                                width: 100,
-                                template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Action("EditPopup","ShippingByWeight")?id=#=Id#&btnId=btnRefresh&formId=shipping-byweight-form', 800, 400, true); return false;\" class='k-button' />"
-                            },  {
-                                command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
-                                title: "@T("Admin.Common.Delete")",
-                                width: 100
-                            }]
-                        });
-                    });
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#shipping-byweight-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("RatesList", "ShippingByWeight"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        destroy: {
+                            url: "@Html.Raw(Url.Action("RateDelete", "ShippingByWeight"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors",
+                        model: {
+                            id: "Id"
+                        }
+                    },
+                    requestEnd: function (e) {
+                        if (e.type == "update") {
+                            this.read();
+                        }
+                    },
+                    error: function (e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(adminAreaSettings.DefaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "StoreName",
+                    title: "@T("Plugins.Shipping.ByWeight.Fields.Store")",
+                    width: 300
+                }, {
+                    field: "WarehouseName",
+                    title: "@T("Plugins.Shipping.ByWeight.Fields.Warehouse")",
+                    width: 300
+                }, {
+                    field: "CountryName",
+                    title: "@T("Plugins.Shipping.ByWeight.Fields.Country")",
+                    width: 200
+                }, {
+                    field: "StateProvinceName",
+                    title: "@T("Plugins.Shipping.ByWeight.Fields.StateProvince")",
+                    width: 200
+                }, {
+                    field: "Zip",
+                    title: "@T("Plugins.Shipping.ByWeight.Fields.Zip")",
+                    width: 200
+                }, {
+                    field: "ShippingMethodName",
+                    title: "@T("Plugins.Shipping.ByWeight.Fields.ShippingMethod")",
+                    width: 200
+                }, {
+                    field: "DataHtml",
+                    title: "@T("Plugins.Shipping.ByWeight.Fields.DataHtml")",
+                    width: 200,
+                    encoded: false
+                }, {
+                    field: "Id",
+                    title: "@T("Admin.Common.Edit")",
+                    width: 100,
+                    template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Action("EditPopup","ShippingByWeight")?id=#=Id#&btnId=btnRefresh&formId=shipping-byweight-form', 800, 400, true); return false;\" class='k-button k-button-icontext' />"
+                },  {
+                    command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                    title: "@T("Admin.Common.Delete")",
+                    width: 100
+                }]
+            });
+        });
     </script>
 
     <script type="text/javascript">
@@ -138,21 +132,23 @@
         });
     </script>
 
-                <table>
-                    <tr>
-                        <td class="adminTitle">
-                            @Html.GrandLabelFor(model => model.LimitMethodsToCreated, null, false):
-                        </td>
-                        <td class="adminData">
-                            @Html.EditorFor(model => model.LimitMethodsToCreated)
-                            @Html.ValidationMessageFor(model => model.LimitMethodsToCreated)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <br />
-                            <input type="button" id="savegeneralsettings" class="btn default" value="@T("Admin.Common.Save")" />
-                            <script type="text/javascript">
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-body">
+                    <div class="form-group">
+                        <admin-label asp-for="LimitMethodsToCreated" />
+                        <div class="col-md-9 col-sm-9">
+                            <label class="mt-checkbox mt-checkbox-outline">
+                                <admin-input asp-for="LimitMethodsToCreated" />
+                                <span></span>
+                            </label>
+                            <span asp-validation-for="LimitMethodsToCreated"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="button" id="savegeneralsettings" class="btn default" value="@T("Admin.Common.Save")" />
+                        <script type="text/javascript">
                     $(function () {
                         $('#savegeneralsettings').click(function () {
 
@@ -175,11 +171,10 @@
                             return false;
                         });
                     });
-                            </script>
-                        </td>
-                    </tr>
-                </table>
-                <br />
-                <hr />
-                <br />
-}
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

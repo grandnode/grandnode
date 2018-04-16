@@ -20,6 +20,7 @@ using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Grand.Framework.Kendoui;
+using Grand.Framework.Mvc;
 
 namespace Grand.Plugin.Shipping.ByWeight.Controllers
 {
@@ -173,7 +174,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
             if (sbw != null)
                 _shippingByWeightService.DeleteShippingByWeightRecord(sbw);
 
-            return Content("");
+            return new NullJsonResult();
         }
 
         public IActionResult AddPopup()
@@ -213,7 +214,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
         }
         [HttpPost]
         [AdminAntiForgery]
-        public ActionResult AddPopup(string btnId, string formId, ShippingByWeightModel model)
+        public ActionResult AddPopup(ShippingByWeightModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return Content("Access denied");
@@ -236,8 +237,6 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
             _shippingByWeightService.InsertShippingByWeightRecord(sbw);
 
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
 
             return View("~/Plugins/Shipping.ByWeight/Views/AddPopup.cshtml", model);
         }
@@ -307,7 +306,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
         }
         [HttpPost]
         [AdminAntiForgery]
-        public ActionResult EditPopup(string btnId, string formId, ShippingByWeightModel model)
+        public ActionResult EditPopup(ShippingByWeightModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return Content("Access denied");
@@ -332,8 +331,6 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
             _shippingByWeightService.UpdateShippingByWeightRecord(sbw);
 
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
 
             return View("~/Plugins/Shipping.ByWeight/Views/EditPopup.cshtml", model);
         }
