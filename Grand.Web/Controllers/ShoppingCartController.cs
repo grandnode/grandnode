@@ -273,7 +273,7 @@ namespace Grand.Web.Controllers
                 });
             }
 
-            var addtoCartModel = _shoppingCartWebService.PrepareAddToCartModel(product, customer, quantity, "", cartType, null, null, "", "", "");
+            var addtoCartModel = _shoppingCartWebService.PrepareAddToCartModel(product, customer, quantity, 0, "", cartType, null, null, "", "", "");
 
             //added to the cart/wishlist
             switch (cartType)
@@ -593,7 +593,7 @@ namespace Grand.Web.Controllers
                 });
             }
 
-            var addtoCartModel = _shoppingCartWebService.PrepareAddToCartModel(product, _workContext.CurrentCustomer, quantity, attributes, cartType, rentalStartDate, rentalEndDate, reservationId, parameter, duration);
+            var addtoCartModel = _shoppingCartWebService.PrepareAddToCartModel(product, _workContext.CurrentCustomer, quantity, customerEnteredPriceConverted, attributes, cartType, rentalStartDate, rentalEndDate, reservationId, parameter, duration);
 
             //added to the cart/wishlist
             switch (cartType)
@@ -740,7 +740,7 @@ namespace Grand.Web.Controllers
             //activity log
             _customerActivityService.InsertActivity("PublicStore.AddNewBid", product.Id, _localizationService.GetResource("ActivityLog.PublicStore.AddToBid"), product.Name);
 
-            var addtoCartModel = _shoppingCartWebService.PrepareAddToCartModel(product, customer, 1, "", ShoppingCartType.Auctions, null, null, "", "", "");
+            var addtoCartModel = _shoppingCartWebService.PrepareAddToCartModel(product, customer, 1, 0, "", ShoppingCartType.Auctions, null, null, "", "", "");
 
             return Json(new
             {

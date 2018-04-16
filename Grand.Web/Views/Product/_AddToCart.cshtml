@@ -77,6 +77,12 @@
                             return false;
                         }
                     });
+                    $("#@Html.IdFor(model => model.CustomerEnteredPrice)").keydown(function (event) {
+                        if (event.keyCode == 13) {
+                            $("#add-to-cart-button-@Model.ProductId").click();
+                            return false;
+                        }
+                    });
                 });
             </script>
             <button type="button" id="add-to-cart-button-@Model.ProductId" class="btn btn-success add-to-cart-button" data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;">
