@@ -490,7 +490,7 @@
     </div>
 </div>
 @(Html.LocalizedEditor<ProductModel, ProductLocalizedModel>("product-info-localized",
-    @<div class="form-horizontal portlet light bg-inverse form-fit">
+    @<div class="form-horizontal portlet bg-inverse form-fit">
         <div class="form-body">
             <div class="form-group">
                 <admin-label asp-for="@Model.Locales[item].Name" />
@@ -517,7 +517,7 @@
         </div>
     </div>
     ,
-    @<div class="form-horizontal portlet light bg-inverse form-fit">
+    @<div class="form-horizontal portlet bg-inverse form-fit">
         <div class="form-body">
             <div class="form-group">
                 <admin-label asp-for="Name" />

@@ -237,3 +237,17 @@ a span.username {
 .help.icon-question {
     padding-left: 3px;
 }
+
+@media only screen and (min-width: 1200px) {
+    .k-grid-header {
+        padding-right: 0px !important
+    }
+
+    .k-grid-content::-webkit-scrollbar {
+        width: 0px !important;
+    }
+
+    .k-grid.k-widget {
+        overflow-x: hidden;
+    }
+}

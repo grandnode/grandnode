@@ -184,57 +184,61 @@
                     confirmation: false,
                     mode: "inline"
                 },
-                scrollable: false,
+                scrollable: true,
                 dataBound: onDataBound,
                 columns: [
                     {
                         field: "Id",
                         headerTemplate: "<label class='mt-checkbox mt-checkbox-outline'><input id='mastercheckbox' type='checkbox'/><span></span></label>",
-                        headerAttributes: { style: "text-align:center" },
-                        attributes: { style: "text-align:center" },
                         template: "<label class='mt-checkbox mt-checkbox-outline'><input type='checkbox' value='#=Id#' class='checkboxGroups'/><span></span></label>",
-                        width: 50
+                        width: 40
                     },
                     {
                         field: "PictureThumbnailUrl",
                         title: "@T("Admin.Catalog.Products.Fields.PictureThumbnailUrl")",
-                        template: '<img src="#=PictureThumbnailUrl#" />',
-                        width: 100
+                        template: '<a class="k-link" href="Edit/#=Id#"><img src="#=PictureThumbnailUrl#" /></a>',
+                        width: 92
                     },
                     {
                         field: "Name",
                         title: "@T("Admin.Catalog.Products.Fields.Name")",
-                        width: 300
+						template: '<a class="k-link" href="Edit/#=Id#">#=Name#</a>',
+                        width: 270
                     }, {
                         field: "Sku",
                         title: "@T("Admin.Catalog.Products.Fields.Sku")",
-                        width: 100
+						headerAttributes: { style: "text-align:center" },
+						attributes: { style: "text-align:center" },
+                        width: 80
                     }, {
                         field: "Price",
                         title: "@T("Admin.Catalog.Products.Fields.Price")",
-                        width: 150,
+						headerAttributes: { style: "text-align:center" },
+						attributes: { style: "text-align:center" },
+                        width: 100,
                         //if not a grouped product, then display
                         template: "# if(ProductTypeId != @((int)ProductType.GroupedProduct)) {# #:Price# #}  #"
                     }, {
                         field: "StockQuantityStr",
                         title: "@T("Admin.Catalog.Products.Fields.StockQuantity")",
-                        width: 100
+						headerAttributes: { style: "text-align:center" },
+						attributes: { style: "text-align:center" },
+						minScreenWidth: 750, 
+                        width: 80
                     }, {
                         field: "ProductTypeName",
                         title: "@T("Admin.Catalog.Products.Fields.ProductType")",
-                        width: 100
+						headerAttributes: { style: "text-align:center" },
+						attributes: { style: "text-align:center" },
+                        width: 100,
+						minScreenWidth: 1050 
                     }, {
                         field: "Published",
                         title: "@T("Admin.Catalog.Products.Fields.Published")",
-                        width: 100,
+                        width: 85,
                         headerAttributes: { style: "text-align:center" },
                         attributes: { style: "text-align:center" },
                         template: '# if(Published) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
-                    }, {
-                        field: "Id",
-                        title: "@T("Admin.Common.Edit")",
-                        width: 80,
-                        template: '<a class="btn btn-sm btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
                     }
                 ]
             } );

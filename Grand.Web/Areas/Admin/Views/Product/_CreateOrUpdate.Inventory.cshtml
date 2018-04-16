@@ -3,7 +3,7 @@
 
 @model ProductModel
 
-<div class="form-horizontal portlet light bg-inverse form-fit" id="group-inventory">
+<div class="form-horizontal portlet bg-inverse form-fit" id="group-inventory">
     <div class="form-body">
         <div class="form-group">
             <admin-label asp-for="ManageInventoryMethodId" />
@@ -85,10 +85,10 @@
                                                 }
                                         </script>
                                     <td align="center" style="width: 20%;">
-                                        <input id="warehouse_qty_@(item.WarehouseId)" name="warehouse_qty_@(item.WarehouseId)" type="text" value="@item.StockQuantity" class="adminInput" style="width: 70px;" />
+                                        <input id="warehouse_qty_@(item.WarehouseId)" name="warehouse_qty_@(item.WarehouseId)" type="text" value="@item.StockQuantity" class="k-input"  style="width: 70px;" />
                                     </td>
                                     <td align="center" style="width: 20%;">
-                                        <input id="warehouse_reserved_@(item.WarehouseId)" name="warehouse_reserved_@(item.WarehouseId)" type="text" value="@item.ReservedQuantity" class="adminInput" style="width: 70px;" />
+                                        <input id="warehouse_reserved_@(item.WarehouseId)" name="warehouse_reserved_@(item.WarehouseId)" type="text" value="@item.ReservedQuantity" class="k-input" style="width: 70px;" />
                                     </td>
                                     <td align="center" style="width: 10%;">
                                         @item.PlannedQuantity
@@ -224,7 +224,7 @@
         </div>
     </div>
 </div>
-<div class="form-horizontal portlet light bg-inverse form-fit" id="group-shipping">
+<div class="form-horizontal portlet bg-inverse form-fit" id="group-shipping">
     <div class="form-body">
         <div class="form-group">
             <admin-label asp-for="IsShipEnabled" />
