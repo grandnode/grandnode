@@ -116,7 +116,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(string btnId, string formId, ShippingPointModel model)
+        public ActionResult Create(ShippingPointModel model)
         {
             if (ModelState.IsValid)
             {
@@ -124,8 +124,6 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Controllers
                 _shippingPointService.InsertStoreShippingPoint(shippingPoint);
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
             }
 
             PrepareShippingPointModel(model);
@@ -142,7 +140,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(string btnId, string formId, ShippingPointModel model)
+        public ActionResult Edit(ShippingPointModel model)
         {
             if (ModelState.IsValid)
             {
@@ -151,8 +149,6 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Controllers
                 _shippingPointService.UpdateStoreShippingPoint(shippingPoint);
             }
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
 
             PrepareShippingPointModel(model);
 
