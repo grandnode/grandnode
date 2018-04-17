@@ -145,7 +145,8 @@ namespace Grand.Services.Installation
         private readonly IRepository<CustomerReminder> _customerReminder;
         private readonly IRepository<CustomerReminderHistory> _customerReminderHistoryRepository;
         private readonly IRepository<RecentlyViewedProduct> _recentlyViewedProductRepository;
-
+        private readonly IRepository<KnowledgebaseArticle> _knowledgebaseArticleRepository;
+        private readonly IRepository<KnowledgebaseCategory> _knowledgebaseCategoryRepository;
         private readonly ICustomerActionService _customerActionService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWebHelper _webHelper;
@@ -246,6 +247,8 @@ namespace Grand.Services.Installation
             IRepository<CustomerReminder> customerReminder,
             IRepository<CustomerReminderHistory> customerReminderHistoryRepository,
             IRepository<RecentlyViewedProduct> recentlyViewedProductRepository,
+            IRepository<KnowledgebaseArticle> knowledgebaseArticleRepository,
+            IRepository<KnowledgebaseCategory> knowledgebaseCategoryRepository,
             IGenericAttributeService genericAttributeService,
             ICustomerActionService customerActionService,
             IWebHelper webHelper,
@@ -338,7 +341,8 @@ namespace Grand.Services.Installation
             this._customerActionHistory = customerActionHistory;
             this._customerReminder = customerReminder;
             this._customerReminderHistoryRepository = customerReminderHistoryRepository;
-            ;
+            this._knowledgebaseArticleRepository = knowledgebaseArticleRepository;
+            this._knowledgebaseCategoryRepository = knowledgebaseCategoryRepository;
             this._banner = banner;
             this._popupArchive = popupArchive;
             this._genericAttributeService = genericAttributeService;
@@ -11092,11 +11096,16 @@ namespace Grand.Services.Installation
             _discountusageRepository.Collection.Indexes.CreateOneAsync(Builders<DiscountUsageHistory>.IndexKeys.Ascending(x => x.DiscountId), new CreateIndexOptions() { Name = "DiscountId" });
             _discountusageRepository.Collection.Indexes.CreateOneAsync(Builders<DiscountUsageHistory>.IndexKeys.Ascending(x => x.OrderId), new CreateIndexOptions() { Name = "OrderId" });
 
-
             //blog
             _blogPostRepository.Collection.Indexes.CreateOneAsync(Builders<BlogPost>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _blogcommentRepository.Collection.Indexes.CreateOneAsync(Builders<BlogComment>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _blogpostRepository.Collection.Indexes.CreateOneAsync(Builders<BlogPost>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+
+            //knowledgebase
+            _knowledgebaseArticleRepository.Collection.Indexes.CreateOneAsync(Builders<KnowledgebaseArticle>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _knowledgebaseArticleRepository.Collection.Indexes.CreateOneAsync(Builders<KnowledgebaseArticle>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder", Unique = false });
+            _knowledgebaseCategoryRepository.Collection.Indexes.CreateOneAsync(Builders<KnowledgebaseCategory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _knowledgebaseCategoryRepository.Collection.Indexes.CreateOneAsync(Builders<KnowledgebaseCategory>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder", Unique = false });
 
             //topic
             _topicRepository.Collection.Indexes.CreateOneAsync(Builders<Topic>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
@@ -11221,7 +11230,6 @@ namespace Grand.Services.Installation
             _customerActionHistory.Collection.Indexes.CreateOneAsync(Builders<CustomerActionHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _customerActionHistory.Collection.Indexes.CreateOneAsync(Builders<CustomerActionHistory>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x => x.CustomerActionId), new CreateIndexOptions() { Name = "Customer_Action", Unique = false });
 
-
             //banner
             _banner.Collection.Indexes.CreateOneAsync(Builders<Banner>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _popupArchive.Collection.Indexes.CreateOneAsync(Builders<PopupArchive>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
@@ -11231,7 +11239,6 @@ namespace Grand.Services.Installation
             _customerReminder.Collection.Indexes.CreateOneAsync(Builders<CustomerReminder>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _customerReminderHistoryRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerReminderHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _customerReminderHistoryRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerReminderHistory>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x => x.CustomerReminderId), new CreateIndexOptions() { Name = "CustomerId", Unique = false });
-
         }
 
         #endregion

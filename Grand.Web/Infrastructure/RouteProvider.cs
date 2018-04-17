@@ -571,7 +571,7 @@ namespace Grand.Web.Infrastructure
             //upgrade
             routeBuilder.MapRoute("Upgrade", "upgrade",
                             new { controller = "Upgrade", action = "Index" });
-           
+
             //page not found
             routeBuilder.MapLocalizedRoute("PageNotFound", "page-not-found",
                             new { controller = "Common", action = "PageNotFound" });

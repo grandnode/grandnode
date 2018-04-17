@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Grand.Core;
@@ -166,7 +167,7 @@ namespace Grand.Services.Knowledgebase
             }
 
             var builderSort = Builders<KnowledgebaseCategory>.Sort.Ascending(x => x.DisplayOrder);
-            var toReturn = _knowledgebaseCategoryRepository.Collection.Aggregate().Match(filter).Sort(builderSort);
+            var toReturn = _knowledgebaseCategoryRepository.Collection.Find(filter).Sort(builderSort);
             return toReturn.ToList();
         }
 
@@ -187,7 +188,7 @@ namespace Grand.Services.Knowledgebase
             }
 
             var builderSort = Builders<KnowledgebaseArticle>.Sort.Ascending(x => x.DisplayOrder);
-            var toReturn = _knowledgebaseArticleRepository.Collection.Aggregate().Match(filter).Sort(builderSort);
+            var toReturn = _knowledgebaseArticleRepository.Collection.Find(filter).Sort(builderSort);
             return toReturn.ToList();
         }
 
@@ -209,7 +210,7 @@ namespace Grand.Services.Knowledgebase
             }
 
             var builderSort = Builders<KnowledgebaseArticle>.Sort.Ascending(x => x.DisplayOrder);
-            var toReturn = _knowledgebaseArticleRepository.Collection.Aggregate().Match(filter).Sort(builderSort);
+            var toReturn = _knowledgebaseArticleRepository.Collection.Find(filter).Sort(builderSort);
             return toReturn.ToList();
         }
 
@@ -243,7 +244,7 @@ namespace Grand.Services.Knowledgebase
             }
 
             var builderSort = Builders<KnowledgebaseArticle>.Sort.Ascending(x => x.DisplayOrder);
-            var toReturn = _knowledgebaseArticleRepository.Collection.Aggregate().Match(filter).Sort(builderSort);
+            var toReturn = _knowledgebaseArticleRepository.Collection.Find(filter).Sort(builderSort);
             return toReturn.ToList();
         }
     }
