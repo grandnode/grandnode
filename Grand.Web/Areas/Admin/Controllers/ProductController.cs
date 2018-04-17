@@ -4890,7 +4890,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     {
                         Id = x.Id,
                         ProductId = product.Id,
-                        AttributesXml = _productAttributeFormatter.FormatAttributes(_productService.GetProductById(product.Id), x.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false),
+                        AttributesXml = _productAttributeFormatter.FormatAttributes(_productService.GetProductById(product.Id), x.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false, true, true),
                         StockQuantity = product.UseMultipleWarehouses ? x.WarehouseInventory.Sum(y=>y.StockQuantity-y.ReservedQuantity) : x.StockQuantity,
                         AllowOutOfStockOrders = x.AllowOutOfStockOrders,
                         Sku = x.Sku,

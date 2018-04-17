@@ -32,6 +32,6 @@ namespace Grand.Services.Catalog
         string FormatAttributes(Product product, string attributesXml,
             Customer customer, string serapator = "<br />", bool htmlEncode = true, bool renderPrices = true,
             bool renderProductAttributes = true, bool renderGiftCardAttributes = true,
-            bool allowHyperlinks = true);
+            bool allowHyperlinks = true, bool showInAdmin = false);
     }
 }
