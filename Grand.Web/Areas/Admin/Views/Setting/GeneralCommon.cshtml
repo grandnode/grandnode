@@ -116,7 +116,7 @@
 </form>
 
 <div class="modal-dialog" id="importfile-window" style="display:none; padding: 0 10px;">
-    <form asp-controller="Plugin" asp-action="UploadTheme" method="post">
+    <form asp-controller="Plugin" asp-action="UploadTheme" method="post" enctype="multipart/form-data">
         <antiforgery-token />
         <ul class="common-list">
             <li>
