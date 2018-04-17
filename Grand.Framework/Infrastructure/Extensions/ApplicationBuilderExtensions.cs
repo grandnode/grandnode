@@ -170,10 +170,6 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseCulture(this IApplicationBuilder application)
         {
-            //check whether database is installed
-            if (!DataSettingsHelper.DatabaseIsInstalled())
-                return;
-
             var lang = EngineContext.Current.Resolve<Grand.Services.Localization.ILanguageService>().GetAllLanguages();
             var supportedCultures = new List<CultureInfo>();
             foreach (var item in lang)
@@ -198,10 +194,6 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseGrandAuthentication(this IApplicationBuilder application)
         {                    
-            //check whether database is installed
-            if (!DataSettingsHelper.DatabaseIsInstalled())
-                return;
-
             application.UseMiddleware<AuthenticationMiddleware>();
         }
 

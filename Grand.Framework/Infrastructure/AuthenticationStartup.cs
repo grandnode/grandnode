@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Grand.Core.Infrastructure;
 using Grand.Framework.Infrastructure.Extensions;
+using Grand.Core.Data;
 
 namespace Grand.Framework.Infrastructure
 {
@@ -30,6 +31,10 @@ namespace Grand.Framework.Infrastructure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
+            //check whether database is installed
+            if (!DataSettingsHelper.DatabaseIsInstalled())
+                return;
+
             //configure authentication
             application.UseGrandAuthentication();
 
