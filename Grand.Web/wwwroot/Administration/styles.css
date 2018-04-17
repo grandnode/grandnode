@@ -251,3 +251,7 @@ a span.username {
         overflow-x: hidden;
     }
 }
+
+.k-input.text-box {
+    padding: 6px 12px;
+}
