@@ -297,8 +297,6 @@ namespace Grand.Framework.Infrastructure
 
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().SingleInstance();
 
-            builder.RegisterType<ActionContextAccessor>().As<IActionContextAccessor>().InstancePerLifetimeScope();
-
             //Register event consumers
             var consumers = typeFinder.FindClassesOfType(typeof(IConsumer<>)).ToList();
             foreach (var consumer in consumers)

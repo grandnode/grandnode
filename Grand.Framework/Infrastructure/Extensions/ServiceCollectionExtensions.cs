@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Mvc.Internal;
 using Grand.Framework.Mvc.Routing;
 using Grand.Core.Domain.Security;
 using Grand.Services.Authentication;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace Grand.Framework.Infrastructure.Extensions
 {
@@ -94,6 +95,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         public static void AddHttpContextAccessor(this IServiceCollection services)
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IActionContextAccessor, ActionContextAccessor>();
         }
 
         /// <summary>
