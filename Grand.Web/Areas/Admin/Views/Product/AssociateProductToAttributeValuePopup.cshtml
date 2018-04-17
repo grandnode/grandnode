@@ -6,10 +6,9 @@
     ViewBag.Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.AddNew").Text;
 }
 
-<form asp-controller="Product" asp-action="AssociatedProductToAttributeValuePopup"
-      asp-route-ProductId="@Context.Request.Query["ProductId"]"
-      asp-route-btnId="@Context.Request.Query["btnId"]"
-      asp-route-formId="@Context.Request.Query["formId"]">
+<form asp-controller="Product" asp-action="AssociateProductToAttributeValuePopup"
+     asp-route-productIdInput="@Context.Request.Query["productIdInput"]"
+      asp-route-productNameInput="@Context.Request.Query["productNameInput"]">
 
     <antiforgery-token />
 
@@ -67,7 +66,7 @@
                                         <button class="btn btn-success filter-submit" id="search-products">
                                             <i class="fa fa-search"></i> @T("Admin.Common.Search")
                                         </button>
-                                        <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                                        <button class="btn btn-success hidden" type="submit" name="save" id="save" ><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
                                     </div>
                                 </div>
                             </div>
@@ -83,8 +82,10 @@
     {
     <script type="text/javascript">
             try {
-                window.opener.document.getElementById('@(ViewBag.productIdInput)').value = '@(ViewBag.productId)';
-                window.opener.document.getElementById('@(ViewBag.productNameInput)').innerHTML = '@(ViewBag.productName)';
+                //window.opener.document.getElementById('@(ViewBag.productIdInput)').value = '@(ViewBag.productId)';
+                //window.opener.document.getElementById('@(ViewBag.productNameInput)').innerHTML = '@(ViewBag.productName)';
+                window.opener.$('#@(Context.Request.Query["productIdInput"])').val('@(ViewBag.productId)');
+                window.opener.document.getElementById('@(Context.Request.Query["productNameInput"])').innerHTML = '@(ViewBag.productName)';
             }
             catch (e){}
             window.close();
