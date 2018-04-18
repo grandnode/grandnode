@@ -18480,4 +18480,64 @@
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.AclCustomerRoles.Hint">
     <Value>Acl(Access control list) Customer Roles</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.MetaKeywords">
+    <Value>Meta keywords</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.MetaDescription">
+    <Value>Meta description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.MetaTitle">
+    <Value>Meta title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.SeName">
+    <Value>SeName</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.MetaKeywords">
+    <Value>Meta keywords</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.MetaDescription">
+    <Value>Meta description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.MetaTitle">
+    <Value>Meta title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.SeName">
+    <Value>SeName</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.MetaKeywords.Hint">
+    <Value>Meta keywords</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.MetaDescription.Hint">
+    <Value>Meta description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.MetaTitle.Hint">
+    <Value>Meta title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.SeName.Hint">
+    <Value>SeName</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.MetaKeywords.Hint">
+    <Value>Meta keywords</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.MetaDescription.Hint">
+    <Value>Meta description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.MetaTitle.Hint">
+    <Value>Meta title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.SeName.Hint">
+    <Value>SeName</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Seo">
+    <Value>Seo</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Seo">
+    <Value>Seo</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.ShowOnHomepage">
+    <Value>Show on homepage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.ShowOnHomepage.Hint">
+    <Value>Show on homepage</Value>
+  </LocaleResource>
 </Language>
