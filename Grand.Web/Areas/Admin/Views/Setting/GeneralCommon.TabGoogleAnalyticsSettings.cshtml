@@ -13,7 +13,7 @@
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.GoogleAnalyticsSettings.gaprivateKey_OverrideForStore, model => model.GoogleAnalyticsSettings.gaprivateKey, Model.ActiveStoreScopeConfiguration)
-                <admin-label asp-for="GoogleAnalyticsSettings.gaprivateKey" class="control-label"/>
+                <admin-label asp-for="GoogleAnalyticsSettings.gaprivateKey" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <admin-input asp-for="GoogleAnalyticsSettings.gaprivateKey" />
@@ -23,7 +23,7 @@
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.GoogleAnalyticsSettings.gaserviceAccountEmail_OverrideForStore, model => model.GoogleAnalyticsSettings.gaserviceAccountEmail, Model.ActiveStoreScopeConfiguration)
-                <admin-label asp-for="GoogleAnalyticsSettings.gaserviceAccountEmail" class="control-label"/>
+                <admin-label asp-for="GoogleAnalyticsSettings.gaserviceAccountEmail" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <admin-input asp-for="GoogleAnalyticsSettings.gaserviceAccountEmail" />
@@ -33,11 +33,11 @@
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.GoogleAnalyticsSettings.gaviewID_OverrideForStore, model => model.GoogleAnalyticsSettings.gaviewID, Model.ActiveStoreScopeConfiguration)
-                <admin-label asp-for="GoogleAnalyticsSettings.gaviewID" class="control-label"/>
+                <admin-label asp-for="GoogleAnalyticsSettings.gaviewID" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
-                <admin-input asp-for="GoogleAnalyticsSettings" />
-                <span asp-validation-for="GoogleAnalyticsSettings"></span>
+                <admin-input asp-for="GoogleAnalyticsSettings.gaviewID" />
+                <span asp-validation-for="GoogleAnalyticsSettings.gaviewID"></span>
             </div>
         </div>
     </div>
