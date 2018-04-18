@@ -17,6 +17,7 @@ using Grand.Services.Logging;
 using Grand.Services.Customers;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Grand.Services.Helpers;
+using Grand.Services.Seo;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -29,10 +30,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IUrlRecordService _urlRecordService;
 
         public KnowledgebaseController(ILocalizationService localizationService, IPermissionService permissionService,
             IKnowledgebaseService knowledgebaseService, ILanguageService languageService, ICustomerActivityService customerActivityService,
-            ICustomerService customerService, IDateTimeHelper dateTimeHelper)
+            ICustomerService customerService, IDateTimeHelper dateTimeHelper, IUrlRecordService urlRecordService)
         {
             this._localizationService = localizationService;
             this._permissionService = permissionService;
@@ -41,15 +43,19 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._customerActivityService = customerActivityService;
             this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
+            this._urlRecordService = urlRecordService;
         }
 
         [NonAction]
-        protected virtual List<LocalizedProperty> UpdateLocales(KnowledgebaseCategoryModel model)
+        protected virtual List<LocalizedProperty> UpdateLocales(KnowledgebaseCategory category, KnowledgebaseCategoryModel model)
         {
             List<LocalizedProperty> localized = new List<LocalizedProperty>();
 
             foreach (var local in model.Locales)
             {
+                var seName = category.ValidateSeName(local.SeName, local.Name, false);
+                _urlRecordService.SaveSlug(category, seName, local.LanguageId);
+
                 if (!(String.IsNullOrEmpty(local.Name)))
                     localized.Add(new LocalizedProperty()
                     {
@@ -65,18 +71,53 @@ namespace Grand.Web.Areas.Admin.Controllers
                         LocaleKey = "Description",
                         LocaleValue = local.Description,
                     });
+
+                if (!(String.IsNullOrEmpty(local.MetaDescription)))
+                    localized.Add(new LocalizedProperty()
+                    {
+                        LanguageId = local.LanguageId,
+                        LocaleKey = "MetaDescription",
+                        LocaleValue = local.MetaDescription,
+                    });
+
+                if (!(String.IsNullOrEmpty(local.MetaKeywords)))
+                    localized.Add(new LocalizedProperty()
+                    {
+                        LanguageId = local.LanguageId,
+                        LocaleKey = "MetaKeywords",
+                        LocaleValue = local.MetaKeywords,
+                    });
+
+                if (!(String.IsNullOrEmpty(local.MetaTitle)))
+                    localized.Add(new LocalizedProperty()
+                    {
+                        LanguageId = local.LanguageId,
+                        LocaleKey = "MetaTitle",
+                        LocaleValue = local.MetaTitle,
+                    });
+
+                if (!(String.IsNullOrEmpty(seName)))
+                    localized.Add(new LocalizedProperty()
+                    {
+                        LanguageId = local.LanguageId,
+                        LocaleKey = "SeName",
+                        LocaleValue = seName,
+                    });
             }
 
             return localized;
         }
 
         [NonAction]
-        protected virtual List<LocalizedProperty> UpdateLocales(KnowledgebaseArticleModel model)
+        protected virtual List<LocalizedProperty> UpdateLocales(KnowledgebaseArticle article, KnowledgebaseArticleModel model)
         {
             List<LocalizedProperty> localized = new List<LocalizedProperty>();
 
             foreach (var local in model.Locales)
             {
+                var seName = article.ValidateSeName(local.SeName, local.Name, false);
+                _urlRecordService.SaveSlug(article, seName, local.LanguageId);
+
                 if (!(String.IsNullOrEmpty(local.Name)))
                     localized.Add(new LocalizedProperty()
                     {
@@ -91,6 +132,38 @@ namespace Grand.Web.Areas.Admin.Controllers
                         LanguageId = local.LanguageId,
                         LocaleKey = "Content",
                         LocaleValue = local.Content,
+                    });
+
+                if (!(String.IsNullOrEmpty(local.MetaDescription)))
+                    localized.Add(new LocalizedProperty()
+                    {
+                        LanguageId = local.LanguageId,
+                        LocaleKey = "MetaDescription",
+                        LocaleValue = local.MetaDescription,
+                    });
+
+                if (!(String.IsNullOrEmpty(local.MetaKeywords)))
+                    localized.Add(new LocalizedProperty()
+                    {
+                        LanguageId = local.LanguageId,
+                        LocaleKey = "MetaKeywords",
+                        LocaleValue = local.MetaKeywords,
+                    });
+
+                if (!(String.IsNullOrEmpty(local.MetaTitle)))
+                    localized.Add(new LocalizedProperty()
+                    {
+                        LanguageId = local.LanguageId,
+                        LocaleKey = "MetaTitle",
+                        LocaleValue = local.MetaTitle,
+                    });
+
+                if (!(String.IsNullOrEmpty(seName)))
+                    localized.Add(new LocalizedProperty()
+                    {
+                        LanguageId = local.LanguageId,
+                        LocaleKey = "SeName",
+                        LocaleValue = seName,
                     });
             }
 
@@ -269,6 +342,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             .GetAllCustomerRoles(true)
             .Select(cr => cr.ToModel())
             .ToList();
+            model.Published = true;
 
             AddLocales(_languageService, model.Locales);
             return View(model);
@@ -285,10 +359,14 @@ namespace Grand.Web.Areas.Admin.Controllers
                 var knowledgebaseCategory = model.ToEntity();
                 knowledgebaseCategory.CreatedOnUtc = DateTime.UtcNow;
                 knowledgebaseCategory.UpdatedOnUtc = DateTime.UtcNow;
-                knowledgebaseCategory.Locales = UpdateLocales(model);
+                knowledgebaseCategory.Locales = UpdateLocales(knowledgebaseCategory, model);
                 knowledgebaseCategory.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
+                model.SeName = knowledgebaseCategory.ValidateSeName(model.SeName, knowledgebaseCategory.Name, true);
+                knowledgebaseCategory.SeName = model.SeName;
 
                 _knowledgebaseService.InsertKnowledgebaseCategory(knowledgebaseCategory);
+
+                _urlRecordService.SaveSlug(knowledgebaseCategory, model.SeName, "");
 
                 _customerActivityService.InsertActivity("CreateKnowledgebaseCategory", knowledgebaseCategory.Id,
                     _localizationService.GetResource("ActivityLog.CreateKnowledgebaseCategory"), knowledgebaseCategory.Name);
@@ -331,6 +409,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 locale.Name = knowledgebaseCategory.GetLocalized(x => x.Name, languageId, false, false);
                 locale.Description = knowledgebaseCategory.GetLocalized(x => x.Description, languageId, false, false);
+                locale.MetaDescription = knowledgebaseCategory.GetLocalized(x => x.MetaDescription, languageId, false, false);
+                locale.MetaKeywords = knowledgebaseCategory.GetLocalized(x => x.MetaKeywords, languageId, false, false);
+                locale.MetaTitle = knowledgebaseCategory.GetLocalized(x => x.MetaTitle, languageId, false, false);
+                locale.SeName = knowledgebaseCategory.GetSeName(languageId, false, false);
             });
 
             model.AvailableCustomerRoles = _customerService
@@ -356,10 +438,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 knowledgebaseCategory = model.ToEntity(knowledgebaseCategory);
                 knowledgebaseCategory.UpdatedOnUtc = DateTime.UtcNow;
-                knowledgebaseCategory.Locales = UpdateLocales(model);
+                knowledgebaseCategory.Locales = UpdateLocales(knowledgebaseCategory, model);
                 knowledgebaseCategory.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
+                model.SeName = knowledgebaseCategory.ValidateSeName(model.SeName, knowledgebaseCategory.Name, true);
+                knowledgebaseCategory.SeName = model.SeName;
 
                 _knowledgebaseService.UpdateKnowledgebaseCategory(knowledgebaseCategory);
+
+                _urlRecordService.SaveSlug(knowledgebaseCategory, model.SeName, "");
 
                 _customerActivityService.InsertActivity("UpdateKnowledgebaseCategory", knowledgebaseCategory.Id,
                     _localizationService.GetResource("ActivityLog.UpdateKnowledgebaseCategory"), knowledgebaseCategory.Name);
@@ -417,6 +503,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             .GetAllCustomerRoles(true)
             .Select(cr => cr.ToModel())
             .ToList();
+            model.Published = true;
 
             if (!string.IsNullOrEmpty(parentCategoryId))
                 model.ParentCategoryId = parentCategoryId;
@@ -436,10 +523,14 @@ namespace Grand.Web.Areas.Admin.Controllers
                 var knowledgebaseArticle = model.ToEntity();
                 knowledgebaseArticle.CreatedOnUtc = DateTime.UtcNow;
                 knowledgebaseArticle.UpdatedOnUtc = DateTime.UtcNow;
-                knowledgebaseArticle.Locales = UpdateLocales(model);
+                knowledgebaseArticle.Locales = UpdateLocales(knowledgebaseArticle, model);
                 knowledgebaseArticle.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
+                model.SeName = knowledgebaseArticle.ValidateSeName(model.SeName, knowledgebaseArticle.Name, true);
+                knowledgebaseArticle.SeName = model.SeName;
 
                 _knowledgebaseService.InsertKnowledgebaseArticle(knowledgebaseArticle);
+
+                _urlRecordService.SaveSlug(knowledgebaseArticle, model.SeName, "");
 
                 _customerActivityService.InsertActivity("CreateKnowledgebaseArticle", knowledgebaseArticle.Id,
                     _localizationService.GetResource("ActivityLog.CreateKnowledgebaseArticle"), knowledgebaseArticle.Name);
@@ -482,6 +573,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 locale.Name = knowledgebaseArticle.GetLocalized(x => x.Name, languageId, false, false);
                 locale.Content = knowledgebaseArticle.GetLocalized(x => x.Content, languageId, false, false);
+                locale.MetaDescription = knowledgebaseArticle.GetLocalized(x => x.MetaDescription, languageId, false, false);
+                locale.MetaKeywords = knowledgebaseArticle.GetLocalized(x => x.MetaKeywords, languageId, false, false);
+                locale.MetaTitle = knowledgebaseArticle.GetLocalized(x => x.MetaTitle, languageId, false, false);
+                locale.SeName = knowledgebaseArticle.GetSeName(languageId, false, false);
             });
 
             model.AvailableCustomerRoles = _customerService
@@ -507,10 +602,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 knowledgebaseArticle = model.ToEntity(knowledgebaseArticle);
                 knowledgebaseArticle.UpdatedOnUtc = DateTime.UtcNow;
-                knowledgebaseArticle.Locales = UpdateLocales(model);
+                knowledgebaseArticle.Locales = UpdateLocales(knowledgebaseArticle, model);
                 knowledgebaseArticle.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
+                model.SeName = knowledgebaseArticle.ValidateSeName(model.SeName, knowledgebaseArticle.Name, true);
+                knowledgebaseArticle.SeName = model.SeName;
 
                 _knowledgebaseService.UpdateKnowledgebaseArticle(knowledgebaseArticle);
+
+                _urlRecordService.SaveSlug(knowledgebaseArticle, model.SeName, "");
 
                 _customerActivityService.InsertActivity("UpdateKnowledgebaseArticle", knowledgebaseArticle.Id,
                     _localizationService.GetResource("ActivityLog.UpdateKnowledgebaseArticle"), knowledgebaseArticle.Name);

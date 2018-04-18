@@ -247,5 +247,27 @@ namespace Grand.Services.Knowledgebase
             var toReturn = _knowledgebaseArticleRepository.Collection.Find(filter).Sort(builderSort);
             return toReturn.ToList();
         }
+
+        /// <summary>
+        /// Gets homepage knowledgebase articles
+        /// </summary>
+        /// <returns>List of homepage knowledgebase articles</returns>
+        public List<KnowledgebaseArticle> GetHomepageKnowledgebaseArticles()
+        {
+            var builder = Builders<KnowledgebaseArticle>.Filter;
+            var filter = FilterDefinition<KnowledgebaseArticle>.Empty;
+            filter = filter & builder.Where(x => x.Published);
+            filter = filter & builder.Where(x => x.ShowOnHomepage);
+
+            if (!_catalogSettings.IgnoreAcl)
+            {
+                var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
+                filter = filter & (builder.AnyIn(x => x.CustomerRoles, allowedCustomerRolesIds) | builder.Where(x => !x.SubjectToAcl));
+            }
+
+            var builderSort = Builders<KnowledgebaseArticle>.Sort.Ascending(x => x.DisplayOrder);
+            var toReturn = _knowledgebaseArticleRepository.Collection.Find(filter).Sort(builderSort);
+            return toReturn.ToList();
+        }
     }
 }

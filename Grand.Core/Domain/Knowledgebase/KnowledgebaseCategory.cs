@@ -1,11 +1,12 @@
 ﻿using Grand.Core.Domain.Localization;
+using Grand.Core.Domain.Seo;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Grand.Core.Domain.Knowledgebase
 {
-    public class KnowledgebaseCategory : BaseEntity, ITreeNode, ILocalizedEntity
+    public class KnowledgebaseCategory : BaseEntity, ITreeNode, ILocalizedEntity, ISlugSupported
     {
         public KnowledgebaseCategory()
         {
@@ -58,5 +59,25 @@ namespace Grand.Core.Domain.Knowledgebase
         /// </summary>
         public bool SubjectToAcl { get; set; }
         public IList<string> CustomerRoles { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name
+        /// </summary>
+        public string SeName { get; set; }
+
+        /// <summary>
+        /// Gets or sets meta keywords
+        /// </summary>
+        public string MetaKeywords { get; set; }
+
+        /// <summary>
+        /// Gets or sets meta description
+        /// </summary>
+        public string MetaDescription { get; set; }
+
+        /// <summary>
+        /// Gets or sets meta title
+        /// </summary>
+        public string MetaTitle { get; set; }
     }
 }

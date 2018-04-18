@@ -37,7 +37,8 @@ namespace Grand.Web.ViewComponents
                         Id = category.Id,
                         Name = category.GetLocalized(y => y.Name),
                         Children = new List<KnowledgebaseCategoryModel>(),
-                        IsCurrent = model.CurrentCategoryId == category.Id
+                        IsCurrent = model.CurrentCategoryId == category.Id,
+                        SeName = category.GetLocalized(y => y.SeName)
                     };
 
                     FillChildNodes(newNode, categories, model.CurrentCategoryId);
@@ -59,7 +60,8 @@ namespace Grand.Web.ViewComponents
                     Id = child.Id,
                     Name = child.GetLocalized(y => y.Name),
                     Children = new List<KnowledgebaseCategoryModel>(),
-                    IsCurrent = currentCategoryId == child.Id
+                    IsCurrent = currentCategoryId == child.Id,
+                    SeName = child.GetLocalized(y => y.SeName)
                 };
 
                 FillChildNodes(newNode, nodes, currentCategoryId);

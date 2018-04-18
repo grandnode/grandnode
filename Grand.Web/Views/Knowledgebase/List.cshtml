@@ -2,8 +2,6 @@
 @{
     Layout = "_ColumnsTwo";
 
-    //title
-    Html.AddTitleParts(T("PageTitle.Knowledgebase").Text);
     Html.AppendScriptParts("~/Scripts/bootstrap-treeview.js");
 }
 
@@ -20,6 +18,8 @@
 
 @if (string.IsNullOrEmpty(Model.CurrentCategoryId))
 {
+    Html.AddTitleParts(T("PageTitle.Knowledgebase").Text);
+
     <form method="get" id="small-search-box-form" asp-action="ArticlesByKeyword" asp-controller="knowledgebase" novalidate="novalidate">
         <div class="input-group flex-row">
             <span role="status" aria-live="polite" class="ui-helper-hidden-accessible"></span>
@@ -36,9 +36,25 @@
     </form>
 
     @await Component.InvokeAsync("TopicBlock", new { systemName = "KnowledgebaseHomePage" })
+    @await Component.InvokeAsync("KnowledgebaseHomepageArticles", @Model)
 }
 else
 {
+    @inject SeoSettings seoSettings
+    {
+        Layout = "_ColumnsTwo";
+        Html.AddTitleParts(!String.IsNullOrEmpty(Model.CurrentCategoryDescription) ? Model.CurrentCategoryMetaTitle : Model.CurrentCategoryName);
+        Html.AddMetaDescriptionParts(Model.CurrentCategoryMetaDescription);
+        Html.AddMetaKeywordParts(Model.CurrentCategoryMetaKeywords);
+
+        var canonicalUrlsEnabled = seoSettings.CanonicalUrlsEnabled;
+        if (canonicalUrlsEnabled)
+        {
+            var categoryUrl = Url.RouteUrl("ArticlesByCategory", new { SeName = Model.CurrentCategorySeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
+            Html.AddCanonicalUrlParts(categoryUrl);
+        }
+    }
+
     @Html.Raw(@Model.CurrentCategoryDescription)
 
     @if (Model.Articles.Any())
@@ -46,7 +62,7 @@ else
         <div class="list-group">
             @foreach (var article in Model.Articles)
             {
-                <a class="list-group-item" href="@Url.RouteUrl("KnowledgebaseArticle", new { articleId = article.Id })">
+                <a class="list-group-item" href="@Url.RouteUrl("KnowledgebaseArticle", new { SeName = article.SeName })">
                     @article.Name
                 </a>
             }

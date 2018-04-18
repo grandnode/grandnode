@@ -46,11 +46,18 @@ namespace Grand.Web.Controllers
                 Content = x.GetLocalized(y => y.Content),
                 Name = x.GetLocalized(y => y.Name),
                 Id = x.Id,
-                ParentCategoryId = x.ParentCategoryId
+                ParentCategoryId = x.ParentCategoryId,
+                SeName = x.GetLocalized(y => y.SeName)
             }));
 
             model.CurrentCategoryId = categoryId;
-            model.CurrentCategoryDescription = _knowledgebaseService.GetKnowledgebaseCategory(categoryId).GetLocalized(y => y.Description);
+            var category = _knowledgebaseService.GetKnowledgebaseCategory(categoryId);
+            model.CurrentCategoryDescription = category.GetLocalized(y => y.Description);
+            model.CurrentCategoryMetaDescription = category.GetLocalized(y => y.MetaDescription);
+            model.CurrentCategoryMetaKeywords = category.GetLocalized(y => y.MetaKeywords);
+            model.CurrentCategoryMetaTitle = category.GetLocalized(y => y.MetaTitle);
+            model.CurrentCategoryName = category.GetLocalized(y => y.Name);
+            model.CurrentCategorySeName = category.GetLocalized(y => y.SeName);
 
             return View("List", model);
         }
@@ -70,7 +77,8 @@ namespace Grand.Web.Controllers
                     Content = x.GetLocalized(y => y.Content),
                     Name = x.GetLocalized(y => y.Name),
                     Id = x.Id,
-                    ParentCategoryId = x.ParentCategoryId
+                    ParentCategoryId = x.ParentCategoryId,
+                    SeName = x.GetLocalized(y => y.SeName)
                 }));
             }
 
@@ -90,6 +98,7 @@ namespace Grand.Web.Controllers
             model.Name = article.GetLocalized(y => y.Name);
             model.Id = article.Id;
             model.ParentCategoryId = article.ParentCategoryId;
+            model.SeName = article.GetLocalized(y => y.SeName);
 
             return View("Article", model);
         }

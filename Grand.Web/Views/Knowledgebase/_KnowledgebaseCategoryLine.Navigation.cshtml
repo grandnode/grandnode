@@ -4,11 +4,11 @@
     <li class="active">
         @if (Model.IsCurrent)
         {
-            <a href="@Url.RouteUrl("ArticlesByCategory", new { categoryId = Model.Id})"><strong>@Model.Name</strong></a>
+            <a href="@Url.RouteUrl("KnowledgebaseCategory", new { SeName = Model.SeName })"><strong>@Model.Name</strong></a>
         }
         else
         {
-            <a href="@Url.RouteUrl("ArticlesByCategory", new { categoryId = Model.Id})">@Model.Name</a>
+            <a href="@Url.RouteUrl("KnowledgebaseCategory", new { SeName = Model.SeName })">@Model.Name</a>
         }
 
         @foreach (var category in Model.Children)

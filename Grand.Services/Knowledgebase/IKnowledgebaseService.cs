@@ -65,6 +65,12 @@ namespace Grand.Services.Knowledgebase
         List<KnowledgebaseArticle> GetPublicKnowledgebaseArticles();
 
         /// <summary>
+        /// Gets homepage knowledgebase articles
+        /// </summary>
+        /// <returns>List of homepage knowledgebase articles</returns>
+        List<KnowledgebaseArticle> GetHomepageKnowledgebaseArticles();
+
+        /// <summary>
         /// Gets public(published etc) knowledgebase articles for category id
         /// </summary>
         /// <returns>List of public knowledgebase articles</returns>

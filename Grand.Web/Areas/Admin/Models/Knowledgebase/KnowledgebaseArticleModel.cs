@@ -35,6 +35,21 @@ namespace Grand.Web.Areas.Admin.Models.Knowledgebase
         [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.Published")]
         public bool Published { get; set; }
 
+        [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.MetaKeywords")]
+        public string MetaKeywords { get; set; }
+
+        [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.MetaDescription")]
+        public string MetaDescription { get; set; }
+
+        [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.MetaTitle")]
+        public string MetaTitle { get; set; }
+
+        [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.SeName")]
+        public string SeName { get; set; }
+
+        [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.ShowOnHomepage")]
+        public bool ShowOnHomepage { get; set; }
+
         public List<SelectListItem> Categories { get; set; }
 
         public IList<KnowledgebaseArticleLocalizedModel> Locales { get; set; }
@@ -70,5 +85,17 @@ namespace Grand.Web.Areas.Admin.Models.Knowledgebase
 
         [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.Content")]
         public string Content { get; set; }
+
+        [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.MetaKeywords")]
+        public string MetaKeywords { get; set; }
+
+        [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.MetaDescription")]
+        public string MetaDescription { get; set; }
+
+        [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.MetaTitle")]
+        public string MetaTitle { get; set; }
+
+        [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.SeName")]
+        public string SeName { get; set; }
     }
 }

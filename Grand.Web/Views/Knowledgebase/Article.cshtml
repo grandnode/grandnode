@@ -1,9 +1,17 @@
 ﻿@model Grand.Web.Models.Knowledgebase.KnowledgebaseArticleModel
+@inject SeoSettings seoSettings
 @{
     Layout = "_ColumnsTwo";
+    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
+    Html.AddMetaDescriptionParts(Model.MetaDescription);
+    Html.AddMetaKeywordParts(Model.MetaKeywords);
 
-    //title
-    Html.AddTitleParts(T("PageTitle.Knowledgebase").Text);
+    var canonicalUrlsEnabled = seoSettings.CanonicalUrlsEnabled;
+    if (canonicalUrlsEnabled)
+    {
+        var articleUrl = Url.RouteUrl("KnowledgebaseArticle", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
+        Html.AddCanonicalUrlParts(articleUrl);
+    }
 }
 
 @Html.AntiForgeryToken()
@@ -14,7 +22,13 @@
 
 <h1 class="h2 generalTitle">
     @Model.Name
-    <a class=" fa fa-home pull-right" href="@Url.RouteUrl("Knowledgebase")"></a>
+    <a class=" fa fa-home pull-right" title=@T("Knowledgebase.Backtohomepage") data-toggle="tooltip" data-placement="right" href="@Url.RouteUrl("Knowledgebase")"></a>
 </h1>
 
 @Html.Raw(@Model.Content)
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>

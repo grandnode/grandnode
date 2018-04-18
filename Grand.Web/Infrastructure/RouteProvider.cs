@@ -119,14 +119,6 @@ namespace Grand.Web.Infrastructure
                             "knowledgebase",
                             new { controller = "Knowledgebase", action = "List" });
 
-            routeBuilder.MapLocalizedRoute("ArticlesByCategory",
-                "knowledgebase/category/{categoryId}",
-                new { controller = "Knowledgebase", action = "ArticlesByCategory" });
-
-            routeBuilder.MapLocalizedRoute("KnowledgebaseArticle",
-                "knowledgebase/article/{articleId}",
-                new { controller = "Knowledgebase", action = "KnowledgebaseArticle" });
-
             //news
             routeBuilder.MapLocalizedRoute("NewsArchive",
                             "news",
