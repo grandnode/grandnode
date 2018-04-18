@@ -181,7 +181,7 @@ namespace Grand.Framework.Infrastructure.Extensions
             //set default authentication schemes
             var authenticationBuilder = services.AddAuthentication(options =>
             {
-                options.DefaultChallengeScheme = GrandCookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultScheme = GrandCookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultSignInScheme = GrandCookieAuthenticationDefaults.ExternalAuthenticationScheme;
             });
 
