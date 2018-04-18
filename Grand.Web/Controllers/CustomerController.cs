@@ -33,6 +33,7 @@ using Grand.Core.Infrastructure;
 using System.Net;
 using Grand.Framework.Mvc.Filters;
 using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 
 namespace Grand.Web.Controllers
 {
@@ -489,10 +490,26 @@ namespace Grand.Web.Controllers
                     //newsletter
                     if (_customerSettings.NewsletterEnabled)
                     {
+                        var categories = new List<string>();
+                        foreach (string formKey in form.Keys)
+                        {
+                            if (formKey.Contains("customernewsletterCategory_"))
+                            {
+                                try
+                                {
+                                    var category = formKey.Split('_')[1];
+                                    categories.Add(category);
+                                }
+                                catch { }
+                            }
+                        }
+
                         //save newsletter value
                         var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(model.Email, _storeContext.CurrentStore.Id);
                         if (newsletter != null)
                         {
+                            newsletter.Categories.Clear();
+                            categories.ForEach(x => newsletter.Categories.Add(x));
                             if (model.Newsletter)
                             {
                                 newsletter.Active = true;
@@ -503,7 +520,7 @@ namespace Grand.Web.Controllers
                         {
                             if (model.Newsletter)
                             {
-                                _newsLetterSubscriptionService.InsertNewsLetterSubscription(new NewsLetterSubscription
+                                var newsLetterSubscription = new NewsLetterSubscription
                                 {
                                     NewsLetterSubscriptionGuid = Guid.NewGuid(),
                                     Email = model.Email,
@@ -511,7 +528,9 @@ namespace Grand.Web.Controllers
                                     Active = true,
                                     StoreId = _storeContext.CurrentStore.Id,
                                     CreatedOnUtc = DateTime.UtcNow
-                                });
+                                };
+                                categories.ForEach(x => newsLetterSubscription.Categories.Add(x));
+                                _newsLetterSubscriptionService.InsertNewsLetterSubscription(newsLetterSubscription);
                             }
                         }
                     }
@@ -826,6 +845,19 @@ namespace Grand.Web.Controllers
                     //newsletter
                     if (_customerSettings.NewsletterEnabled)
                     {
+                        var categories = new List<string>();
+                        foreach (string formKey in form.Keys)
+                        {
+                            if (formKey.Contains("customernewsletterCategory_"))
+                            {
+                                try
+                                {
+                                    var category = formKey.Split('_')[1];
+                                    categories.Add(category);
+                                }
+                                catch { }
+                            }
+                        }
                         //save newsletter value
                         var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, _storeContext.CurrentStore.Id);
                         if (newsletter == null)
@@ -833,6 +865,9 @@ namespace Grand.Web.Controllers
 
                         if (newsletter != null)
                         {
+                            newsletter.Categories.Clear();
+                            categories.ForEach(x => newsletter.Categories.Add(x));
+
                             if (model.Newsletter)
                             {
                                 newsletter.Active = true;
@@ -848,7 +883,7 @@ namespace Grand.Web.Controllers
                         {
                             if (model.Newsletter)
                             {
-                                _newsLetterSubscriptionService.InsertNewsLetterSubscription(new NewsLetterSubscription
+                                var newsLetterSubscription = new NewsLetterSubscription
                                 {
                                     NewsLetterSubscriptionGuid = Guid.NewGuid(),
                                     Email = customer.Email,
@@ -856,7 +891,9 @@ namespace Grand.Web.Controllers
                                     Active = true,
                                     StoreId = _storeContext.CurrentStore.Id,
                                     CreatedOnUtc = DateTime.UtcNow
-                                });
+                                };
+                                categories.ForEach(x => newsLetterSubscription.Categories.Add(x));
+                                _newsLetterSubscriptionService.InsertNewsLetterSubscription(newsLetterSubscription);
                             }
                         }
                     }

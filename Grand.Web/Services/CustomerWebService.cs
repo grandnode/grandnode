@@ -28,6 +28,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Grand.Core.Domain.Vendors;
+using Grand.Web.Models.Newsletter;
 
 namespace Grand.Web.Services
 {
@@ -54,6 +55,7 @@ namespace Grand.Web.Services
         private readonly IPictureService _pictureService;
         private readonly IProductService _productService;
         private readonly IAuctionService _auctionService;
+        private readonly INewsletterCategoryService _newsletterCategoryService;
 
         private readonly CustomerSettings _customerSettings;
         private readonly DateTimeSettings _dateTimeSettings;
@@ -88,6 +90,7 @@ namespace Grand.Web.Services
                     IPictureService pictureService,
                     IProductService productService,
                     IAuctionService auctionService,
+                    INewsletterCategoryService newsletterCategoryService,
                     CustomerSettings customerSettings,
                     DateTimeSettings dateTimeSettings,
                     TaxSettings taxSettings,
@@ -121,6 +124,7 @@ namespace Grand.Web.Services
             this._pictureService = pictureService;
             this._productService = productService;
             this._auctionService = auctionService;
+            this._newsletterCategoryService = newsletterCategoryService;
             this._customerSettings = customerSettings;
             this._dateTimeSettings = dateTimeSettings;
             this._taxSettings = taxSettings;
@@ -280,6 +284,14 @@ namespace Grand.Web.Services
                     newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByCustomerId(customer.Id);
 
                 model.Newsletter = newsletter != null && newsletter.Active;
+
+                var categories = _newsletterCategoryService.GetAllNewsletterCategory().ToList();
+                categories.ForEach(x => model.NewsletterCategories.Add(new NewsletterSimpleCategory() {
+                    Id = x.Id,
+                    Description = x.GetLocalized(y=>y.Description),
+                    Name = x.GetLocalized(y=>y.Name),
+                    Selected = newsletter == null ? false: newsletter.Categories.Contains(x.Id),
+                }));
 
                 model.Signature = customer.GetAttribute<string>(SystemCustomerAttributeNames.Signature);
 
@@ -478,6 +490,18 @@ namespace Grand.Web.Services
                 model.CustomerAttributes.Add(item);
             }
 
+            //newsletter categories
+            var newsletterCategories = _newsletterCategoryService.GetNewsletterCategoriesByStore(_storeContext.CurrentStore.Id);
+            foreach (var item in newsletterCategories)
+            {
+                model.NewsletterCategories.Add(new NewsletterSimpleCategory()
+                {
+                    Id = item.Id,
+                    Name = item.GetLocalized(x => x.Name),
+                    Description = item.GetLocalized(x => x.Description),
+                    Selected = item.Selected
+                });
+            }
             return model;
         }
 

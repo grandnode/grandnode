@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
 using FluentValidation.Attributes;
-using Grand.Framework;
 using Grand.Framework.Mvc.Models;
 using Grand.Web.Validators.Customer;
 using Grand.Framework.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Grand.Web.Models.Newsletter;
 
 namespace Grand.Web.Models.Customer
 {
@@ -20,6 +19,7 @@ namespace Grand.Web.Models.Customer
             this.AvailableStates = new List<SelectListItem>();
             this.AssociatedExternalAuthRecords = new List<AssociatedExternalAuthModel>();
             this.CustomerAttributes = new List<CustomerAttributeModel>();
+            this.NewsletterCategories = new List<NewsletterSimpleCategory>();
         }
 
         [GrandResourceDisplayName("Account.Fields.Email")]
@@ -138,6 +138,8 @@ namespace Grand.Web.Models.Customer
         public int NumberOfExternalAuthenticationProviders { get; set; }
 
         public IList<CustomerAttributeModel> CustomerAttributes { get; set; }
+
+        public IList<NewsletterSimpleCategory> NewsletterCategories { get; set; }
 
         #region Nested classes
 

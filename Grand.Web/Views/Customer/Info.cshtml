@@ -42,6 +42,21 @@
         });
     </script>
 }
+<script type="text/javascript">
+    $(function () {
+        $("#@Html.IdFor(model => model.Newsletter)").click(toggleNewsletterCat);
+        toggleNewsletterCat();
+
+        function toggleNewsletterCat() {
+            if ($('#@Html.FieldIdFor(model => model.Newsletter)').is(':checked')) {
+                $('.register-category-newsletter').show();
+            }
+            else {
+                $('.register-category-newsletter').hide();
+            }
+        }
+    });
+</script>
 <div class="page account-page customer-info-page">
     <h2 class="generalTitle">@T("Account.CustomerInfo")</h2>
 
@@ -298,6 +313,7 @@
                                     <label asp-for="Newsletter" class="custom-control-description">@T("Account.Fields.Newsletter")</label>
                                 </label>
                             </div>
+                            @await Html.PartialAsync("_NewsLetterCategories", Model.NewsletterCategories)
                         }
 
                         @if (Model.CustomerAttributes.Any())
