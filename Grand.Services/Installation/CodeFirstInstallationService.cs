@@ -5191,7 +5191,7 @@ namespace Grand.Services.Installation
                 OnlineShoppingCartMinutes = 60,
                 StoreLastVisitedPage = false,
                 SaveVisitedPage = false,
-                SuffixDeletedCustomers = false,
+                SuffixDeletedCustomers = true,
             });
 
             _settingService.SaveSetting(new AddressSettings
