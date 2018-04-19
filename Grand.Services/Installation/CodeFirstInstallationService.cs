@@ -4406,6 +4406,14 @@ namespace Grand.Services.Installation
                                        },
                                    new MessageTemplate
                                        {
+                                           Name = "CustomerDelete.StoreOwnerNotification",
+                                           Subject = "%Store.Name%. Customer has been deleted.",
+                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> ,<br />%Customer.FullName% (%Customer.Email%) has just deleted from your database. </p>",
+                                           IsActive = true,
+                                           EmailAccountId = eaGeneral.Id,
+                                       },
+                                   new MessageTemplate
+                                       {
                                            Name = "Customer.EmailValidationMessage",
                                            Subject = "%Store.Name%. Email validation",
                                            Body = "<a href=\"%Store.URL%\">%Store.Name%</a>  <br />  <br />  To activate your account <a href=\"%Customer.AccountActivationURL%\">click here</a>.     <br />  <br />  %Store.Name%",
@@ -5192,6 +5200,7 @@ namespace Grand.Services.Installation
                 StoreLastVisitedPage = false,
                 SaveVisitedPage = false,
                 SuffixDeletedCustomers = true,
+                AllowUsersToDeleteAccount = false
             });
 
             _settingService.SaveSetting(new AddressSettings
@@ -10366,6 +10375,12 @@ namespace Grand.Services.Installation
                                                   SystemKeyword = "PublicStore.DeleteForumPost",
                                                   Enabled = false,
                                                   Name = "Public store. Delete forum post"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "PublicStore.DeleteAccount",
+                                                  Enabled = false,
+                                                  Name = "Public store. Delete account"
                                               },
                                           new ActivityLogType
                                               {

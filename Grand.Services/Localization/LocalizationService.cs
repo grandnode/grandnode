@@ -234,26 +234,19 @@ namespace Grand.Services.Localization
                 //load all records (cached)
                 string key = string.Format(LOCALSTRINGRESOURCES_ALL_KEY, languageId);
                 var resources = _cacheManager.Get(key, () => {
-                    try
+                    var dictionary = new Dictionary<string, LocaleStringResource>();
+                    var locales = GetAllResources(languageId);
+                    foreach (var locale in locales)
                     {
-                        var res = _lsrRepository.Table.Where(x => x.LanguageId == languageId).ToDictionary(x => x.ResourceName.ToLowerInvariant());
-                        return res;
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Error(ex.Message, ex);
-                        var dictionary = new Dictionary<string, LocaleStringResource>();
-                        var locales = GetAllResources(languageId);
-                        foreach (var locale in locales)
+                        var resourceName = locale.ResourceName.ToLowerInvariant();
+                        if (!dictionary.ContainsKey(resourceName))
+                            dictionary.Add(resourceName.ToLowerInvariant(), locale);
+                        else
                         {
-                            var resourceName = locale.ResourceName.ToLowerInvariant();
-                            if (!dictionary.ContainsKey(resourceName))
-                                dictionary.Add(resourceName.ToLowerInvariant(), locale);
-                            else
-                                _lsrRepository.Delete(locale);
+                            _lsrRepository.Delete(locale);
                         }
-                        return dictionary;
                     }
+                    return dictionary;
                 });
                 if (resources.ContainsKey(resourceKey.ToLowerInvariant()))
                     result = resources[resourceKey.ToLowerInvariant()].ResourceValue;

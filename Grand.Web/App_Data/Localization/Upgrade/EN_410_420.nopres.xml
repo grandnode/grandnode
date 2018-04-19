@@ -32,4 +32,29 @@
   <LocaleResource Name="Admin.ContentManagement.Topics.NoStoresDefined">
     <Value>No stores defined</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowUsersToDeleteAccount">
+    <Value>Allow users to delete account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowUsersToDeleteAccount.hint">
+    <Value>A value indicating whether users are allowed to delete account. Option appears in my account (left side).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.DeleteAccount.DangerAlert">
+    <Value>You can delete your Account at any time. If you change your mind, you might not be able to recover it.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteAccount">
+    <Value>Customer was deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.DeleteAccount.Button">
+    <Value>Delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.DeleteAccount.Fields.Password.Required">
+    <Value>Password field is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.DeleteAccount.Fields.Password">
+    <Value>Current password</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.DeleteAccount">
+    <Value>Delete account</Value>
+  </LocaleResource>
+
 </Language>

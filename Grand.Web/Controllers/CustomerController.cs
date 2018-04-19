@@ -1185,6 +1185,84 @@ namespace Grand.Web.Controllers
 
         #endregion
 
+
+        #region My account / Delete account
+
+        [HttpsRequirement(SslRequirement.Yes)]
+        public virtual IActionResult DeleteAccount()
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if(!_customerSettings.AllowUsersToDeleteAccount)
+                return RedirectToRoute("CustomerInfo");
+
+            var model = new DeleteAccountModel();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [PublicAntiForgery]
+        public virtual IActionResult DeleteAccount(DeleteAccountModel model)
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if (!_customerSettings.AllowUsersToDeleteAccount)
+                return RedirectToRoute("CustomerInfo");
+
+            var customer = _workContext.CurrentCustomer;
+            if (ModelState.IsValid)
+            {
+                var loginResult = _customerRegistrationService.ValidateCustomer(_customerSettings.UsernamesEnabled ? customer.Username : customer.Email, model.Password);
+
+                switch (loginResult)
+                {
+                    case CustomerLoginResults.Successful:
+                        {
+                            //activity log
+                            _customerActivityService.InsertActivity("PublicStore.DeleteAccount", "", _localizationService.GetResource("ActivityLog.DeleteAccount"));
+
+                            //send notification to customer
+                            _workflowMessageService.SendCustomerDeleteStoreOwnerNotification(customer, _localizationSettings.DefaultAdminLanguageId);
+
+                            //delete account
+                            _customerService.DeleteCustomer(customer);
+
+                            //standard logout 
+                            _authenticationService.SignOut();
+
+                            return RedirectToRoute("HomePage");
+                        }
+                    case CustomerLoginResults.CustomerNotExist:
+                        ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials.CustomerNotExist"));
+                        break;
+                    case CustomerLoginResults.Deleted:
+                        ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials.Deleted"));
+                        break;
+                    case CustomerLoginResults.NotActive:
+                        ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials.NotActive"));
+                        break;
+                    case CustomerLoginResults.NotRegistered:
+                        ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials.NotRegistered"));
+                        break;
+                    case CustomerLoginResults.LockedOut:
+                        ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials.LockedOut"));
+                        break;
+                    case CustomerLoginResults.WrongPassword:
+                    default:
+                        ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials"));
+                        break;
+                }
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        #endregion
+
         #region My account / Avatar
 
         [HttpsRequirement(SslRequirement.Yes)]

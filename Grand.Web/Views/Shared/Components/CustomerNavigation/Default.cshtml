@@ -67,6 +67,13 @@
                                                                              else
                                                                              {<text>inactive</text>}">@T("Account.ChangePassword")</a></li>
             }
+            @if (!Model.HideDeleteAccount)
+            { 
+                <li><a href="@Url.RouteUrl("CustomerDeleteAccount")" class="@if (Model.SelectedTab == CustomerNavigationEnum.DeleteAccount)
+                                                                             {<text>active</text>}
+                                                                             else
+                                                                             {<text>inactive</text>}">@T("Account.DeleteAccount")</a></li>
+            }
             @if (!Model.HideAvatar)
             { 
                 <li><a href="@Url.RouteUrl("CustomerAvatar")" class="@if (Model.SelectedTab == CustomerNavigationEnum.Avatar)

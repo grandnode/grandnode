@@ -392,6 +392,14 @@ namespace Grand.Services.Messages
         int SendNewVatSubmittedStoreOwnerNotification(Customer customer, string vatName, string vatAddress, string languageId);
 
         /// <summary>
+        /// Sends a "customer delete" notification to a store owner
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        int SendCustomerDeleteStoreOwnerNotification(Customer customer, string languageId);
+
+        /// <summary>
         /// Sends a blog comment notification message to a store owner
         /// </summary>
         /// <param name="blogComment">Blog comment</param>

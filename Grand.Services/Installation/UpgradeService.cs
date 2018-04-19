@@ -853,6 +853,35 @@ namespace Grand.Services.Installation
             _settingService.SaveSetting(adminareasettings);
 
             #endregion
+            #region ActivityLog
+
+            var _activityLogTypeRepository = EngineContext.Current.Resolve<IRepository<ActivityLogType>>();
+            _activityLogTypeRepository.Insert(new ActivityLogType()
+            {
+                SystemKeyword = "PublicStore.DeleteAccount",
+                Enabled = false,
+                Name = "Public store. Delete account"
+            });
+
+            #endregion
+            #region MessageTemplates
+
+            var emailAccount = EngineContext.Current.Resolve<IRepository<EmailAccount>>().Table.FirstOrDefault();
+            if (emailAccount == null)
+                throw new Exception("Default email account cannot be loaded");
+            var messageTemplates = new List<MessageTemplate>
+            {
+                new MessageTemplate
+                {
+                    Name = "CustomerDelete.StoreOwnerNotification",
+                    Subject = "%Store.Name%. Customer has been deleted.",
+                    Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> ,<br />%Customer.FullName% (%Customer.Email%) has just deleted from your database. </p>",
+                    IsActive = true,
+                    EmailAccountId = emailAccount.Id,
+                },
+            };
+            EngineContext.Current.Resolve<IRepository<MessageTemplate>>().Insert(messageTemplates);
+            #endregion
 
         }
         private void InstallStringResources(string filenames)

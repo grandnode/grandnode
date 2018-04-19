@@ -161,6 +161,11 @@ namespace Grand.Core.Domain.Customers
         public bool SuffixDeletedCustomers { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether users are allowed to delete account
+        /// </summary>
+        public bool AllowUsersToDeleteAccount { get; set; }
+
+        /// <summary>
         /// Gets or sets maximum login failures to lockout account. Set 0 to disable this feature
         /// </summary>
         public int FailedPasswordAllowedAttempts { get; set; }

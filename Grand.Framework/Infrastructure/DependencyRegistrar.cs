@@ -5,7 +5,6 @@ using System.Reflection;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Configuration;
