@@ -77,25 +77,24 @@
                     field: "ProductName",
                     editable: false,
                     type: "string",
-                    title: "@T("Admin.Catalog.Manufacturers.Products.Fields.Product")"
+                    title: "@T("Admin.Catalog.Manufacturers.Products.Fields.Product")",
+                    template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#=ProductName#</a>'
                 }, {
                     field: "IsFeaturedProduct",
                     title: "@T("Admin.Catalog.Manufacturers.Products.Fields.IsFeaturedProduct")",
-                    width: 150,
+                    width: 100,
+                    minScreenWidth: 750,
                     headerAttributes: { style: "text-align:center" },
                     attributes: { style: "text-align:center" },
                     template: '# if(IsFeaturedProduct) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
                 }, {
                     field: "DisplayOrder",
                     title: "@T("Admin.Catalog.Manufacturers.Products.Fields.DisplayOrder")",
-                    //integer format
+                    minScreenWidth: 750,
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
                     format: "{0:0}",
-                    width: 150
-                }, {
-                    field: "ProductId",
-                    title: "@T("Admin.Common.View")",
-                    width: 100,
-                    template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">@T("Admin.Common.View")</a>'
+                    width: 80
                 }, {
                     command: [{
                         name: "edit",
@@ -108,7 +107,6 @@
                         name: "destroy",
                         text: "@T("Admin.Common.Delete")"
                     }],
-                    width: 200
                 }]
             });
         });

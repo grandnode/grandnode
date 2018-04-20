@@ -46,19 +46,18 @@
                 columns: [{
                     field: "ActivityLogTypeName",
                     title: "@T("Admin.Catalog.Categories.ActivityLog.ActivityLogType")",
-                    width: 200,
                 }, {
                     field: "CustomerId",
+                    minScreenWidth: 500,
                     title: "@T("Admin.Catalog.Categories.ActivityLog.Customer")",
-                    width: 200,
                     template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerEmail#</a>'
                 }, {
                     field: "Comment",
+                    minScreenWidth: 750,
                     title: "@T("Admin.Catalog.Categories.ActivityLog.Comment")"
                 }, {
                     field: "CreatedOn",
                     title: "@T("Admin.Catalog.Categories.ActivityLog.CreatedOn")",
-                    width: 200,
                     type: "date",
                     format: "{0:G}"
                 }]
