@@ -230,7 +230,7 @@ textarea.k-textbox:hover,
 .k-link:link,
 .k-link:visited,
 .k-nav-current.k-state-hover .k-link {
-  color: #364150;
+  /*color: #364150;*/
 }
 .k-tabstrip-items .k-link,
 .k-panelbar > li > .k-link {

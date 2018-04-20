@@ -69,16 +69,14 @@
             columns: [{
                 field: "Name",
                 title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name")",
+                template: '<a class="k-link" href="Edit/#=Id#">#=Name#</a>',
                 width: 300
             }, {
                 field: "DisplayOrder",
                 title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Fields.DisplayOrder")",
-                width: 100
-            }, {
-                field: "Id",
-                title: "@T("Admin.Common.Edit")",
-                width: 80,
-                template: '<a class="btn btn-sm btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
+                width: 100,
+                headerAttributes: { style: "text-align:center" },
+                attributes: { style: "text-align:center" },
             }]
         });
     });
