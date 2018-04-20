@@ -957,22 +957,22 @@
     <Value>Customer</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteKnowledgebaseCategory">
-    <Value>Delete knowledgebase category</Value>
+    <Value>Deleted knowledgebase category ('{0}')</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.CreateKnowledgebaseCategory">
-    <Value>Create knowledgebase category</Value>
+    <Value>Created knowledgebase category ('{0}')</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.UpdateKnowledgebaseCategory">
-    <Value>Update knowledgebase category</Value>
-  </LocaleResource>
-  <LocaleResource Name="ActivityLog.CreateKnowledgebaseArticle">
-    <Value>Create knowledgebase article</Value>
-  </LocaleResource>
-  <LocaleResource Name="ActivityLog.UpdateKnowledgebaseArticle">
-    <Value>Update knowledgebase article</Value>
+    <Value>Updated knowledgebase category ('{0}')</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteKnowledgebaseArticle">
-    <Value>Delete knowledgebase article</Value>
+    <Value>Deleted knowledgebase article ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.CreateKnowledgebaseArticle">
+    <Value>Created knowledgebase article ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.UpdateKnowledgebaseArticle">
+    <Value>Updated knowledgebase article ('{0}')</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Info">
     <Value>Info</Value>
@@ -997,15 +997,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Acl">
     <Value>Access control list</Value>
-  </LocaleResource>
-  <LocaleResource Name="ActivityLog.DeleteKnowledgebaseArticle">
-    <Value>Delete knowledgebase category</Value>
-  </LocaleResource>
-  <LocaleResource Name="ActivityLog.CreateKnowledgebaseArticle">
-    <Value>Create knowledgebase category</Value>
-  </LocaleResource>
-  <LocaleResource Name="ActivityLog.UpdateKnowledgebaseArticle">
-    <Value>Update knowledgebase category</Value>
   </LocaleResource>
   <LocaleResource Name="Knowledgebase">
     <Value>Knowledgebase</Value>
@@ -1096,5 +1087,20 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.ShowOnHomepage.Hint">
     <Value>Show on homepage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Cannotdeletewitharticles">
+    <Value>Cannot delete category with articles assigned to it</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Related">
+    <Value>Related articles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Related.AddNew">
+    <Value>Add new related article</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Related.SaveBeforeEdit">
+    <Value>Save article before editing this section</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Related.SearchArticleName">
+    <Value>Search article title</Value>
   </LocaleResource>
 </Language>

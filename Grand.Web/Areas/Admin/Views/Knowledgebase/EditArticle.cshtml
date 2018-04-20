@@ -18,7 +18,7 @@
                     </div>
                     <div class="actions">
                         <div class="btn-group btn-group-devided">
-                            <button type="button" onclick="javascript:OpenWindow('@Url.RouteUrl("KnowledgebaseArticle", new { articleId = Model.Id })', 800, 600, true); return false;" class="btn purple">
+                            <button type="button" onclick="javascript:OpenWindow('@Url.RouteUrl("KnowledgebaseArticle", new { SeName = Model.SeName })', 800, 600, true); return false;" class="btn purple">
                                 <i class="fa fa-eye"></i>
                                 @T("Admin.Common.Preview")
                             </button>

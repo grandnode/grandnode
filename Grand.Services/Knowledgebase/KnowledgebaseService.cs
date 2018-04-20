@@ -47,7 +47,14 @@ namespace Grand.Services.Knowledgebase
         /// <param name="id"></param>
         public void DeleteKnowledgebaseCategory(KnowledgebaseCategory kc)
         {
+            var children = _knowledgebaseCategoryRepository.Table.Where(x => x.ParentCategoryId == kc.Id).ToList();
             _knowledgebaseCategoryRepository.Delete(kc);
+            foreach (var child in children)
+            {
+                child.ParentCategoryId = "";
+                UpdateKnowledgebaseCategory(child);
+            }
+
             _eventPublisher.EntityDeleted(kc);
         }
 
@@ -87,7 +94,7 @@ namespace Grand.Services.Knowledgebase
         /// <returns>List of knowledgebase categories</returns>
         public List<KnowledgebaseCategory> GetKnowledgebaseCategories()
         {
-            return _knowledgebaseCategoryRepository.Table.ToList();
+            return _knowledgebaseCategoryRepository.Table.OrderBy(x => x.DisplayOrder).ToList();
         }
 
         /// <summary>
@@ -106,7 +113,7 @@ namespace Grand.Services.Knowledgebase
         /// <returns>List of knowledgebase articles</returns>
         public List<KnowledgebaseArticle> GetKnowledgebaseArticles()
         {
-            return _knowledgebaseArticleRepository.Table.ToList();
+            return _knowledgebaseArticleRepository.Table.OrderBy(x => x.DisplayOrder).ToList();
         }
 
         /// <summary>

@@ -1,0 +1,19 @@
+﻿@model KnowledgebaseArticleModel
+@if (!String.IsNullOrEmpty(Model.Id))
+{
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="relatedarticles-grid"></div>
+        </div>
+        <div class="panel-footer">
+            <input type="submit" id="btnAddNewRelatedArticle" value="@T("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Related.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("RelatedArticleAddPopup", "Knowledgebase", new { articleId = Model.Id }))', 800, 800, true); return false;" class="k-button" />
+            <input type="submit" id="btnRefreshRelatedArticles" style="display: none" />
+        </div>
+    </div>
+}
+else
+{
+    <div class="note note-info">
+        @T("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Related.SaveBeforeEdit")
+    </div>
+}

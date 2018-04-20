@@ -52,6 +52,9 @@ namespace Grand.Web.Controllers
 
             model.CurrentCategoryId = categoryId;
             var category = _knowledgebaseService.GetKnowledgebaseCategory(categoryId);
+            if (category == null)
+                return RedirectToAction("List");
+
             model.CurrentCategoryDescription = category.GetLocalized(y => y.Description);
             model.CurrentCategoryMetaDescription = category.GetLocalized(y => y.MetaDescription);
             model.CurrentCategoryMetaKeywords = category.GetLocalized(y => y.MetaKeywords);
@@ -94,6 +97,9 @@ namespace Grand.Web.Controllers
 
             var model = new KnowledgebaseArticleModel();
             var article = _knowledgebaseService.GetKnowledgebaseArticle(articleId);
+            if (article == null)
+                return RedirectToAction("List");
+
             model.Content = article.GetLocalized(y => y.Content);
             model.Name = article.GetLocalized(y => y.Name);
             model.Id = article.Id;

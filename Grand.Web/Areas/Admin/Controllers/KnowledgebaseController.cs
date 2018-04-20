@@ -473,6 +473,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (knowledgebaseCategory == null)
                 return RedirectToAction("List");
 
+            if (_knowledgebaseService.GetKnowledgebaseArticlesByCategoryId(id).Any())
+            {
+                ErrorNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Cannotdeletewitharticles"));
+                return RedirectToAction("EditCategory", new { id });
+            }
+
             _knowledgebaseService.DeleteKnowledgebaseCategory(knowledgebaseCategory);
 
             _customerActivityService.InsertActivity("DeleteKnowledgebaseCategory", knowledgebaseCategory.Id,
@@ -644,6 +650,14 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Deleted"));
             return RedirectToAction("List");
+        }
+
+        public IActionResult RelatedArticleAddPopup(string articleId)
+        {
+            var model = new KnowledgebaseArticleModel.AddRelatedArticleModel();
+            model.ArticleId = articleId;
+
+            return View("ArticlesPopup", model);
         }
     }
 }

@@ -26,9 +26,12 @@
             @T("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Seo")
         </li>
         <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
-            @T("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Acl")
+            @T("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Related")
         </li>
         <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
+            @T("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Acl")
+        </li>
+        <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
             @T("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.ActivityLog")
         </li>
     </ul>
@@ -37,6 +40,9 @@
     </div>
     <div>
         @Html.Partial("_CreateOrUpdateArticle.TabSeo", Model)
+    </div>
+    <div>
+        @Html.Partial("_CreateOrUpdateArticle.TabRelated", Model)
     </div>
     <div>
         @Html.Partial("_CreateOrUpdateArticle.TabAcl", Model)

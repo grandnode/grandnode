@@ -74,6 +74,16 @@ namespace Grand.Web.Areas.Admin.Models.Knowledgebase
             public string CustomerId { get; set; }
             public string CustomerEmail { get; set; }
         }
+
+        public partial class AddRelatedArticleModel : BaseGrandModel
+        {
+            [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Related.SearchArticleName")]
+            public string SearchArticleName { get; set; }
+
+            public string ArticleId { get; set; }
+
+            public string[] SelectedArticleIds { get; set; }
+        }
     }
 
     public class KnowledgebaseArticleLocalizedModel : ILocalizedModelLocal
