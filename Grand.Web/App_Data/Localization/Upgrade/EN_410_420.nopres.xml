@@ -56,5 +56,7 @@
   <LocaleResource Name="Account.DeleteAccount">
     <Value>Delete account</Value>
   </LocaleResource>
-
+  <LocaleResource Name="Account.CustomerExportToXls">
+    <Value>Export data</Value>
+  </LocaleResource>
 </Language>

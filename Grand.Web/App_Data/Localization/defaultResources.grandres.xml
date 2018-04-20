@@ -300,6 +300,9 @@
   <LocaleResource Name="Account.EmailUsernameErrors.UsernameTooLong">
     <Value>Username is too long</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.CustomerExportToXls">
+    <Value>Export data</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.Fields.AcceptPrivacyPolicy">
     <Value>I accept privacy policy</Value>
   </LocaleResource>

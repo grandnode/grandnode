@@ -947,6 +947,19 @@ namespace Grand.Web.Controllers
             });
         }
 
+
+        [HttpsRequirement(SslRequirement.Yes)]
+        public virtual IActionResult Export()
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            var customer = _workContext.CurrentCustomer;
+            var exportManager = EngineContext.Current.Resolve<Grand.Services.ExportImport.IExportManager>();
+            byte[] bytes = exportManager.ExportCustomerToXlsx(customer);
+            return File(bytes, "text/xls", "PersonalInfo.xlsx");
+
+        }
         #endregion
 
         #region My account / Addresses

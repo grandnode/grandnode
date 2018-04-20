@@ -58,8 +58,10 @@
     });
 </script>
 <div class="page account-page customer-info-page">
+    <button type="button" class="btn btn-info btn-sm float-sm-right" onclick="location.href='/customer/export'">
+        <i class="fa fa-file-excel-o" aria-hidden="true"></i> @T("Account.CustomerExportToXls")
+    </button>
     <h2 class="generalTitle">@T("Account.CustomerInfo")</h2>
-
     <form asp-route="CustomerInfo" method="post">
         <div asp-validation-summary="ModelOnly" class="message-error"></div>
         <div class="card mb-3">
@@ -82,7 +84,7 @@
                                     <span class="custom-control-description forcheckbox" for="gender-male">@T("Account.Fields.Gender.Male")</span>
                                 </label>
                                 <label class="custom-control custom-radio female">
-                                    <input type="radio" asp-for="Gender" value="F" checked="@(Model.Gender == "F")" id="gender-female" class="custom-control-input"/>
+                                    <input type="radio" asp-for="Gender" value="F" checked="@(Model.Gender == "F")" id="gender-female" class="custom-control-input" />
                                     <span class="custom-control-indicator"></span>
                                     <span class="custom-control-description forcheckbox" for="gender-female">@T("Account.Fields.Gender.Female")</span>
                                 </label>
@@ -94,7 +96,7 @@
                     <fieldset class="form-group col-sm-6 col-12">
                         <legend class="sr-only">@T("account.fields.firstname")</legend>
                         <label asp-for="FirstName" class="col-form-label">@T("Account.Fields.FirstName"):</label>
-                        <input asp-for="FirstName" class="form-control"/>
+                        <input asp-for="FirstName" class="form-control" />
                         <span asp-validation-for="FirstName"></span>
                     </fieldset>
                     <fieldset class="form-group col-sm-6 col-12">
@@ -115,15 +117,15 @@
                         </div>
                         <div class="d-flex justify-content-between flex-row">
                             @Html.DatePickerDropDowns(Html.FieldNameFor(x => x.DateOfBirthDay),
-                                        Html.FieldNameFor(x => x.DateOfBirthMonth),
-                                        Html.FieldNameFor(x => x.DateOfBirthYear),
-                                        DateTime.Now.Year - 110,
-                                        DateTime.Now.Year,
-                                        Model.DateOfBirthDay,
-                                        Model.DateOfBirthMonth,
-                                        Model.DateOfBirthYear,
-                                        false,
-                                        new { @class = "col-4 custom-select dateHelper" })
+                                                  Html.FieldNameFor(x => x.DateOfBirthMonth),
+                                                  Html.FieldNameFor(x => x.DateOfBirthYear),
+                                                  DateTime.Now.Year - 110,
+                                                  DateTime.Now.Year,
+                                                  Model.DateOfBirthDay,
+                                                  Model.DateOfBirthMonth,
+                                                  Model.DateOfBirthYear,
+                                                  false,
+                                                  new { @class = "col-4 custom-select dateHelper" })
                             <span asp-validation-for="DateOfBirthDay"></span>
                             <span asp-validation-for="DateOfBirthMonth"></span>
                             <span asp-validation-for="DateOfBirthYear"></span>
@@ -184,7 +186,7 @@
                         {
                             <div class="form-group">
                                 <label asp-for="VatNumber" class="col-form-label">@T("Account.Fields.VatNumber"):</label>
-                                <input asp-for="VatNumber" class="form-control"/>
+                                <input asp-for="VatNumber" class="form-control" />
                                 <span class="vat-status">@Model.VatNumberStatusNote</span>
                                 <span class="vat-note"><em>@T("Account.Fields.VatNumber.Note")</em></span>
                             </div>
@@ -194,10 +196,10 @@
             </div>
         }
         @if (Model.StreetAddressEnabled ||
-            Model.StreetAddress2Enabled ||
-            Model.ZipPostalCodeEnabled ||
-            Model.CityEnabled ||
-            Model.CountryEnabled)
+          Model.StreetAddress2Enabled ||
+          Model.ZipPostalCodeEnabled ||
+          Model.CityEnabled ||
+          Model.CountryEnabled)
         {
             <div class="card mb-3">
                 <h3 class="card-header">
