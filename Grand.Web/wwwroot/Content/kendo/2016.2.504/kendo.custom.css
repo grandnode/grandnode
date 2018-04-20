@@ -2839,7 +2839,6 @@ td.k-state-focused.k-state-selected,
 .k-spreadsheet .k-widget[data-property='fontFamily'] {
   width: 130px;
 }
-
-.k-link:hover {
+a.k-link:hover {
     text-decoration: underline !important;
 }
