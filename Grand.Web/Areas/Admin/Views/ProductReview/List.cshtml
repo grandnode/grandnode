@@ -129,7 +129,7 @@ $(document).ready(function () {
             refresh: true,
             pageSizes: [@(adminAreaSettings.GridPageSizes)]
         },
-        scrollable: false,
+        scrollable: true,
         dataBound: onDataBound,
         columns: [{
             field: "Ids",
@@ -137,49 +137,42 @@ $(document).ready(function () {
             headerAttributes: { style: "text-align:center" },
             attributes: { style: "text-align:center" },
             template: "<label class='mt-checkbox mt-checkbox-outline'><input type='checkbox' value='#=Ids#' class='checkboxGroups'/><span></span></label>",
-            width: 50
-        },
-        {
-            field: "StoreName",
-            title: "@T("Admin.Catalog.ProductReviews.Fields.Store")",
-            width: 150
+            width: 40
         },
         {
             field: "ProductName",
             title: "@T("Admin.Catalog.ProductReviews.Fields.Product")",
             width: 200,
-            template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:ProductName#</a>'
+            template: '<a class="k-link" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:ProductName#</a>'
         }, {
             field: "CustomerId",
             title: "@T("Admin.Catalog.ProductReviews.Fields.Customer")",
             width: 200,
-            template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerInfo#</a>'
+            minScreenWidth: 750,
+            template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerInfo#</a>'
         }, {
             field: "Title",
             title: "@T("Admin.Catalog.ProductReviews.Fields.Title")",
-            width: 200
+            width: 200,
+            template: '<a class="k-link" href="Edit/#=Id#?ProductId=#=ProductId#">#:Title#</a>'
         }, {
             field: "Rating",
             title: "@T("Admin.Catalog.ProductReviews.Fields.Rating")",
-            width: 100
+            width: 60,
+            minScreenWidth: 750,
         }, {
             field: "IsApproved",
             title: "@T("Admin.Catalog.ProductReviews.Fields.IsApproved")",
-            width: 100,
+            width: 80,
             headerAttributes: { style: "text-align:center" },
             attributes: { style: "text-align:center" },
             template: '# if(IsApproved) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
         }, {
             field: "CreatedOn",
             title: "@T("Admin.Catalog.ProductReviews.Fields.CreatedOn")",
-            width: 200,
+            width: 120,
             type: "date",
             format: "{0:G}"
-        }, {
-            field: "Id",
-            title: "@T("Admin.Common.Edit")",
-            width: 50,
-            template: '<a class="k-button k-button-icontext" href="Edit/#=Id#?ProductId=#=ProductId#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
         }]
     });
 });
