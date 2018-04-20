@@ -150,7 +150,7 @@
                     //bulk editing
                     mode: "incell"
                 },
-                scrollable: false,
+                scrollable: true,
                 columns: [ {
                     field: "Name",
                     title: "@T("Admin.Catalog.BulkEdit.Fields.Name")",
@@ -159,7 +159,7 @@
                     field: "ProductId",
                     title: "@T("Admin.Common.View")",
                     width: 50,
-                    template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=Id#">@T("Admin.Common.View")</a>'
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Product/Edit/")#=Id#">@T("Admin.Common.View")</a>'
                 },{
                     field: "Sku",
                     title: "@T("Admin.Catalog.BulkEdit.Fields.Sku")",
