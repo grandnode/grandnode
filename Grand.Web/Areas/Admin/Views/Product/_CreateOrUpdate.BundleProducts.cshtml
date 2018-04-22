@@ -78,22 +78,21 @@
                 scrollable: false,
                 columns: [{
                     field: "ProductName",
-                    title: "@T("Admin.Catalog.Products.BundleProducts.Fields.Product")"
+                    title: "@T("Admin.Catalog.Products.BundleProducts.Fields.Product")",
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#=ProductName#</a>',
                 },{
                     field: "Quantity",
                     title: "@T("Admin.Catalog.Products.BundleProducts.Fields.Quantity")",
                     format: "{0:0}",
-                    width: 150
                 },{
                     field: "DisplayOrder",
                     title: "@T("Admin.Catalog.Products.BundleProducts.Fields.DisplayOrder")",
                     format: "{0:0}",
-                    width: 150
-                },{
-                    field: "ProductId",
-                    title: "@T("Admin.Common.View")",
-                    width: 100,
-                    template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">@T("Admin.Common.View")</a>'
+                    width: 80,
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
+                    minScreenWidth: 750,
+
                 }, {
                     command: [{
                         name: "edit",
@@ -105,8 +104,7 @@
                     }, {
                         name: "destroy",
                         text: "@T("Admin.Common.Delete")"
-                    }],
-                    width: 200
+                    }]
                 }]
             });
         });

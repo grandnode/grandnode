@@ -4886,11 +4886,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             var combinationsModel = combinations
                 .Select(x =>
                 {
+                    var attributesXml = _productAttributeFormatter.FormatAttributes(_productService.GetProductById(product.Id), x.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false, true, true);
                     var pacModel = new ProductModel.ProductAttributeCombinationModel
                     {
                         Id = x.Id,
                         ProductId = product.Id,
-                        AttributesXml = _productAttributeFormatter.FormatAttributes(_productService.GetProductById(product.Id), x.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false, true, true),
+                        AttributesXml = string.IsNullOrEmpty(attributesXml)? "(null)": attributesXml,
                         StockQuantity = product.UseMultipleWarehouses ? x.WarehouseInventory.Sum(y=>y.StockQuantity-y.ReservedQuantity) : x.StockQuantity,
                         AllowOutOfStockOrders = x.AllowOutOfStockOrders,
                         Sku = x.Sku,

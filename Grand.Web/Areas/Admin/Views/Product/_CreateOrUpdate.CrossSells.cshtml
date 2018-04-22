@@ -65,16 +65,11 @@
                 columns: [
                     {
                         field: "Product2Name",
-                        title: "@T("Admin.Catalog.Products.CrossSells.Fields.Product")"
-                    }, {
-                        field: "ProductId2",
-                        title: "@T("Admin.Common.View")",
-                        width: 100,
-                        template: '<a class="k-link" href="@Url.Content("~/Admin/Product/Edit/")#=Id#">@T("Admin.Common.View")</a>'
+                        title: "@T("Admin.Catalog.Products.CrossSells.Fields.Product")",
+                        template: '<a class="k-link" href="@Url.Content("~/Admin/Product/Edit/")#=Id#">#=Product2Name#</a>',
                     }, {
                         command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                         title: "@T("Admin.Common.Delete")",
-                        width: 200
                     }
                 ]
             });

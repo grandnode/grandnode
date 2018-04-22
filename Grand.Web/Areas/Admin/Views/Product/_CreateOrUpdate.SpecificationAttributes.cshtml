@@ -73,22 +73,22 @@
                             info: false
                         },
                         editable: {
-                            confirmation: false,
+                            confirmation: true,
                             mode: "inline"
                         },
-                        scrollable: false,
+                        scrollable: true,
                         columns: [{
                                 field: "AttributeTypeName",
                                 title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.AttributeType")",
-                                width: 150
+                                width: 100
                             },{
                                 field: "AttributeName",
                                 title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttribute")",
-                                width: 200
+                                width: 100
                             }, {
                                 field: "ValueRaw",
                                 title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.Value")",
-                                width: 200,
+                                width: 150,
                                 encoded: false,
                                 editor: function setDropDownEditor(container, options) {
                                                     if (options.model.AttributeTypeId == @((int)SpecificationAttributeType.Option)) {
@@ -121,14 +121,14 @@
                             }, {
                                 field: "AllowFiltering",
                                 title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.AllowFiltering")",
-                                width: 150,
+                                width: 80,
                                 headerAttributes: { style: "text-align:center" },
                                 attributes: { style: "text-align:center" },
                                 template: '# if(AllowFiltering) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
                             }, {
                                 field: "ShowOnProductPage",
                                 title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.ShowOnProductPage")",
-                                width: 150,
+                                width: 90,
                                 headerAttributes: { style: "text-align:center" },
                                 attributes: { style: "text-align:center" },
                                 template: '# if(ShowOnProductPage) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
@@ -136,7 +136,10 @@
                             {
                                 field: "DisplayOrder",
                                 title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.DisplayOrder")",
-                                width: 150,
+                                width: 100,
+                                minScreenWidth: 500,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
                                 //integer format
                                 format: "{0:0}"
                             }, {

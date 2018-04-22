@@ -84,7 +84,7 @@
                 info: false
             },
             editable: {
-                confirmation: false,
+                confirmation: true,
                 mode: "inline"
             },
             scrollable: false,
@@ -93,18 +93,21 @@
                     field: "AttributesXml",
                     title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Attributes")",
                     width: 200,
-                    template: "#=AttributesXml#<br /> # if(Warnings !== null) {# <span style=\"color: red\">#=Warnings#</span> #}  #",
-                    encoded: false
+                    //template: "#=AttributesXml#<br /> # if(Warnings !== null) {# <span style=\"color: red\">#=Warnings#</span> #}  #",
+                    encoded: false,
+                    template: "<a class='k-link' href='javascript:OpenWindow(\"@Url.Content("~/Admin/Product/AttributeCombinationPopup/")?productId=@(Model.Id)&Id=#=Id#&btnId=btnRefreshCombinations&formId=product-form\", 800, 600, true);'>#=AttributesXml#<br /> # if(Warnings !== null) {# <span style=\"color: red\">#=Warnings#</span> #}  #</a>"
                 }, {
                     field: "StockQuantity",
                     title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.StockQuantity")",
-                    width: 100,
+                    width: 80,
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
                     //integer format
                     format: "{0:0}"
                 }, {
                     field: "AllowOutOfStockOrders",
                     title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.AllowOutOfStockOrders")",
-                    width: 100,
+                    width: 80,
                     headerAttributes: { style: "text-align:center" },
                     attributes: { style: "text-align:center" },
                     template: '# if(AllowOutOfStockOrders) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
@@ -123,7 +126,9 @@
                 }, {
                     field: "OverriddenPrice",
                     title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.OverriddenPrice")",
-                    width: 100,
+                    width: 80,
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
                     editor: function (container, options) {
                         $('<input name="' + options.field + '"/>')
                                 .appendTo(container)
@@ -132,12 +137,6 @@
                                     decimals: 4
                                 });
                     }
-                },
-                {
-                    field: "Id",
-                    title: "@T("Admin.Common.Edit")",
-                    width: 120,
-                    template: "<a href='javascript:OpenWindow(\"@Url.Content("~/Admin/Product/AttributeCombinationPopup/")?productId=@(Model.Id)&Id=#=Id#&btnId=btnRefreshCombinations&formId=product-form\", 800, 600, true);'>@T("Admin.Common.Edit")</a>"
                 },
                 {
                     command: [
