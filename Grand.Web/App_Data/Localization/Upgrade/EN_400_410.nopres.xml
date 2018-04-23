@@ -1103,4 +1103,7 @@
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Related.SearchArticleName">
     <Value>Search article title</Value>
   </LocaleResource>
+  <LocaleResource Name="Knowledgebase.Article.RelatedArticles">
+    <Value>Related articles</Value>
+  </LocaleResource>
 </Language>

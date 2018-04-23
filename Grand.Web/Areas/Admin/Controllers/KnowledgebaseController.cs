@@ -18,6 +18,9 @@ using Grand.Services.Customers;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Grand.Services.Helpers;
 using Grand.Services.Seo;
+using Grand.Core;
+using Grand.Framework.Controllers;
+using Grand.Framework.Mvc;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -257,7 +260,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return Json(gridModel);
         }
-
 
         [HttpPost]
         public IActionResult ListCategoryActivityLog(DataSourceRequest command, string categoryId)
@@ -652,12 +654,108 @@ namespace Grand.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        public IActionResult RelatedArticleAddPopup(string articleId)
+        public IActionResult ArticlesPopup(string articleId)
         {
             var model = new KnowledgebaseArticleModel.AddRelatedArticleModel();
             model.ArticleId = articleId;
+            model.AvailableArticles.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
+            var articles = _knowledgebaseService.GetKnowledgebaseArticles();
+            foreach (var a in articles)
+                model.AvailableArticles.Add(new SelectListItem { Text = a.Name, Value = a.Id.ToString() });
 
-            return View("ArticlesPopup", model);
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult RelatedArticlesAddPopupList(DataSourceRequest command, KnowledgebaseArticleModel.AddRelatedArticleModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
+                return AccessDeniedView();
+
+            var articles = _knowledgebaseService.GetKnowledgebaseArticlesByName(model.SearchArticleName);
+            var gridModel = new DataSourceResult();
+            gridModel.Data = articles.Select(x => x.ToModel());
+            gridModel.Total = articles.TotalCount;
+
+            return Json(gridModel);
+        }
+
+        public IActionResult RelatedArticlesList(DataSourceRequest command, string articleId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
+                return AccessDeniedView();
+
+            var articles = _knowledgebaseService.GetRelatedKnowledgebaseArticles(articleId, command.Page - 1, command.PageSize);
+            var gridModel = new DataSourceResult
+            {
+                Data = articles.Select(x => new KnowledgebaseRelatedArticleGridModel
+                {
+                    Article2Id = x.Id,
+                    DisplayOrder = x.DisplayOrder,
+                    Published = x.Published,
+                    Article2Name = x.Name,
+                    Id = x.Id
+                }),
+                Total = articles.TotalCount
+            };
+
+            return Json(gridModel);
+        }
+
+        [HttpPost]
+        [FormValueRequired("save")]
+        public IActionResult ArticlesPopup(KnowledgebaseArticleModel.AddRelatedArticleModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
+                return AccessDeniedView();
+
+            if (model.SelectedArticlesIds != null)
+            {
+                var article = _knowledgebaseService.GetKnowledgebaseArticle(model.ArticleId);
+
+                foreach (var id in model.SelectedArticlesIds)
+                {
+                    if (id != article.Id)
+                        if (!article.RelatedArticles.Contains(id))
+                            article.RelatedArticles.Add(id);
+                }
+
+                _knowledgebaseService.UpdateKnowledgebaseArticle(article);
+            }
+
+            ViewBag.RefreshPage = true;
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult RelatedArticleDelete(KnowledgebaseArticleModel.AddRelatedArticleModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            if (model.ArticleId == null || model.Id == null)
+                throw new ArgumentNullException("Article id expected ");
+
+            var article = _knowledgebaseService.GetKnowledgebaseArticle(model.ArticleId);
+            var related = _knowledgebaseService.GetKnowledgebaseArticle(model.Id);
+
+            if (article == null || related == null)
+                throw new ArgumentNullException("No article found with specified id");
+
+            string toDelete = "";
+            foreach (var item in article.RelatedArticles)
+            {
+                if (item == related.Id)
+                    toDelete = item;
+            }
+
+            if (!string.IsNullOrEmpty(toDelete))
+                article.RelatedArticles.Remove(toDelete);
+
+            _knowledgebaseService.UpdateKnowledgebaseArticle(article);
+
+            return new NullJsonResult();
         }
     }
 }

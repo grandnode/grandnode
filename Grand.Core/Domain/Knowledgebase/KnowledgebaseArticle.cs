@@ -12,6 +12,7 @@ namespace Grand.Core.Domain.Knowledgebase
         {
             CustomerRoles = new List<string>();
             Locales = new List<LocalizedProperty>();
+            RelatedArticles = new List<string>();
         }
 
         /// <summary>
@@ -84,5 +85,10 @@ namespace Grand.Core.Domain.Knowledgebase
         /// Gets or sets value indicating whether to show article on knowledgebase homepage
         /// </summary>
         public bool ShowOnHomepage { get; set; }
+
+        /// <summary>
+        /// Gets or sets list of related articles ids
+        /// </summary>
+        public IList<string> RelatedArticles { get; set; }
     }
 }

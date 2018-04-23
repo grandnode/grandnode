@@ -3,8 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.ContentManagement.Knowledgebase.KnowgledgebaseArticle.EditKnowgledgebaseArticle").Text;
 }
-@using (Html.BeginForm())
-{
+<form asp-controller="Knowledgebase" asp-action="EditArticle" method="post" id="article-form">
     @Html.AntiForgeryToken()
 
     <div class="row">
@@ -34,5 +33,5 @@
             </div>
         </div>
     </div>
-}
-@Html.DeleteConfirmation("DeleteArticle", "knowledgebasearticle-delete")
+</form>
+    @Html.DeleteConfirmation("DeleteArticle", "knowledgebasearticle-delete")

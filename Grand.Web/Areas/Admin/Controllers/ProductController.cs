@@ -343,7 +343,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             model.AvailableStores = _storeService
                 .GetAllStores()
-                .Where(x => (_workContext.CurrentVendor == null ? true: !string.IsNullOrEmpty(_workContext.CurrentVendor.StoreId) ? x.Id == _workContext.CurrentVendor.StoreId ? true: false : true)
+                .Where(x => (_workContext.CurrentVendor == null ? true : !string.IsNullOrEmpty(_workContext.CurrentVendor.StoreId) ? x.Id == _workContext.CurrentVendor.StoreId ? true : false : true)
                 )
                 .Select(s => s.ToModel())
                 .ToList();
@@ -388,7 +388,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     if (attribute.ShouldHaveValues())
                     {
                         //values
-                        var attributeValues = attribute.ProductAttributeValues; 
+                        var attributeValues = attribute.ProductAttributeValues;
                         foreach (var attributeValue in attributeValues)
                         {
                             var attributeValueModel = new ProductAttributeCombinationModel.ProductAttributeValueModel
@@ -406,7 +406,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
 
-            if(!string.IsNullOrEmpty(model.PictureId))
+            if (!string.IsNullOrEmpty(model.PictureId))
             {
                 var pictureThumbnailUrl = _pictureService.GetPictureUrl(model.PictureId, 75, false);
                 model.PictureThumbnailUrl = pictureThumbnailUrl;
@@ -740,7 +740,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.Published = true;
                 model.VisibleIndividually = true;
             }
-            if(_workContext.CurrentVendor != null && !string.IsNullOrEmpty(_workContext.CurrentVendor.StoreId))
+            if (_workContext.CurrentVendor != null && !string.IsNullOrEmpty(_workContext.CurrentVendor.StoreId))
             {
                 model.LimitedToStores = true;
                 model.SelectedStoreIds = new string[] { _workContext.CurrentVendor.StoreId };
@@ -912,7 +912,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 if (_workContext.CurrentVendor != null && !string.IsNullOrEmpty(_workContext.CurrentVendor.StoreId))
                 {
-                    if(s.Id == _workContext.CurrentVendor.StoreId)
+                    if (s.Id == _workContext.CurrentVendor.StoreId)
                         model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
                 }
                 else
@@ -1163,7 +1163,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List");
 
-            if (model.Ticks!=product.UpdatedOnUtc.Ticks)
+            if (model.Ticks != product.UpdatedOnUtc.Ticks)
             {
                 ErrorNotification(_localizationService.GetResource("Admin.Catalog.Products.Fields.ChangedWarning"));
                 return RedirectToAction("Edit", new { id = product.Id });
@@ -1518,7 +1518,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }
             }
 
-            var productCategories = product.ProductCategories.OrderBy(x => x.DisplayOrder); 
+            var productCategories = product.ProductCategories.OrderBy(x => x.DisplayOrder);
             var productCategoriesModel = productCategories
                 .Select(x => new ProductModel.ProductCategoryModel
                 {
@@ -1798,7 +1798,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }
             }
 
-            var relatedProducts = product.RelatedProducts.OrderBy(x => x.DisplayOrder); 
+            var relatedProducts = product.RelatedProducts.OrderBy(x => x.DisplayOrder);
             var relatedProductsModel = relatedProducts
                 .Select(x => new ProductModel.RelatedProductModel
                 {
@@ -1826,7 +1826,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             var product1 = _productService.GetProductById(model.ProductId1);
-            var relatedProduct = product1.RelatedProducts.Where(x => x.Id == model.Id).FirstOrDefault(); 
+            var relatedProduct = product1.RelatedProducts.Where(x => x.Id == model.Id).FirstOrDefault();
             if (relatedProduct == null)
                 throw new ArgumentException("No related product found with the specified id");
 
@@ -2018,7 +2018,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 .Select(x => new ProductModel.BundleProductModel
                 {
                     Id = x.Id,
-                    ProductBundleId= productId,
+                    ProductBundleId = productId,
                     ProductId = x.ProductId,
                     ProductName = _productService.GetProductById(x.ProductId).Name,
                     DisplayOrder = x.DisplayOrder,
@@ -2253,7 +2253,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             var product = _productService.GetProductById(productId);
 
-            var crossSellProduct = product.CrossSellProduct.Where(x => x == id).FirstOrDefault();  
+            var crossSellProduct = product.CrossSellProduct.Where(x => x == id).FirstOrDefault();
             if (String.IsNullOrEmpty(crossSellProduct))
                 throw new ArgumentException("No cross-sell product found with the specified id");
 
@@ -2890,7 +2890,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             var product = _productService.GetProductById(model.ProductId);
-            var psa = product.ProductSpecificationAttributes.Where(x => x.SpecificationAttributeId == model.ProductSpecificationId).Where(x => x.Id == model.Id).FirstOrDefault();  
+            var psa = product.ProductSpecificationAttributes.Where(x => x.SpecificationAttributeId == model.ProductSpecificationId).Where(x => x.Id == model.Id).FirstOrDefault();
             if (psa == null)
                 return Content("No product specification attribute found with the specified id");
 
@@ -4020,7 +4020,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
-            var productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == model.Id).FirstOrDefault(); 
+            var productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == model.Id).FirstOrDefault();
             if (productAttributeMapping == null)
                 throw new ArgumentException("No product attribute mapping found with the specified id");
 
@@ -4050,7 +4050,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
-            var productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == id).FirstOrDefault(); 
+            var productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == id).FirstOrDefault();
             if (productAttributeMapping == null)
                 throw new ArgumentException("No product attribute mapping found with the specified id");
 
@@ -4074,7 +4074,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
-            var productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == id).FirstOrDefault(); 
+            var productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == id).FirstOrDefault();
             if (productAttributeMapping == null)
                 //No attribute value found with the specified id
                 return RedirectToAction("List", "Product");
@@ -4109,7 +4109,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
-            var productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == model.Id).FirstOrDefault(); 
+            var productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == model.Id).FirstOrDefault();
             if (productAttributeMapping == null)
                 //No attribute value found with the specified id
                 return RedirectToAction("List", "Product");
@@ -4154,7 +4154,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
-            var productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == productAttributeMappingId).FirstOrDefault(); 
+            var productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == productAttributeMappingId).FirstOrDefault();
             if (productAttributeMapping == null)
                 //No attribute value found with the specified id
                 return RedirectToAction("List", "Product");
@@ -4176,7 +4176,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 .ParseProductAttributeMappings(product, productAttributeMapping.ConditionAttributeXml)
                 .FirstOrDefault();
 
-            var attributes = product.ProductAttributeMappings 
+            var attributes = product.ProductAttributeMappings
                 //ignore non-combinable attributes (should have selectable values)
                 .Where(x => x.CanBeUsedAsCondition())
                 //ignore this attribute (it cannot depend on itself)
@@ -4198,7 +4198,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (attribute.ShouldHaveValues())
                 {
                     //values
-                    var attributeValues = product.ProductAttributeMappings.FirstOrDefault(x => x.Id == attribute.Id).ProductAttributeValues; 
+                    var attributeValues = product.ProductAttributeMappings.FirstOrDefault(x => x.Id == attribute.Id).ProductAttributeValues;
                     foreach (var attributeValue in attributeValues)
                     {
                         var attributeValueModel = new ProductAttributeConditionModel.ProductAttributeValueModel
@@ -4281,7 +4281,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             string attributesXml = null;
             if (model.EnableCondition)
             {
-                var attribute = product.ProductAttributeMappings.FirstOrDefault(x => x.Id == model.SelectedProductAttributeId); 
+                var attribute = product.ProductAttributeMappings.FirstOrDefault(x => x.Id == model.SelectedProductAttributeId);
                 if (attribute != null)
                 {
                     string controlId = string.Format("product_attribute_{0}", attribute.Id);
@@ -4378,7 +4378,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
-            var productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == productAttributeMappingId).FirstOrDefault(); 
+            var productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == productAttributeMappingId).FirstOrDefault();
             if (productAttributeMapping == null)
                 throw new ArgumentException("No product attribute mapping found with the specified id");
 
@@ -4409,7 +4409,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
-            var productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == productAttributeMappingId).FirstOrDefault(); 
+            var productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == productAttributeMappingId).FirstOrDefault();
             if (productAttributeMapping == null)
                 throw new ArgumentException("No product attribute mapping found with the specified id");
 
@@ -4419,7 +4419,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            var values = productAttributeMapping.ProductAttributeValues.OrderBy(x => x.DisplayOrder); 
+            var values = productAttributeMapping.ProductAttributeValues.OrderBy(x => x.DisplayOrder);
             var gridModel = new DataSourceResult
             {
                 Data = values.Select(x =>
@@ -4619,7 +4619,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (pa == null)
                 return RedirectToAction("List", "Product");
 
-            var pav = pa.ProductAttributeValues.Where(x => x.Id == id).FirstOrDefault(); 
+            var pav = pa.ProductAttributeValues.Where(x => x.Id == id).FirstOrDefault();
             if (pav == null)
                 //No attribute value found with the specified id
                 return RedirectToAction("List", "Product");
@@ -4660,7 +4660,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.Name = pav.GetLocalized(x => x.Name, languageId, false, false);
             });
             //pictures
-            model.ProductPictureModels = product.ProductPictures.OrderBy(x => x.DisplayOrder) 
+            model.ProductPictureModels = product.ProductPictures.OrderBy(x => x.DisplayOrder)
                 .Select(x => new ProductModel.ProductPictureModel
                 {
                     Id = x.Id,
@@ -4684,7 +4684,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
-            var pav = product.ProductAttributeMappings.Where(x => x.Id == model.ProductAttributeMappingId).FirstOrDefault().ProductAttributeValues.Where(x => x.Id == model.Id).FirstOrDefault(); 
+            var pav = product.ProductAttributeMappings.Where(x => x.Id == model.ProductAttributeMappingId).FirstOrDefault().ProductAttributeValues.Where(x => x.Id == model.Id).FirstOrDefault();
             if (pav == null)
                 //No attribute value found with the specified id
                 return RedirectToAction("List", "Product");
@@ -4735,7 +4735,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
 
             //pictures
-            model.ProductPictureModels = product.ProductPictures    
+            model.ProductPictureModels = product.ProductPictures
                 .Select(x => new ProductModel.ProductPictureModel
                 {
                     Id = x.Id,
@@ -4908,7 +4908,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         Id = x.Id,
                         ProductId = product.Id,
                         AttributesXml = _productAttributeFormatter.FormatAttributes(_productService.GetProductById(product.Id), x.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false),
-                        StockQuantity = product.UseMultipleWarehouses ? x.WarehouseInventory.Sum(y=>y.StockQuantity-y.ReservedQuantity) : x.StockQuantity,
+                        StockQuantity = product.UseMultipleWarehouses ? x.WarehouseInventory.Sum(y => y.StockQuantity - y.ReservedQuantity) : x.StockQuantity,
                         AllowOutOfStockOrders = x.AllowOutOfStockOrders,
                         Sku = x.Sku,
                         ManufacturerPartNumber = x.ManufacturerPartNumber,
@@ -5015,21 +5015,22 @@ namespace Grand.Web.Areas.Admin.Controllers
                     model.WarehouseInventoryModels = wim;
                     model.ProductId = productId;
                     model.AttributesXML = _productAttributeFormatter.FormatAttributes(product, combination.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false);
-                    if(model.UseMultipleWarehouses)
+                    if (model.UseMultipleWarehouses)
                     {
-                        foreach(var _winv in combination.WarehouseInventory)
+                        foreach (var _winv in combination.WarehouseInventory)
                         {
                             var warehouseInventoryModel = model.WarehouseInventoryModels.FirstOrDefault(x => x.WarehouseId == _winv.WarehouseId);
-                            if(warehouseInventoryModel!=null)
+                            if (warehouseInventoryModel != null)
                             {
                                 warehouseInventoryModel.WarehouseUsed = true;
                                 warehouseInventoryModel.Id = _winv.Id;
                                 warehouseInventoryModel.StockQuantity = _winv.StockQuantity;
                                 warehouseInventoryModel.ReservedQuantity = _winv.ReservedQuantity;
-                                warehouseInventoryModel.PlannedQuantity = _shipmentService.GetQuantityInShipments(product, combination.AttributesXml, _winv.WarehouseId, true, true); ;
+                                warehouseInventoryModel.PlannedQuantity = _shipmentService.GetQuantityInShipments(product, combination.AttributesXml, _winv.WarehouseId, true, true);
+                                ;
                             }
                         }
-                    }                   
+                    }
                 }
             }
             PrepareAddProductAttributeCombinationModel(model, product);
@@ -5419,7 +5420,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            var tierprices = product.ProductAttributeCombinations.Where(x=>x.Id == productAttributeCombinationId).SelectMany(x=>x.TierPrices);
+            var tierprices = product.ProductAttributeCombinations.Where(x => x.Id == productAttributeCombinationId).SelectMany(x => x.TierPrices);
             var tierPriceModel = tierprices
                 .Select(x =>
                 {
@@ -5740,11 +5741,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                     try
                     {
                         var insert = true;
-                        if(((IntervalUnit)model.IntervalUnit) == IntervalUnit.Day)
+                        if (((IntervalUnit)model.IntervalUnit) == IntervalUnit.Day)
                         {
                             if (reservations.Where(x => x.Resource == model.Resource && x.Date == iterator).Any())
                                 insert = false;
-                        }                        
+                        }
                         if (insert)
                         {
                             _productReservationService.InsertProductReservation(new ProductReservation
@@ -5757,7 +5758,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                                 Duration = model.Interval + " " + ((IntervalUnit)model.IntervalUnit).GetLocalizedEnum(_localizationService, _workContext),
                             });
                         }
-                    } catch { };
+                    }
+                    catch { };
                 }
             }
 
@@ -5784,7 +5786,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var toDelete = _productReservationService.GetProductReservation(model.ReservationId);
             if (toDelete != null)
             {
-                if(string.IsNullOrEmpty(toDelete.OrderId))
+                if (string.IsNullOrEmpty(toDelete.OrderId))
                     _productReservationService.DeleteProductReservation(toDelete);
                 else
                     return Json(new DataSourceResult { Errors = _localizationService.GetResource("Admin.Catalog.ProductReservations.CantDeleteWithOrder") });
@@ -5831,7 +5833,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (toDelete != null)
             {
                 var product = _productService.GetProductById(toDelete.ProductId);
-                if(product == null)
+                if (product == null)
                     return Json(new DataSourceResult { Errors = "Product not exists" });
 
                 if (string.IsNullOrEmpty(toDelete.OrderId))

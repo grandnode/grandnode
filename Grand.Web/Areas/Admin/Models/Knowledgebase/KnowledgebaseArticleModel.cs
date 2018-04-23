@@ -75,14 +75,21 @@ namespace Grand.Web.Areas.Admin.Models.Knowledgebase
             public string CustomerEmail { get; set; }
         }
 
-        public partial class AddRelatedArticleModel : BaseGrandModel
+        public partial class AddRelatedArticleModel : BaseGrandEntityModel
         {
+            public AddRelatedArticleModel()
+            {
+                AvailableArticles = new List<SelectListItem>();
+            }
+
             [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Related.SearchArticleName")]
             public string SearchArticleName { get; set; }
 
             public string ArticleId { get; set; }
 
-            public string[] SelectedArticleIds { get; set; }
+            public string[] SelectedArticlesIds { get; set; }
+
+            public IList<SelectListItem> AvailableArticles { get; set; }
         }
     }
 

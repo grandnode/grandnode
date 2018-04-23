@@ -27,6 +27,20 @@
 
 @Html.Raw(@Model.Content)
 
+
+@if (Model.RelatedArticles.Any())
+{
+    <h4>@T("Knowledgebase.Article.RelatedArticles")</h4>
+    <div class="list-group">
+        @foreach (var article in Model.RelatedArticles)
+        {
+            <a class="list-group-item" href="@Url.RouteUrl("KnowledgebaseArticle", new { SeName = article.SeName })">
+                @article.Name
+            </a>
+        }
+    </div>
+}
+
 <script>
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();

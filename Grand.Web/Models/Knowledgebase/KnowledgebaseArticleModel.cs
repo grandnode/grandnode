@@ -9,6 +9,11 @@ namespace Grand.Web.Models.Knowledgebase
 {
     public class KnowledgebaseArticleModel : BaseGrandEntityModel
     {
+        public KnowledgebaseArticleModel()
+        {
+            RelatedArticles = new List<KnowledgebaseArticleModel>();
+        }
+
         public string Name { get; set; }
 
         public string Content { get; set; }
@@ -22,5 +27,7 @@ namespace Grand.Web.Models.Knowledgebase
         public string MetaDescription { get; set; }
 
         public string MetaTitle { get; set; }
+
+        public IList<KnowledgebaseArticleModel> RelatedArticles { get; set; }
     }
 }

@@ -106,6 +106,18 @@ namespace Grand.Web.Controllers
             model.ParentCategoryId = article.ParentCategoryId;
             model.SeName = article.GetLocalized(y => y.SeName);
 
+            foreach (var id in article.RelatedArticles)
+            {
+                var a = _knowledgebaseService.GetPublicKnowledgebaseArticle(id);
+                if (a != null)
+                    model.RelatedArticles.Add(new KnowledgebaseArticleModel
+                    {
+                        SeName = a.SeName,
+                        Id = a.Id,
+                        Name = a.Name
+                    });
+            }
+
             return View("Article", model);
         }
     }

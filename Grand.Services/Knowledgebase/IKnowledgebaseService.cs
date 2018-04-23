@@ -105,6 +105,26 @@ namespace Grand.Services.Knowledgebase
         /// </summary>
         /// <param name="id"></param>
         /// <returns>IPagedList<KnowledgebaseArticle></returns>
-        IPagedList<KnowledgebaseArticle> GetKnowledgebaseArticlesByCategoryId(string id, int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
+        IPagedList<KnowledgebaseArticle> GetKnowledgebaseArticlesByCategoryId(string id, int pageIndex = 0, int pageSize = int.MaxValue);
+
+        /// <summary>
+        /// Gets knowledgebase articles by name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>IPagedList<KnowledgebaseArticle></returns>
+        IPagedList<KnowledgebaseArticle> GetKnowledgebaseArticlesByName(string name, int pageIndex = 0, int pageSize = int.MaxValue);
+
+        /// <summary>
+        /// Gets related knowledgebase articles
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>IPagedList<KnowledgebaseArticle></returns>
+        IPagedList<KnowledgebaseArticle> GetRelatedKnowledgebaseArticles(string articleId, int pageIndex = 0, int pageSize = int.MaxValue);
+
+        /// <summary>
+        /// Gets knowledgebase article if it is published etc
+        /// </summary>
+        /// <returns>knowledgebase article</returns>
+        KnowledgebaseArticle GetPublicKnowledgebaseArticle(string id);
     }
 }

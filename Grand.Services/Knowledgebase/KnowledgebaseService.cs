@@ -151,7 +151,7 @@ namespace Grand.Services.Knowledgebase
         /// </summary>
         /// <param name="id"></param>
         /// <returns>IPagedList<KnowledgebaseArticle></returns>
-        public IPagedList<KnowledgebaseArticle> GetKnowledgebaseArticlesByCategoryId(string id, int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
+        public IPagedList<KnowledgebaseArticle> GetKnowledgebaseArticlesByCategoryId(string id, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var articles = _knowledgebaseArticleRepository.Table.Where(x => x.ParentCategoryId == id).ToList();
             return new PagedList<KnowledgebaseArticle>(articles, pageIndex, pageSize);
@@ -197,6 +197,27 @@ namespace Grand.Services.Knowledgebase
             var builderSort = Builders<KnowledgebaseArticle>.Sort.Ascending(x => x.DisplayOrder);
             var toReturn = _knowledgebaseArticleRepository.Collection.Find(filter).Sort(builderSort);
             return toReturn.ToList();
+        }
+
+        /// <summary>
+        /// Gets knowledgebase article if it is published etc
+        /// </summary>
+        /// <returns>knowledgebase article</returns>
+        public KnowledgebaseArticle GetPublicKnowledgebaseArticle(string id)
+        {
+            var builder = Builders<KnowledgebaseArticle>.Filter;
+            var filter = FilterDefinition<KnowledgebaseArticle>.Empty;
+            filter = filter & builder.Where(x => x.Published);
+            filter = filter & builder.Where(x => x.Id == id);
+
+            if (!_catalogSettings.IgnoreAcl)
+            {
+                var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
+                filter = filter & (builder.AnyIn(x => x.CustomerRoles, allowedCustomerRolesIds) | builder.Where(x => !x.SubjectToAcl));
+            }
+
+            var toReturn = _knowledgebaseArticleRepository.Collection.Find(filter).FirstOrDefault();
+            return toReturn;
         }
 
         /// <summary>
@@ -275,6 +296,60 @@ namespace Grand.Services.Knowledgebase
             var builderSort = Builders<KnowledgebaseArticle>.Sort.Ascending(x => x.DisplayOrder);
             var toReturn = _knowledgebaseArticleRepository.Collection.Find(filter).Sort(builderSort);
             return toReturn.ToList();
+        }
+
+        /// <summary>
+        /// Gets knowledgebase articles by name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>IPagedList<KnowledgebaseArticle></returns>
+        public IPagedList<KnowledgebaseArticle> GetKnowledgebaseArticlesByName(string name, int pageIndex = 0, int pageSize = int.MaxValue)
+        {
+            var builder = Builders<KnowledgebaseArticle>.Filter;
+            var filter = FilterDefinition<KnowledgebaseArticle>.Empty;
+            filter = filter & builder.Where(x => x.Published);
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                if (_commonSettings.UseFullTextSearch)
+                {
+                    name = "\"" + name + "\"";
+                    name = name.Replace("+", "\" \"");
+                    name = name.Replace(" ", "\" \"");
+                    filter = filter & builder.Text(name);
+                }
+                else
+                {
+                    filter = filter & builder.Where(p => p.Locales.Any(x => x.LocaleKey == "Name" && x.LocaleValue != null && x.LocaleValue.ToLower().
+                        Contains(name.ToLower()))
+                    || p.Name.ToLower().Contains(name.ToLower()));
+                }
+            }
+
+            var builderSort = Builders<KnowledgebaseArticle>.Sort.Ascending(x => x.DisplayOrder);
+            var toReturn = _knowledgebaseArticleRepository.Collection.Find(filter).Sort(builderSort);
+
+            return new PagedList<KnowledgebaseArticle>(toReturn.ToList(), pageIndex, pageSize);
+        }
+
+        /// <summary>
+        /// Gets related knowledgebase articles
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>IPagedList<KnowledgebaseArticle></returns>
+        public IPagedList<KnowledgebaseArticle> GetRelatedKnowledgebaseArticles(string articleId, int pageIndex = 0, int pageSize = int.MaxValue)
+        {
+            var article = GetKnowledgebaseArticle(articleId);
+            List<KnowledgebaseArticle> toReturn = new List<KnowledgebaseArticle>();
+
+            foreach (var id in article.RelatedArticles)
+            {
+                var relatedArticle = GetKnowledgebaseArticle(id);
+                if (relatedArticle != null)
+                    toReturn.Add(relatedArticle);
+            }
+
+            return new PagedList<KnowledgebaseArticle>(toReturn.ToList(), pageIndex, pageSize);
         }
     }
 }
