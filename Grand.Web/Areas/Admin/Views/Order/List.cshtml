@@ -286,7 +286,8 @@
                         field: "CustomerEmail",
                         title: "@T("Admin.Orders.Fields.Customer")",
                         width: 200,
-                        template: '#=CustomerFullName# (#=CustomerEmail#)'
+                        //template: '#=CustomerFullName# (#=CustomerEmail#)'
+                        template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#=CustomerFullName#</a>'
                     },
                     {
                         field: "StoreName",
