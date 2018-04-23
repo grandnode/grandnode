@@ -65,7 +65,8 @@
                     title: "@T("Admin.Catalog.Products.Fields.Name")",
                     width: 300,
                     //if not a grouped product, then display
-                    template: "#:Name# # if(Attributes !== null) {# <br /><i> #=Attributes# </i> #} #"
+                    //template: "#:Name# # if(Attributes !== null) {# <br /><i> #=Attributes# </i> #} #"
+                    template: '<a class="k-link" href="Edit/#=Id#">#:Name# # if(Attributes !== null) {# <br /><i> #=Attributes# </i> #} #</a>',
                 }, {
                     field: "ManageInventoryMethod",
                     title: "@T("Admin.Catalog.Products.Fields.ManageInventoryMethod")",
@@ -81,11 +82,6 @@
                     headerAttributes: { style: "text-align:center" },
                     attributes: { style: "text-align:center" },
                     template: '# if(Published) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
-                }, {
-                    field: "Id",
-                    title: "@T("Admin.Common.Edit")",
-                    width: 100,
-                    template: '<a class="btn btn-sm btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
                 }
             ]
         });
