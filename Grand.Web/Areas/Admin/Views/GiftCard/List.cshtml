@@ -93,19 +93,27 @@
                     confirmation: false,
                     mode: "inline"
                 },
-                scrollable: false,
+                scrollable: true,
                 columns: [{
                     field: "AmountStr",
-                    title: "@T("Admin.GiftCards.Fields.Amount")"
+                    title: "@T("Admin.GiftCards.Fields.Amount")",
+                    template: '<a class="k-link" href="Edit/#=Id#">#=AmountStr#</a>',
+                    width: 100,
                 }, {
                     field: "RemainingAmountStr",
-                    title: "@T("Admin.GiftCards.Fields.RemainingAmount")"
+                    title: "@T("Admin.GiftCards.Fields.RemainingAmount")",
+                    template: '<a class="k-link" href="Edit/#=Id#">#=RemainingAmountStr#</a>',
+                    width: 100,
                 }, {
                     field: "GiftCardCouponCode",
-                    title: "@T("Admin.GiftCards.Fields.GiftCardCouponCode")"
+                    title: "@T("Admin.GiftCards.Fields.GiftCardCouponCode")",
+                    template: '<a class="k-link" href="Edit/#=Id#">#=GiftCardCouponCode#</a>',
+                    width: 120,
                 }, {
                     field: "RecipientName",
-                    title: "@T("Admin.GiftCards.Fields.RecipientName")"
+                    title: "@T("Admin.GiftCards.Fields.RecipientName")",
+                    minScreenWidth: 750,
+                    width: 150,
                 }, {
                     field: "IsGiftCardActivated",
                     title: "@T("Admin.GiftCards.Fields.IsGiftCardActivated")",
@@ -116,14 +124,9 @@
                 }, {
                     field: "CreatedOn",
                     title: "@T("Admin.GiftCards.Fields.CreatedOn")",
-                    width: 200,
+                    width: 180,
                     type: "date",
                     format: "{0:G}"
-                }, {
-                    field: "Id",
-                    title: "@T("Admin.Common.Edit")",
-                    width: 100,
-                    template: '<a class="btn btn-sm btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
                 }]
             });
         });
