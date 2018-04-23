@@ -1669,9 +1669,9 @@ namespace Grand.Services.Orders
                                     //first payment
                                     var rph = new RecurringPaymentHistory
                                     {
-                                        RecurringPayment = rp,
                                         CreatedOnUtc = DateTime.UtcNow,
                                         OrderId = order.Id,
+                                        RecurringPaymentId = rp.Id
                                     };
                                     rp.RecurringPaymentHistory.Add(rph);
                                     _orderService.UpdateRecurringPayment(rp);
@@ -1947,7 +1947,7 @@ namespace Grand.Services.Orders
 
                     var rph = new RecurringPaymentHistory
                     {
-                        RecurringPayment = recurringPayment,
+                        RecurringPaymentId = recurringPayment.Id,
                         CreatedOnUtc = DateTime.UtcNow,
                         OrderId = result.PlacedOrder.Id,
                     };
