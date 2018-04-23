@@ -6,13 +6,17 @@
         <div class="form-group">
             <admin-label asp-for="InitialOrderId" />
             <div class="col-md-9 col-sm-9">
-                @Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Order", new { id = Model.InitialOrderId }, new { })
+                <label class="control-label">
+                    @Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Order", new { id = Model.InitialOrderId }, new { })
+                </label>
             </div>
         </div>
         <div class="form-group">
             <admin-label asp-for="CustomerEmail" />
             <div class="col-md-9 col-sm-9">
-                @Html.ActionLink(Model.CustomerEmail, "Edit", "Customer", new { id = Model.CustomerId }, new { })
+                <label class="control-label">
+                    @Html.ActionLink(Model.CustomerEmail, "Edit", "Customer", new { id = Model.CustomerId }, new { })
+                </label>
             </div>
         </div>
         <div class="form-group">
@@ -39,25 +43,34 @@
         <div class="form-group">
             <admin-label asp-for="CyclesRemaining" />
             <div class="col-md-9 col-sm-9">
-                @Model.CyclesRemaining
+                <label class="control-label">
+                    @Model.CyclesRemaining
+                </label>
             </div>
         </div>
         <div class="form-group">
             <admin-label asp-for="PaymentType" />
             <div class="col-md-9 col-sm-9">
-                @Model.PaymentType
+                <label class="control-label">
+                    @Model.PaymentType
+                </label>
             </div>
         </div>
         <div class="form-group">
             <admin-label asp-for="StartDate" />
             <div class="col-md-9 col-sm-9">
-                @Model.StartDate
+                <label class="control-label">
+                    @Model.StartDate
+                </label>
             </div>
         </div>
         <div class="form-group">
             <admin-label asp-for="IsActive" />
             <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="IsActive" />
+                <label class="mt-checkbox mt-checkbox-outline">
+                    <admin-input asp-for="IsActive" />
+                    <span></span>
+                </label>
                 <span asp-validation-for="IsActive"></span>
             </div>
         </div>
