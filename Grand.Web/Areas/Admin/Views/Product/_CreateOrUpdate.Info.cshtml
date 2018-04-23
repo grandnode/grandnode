@@ -99,10 +99,10 @@
             $('#group-required-other-products').show();
             $('#group-giftcard').show();
             $('#group-downloads').show();
-            $('#group-recurring').show();
             $('#group-shipping').show();
             $('#group-tax').show();
             $('#pnlStartPrice').hide();
+            $('#group-recurring').hide();
             $('#tab-associated-products').hide();
             $('#tab-price-product').show();
             $('#tab-inventory-product').show();
@@ -115,6 +115,7 @@
             toggleManageStock();
             $("#@Html.FieldIdFor(model => model.IsShipEnabled)").prop("checked", false);
             $("#@Html.FieldIdFor(model => model.NotReturnable)").prop("checked", true);
+            $("#@Html.FieldIdFor(model => model.IsRecurring)").prop("checked", false);
             toggleShipping();
             $('#tab-inventory-product').hide();
         } else if (selectedProductTypeId == @(((int) ProductType.BundledProduct).ToString())){
@@ -133,6 +134,7 @@
             $('#tab-calendar').hide();
             $('#tab-bundle-products').show();
             $('#tab-bids').hide();
+            $("#@Html.FieldIdFor(model => model.IsRecurring)").prop("checked", false);
         } else if (selectedProductTypeId == @(((int) ProductType.Auction).ToString())){
             $('#tab-bids').show();
             $('#tab-calendar').hide();
@@ -142,6 +144,7 @@
             $('#group-recurring').hide();
             $('#pnlStartPrice').show();
             $('#tab-associated-products').hide();
+            $("#@Html.FieldIdFor(model => model.IsRecurring)").prop("checked", false);
         }
     }
 
