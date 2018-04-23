@@ -75,7 +75,7 @@
                 }, {
                     field: "Quantity",
                     title: "@T("Admin.ReturnRequests.Fields.Quantity")",
-                    width: 100
+                    width: 80
                 }, {
                     field: "CustomerId",
                     title: "@T("Admin.ReturnRequests.Fields.Customer")",
@@ -84,12 +84,12 @@
                 }, {
                     field: "OrderId",
                     title: "@T("Admin.ReturnRequests.Fields.Order")",
-                    width: 200,
+                    width: 80,
                     template: '<a class="k-link" href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#">#:OrderNumber#</a>'
                 }, {
                     field: "ReturnRequestStatusStr",
                     title: "@T("Admin.ReturnRequests.Fields.Status")",
-                    width: 100,
+                    width: 130,
                     template: '<a class="k-link" href="Edit/#=Id#">#=ReturnRequestStatusStr#</a>'
                 }, {
                     field: "CreatedOn",
