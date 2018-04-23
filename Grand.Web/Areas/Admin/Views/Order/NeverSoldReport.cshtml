@@ -93,12 +93,8 @@
             scrollable: false,
             columns: [{
                 field: "ProductName",
-                title: "@T("Admin.SalesReport.NeverSold.Fields.Name")"
-            }, {
-                field: "ProductId",
-                title: "@T("Admin.Common.View")",
-                width: 100,
-                template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">@T("Admin.Common.View")</a>'
+                title: "@T("Admin.SalesReport.NeverSold.Fields.Name")",
+                template: '<a class="k-link" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#=ProductName#</a>'
             }]
         });
     });
