@@ -316,15 +316,13 @@
                 columns: [{
                     field: "ShipmentNumber",
                     title: "@T("Admin.Orders.Shipments.ID")",
-                    width: 50
-                }, {
-                    field: "OrderNumber",
-                    title: "@T("Admin.Orders.Shipments.OrderID")",
-                    width: 100
+                    width: 50,
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Order/ShipmentDetails/")#=Id#">#=ShipmentNumber#</a>'
                 }, {
                     field: "TrackingNumber",
                     title: "@T("Admin.Orders.Shipments.TrackingNumber")",
-                    width: 100
+                    width: 100,
+                        template: '<a class="k-link" href="@Url.Content("~/Admin/Order/ShipmentDetails/")#=Id#">#=ShipmentNumber#</a>'
                 }, {
                     field: "TotalWeight",
                     title: "@T("Admin.Orders.Shipments.TotalWeight")",
@@ -341,11 +339,6 @@
                     width: 200,
                     type: "date",
                     format: "{0:G}"
-                }, {
-                    field: "Id",
-                    title: "@T("Admin.Common.View")",
-                    width: 50,
-                    template: '<a href="@Url.Content("~/Admin/Order/ShipmentDetails/")#=Id#">@T("Admin.Common.View")</a>'
                 }]
             });
         });

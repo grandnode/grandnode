@@ -111,7 +111,7 @@
                 },
                 //details grid
                 detailInit: detailInit,
-                scrollable: false,
+                scrollable: true,
                 dataBound: onDataBound,
                 columns: [{
                     field: "Id",
@@ -121,36 +121,35 @@
                 }, {
                     field: "ShipmentNumber",
                     title: "@T("Admin.Orders.Shipments.ID")",
-                    width: 50
+                    width: 100,
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Order/ShipmentDetails/")#=Id#">#=ShipmentNumber#</a>'
                 }, {
                     field: "OrderNumber",
                     title: "@T("Admin.Orders.Shipments.OrderID")",
-                    width: 100
+                    width: 100,
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#">#=OrderNumber#</a>'
                 }, {
                     field: "TrackingNumber",
                     title: "@T("Admin.Orders.Shipments.TrackingNumber")",
-                    width: 100
+                    width: 100,
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Order/ShipmentDetails/")#=Id#">#=TrackingNumber#</a>'
                 }, {
                     field: "TotalWeight",
                     title: "@T("Admin.Orders.Shipments.TotalWeight")",
-                    width: 100
+                    width: 80,
+                    minScreenWidth: 770,
                 }, {
                     field: "ShippedDate",
                     title: "@T("Admin.Orders.Shipments.ShippedDate")",
-                    width: 200,
+                    width: 180,
                     type: "date",
                     format: "{0:G}"
                 }, {
                     field: "DeliveryDate",
                     title: "@T("Admin.Orders.Shipments.DeliveryDate")",
-                    width: 200,
+                    width: 180,
                     type: "date",
                     format: "{0:G}"
-                }, {
-                    field: "Id",
-                    title: "@T("Admin.Common.View")",
-                    width: 50,
-                    template: '<a class="btn btn-sm btn-default" href="@Url.Content("~/Admin/Order/ShipmentDetails/")#=Id#"><i class="fa fa-search"></i> @T("Admin.Common.View")</a>'
                 }]
             });
         });

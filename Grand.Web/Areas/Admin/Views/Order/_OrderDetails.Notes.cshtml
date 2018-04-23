@@ -55,20 +55,22 @@
                     confirmation: false,
                     mode: "inline"
                 },
-                scrollable: false,
+                scrollable: true,
                 columns: [{
                     field: "CreatedOn",
                     title: "@T("Admin.Orders.OrderNotes.Fields.CreatedOn")",
-                    width: 200,
+                    width: 180,
                     type: "date",
                     format: "{0:G}"
                 }, {
                     field: "Note",
                     title: "@T("Admin.Orders.OrderNotes.Fields.Note")",
+                    width: 350,
                     encoded: false
                 },{
                     field: "DownloadId",
                     title: "@T("Admin.Orders.OrderNotes.Fields.Download")",
+                    width: 100,
                     template: '# if(DownloadId != "") {# <a href="@Url.Content("~/Admin/Download/DownloadFile")?downloadGuid=#=DownloadGuid#">@T("Admin.Orders.OrderNotes.Fields.Download.Link")</a> #} else {# @T("Admin.Orders.OrderNotes.Fields.Download.Link.No") #} #'
                 },{
                     field: "DisplayToCustomer",
