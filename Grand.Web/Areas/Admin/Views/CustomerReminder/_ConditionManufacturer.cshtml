@@ -70,13 +70,9 @@
                     scrollable: false,
                     columns: [{
                         field: "ManufacturerName",
-                        title: "@T("Admin.Customers.CustomerReminder.Condition.Fields.Manufacturer")"
+                        title: "@T("Admin.Customers.CustomerReminder.Condition.Fields.Manufacturer")",
+                        template: '<a class="k-link" href="@Url.Content("~/Admin/Manufacturer/Edit/")#=Id#">#=ManufacturerName#</a>',
                     },  {
-                        field: "ManufacturerId",
-                        title: "@T("Admin.Common.View")",
-                        width: 150,
-                        template: '<a href="@Url.Content("~/Admin/Manufacturer/Edit/")#=Id#">@T("Admin.Common.View")</a>'
-                    }, {
                         command: [{
                             name: "destroy",
                             text: "@T("Admin.Common.Delete")"

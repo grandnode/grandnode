@@ -69,12 +69,8 @@
             scrollable: false,
             columns: [{
                 field: "Name",
-                title: "@T("Admin.Promotions.InteractiveForms.Fields.Name")"
-            }, {
-                field: "Id",
-                title: "@T("Admin.Common.Edit")",
-                width: 100,
-                template: '<a class="btn btn-sm btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
+                title: "@T("Admin.Promotions.InteractiveForms.Fields.Name")",
+                template: '<a class="k-link" href="Edit/#=Id#">#=Name#</a>',
             }]
         });
     });

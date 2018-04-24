@@ -69,13 +69,9 @@
                     scrollable: false,
                     columns: [{
                         field: "CategoryName",
-                        title: "@T("Admin.Customers.CustomerActionCondition.Fields.CategoryName")"
-                    },  {
-                        field: "CategoryId",
-                        title: "@T("Admin.Common.View")",
-                        width: 150,
-                        template: '<a href="@Url.Content("~/Admin/Category/Edit/")#=Id#">@T("Admin.Common.View")</a>'
-                    }, {
+                        title: "@T("Admin.Customers.CustomerActionCondition.Fields.CategoryName")",
+                        template: '<a class="k-link" href="@Url.Content("~/Admin/Category/Edit/")#=Id#">#=CategoryName#</a>',
+                    },{
                         command: [{
                             name: "destroy",
                             text: "@T("Admin.Common.Delete")"

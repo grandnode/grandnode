@@ -70,8 +70,7 @@
                         field: "ProductName",
                         title: "@T("Admin.Customers.CustomerActionCondition.Fields.ProductName")",
                         width: 300,
-                        filterable: false,
-                        sortable: false
+                        template: '<a class="k-link" href="@Url.Content("~/Admin/Product/Edit/")#=Id#">#=ProductName#</a>',
                 },
                 {
                     command: { name: "destroy", text: "@T("Admin.Common.Delete")" },

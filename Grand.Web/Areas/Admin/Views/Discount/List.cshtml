@@ -96,7 +96,8 @@
                 columns: [{
                     field: "Name",
                     title: "@T("Admin.Promotions.Discounts.Fields.Name")",
-                    width: 350
+                    width: 350,
+                    template: '<a class="k-link" href="Edit/#=Id#">#=Name#</a>',
                 }, {
                     field: "DiscountTypeName",
                     title: "@T("Admin.Promotions.Discounts.Fields.DiscountType")",
@@ -129,11 +130,6 @@
                     headerAttributes: { style: "text-align:center" },
                     attributes: { style: "text-align:center" },
                     template: '# if(IsEnabled) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
-                },{
-                    field: "Id",
-                    title: "@T("Admin.Common.Edit")",
-                    width: 80,
-                    template: '<a class="btn btn-sm btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
                 }]
             });
         });

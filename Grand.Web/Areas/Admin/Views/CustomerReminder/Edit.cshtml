@@ -3,7 +3,8 @@
     //page title
     ViewBag.Title = T("Admin.Customers.CustomerReminder.Edit").Text;
 }
-<form asp-controller="CustomerReminder" asp-action="EditCondition" method="post" id="customer-reminder-form">
+<form asp-controller="CustomerReminder" 
+      asp-action="Edit" method="post" id="customer-reminder-form">
     <antiforgery-token />
     <div class="row">
         <div class="col-md-12">

@@ -133,10 +133,16 @@
                     mode: "inline"
                 },
                 scrollable: false,
-                columns: [{
+                columns: [
+                {
+                    field: "Address.Email",
+                    title: "@T("Admin.Address.Fields.Email")",
+                    width: 200,
+                    template: '<a class="k-link" href="Edit/#=Id#">#=Address.Email#</a>',
+                }, {
                     field: "Address.FirstName",
                     title: "@T("Admin.Address.Fields.FirstName")",
-                    width: 200
+                    width: 200,
                 }, {
                     field: "Address.LastName",
                     title: "@T("Admin.Address.Fields.LastName")",
@@ -148,11 +154,6 @@
                     headerAttributes: { style: "text-align:center" },
                     attributes: { style: "text-align:center" },
                     template: '# if(Active) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
-                }, {
-                    field: "Id",
-                    title: "@T("Admin.Common.Edit")",
-                    width: 100,
-                    template: '<a class="btn btn-sm btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
                 }]
             });
         });

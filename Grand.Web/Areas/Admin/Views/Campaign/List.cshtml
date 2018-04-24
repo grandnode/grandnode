@@ -68,18 +68,14 @@ $(document).ready(function () {
         scrollable: false,
         columns: [{
             field: "Name",
-            title: "@T("Admin.Promotions.Campaigns.Fields.Name")"
+            title: "@T("Admin.Promotions.Campaigns.Fields.Name")",
+            template: '<a class="k-link" href="Edit/#=Id#">#=Name#</a>',
         }, {
             field: "CreatedOn",
             title: "@T("Admin.Promotions.Campaigns.Fields.CreatedOn")",
             width: 200,
             type: "date",
             format: "{0:G}"
-        }, {
-            field: "Id",
-            title: "@T("Admin.Common.Edit")",
-            width: 100,
-            template: '<a class="btn btn-sm btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
         }]
     });
 });

@@ -60,7 +60,7 @@
                     info: false
                 },
                 editable: {
-                    confirmation: false,
+                    confirmation: true,
                     mode: "inline"
                 },
                 scrollable: false,
@@ -69,19 +69,12 @@
                     field: "Name",
                     title: "@T("Admin.Customers.CustomerAction.Fields.Name")",
                     width: 300,
-                    filterable: false,
-                    sortable: false
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/CustomerAction/EditCondition")?customerActionId=@(Model.Id)&cid=#=Id#">#=Name#</a>',
                 },
                 {
                     field: "Condition",
                     title: "@T("Admin.Customers.CustomerAction.Fields.ConditionType")",
                     width: 100,
-                },
-                {
-                    field: "Id",
-                    title: "@T("Admin.Common.Edit")",
-                    width: 100,
-                    template: '<a href="@Url.Content("~/Admin/CustomerAction/EditCondition")?customerActionId=@(Model.Id)&cid=#=Id#">@T("Admin.Common.Edit")</a>'
                 },
                 {
                     command: { name: "destroy", text: "@T("Admin.Common.Delete")" },

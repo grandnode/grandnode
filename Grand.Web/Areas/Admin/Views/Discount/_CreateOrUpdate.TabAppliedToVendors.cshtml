@@ -64,12 +64,8 @@
                     scrollable: false,
                     columns: [{
                         field: "VendorName",
-                        title: "@T("Admin.Promotions.Discounts.AppliedToVendors.Vendor")"
-                    },  {
-                        field: "VendorId",
-                        title: "@T("Admin.Common.View")",
-                        width: 150,
-                        template: '<a class="btn btn-sm btn-default" href="@Url.Content("~/Admin/Vendor/Edit/")#=VendorId#"><i class="fa fa-search"></i> @T("Admin.Common.View")</a>'
+                        title: "@T("Admin.Promotions.Discounts.AppliedToVendors.Vendor")",
+                        template: '<a class="k-link" href="@Url.Content("~/Admin/Vendor/Edit/")#=VendorId#">#=VendorName#</a>',
                     }, {
                         command: [{
                             name: "destroy",

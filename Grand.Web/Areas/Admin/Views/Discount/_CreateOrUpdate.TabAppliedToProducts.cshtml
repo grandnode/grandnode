@@ -66,12 +66,8 @@
                     scrollable: false,
                     columns: [{
                         field: "ProductName",
-                        title: "@T("Admin.Promotions.Discounts.AppliedToProducts.Product")"
-                    },  {
-                        field: "ProductId",
-                        title: "@T("Admin.Common.View")",
-                        width: 150,
-                        template: '<a class="btn btn-sm btn-default" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#"><i class="fa fa-search"></i> @T("Admin.Common.View")</a>'
+                        title: "@T("Admin.Promotions.Discounts.AppliedToProducts.Product")",
+                        template: '<a class="k-link" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#=ProductName#</a>',
                     }, {
                         command: [{
                             name: "destroy",

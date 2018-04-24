@@ -4,7 +4,10 @@
     ViewBag.Title = T("Admin.Customers.CustomerAction.EditCustomerActionCondition").Text;
 }
 
-<form asp-controller="CustomerAction" asp-action="EditCondition" method="post" id="customer-action-condition-form">
+<form asp-controller="CustomerAction" asp-action="EditCondition" 
+      asp-route-customerActionId="@Context.Request.Query["CustomerActionId"]"
+      asp-route-cid="@Context.Request.Query["cid"]"
+      method="post" id="customer-action-condition-form">
     <antiforgery-token />
     <div class="row">
         <div class="col-md-12">

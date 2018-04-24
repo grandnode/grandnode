@@ -17,9 +17,6 @@
                 <input type="submit" id="btnRefreshManufacturers" style="display: none" />
             </div>
         </div>
-
-                
-
     <script>
             $(document).ready(function () {
                 $("#manufacturers-grid").kendoGrid({
@@ -72,12 +69,8 @@
                     scrollable: false,
                     columns: [{
                         field: "ManufacturerName",
-                        title: "@T("Admin.Customers.CustomerActionCondition.Fields.Manufacturer")"
-                    },  {
-                        field: "ManufacturerId",
-                        title: "@T("Admin.Common.View")",
-                        width: 150,
-                        template: '<a href="@Url.Content("~/Admin/Manufacturer/Edit/")#=Id#">@T("Admin.Common.View")</a>'
+                        title: "@T("Admin.Customers.CustomerActionCondition.Fields.Manufacturer")",
+                        template: '<a class="k-link" href="@Url.Content("~/Admin/Manufacturer/Edit/")#=Id#">#=ManufacturerName#</a>',
                     }, {
                         command: [{
                             name: "destroy",
