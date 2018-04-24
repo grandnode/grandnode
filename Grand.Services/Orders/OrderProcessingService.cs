@@ -446,6 +446,10 @@ namespace Grand.Services.Orders
             {
                 details.OrderSubTotalInclTax = details.InitialOrder.OrderSubtotalInclTax;
                 details.OrderSubTotalExclTax = details.InitialOrder.OrderSubtotalExclTax;
+                details.OrderDiscountAmount = details.InitialOrder.OrderDiscount;
+                details.OrderSubTotalDiscountExclTax = details.InitialOrder.OrderSubTotalDiscountExclTax;
+                details.OrderSubTotalDiscountInclTax = details.InitialOrder.OrderSubTotalDiscountInclTax;
+                details.OrderTotal = details.InitialOrder.OrderTotal;
             }
 
 
@@ -528,22 +532,31 @@ namespace Grand.Services.Orders
                 : ShippingStatus.ShippingNotRequired;
 
             //shipping total
-            decimal tax;
-            List<AppliedDiscount> shippingTotalDiscounts;
-            var orderShippingTotalInclTax = _orderTotalCalculationService.GetShoppingCartShippingTotal(details.Cart, true, out tax, out shippingTotalDiscounts);
-            var orderShippingTotalExclTax = _orderTotalCalculationService.GetShoppingCartShippingTotal(details.Cart, false);
-            if (!orderShippingTotalInclTax.HasValue || !orderShippingTotalExclTax.HasValue)
-                throw new GrandException("Shipping total couldn't be calculated");
-
-            details.OrderShippingTotalInclTax = orderShippingTotalInclTax.Value;
-            details.OrderShippingTotalExclTax = orderShippingTotalExclTax.Value;
-
-            foreach (var disc in shippingTotalDiscounts)
+            if (!processPaymentRequest.IsRecurringPayment)
             {
-                if (!details.AppliedDiscounts.Where(x => x.DiscountId == disc.DiscountId).Any())
-                    details.AppliedDiscounts.Add(disc);
-            }
 
+                decimal tax;
+                List<AppliedDiscount> shippingTotalDiscounts;
+                var orderShippingTotalInclTax = _orderTotalCalculationService.GetShoppingCartShippingTotal(details.Cart, true, out tax, out shippingTotalDiscounts);
+                var orderShippingTotalExclTax = _orderTotalCalculationService.GetShoppingCartShippingTotal(details.Cart, false);
+                if (!orderShippingTotalInclTax.HasValue || !orderShippingTotalExclTax.HasValue)
+                    throw new GrandException("Shipping total couldn't be calculated");
+
+                foreach (var disc in shippingTotalDiscounts)
+                {
+                    if (!details.AppliedDiscounts.Where(x => x.DiscountId == disc.DiscountId).Any())
+                        details.AppliedDiscounts.Add(disc);
+                }
+
+
+                details.OrderShippingTotalInclTax = orderShippingTotalInclTax.Value;
+                details.OrderShippingTotalExclTax = orderShippingTotalExclTax.Value;
+            }
+            else
+            {
+                details.OrderShippingTotalInclTax = details.InitialOrder.OrderShippingInclTax;
+                details.OrderShippingTotalExclTax = details.InitialOrder.OrderShippingExclTax;
+            }
             //payment total
             if (!processPaymentRequest.IsRecurringPayment)
             {
@@ -581,40 +594,38 @@ namespace Grand.Services.Orders
             else
             {
                 details.OrderTaxTotal = details.InitialOrder.OrderTax;
+                details.TaxRates = details.InitialOrder.TaxRates;
                 //VAT number
                 details.VatNumber = details.InitialOrder.VatNumber;
             }
 
-
-            //order total (and applied discounts, gift cards, reward points)
-            List<AppliedGiftCard> appliedGiftCards;
-            List<AppliedDiscount> orderAppliedDiscounts;
-            decimal orderDiscountAmount;
-            int redeemedRewardPoints;
-            decimal redeemedRewardPointsAmount;
-            var orderTotal = _orderTotalCalculationService.GetShoppingCartTotal(details.Cart, out orderDiscountAmount,
-                out orderAppliedDiscounts, out appliedGiftCards, out redeemedRewardPoints, out redeemedRewardPointsAmount);
-            if (!orderTotal.HasValue)
-                throw new GrandException("Order total couldn't be calculated");
-
-            details.OrderDiscountAmount = orderDiscountAmount;
-            details.RedeemedRewardPoints = redeemedRewardPoints;
-            details.RedeemedRewardPointsAmount = redeemedRewardPointsAmount;
-            details.AppliedGiftCards = appliedGiftCards;
-            details.OrderTotal = orderTotal.Value;
-
-            //discount history
-            foreach (var disc in orderAppliedDiscounts)
-            {
-                if(!details.AppliedDiscounts.Where(x=>x.DiscountId == disc.DiscountId).Any())
-                    details.AppliedDiscounts.Add(disc);
-            }
-
-            processPaymentRequest.OrderTotal = details.OrderTotal;
-
             //recurring or standard shopping cart?
             if (!processPaymentRequest.IsRecurringPayment)
             {
+                //order total (and applied discounts, gift cards, reward points)
+                List<AppliedGiftCard> appliedGiftCards;
+                List<AppliedDiscount> orderAppliedDiscounts;
+                decimal orderDiscountAmount;
+                int redeemedRewardPoints;
+                decimal redeemedRewardPointsAmount;
+                var orderTotal = _orderTotalCalculationService.GetShoppingCartTotal(details.Cart, out orderDiscountAmount,
+                    out orderAppliedDiscounts, out appliedGiftCards, out redeemedRewardPoints, out redeemedRewardPointsAmount);
+                if (!orderTotal.HasValue)
+                    throw new GrandException("Order total couldn't be calculated");
+
+                details.OrderDiscountAmount = orderDiscountAmount;
+                details.RedeemedRewardPoints = redeemedRewardPoints;
+                details.RedeemedRewardPointsAmount = redeemedRewardPointsAmount;
+                details.AppliedGiftCards = appliedGiftCards;
+                details.OrderTotal = orderTotal.Value;
+
+                //discount history
+                foreach (var disc in orderAppliedDiscounts)
+                {
+                    if (!details.AppliedDiscounts.Where(x => x.DiscountId == disc.DiscountId).Any())
+                        details.AppliedDiscounts.Add(disc);
+                }
+
                 details.IsRecurringShoppingCart = details.Cart.IsRecurring();
                 if (details.IsRecurringShoppingCart)
                 {
@@ -635,6 +646,8 @@ namespace Grand.Services.Orders
             {
                 details.IsRecurringShoppingCart = true;
             }
+            processPaymentRequest.OrderTotal = details.OrderTotal;
+
 
             return details;
         }
