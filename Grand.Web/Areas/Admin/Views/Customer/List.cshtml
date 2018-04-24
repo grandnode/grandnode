@@ -172,11 +172,12 @@
                             headerAttributes: { style: "text-align:center" },
                             attributes: { style: "text-align:center" },
                             template: "<label class='mt-checkbox mt-checkbox-outline'><input type='checkbox' value='#=Id#' class='checkboxGroups'/><span></span></label>",
-                            width: 50
+                            width: 40
                         }, {
                             field: "Email",
                             title: "@T("Admin.Customers.Customers.Fields.Email")",
-                            width: 200
+                            width: 200,
+                            template: '<a class="k-link" href="Edit/#=Id#">#=Email#</a>',
                         },
                         @if (Model.UsernamesEnabled)
                         {
@@ -189,7 +190,8 @@
                         {
                             field: "FullName",
                             title: "@T("Admin.Customers.Customers.Fields.FullName")",
-                            width: 200
+                            width: 200,
+                            template: '<a class="k-link" href="Edit/#=Id#">#=FullName#</a>',
                         }, {
                             field: "CustomerRoleNames",
                             title: "@T("Admin.Customers.Customers.Fields.CustomerRoles")",
@@ -199,27 +201,30 @@
                         @if (Model.CompanyEnabled)
                         {
                           <text>{
-                                field: "Company",
-                                                    title: "@T("Admin.Customers.Customers.Fields.Company")",
-                            width: 200
+                            field: "Company",
+                            title: "@T("Admin.Customers.Customers.Fields.Company")",
+                            width: 200,
+                            minScreenWidth: 770,
                             },</text>
                         }
 /**/
                         @if (Model.PhoneEnabled)
                         {
                             <text>{
-                                field: "Phone",
-                                    title: "@T("Admin.Customers.Customers.Fields.Phone")",
-                            width: 200
+                            field: "Phone",
+                            title: "@T("Admin.Customers.Customers.Fields.Phone")",
+                            width: 200,
+                            minScreenWidth: 770,
                             },</text>
                         }
 /**/
                         @if (Model.ZipPostalCodeEnabled)
                         {
                             <text>{
-                                field: "ZipPostalCode",
-                                    title: "@T("Admin.Customers.Customers.Fields.ZipPostalCode")",
-                            width: 200
+                            field: "ZipPostalCode",
+                            title: "@T("Admin.Customers.Customers.Fields.ZipPostalCode")",
+                            width: 200,
+                            minScreenWidth: 770,
                             },</text>
                         }
                     {
@@ -234,18 +239,14 @@
                         title: "@T("Admin.Customers.Customers.Fields.CreatedOn")",
                         width: 200,
                         type: "date",
-                        format: "{0:G}"
+                        format: "{0:G}",
+                        minScreenWidth: 770,
                     }, {
                         field: "LastActivityDate",
                         title: "@T("Admin.Customers.Customers.Fields.LastActivityDate")",
                         width: 200,
                         type: "date",
                         format: "{0:G}"
-                    }, {
-                        field: "Id",
-                        title: "@T("Admin.Common.Edit")",
-                        width: 50,
-                        template: '<a class="btn btn-sm btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
                     }]
                 });
             });

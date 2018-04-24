@@ -45,23 +45,25 @@
                 columns: [{
                     field: "OrderNumber",
                     title: "@T("Admin.Customers.Customers.Orders.ID")",
-                    width: 50
+                    width: 90,
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Order/Edit/")#=Id#">#=OrderNumber#</a>'
                 }, {
                     field: "OrderTotal",
                     title: "@T("Admin.Customers.Customers.Orders.OrderTotal")",
-                    width: 200
+                    width: 120,
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Order/Edit/")#=Id#">#=OrderTotal#</a>'
                 }, {
                     field: "OrderStatus",
                     title: "@T("Admin.Customers.Customers.Orders.OrderStatus")",
-                    width: 200
+                    width: 160
                 }, {
                     field: "PaymentStatus",
                     title: "@T("Admin.Customers.Customers.Orders.PaymentStatus")",
-                    width: 200
+                    width: 180
                 }, {
                     field: "ShippingStatus",
                     title: "@T("Admin.Customers.Customers.Orders.ShippingStatus")",
-                    width: 200
+                    width: 180
                 }, {
                     field: "StoreName",
                     title: "@T("Admin.Customers.Customers.Orders.Store")",
@@ -69,14 +71,9 @@
                 }, {
                     field: "CreatedOn",
                     title: "@T("Admin.System.Log.Fields.CreatedOn")",
-                    width: 200,
+                    width: 220,
                     type: "date",
                     format: "{0:G}"
-                }, {
-                    field: "Id",
-                    title: "@T("Admin.Common.View")",
-                    width: 100,
-                    template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=Id#">@T("Admin.Common.View")</a>'
                 }]
             });
         });

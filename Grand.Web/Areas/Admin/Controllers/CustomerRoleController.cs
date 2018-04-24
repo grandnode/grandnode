@@ -352,6 +352,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     Id = x.Id,
                     Name = _productService.GetProductById(x.ProductId)?.Name,
+                    ProductId = x.ProductId,
                     DisplayOrder = x.DisplayOrder
                 }),
                 Total = products.Count()

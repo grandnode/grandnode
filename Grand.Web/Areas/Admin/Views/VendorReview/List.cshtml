@@ -119,7 +119,8 @@ $(document).ready(function () {
         }, {
             field: "Title",
             title: "@T("Admin.VendorReviews.Fields.Title")",
-            width: 200
+            width: 200,
+            template: '<a class="k-link" href="Edit/#=Id#?VendorId=#=VendorId#">#=Title#</a>',
         }, {
             field: "Rating",
             title: "@T("Admin.VendorReviews.Fields.Rating")",
@@ -137,11 +138,6 @@ $(document).ready(function () {
             width: 200,
             type: "date",
             format: "{0:G}"
-        }, {
-            field: "Id",
-            title: "@T("Admin.Common.Edit")",
-            width: 50,
-            template: '<a class="btn btn-sm btn-default" href="Edit/#=Id#?VendorId=#=VendorId#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
         }]
     });
 });

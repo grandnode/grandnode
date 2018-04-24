@@ -81,18 +81,14 @@
             scrollable: false,
             columns: [{
                 field: "CustomerName",
-                title: "@T("Admin.Customers.Reports.BestBy.Fields.Customer")"
+                title: "@T("Admin.Customers.Reports.BestBy.Fields.Customer")",
+                template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerName#</a>',
             }, {
                 field: "OrderTotal",
                 title: "@T("Admin.Customers.Reports.BestBy.Fields.OrderTotal")"
             }, {
                 field: "OrderCount",
                 title: "@T("Admin.Customers.Reports.BestBy.Fields.OrderCount")"
-            }, {
-                field: "Id",
-                title: "@T("Admin.Common.View")",
-                width: 100,
-                template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">@T("Admin.Common.View")</a>'
             }]
         });
     });
