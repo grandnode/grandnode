@@ -85,7 +85,6 @@ namespace Grand.Web.Controllers
             MediaSettings mediaSettings,
             CatalogSettings catalogSettings,
             VendorSettings vendorSettings,
-            ICacheManager cacheManager,
             IEventPublisher eventPublisher,
             IOrderService orderService)
         {
