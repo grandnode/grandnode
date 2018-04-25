@@ -628,6 +628,8 @@ namespace Grand.Web.Services
                     "/customer/downloadableproducts",
                     "/customer/info",
                     "/customer/auctions",
+                    "/common/getactivepopup",
+                    "/common/removepopup",
                     "/deletepm",
                     "/emailwishlist",
                     "/inboxupdate",
