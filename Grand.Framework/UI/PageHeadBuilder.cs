@@ -71,7 +71,7 @@ namespace Grand.Framework.UI
             if (filePaths == null || filePaths.Length == 0)
                 throw new ArgumentException("parts");
 
-            var ticks = filePaths.Select(filePath => { return File.GetLastWriteTimeUtc(filePath).Ticks; });
+            var ticks = filePaths.Where(filePath => File.Exists(filePath)).Select(filePath => { return File.GetLastWriteTimeUtc(filePath).Ticks; });
 
             //calculate hash
             var hash = "";
@@ -287,9 +287,6 @@ namespace Grand.Framework.UI
                         {
                             //remove starting /
                             src = src.Remove(0, 1);
-
-                            if (File.Exists(srcPath))
-                                item.FilePath = srcPath;
                         }
                         else
                         {
@@ -299,9 +296,6 @@ namespace Grand.Framework.UI
                                 srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src.Replace("/", "\\").Replace("\\\\", "\\"));
                             else
                                 srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src);
-
-                            if (File.Exists(srcPath))
-                                item.FilePath = srcPath;
                         }
                         bundle.InputFiles.Add(src);
                     }
@@ -447,20 +441,16 @@ namespace Grand.Framework.UI
                         {
                             //remove starting /
                             src = src.Remove(0, 1);
-                            if (File.Exists(srcPath))
-                                item.FilePath = srcPath;
                         }
                         else
                         {
                             //if not, it should be stored into /wwwroot directory
-                            src = "wwwroot/" + src;
+                            src = "wwwroot" + src;
                             if(Grand.Core.OperatingSystem.IsWindows())
                                 srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src.Replace("/", "\\").Replace("\\\\", "\\"));
                             else
                                 srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src);
 
-                            if (File.Exists(srcPath))
-                                item.FilePath = srcPath;
                         }
                         bundle.InputFiles.Add(src);
                     }
