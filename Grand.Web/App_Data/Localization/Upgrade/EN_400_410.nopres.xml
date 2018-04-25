@@ -993,10 +993,10 @@
     <Value>Created on</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Acl">
-    <Value>Access control list</Value>
+    <Value>Select customer roles for which the category will be shown.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Acl">
-    <Value>Access control list</Value>
+    <Value>Select customer roles for which the article will be shown.</Value>
   </LocaleResource>
   <LocaleResource Name="Knowledgebase">
     <Value>Knowledgebase</Value>
@@ -1053,28 +1053,28 @@
     <Value>SeName</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.MetaKeywords.Hint">
-    <Value>Meta keywords</Value>
+    <Value>Meta keywords to be added to page header.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.MetaDescription.Hint">
-    <Value>Meta description</Value>
+    <Value>Meta description to be added to page header.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.MetaTitle.Hint">
-    <Value>Meta title</Value>
+    <Value>Override the page title. The default is the name of the category.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.SeName.Hint">
-    <Value>SeName</Value>
+    <Value>Set a search engine friendly page name. Leave empty to generate it automatically based on the name of the article.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.MetaKeywords.Hint">
-    <Value>Meta keywords</Value>
+    <Value>Meta keywords to be added to page header.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.MetaDescription.Hint">
-    <Value>Meta description</Value>
+    <Value>Meta description to be added to page header.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.MetaTitle.Hint">
-    <Value>Meta title</Value>
+    <Value>Override the page title. The default is the name of the category.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.SeName.Hint">
-    <Value>SeName</Value>
+    <Value>Set a search engine friendly page name. Leave empty to generate it automatically based on the name of the category.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Seo">
     <Value>Seo</Value>
@@ -1086,7 +1086,7 @@
     <Value>Show on homepage</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.ShowOnHomepage.Hint">
-    <Value>Show on homepage</Value>
+    <Value>Indicates whether to show this article on knowledgebase homepage or not.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Cannotdeletewitharticles">
     <Value>Cannot delete category with articles assigned to it</Value>
@@ -1105,5 +1105,35 @@
   </LocaleResource>
   <LocaleResource Name="Knowledgebase.Article.RelatedArticles">
     <Value>Related articles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.LimitedToStores">
+    <Value>Limited to stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.LimitedToStores">
+    <Value>Limited to stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.AvailableStores">
+    <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.AvailableStores">
+    <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.LimitedToStores.Hint">
+    <Value>Determines whether the category is available only at certain stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.LimitedToStores.Hint">
+    <Value>Determines whether the article is available only at certain stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.AvailableStores.Hint">
+    <Value>Select stores for which the category will be shown.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.AvailableStores.Hint">
+    <Value>Select stores for which the article will be shown.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Stores">
+    <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Stores">
+    <Value>Stores</Value>
   </LocaleResource>
 </Language>

@@ -32,6 +32,9 @@
             @T("Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Acl")
         </li>
         <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
+            @T("Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Stores")
+        </li>
+        <li @Html.RenderSelectedTabIndex(5, GetSelectedTabIndex())>
             @T("Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.ActivityLog")
         </li>
     </ul>
@@ -46,6 +49,9 @@
     </div>
     <div>
         @Html.Partial("_CreateOrUpdateCategory.TabAcl", Model)
+    </div>
+    <div>
+        @Html.Partial("_CreateOrUpdateCategory.TabStores", Model)
     </div>
     <div>
         @Html.Partial("_CreateOrUpdateCategory.TabActivityLog", Model)

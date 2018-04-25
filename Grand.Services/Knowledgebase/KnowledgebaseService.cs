@@ -65,42 +65,54 @@ namespace Grand.Services.Knowledgebase
 
         /// <summary>
         /// Key for caching
+        /// {0} : customer roles
+        /// {1} : store id
         /// </summary>
-        private const string PUBLIC_CATEGORIES = "Knowledgebase.category.public.all";
+        private const string PUBLIC_CATEGORIES = "Knowledgebase.category.public.all-{0}-{1}";
 
         /// <summary>
         /// Key for caching
+        /// {0} : customer roles
+        /// {1} : store id
         /// </summary>
-        private const string PUBLIC_ARTICLES = "Knowledgebase.article.public.all";
+        private const string PUBLIC_ARTICLES = "Knowledgebase.article.public.all-{0}-{1}";
 
         /// <summary>
         /// Key for caching
         /// </summary>
         /// <remarks>
         /// {0} : article ID
+        /// {1} : customer roles
+        /// {2} : store id
         /// </remarks>
-        private const string PUBLIC_ARTICLE_BY_ID = "Knowledgebase.article.public.id-{0}";
+        private const string PUBLIC_ARTICLE_BY_ID = "Knowledgebase.article.public.id-{0}-{1}-{2}";
 
         /// <summary>
         /// Key for caching
         /// </summary>
         /// <remarks>
         /// {0} : category ID
+        /// {1} : customer roles
+        /// {2} : store id
         /// </remarks>
-        private const string PUBLIC_ARTICLES_BY_CATEGORY_ID = "Knowledgebase.article.public.categoryid-{0}";
+        private const string PUBLIC_ARTICLES_BY_CATEGORY_ID = "Knowledgebase.article.public.categoryid-{0}-{1}-{2}";
 
         /// <summary>
         /// Key for caching
         /// </summary>
         /// <remarks>
         /// {0} : keyword
+        /// {1} : customer roles
+        /// {2} : store id
         /// </remarks>
-        private const string PUBLIC_ARTICLES_BY_KEYWORD = "Knowledgebase.article.public.keyword-{0}";
+        private const string PUBLIC_ARTICLES_BY_KEYWORD = "Knowledgebase.article.public.keyword-{0}-{1}-{2}";
 
         /// <summary>
         /// Key for caching
+        /// {0} : customer roles
+        /// {1} : store id
         /// </summary>
-        private const string HOMEPAGE_ARTICLES = "Knowledgebase.article.homepage";
+        private const string HOMEPAGE_ARTICLES = "Knowledgebase.article.homepage-{0}-{1}";
 
         /// <summary>
         /// Key for caching
@@ -119,8 +131,10 @@ namespace Grand.Services.Knowledgebase
         /// {0} : id
         /// {1} : page index
         /// {2} : page size
+        /// {3} : customer roles
+        /// {4} : store id
         /// </remarks>
-        private const string RELATED_ARTICLES = "Knowledgebase.article.related-{0}-{1}-{2}";
+        private const string RELATED_ARTICLES = "Knowledgebase.article.related-{0}-{1}-{2}-{3}-{4}";
 
         private readonly IRepository<KnowledgebaseCategory> _knowledgebaseCategoryRepository;
         private readonly IRepository<KnowledgebaseArticle> _knowledgebaseArticleRepository;
@@ -129,6 +143,7 @@ namespace Grand.Services.Knowledgebase
         private readonly CatalogSettings _catalogSettings;
         private readonly IWorkContext _workContext;
         private readonly ICacheManager _cacheManager;
+        private readonly IStoreContext _storeContext;
 
         /// <summary>
         /// Ctor
@@ -138,7 +153,7 @@ namespace Grand.Services.Knowledgebase
         /// <param name="eventPublisher"></param>
         public KnowledgebaseService(IRepository<KnowledgebaseCategory> knowledgebaseCategoryRepository,
             IRepository<KnowledgebaseArticle> knowledgebaseArticleRepository, IEventPublisher eventPublisher, CommonSettings commonSettings,
-            CatalogSettings catalogSettings, IWorkContext workContext, ICacheManager cacheManager)
+            CatalogSettings catalogSettings, IWorkContext workContext, ICacheManager cacheManager, IStoreContext storeContext)
         {
             this._knowledgebaseCategoryRepository = knowledgebaseCategoryRepository;
             this._knowledgebaseArticleRepository = knowledgebaseArticleRepository;
@@ -147,6 +162,7 @@ namespace Grand.Services.Knowledgebase
             this._catalogSettings = catalogSettings;
             this._workContext = workContext;
             this._cacheManager = cacheManager;
+            this._storeContext = storeContext;
         }
 
         /// <summary>
@@ -186,7 +202,8 @@ namespace Grand.Services.Knowledgebase
         /// <returns>knowledgebase category</returns>
         public KnowledgebaseCategory GetKnowledgebaseCategory(string id)
         {
-            string key = string.Format(CATEGORY_BY_ID, id);
+            string key = string.Format(CATEGORY_BY_ID, id, _workContext.CurrentCustomer.GetCustomerRoleIds(),
+                _storeContext.CurrentStore.Id);
             return _cacheManager.Get(key, () => _knowledgebaseCategoryRepository.Table.Where(x => x.Id == id).FirstOrDefault());
         }
 
@@ -284,7 +301,9 @@ namespace Grand.Services.Knowledgebase
         /// <returns>List of public knowledgebase categories</returns>
         public List<KnowledgebaseCategory> GetPublicKnowledgebaseCategories()
         {
-            return _cacheManager.Get(PUBLIC_CATEGORIES, () =>
+            var key = string.Format(PUBLIC_CATEGORIES, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                _storeContext.CurrentStore.Id);
+            return _cacheManager.Get(key, () =>
             {
                 var builder = Builders<KnowledgebaseCategory>.Filter;
                 var filter = FilterDefinition<KnowledgebaseCategory>.Empty;
@@ -294,6 +313,13 @@ namespace Grand.Services.Knowledgebase
                 {
                     var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
                     filter = filter & (builder.AnyIn(x => x.CustomerRoles, allowedCustomerRolesIds) | builder.Where(x => !x.SubjectToAcl));
+                }
+
+                if (!_catalogSettings.IgnoreStoreLimitations)
+                {
+                    //Store mapping
+                    var currentStoreId = new List<string> { _storeContext.CurrentStore.Id };
+                    filter = filter & (builder.AnyIn(x => x.Stores, currentStoreId) | builder.Where(x => !x.LimitedToStores));
                 }
 
                 var builderSort = Builders<KnowledgebaseCategory>.Sort.Ascending(x => x.DisplayOrder);
@@ -308,7 +334,9 @@ namespace Grand.Services.Knowledgebase
         /// <returns>List of public knowledgebase articles</returns>
         public List<KnowledgebaseArticle> GetPublicKnowledgebaseArticles()
         {
-            return _cacheManager.Get(PUBLIC_ARTICLES, () =>
+            var key = string.Format(PUBLIC_ARTICLES, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                _storeContext.CurrentStore.Id);
+            return _cacheManager.Get(key, () =>
             {
                 var builder = Builders<KnowledgebaseArticle>.Filter;
                 var filter = FilterDefinition<KnowledgebaseArticle>.Empty;
@@ -318,6 +346,13 @@ namespace Grand.Services.Knowledgebase
                 {
                     var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
                     filter = filter & (builder.AnyIn(x => x.CustomerRoles, allowedCustomerRolesIds) | builder.Where(x => !x.SubjectToAcl));
+                }
+
+                if (!_catalogSettings.IgnoreStoreLimitations)
+                {
+                    //Store mapping
+                    var currentStoreId = new List<string> { _storeContext.CurrentStore.Id };
+                    filter = filter & (builder.AnyIn(x => x.Stores, currentStoreId) | builder.Where(x => !x.LimitedToStores));
                 }
 
                 var builderSort = Builders<KnowledgebaseArticle>.Sort.Ascending(x => x.DisplayOrder);
@@ -332,7 +367,8 @@ namespace Grand.Services.Knowledgebase
         /// <returns>knowledgebase article</returns>
         public KnowledgebaseArticle GetPublicKnowledgebaseArticle(string id)
         {
-            var key = string.Format(PUBLIC_ARTICLE_BY_ID, id);
+            var key = string.Format(PUBLIC_ARTICLE_BY_ID, id, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                _storeContext.CurrentStore.Id);
             return _cacheManager.Get(key, () =>
             {
                 var builder = Builders<KnowledgebaseArticle>.Filter;
@@ -346,6 +382,13 @@ namespace Grand.Services.Knowledgebase
                     filter = filter & (builder.AnyIn(x => x.CustomerRoles, allowedCustomerRolesIds) | builder.Where(x => !x.SubjectToAcl));
                 }
 
+                if (!_catalogSettings.IgnoreStoreLimitations)
+                {
+                    //Store mapping
+                    var currentStoreId = new List<string> { _storeContext.CurrentStore.Id };
+                    filter = filter & (builder.AnyIn(x => x.Stores, currentStoreId) | builder.Where(x => !x.LimitedToStores));
+                }
+
                 var toReturn = _knowledgebaseArticleRepository.Collection.Find(filter).FirstOrDefault();
                 return toReturn;
             });
@@ -357,7 +400,8 @@ namespace Grand.Services.Knowledgebase
         /// <returns>List of public knowledgebase articles</returns>
         public List<KnowledgebaseArticle> GetPublicKnowledgebaseArticlesByCategory(string categoryId)
         {
-            var key = string.Format(PUBLIC_ARTICLES_BY_CATEGORY_ID, categoryId);
+            var key = string.Format(PUBLIC_ARTICLES_BY_CATEGORY_ID, categoryId, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                _storeContext.CurrentStore.Id);
             return _cacheManager.Get(key, () =>
             {
                 var builder = Builders<KnowledgebaseArticle>.Filter;
@@ -369,6 +413,13 @@ namespace Grand.Services.Knowledgebase
                 {
                     var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
                     filter = filter & (builder.AnyIn(x => x.CustomerRoles, allowedCustomerRolesIds) | builder.Where(x => !x.SubjectToAcl));
+                }
+
+                if (!_catalogSettings.IgnoreStoreLimitations)
+                {
+                    //Store mapping
+                    var currentStoreId = new List<string> { _storeContext.CurrentStore.Id };
+                    filter = filter & (builder.AnyIn(x => x.Stores, currentStoreId) | builder.Where(x => !x.LimitedToStores));
                 }
 
                 var builderSort = Builders<KnowledgebaseArticle>.Sort.Ascending(x => x.DisplayOrder);
@@ -383,7 +434,8 @@ namespace Grand.Services.Knowledgebase
         /// <returns>List of public knowledgebase articles</returns>
         public List<KnowledgebaseArticle> GetPublicKnowledgebaseArticlesByKeyword(string keyword)
         {
-            var key = string.Format(PUBLIC_ARTICLES_BY_KEYWORD, keyword);
+            var key = string.Format(PUBLIC_ARTICLES_BY_KEYWORD, keyword, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                _storeContext.CurrentStore.Id);
             return _cacheManager.Get(key, () =>
             {
                 var builder = Builders<KnowledgebaseArticle>.Filter;
@@ -409,6 +461,13 @@ namespace Grand.Services.Knowledgebase
                     filter = filter & (builder.AnyIn(x => x.CustomerRoles, allowedCustomerRolesIds) | builder.Where(x => !x.SubjectToAcl));
                 }
 
+                if (!_catalogSettings.IgnoreStoreLimitations)
+                {
+                    //Store mapping
+                    var currentStoreId = new List<string> { _storeContext.CurrentStore.Id };
+                    filter = filter & (builder.AnyIn(x => x.Stores, currentStoreId) | builder.Where(x => !x.LimitedToStores));
+                }
+
                 var builderSort = Builders<KnowledgebaseArticle>.Sort.Ascending(x => x.DisplayOrder);
                 var toReturn = _knowledgebaseArticleRepository.Collection.Find(filter).Sort(builderSort);
                 return toReturn.ToList();
@@ -421,7 +480,9 @@ namespace Grand.Services.Knowledgebase
         /// <returns>List of homepage knowledgebase articles</returns>
         public List<KnowledgebaseArticle> GetHomepageKnowledgebaseArticles()
         {
-            return _cacheManager.Get(HOMEPAGE_ARTICLES, () =>
+            var key = string.Format(HOMEPAGE_ARTICLES, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                _storeContext.CurrentStore.Id);
+            return _cacheManager.Get(key, () =>
             {
                 var builder = Builders<KnowledgebaseArticle>.Filter;
                 var filter = FilterDefinition<KnowledgebaseArticle>.Empty;
@@ -432,6 +493,13 @@ namespace Grand.Services.Knowledgebase
                 {
                     var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
                     filter = filter & (builder.AnyIn(x => x.CustomerRoles, allowedCustomerRolesIds) | builder.Where(x => !x.SubjectToAcl));
+                }
+
+                if (!_catalogSettings.IgnoreStoreLimitations)
+                {
+                    //Store mapping
+                    var currentStoreId = new List<string> { _storeContext.CurrentStore.Id };
+                    filter = filter & (builder.AnyIn(x => x.Stores, currentStoreId) | builder.Where(x => !x.LimitedToStores));
                 }
 
                 var builderSort = Builders<KnowledgebaseArticle>.Sort.Ascending(x => x.DisplayOrder);
@@ -485,7 +553,8 @@ namespace Grand.Services.Knowledgebase
         /// <returns>IPagedList<KnowledgebaseArticle></returns>
         public IPagedList<KnowledgebaseArticle> GetRelatedKnowledgebaseArticles(string articleId, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var key = string.Format(RELATED_ARTICLES, articleId, pageIndex, pageSize);
+            var key = string.Format(RELATED_ARTICLES, articleId, pageIndex, pageSize, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                _storeContext.CurrentStore.Id);
             return _cacheManager.Get(key, () =>
             {
                 var article = GetKnowledgebaseArticle(articleId);

@@ -3,6 +3,7 @@ using Grand.Framework.Localization;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
 using Grand.Web.Areas.Admin.Models.Customers;
+using Grand.Web.Areas.Admin.Models.Stores;
 using Grand.Web.Areas.Admin.Validators.Knowledgebase;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -18,6 +19,7 @@ namespace Grand.Web.Areas.Admin.Models.Knowledgebase
             Categories = new List<SelectListItem>();
             Locales = new List<KnowledgebaseArticleLocalizedModel>();
             AvailableCustomerRoles = new List<CustomerRoleModel>();
+            AvailableStores = new List<StoreModel>();
         }
 
         [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.Name")]
@@ -61,6 +63,12 @@ namespace Grand.Web.Areas.Admin.Models.Knowledgebase
         public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }
 
         public string[] SelectedCustomerRoleIds { get; set; }
+
+        [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.LimitedToStores")]
+        public bool LimitedToStores { get; set; }
+        [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.AvailableStores")]
+        public List<StoreModel> AvailableStores { get; set; }
+        public string[] SelectedStoreIds { get; set; }
 
         public partial class ActivityLogModel : BaseGrandEntityModel
         {

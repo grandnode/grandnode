@@ -13,6 +13,7 @@ namespace Grand.Core.Domain.Knowledgebase
             CustomerRoles = new List<string>();
             Locales = new List<LocalizedProperty>();
             RelatedArticles = new List<string>();
+            Stores = new List<string>();
         }
 
         /// <summary>
@@ -90,5 +91,11 @@ namespace Grand.Core.Domain.Knowledgebase
         /// Gets or sets list of related articles ids
         /// </summary>
         public IList<string> RelatedArticles { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
+        /// </summary>
+        public bool LimitedToStores { get; set; }
+        public IList<string> Stores { get; set; }
     }
 }

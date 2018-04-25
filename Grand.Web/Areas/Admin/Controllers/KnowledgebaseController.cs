@@ -21,6 +21,7 @@ using Grand.Services.Seo;
 using Grand.Core;
 using Grand.Framework.Controllers;
 using Grand.Framework.Mvc;
+using Grand.Services.Stores;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -34,10 +35,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IUrlRecordService _urlRecordService;
+        private readonly IStoreService _storeService;
 
         public KnowledgebaseController(ILocalizationService localizationService, IPermissionService permissionService,
             IKnowledgebaseService knowledgebaseService, ILanguageService languageService, ICustomerActivityService customerActivityService,
-            ICustomerService customerService, IDateTimeHelper dateTimeHelper, IUrlRecordService urlRecordService)
+            ICustomerService customerService, IDateTimeHelper dateTimeHelper, IUrlRecordService urlRecordService, IStoreService storeService)
         {
             this._localizationService = localizationService;
             this._permissionService = permissionService;
@@ -47,6 +49,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
             this._urlRecordService = urlRecordService;
+            this._storeService = storeService;
         }
 
         [NonAction]
@@ -345,6 +348,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             .Select(cr => cr.ToModel())
             .ToList();
             model.Published = true;
+            model.AvailableStores = _storeService
+            .GetAllStores()
+            .Select(s => s.ToModel())
+            .ToList();
 
             AddLocales(_languageService, model.Locales);
             return View(model);
@@ -365,6 +372,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 knowledgebaseCategory.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
                 model.SeName = knowledgebaseCategory.ValidateSeName(model.SeName, knowledgebaseCategory.Name, true);
                 knowledgebaseCategory.SeName = model.SeName;
+                knowledgebaseCategory.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
 
                 _knowledgebaseService.InsertKnowledgebaseCategory(knowledgebaseCategory);
 
@@ -376,6 +384,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.AvailableCustomerRoles = _customerService
                 .GetAllCustomerRoles(true)
                 .Select(cr => cr.ToModel())
+                .ToList();
+                model.AvailableStores = _storeService
+                .GetAllStores()
+                .Select(s => s.ToModel())
                 .ToList();
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Added"));
@@ -422,6 +434,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             .Select(cr => cr.ToModel())
             .ToList();
             model.SelectedCustomerRoleIds = knowledgebaseCategory.CustomerRoles.ToArray();
+            model.AvailableStores = _storeService
+            .GetAllStores()
+            .Select(s => s.ToModel())
+            .ToList();
+            model.SelectedStoreIds = knowledgebaseCategory.Stores.ToArray();
 
             return View(model);
         }
@@ -444,6 +461,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 knowledgebaseCategory.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
                 model.SeName = knowledgebaseCategory.ValidateSeName(model.SeName, knowledgebaseCategory.Name, true);
                 knowledgebaseCategory.SeName = model.SeName;
+                knowledgebaseCategory.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
 
                 _knowledgebaseService.UpdateKnowledgebaseCategory(knowledgebaseCategory);
 
@@ -455,6 +473,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.AvailableCustomerRoles = _customerService
                 .GetAllCustomerRoles(true)
                 .Select(cr => cr.ToModel())
+                .ToList();
+                model.AvailableStores = _storeService
+                .GetAllStores()
+                .Select(s => s.ToModel())
                 .ToList();
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Updated"));
@@ -512,6 +534,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             .Select(cr => cr.ToModel())
             .ToList();
             model.Published = true;
+            model.AvailableStores = _storeService
+                .GetAllStores()
+                .Select(s => s.ToModel())
+                .ToList();
 
             if (!string.IsNullOrEmpty(parentCategoryId))
                 model.ParentCategoryId = parentCategoryId;
@@ -535,6 +561,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 knowledgebaseArticle.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
                 model.SeName = knowledgebaseArticle.ValidateSeName(model.SeName, knowledgebaseArticle.Name, true);
                 knowledgebaseArticle.SeName = model.SeName;
+                knowledgebaseArticle.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
 
                 _knowledgebaseService.InsertKnowledgebaseArticle(knowledgebaseArticle);
 
@@ -546,6 +573,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.AvailableCustomerRoles = _customerService
                 .GetAllCustomerRoles(true)
                 .Select(cr => cr.ToModel())
+                .ToList();
+                model.AvailableStores = _storeService
+                .GetAllStores()
+                .Select(s => s.ToModel())
                 .ToList();
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Added"));
@@ -592,6 +623,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             .Select(cr => cr.ToModel())
             .ToList();
             model.SelectedCustomerRoleIds = knowledgebaseArticle.CustomerRoles.ToArray();
+            model.AvailableStores = _storeService
+            .GetAllStores()
+            .Select(s => s.ToModel())
+            .ToList();
+            model.SelectedStoreIds = knowledgebaseArticle.Stores.ToArray();
 
             return View(model);
         }
@@ -614,6 +650,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 knowledgebaseArticle.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
                 model.SeName = knowledgebaseArticle.ValidateSeName(model.SeName, knowledgebaseArticle.Name, true);
                 knowledgebaseArticle.SeName = model.SeName;
+                knowledgebaseArticle.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
 
                 _knowledgebaseService.UpdateKnowledgebaseArticle(knowledgebaseArticle);
 
@@ -625,6 +662,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.AvailableCustomerRoles = _customerService
                 .GetAllCustomerRoles(true)
                 .Select(cr => cr.ToModel())
+                .ToList();
+                model.AvailableStores = _storeService
+                .GetAllStores()
+                .Select(s => s.ToModel())
                 .ToList();
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Updated"));
