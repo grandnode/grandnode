@@ -628,6 +628,7 @@ namespace Grand.Web.Services
                     "/customer/downloadableproducts",
                     "/customer/info",
                     "/customer/auctions",
+                    "/common/customeractioneventurl",
                     "/common/getactivepopup",
                     "/common/removepopup",
                     "/deletepm",
