@@ -54,7 +54,8 @@
             columns: [{
                 field: "Name",
                 title: "@T("Admin.Address.AddressAttributes.Fields.Name")",
-                width: 300
+                width: 300,
+                template: '<a class="k-link" href="@Url.Content("~/Admin/AddressAttribute/Edit/")#=Id#">#=Name#</a>',
             }, {
                 field: "AttributeControlTypeName",
                 title: "@T("Admin.Address.AddressAttributes.Fields.AttributeControlType")",
@@ -70,11 +71,6 @@
                 field: "DisplayOrder",
                 title: "@T("Admin.Address.AddressAttributes.Fields.DisplayOrder")",
                 width: 100
-            }, {
-                field: "Id",
-                title: "@T("Admin.Common.Edit")",
-                width: 100,
-                template: '<a href="@Url.Content("~/Admin/AddressAttribute/Edit/")#=Id#">@T("Admin.Common.Edit")</a>'
             }]
         });
     });
