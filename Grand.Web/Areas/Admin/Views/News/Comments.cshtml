@@ -1,6 +1,6 @@
 ﻿@inject AdminAreaSettings adminAreaSettings
 @{
-    int? filterByNewsItemId = ViewBag.FilterByNewsItemId;
+    string filterByNewsItemId = ViewBag.FilterByNewsItemId;
     //page title
     ViewBag.Title = T("Admin.ContentManagement.News.Comments").Text;
 }
@@ -28,9 +28,9 @@
 </div>
 @{
     string readUrl = "";
-    if (filterByNewsItemId.HasValue)
+    if (!string.IsNullOrEmpty(filterByNewsItemId))
     {
-        readUrl = Url.Action("Comments", "News", new { filterByNewsItemId = filterByNewsItemId.Value });
+        readUrl = Url.Action("Comments", "News", new { filterByNewsItemId = filterByNewsItemId });
     }
     else
     {
@@ -84,7 +84,7 @@
                     pageSizes: [@(adminAreaSettings.GridPageSizes)]
                 },
                 editable: {
-                    confirmation: false,
+                    confirmation: true,
                     mode: "inline"
                 },
                 scrollable: false,
@@ -92,12 +92,12 @@
                     field: "NewsItemTitle",
                     title: "@T("Admin.ContentManagement.News.Comments.Fields.NewsItem")",
                     width: 200,
-                    template: '<a href="@Url.Content("~/Admin/News/Edit/")#=NewsItemId#">#:NewsItemTitle#</a>'
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/News/Edit/")#=NewsItemId#">#:NewsItemTitle#</a>'
                 }, {
                     field: "CustomerId",
                     title: "@T("Admin.ContentManagement.News.Comments.Fields.Customer")",
                     width: 200,
-                    template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerInfo#</a>'
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerInfo#</a>'
                 }, {
                     field: "CommentTitle",
                     title: "@T("Admin.ContentManagement.News.Comments.Fields.CommentTitle")"

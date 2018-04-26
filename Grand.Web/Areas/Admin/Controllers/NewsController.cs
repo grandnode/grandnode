@@ -406,7 +406,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Comments
 
-        public IActionResult Comments(int? filterByNewsItemId)
+        public IActionResult Comments(string filterByNewsItemId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();

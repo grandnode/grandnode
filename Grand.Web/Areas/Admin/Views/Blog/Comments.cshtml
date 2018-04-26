@@ -2,7 +2,7 @@
 @{
     //page title
     ViewBag.Title = T("Admin.ContentManagement.Blog.Comments").Text;
-    int? filterByBlogPostId = ViewBag.FilterByBlogPostId;
+    string filterByBlogPostId = ViewBag.FilterByBlogPostId;
 }
 <antiforgery-token />
 <div class="row">
@@ -29,9 +29,9 @@
 
 @{
     string readUrl = "";
-    if (filterByBlogPostId.HasValue)
+    if (!string.IsNullOrEmpty(filterByBlogPostId))
     {
-        readUrl = Url.Action("Comments", "Blog", new { filterByBlogPostId = filterByBlogPostId.Value });
+        readUrl = Url.Action("Comments", "Blog", new { filterByBlogPostId = filterByBlogPostId });
     }
     else
     {
@@ -85,7 +85,7 @@
                 pageSizes: [@(adminAreaSettings.GridPageSizes)]
             },
             editable: {
-                confirmation: false,
+                confirmation: true,
                 mode: "inline"
             },
             scrollable: false,
@@ -93,12 +93,12 @@
                 field: "BlogPostTitle",
                 title: "@T("Admin.ContentManagement.Blog.Comments.Fields.BlogPost")",
                 width: 200,
-                template: '<a href="@Url.Content("~/Admin/Blog/Edit/")#=BlogPostId#">#:BlogPostTitle#</a>'
+                template: '<a class="k-link" href="@Url.Content("~/Admin/Blog/Edit/")#=BlogPostId#">#:BlogPostTitle#</a>'
             }, {
                 field: "CustomerId",
                 title: "@T("Admin.ContentManagement.Blog.Comments.Fields.Customer")",
                 width: 200,
-                template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerInfo#</a>'
+                template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerInfo#</a>'
             }, {
                 field: "Comment",
                 title: "@T("Admin.ContentManagement.Blog.Comments.Fields.Comment")",

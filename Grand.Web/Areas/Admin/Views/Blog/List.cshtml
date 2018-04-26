@@ -69,11 +69,12 @@
                 field: "Title",
                 title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Title")",
                 width: 400,
+                template: '<a class="k-link" href="Edit/#=Id#">#=Title#</a>',
             }, {
                 field: "Comments",
                 title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments")",
                 width: 200,
-                template: '<a href="Comments?filterByBlogPostId=#=Id#">@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments") - #=Comments# </a>'
+                template: '<a class="k-link" href="Comments?filterByBlogPostId=#=Id#">@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments") - #=Comments# </a>'
             }, {
                 field: "StartDate",
                 title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.StartDate")",
@@ -92,11 +93,6 @@
                 width: 200,
                 type: "date",
                 format: "{0:G}"
-            }, {
-                field: "Id",
-                title: "@T("Admin.Common.Edit")",
-                width: 100,
-                template: '<a class="btn btn-sm btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
             }]
         });
     });

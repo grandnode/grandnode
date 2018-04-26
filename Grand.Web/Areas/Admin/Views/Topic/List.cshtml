@@ -86,7 +86,8 @@
             scrollable: false,
             columns: [{
                 field: "SystemName",
-                title: "@T("Admin.ContentManagement.Topics.Fields.SystemName")"
+                title: "@T("Admin.ContentManagement.Topics.Fields.SystemName")",
+                template: '<a class="k-link" href="Edit/#=Id#">#=SystemName#</a>',
             }, {
                 field: "IsPasswordProtected",
                 title: "@T("Admin.ContentManagement.Topics.Fields.IsPasswordProtected")",
@@ -105,11 +106,6 @@
                 field: "DisplayOrder",
                 title: "@T("Admin.ContentManagement.Topics.Fields.DisplayOrder")",
                 width: 100
-            }, {
-                field: "Id",
-                title: "@T("Admin.Common.Edit")",
-                width: 100,
-                template: '<a class="btn btn-sm btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
             }]
         });
     });

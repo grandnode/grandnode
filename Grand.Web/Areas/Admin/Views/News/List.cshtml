@@ -90,12 +90,13 @@
             columns: [{
                 field: "Title",
                 width: 300,
-                title: "@T("Admin.ContentManagement.News.NewsItems.Fields.Title")"
+                title: "@T("Admin.ContentManagement.News.NewsItems.Fields.Title")",
+                template: '<a class="k-link" href="Edit/#=Id#">#=Title#</a>',
             }, {
                 field: "Comments",
                 title: "@T("Admin.ContentManagement.News.NewsItems.Fields.Comments")",
                 width: 200,
-                template: '<a href="Comments?filterByNewsItemId=#=Id#">@T("Admin.ContentManagement.News.NewsItems.Fields.Comments") - #=Comments# </a>'
+                template: '<a class="k-link" href="Comments?filterByNewsItemId=#=Id#">@T("Admin.ContentManagement.News.NewsItems.Fields.Comments") - #=Comments# </a>'
             }, {
                 field: "StartDate",
                 title: "@T("Admin.ContentManagement.News.NewsItems.Fields.StartDate")",
@@ -121,11 +122,6 @@
                 width: 200,
                 type: "date",
                 format: "{0:G}"
-            }, {
-                field: "Id",
-                title: "@T("Admin.Common.Edit")",
-                width: 100,
-                template: '<a class="btn btn-sm btn-default"  href="Edit/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
             }]
         });
     });
