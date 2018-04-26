@@ -62,4 +62,10 @@
   <LocaleResource Name="Admin.Dashboard.ActivityOverview.ReturnRequests">
     <Value>Pending return requests</Value>
   </LocaleResource>
+  <LocaleResource Name="admin.common.search.filter.open">
+    <Value>Show filter</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.common.search.filter.close">
+    <Value>Hide filter</Value>
+  </LocaleResource>
 </Language>

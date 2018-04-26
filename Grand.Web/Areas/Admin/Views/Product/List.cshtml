@@ -5,7 +5,7 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.Manage").Text;
 }
-<form asp-controller="Product" asp-action="List" method="post" >
+<form asp-controller="Product" asp-action="List" method="post">
     <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
@@ -59,33 +59,52 @@
                 </div>
                 <div class="portlet-body form">
                     <div class="form-horizontal">
-                        <div class="form-body col-md-6">
+                        <div class="form-body col-md-6 advanced-filter">
                             <div class="form-group">
-                                <admin-label asp-for="SearchProductName" class="control-label col-md-4 col-sm-4"/>
+                                <admin-label asp-for="SearchProductName" class="control-label col-md-4 col-sm-4" />
                                 <div class="col-md-8 col-sm-8">
                                     <admin-input asp-for="SearchProductName" />
                                 </div>
                             </div>
+                        </div>
+                        <div class="form-body col-md-6 advanced-filter">
                             <div class="form-group">
-                                <admin-label asp-for="SearchProductTypeId" class="control-label col-md-4 col-sm-4"/>
+                                <div class="col-md-8 col-sm-8">
+                                    <div id="ExtendFilter">
+                                        <button class="btn btn-success filter-submit" id="search-products">
+                                            <i class="fa fa-search"></i> @T("Admin.Common.Search")
+                                        </button>
+                                        <button type="button" class="btn btn-default filter-extend-button">
+                                            <i class="fa fa-filter"></i> <span class="filter-text-close">@T("Admin.Common.Search.Filter.Open")</span>
+                                            <span class="filter-text-open">@T("Admin.Common.Search.Filter.Close")</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-body col-sm-6 extend-collapse">
+                            <div class="form-group">
+                                <admin-label asp-for="SearchProductTypeId" class="control-label col-md-4 col-sm-4" />
                                 <div class="col-md-8 col-sm-8">
                                     <admin-select asp-for="SearchProductTypeId" asp-items="Model.AvailableProductTypes" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <admin-label asp-for="SearchPublishedId" class="control-label col-md-4 col-sm-4"/>
+                                <admin-label asp-for="SearchPublishedId" class="control-label col-md-4 col-sm-4" />
                                 <div class="col-md-8 col-sm-8">
                                     <admin-select asp-for="SearchPublishedId" asp-items="Model.AvailablePublishedOptions" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <admin-label asp-for="SearchWarehouseId" class="control-label col-md-4 col-sm-4"/>
+                                <admin-label asp-for="SearchWarehouseId" class="control-label col-md-4 col-sm-4" />
                                 <div class="col-md-8 col-sm-8">
                                     <admin-select asp-for="SearchWarehouseId" asp-items="Model.AvailableWarehouses" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <admin-label asp-for="GoDirectlyToSku" class="control-label col-md-4 col-sm-4"/>
+                                <admin-label asp-for="GoDirectlyToSku" class="control-label col-md-4 col-sm-4" />
                                 <div class="col-md-8 col-sm-8">
                                     <div class="input-group" style="text-align:left">
                                         <admin-input asp-for="GoDirectlyToSku" />
@@ -96,15 +115,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-body col-md-6">
+                        <div class="form-body col-sm-6 extend-collapse">
                             <div class="form-group">
-                                <admin-label asp-for="SearchCategoryId" class="control-label col-md-4 col-sm-4"/>
+                                <admin-label asp-for="SearchCategoryId" class="control-label col-md-4 col-sm-4" />
                                 <div class="col-md-8 col-sm-8">
                                     <admin-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <admin-label asp-for="SearchIncludeSubCategories" class="control-label col-md-4 col-sm-4"/>
+                                <admin-label asp-for="SearchIncludeSubCategories" class="control-label col-md-4 col-sm-4" />
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
                                         <admin-input asp-for="SearchIncludeSubCategories" />
@@ -113,33 +132,25 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <admin-label asp-for="SearchManufacturerId" class="control-label col-md-4 col-sm-4"/>
+                                <admin-label asp-for="SearchManufacturerId" class="control-label col-md-4 col-sm-4" />
                                 <div class="col-md-8 col-sm-8">
                                     <admin-select asp-for="SearchManufacturerId" asp-items="Model.AvailableManufacturers" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <admin-label asp-for="SearchStoreId" class="control-label col-md-4 col-sm-4"/>
+                                <admin-label asp-for="SearchStoreId" class="control-label col-md-4 col-sm-4" />
                                 <div class="col-md-8 col-sm-8">
                                     <admin-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
                                 </div>
                             </div>
                             <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-                                <admin-label asp-for="SearchVendorId" class="control-label col-md-4 col-sm-4"/>
+                                <admin-label asp-for="SearchVendorId" class="control-label col-md-4 col-sm-4" />
                                 <div class="col-md-8 col-sm-8">
                                     <admin-select asp-for="SearchVendorId" asp-items="Model.AvailableVendors" />
                                 </div>
                             </div>
                         </div>
-                        <div class="form-actions">
-                            <div class="row">
-                                <div class="col-md-offset-5 col-sm-offset-5 col-md-7 col-sm-7">
-                                    <button class="btn btn-success filter-submit" id="search-products">
-                                        <i class="fa fa-search"></i> @T("Admin.Common.Search")
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                        <div class="clearfix"></div>
                         <div class="portlet-body">
                             <div id="products-grid"></div>
                         </div>
@@ -149,8 +160,17 @@
         </div>
     </div>
 
-    <script>
-        $(document).ready(function() {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('.extend-collapse').hide();
+            $('.filter-text-open').hide();
+            $('.filter-extend-button').click(function () {
+                $('.extend-collapse').toggle("slow");
+                $('.filter-text-open').toggle();
+                $('.filter-text-close').toggle();
+            })
+
             $("#products-grid").kendoGrid({
                 dataSource: {
                     transport: {
@@ -223,7 +243,7 @@
                         title: "@T("Admin.Catalog.Products.Fields.StockQuantity")",
 						headerAttributes: { style: "text-align:center" },
 						attributes: { style: "text-align:center" },
-						minScreenWidth: 750, 
+						minScreenWidth: 750,
                         width: 80
                     }, {
                         field: "ProductTypeName",
@@ -231,7 +251,7 @@
 						headerAttributes: { style: "text-align:center" },
 						attributes: { style: "text-align:center" },
                         width: 100,
-						minScreenWidth: 1050 
+						minScreenWidth: 1050
                     }, {
                         field: "Published",
                         title: "@T("Admin.Catalog.Products.Fields.Published")",
@@ -366,38 +386,38 @@
     </script>
 </form>
 
-    @*import products form*@
+@*import products form*@
 <div class="modal-dialog" id="importexcel-window" style="display:none; padding: 0 10px;">
-        <form asp-controller="Product" asp-action="ImportExcel" method="post" enctype="multipart/form-data">
-            <antiforgery-token />
-            <em>@T("Admin.Catalog.Products.List.ImportFromExcelTip")</em>
-            <div class="form-group">
+    <form asp-controller="Product" asp-action="ImportExcel" method="post" enctype="multipart/form-data">
+        <antiforgery-token />
+        <em>@T("Admin.Catalog.Products.List.ImportFromExcelTip")</em>
+        <div class="form-group">
+            &nbsp;
+        </div>
+        <div class="form-group">
+            <div class="col-md-2" style="margin-top: 2px; height: 34px; padding-left: 25px;">
+                <label class="control-label">
+                    @T("Admin.Common.ExcelFile")
+                </label>
+            </div>
+            <div class="col-md-10">
+                <input type="file" id="importexcelfile" name="importexcelfile" />
+            </div>
+        </div>
+        <div class="form-group">
+            &nbsp;
+        </div>
+        <div class="form-group">
+            <div class="col-md-2">
                 &nbsp;
             </div>
-            <div class="form-group">
-                <div class="col-md-2" style="margin-top: 2px; height: 34px; padding-left: 25px;">
-                    <label class="control-label">
-                        @T("Admin.Common.ExcelFile")
-                    </label>
-                </div>
-                <div class="col-md-10">
-                    <input type="file" id="importexcelfile" name="importexcelfile" />
-                </div>
+            <div class="col-md-10 text-right mt-10">
+                <input type="submit" class="k-button" value="@T("Admin.Common.ImportFromExcel")" />
             </div>
-            <div class="form-group">
-                &nbsp;
-            </div>
-            <div class="form-group">
-                <div class="col-md-2">
-                    &nbsp;
-                </div>
-                <div class="col-md-10 text-right mt-10">
-                    <input type="submit" class="k-button" value="@T("Admin.Common.ImportFromExcel")" />
-                </div>
-            </div>
-        </form>
+        </div>
+    </form>
 </div>
-    <script type="text/javascript">
+<script type="text/javascript">
         $(document).ready(function () {
             $("#importexcel").click(function (e) {
                 e.preventDefault();
@@ -412,39 +432,39 @@
                 window.data('kendoWindow').center().open();
             });
         });
-    </script>
-    @*export selected (XML). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
-    <form asp-controller="Product" asp-action="ExportXmlSelected" method="post" id = "export-xml-selected-form">
-        <antiforgery-token />
-        <input type="hidden" id="selectedIds" name="selectedIds" value="" />
-    </form>
+</script>
+@*export selected (XML). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
+<form asp-controller="Product" asp-action="ExportXmlSelected" method="post" id="export-xml-selected-form">
+    <antiforgery-token />
+    <input type="hidden" id="selectedIds" name="selectedIds" value="" />
+</form>
 
-    <script type="text/javascript">
+<script type="text/javascript">
 
-        $(document).ready(function () {
-            $('#exportxml-selected').click(function (e) {
-                e.preventDefault();
-                var ids = selectedIds.join(",");
-                $('#export-xml-selected-form #selectedIds').val(ids);
-                $('#export-xml-selected-form').submit();
-                return false;
-            });
+    $(document).ready(function () {
+        $('#exportxml-selected').click(function (e) {
+            e.preventDefault();
+            var ids = selectedIds.join(",");
+            $('#export-xml-selected-form #selectedIds').val(ids);
+            $('#export-xml-selected-form').submit();
+            return false;
         });
+    });
 
-    </script>
-    @*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
-    <form asp-controller="Product" asp-action="ExportExcelSelected" method="post" id = "export-excel-selected-form">
-        <antiforgery-token />
-        <input type="hidden" id="selectedIds" name="selectedIds" value="" />
-    </form>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#exportexcel-selected').click(function (e) {
-                e.preventDefault();
-                var ids = selectedIds.join(",");
-                $('#export-excel-selected-form #selectedIds').val(ids);
-                $('#export-excel-selected-form').submit();
-                return false;
-            });
+</script>
+@*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
+<form asp-controller="Product" asp-action="ExportExcelSelected" method="post" id="export-excel-selected-form">
+    <antiforgery-token />
+    <input type="hidden" id="selectedIds" name="selectedIds" value="" />
+</form>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#exportexcel-selected').click(function (e) {
+            e.preventDefault();
+            var ids = selectedIds.join(",");
+            $('#export-excel-selected-form #selectedIds').val(ids);
+            $('#export-excel-selected-form').submit();
+            return false;
         });
-    </script>
+    });
+</script>

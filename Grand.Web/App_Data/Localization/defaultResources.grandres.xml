@@ -4266,6 +4266,12 @@
   <LocaleResource Name="Admin.Common.Search">
     <Value>Search</Value>
   </LocaleResource>
+  <LocaleResource Name="admin.common.search.filter.close">
+    <Value>Hide filter</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.common.search.filter.open">
+    <Value>Show filter</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Common.Select">
     <Value>Select</Value>
   </LocaleResource>

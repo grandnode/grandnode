@@ -252,6 +252,35 @@ a span.username {
     }
 }
 
+@media only screen and (min-device-width : 375px) and (max-device-width : 667px) {
+    .form-horizontal .form-body.col-md-6.advanced-filter {
+        padding: 0;
+    }
+}
+
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (-webkit-min-device-pixel-ratio: 1) {
+    .form-horizontal .form-body.col-md-6.advanced-filter {
+        padding: 0;
+    }
+
+        .form-horizontal .form-body.col-md-6.advanced-filter:first-child {
+            padding-top: 20px;
+        }
+
+        .form-horizontal .form-body.col-md-6.advanced-filter:nth-child(2) {
+            margin-left: 33.33333%;
+        }
+}
+
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) and (-webkit-min-device-pixel-ratio: 1) {
+    .form-horizontal .form-body.col-md-6.advanced-filter:nth-child(2) {
+        margin-left: 0;
+        padding-top: 20px;
+    }
+}
+
+
+
 .k-input.text-box {
     padding: 6px 12px;
 }
@@ -259,3 +288,5 @@ a span.username {
 textarea.form-control.k-input {
     padding: 6px 12px;
 }
+
+
