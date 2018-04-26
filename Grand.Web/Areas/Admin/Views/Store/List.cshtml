@@ -67,18 +67,14 @@ $(document).ready(function () {
         scrollable: false,
         columns: [{
             field: "Name",
-            title: "@T("Admin.Configuration.Stores.Fields.Name")"
+            title: "@T("Admin.Configuration.Stores.Fields.Name")",
+            template: '<a class="k-link" href="Edit/#=Id#">#=Name#</a>',
         }, {
             field: "Url",
             title: "@T("Admin.Configuration.Stores.Fields.Url")"
         }, {
             field: "DisplayOrder",
             title: "@T("Admin.Configuration.Stores.Fields.DisplayOrder")"
-        }, {
-            field: "Id",
-            title: "@T("Admin.Common.Edit")",
-            width: 100,
-            template: '<a class="btn btn-sm btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
         }]
     });
 });
