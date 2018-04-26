@@ -56,7 +56,8 @@
                     {
                         field: "OrderNumber",
                         title: "@T("Admin.Orders.Fields.Id")",
-                        width: 50
+                        width: 50,
+                        template: '<a class="k-link" href="Admin/Order/Edit/#=Id#">#=OrderNumber#</a>',
                     },
                     {
                         field: "CustomerEmail",
@@ -80,12 +81,6 @@
                         width: 200,
                         type: "date",
                         format: "{0:G}"
-                    },
-                    {
-                        field: "Id",
-                        title: "@T("Admin.Common.View")",
-                        width: 100,
-                        template: '<a class="btn btn-sm btn-default" href="Admin/Order/Edit/#=Id#"><i class="fa fa-search"></i> @T("Admin.Common.View")</a>'
                     }
                 ]
             } );
