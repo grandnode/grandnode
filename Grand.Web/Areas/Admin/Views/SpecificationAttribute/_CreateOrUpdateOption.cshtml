@@ -1,7 +1,7 @@
 ﻿@model SpecificationAttributeOptionModel
 @{
-    Html.AddScriptParts("~/Scripts/farbtastic.js");
-    Html.AddCssFileParts("~/Content/farbtastic/farbtastic.css");
+    Html.AddScriptParts("~/Scripts/farbtastic.js", excludeFromBundle: true);
+    Html.AddCssFileParts("~/Content/farbtastic/farbtastic.css", excludeFromBundle: true);
 }
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
