@@ -96,7 +96,8 @@
             columns: [
                 {
                     field: "Name",
-                    title: "@T("Admin.Configuration.Currencies.Fields.Name")"
+                    title: "@T("Admin.Configuration.Currencies.Fields.Name")",
+                    template: '<a class="k-link" href="Edit/#=Id#">#=Name#</a>',
                 }, {
                     field: "CurrencyCode",
                     title: "@T("Admin.Configuration.Currencies.Fields.CurrencyCode")",
@@ -138,11 +139,6 @@
                     field: "DisplayOrder",
                     title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.DisplayOrder")",
                     width: 50
-                }, {
-                    field: "Id",
-                    title: "@T("Admin.Common.Edit")",
-                    width: 50,
-                    template: '<a class="btn btn-sm btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
                 }
             ]
         });
