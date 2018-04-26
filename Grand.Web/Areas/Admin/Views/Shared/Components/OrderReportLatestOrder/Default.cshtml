@@ -55,24 +55,37 @@
                         field: "CustomerEmail",
                         title: "@T("Admin.Orders.Fields.Customer")",
                         width: 300,
-                        template: '#=CustomerFullName# (#=CustomerEmail#)'
+                        template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#=CustomerFullName# (#=CustomerEmail#)</a>'
                     },
                     {
                         field: "StoreName",
                         title: "@T("Admin.Orders.Fields.Store")",
-                        width: 200
+                        width: 200,
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                    },
+                    {
+                        field: "PaymentStatus",
+                        title: "@T("Admin.Orders.Fields.PaymentStatus")",
+                        width: 120,
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
                     },
                     {
                         field: "OrderTotal",
                         title: "@T("Admin.Orders.Fields.OrderTotal")",
                         width: 200,
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
                     },
                     {
                         field: "CreatedOn",
                         title: "@T("Admin.Orders.Fields.CreatedOn")",
                         width: 200,
                         type: "date",
-                        format: "{0:G}"
+                        format: "{0:G}",
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
                     }
                 ]
             } );
