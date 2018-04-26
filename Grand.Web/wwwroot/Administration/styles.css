@@ -279,8 +279,14 @@ a span.username {
     }
 }
 
-
-
+@media (min-width: 992px) {
+    .page-content-wrapper .page-content {
+        padding: 5px 20px 10px;
+    }
+}
+.page-content-white .page-content .page-bar {
+    border-bottom: 0px;
+}
 .k-input.text-box {
     padding: 6px 12px;
 }
