@@ -11020,7 +11020,7 @@
     <Value>Order Pending</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Dashboard.ActivityOverview.ReturnRequests">
-    <Value>Return Requests</Value>
+    <Value>Pending return requests</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Dashboard.ActivityOverview.TodayRegisteredCustomers">
     <Value>Today Registered Customers</Value>

@@ -14,6 +14,7 @@ using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Seo;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -79,7 +80,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             model.LowStockProducts = products.Count + combinations.Count;
 
-            model.ReturnRequests = (int)_returnRequestRepository.Collection.Count(new BsonDocument());
+            model.ReturnRequests = (int)_returnRequestRepository.Table.Where(x=>x.ReturnRequestStatusId == 0).Count();
             model.TodayRegisteredCustomers = _customerService.GetAllCustomers(customerRoleIds: new string[] { _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id }, createdFromUtc: DateTime.UtcNow.Date, pageSize: 1).TotalCount;
             return model;
 

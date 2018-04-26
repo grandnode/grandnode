@@ -109,7 +109,7 @@
                             </div>
                         </div>
                         <div class="col-sm-12 col-lg-8 col-md-12">
-                            @await Component.InvokeAsync("OrderReportOrderTimeChar")
+                            @await Component.InvokeAsync("CustomerReportCustomerTimeChar")
                         </div>
                     </div>
                 </div>
@@ -133,10 +133,16 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-sm-12 col-lg-8 col-md-12">
+                                @await Component.InvokeAsync("OrderReportOrderTimeChar")
+                            </div>
                         }
-                        <div class="col-sm-12 col-lg-8 col-md-12">
-                            @await Component.InvokeAsync("CustomerReportCustomerTimeChar")
-                        </div>
+                        else
+                        {
+                            <div class="col-sm-12 col-lg-12 col-md-12">
+                                @await Component.InvokeAsync("OrderReportOrderTimeChar")
+                            </div>
+                        }
                     </div>
                 </div>
                 if (!Model.HideReportGA)

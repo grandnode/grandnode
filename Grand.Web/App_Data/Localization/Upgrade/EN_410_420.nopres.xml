@@ -59,4 +59,7 @@
   <LocaleResource Name="Account.CustomerExportToXls">
     <Value>Export data</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.ActivityOverview.ReturnRequests">
+    <Value>Pending return requests</Value>
+  </LocaleResource>
 </Language>
