@@ -287,6 +287,8 @@ namespace Grand.Framework.UI
                         {
                             //remove starting /
                             src = src.Remove(0, 1);
+                            if (File.Exists(srcPath))
+                                item.FilePath = srcPath;
                         }
                         else
                         {
@@ -296,6 +298,8 @@ namespace Grand.Framework.UI
                                 srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src.Replace("/", "\\").Replace("\\\\", "\\"));
                             else
                                 srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src);
+                            if (File.Exists(srcPath))
+                                item.FilePath = srcPath;
                         }
                         bundle.InputFiles.Add(src);
                     }
@@ -311,7 +315,7 @@ namespace Grand.Framework.UI
                     var filePaths = Directory.EnumerateFiles(bundleDirectory);
                     var fileNames = filePaths.Select(x => x.Substring(x.LastIndexOf((Grand.Core.OperatingSystem.IsWindows() ? "\\" : "/")) + 1));
 
-                    if (!fileNames.Contains(outputFileName + ".min.js"))
+                    if (!fileNames.Any(x=>x.Contains(outputFileName)))
                     {
                         lock (s_lock)
                         {
@@ -408,6 +412,10 @@ namespace Grand.Framework.UI
                 bundleFiles = _seoSettings.EnableCssBundling;
             }
 
+            //CSS bundling is not allowed in virtual directories
+            if (urlHelper.ActionContext.HttpContext.Request.PathBase.HasValue)
+                bundleFiles = false;
+
             if (bundleFiles.Value)
             {
                 var partsToBundle = _cssParts[location]
@@ -441,6 +449,8 @@ namespace Grand.Framework.UI
                         {
                             //remove starting /
                             src = src.Remove(0, 1);
+                            if (File.Exists(srcPath))
+                                item.FilePath = srcPath;
                         }
                         else
                         {
@@ -451,6 +461,8 @@ namespace Grand.Framework.UI
                             else
                                 srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src);
 
+                            if (File.Exists(srcPath))
+                                item.FilePath = srcPath;
                         }
                         bundle.InputFiles.Add(src);
                     }
@@ -467,7 +479,7 @@ namespace Grand.Framework.UI
                     var filePaths = Directory.EnumerateFiles(bundleDirectory);
                     var fileNames = filePaths.Select(x => x.Substring(x.LastIndexOf((Grand.Core.OperatingSystem.IsWindows() ? "\\" : "/")) + 1));
 
-                    if (!fileNames.Contains(outputFileName + ".min.css"))
+                    if (!fileNames.Any(x=>x.Contains(outputFileName)))
                     {
                         lock (s_lock)
                         {
