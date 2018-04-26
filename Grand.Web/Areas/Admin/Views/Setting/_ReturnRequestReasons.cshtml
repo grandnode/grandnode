@@ -55,16 +55,12 @@ $(document).ready(function () {
         columns: [{
             field: "Name",
             title: "@T("Admin.Configuration.Settings.Order.ReturnRequestReasons.Name")",
-            width: 300
+            width: 300,
+            template: '<a class="k-link" href="@Url.Content("~/Admin/Setting/ReturnRequestReasonEdit/")#=Id#">#=Name#</a>',
         }, {
             field: "DisplayOrder",
             title: "@T("Admin.Configuration.Settings.Order.ReturnRequestReasons.DisplayOrder")",
             width: 100
-        }, {
-            field: "Id",
-            title: "@T("Admin.Common.Edit")",
-            width: 100,
-            template: '<a href="@Url.Content("~/Admin/Setting/ReturnRequestReasonEdit/")#=Id#">@T("Admin.Common.Edit")</a>'
         }]
     });
 });
