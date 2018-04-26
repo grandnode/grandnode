@@ -95,7 +95,8 @@
                     {
                         field: "ScheduleTaskName",
                         title: "@T("Admin.System.ScheduleTasks.Name")",
-                        width: 300
+                        width: 300,
+                        template: '<a class="k-link" href="EditScheduler/#=Id#">#=ScheduleTaskName#</a>',
                     },
                     {
                         field: "Enabled",
@@ -129,19 +130,12 @@
                         width: 200,
                         type: "date",
                         format: "{0:G}"
-                    },
-            {
-                field: "Id",
-                title: "@T("admin.common.edit")",
-                width: 100,
-                template: '<a href="EditScheduler/#=Id#" class="k-button k-button-icontext"><i class="fa fa-pencil"></i> @T("admin.common.edit")</a>'
-            },
-            {
-                field: "Id",
-                title: "@T("Admin.System.ScheduleTasks.RunNow")",
-                width: 100,
-                template: '<a href="@Url.Content("~/Admin/ScheduleTask/RunNow/")#=Id#" class="k-button run-now k-button-icontext"><i class="fa fa-forward"></i> @T("Admin.System.ScheduleTasks.RunNow")</a>'
-            }]
+                    }, {
+                        field: "Id",
+                        title: "@T("Admin.System.ScheduleTasks.RunNow")",
+                        width: 100,
+                        template: '<a href="@Url.Content("~/Admin/ScheduleTask/RunNow/")#=Id#" class="k-button run-now k-button-icontext"><i class="fa fa-forward"></i> @T("Admin.System.ScheduleTasks.RunNow")</a>'
+                }]
         });
     });
 </script>

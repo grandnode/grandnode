@@ -89,7 +89,8 @@
             }, {
                 field: "Name",
                 title: "@T("Admin.System.SeNames.Name")",
-                width: 300
+                width: 300,
+                template: '# if(DetailsUrl && DetailsUrl.length > 0) {# <a class="k-link" href="#=DetailsUrl#">#=Name#</a> #} #'
             }, {
                 field: "EntityName",
                 title: "@T("Admin.System.SeNames.EntityName")",
@@ -105,11 +106,6 @@
                 field: "Language",
                 title: "@T("Admin.System.SeNames.Language")",
                 width: 100
-            }, {
-                field: "DetailsUrl",
-                title: "@T("Admin.System.SeNames.Details")",
-                width: 100,
-                template: '# if(DetailsUrl && DetailsUrl.length > 0) {# <a class="btn btn-sm btn-default" href="#=DetailsUrl#"><i class="fa fa-pencil"></i>  @T("Admin.System.SeNames.Details")</a> #} #'
             }]
         });
     });

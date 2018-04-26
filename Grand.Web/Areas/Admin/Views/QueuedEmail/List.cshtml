@@ -126,7 +126,8 @@
                 }, {
                     field: "Subject",
                     title: "@T("Admin.System.QueuedEmails.Fields.Subject")",
-                    width: 300
+                    width: 300,
+                    template: '<a class="k-link" href="Edit/#=Id#">#=Subject#</a>',
                 }, {
                     field: "From",
                     title: "@T("Admin.System.QueuedEmails.Fields.From")",
@@ -157,11 +158,6 @@
                     field: "PriorityName",
                     title: "@T("Admin.System.QueuedEmails.Fields.Priority")",
                     width: 50
-                }, {
-                    field: "Id",
-                    title: "@T("Admin.Common.Edit")",
-                    width: 50,
-                    template: '<a class="k-button k-button-icontext" href="Edit/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
                 }]
             });
         });

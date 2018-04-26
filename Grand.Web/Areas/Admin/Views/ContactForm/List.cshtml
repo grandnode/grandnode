@@ -117,12 +117,8 @@ $(document).ready(function () {
         }, {
             field: "Subject",
             title: "@T("Admin.System.ContactForm.Fields.Subject")",
-            width: 300
-        }, {
-            field: "Id",
-            title: "@T("Admin.Common.View")",
-            width: 30,
-            template: '<a class="btn btn-sm btn-default" href="Details/#=Id#"><i class="fa fa-search"></i> @T("admin.common.view")</a>'
+            width: 300,
+            template: '<a class="k-link" href="Details/#=Id#">#=Subject#</a>',
         }]
     });
 });
