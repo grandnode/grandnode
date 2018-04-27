@@ -292,6 +292,11 @@ namespace Grand.Web.Services
 
         #region Category
 
+        public virtual Category GetCategoryById(string categoryId)
+        {
+            return _categoryService.GetCategoryById(categoryId);
+        }
+
         public virtual List<string> GetChildCategoryIds(string parentCategoryId)
         {
             string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY,
@@ -669,6 +674,11 @@ namespace Grand.Web.Services
         #endregion
 
         #region Manufacturer
+
+        public Manufacturer GetManufacturerById(string manufacturerId)
+        {
+            return _manufacturerService.GetManufacturerById(manufacturerId);
+        }
 
         public virtual string PrepareManufacturerTemplateViewPath(string templateId)
         {

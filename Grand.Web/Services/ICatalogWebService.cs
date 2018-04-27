@@ -7,6 +7,7 @@ namespace Grand.Web.Services
 {
     public partial interface ICatalogWebService
     {
+        Category GetCategoryById(string categoryId);
         List<string> GetChildCategoryIds(string parentCategoryId);
         void PrepareSortingOptions(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command);
         void PrepareViewModes(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command);
@@ -28,6 +29,7 @@ namespace Grand.Web.Services
 
         List<CategoryModel> PrepareHomepageCategory();
 
+        Manufacturer GetManufacturerById(string manufacturerId);
         string PrepareManufacturerTemplateViewPath(string templateId);
         ManufacturerModel PrepareManufacturer(Manufacturer manufacturer, CatalogPagingFilteringModel command);
         List<ManufacturerModel> PrepareManufacturerAll();

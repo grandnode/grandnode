@@ -2,7 +2,6 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Grand.Core;
-using Grand.Core.Caching;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Media;
@@ -36,9 +35,7 @@ namespace Grand.Web.Controllers
         #region Fields
 
         private readonly ICatalogWebService _catalogWebService;
-        private readonly ICategoryService _categoryService;
         private readonly IProductWebService _productWebService;
-        private readonly IManufacturerService _manufacturerService;
         private readonly IProductService _productService;
         private readonly IVendorService _vendorService;
         private readonly IWorkContext _workContext;
@@ -64,9 +61,7 @@ namespace Grand.Web.Controllers
         #region Constructors
 
         public CatalogController(ICatalogWebService catalogWebService,
-            ICategoryService categoryService,
             IProductWebService productWebService,
-            IManufacturerService manufacturerService,
             IProductService productService, 
             IVendorService vendorService,
             IWorkContext workContext, 
@@ -85,14 +80,11 @@ namespace Grand.Web.Controllers
             MediaSettings mediaSettings,
             CatalogSettings catalogSettings,
             VendorSettings vendorSettings,
-            ICacheManager cacheManager,
             IEventPublisher eventPublisher,
             IOrderService orderService)
         {
             this._catalogWebService = catalogWebService;
-            this._categoryService = categoryService;
             this._productWebService = productWebService;
-            this._manufacturerService = manufacturerService;
             this._productService = productService;
             this._vendorService = vendorService;
             this._workContext = workContext;
@@ -122,7 +114,7 @@ namespace Grand.Web.Controllers
         [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult Category(string categoryId, CatalogPagingFilteringModel command)
         {
-            var category = _categoryService.GetCategoryById(categoryId);
+            var category = _catalogWebService.GetCategoryById(categoryId);
             if (category == null)
                 return InvokeHttp404();
 
@@ -170,7 +162,7 @@ namespace Grand.Web.Controllers
         [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult Manufacturer(string manufacturerId, CatalogPagingFilteringModel command)
         {
-            var manufacturer = _manufacturerService.GetManufacturerById(manufacturerId);
+            var manufacturer = _catalogWebService.GetManufacturerById(manufacturerId);
             if (manufacturer == null)
                 return InvokeHttp404();
 
