@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Net;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Http;
 
 namespace Grand.Framework.Controllers
 {
@@ -36,7 +36,7 @@ namespace Grand.Framework.Controllers
 
         public override bool IsValidForRequest(RouteContext routeContext, ActionDescriptor action)
         {
-            if (routeContext.HttpContext.Request.Method.ToLower() != "post")
+            if (!HttpMethods.IsPost(routeContext.HttpContext.Request.Method))
                 return false;
 
             foreach (string buttonName in _submitButtonNames)

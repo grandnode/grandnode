@@ -3,9 +3,8 @@
     //page title
     ViewBag.Title = T("Admin.Customers.ActionType").Text;
 }
-@using (Html.BeginForm("SaveTypes", "CustomerActionType"))
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="CustomerActionType" asp-action="SaveTypes" method="post">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -113,5 +112,4 @@
             $('#mastercheckbox').prop('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
         }
     </script>   
-           
-}
+</form>

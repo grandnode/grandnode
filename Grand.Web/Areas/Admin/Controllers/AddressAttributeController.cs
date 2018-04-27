@@ -258,7 +258,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ValueCreatePopup(string btnId, string formId, AddressAttributeValueModel model)
+        public IActionResult ValueCreatePopup(AddressAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -291,14 +291,9 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }
 
                 _addressAttributeService.InsertAddressAttributeValue(cav);
-                //UpdateValueLocales(cav, model);
-
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
-
             //If we got this far, something failed, redisplay form
             return View(model);
         }
@@ -333,7 +328,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ValueEditPopup(string btnId, string formId, AddressAttributeValueModel model)
+        public IActionResult ValueEditPopup(AddressAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -362,11 +357,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
                 _addressAttributeService.UpdateAddressAttributeValue(cav);
 
-                //UpdateValueLocales(cav, model);
-
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
 

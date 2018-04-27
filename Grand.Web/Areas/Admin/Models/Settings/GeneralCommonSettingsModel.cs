@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using Grand.Framework;
 using Grand.Framework.Mvc;
 using Grand.Framework.Security.Captcha;
+using Grand.Web.Areas.Admin.Helpers;
 
 namespace Grand.Web.Areas.Admin.Models.Settings
 {
@@ -36,6 +37,11 @@ namespace Grand.Web.Areas.Admin.Models.Settings
 
         public string ActiveStoreScopeConfiguration { get; set; }
 
+        [GrandResourceDisplayName("Admin.Configuration.Settings.AdminLayout")]
+        public AdminLayout Layout { get; set; }
+
+        [GrandResourceDisplayName("Admin.Configuration.Settings.GridLayout")]
+        public KendoLayout GridLayout { get; set; }
 
         #region Nested classes
 

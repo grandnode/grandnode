@@ -1,14 +1,10 @@
-﻿@{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
-    int? filterByNewsItemId = ViewBag.FilterByNewsItemId;
-    
+﻿@inject AdminAreaSettings adminAreaSettings
+@{
+    string filterByNewsItemId = ViewBag.FilterByNewsItemId;
     //page title
     ViewBag.Title = T("Admin.ContentManagement.News.Comments").Text;
 }
-@Html.AntiForgeryToken()
-
+<antiforgery-token />
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light form-fit">
@@ -30,20 +26,18 @@
         </div>
     </div>
 </div>
-
-
-    @{
-        string readUrl = "";
-        if (filterByNewsItemId.HasValue)
-        {
-            readUrl = Url.Action("Comments", "News", new { filterByNewsItemId = filterByNewsItemId.Value });
-        }
-        else
-        {
-            readUrl = Url.Action("Comments", "News");
-        }
+@{
+    string readUrl = "";
+    if (!string.IsNullOrEmpty(filterByNewsItemId))
+    {
+        readUrl = Url.Action("Comments", "News", new { filterByNewsItemId = filterByNewsItemId });
     }
-    <script>
+    else
+    {
+        readUrl = Url.Action("Comments", "News");
+    }
+}
+<script>
         $(document).ready(function () {
             $("#comments-grid").kendoGrid({
                 dataSource: {
@@ -80,17 +74,17 @@
                         // Cancel the changes
                         this.cancelChanges();
                     },
-                    pageSize: @(defaultGridPageSize),
+                    pageSize: @(adminAreaSettings.DefaultGridPageSize),
                     serverPaging: true,
                     serverFiltering: true,
                     serverSorting: true
                 },
                 pageable: {
                     refresh: true,
-                    pageSizes: [@(gridPageSizes)]
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
                 },
                 editable: {
-                    confirmation: false,
+                    confirmation: true,
                     mode: "inline"
                 },
                 scrollable: false,
@@ -98,12 +92,12 @@
                     field: "NewsItemTitle",
                     title: "@T("Admin.ContentManagement.News.Comments.Fields.NewsItem")",
                     width: 200,
-                    template: '<a href="@Url.Content("~/Admin/News/Edit/")#=NewsItemId#">#:NewsItemTitle#</a>'
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/News/Edit/")#=NewsItemId#">#:NewsItemTitle#</a>'
                 }, {
                     field: "CustomerId",
                     title: "@T("Admin.ContentManagement.News.Comments.Fields.Customer")",
                     width: 200,
-                    template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerInfo#</a>'
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerInfo#</a>'
                 }, {
                     field: "CommentTitle",
                     title: "@T("Admin.ContentManagement.News.Comments.Fields.CommentTitle")"
@@ -124,4 +118,4 @@
                 }]
             });
         });
-    </script>
+</script>

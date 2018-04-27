@@ -1,6 +1,4 @@
 ﻿@model InteractiveFormAttributeModel
-
-
 @{
 
     if (!string.IsNullOrEmpty(Model.Id))
@@ -57,13 +55,14 @@
                         info: false
                     },
                     editable: {
-                        confirmation: false,
+                        confirmation: true,
                         mode: "inline"
                     },
                     scrollable: false,
                     columns: [{
                         field: "Name",
-                        title: "@T("Admin.Promotions.InteractiveForms.Attribute.Values.Fields.Name")"
+                        title: "@T("Admin.Promotions.InteractiveForms.Attribute.Values.Fields.Name")",
+                        template: "<a class='k-link' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/InteractiveForm/ValueEditPopup/")#=Id#?form=@Model.FormId&aId=@Model.Id&btnId=btnRefreshValues&formId=attribute-form', 800, 350, true); return false;\">#=Name#</a>",
                     },
                     {
                         field: "IsPreSelected",
@@ -79,12 +78,6 @@
                         width: 150
                     },
                     {
-                        field: "Id",
-                        title: "@T("Admin.Common.View")",
-                        width: 150,
-                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/InteractiveForm/ValueEditPopup/")#=Id#?form=@Model.FormId&aId=@Model.Id&btnId=btnRefreshValues&formId=attribute-form', 800, 350, true); return false;\" class='k-button' />"
-
-                    }, {
                         command: [{
                             name: "destroy",
                             text: "@T("Admin.Common.Delete")"

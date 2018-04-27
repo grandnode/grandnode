@@ -1037,7 +1037,7 @@ namespace Grand.Web.Services
             return model;
         }
 
-        public virtual AddToCartModel PrepareAddToCartModel(Product product, Customer customer, int quantity, string attributesXml, ShoppingCartType cartType, DateTime? startDate, DateTime? endDate, string reservationId, string parameter, string duration)
+        public virtual AddToCartModel PrepareAddToCartModel(Product product, Customer customer, int quantity, decimal customerEnteredPrice, string attributesXml, ShoppingCartType cartType, DateTime? startDate, DateTime? endDate, string reservationId, string parameter, string duration)
         {
             var model = new AddToCartModel();
             model.AttributeDescription = _productAttributeFormatter.FormatAttributes(product, attributesXml);
@@ -1084,8 +1084,8 @@ namespace Grand.Web.Services
                     decimal taxRate;
                     decimal shoppingCartUnitPriceWithDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetUnitPrice(sci), out taxRate);
                     decimal shoppingCartUnitPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartUnitPriceWithDiscountBase, _workContext.WorkingCurrency);
-                    model.Price = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount);
-                    model.DecimalPrice = shoppingCartUnitPriceWithDiscount;
+                    model.Price = customerEnteredPrice == 0 ? _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount) : _priceFormatter.FormatPrice(customerEnteredPrice);
+                    model.DecimalPrice = customerEnteredPrice == 0 ? shoppingCartUnitPriceWithDiscount: customerEnteredPrice;
                     model.TotalPrice = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount * sci.Quantity);
                 }
 

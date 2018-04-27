@@ -1,5 +1,4 @@
 ﻿@model Grand.Plugin.Widgets.Slider.Models.PublicInfoModel
-@using Grand.Framework.UI
 <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
     <div class="carousel-inner" role="listbox">
         @foreach (var item in Model.Slide)
@@ -33,29 +32,28 @@
         <span class="sr-only">Next</span>
     </a>
 </div>
-<script>
-        $("#next").click(function () {
-            $('#grandCarousel').carousel('next');
-        });
+<script type="text/javascript">
+    $("#next").click(function () {
+        $('#grandCarousel').carousel('next');
+    });
 
-        $("#prev").click(function () {
-            $('#grandCarousel').carousel('prev');
-        });
+    $("#prev").click(function () {
+        $('#grandCarousel').carousel('prev');
+    });
 
-        $(".carousel").on("touchstart", function (event) {
-            var xClick = event.originalEvent.touches[0].pageX;
-            $(this).one("touchmove", function (event) {
-                var xMove = event.originalEvent.touches[0].pageX;
-                if (Math.floor(xClick - xMove) > 5) {
-                    $(".carousel").carousel('next');
-                }
-                else if (Math.floor(xClick - xMove) < -5) {
-                    $(".carousel").carousel('prev');
-                }
-            });
-            $(".carousel").on("touchend", function () {
-                $(this).off("touchmove");
-            });
+    $(".carousel").on("touchstart", function (event) {
+        var xClick = event.originalEvent.touches[0].pageX;
+        $(this).one("touchmove", function (event) {
+            var xMove = event.originalEvent.touches[0].pageX;
+            if (Math.floor(xClick - xMove) > 5) {
+                $(".carousel").carousel('next');
+            }
+            else if (Math.floor(xClick - xMove) < -5) {
+                $(".carousel").carousel('prev');
+            }
         });
+        $(".carousel").on("touchend", function () {
+            $(this).off("touchmove");
+        });
+    });
 </script>
-

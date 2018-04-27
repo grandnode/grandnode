@@ -1,14 +1,9 @@
 ﻿@model AffiliateModel
-@{ 
+@inject AdminAreaSettings adminAreaSettings
+@{
 
-var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>
-    ().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>
-        ().GridPageSizes;
-
-
-        <div id="customers-grid"></div>
-        <script>
+    <div id="customers-grid"></div>
+    <script>
     $(document).ready(function () {
         $("#customers-grid").kendoGrid({
             dataSource: {
@@ -30,14 +25,14 @@ var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common
                     // Cancel the changes
                     this.cancelChanges();
                 },
-                pageSize: @(defaultGridPageSize),
+                pageSize: @(adminAreaSettings.DefaultGridPageSize),
                 serverPaging: true,
                 serverFiltering: true,
                 serverSorting: true
             },
             pageable: {
                 refresh: true,
-                pageSizes: [@(gridPageSizes)]
+                pageSizes: [@(adminAreaSettings.GridPageSizes)]
             },
             editable: {
                 confirmation: false,
@@ -60,6 +55,6 @@ var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common
             }]
         });
     });
-        </script>
+    </script>
 
 }

@@ -47,6 +47,7 @@ using Grand.Framework.Themes;
 using Grand.Core.Data;
 using MongoDB.Driver;
 using Grand.Core.Caching;
+using Grand.Web.Areas.Admin.Helpers;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -2546,8 +2547,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             var storeInformationSettings = _settingService.LoadSetting<StoreInformationSettings>(storeScope);
             var commonSettings = _settingService.LoadSetting<CommonSettings>(storeScope);
             var googleAnalyticsSettings = _settingService.LoadSetting<GoogleAnalyticsSettings>(storeScope);
+            var adminareasettings = _settingService.LoadSetting<AdminAreaSettings>(storeScope);
 
             model.StoreInformationSettings.StoreClosed = storeInformationSettings.StoreClosed;
+            model.Layout = string.IsNullOrEmpty(adminareasettings.AdminLayout) ? (AdminLayout)Enum.Parse(typeof(AdminLayout), "Default") : (AdminLayout)Enum.Parse(typeof(AdminLayout), adminareasettings.AdminLayout);
+            model.GridLayout = string.IsNullOrEmpty(adminareasettings.KendoLayout) ? (KendoLayout)Enum.Parse(typeof(KendoLayout), "custom") : (KendoLayout)Enum.Parse(typeof(KendoLayout), adminareasettings.KendoLayout);
+
             //themes
             model.StoreInformationSettings.DefaultStoreTheme = storeInformationSettings.DefaultStoreTheme;
             model.StoreInformationSettings.AvailableStoreThemes = _themeProvider
@@ -2999,6 +3004,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             commonSettings.FullTextMode = (FulltextSearchMode)model.FullTextSettings.SearchMode;
             _settingService.SaveSetting(commonSettings);
 
+            //admin settings
+            var adminareasettings = _settingService.LoadSetting<AdminAreaSettings>(storeScope);
+            adminareasettings.AdminLayout = model.Layout.ToString();
+            adminareasettings.KendoLayout = model.GridLayout.ToString();
+
+            _settingService.SaveSetting(adminareasettings);
 
             //googleanalytics settings
             var googleAnalyticsSettings = _settingService.LoadSetting<GoogleAnalyticsSettings>(storeScope);

@@ -2,7 +2,7 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Measures.Dimensions").Text;
 }
-@Html.AntiForgeryToken()
+<antiforgery-token />
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light form-fit">
@@ -27,8 +27,6 @@
         </div>
     </div>
 </div>
-
-
 <script>
     $(document).ready(function() {
         $("#measuredimension-grid").kendoGrid({

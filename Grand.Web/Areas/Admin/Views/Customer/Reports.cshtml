@@ -1,10 +1,10 @@
 ﻿@model CustomerReportsModel
+@inject IEventPublisher eventPublisher
 @{
     //page title
     ViewBag.Title = T("Admin.Customers.Reports").Text;
 }
-@Html.AntiForgeryToken()
-
+<antiforgery-token />
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light form-fit">
@@ -40,7 +40,6 @@
                                     @Html.Partial("Reports.TabRegisteredCustomers", Model)
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -48,7 +47,6 @@
         </div>
     </div>
 </div>
-
 <script>
     $(document).ready(function () {
         $("#customer-reports").kendoTabStrip({
@@ -61,11 +59,10 @@
         });
     });
 </script>
-
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "customer-reports");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock

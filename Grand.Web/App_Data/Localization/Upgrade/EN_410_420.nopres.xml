@@ -1,0 +1,71 @@
+﻿<Language>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.ReplyText">
+    <Value>Reply text</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.ReplyText.Hint">
+    <Value>The reply text by a store owner.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.Signature">
+    <Value>Signature</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.Signature.Hint">
+    <Value>Signature by a store owner.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.Store">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.Store.hint">
+    <Value>A store name for which products of vendor will be available.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AdminLayout">
+    <Value>Admin layout</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AdminLayout.hint">
+    <Value>Allow to set administrator layout</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GridLayout">
+    <Value>Admin layout for tabs and grids</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GridLayout.hint">
+    <Value>Allow to set administrator layout for tabs and grids</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.NoStoresDefined">
+    <Value>No stores defined</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowUsersToDeleteAccount">
+    <Value>Allow users to delete account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowUsersToDeleteAccount.hint">
+    <Value>A value indicating whether users are allowed to delete account. Option appears in my account (left side).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.DeleteAccount.DangerAlert">
+    <Value>You can delete your Account at any time. If you change your mind, you might not be able to recover it.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteAccount">
+    <Value>Customer was deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.DeleteAccount.Button">
+    <Value>Delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.DeleteAccount.Fields.Password.Required">
+    <Value>Password field is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.DeleteAccount.Fields.Password">
+    <Value>Current password</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.DeleteAccount">
+    <Value>Delete account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerExportToXls">
+    <Value>Export data</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.ActivityOverview.ReturnRequests">
+    <Value>Pending return requests</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.common.search.filter.open">
+    <Value>Show filter</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.common.search.filter.close">
+    <Value>Hide filter</Value>
+  </LocaleResource>
+</Language>

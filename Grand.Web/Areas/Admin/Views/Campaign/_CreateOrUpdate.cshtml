@@ -1,8 +1,7 @@
 ﻿@model CampaignModel
-
-@Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
-
+@inject IEventPublisher eventPublisher
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
 <div id="campaign-edit" style="display:none">
     <ul>
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
@@ -37,12 +36,11 @@
         @Html.Partial("_CreateOrUpdate.TabTest", Model)
     </div>
 </div>
-
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('#campaign-edit').show();
         $("#campaign-edit").kendoTabStrip({
-            animation:  {
+            animation: {
                 open: {
                     effects: "fadeIn"
                 }
@@ -51,17 +49,15 @@
         });
     });
 </script>
-
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "campaign-edit");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock
     }
 }
-
 
 @*save selected tab index*@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">

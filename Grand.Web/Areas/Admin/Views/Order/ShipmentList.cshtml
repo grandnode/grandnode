@@ -1,18 +1,12 @@
 ﻿@model ShipmentListModel
-           
+@inject AdminAreaSettings adminAreaSettings
 @{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
-
     //page title
     ViewBag.Title = T("Admin.Orders.Shipments.List").Text;
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-
+<form asp-controller="Order" asp-action="ShipmentList" method="post">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -23,7 +17,7 @@
                     </div>
                     <div class="actions">
                         <div class="btn-group btn-group-devided util-btn-margin-bottom-5">
-                            <button type="submit" name="exportpackagingslips-all"  class="btn purple">
+                            <button type="submit" name="exportpackagingslips-all" class="btn purple">
                                 <i class="fa fa-file-pdf-o"></i>
                                 @T("Admin.Orders.Shipments.PrintPackagingSlip.All")
                             </button>
@@ -31,8 +25,8 @@
                                 <i class="fa fa-file-pdf-o"></i>
                                 @T("Admin.Orders.Shipments.PrintPackagingSlip.Selected")
                             </button>
-                            <button class="btn btn-success" type="submit" id="ship-selected" ><i class="fa fa-check"></i> @T("Admin.Orders.Shipments.ShipSelected") </button>
-                            <button class="btn btn-success" type="submit" id="deliver-selected" ><i class="fa fa-check-circle"></i> @T("Admin.Orders.Shipments.DeliverySelected") </button>
+                            <button class="btn btn-success" type="submit" id="ship-selected"><i class="fa fa-check"></i> @T("Admin.Orders.Shipments.ShipSelected") </button>
+                            <button class="btn btn-success" type="submit" id="deliver-selected"><i class="fa fa-check-circle"></i> @T("Admin.Orders.Shipments.DeliverySelected") </button>
                         </div>
                     </div>
                 </div>
@@ -40,28 +34,28 @@
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.StartDate)
+                                <admin-label asp-for="StartDate" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.StartDate)
+                                    <admin-input asp-for="StartDate" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.EndDate)
+                                <admin-label asp-for="EndDate" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.EndDate)
+                                    <admin-input asp-for="EndDate" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.TrackingNumber)
+                                <admin-label asp-for="TrackingNumber" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.TrackingNumber)
+                                    <admin-input asp-for="TrackingNumber" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.LoadNotShipped)
+                                <admin-label asp-for="LoadNotShipped" />
                                 <div class="col-md-9 col-sm-9">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.LoadNotShipped)
+                                        <admin-input asp-for="LoadNotShipped" />
                                         <span></span>
                                     </label>
                                 </div>
@@ -84,152 +78,144 @@
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function () {
+            $("#shipments-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("ShipmentListSelect", "Order"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: additionalData
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(adminAreaSettings.DefaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
+                },
+                //details grid
+                detailInit: detailInit,
+                scrollable: true,
+                dataBound: onDataBound,
+                columns: [{
+                    field: "Id",
+                    headerTemplate: "<label class='mt-checkbox mt-checkbox-outline'><input id='mastercheckbox' type='checkbox'/><span></span></label>",
+                    template: "<label class='mt-checkbox mt-checkbox-outline'><input type='checkbox' value='#=Id#' class='checkboxGroups'/><span></span></label>",
+                    width: 40
+                }, {
+                    field: "ShipmentNumber",
+                    title: "@T("Admin.Orders.Shipments.ID")",
+                    width: 100,
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Order/ShipmentDetails/")#=Id#">#=ShipmentNumber#</a>'
+                }, {
+                    field: "OrderNumber",
+                    title: "@T("Admin.Orders.Shipments.OrderID")",
+                    width: 100,
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#">#=OrderNumber#</a>'
+                }, {
+                    field: "TrackingNumber",
+                    title: "@T("Admin.Orders.Shipments.TrackingNumber")",
+                    width: 100,
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Order/ShipmentDetails/")#=Id#">#=TrackingNumber#</a>'
+                }, {
+                    field: "TotalWeight",
+                    title: "@T("Admin.Orders.Shipments.TotalWeight")",
+                    width: 80,
+                    minScreenWidth: 770,
+                }, {
+                    field: "ShippedDate",
+                    title: "@T("Admin.Orders.Shipments.ShippedDate")",
+                    width: 180,
+                    type: "date",
+                    format: "{0:G}"
+                }, {
+                    field: "DeliveryDate",
+                    title: "@T("Admin.Orders.Shipments.DeliveryDate")",
+                    width: 180,
+                    type: "date",
+                    format: "{0:G}"
+                }]
+            });
+        });
 
-
-
-                
-
-                <script>
-                    $(document).ready(function () {
-                        $("#shipments-grid").kendoGrid({
-                            dataSource: {
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("ShipmentListSelect", "Order"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: additionalData
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors"
-                                },
-                                error: function(e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                pageSize: @(defaultGridPageSize),
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
-                            },
-                            pageable: {
-                                refresh: true,
-                                pageSizes: [@(gridPageSizes)]
-                            },
-                            //details grid
-                            detailInit: detailInit,
-                            scrollable: false,
-                            dataBound: onDataBound,
-                            columns: [{
-                                field: "Id",
-                                headerTemplate: "<label class='mt-checkbox mt-checkbox-outline'><input id='mastercheckbox' type='checkbox'/><span></span></label>",
-                                headerAttributes: { style: "text-align:center" },
-                                attributes: { style: "text-align:center" },
-                                template: "<label class='mt-checkbox mt-checkbox-outline'><input type='checkbox' value='#=Id#' class='checkboxGroups'/><span></span></label>",
-                                width: 50
-                            }, {
-                                field: "ShipmentNumber",
-                                title: "@T("Admin.Orders.Shipments.ID")",
-                                width: 50
-                            }, {
-                                field: "OrderNumber",
-                                title: "@T("Admin.Orders.Shipments.OrderID")",
-                                width: 100
-                            }, {
-                                field: "TrackingNumber",
-                                title: "@T("Admin.Orders.Shipments.TrackingNumber")",
-                                width: 100
-                            }, {
-                                field: "TotalWeight",
-                                title: "@T("Admin.Orders.Shipments.TotalWeight")",
-                                width: 100
-                            }, {
-                                field: "ShippedDate",
-                                title: "@T("Admin.Orders.Shipments.ShippedDate")",
-                                width: 200,
-                                type: "date",
-                                format: "{0:G}"
-                            }, {
-                                field: "DeliveryDate",
-                                title: "@T("Admin.Orders.Shipments.DeliveryDate")",
-                                width: 200,
-                                type: "date",
-                                format: "{0:G}"
-                            }, {
-                                field: "Id",
-                                title: "@T("Admin.Common.View")",
-                                width: 50,
-                                template: '<a class="btn btn-sm btn-default" href="@Url.Content("~/Admin/Order/ShipmentDetails/")#=Id#"><i class="fa fa-search"></i> @T("Admin.Common.View")</a>'
-                            }]
-                        });
-                    });
-
-                    //details grid
-                    function detailInit(e) {
-                        $("<div/>").appendTo(e.detailCell).kendoGrid({
-                            dataSource: {
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("ShipmentsItemsByShipmentId", "Order"))?shipmentId="+e.data.Id,
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors"
-                                },
-                                error: function(e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
-                            },
-                            scrollable: false,
-                            sortable: true,
-                            pageable: {
-                                refresh: true,
-                                numeric: false,
-                                previousNext: false,
-                                info: false
-                            },
-                            columns: [
-                                {
-                                    field: "ProductName",
-                                    title: "@T("Admin.Orders.Shipments.Products.ProductName")",
-                                    width: 400
-                                },{
-                                    field: "ShippedFromWarehouse",
-                                    title: "@T("Admin.Orders.Shipments.Products.Warehouse")",
-                                    width: 150
-                                },{
-                                    field: "QuantityInThisShipment",
-                                    title: "@T("Admin.Orders.Shipments.Products.QtyShipped")",
-                                    width: 150
-                                },{
-                                    field: "ItemWeight",
-                                    title: "@T("Admin.Orders.Shipments.Products.ItemWeight")",
-                                    width: 150
-                                },{
-                                    field: "ItemDimensions",
-                                    title: "@T("Admin.Orders.Shipments.Products.ItemDimensions")",
-                                    width: 150
-                                }
-                            ]
-                        });
+        //details grid
+        function detailInit(e) {
+            $("<div/>").appendTo(e.detailCell).kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("ShipmentsItemsByShipmentId", "Order"))?shipmentId="+e.data.Id,
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                scrollable: false,
+                sortable: true,
+                pageable: {
+                    refresh: true,
+                    numeric: false,
+                    previousNext: false,
+                    info: false
+                },
+                columns: [
+                    {
+                        field: "ProductName",
+                        title: "@T("Admin.Orders.Shipments.Products.ProductName")",
+                        width: 400
+                    },{
+                        field: "ShippedFromWarehouse",
+                        title: "@T("Admin.Orders.Shipments.Products.Warehouse")",
+                        width: 150
+                    },{
+                        field: "QuantityInThisShipment",
+                        title: "@T("Admin.Orders.Shipments.Products.QtyShipped")",
+                        width: 150
+                    },{
+                        field: "ItemWeight",
+                        title: "@T("Admin.Orders.Shipments.Products.ItemWeight")",
+                        width: 150
+                    },{
+                        field: "ItemDimensions",
+                        title: "@T("Admin.Orders.Shipments.Products.ItemDimensions")",
+                        width: 150
                     }
-                </script>
-           
-    
+                ]
+            });
+        }
+    </script>
+
+
     <script type="text/javascript">
 
         var selectedIds = [];
@@ -269,7 +255,7 @@
                     return false;
                 }
             });
-            
+
             //search button
             $('#search-shipments').click(function () {
                 //search
@@ -337,25 +323,25 @@
                 return false;
             });
 
-            
+
             $('#mastercheckbox').click(function () {
                 $('.checkboxGroups').prop('checked', $(this).is(':checked')).change();
             });
 
-            //wire up checkboxes. 
+            //wire up checkboxes.
             $('#shipments-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function (e) {
                 var $check = $(this);
                 if ($check.is(":checked") == true) {
                     var checked = jQuery.inArray($check.val(), selectedIds);
                     if (checked == -1) {
-                        //add id to selectedIds.  
+                        //add id to selectedIds.
                         selectedIds.push($check.val());
                     }
                 }
                 else {
                     var checked = jQuery.inArray($check.val(), selectedIds);
                     if (checked > -1) {
-                        //remove id from selectedIds.  
+                        //remove id from selectedIds.
                         selectedIds = $.grep(selectedIds, function (item, index) {
                             return item != $check.val();
                         });
@@ -379,12 +365,12 @@
             addAntiForgeryToken(data);
             return data;
         }
-    
+
         function onDataBound(e) {
             $('#shipments-grid input[type=checkbox][id!=mastercheckbox]').each(function () {
                 var currentId = $(this).val();
                 var checked = jQuery.inArray(currentId, selectedIds);
-                //set checked based on if current checkbox's value is in selectedIds.  
+                //set checked based on if current checkbox's value is in selectedIds.
                 $(this).prop('checked', checked > -1);
             });
 
@@ -396,16 +382,15 @@
             var numChkBoxesChecked = $('#shipments-grid input[type=checkbox][id!=mastercheckbox]:checked').length;
             $('#mastercheckbox').prop('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
         }
-   </script>
-    
-}
+    </script>
 
+</form>
 @*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
-@using (Html.BeginForm("PdfPackagingSlipSelected", "Order", FormMethod.Post, new { id = "pdf-packaging-slip-selected-form" }))
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Order" asp-action="PdfPackagingSlipSelected" method="post" id="pdf-packaging-slip-selected-form">
+    <antiforgery-token />
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
-}
+</form>
+
 <script type="text/javascript">
 
     $(document).ready(function () {

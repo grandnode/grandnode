@@ -1,20 +1,14 @@
 ﻿@model CampaignModel
-
-
-
+@inject AdminAreaSettings adminAreaSettings
 @{
-
     if (!String.IsNullOrEmpty(Model.Id))
     {
-        var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-        var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
         <div class="panel panel-default">
             <div class="panel-body">
                 <div id="history-grid"></div>
             </div>
         </div>
-            <script>
+        <script>
             $(document).ready(function () {
                 $("#history-grid").kendoGrid({
                     dataSource: {
@@ -41,14 +35,14 @@
                             // Cancel the changes
                             this.cancelChanges();
                         },
-                        pageSize: @(defaultGridPageSize),
+                        pageSize: @(adminAreaSettings.DefaultGridPageSize),
                         serverPaging: true,
                         serverFiltering: true,
                         serverSorting: true
                     },
                     pageable: {
                         refresh: true,
-                        pageSizes: [@(gridPageSizes)]
+                        pageSizes: [@(adminAreaSettings.GridPageSizes)]
                     },
                     editable: {
                         confirmation: false,
@@ -66,7 +60,7 @@
                     }]
                 });
             });
-            </script>
+        </script>
     }
     else
     {

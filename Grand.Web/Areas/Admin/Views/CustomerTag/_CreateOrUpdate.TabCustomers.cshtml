@@ -1,7 +1,5 @@
 ﻿@model CustomerTagModel
-
-
-
+@inject AdminAreaSettings adminAreaSettings
 @{
 
     if (String.IsNullOrEmpty(Model.Id))
@@ -17,10 +15,6 @@
                 <div id="customers-grid"></div>
             </div>
         </div>
-        var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-        var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
-
         <script>
             $(document).ready(function () {
                 $("#customers-grid").kendoGrid({
@@ -52,14 +46,14 @@
                             // Cancel the changes
                             this.cancelChanges();
                         },
-                        pageSize: @(defaultGridPageSize),
+                        pageSize: @(adminAreaSettings.DefaultGridPageSize),
                         serverPaging: true,
                         serverFiltering: true,
                         serverSorting: true
                     },
                     pageable: {
                         refresh: true,
-                        pageSizes: [@(gridPageSizes)]
+                        pageSizes: [@(adminAreaSettings.GridPageSizes)]
                     },
                     editable: {
                         confirmation: false,
@@ -71,14 +65,7 @@
                         field: "Email",
                         title: "@T("Admin.Customers.CustomerTags.Fields.Email")",
                         width: 300,
-                        filterable: false,
-                        sortable: false
-                    },
-                    {
-                        field: "Id",
-                        title: "@T("Admin.Common.Edit")",
-                        width: 100,
-                        template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=Id#">@T("Admin.Common.Edit")</a>'
+                            template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/Edit/")#=Id#">#=Email#</a>',
                     },
                     {
                         command: { name: "destroy", text: "@T("Admin.Common.Delete")" },

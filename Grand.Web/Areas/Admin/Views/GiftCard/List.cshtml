@@ -1,13 +1,11 @@
 ﻿@model GiftCardListModel
-@{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+@inject AdminAreaSettings adminAreaSettings
 
+@{
     //page title
     ViewBag.Title = T("Admin.GiftCards").Text;
 }
-@Html.AntiForgeryToken()
-
+<antiforgery-token />
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light form-fit">
@@ -24,21 +22,21 @@
                 <div class="form-horizontal">
                     <div class="form-body">
                         <div class="form-group">
-                            @Html.GrandLabelFor(model => model.ActivatedId)
+                            <admin-label asp-for="ActivatedId" />
                             <div class="col-md-9 col-sm-9">
-                                @Html.GrandDropDownListFor(model => model.ActivatedId, Model.ActivatedList)
+                                <admin-select asp-for="ActivatedId" asp-items="Model.ActivatedList" />
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.GrandLabelFor(model => model.CouponCode)
+                            <admin-label asp-for="CouponCode" />
                             <div class="col-md-9 col-sm-9">
-                                @Html.GrandEditorFor(model => model.CouponCode)
+                                <admin-input asp-for="CouponCode" />
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.GrandLabelFor(model => model.RecipientName)
+                            <admin-label asp-for="RecipientName" />
                             <div class="col-md-9 col-sm-9">
-                                @Html.GrandEditorFor(model => model.RecipientName)
+                                <admin-input asp-for="RecipientName" />
                             </div>
                         </div>
                     </div>
@@ -60,8 +58,7 @@
     </div>
 </div>
 
-
-    <script>
+<script>
         $(document).ready(function () {
             $("#giftcards-grid").kendoGrid({
                 dataSource: {
@@ -83,32 +80,40 @@
                         // Cancel the changes
                         this.cancelChanges();
                     },
-                    pageSize: @(defaultGridPageSize),
+                    pageSize: @(adminAreaSettings.DefaultGridPageSize),
                     serverPaging: true,
                     serverFiltering: true,
                     serverSorting: true
                 },
                 pageable: {
                     refresh: true,
-                    pageSizes: [@(gridPageSizes)]
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
                 },
                 editable: {
                     confirmation: false,
                     mode: "inline"
                 },
-                scrollable: false,
+                scrollable: true,
                 columns: [{
                     field: "AmountStr",
-                    title: "@T("Admin.GiftCards.Fields.Amount")"
+                    title: "@T("Admin.GiftCards.Fields.Amount")",
+                    template: '<a class="k-link" href="Edit/#=Id#">#=AmountStr#</a>',
+                    width: 100,
                 }, {
                     field: "RemainingAmountStr",
-                    title: "@T("Admin.GiftCards.Fields.RemainingAmount")"
+                    title: "@T("Admin.GiftCards.Fields.RemainingAmount")",
+                    template: '<a class="k-link" href="Edit/#=Id#">#=RemainingAmountStr#</a>',
+                    width: 100,
                 }, {
                     field: "GiftCardCouponCode",
-                    title: "@T("Admin.GiftCards.Fields.GiftCardCouponCode")"
+                    title: "@T("Admin.GiftCards.Fields.GiftCardCouponCode")",
+                    template: '<a class="k-link" href="Edit/#=Id#">#=GiftCardCouponCode#</a>',
+                    width: 120,
                 }, {
                     field: "RecipientName",
-                    title: "@T("Admin.GiftCards.Fields.RecipientName")"
+                    title: "@T("Admin.GiftCards.Fields.RecipientName")",
+                    minScreenWidth: 750,
+                    width: 150,
                 }, {
                     field: "IsGiftCardActivated",
                     title: "@T("Admin.GiftCards.Fields.IsGiftCardActivated")",
@@ -119,20 +124,14 @@
                 }, {
                     field: "CreatedOn",
                     title: "@T("Admin.GiftCards.Fields.CreatedOn")",
-                    width: 200,
+                    width: 180,
                     type: "date",
                     format: "{0:G}"
-                }, {
-                    field: "Id",
-                    title: "@T("Admin.Common.Edit")",
-                    width: 100,
-                    template: '<a class="btn btn-sm btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
                 }]
             });
         });
-    </script>
-
-    <script type="text/javascript">
+</script>
+<script type="text/javascript">
 
         $(document).ready(function () {
 
@@ -161,4 +160,4 @@
             return data;
         }
 
-    </script>
+</script>

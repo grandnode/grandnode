@@ -1,11 +1,9 @@
 ﻿@{
     Layout = "_ConfigurePlugin";
 }
-@Html.AntiForgeryToken()
-
+<antiforgery-token />
 <div id="tax-categories-grid"></div>
-
-<script>
+<script type="text/javascript">
     $(document).ready(function () {
         $("#tax-categories-grid").kendoGrid({
             dataSource: {
@@ -84,6 +82,4 @@
             }]
         });
     });
-
-                
 </script>

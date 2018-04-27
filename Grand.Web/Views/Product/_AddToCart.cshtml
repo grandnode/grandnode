@@ -1,7 +1,7 @@
 ﻿@model ProductDetailsModel.AddToCartModel
 @if (!String.IsNullOrEmpty(Model.UpdatedShoppingCartItemId))
 {
-    @Html.HiddenFor(x => x.UpdatedShoppingCartItemId)
+    <input asp-for="UpdatedShoppingCartItemId" type="hidden" />
 }
 @if (Model.CustomerEntersPrice)
 {
@@ -72,6 +72,12 @@
             <script type="text/javascript">
                 $(document).ready(function () {
                     $("#@Html.IdFor(model => model.EnteredQuantity)").keydown(function (event) {
+                        if (event.keyCode == 13) {
+                            $("#add-to-cart-button-@Model.ProductId").click();
+                            return false;
+                        }
+                    });
+                    $("#@Html.IdFor(model => model.CustomerEnteredPrice)").keydown(function (event) {
                         if (event.keyCode == 13) {
                             $("#add-to-cart-button-@Model.ProductId").click();
                             return false;

@@ -7,6 +7,7 @@ using Grand.Core.Domain.Localization;
 using Grand.Services.Localization;
 using Grand.Framework.Localization;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 
 namespace Grand.Framework.Mvc.Filters
 {
@@ -68,7 +69,7 @@ namespace Grand.Framework.Mvc.Filters
                     return;
 
                 //only in GET requests
-                if (context.HttpContext.Request.Method.ToLower() != "get")
+                if (!HttpMethods.IsGet(context.HttpContext.Request.Method))
                     return;
 
                 //whether SEO friendly URLs are enabled

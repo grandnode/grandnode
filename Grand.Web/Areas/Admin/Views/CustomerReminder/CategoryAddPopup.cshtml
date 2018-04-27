@@ -1,23 +1,20 @@
 ﻿@model CustomerReminderModel.ConditionModel.AddCategoryConditionModel
-
+@inject AdminAreaSettings adminAreaSettings
 @{
     Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
-}
-
-
-@{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.Customers.CustomerReminder.Condition.Category.AddNew").Text;
 }
-@using (Html.BeginForm())
-{
-    @Html.HiddenFor(model => model.CustomerReminderId)
-    @Html.HiddenFor(model => model.ConditionId)
 
-    @Html.AntiForgeryToken()
+<form asp-controller="CustomerReminder" asp-action="CategoryAddPopup" method="post"
+      asp-route-CustomerReminderId="@Context.Request.Query["CustomerReminderId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
+
+    <input asp-for="CustomerReminderId" type="hidden" />
+    <input asp-for="ConditionId" type="hidden" />
+
+    <antiforgery-token />
 
     <div class="row">
         <div class="col-md-12">
@@ -29,13 +26,12 @@
                     </div>
                 </div>
                 <div class="portlet-body form">
-
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchCategoryName, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <admin-label asp-for="SearchCategoryName" class="col-sm-3 control-label" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.SearchCategoryName)
+                                    <admin-input asp-for="SearchCategoryName" />
                                 </div>
                             </div>
                             <div class="form-actions">
@@ -55,16 +51,16 @@
             </div>
         </div>
     </div>
-    if (ViewBag.RefreshPage == true)
+    @if (ViewBag.RefreshPage == true)
     {
-        <script type="text/javascript">
-           try {window.opener.document.getElementById('@(ViewBag.btnId)').click();}
+    <script type="text/javascript">
+           try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
              catch (e){}
             window.close();
-        </script>
+    </script>
     }
 
-                <script>
+    <script>
                 $(document).ready(function () {
                     $("#categories-grid").kendoGrid({
                         dataSource: {
@@ -86,14 +82,14 @@
                                 // Cancel the changes
                                 this.cancelChanges();
                             },
-                            pageSize: @(defaultGridPageSize),
+                            pageSize: @(adminAreaSettings.DefaultGridPageSize),
                             serverPaging: true,
                             serverFiltering: true,
                             serverSorting: true
                         },
                         pageable: {
                             refresh: true,
-                            pageSizes: [@(gridPageSizes)]
+                            pageSizes: [@(adminAreaSettings.GridPageSizes)]
                         },
                         editable: {
                             confirmation: false,
@@ -120,13 +116,13 @@
                         }]
                     });
                 });
-                </script>
+    </script>
 
-                <script type="text/javascript">
+    <script type="text/javascript">
                     $(document).ready(function() {
                         $('#search-categories').click(function() {
                             var grid = $('#categories-grid').data('kendoGrid');
-                            grid.dataSource.page(1); 
+                            grid.dataSource.page(1);
                             $('.checkboxGroups').prop('checked', false).change();
                             return false;
                         });
@@ -147,7 +143,7 @@
                             updateMasterCheckbox();
                         });
                     });
-                    
+
                     function additionalData() {
                         var data = {
                             SearchCategoryName: $('#@Html.FieldIdFor(model => model.SearchCategoryName)').val()
@@ -162,5 +158,5 @@
                         $('#mastercheckbox').prop('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
                     }
 
-                </script>
-}
+    </script>
+</form>

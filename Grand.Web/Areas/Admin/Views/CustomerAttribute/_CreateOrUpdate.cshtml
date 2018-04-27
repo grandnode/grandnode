@@ -1,10 +1,7 @@
 ﻿@model CustomerAttributeModel
-
-@using Grand.Core.Domain.Catalog;
-
-@Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
-
+@inject IEventPublisher eventPublisher
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
 <script>
     $(document).ready(function () {
         $("#customerattribute-edit").kendoTabStrip({
@@ -17,14 +14,12 @@
         });
     });
 </script>
-
-
 <div id="customerattribute-edit">
     <ul>
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
             @T("Admin.Customers.CustomerAttributes.Info")
         </li>
-        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex()) id="tab-customerattributesvalues">
             @T("Admin.Customers.CustomerAttributes.Values")
         </li>
     </ul>
@@ -38,12 +33,11 @@
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "customerattribute-edit");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock
     }
 }
-
 @*save selected tab index*@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">

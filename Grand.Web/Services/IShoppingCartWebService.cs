@@ -26,7 +26,7 @@ namespace Grand.Web.Services
 
         OrderTotalsModel PrepareOrderTotals(IList<ShoppingCartItem> cart, bool isEditable);
 
-        AddToCartModel PrepareAddToCartModel(Product product, Customer customer, int quantity, string attributesXml, ShoppingCartType cartType, DateTime? startDate, DateTime? endDate, string reservationId, string parameter, string duration);
+        AddToCartModel PrepareAddToCartModel(Product product, Customer customer, int quantity, decimal customerEnteredPrice, string attributesXml, ShoppingCartType cartType, DateTime? startDate, DateTime? endDate, string reservationId, string parameter, string duration);
 
         void ParseAndSaveCheckoutAttributes(List<ShoppingCartItem> cart, IFormCollection form);
 

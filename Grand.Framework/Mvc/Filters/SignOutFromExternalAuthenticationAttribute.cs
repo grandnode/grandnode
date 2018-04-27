@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Grand.Services.Authentication;
-using Grand.Service.Authentication;
 using Microsoft.AspNetCore.Authentication;
 
 namespace Grand.Framework.Mvc.Filters

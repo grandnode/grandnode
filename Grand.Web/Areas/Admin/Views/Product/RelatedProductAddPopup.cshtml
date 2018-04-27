@@ -1,18 +1,17 @@
-﻿@{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
-}
-@model ProductModel.AddRelatedProductModel
+﻿@model ProductModel.AddRelatedProductModel
+@inject AdminAreaSettings adminAreaSettings
 @{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
+    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.RelatedProducts.AddNew").Text;
 }
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    
+
+<form asp-controller="Product" asp-action="RelatedProductAddPopup"
+      asp-route-productId="@Context.Request.Query["productId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
+    <antiforgery-token />
+
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -23,43 +22,42 @@
                     </div>
                 </div>
                 <div class="portlet-body form">
-
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchProductName, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <admin-label asp-for="SearchProductName" class="col-sm-3 control-label" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.SearchProductName)
+                                    <admin-input asp-for="SearchProductName" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchCategoryId, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <admin-label asp-for="SearchCategoryId" class="col-sm-3 control-label" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandDropDownListFor(model => model.SearchCategoryId, Model.AvailableCategories)
+                                    <admin-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchManufacturerId, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <admin-label asp-for="SearchManufacturerId" class="col-sm-3 control-label" />
                                 <div class="col-md-9  col-sm-9">
-                                    @Html.GrandDropDownListFor(model => model.SearchManufacturerId, Model.AvailableManufacturers)
+                                    <admin-select asp-for="SearchManufacturerId" asp-items="Model.AvailableManufacturers" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchStoreId, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <admin-label asp-for="SearchStoreId" class="col-sm-3 control-label" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandDropDownListFor(model => model.SearchStoreId, Model.AvailableStores)
+                                    <admin-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchVendorId, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <admin-label asp-for="SearchVendorId" class="col-sm-3 control-label" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandDropDownListFor(model => model.SearchVendorId, Model.AvailableVendors)
+                                    <admin-select asp-for="SearchVendorId" asp-items="Model.AvailableVendors" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchProductTypeId, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <admin-label asp-for="SearchProductTypeId" class="col-sm-3 control-label" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandDropDownListFor(model => model.SearchProductTypeId, Model.AvailableProductTypes)
+                                    <admin-select asp-for="SearchProductTypeId" asp-items="Model.AvailableProductTypes" />
                                 </div>
                             </div>
                             <div class="form-actions">
@@ -68,7 +66,7 @@
                                         <button class="btn btn-success filter-submit" id="search-products">
                                             <i class="fa fa-search"></i> @T("Admin.Common.Search")
                                         </button>
-                                        <button class="btn btn-success" type="submit" name="save" ><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                                        <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
                                     </div>
                                 </div>
                             </div>
@@ -79,9 +77,7 @@
             </div>
         </div>
     </div>
-
-
-    if (ViewBag.RefreshPage == true)
+    @if (ViewBag.RefreshPage == true)
     {
     <script type="text/javascript">
             try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
@@ -89,9 +85,6 @@
             window.close();
     </script>
     }
-
-    
-    
     <script>
         $(document).ready(function () {
             $("#products-grid").kendoGrid({
@@ -114,14 +107,14 @@
                         // Cancel the changes
                         this.cancelChanges();
                     },
-                    pageSize: @(defaultGridPageSize),
+                    pageSize: @(adminAreaSettings.DefaultGridPageSize),
                     serverPaging: true,
                     serverFiltering: true,
                     serverSorting: true
                 },
                 pageable: {
                     refresh: true,
-                    pageSizes: [@(gridPageSizes)]
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
                 },
                 editable: {
                     confirmation: false,
@@ -149,8 +142,8 @@
             });
         });
     </script>
-           
-    
+
+
     <script type="text/javascript">
         $(document).ready(function () {
             $('#search-products').click(function () {
@@ -161,14 +154,14 @@
                 $('.checkboxGroups').prop('checked', false).change();
                 return false;
             });
-        
+
             $("#@Html.FieldIdFor(model => model.SearchProductName)").keydown(function (event) {
                 if (event.keyCode == 13) {
                     $("#search-products").click();
                     return false;
                 }
             });
-                        
+
             //wire up checkboxes
             $('#mastercheckbox').click(function() {
                 $('.checkboxGroups').prop('checked', $(this).is(':checked')).change();
@@ -198,4 +191,4 @@
             $('#mastercheckbox').prop('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
         }
     </script>
-}
+</form>

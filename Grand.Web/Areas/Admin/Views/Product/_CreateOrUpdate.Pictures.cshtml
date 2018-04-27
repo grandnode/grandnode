@@ -66,29 +66,31 @@
                         info: false
                     },
                     editable: {
-                        confirmation: false,
+                        confirmation: true,
                         mode: "inline"
                     },
-                    scrollable: false,
+                    scrollable: true,
                     columns: [{
                         field: "PictureUrl",
                         title: "@T("Admin.Catalog.Products.Pictures.Fields.Picture")",
                         template: '<a href="#=PictureUrl#" target="_blank"><img alt="#=PictureId#" src="#=PictureUrl#" width="150" /></a>',
-                        width: 200
+                        width: 165
                     }, {
                         field: "DisplayOrder",
                         title: "@T("Admin.Catalog.Products.Pictures.Fields.DisplayOrder")",
-                        //integer format
+                        minScreenWidth: 750,
+                        width: 100,
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
                         format: "{0:0}",
-                        width: 150
                     }, {
                         field: "OverrideAltAttribute",
+                        minScreenWidth: 500,
                         title: "@T("Admin.Catalog.Products.Pictures.Fields.OverrideAltAttribute")",
-                        width: 200
                     }, {
                         field: "OverrideTitleAttribute",
                         title: "@T("Admin.Catalog.Products.Pictures.Fields.OverrideTitleAttribute")",
-                        width: 200
+                        minScreenWidth: 500,
                     }, {
                         command: [{
                             name: "edit",
@@ -156,31 +158,31 @@
     <div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.AddPictureModel.PictureId)
+                <admin-label asp-for="AddPictureModel.PictureId" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.EditorFor(model => model.AddPictureModel.PictureId)
-                    @Html.ValidationMessageFor(model => model.AddPictureModel.PictureId)
+                    <admin-input asp-for="AddPictureModel.PictureId" />
+                    <span asp-validation-for="AddPictureModel.PictureId"></span>
                 </div>
             </div>
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.AddPictureModel.OverrideAltAttribute)
+                <admin-label asp-for="AddPictureModel.OverrideAltAttribute" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.AddPictureModel.OverrideAltAttribute)
-                    @Html.ValidationMessageFor(model => model.AddPictureModel.OverrideAltAttribute)
+                    <admin-input asp-for="AddPictureModel.OverrideAltAttribute" />
+                    <span asp-validation-for="AddPictureModel.OverrideAltAttribute"></span>
                 </div>
             </div>
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.AddPictureModel.OverrideTitleAttribute)
+                <admin-label asp-for="AddPictureModel.OverrideTitleAttribute" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.AddPictureModel.OverrideTitleAttribute)
-                    @Html.ValidationMessageFor(model => model.AddPictureModel.OverrideTitleAttribute)
+                    <admin-input asp-for="AddPictureModel.OverrideTitleAttribute" />
+                    <span asp-validation-for="AddPictureModel.OverrideTitleAttribute"></span>
                 </div>
             </div>
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.AddPictureModel.DisplayOrder)
+                <admin-label asp-for="AddPictureModel.DisplayOrder" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.AddPictureModel.DisplayOrder)
-                    @Html.ValidationMessageFor(model => model.AddPictureModel.DisplayOrder)
+                    <admin-input asp-for="AddPictureModel.DisplayOrder" />
+                    <span asp-validation-for="AddPictureModel.DisplayOrder"></span>
                 </div>
             </div>
             <div class="form-actions">

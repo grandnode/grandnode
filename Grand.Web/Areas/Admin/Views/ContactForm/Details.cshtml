@@ -3,18 +3,16 @@
     //page title
     ViewBag.Title = T("Admin.System.ContactForm.Details").Text;
 }
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    @Html.HiddenFor(model => model.Id)
-
+<form asp-controller="ContactForm" asp-action="Details" method="post">
+    <antiforgery-token />
+    <input asp-for="Id" type="hidden" />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
                 <div class="portlet-title">
                     <div class="caption">
                         <i class="fa fa-envelope-o"></i>
-                        @T("Admin.System.ContactForm.Details") 
+                        @T("Admin.System.ContactForm.Details")
                         <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.System.ContactForm.BackToList").Text, "List")</small>
                     </div>
                     <div class="actions">
@@ -25,45 +23,45 @@
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.CreatedOn)
+                                <admin-label asp-for="CreatedOn" />
                                 <div class="col-md-9 col-sm-9">
-                                    <label class="control-label">@Html.DisplayFor(model => model.CreatedOn)</label>
+                                    <label class="control-label">@Model.CreatedOn</label>
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.Email)
+                                <admin-label asp-for="Email" />
                                 <div class="col-md-9 col-sm-9">
-                                    <label class="control-label" style="text-align:left">@Html.DisplayFor(model => model.FullName) - @Html.DisplayFor(model => model.Email)</label>
+                                    <label class="control-label" style="text-align:left">@Model.FullName - @Model.Email</label>
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.Subject)
+                                <admin-label asp-for="Subject" />
                                 <div class="col-md-9 col-sm-9">
-                                    <label class="control-label" style="text-align:left">@Html.DisplayFor(model => model.Subject)</label>
+                                    <label class="control-label" style="text-align:left">@Model.Subject</label>
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.Enquiry)
+                                <admin-label asp-for="Enquiry" />
                                 <div class="col-md-9 col-sm-9">
                                     <label class="control-label" style="text-align:left">@Html.Raw(Model.Enquiry)</label>
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.IpAddress)
+                                <admin-label asp-for="IpAddress" />
                                 <div class="col-md-9 col-sm-9">
-                                    <label class="control-label">@Html.DisplayFor(model => model.IpAddress)</label>
+                                    <label class="control-label">@Model.IpAddress</label>
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.Store)
+                                <admin-label asp-for="Store" />
                                 <div class="col-md-9 col-sm-9">
-                                    <label class="control-label">@Html.DisplayFor(model => model.Store)</label>
+                                    <label class="control-label">@Model.Store</label>
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.EmailAccountName)
+                                <admin-label asp-for="EmailAccountName" />
                                 <div class="col-md-9 col-sm-9">
-                                    <label class="control-label">@Html.DisplayFor(model => model.EmailAccountName)</label>
+                                    <label class="control-label">@Model.EmailAccountName</label>
                                 </div>
                             </div>
                         </div>
@@ -72,6 +70,5 @@
             </div>
         </div>
     </div>
-
-}
+</form>
 @Html.DeleteConfirmation("contactform-delete")

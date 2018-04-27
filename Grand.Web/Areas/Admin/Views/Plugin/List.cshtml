@@ -3,10 +3,8 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Plugins.Local").Text;
 }
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "plugins-form" }))
-{
-    @Html.AntiForgeryToken()
-
+<form asp-controller="Plugin" asp-action="List" method="post" id="plugins-form">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -31,22 +29,22 @@
                             <li>@T("Admin.Configuration.Plugins.Description.Step5")</li>
                         </ol>
                         <p>
-                            You can download more grandnode plugins on our <a href="http://www.grandnode.com/extensions?utm_source=admin-panel&utm_medium=plugins&utm_campaign=admin-panel" target="_blank">extensions directory</a>
+                            You can download more grandnode plugins on our <a href="https://www.grandnode.com/extensions?utm_source=admin-panel&utm_medium=plugins&utm_campaign=admin-panel" target="_blank">extensions directory</a>
                         </p>
 
                     </div>
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchLoadModeId)
+                                <admin-label asp-for="SearchLoadModeId" />
                                 <div class="col-md-4 col-sm-6">
-                                    @Html.GrandDropDownListFor(model => model.SearchLoadModeId, Model.AvailableLoadModes)
+                                    <admin-select asp-for="SearchLoadModeId" asp-items="Model.AvailableLoadModes" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchGroup)
+                                <admin-label asp-for="SearchGroup" />
                                 <div class="col-md-4 col-sm-6">
-                                    @Html.GrandDropDownListFor(model => model.SearchGroup, Model.AvailableGroups)
+                                    <admin-select asp-for="SearchGroup" asp-items="Model.AvailableGroups" />
                                 </div>
                             </div>
                         </div>
@@ -205,15 +203,12 @@
             addAntiForgeryToken(data);
             return data;
         }
-
     </script>
-}
-
+</form>
 
 <div class="modal-dialog" id="importfile-window" style="display:none; padding: 0 10px;">
-    @using (Html.BeginForm("UploadPlugin", "Plugin", null, FormMethod.Post, false, new { enctype = "multipart/form-data" }))
-    {
-        @Html.AntiForgeryToken()
+    <form asp-controller="Plugin" asp-action="UploadPlugin" method="post" enctype = "multipart/form-data">
+        <antiforgery-token />
         <ul class="common-list">
             <li>
                 <strong>NOTE: It can take up to several minutes.</strong>
@@ -243,5 +238,5 @@
                     <input id="importfilesubmit" class="btn blue" value="@T("Admin.Configuration.Plugins.Upload")" type="submit">
                 </div>
             </div>
-    }
+    </form>
 </div>

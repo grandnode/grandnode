@@ -17,6 +17,8 @@ namespace Grand.Web.Areas.Admin.Models.Customers
         
         public string Name { get; set; }
 
+        public string ProductId { get; set; }
+
         [GrandResourceDisplayName("Admin.Customers.CustomerRoles.Products.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 

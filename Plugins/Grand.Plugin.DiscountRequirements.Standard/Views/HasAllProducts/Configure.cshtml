@@ -40,10 +40,9 @@
 </script>
 
 <div class="form-body">
-    @Html.GrandLabelFor(model => model.Products)
-
+    <admin-label asp-for="Products" />
     <div class="col-md-8 col-sm-8">
-        @Html.GrandEditorFor(model => model.Products)
+        <admin-input asp-for="Products" />
         <span class="control-label" style="text-align:left" id="discountrequirement-product-names@(Model.RequirementId)"></span>
         <div class="group-btn btn-group-devided margin-top-10">
             <input type="button" id="saveHasAllProductsrequirement@(Model.RequirementId)" class="btn default" value="@T("Admin.Common.Save")" />

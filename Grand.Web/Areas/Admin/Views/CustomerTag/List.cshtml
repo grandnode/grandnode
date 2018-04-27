@@ -2,8 +2,7 @@
     //page title
     ViewBag.Title = T("Admin.Customers.CustomerTags").Text;
 }
-@Html.AntiForgeryToken()
-
+<antiforgery-token />
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light form-fit">
@@ -22,10 +21,6 @@
         </div>
     </div>
 </div>
-
-
-            
-
 <script>
     $(document).ready(function () {
         $("#customertags-grid").kendoGrid({
@@ -66,17 +61,13 @@
             columns: [{
                 field: "Name",
                 title: "@T("Admin.Customers.CustomerTags.Fields.Name")",
-                width: 300
+                width: 300,
+                template: '<a class="k-link" href="Edit/#=Id#">#=Name#</a>'
             },
             {
                 field: "Count",
                 title: "@T("Admin.Customers.CustomerTags.Fields.Count")",
                 width: 50
-            }, {
-                field: "Id",
-                title: "@T("Admin.Common.Edit")",
-                width: 100,
-                template: '<a class="btn btn-sm btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
             }]
         });
     });

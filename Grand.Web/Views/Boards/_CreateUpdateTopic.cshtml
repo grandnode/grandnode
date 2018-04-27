@@ -33,8 +33,8 @@
                             @Html.BBCodeEditor("Text")
                         </label>
                     }
-                        @Html.TextAreaFor(model => model.Text, new { @class = "form-control forum-post-text", TextMode = "MultiLine" })
-                        @Html.ValidationMessageFor(model => model.Text)
+                    <textarea asp-for="Text" class="form-control forum-post-text" ></textarea>
+                    <span asp-validation-for="Text"></span>
                 </fieldset>
                 @if (Model.IsCustomerAllowedToSetTopicPriority)
                 {

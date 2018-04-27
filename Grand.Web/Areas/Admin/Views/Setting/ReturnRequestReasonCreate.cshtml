@@ -3,17 +3,15 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Order.ReturnRequestReasons.AddNew").Text;
 }
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-   
+<form asp-controller="Setting" asp-action="ReturnRequestReasonCreate" method="post">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
                 <div class="portlet-title">
                     <div class="caption">
                         <i class="fa fa-list-alt"></i>
-                        @T("Admin.Configuration.Settings.Order.ReturnRequestReasons.AddNew") 
+                        @T("Admin.Configuration.Settings.Order.ReturnRequestReasons.AddNew")
                         <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Configuration.Settings.Order.ReturnRequestReasons.BackToList").Text, "ReturnRequestReasonList")</small>
                     </div>
                     <div class="actions">
@@ -27,4 +25,4 @@
             </div>
         </div>
     </div>
-}
+</form>

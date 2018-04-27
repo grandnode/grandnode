@@ -1,12 +1,8 @@
 ﻿@model CheckoutAttributeModel
-@using Grand.Core.Domain.Catalog;
 @{
 
     if (!String.IsNullOrEmpty(Model.Id))
     {
-        /*TODO display the following warning if values are not supported by selected attribute control type
-         'Values are not required for this attribute control type'
-         */
         <div class="panel panel-default">
             <div class="panel-body">
                 <div id="checkoutattributevalues-grid"></div>
@@ -59,37 +55,38 @@
                         info: false
                     },
                     editable: {
-                        confirmation: false,
+                        confirmation: true,
                         mode: "inline"
                     },
                     scrollable: false,
                     columns: [{
                         field: "Name",
-                        title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.Name")"
+                        title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.Name")",
+                        template: "<a class='k-link' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/CheckoutAttribute/ValueEditPopup/")#=Id#?checkoutAttributeId=@Model.Id&btnId=btnRefresh&formId=checkoutattribute-form', 800, 350, true); return false;\">#=Name#</a>"
                     }, {
                         field: "PriceAdjustment",
                         title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.PriceAdjustment")",
-                        width: 200
+                        width: 150,
+                        minScreenWidth: 750,
                     }, {
                         field: "WeightAdjustment",
                         title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.WeightAdjustment")",
-                        width: 200
+                        width: 150,
+                        minScreenWidth: 750,
                     }, {
                         field: "IsPreSelected",
                         title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.IsPreSelected")",
                         width: 100,
+                        minScreenWidth: 500,
                         headerAttributes: { style: "text-align:center" },
                         attributes: { style: "text-align:center" },
                         template: '# if(IsPreSelected) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
                     }, {
                         field: "DisplayOrder",
                         title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.DisplayOrder")",
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
                         width: 100
-                    },{
-                        field: "Id",
-                        title: "@T("Admin.Common.Edit")",
-                        width: 100,
-                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/CheckoutAttribute/ValueEditPopup/")#=Id#?checkoutAttributeId=@Model.Id&btnId=btnRefresh&formId=checkoutattribute-form', 800, 350, true); return false;\" class='k-button' />"
                     }, {
                         command: {name: "destroy", text: "@T("Admin.Common.Delete")"},
                         title: "@T("Admin.Common.Delete")",

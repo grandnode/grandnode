@@ -1,9 +1,8 @@
 ﻿@model AddressAttributeModel
+@inject IEventPublisher eventPublisher
 
-@using Grand.Core.Domain.Catalog;
-
-@Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
 
 <script>
     $(document).ready(function () {
@@ -22,7 +21,7 @@
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
             @T("Admin.Address.AddressAttributes.Info")
         </li>
-        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex()) id="tab-addressattributesvalues">
             @T("Admin.Address.AddressAttributes.Values")
         </li>
     </ul>
@@ -33,16 +32,14 @@
         @Html.Partial("_CreateOrUpdate.TabValues", Model)
     </div>
 </div>
-
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "addressattribute-edit");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock
     }
 }
-
 @*save selected tab index*@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">

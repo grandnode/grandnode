@@ -1,28 +1,28 @@
 ﻿@model ReturnRequestReasonModel
-@Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
 
 @(Html.LocalizedEditor<ReturnRequestReasonModel, ReturnRequestReasonLocalizedModel>("returnrequestreason-localized",
     @<div class="form-horizontal">
          <div class="form-body">
              <div class="form-group">
-                 @Html.GrandLabelFor(model => model.Locales[item].Name)
+                 <admin-label asp-for="@Model.Locales[item].Name" />
                  <div class="col-md-9 col-sm-9">
-                     @Html.GrandEditorFor(model => model.Locales[item].Name)
-                     @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                     <admin-input asp-for="@Model.Locales[item].Name" />
+                     <span asp-validation-for="@Model.Locales[item].Name"></span>
                  </div>
              </div>
-                @Html.HiddenFor(model => model.Locales[item].LanguageId)
+             <input asp-for="@Model.Locales[item].LanguageId" type="hidden" />
          </div>
     </div>
     ,
     @<div class="form-horizontal">
          <div class="form-body">
              <div class="form-group">
-                 @Html.GrandLabelFor(model => model.Name)
+                 <admin-label asp-for="Name" />
                  <div class="col-md-9 col-sm-9">
-                     @Html.GrandEditorFor(model => model.Name)
-                     @Html.ValidationMessageFor(model => model.Name)
+                     <admin-input asp-for="Name" />
+                     <span asp-validation-for="Name"></span>
                  </div>
              </div>
          </div>
@@ -31,10 +31,10 @@
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.DisplayOrder)
+            <admin-label asp-for="DisplayOrder" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.DisplayOrder)
-                @Html.ValidationMessageFor(model => model.DisplayOrder)
+                <admin-input asp-for="DisplayOrder" />
+                <span asp-validation-for="DisplayOrder"></span>
             </div>
         </div>
     </div>

@@ -233,6 +233,7 @@ a span.username {
     background-color: #ffffff;
 }
 
+
 .treeview .list-group-item {
     display: flex;
     align-items: center;
@@ -256,4 +257,66 @@ a span.username {
 
 .treeview .list-group-item span.pull-right {
     margin-left: auto;
+}
+
+/* label icon*/
+.help.icon-question {
+    padding-left: 3px;
+}
+
+@media only screen and (min-width: 1200px) {
+    .k-grid-header {
+        padding-right: 0px !important
+    }
+
+    .k-grid-content::-webkit-scrollbar {
+        width: 0px !important;
+    }
+
+    .k-grid.k-widget {
+        overflow-x: hidden;
+    }
+}
+
+@media only screen and (min-device-width : 375px) and (max-device-width : 667px) {
+    .form-horizontal .form-body.col-md-6.advanced-filter {
+        padding: 0;
+    }
+}
+
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (-webkit-min-device-pixel-ratio: 1) {
+    .form-horizontal .form-body.col-md-6.advanced-filter {
+        padding: 0;
+    }
+
+        .form-horizontal .form-body.col-md-6.advanced-filter:first-child {
+            padding-top: 20px;
+        }
+
+        .form-horizontal .form-body.col-md-6.advanced-filter:nth-child(2) {
+            margin-left: 33.33333%;
+        }
+}
+
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) and (-webkit-min-device-pixel-ratio: 1) {
+    .form-horizontal .form-body.col-md-6.advanced-filter:nth-child(2) {
+        margin-left: 0;
+        padding-top: 20px;
+    }
+}
+
+@media (min-width: 992px) {
+    .page-content-wrapper .page-content {
+        padding: 5px 20px 10px;
+    }
+}
+.page-content-white .page-content .page-bar {
+    border-bottom: 0px;
+}
+.k-input.text-box {
+    padding: 6px 12px;
+}
+
+textarea.form-control.k-input {
+    padding: 6px 12px;
 }

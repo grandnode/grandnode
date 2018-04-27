@@ -1,22 +1,19 @@
 ﻿@model DashboardModel
-
-@using Grand.Services.Security
+@inject Grand.Services.Security.IPermissionService permissionService
 
 @{
     //page title
     ViewBag.Title = T("Admin.Dashboard.Statistics").Text;
-
-    var permissionService = EngineContext.Current.Resolve<IPermissionService>();
-    var canManageOrders = permissionService.Authorize(StandardPermissionProvider.ManageOrders);
-    var canManageCustomers = permissionService.Authorize(StandardPermissionProvider.ManageCustomers);
-    var canManageProducts = permissionService.Authorize(StandardPermissionProvider.ManageProducts);
+    var canManageOrders = permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageOrders);
+    var canManageCustomers = permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageCustomers);
+    var canManageProducts = permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManageProducts);
 }
-@Html.AntiForgeryToken()
+<antiforgery-token />
 <div class="page-bar" style="height:43px;">
     <div class="page-toolbar">
         <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
             <i class="icon-calendar"></i>&nbsp;
-            <span class="thin uppercase">@DateTime.Now.ToLocalTime().ToString("dddd, dd MMMM yyyy hh:mm:ss")</span>&nbsp;
+            <span class="thin uppercase">@DateTime.Now.ToLocalTime().ToString()</span>&nbsp;
         </div>
     </div>
 </div>

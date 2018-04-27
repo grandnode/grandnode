@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Grand.Core;
 using Grand.Core.Data;
 using Grand.Core.Domain.Seo;
+using Microsoft.AspNetCore.Http;
 
 namespace Grand.Framework.Mvc.Filters
 {
@@ -92,7 +93,7 @@ namespace Grand.Framework.Mvc.Filters
                     return;
 
                 //only in GET requests, otherwise the browser might not propagate the verb and request body correctly.
-                if (filterContext.HttpContext.Request.Method.ToLower() != "get")
+                if (!HttpMethods.IsGet(filterContext.HttpContext.Request.Method))
                     return;
 
                 //ignore this rule for localhost

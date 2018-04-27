@@ -2,7 +2,7 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Shipping.PickupPoints").Text;
 }
-@Html.AntiForgeryToken()
+<antiforgery-token />
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light form-fit">
@@ -28,7 +28,7 @@
     </div>
 </div>
 
-<script>
+<script type="text/javascript">
     $(document).ready(function () {
         $("#pickupPoints-grid").kendoGrid({
             dataSource: {
@@ -67,7 +67,8 @@
             scrollable: false,
             columns: [{
                 field: "Name",
-                title: "@T("Admin.Configuration.Shipping.PickupPoint.Fields.Name")"
+                title: "@T("Admin.Configuration.Shipping.PickupPoint.Fields.Name")",
+                template: '<a class="k-link" href="EditPickupPoint/#=Id#">#=Name#</a>',
             },
             {
                 field: "Description",
@@ -77,12 +78,6 @@
                 field: "DisplayOrder",
                 title: "@T("Admin.Configuration.Shipping.PickupPoint.Fields.DisplayOrder")",
                 width: 120,
-            },
-            {
-                field: "Id",
-                title: "@T("Admin.Common.Edit")",
-                width: 100,
-                template: '<a class="btn btn-sm btn-default" href="EditPickupPoint/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
             }]
         });
     });

@@ -1,10 +1,5 @@
 ﻿@model CatalogSettingsModel
 
-
-
-
-
-
 <script type="text/javascript">
         $(document).ready(function () {
 
@@ -27,24 +22,24 @@
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.ShowShareButton_OverrideForStore, model => model.ShowShareButton, Model.ActiveStoreScopeConfiguration)
-                @Html.GrandLabelFor(model => model.ShowShareButton, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="ShowShareButton" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.ShowShareButton)
+                    <admin-input asp-for="ShowShareButton" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.ShowShareButton)
+                <span asp-validation-for="ShowShareButton"></span>
             </div>
         </div>
         <div class="form-group" id="pnlPageShareCode">
             <div class="col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.PageShareCode_OverrideForStore, model => model.PageShareCode, Model.ActiveStoreScopeConfiguration)
-                @Html.GrandLabelFor(model => model.PageShareCode, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="PageShareCode" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
-                @Html.GrandTextAreaFor(model => model.PageShareCode, new { style = "Height: 100px;" })
-                @Html.ValidationMessageFor(model => model.PageShareCode)
+                <admin-textarea asp-for="PageShareCode"></admin-textarea>
+                <span asp-validation-for="PageShareCode"></span>
             </div>
         </div>
     </div>

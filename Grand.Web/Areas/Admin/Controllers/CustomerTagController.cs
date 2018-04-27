@@ -283,6 +283,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     Id = x.Id,
                     Name = _productService.GetProductById(x.ProductId)?.Name,
+                    ProductId = x.ProductId,
                     DisplayOrder = x.DisplayOrder
                 }),
                 Total = products.Count()
@@ -386,7 +387,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult ProductAddPopup(string btnId, CustomerTagProductModel.AddProductModel model)
+        public IActionResult ProductAddPopup(CustomerTagProductModel.AddProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -413,7 +414,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //a vendor should have access only to his products
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
             return View(model);
         }
 

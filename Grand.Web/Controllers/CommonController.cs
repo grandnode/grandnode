@@ -141,6 +141,38 @@ namespace Grand.Web.Controllers
             }
             return Redirect(returnUrl);
         }
+
+        //helper method to redirect users.
+        public virtual IActionResult InternalRedirect(string url, bool permanentRedirect)
+        {
+            //ensure it's invoked from our GenericPathRoute class
+            if (HttpContext.Items["grand.RedirectFromGenericPathRoute"] == null ||
+                !Convert.ToBoolean(HttpContext.Items["grand.RedirectFromGenericPathRoute"]))
+            {
+                url = Url.RouteUrl("HomePage");
+                permanentRedirect = false;
+            }
+
+            //home page
+            if (string.IsNullOrEmpty(url))
+            {
+                url = Url.RouteUrl("HomePage");
+                permanentRedirect = false;
+            }
+
+            //prevent open redirection attack
+            if (!Url.IsLocalUrl(url))
+            {
+                url = Url.RouteUrl("HomePage");
+                permanentRedirect = false;
+            }
+
+            if (permanentRedirect)
+                return RedirectPermanent(url);
+
+            return Redirect(url);
+        }
+
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual IActionResult SetCurrency(string customerCurrency, string returnUrl = "")

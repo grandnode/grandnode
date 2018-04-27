@@ -1,13 +1,12 @@
 ﻿@{
     Layout = "_ConfigurePlugin";
 }
-@Html.AntiForgeryToken()
-<table class="adminContent">
-    <tr>
-        <td>
+<antiforgery-token />
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
             <div id="shipping-rate-grid"></div>
-
-            <script>
+            <script type="text/javascript">
                 $(document).ready(function () {
                     $("#shipping-rate-grid").kendoGrid({
                         dataSource: {
@@ -88,6 +87,6 @@
                     });
                 });
             </script>
-        </td>
-    </tr>
-</table>
+        </div>
+    </div>
+</div>

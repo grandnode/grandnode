@@ -1,12 +1,8 @@
 ﻿@model ProductModel
-@{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-}
-@using Grand.Core.Domain.Catalog;
+@inject AdminAreaSettings adminAreaSettings
 @if (!String.IsNullOrEmpty(Model.Id))
 {
-    @Html.HiddenFor(x => x.AuctionEnded)
+    <input asp-for="AuctionEnded" type="hidden" />
 
     <div class="panel panel-default">
         <div class="panel-body">
@@ -43,14 +39,14 @@
                     // Cancel the changes
                     this.cancelChanges();
                 },
-                pageSize: @(defaultGridPageSize),
+                pageSize: @(adminAreaSettings.DefaultGridPageSize),
                 serverPaging: true,
                 serverFiltering: true,
                 serverSorting: true
             },
             pageable: {
                 refresh: true,
-                pageSizes: [@(gridPageSizes)]
+                pageSizes: [@(adminAreaSettings.GridPageSizes)]
             },
             editable: {
                 confirmation: false,

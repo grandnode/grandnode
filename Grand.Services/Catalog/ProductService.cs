@@ -1178,6 +1178,9 @@ namespace Grand.Services.Catalog
             var update = Builders<ProductReview>.Update
                 .Set(x => x.Title, productreview.Title)
                 .Set(x => x.ReviewText, productreview.ReviewText)
+                .Set(x => x.ReplyText, productreview.ReplyText)
+                .Set(x => x.Signature, productreview.Signature)
+                .Set(x => x.UpdatedOnUtc, DateTime.UtcNow)
                 .Set(x => x.IsApproved, productreview.IsApproved);
 
             var result = _productReviewRepository.Collection.UpdateManyAsync(filter, update).Result;

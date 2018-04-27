@@ -1,6 +1,7 @@
 ﻿@model TopicModel
-@Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
+@inject IEventPublisher eventPublisher
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
 <script>
     $(document).ready(function () {
         $("#topic-edit").show();
@@ -42,16 +43,14 @@
         @Html.Partial("_CreateOrUpdate.TabStores", Model)
     </div>
 </div>
-
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "topic-edit");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock
     }
 }
-
 @*save selected tab index*@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">

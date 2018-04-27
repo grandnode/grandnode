@@ -1,18 +1,16 @@
 ﻿@{
     Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
-}
-@model DiscountModel.AddStoreToDiscountModel
-@{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.Promotions.Discounts.AppliedToStores.AddNew").Text;
 }
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+@model DiscountModel.AddStoreToDiscountModel
+@inject AdminAreaSettings adminAreaSettings
 
+<form asp-controller="Discount" asp-action="StoreAddPopup" method="post"
+      asp-route-DiscountId="@Context.Request.Query["DiscountId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -26,9 +24,9 @@
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchStoreName, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <admin-label asp-for="SearchStoreName" class="col-sm-3 control-label" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.SearchStoreName)
+                                    <admin-input asp-for="SearchStoreName" />
                                 </div>
                             </div>
                             <div class="form-actions">
@@ -49,18 +47,14 @@
         </div>
     </div>
 
-
-    if (ViewBag.RefreshPage == true)
+    @if (ViewBag.RefreshPage == true)
     {
-        <script type="text/javascript">
-            try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
+    <script type="text/javascript">
+            try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
             catch (e){}
             window.close();
-        </script>
+    </script>
     }
-
-
-
 
     <script>
     $(document).ready(function () {
@@ -84,14 +78,14 @@
                     // Cancel the changes
                     this.cancelChanges();
                 },
-                pageSize: @(defaultGridPageSize),
+                pageSize: @(adminAreaSettings.DefaultGridPageSize),
                 serverPaging: true,
                 serverFiltering: true,
                 serverSorting: true
             },
             pageable: {
                 refresh: true,
-                pageSizes: [@(gridPageSizes)]
+                pageSizes: [@(adminAreaSettings.GridPageSizes)]
             },
             editable: {
                 confirmation: false,
@@ -108,23 +102,10 @@
             }, {
                 field: "Name",
                 title: "@T("Admin.Catalog.Stores.Fields.Name")"
-            }
-
-            @*, {
-                field: "Published",
-                title: "@T("Admin.Catalog.Stores.Fields.Published")",
-                width: 100,
-                headerAttributes: { style: "text-align:center" },
-                attributes: { style: "text-align:center" },
-                template: '# if(Published) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
-            }*@
-
-
-            ]
+            }]
         });
     });
     </script>
-
     <script type="text/javascript">
         $(document).ready(function() {
             $('#search-stores').click(function() {
@@ -168,5 +149,4 @@
         }
 
     </script>
-
-}
+</form>

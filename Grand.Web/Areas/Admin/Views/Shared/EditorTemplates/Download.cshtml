@@ -55,7 +55,7 @@
 
 </script>
 <div id="@(clientId + "value")">
-    @Html.HiddenFor(x => x)
+    <input asp-for="@Model" type="hidden" />
 </div>
 <div class="form-horizontal form-horizontal  portlet light bg-inverse form-bordered box green" style="border-top: 1px solid #5cd1db;">
     <div class="form-body">

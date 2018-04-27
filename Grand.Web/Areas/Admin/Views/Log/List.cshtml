@@ -1,14 +1,11 @@
 ﻿@model LogListModel
+@inject AdminAreaSettings adminAreaSettings
 @{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.System.Log").Text;
 }
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Log" asp-action="List" method="post">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -26,27 +23,27 @@
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.CreatedOnFrom)
+                                <admin-label asp-for="CreatedOnFrom" />
                                 <div class="col-md-4 col-sm-6">
-                                    @Html.GrandEditorFor(model => model.CreatedOnFrom)
+                                    <admin-input asp-for="CreatedOnFrom" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.CreatedOnTo)
+                                <admin-label asp-for="CreatedOnTo" />
                                 <div class="col-md-4 col-sm-6">
-                                    @Html.GrandEditorFor(model => model.CreatedOnTo)
+                                    <admin-input asp-for="CreatedOnTo" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.Message)
+                                <admin-label asp-for="Message" />
                                 <div class="col-md-4 col-sm-6">
-                                    @Html.GrandEditorFor(model => model.Message)
+                                    <admin-input asp-for="Message" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.LogLevelId)
+                                <admin-label asp-for="LogLevelId" />
                                 <div class="col-md-4 col-sm-6">
-                                    @Html.GrandDropDownListFor(model => model.LogLevelId, Model.AvailableLogLevels)
+                                    <admin-select asp-for="LogLevelId" asp-items="Model.AvailableLogLevels" />
                                 </div>
                             </div>
                         </div>
@@ -68,7 +65,7 @@
         </div>
     </div>
 
-<script>
+    <script>
     $(document).ready(function () {
         $("#log-grid").kendoGrid({
             dataSource: {
@@ -90,14 +87,14 @@
                     // Cancel the changes
                     this.cancelChanges();
                 },
-                pageSize: @(defaultGridPageSize),
+                pageSize: @(adminAreaSettings.DefaultGridPageSize),
                 serverPaging: true,
                 serverFiltering: true,
                 serverSorting: true
             },
             pageable: {
                 refresh: true,
-                pageSizes: [@(gridPageSizes)]
+                pageSizes: [@(adminAreaSettings.GridPageSizes)]
             },
             scrollable: false,
             dataBound: onDataBound,
@@ -107,7 +104,7 @@
                 headerAttributes: { style: "text-align:center" },
                 attributes: { style: "text-align:center" },
                 template: "<label class='mt-checkbox mt-checkbox-outline'><input type='checkbox' value='#=Id#' class='checkboxGroups'/><span></span></label>",
-                width: 50
+                width: 60
             }, {
                 field: "LogLevel",
                 title: "@T("Admin.System.Log.Fields.LogLevel")",
@@ -125,14 +122,14 @@
                 field: "Id",
                 title: "@T("Admin.Common.View")",
                 width: 50,
-                template: '<a href="View/#=Id#">@T("Admin.Common.View")</a>'
+                template: '<a class="k-link" href="View/#=Id#">@T("Admin.Common.View")</a>'
             }]
         });
     });
-</script>
-                
+    </script>
 
-<script type="text/javascript">
+
+    <script type="text/javascript">
 
     var selectedIds = [];
 
@@ -244,5 +241,5 @@
         var numChkBoxesChecked = $('#log-grid input[type=checkbox][id!=mastercheckbox]:checked').length;
         $('#mastercheckbox').prop('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
     }
-</script>
-}
+    </script>
+</form>

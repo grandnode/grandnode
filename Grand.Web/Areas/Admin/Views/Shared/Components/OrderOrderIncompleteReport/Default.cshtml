@@ -39,16 +39,14 @@
             scrollable: false,
             columns: [{
                 field: "Item",
-                title: "@T("Admin.SalesReport.Incomplete.Item")"
+                title: "@T("Admin.SalesReport.Incomplete.Item")",
+                template: '<a class="k-link" href="#=ViewLink#">#=Item#</a>',
             }, {
                 field: "Total",
                 title: "@T("Admin.SalesReport.Incomplete.Total")",
-                width: 150
             }, {
                 field: "Count",
-                title: "@T("Admin.SalesReport.Incomplete.Count")",
-                width: 150,
-                template: '#=Count# - <a class="btn btn-sm btn-default" href="#=ViewLink#"><i class="fa fa-search"></i> @T("Admin.SalesReport.Incomplete.View")</a>'
+                title: "@T("Admin.SalesReport.Incomplete.Count")"
             }]
         });
     });

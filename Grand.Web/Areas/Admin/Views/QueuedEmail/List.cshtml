@@ -1,15 +1,11 @@
 ﻿@model QueuedEmailListModel
+@inject AdminAreaSettings adminAreaSettings
 @{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.System.QueuedEmails").Text;
 }
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-
+<form asp-controller="QueuedEmail" asp-action="List" method="post">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -27,42 +23,42 @@
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchStartDate)
+                                <admin-label asp-for="SearchStartDate" />
                                 <div class="col-md-4 col-sm-6">
-                                    @Html.GrandEditorFor(model => model.SearchStartDate)
+                                    <admin-input asp-for="SearchStartDate" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchEndDate)
+                                <admin-label asp-for="SearchEndDate" />
                                 <div class="col-md-4 col-sm-6">
-                                    @Html.GrandEditorFor(model => model.SearchEndDate)
+                                    <admin-input asp-for="SearchEndDate" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchFromEmail)
+                                <admin-label asp-for="SearchFromEmail" />
                                 <div class="col-md-4 col-sm-6">
-                                    @Html.GrandEditorFor(model => model.SearchFromEmail)
+                                    <admin-input asp-for="SearchFromEmail" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchLoadNotSent)
+                                <admin-label asp-for="SearchLoadNotSent" />
                                 <div class="col-md-4 col-sm-6">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.SearchLoadNotSent)
+                                        <admin-input asp-for="SearchLoadNotSent" />
                                         <span></span>
                                     </label>
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchMaxSentTries)
+                                <admin-label asp-for="SearchMaxSentTries" />
                                 <div class="col-md-4 col-sm-6">
-                                    @Html.GrandEditorFor(model => model.SearchMaxSentTries)
+                                    <admin-input asp-for="SearchMaxSentTries" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.GoDirectlyToNumber)
+                                <admin-label asp-for="GoDirectlyToNumber" />
                                 <div class="col-md-4 col-sm-6">
-                                    @Html.GrandEditorFor(model => model.GoDirectlyToNumber)
+                                    <admin-input asp-for="GoDirectlyToNumber" />
                                 </div>
                                 <div class="col-md-1 col-sm-1">
                                     <input type="submit" name="go-to-email-by-number" class="btn default" value="@T("Admin.Common.Go")" />
@@ -87,207 +83,203 @@
         </div>
     </div>
 
-                <script>
-                    $(document).ready(function () {
-                        $("#queuedEmails-grid").kendoGrid({
-                            dataSource: {
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("QueuedEmailList", "QueuedEmail"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: additionalData
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors"
-                                },
-                                error: function(e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                pageSize: @(defaultGridPageSize),
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
-                            },
-                            pageable: {
-                                refresh: true,
-                                pageSizes: [@(gridPageSizes)]
-                            },
-                            scrollable: false,
-                            dataBound: onDataBound,
-                            columns: [{
-                                field: "Id",
-                                headerTemplate: "<label class='mt-checkbox mt-checkbox-outline'><input id='mastercheckbox' type='checkbox'/><span></span></label>",
-                                headerAttributes: { style: "text-align:center" },
-                                attributes: { style: "text-align:center" },
-                                template: "<label class='mt-checkbox mt-checkbox-outline'><input type='checkbox' value='#=Id#' class='checkboxGroups'/><span></span></label>",
-                                width: 50
-                            }, {                                
-                                field: "Subject",
-                                title: "@T("Admin.System.QueuedEmails.Fields.Subject")",
-                                width: 300
-                            }, {
-                                field: "From",
-                                title: "@T("Admin.System.QueuedEmails.Fields.From")",
-                                width: 100
-                            }, {
-                                field: "To",
-                                title: "@T("Admin.System.QueuedEmails.Fields.To")",
-                                width: 100
-                            }, {
-                                field: "CreatedOn",
-                                title: "@T("Admin.System.QueuedEmails.Fields.CreatedOn")",
-                                width: 100,
-                                type: "date",
-                                format: "{0:G}"
-                            }, {
-                                field: "DontSendBeforeDate",
-                                title: "@T("Admin.System.QueuedEmails.Fields.DontSendBeforeDate")",
-                                width: 100,
-                                type: "date",
-                                format: "{0:G}"
-                            }, {
-                                field: "SentOn",
-                                title: "@T("Admin.System.QueuedEmails.Fields.SentOn")",
-                                width: 100,
-                                type: "date",
-                                format: "{0:G}"
-                            }, {
-                                field: "PriorityName",
-                                title: "@T("Admin.System.QueuedEmails.Fields.Priority")",
-                                width: 50
-                            }, {
-                                field: "Id",
-                                title: "@T("Admin.Common.Edit")",
-                                width: 50,
-                                template: '<a class="btn btn-sm btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
-                            }]
-                        });
-                    });
-                </script>
-                <script type="text/javascript">
-                    var selectedIds = [];
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#queuedEmails-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("QueuedEmailList", "QueuedEmail"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: additionalData
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(adminAreaSettings.DefaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
+                },
+                scrollable: false,
+                dataBound: onDataBound,
+                columns: [{
+                    field: "Id",
+                    headerTemplate: "<label class='mt-checkbox mt-checkbox-outline'><input id='mastercheckbox' type='checkbox'/><span></span></label>",
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
+                    template: "<label class='mt-checkbox mt-checkbox-outline'><input type='checkbox' value='#=Id#' class='checkboxGroups'/><span></span></label>",
+                    width: 60
+                }, {
+                    field: "Subject",
+                    title: "@T("Admin.System.QueuedEmails.Fields.Subject")",
+                    width: 300,
+                    template: '<a class="k-link" href="Edit/#=Id#">#=Subject#</a>',
+                }, {
+                    field: "From",
+                    title: "@T("Admin.System.QueuedEmails.Fields.From")",
+                    width: 100
+                }, {
+                    field: "To",
+                    title: "@T("Admin.System.QueuedEmails.Fields.To")",
+                    width: 100
+                }, {
+                    field: "CreatedOn",
+                    title: "@T("Admin.System.QueuedEmails.Fields.CreatedOn")",
+                    width: 100,
+                    type: "date",
+                    format: "{0:G}"
+                }, {
+                    field: "DontSendBeforeDate",
+                    title: "@T("Admin.System.QueuedEmails.Fields.DontSendBeforeDate")",
+                    width: 100,
+                    type: "date",
+                    format: "{0:G}"
+                }, {
+                    field: "SentOn",
+                    title: "@T("Admin.System.QueuedEmails.Fields.SentOn")",
+                    width: 100,
+                    type: "date",
+                    format: "{0:G}"
+                }, {
+                    field: "PriorityName",
+                    title: "@T("Admin.System.QueuedEmails.Fields.Priority")",
+                    width: 50
+                }]
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        var selectedIds = [];
 
-                    $(document).ready(function () {
+        $(document).ready(function () {
 
-                        //search button
-                        $('#search-queuedemails').click(function () {
-                            //search
-                            var grid = $('#queuedEmails-grid').data('kendoGrid');
-                            grid.dataSource.page(1); //new search. Set page size to 1
-                            //grid.dataSource.read(); we already loaded the grid above using "page" function
-                            //clear selected checkboxes
-                            $('.checkboxGroups').prop('checked', false).change();
-                            selectedIds = [];
-                            return false;
-                        });
+            //search button
+            $('#search-queuedemails').click(function () {
+                //search
+                var grid = $('#queuedEmails-grid').data('kendoGrid');
+                grid.dataSource.page(1); //new search. Set page size to 1
+                //grid.dataSource.read(); we already loaded the grid above using "page" function
+                //clear selected checkboxes
+                $('.checkboxGroups').prop('checked', false).change();
+                selectedIds = [];
+                return false;
+            });
 
-                        $("#@Html.FieldIdFor(model => model.SearchFromEmail)").keydown(function (event) {
-                            if (event.keyCode == 13) {
-                                $("#search-queuedemails").click();
-                                return false;
-                            }
-                        });
+            $("#@Html.FieldIdFor(model => model.SearchFromEmail)").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $("#search-queuedemails").click();
+                    return false;
+                }
+            });
 
-                        $("#@Html.FieldIdFor(model => model.SearchToEmail)").keydown(function (event) {
-                            if (event.keyCode == 13) {
-                                $("#search-queuedemails").click();
-                                return false;
-                            }
-                        });
+            $("#@Html.FieldIdFor(model => model.SearchToEmail)").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $("#search-queuedemails").click();
+                    return false;
+                }
+            });
 
-                        //"delete selected" button
-                        $('#delete-selected').click(function (e) {
-                            e.preventDefault();
+            //"delete selected" button
+            $('#delete-selected').click(function (e) {
+                e.preventDefault();
 
-                            var postData = {
-                                selectedIds: selectedIds
-                            };
-                            addAntiForgeryToken(postData);
+                var postData = {
+                    selectedIds: selectedIds
+                };
+                addAntiForgeryToken(postData);
 
-                            $.ajax({
-                                cache:false,
-                                type: "POST",
-                                url: "@(Url.Action("DeleteSelected", "QueuedEmail"))",
-                                data: postData,
-                                complete: function (data) {
-                                    //reload grid
-                                    var grid = $('#queuedEmails-grid').data('kendoGrid');
-                                    grid.dataSource.page(1); //new search. Set page size to 1
-                                    //grid.dataSource.read(); we already loaded the grid above using "page" function
-                                    //clear selected checkboxes
-                                    $('.checkboxGroups').prop('checked', false).change();
-                                    selectedIds = [];
-                                },
-                                error:function (xhr, ajaxOptions, thrownError){
-                                    alert(thrownError);
-                                },
-                                traditional: true
-                            });
-                            return false;
-                        });
+                $.ajax({
+                    cache:false,
+                    type: "POST",
+                    url: "@(Url.Action("DeleteSelected", "QueuedEmail"))",
+                    data: postData,
+                    complete: function (data) {
+                        //reload grid
+                        var grid = $('#queuedEmails-grid').data('kendoGrid');
+                        grid.dataSource.page(1); //new search. Set page size to 1
+                        //grid.dataSource.read(); we already loaded the grid above using "page" function
+                        //clear selected checkboxes
+                        $('.checkboxGroups').prop('checked', false).change();
+                        selectedIds = [];
+                    },
+                    error:function (xhr, ajaxOptions, thrownError){
+                        alert(thrownError);
+                    },
+                    traditional: true
+                });
+                return false;
+            });
 
-                        $('#mastercheckbox').click(function () {
-                            $('.checkboxGroups').prop('checked', $(this).is(':checked')).change();
-                        });
+            $('#mastercheckbox').click(function () {
+                $('.checkboxGroups').prop('checked', $(this).is(':checked')).change();
+            });
 
-                        //wire up checkboxes.
-                        $('#queuedEmails-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function (e) {
-                            var $check = $(this);
-                            if ($check.is(":checked") == true) {
-                                var checked = jQuery.inArray($check.val(), selectedIds);
-                                if (checked == -1) {
-                                    //add id to selectedIds.
-                                    selectedIds.push($check.val());
-                                }
-                            }
-                            else {
-                                var checked = jQuery.inArray($check.val(), selectedIds);
-                                if (checked > -1) {
-                                    //remove id from selectedIds.
-                                    selectedIds = $.grep(selectedIds, function (item, index) {
-                                        return item != $check.val();
-                                    });
-                                }
-                            }
-                            updateMasterCheckbox();
-                        });
-                    });
-
-                    function additionalData() {
-                        var data = {
-                            SearchStartDate: $('#@Html.FieldIdFor(model => model.SearchStartDate)').val(),
-                            SearchEndDate: $('#@Html.FieldIdFor(model => model.SearchEndDate)').val(),
-                            SearchFromEmail: $('#@Html.FieldIdFor(model => model.SearchFromEmail)').val(),
-                            SearchToEmail: $('#@Html.FieldIdFor(model => model.SearchToEmail)').val(),
-                            SearchLoadNotSent: $('#@Html.FieldIdFor(model => model.SearchLoadNotSent)').is(':checked'),
-                            SearchMaxSentTries: $('#@Html.FieldIdFor(model => model.SearchMaxSentTries)').val()
-                        };
-                        addAntiForgeryToken(data);
-                        return data;
+            //wire up checkboxes.
+            $('#queuedEmails-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function (e) {
+                var $check = $(this);
+                if ($check.is(":checked") == true) {
+                    var checked = jQuery.inArray($check.val(), selectedIds);
+                    if (checked == -1) {
+                        //add id to selectedIds.
+                        selectedIds.push($check.val());
                     }
-
-                    function onDataBound(e) {
-
-                        $('#queuedEmails-grid input[type=checkbox][id!=mastercheckbox]').each(function () {
-                            var currentId = $(this).val();
-                            var checked = jQuery.inArray(currentId, selectedIds);
-                            //set checked based on if current checkbox's value is in selectedIds.
-                            $(this).prop('checked', checked > -1);
+                }
+                else {
+                    var checked = jQuery.inArray($check.val(), selectedIds);
+                    if (checked > -1) {
+                        //remove id from selectedIds.
+                        selectedIds = $.grep(selectedIds, function (item, index) {
+                            return item != $check.val();
                         });
-
-                        updateMasterCheckbox();
                     }
+                }
+                updateMasterCheckbox();
+            });
+        });
 
-                    function updateMasterCheckbox() {
-                        var numChkBoxes = $('#queuedEmails-grid input[type=checkbox][id!=mastercheckbox]').length;
-                        var numChkBoxesChecked = $('#queuedEmails-grid input[type=checkbox][id!=mastercheckbox]:checked').length;
-                        $('#mastercheckbox').prop('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
-                    }
-                </script>
-}
+        function additionalData() {
+            var data = {
+                SearchStartDate: $('#@Html.FieldIdFor(model => model.SearchStartDate)').val(),
+                SearchEndDate: $('#@Html.FieldIdFor(model => model.SearchEndDate)').val(),
+                SearchFromEmail: $('#@Html.FieldIdFor(model => model.SearchFromEmail)').val(),
+                SearchToEmail: $('#@Html.FieldIdFor(model => model.SearchToEmail)').val(),
+                SearchLoadNotSent: $('#@Html.FieldIdFor(model => model.SearchLoadNotSent)').is(':checked'),
+                SearchMaxSentTries: $('#@Html.FieldIdFor(model => model.SearchMaxSentTries)').val()
+            };
+            addAntiForgeryToken(data);
+            return data;
+        }
+
+        function onDataBound(e) {
+
+            $('#queuedEmails-grid input[type=checkbox][id!=mastercheckbox]').each(function () {
+                var currentId = $(this).val();
+                var checked = jQuery.inArray(currentId, selectedIds);
+                //set checked based on if current checkbox's value is in selectedIds.
+                $(this).prop('checked', checked > -1);
+            });
+
+            updateMasterCheckbox();
+        }
+
+        function updateMasterCheckbox() {
+            var numChkBoxes = $('#queuedEmails-grid input[type=checkbox][id!=mastercheckbox]').length;
+            var numChkBoxesChecked = $('#queuedEmails-grid input[type=checkbox][id!=mastercheckbox]:checked').length;
+            $('#mastercheckbox').prop('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+        }
+    </script>
+</form>

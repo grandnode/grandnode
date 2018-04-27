@@ -1,6 +1,5 @@
 ﻿@model CustomerActionConditionModel
 
-
 @if (String.IsNullOrEmpty(Model.Id))
 {
     <div class="note note-info">
@@ -15,12 +14,9 @@
             <div id="urlcurrent-grid"></div>
         </div>
     </div>
-
-                
-
         <script>
         $(document).ready(function () {
-        $("#urlcurrent-grid").kendoGrid({
+            $("#urlcurrent-grid").kendoGrid({
             dataSource: {
                 transport: {
                     read: {
@@ -107,5 +103,5 @@
             }]
         });
     });
-                </script>
+    </script>
     }

@@ -56,6 +56,7 @@ namespace Grand.Web.Areas.Admin.Models.Orders
         {
             [GrandResourceDisplayName("Admin.RecurringPayments.History.Order")]
             public string OrderId { get; set; }
+            public int OrderNumber { get; set; }
 
             public string RecurringPaymentId { get; set; }
 

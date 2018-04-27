@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using Grand.Plugin.Payments.PayInStore.Models;
+﻿using Grand.Plugin.Payments.PayInStore.Models;
 using Grand.Services.Configuration;
-using Grand.Services.Payments;
 using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
+using Grand.Services.Localization;
 
 namespace Grand.Plugin.Payments.PayInStore.Controllers
 {
@@ -15,14 +13,16 @@ namespace Grand.Plugin.Payments.PayInStore.Controllers
     {
         private readonly ISettingService _settingService;
         private readonly PayInStorePaymentSettings _payInStorePaymentSettings;
+        private readonly ILocalizationService _localizationService;
 
-        public PaymentPayInStoreController(ISettingService settingService, PayInStorePaymentSettings payInStorePaymentSettings)
+        public PaymentPayInStoreController(ISettingService settingService, PayInStorePaymentSettings payInStorePaymentSettings, ILocalizationService localizationService)
         {
-            this._settingService = settingService; 
+            this._settingService = settingService;
             this._payInStorePaymentSettings = payInStorePaymentSettings;
+            this._localizationService = localizationService;
         }
-        
-        [AuthorizeAdmin]        
+
+        [AuthorizeAdmin]
         public ActionResult Configure()
         {
             var model = new ConfigurationModel();
@@ -34,17 +34,19 @@ namespace Grand.Plugin.Payments.PayInStore.Controllers
         }
 
         [HttpPost]
-        [AuthorizeAdmin]        
+        [AuthorizeAdmin]
         public ActionResult Configure(ConfigurationModel model)
         {
             if (!ModelState.IsValid)
                 return Configure();
-            
+
             //save settings
             _payInStorePaymentSettings.DescriptionText = model.DescriptionText;
             _payInStorePaymentSettings.AdditionalFee = model.AdditionalFee;
             _payInStorePaymentSettings.AdditionalFeePercentage = model.AdditionalFeePercentage;
             _settingService.SaveSetting(_payInStorePaymentSettings);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
             return Configure();
         }

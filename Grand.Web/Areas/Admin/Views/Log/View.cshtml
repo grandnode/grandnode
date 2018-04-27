@@ -3,19 +3,17 @@
     //page title
     ViewBag.Title = T("Admin.System.Log.ViewLogDetails").Text;
 }
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()    
-    @Html.ValidationSummary(true)
-
+<form asp-controller="Log" asp-action="View" method="post">
+    <antiforgery-token />
+    <div asp-validation-summary="All"></div>
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
                 <div class="portlet-title">
                     <div class="caption">
                         <i class="fa fa-tag"></i>
-                        @T("Admin.System.Log.ViewLogDetails") 
-                        <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.System.Log.BackToList").Text, "List")                    </small>
+                        @T("Admin.System.Log.ViewLogDetails")
+                        <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.System.Log.BackToList").Text, "List")</small>
                     </div>
                     <div class="actions">
                         <span id="log-delete" class="btn red"><i class="fa fa-trash-o"></i> @T("Admin.Common.Delete")</span>
@@ -25,31 +23,31 @@
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.LogLevel)
+                                <admin-label asp-for="LogLevel" />
                                 <div class="col-md-9 col-sm-9">
-                                    <label class="control-label">@Html.DisplayFor(model => model.LogLevel)</label> 
+                                    <label class="control-label">@Model.LogLevel</label>
                                 </div>
                             </div>
                             <div class="form-group">
-                                    @Html.GrandLabelFor(model => model.ShortMessage)
+                                <admin-label asp-for="ShortMessage" />
                                 <div class="col-md-9 col-sm-9">
-                                    <label class="control-label" style="text-align:left">@Html.DisplayFor(model => model.ShortMessage)</label> 
+                                    <label class="control-label" style="text-align:left">@Model.ShortMessage</label>
                                 </div>
                             </div>
                             <div class="form-group">
-                                    @Html.GrandLabelFor(model => model.FullMessage)
+                                <admin-label asp-for="FullMessage" />
                                 <div class="col-md-9 col-sm-9">
-                                    <label class="control-label" style="text-align:left">@Html.DisplayFor(model => model.FullMessage)</label> 
+                                    <label class="control-label" style="text-align:left">@Model.FullMessage</label>
                                 </div>
                             </div>
                             <div class="form-group">
-                                    @Html.GrandLabelFor(model => model.IpAddress)
+                                <admin-label asp-for="IpAddress" />
                                 <div class="col-md-9 col-sm-9">
-                                    <label class="control-label">@Html.DisplayFor(model => model.IpAddress)</label> 
+                                    <label class="control-label">@Model.IpAddress</label>
                                 </div>
                             </div>
                             <div class="form-group">
-                                    @Html.GrandLabelFor(model => model.CustomerId)
+                                <admin-label asp-for="CustomerId" />
                                 <div class="col-md-9 col-sm-9">
                                     @if (!String.IsNullOrEmpty(Model.CustomerId))
                                     {
@@ -60,21 +58,21 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                    @Html.GrandLabelFor(model => model.PageUrl)
+                                <admin-label asp-for="PageUrl" />
                                 <div class="col-md-9 col-sm-9">
-                                    <label class="control-label">@Html.DisplayFor(model => model.PageUrl)</label> 
+                                    <label class="control-label">@Model.PageUrl</label>
                                 </div>
                             </div>
                             <div class="form-group">
-                                    @Html.GrandLabelFor(model => model.ReferrerUrl)
+                                <admin-label asp-for="ReferrerUrl" />
                                 <div class="col-md-9 col-sm-9">
-                                    <label class="control-label">@Html.DisplayFor(model => model.ReferrerUrl)</label> 
+                                    <label class="control-label">@Model.ReferrerUrl</label>
                                 </div>
                             </div>
                             <div class="form-group">
-                                    @Html.GrandLabelFor(model => model.CreatedOn)
+                                <admin-label asp-for="CreatedOn" />
                                 <div class="col-md-9 col-sm-9">
-                                    <label class="control-label">@Html.DisplayFor(model => model.CreatedOn)</label> 
+                                    <label class="control-label">@Model.CreatedOn</label>
                                 </div>
                             </div>
                         </div>
@@ -83,7 +81,5 @@
             </div>
         </div>
     </div>
-
-
-}
+</form>
 @Html.DeleteConfirmation("log-delete")

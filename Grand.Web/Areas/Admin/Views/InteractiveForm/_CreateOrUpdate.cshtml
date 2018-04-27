@@ -1,9 +1,7 @@
 ﻿@model InteractiveFormModel
-
-@Html.ValidationSummary(true)
-@Html.HiddenFor(model => model.Id)
-
-
+@inject IEventPublisher eventPublisher
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
 <script>
     $(document).ready(function () {
         $('#interactiveform-edit').show();
@@ -17,7 +15,6 @@
         });
     });
 </script>
-
 <div id="interactiveform-edit" style="display:none">
     <ul>
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
@@ -37,13 +34,11 @@
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "interactiveform-edit");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock
     }
 }
-
 @*save selected tab index*@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
-

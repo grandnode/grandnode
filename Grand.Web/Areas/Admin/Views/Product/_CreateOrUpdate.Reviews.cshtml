@@ -1,14 +1,12 @@
 ﻿@model ProductModel
-@{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-}
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div id="reviews-grid"></div>
-        </div>
+@inject AdminAreaSettings adminAreaSettings
+ 
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div id="reviews-grid"></div>
     </div>
-    <script>
+</div>
+<script>
         $(document).ready(function () {
             $("#reviews-grid").kendoGrid({
                 dataSource: {
@@ -30,14 +28,14 @@
                         // Cancel the changes
                         this.cancelChanges();
                     },
-                    pageSize: @(defaultGridPageSize),
+                    pageSize: @(adminAreaSettings.DefaultGridPageSize),
                     serverPaging: true,
                     serverFiltering: true,
                     serverSorting: true
                 },
                 pageable: {
                     refresh: true,
-                    pageSizes: [@(gridPageSizes)]
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
                 },
                 editable: {
                     confirmation: false,
@@ -48,39 +46,38 @@
                     field: "CustomerId",
                     title: "@T("Admin.Catalog.ProductReviews.Fields.Customer")",
                     width: 200,
-                    template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerInfo#</a>'
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerInfo#</a>',
+                    minScreenWidth: 750,
                 },
                 {
                     field: "Title",
                     title: "@T("Admin.Catalog.ProductReviews.Fields.Title")",
-                    width: 300
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/ProductReview/Edit/")#=Id#">#:Title#</a>',
+                    width: 280,
                 },
                 {
                     field: "Rating",
                     title: "@T("Admin.Catalog.ProductReviews.Fields.Rating")",
-                    width: 100
+                    width: 60,
+                    minScreenWidth: 500,
                 },
                 {
                     field: "IsApproved",
                     title: "@T("Admin.Catalog.ProductReviews.Fields.IsApproved")",
-                    width: 100,
+                    width: 80,
                     headerAttributes: { style: "text-align:center" },
                     attributes: { style: "text-align:center" },
-                    template: '# if(IsApproved) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+                    template: '# if(IsApproved) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #',
+                    minScreenWidth: 500,
                 },
                 {
                     field: "CreatedOn",
                     title: "@T("Admin.Orders.Fields.CreatedOn")",
-                    width: 200,
+                    width: 150,
                     type: "date",
-                    format: "{0:G}"
-                },
-                {
-                    field: "Id",
-                    title: "@T("Admin.Common.View")",
-                    width: 100,
-                    template: '<a class="btn btn-sm btn-default" href="@Url.Content("~/Admin/ProductReview/Edit/")#=Id#"><i class="fa fa-search"></i> @T("Admin.Common.View")</a>'
+                    format: "{0:G}",
+                    minScreenWidth: 500,
                 }]
             });
         });
-    </script>
+</script>

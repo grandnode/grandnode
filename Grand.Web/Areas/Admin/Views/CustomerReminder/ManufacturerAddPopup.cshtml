@@ -1,23 +1,19 @@
 ﻿@model CustomerReminderModel.ConditionModel.AddManufacturerConditionModel
+@inject AdminAreaSettings adminAreaSettings
 
 @{
     Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
-}
-
-
-@{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.Customers.CustomerReminder.Condition.Manufacturers.AddNew").Text;
 }
-@using (Html.BeginForm())
-{
-    @Html.HiddenFor(model => model.CustomerReminderId)
-    @Html.HiddenFor(model => model.ConditionId)
+<form asp-controller="CustomerReminder" asp-action="ManufacturerAddPopup" method="post"
+      asp-route-CustomerReminderId="@Context.Request.Query["CustomerReminderId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
+    <input asp-for="CustomerReminderId" type="hidden" />
 
-    @Html.AntiForgeryToken()
+    <input asp-for="ConditionId" type="hidden" />
+    <antiforgery-token />
 
     <div class="row">
         <div class="col-md-12">
@@ -29,13 +25,12 @@
                     </div>
                 </div>
                 <div class="portlet-body form">
-
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchManufacturerName, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <admin-label asp-for="SearchManufacturerName" class="col-sm-3 control-label" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.SearchManufacturerName)
+                                    <admin-input asp-for="SearchManufacturerName" />
                                 </div>
                             </div>
                             <div class="form-actions">
@@ -44,7 +39,7 @@
                                         <button class="btn btn-success filter-submit" id="search-manufacturers">
                                             <i class="fa fa-search"></i> @T("Admin.Common.Search")
                                         </button>
-                                        <button class="btn btn-success" type="submit" name="save" ><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                                        <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
                                     </div>
                                 </div>
                             </div>
@@ -58,10 +53,10 @@
 
 
 
-    if (ViewBag.RefreshPage == true)
+    @if (ViewBag.RefreshPage == true)
     {
         <script type="text/javascript">
-            try {window.opener.document.getElementById('@(ViewBag.btnId)').click();}
+            try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
             catch (e){}
             window.close();
         </script>
@@ -72,7 +67,7 @@
             dataSource: {
                 transport: {
                     read: {
-                        url: "@Html.Raw(Url.Action("ManufacturerAddPopupList", "Discount"))",
+                        url: "@Html.Raw(Url.Action("ManufacturerAddPopupList", "CustomerReminder"))",
                         type: "POST",
                         dataType: "json",
                         data: additionalData
@@ -88,14 +83,14 @@
                     // Cancel the changes
                     this.cancelChanges();
                 },
-                pageSize: @(defaultGridPageSize),
+                pageSize: @(adminAreaSettings.DefaultGridPageSize),
                 serverPaging: true,
                 serverFiltering: true,
                 serverSorting: true
             },
             pageable: {
                 refresh: true,
-                pageSizes: [@(gridPageSizes)]
+                pageSizes: [@(adminAreaSettings.GridPageSizes)]
             },
             editable: {
                 confirmation: false,
@@ -128,7 +123,7 @@
         $(document).ready(function() {
             $('#search-manufacturers').click(function() {
                 var grid = $('#manufacturers-grid').data('kendoGrid');
-                grid.dataSource.page(1); 
+                grid.dataSource.page(1);
                 $('.checkboxGroups').prop('checked', false).change();
                 return false;
             });
@@ -149,7 +144,7 @@
                 updateMasterCheckbox();
             });
         });
-                    
+
         function additionalData() {
             var data = {
                 SearchManufacturerName: $('#@Html.FieldIdFor(model => model.SearchManufacturerName)').val()
@@ -165,5 +160,4 @@
         }
 
     </script>
- 
-}
+</form>

@@ -402,7 +402,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (zippedFile == null || zippedFile.Length == 0)
             {
                 ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
-                return RedirectToAction("List");
+                return RedirectToAction("GeneralCommon", "Setting");
             }
 
             string zipFilePath = "";

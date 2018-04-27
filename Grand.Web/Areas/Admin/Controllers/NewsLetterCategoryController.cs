@@ -114,9 +114,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                     return new {
                         Id = x.Id,
                         Name = x.Name,
-                        Selected = x.Selected
+                        Selected = x.Selected,
+                        DisplayOrder = x.DisplayOrder
                     };
-                }),
+                }).OrderBy(x=>x.DisplayOrder),
                 Total = newslettercategories.Count
             };
             return Json(gridModel);

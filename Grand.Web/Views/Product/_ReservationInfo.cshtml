@@ -45,7 +45,7 @@
 
 <script>
     $(document).ready(function () {
-        Reservation.init("@Model.StartDate", "@Model.StartDate.Year", "@Model.StartDate.Month", "@T("Products.Noavailablereservations")",
+        Reservation.init("@Model.StartDate.ToString(CultureInfo.CreateSpecificCulture("en-US"))", "@Model.StartDate.Year", "@Model.StartDate.Month", "@T("Products.Noavailablereservations")",
             "@(Url.Action("GetDatesForMonth", "Product"))", "@Model.Id",
             "@Html.Raw(Url.Action("productdetails_attributechange", "shoppingcart", new { productId = Model.Id, validateAttributeConditions = false }))");
     });

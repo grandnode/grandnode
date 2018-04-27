@@ -1,8 +1,6 @@
 ﻿@model FeedGoogleShoppingModel
-@using Grand.Core.Infrastructure
 @using Grand.Plugin.Feed.GoogleShopping.Models;
 @using Grand.Framework;
-@using Grand.Framework.UI;
 
 @{
     <div class="form-horizontal">
@@ -22,72 +20,81 @@
             </div>
             <div class="form-group">
                 <div class="col-md-3 text-right">
-                    @Html.GrandLabelFor(model => model.ProductPictureSize, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                    <admin-label asp-for="ProductPictureSize" class="control-label" />
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.ProductPictureSize)
-                    @Html.ValidationMessageFor(model => model.ProductPictureSize)
+                    <admin-input asp-for="ProductPictureSize" />
+                    <span asp-validation-for="ProductPictureSize"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3 text-right">
-                    @Html.GrandLabelFor(model => model.PassShippingInfoWeight, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                    <admin-label asp-for="PassShippingInfoWeight" class="control-label" />
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.PassShippingInfoWeight)
-                    @Html.ValidationMessageFor(model => model.PassShippingInfoWeight)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        <admin-input asp-for="PassShippingInfoWeight" />
+                        <span></span>
+                    </label>
+                    <span asp-validation-for="PassShippingInfoWeight"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3 text-right">
-                    @Html.GrandLabelFor(model => model.PassShippingInfoDimensions, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                    <admin-label asp-for="PassShippingInfoDimensions" class="control-label" />
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.PassShippingInfoDimensions)
-                    @Html.ValidationMessageFor(model => model.PassShippingInfoDimensions)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        <admin-input asp-for="PassShippingInfoDimensions" />
+                        <span></span>
+                    </label>
+                    <span asp-validation-for="PassShippingInfoDimensions"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3 text-right">
-                    @Html.GrandLabelFor(model => model.PricesConsiderPromotions, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                    <admin-label asp-for="PricesConsiderPromotions" class="control-label" />
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.PricesConsiderPromotions)
-                    @Html.ValidationMessageFor(model => model.PricesConsiderPromotions)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        <admin-input asp-for="PricesConsiderPromotions" />
+                        <span></span>
+                    </label>
+                    <span asp-validation-for="PricesConsiderPromotions"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3 text-right">
-                    @Html.GrandLabelFor(model => model.StoreId, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                    <admin-label asp-for="StoreId" class="control-label" />
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandDropDownListFor(model => model.StoreId, Model.AvailableStores)
-                    @Html.ValidationMessageFor(model => model.StoreId)
+                    <admin-select asp-for="StoreId" asp-items="Model.AvailableStores" />
+                    <span asp-validation-for="StoreId"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3 text-right">
-                    @Html.GrandLabelFor(model => model.CurrencyId, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                    <admin-label asp-for="CurrencyId" class="control-label" />
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandDropDownListFor(model => model.CurrencyId, Model.AvailableCurrencies)
-                    @Html.ValidationMessageFor(model => model.CurrencyId)
+                    <admin-select asp-for="CurrencyId" asp-items="Model.AvailableCurrencies" />
+                    <span asp-validation-for="CurrencyId"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3 text-right">
-                    @Html.GrandLabelFor(model => model.DefaultGoogleCategory, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                    <admin-label asp-for="DefaultGoogleCategory" class="control-label" />
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandDropDownListFor(model => model.DefaultGoogleCategory, Model.AvailableGoogleCategories)
-                    @Html.ValidationMessageFor(model => model.DefaultGoogleCategory)
+                    <admin-select asp-for="DefaultGoogleCategory" asp-items="Model.AvailableGoogleCategories" />
+                    <span asp-validation-for="DefaultGoogleCategory"></span>
                 </div>
             </div>
             @if (Model.GeneratedFiles.Count > 0)
             {
                 <div class="form-group">
                     <div class="col-md-3 text-right">
-                        @Html.GrandLabelFor(m => m.GeneratedFiles, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                        <admin-label asp-for="GeneratedFiles" class="control-label" />
                     </div>
                     <div class="col-md-9 col-sm-9">
                         <label class="control-label">

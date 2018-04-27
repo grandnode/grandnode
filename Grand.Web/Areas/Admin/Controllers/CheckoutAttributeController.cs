@@ -516,7 +516,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ValueCreatePopup(string btnId, string formId, CheckoutAttributeValueModel model)
+        public IActionResult ValueCreatePopup(CheckoutAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -562,10 +562,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 checkoutAttribute.CheckoutAttributeValues.Add(cav);
                 _checkoutAttributeService.UpdateCheckoutAttribute(checkoutAttribute);
                 
-
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
 
@@ -608,7 +605,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ValueEditPopup(string btnId, string formId, CheckoutAttributeValueModel model)
+        public IActionResult ValueEditPopup(CheckoutAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -642,8 +639,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _checkoutAttributeService.UpdateCheckoutAttribute(checkoutAttribute);
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
 

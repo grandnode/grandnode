@@ -13,7 +13,7 @@
     var picture = pictureService.GetPictureById(Model);
 }
 <div id="@(clientId + "value")">
-    @Html.HiddenFor(x => x)
+    <input asp-for="@Model" type="hidden" />
 </div>
 <div id="@(clientId + "image")">
     <img src="@(pictureService.GetPictureUrl(Model, targetSize: 100, showDefaultPicture: true))" />

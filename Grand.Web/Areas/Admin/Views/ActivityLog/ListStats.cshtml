@@ -1,13 +1,10 @@
 ﻿@model ActivityLogSearchModel
+@inject AdminAreaSettings adminAreaSettings
 @{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-    
     //page title
     ViewBag.Title = T("Admin.Configuration.ActivityLog.ActivityStats").Text;
 }
-
-@Html.AntiForgeryToken()
+<antiforgery-token />
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light form-fit">
@@ -21,21 +18,21 @@
                 <div class="form-horizontal">
                     <div class="form-body">
                         <div class="form-group">
-                            @Html.GrandLabelFor(model => model.CreatedOnFrom)
+                            <admin-label asp-for="CreatedOnFrom" />
                             <div class="col-md-4 col-sm-6">
-                                @Html.GrandEditorFor(model => model.CreatedOnFrom)
+                                <admin-input asp-for="CreatedOnFrom" />
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.GrandLabelFor(model => model.CreatedOnTo)
+                            <admin-label asp-for="CreatedOnTo" />
                             <div class="col-md-4 col-sm-6">
-                                @Html.GrandEditorFor(model => model.CreatedOnTo)
+                                <admin-input asp-for="CreatedOnTo" />
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.GrandLabelFor(model => model.ActivityLogTypeId)
+                            <admin-label asp-for="ActivityLogTypeId" />
                             <div class="col-md-4 col-sm-6">
-                                @Html.GrandDropDownListFor(model => model.ActivityLogTypeId, Model.ActivityLogType)
+                                <admin-select asp-for="ActivityLogTypeId" asp-items="Model.ActivityLogType" />
                             </div>
                         </div>
                     </div>
@@ -56,80 +53,79 @@
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+        $("#activityLog-grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("ListStats", "ActivityLog"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: additionalData
+                    },
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors",
+                    model: {
+                        id: "Id",
+                    }
+                },
+                error: function(e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                pageSize: @(adminAreaSettings.DefaultGridPageSize),
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: [@(adminAreaSettings.GridPageSizes)]
+            },
+            editable: {
+                confirmation: false,
+                mode: "inline"
+            },
+            scrollable: false,
+            columns: [{
+                field: "ActivityLogTypeName",
+                title: "@T("Admin.Configuration.ActivityLog.ActivityStats.Fields.ActivityLogType")",
+                width: 250
+            }, {
+                field: "Name",
+                title: "@T("Admin.Configuration.ActivityLog.ActivityStats.Fields.Name")"
+            }, {
+                field: "Count",
+                title: "@T("Admin.Configuration.ActivityLog.ActivityStats.Fields.Count")",
+                width: 100,
+            }]
+        });
+    });
+</script>
+<script type="text/javascript">
 
-            <script>
-                $(document).ready(function () {
-                    $("#activityLog-grid").kendoGrid({
-                        dataSource: {
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("ListStats", "ActivityLog"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: additionalData
-                                },                               
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors",
-                                model: {
-                                    id: "Id",
-                                }
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            pageSize: @(defaultGridPageSize),
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            pageSizes: [@(gridPageSizes)]
-                        },
-                        editable: {
-                            confirmation: false,
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [{
-                            field: "ActivityLogTypeName",
-                            title: "@T("Admin.Configuration.ActivityLog.ActivityStats.Fields.ActivityLogType")",
-                            width: 250
-                        }, {
-                            field: "Name",
-                            title: "@T("Admin.Configuration.ActivityLog.ActivityStats.Fields.Name")"
-                        }, {
-                            field: "Count",
-                            title: "@T("Admin.Configuration.ActivityLog.ActivityStats.Fields.Count")",
-                            width: 100,                           
-                        }]
-                    });
-                });
-            </script>
-            <script type="text/javascript">
+    $(document).ready(function () {
 
-                $(document).ready(function () {
+        $('#search-log').click(function () {
+            var grid = $('#activityLog-grid').data('kendoGrid');
+            grid.dataSource.page(1); //new search. Set page size to 1
+            //grid.dataSource.read(); we already loaded the grid above using "page" function
+            return false;
+        });
+    });
 
-                    $('#search-log').click(function () {
-                        var grid = $('#activityLog-grid').data('kendoGrid');
-                        grid.dataSource.page(1); //new search. Set page size to 1
-                        //grid.dataSource.read(); we already loaded the grid above using "page" function
-                        return false;
-                    });
-                });
-
-                function additionalData() {
-                    var data = {
-                        CreatedOnFrom: $('#@Html.FieldIdFor(model => model.CreatedOnFrom)').val(),
-                        CreatedOnTo: $('#@Html.FieldIdFor(model => model.CreatedOnTo)').val(),
-                        ActivityLogTypeId: $('#ActivityLogTypeId').val()
-                    };
-                    addAntiForgeryToken(data);
-                    return data;
-                }
-            </script>
+    function additionalData() {
+        var data = {
+            CreatedOnFrom: $('#@Html.FieldIdFor(model => model.CreatedOnFrom)').val(),
+            CreatedOnTo: $('#@Html.FieldIdFor(model => model.CreatedOnTo)').val(),
+            ActivityLogTypeId: $('#ActivityLogTypeId').val()
+        };
+        addAntiForgeryToken(data);
+        return data;
+    }
+</script>

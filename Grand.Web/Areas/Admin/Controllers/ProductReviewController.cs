@@ -74,13 +74,20 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.CustomerInfo = customer != null ? customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest") : "";
             model.Rating = productReview.Rating;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(productReview.CreatedOnUtc, DateTimeKind.Utc);
+            model.Signature = productReview.Signature;
             if (!excludeProperties)
             {
                 model.Title = productReview.Title;
                 if (formatReviewText)
+                {
                     model.ReviewText = Core.Html.HtmlHelper.FormatText(productReview.ReviewText, false, true, false, false, false, false);
+                    model.ReplyText = Core.Html.HtmlHelper.FormatText(productReview.ReplyText, false, true, false, false, false, false);
+                }
                 else
+                {
                     model.ReviewText = productReview.ReviewText;
+                    model.ReplyText = productReview.ReplyText;
+                }
                 model.IsApproved = productReview.IsApproved;
             }
         }
@@ -172,6 +179,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                 productReview.Title = model.Title;
                 productReview.ReviewText = model.ReviewText;
                 productReview.IsApproved = model.IsApproved;
+                productReview.ReplyText= model.ReplyText;
+                productReview.Signature= model.Signature;
 
                 _productService.UpdateProductReview(productReview);
 

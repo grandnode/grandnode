@@ -352,7 +352,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult StateCreatePopup(string btnId, string formId, StateProvinceModel model)
+        public IActionResult StateCreatePopup(StateProvinceModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
@@ -369,8 +369,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _stateProvinceService.InsertStateProvince(sp);
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
 
@@ -400,7 +398,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult StateEditPopup(string btnId, string formId, StateProvinceModel model)
+        public IActionResult StateEditPopup(StateProvinceModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
@@ -417,8 +415,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _stateProvinceService.UpdateStateProvince(sp);
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
 
@@ -451,12 +447,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult GetStatesByCountryId(string countryId,
             bool? addSelectStateItem, bool? addAsterisk)
         {
-            //permission validation is not required here
-
-
             // This action method gets called via an ajax request
             if (String.IsNullOrEmpty(countryId))
-                throw new ArgumentNullException("countryId");
+                return Json(new List<dynamic>() { new { id = "", name = _localizationService.GetResource("Address.SelectState") } });
 
             var country = _countryService.GetCountryById(countryId);
             var states = country != null ? _stateProvinceService.GetStateProvincesByCountryId(country.Id, showHidden: true).ToList() : new List<StateProvince>();

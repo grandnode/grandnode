@@ -4,10 +4,10 @@
     ViewBag.Title = T("Admin.Customers.CustomerReminder.AddCondition").Text;
 }
 
-@using(Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-
+<form asp-controller="CustomerReminder" 
+      asp-action="AddCondition" method="post" id="customer-reminder-condition-form"
+      asp-route-CustomerReminderId="@Context.Request.Query["CustomerReminderId"]">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -30,6 +30,4 @@
             </div>
         </div>
     </div>
-
-
-}
+</form>

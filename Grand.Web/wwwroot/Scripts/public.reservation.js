@@ -33,7 +33,7 @@
         if (document.getElementById("reservationDatepickerFrom") != null) {
             this.fillAvailableDatesFrom(startDateYear, startDateMonth);
         }
-        
+
         if (document.getElementById("reservationDatepickerTo") != null) {
             this.fillAvailableDatesTo(startDateYear, startDateMonth);
         }

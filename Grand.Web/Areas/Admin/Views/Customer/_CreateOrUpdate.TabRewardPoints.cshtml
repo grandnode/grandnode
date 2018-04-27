@@ -1,9 +1,4 @@
 ﻿@model CustomerModel
-@using Grand.Core.Domain.Orders;
-@using Grand.Services.Customers;
-@using System.Text;
-
-
 
 <div class="panel panel-default">
     <div class="panel-body">
@@ -76,24 +71,24 @@
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.AddRewardPointsValue)
+            <admin-label asp-for="AddRewardPointsValue" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.AddRewardPointsValue)
-                @Html.ValidationMessageFor(model => model.AddRewardPointsValue)
+                <admin-input asp-for="AddRewardPointsValue" />
+                <span asp-validation-for="AddRewardPointsValue"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.AddRewardPointsMessage)
+            <admin-label asp-for="AddRewardPointsMessage" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.AddRewardPointsMessage)
-                @Html.ValidationMessageFor(model => model.AddRewardPointsMessage)
+                <admin-input asp-for="AddRewardPointsMessage" />
+                <span asp-validation-for="AddRewardPointsMessage"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.AddRewardPointsStoreId)
+            <admin-label asp-for="AddRewardPointsStoreId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.AddRewardPointsStoreId, Model.RewardPointsAvailableStores)
-                @Html.ValidationMessageFor(model => model.AddRewardPointsStoreId)
+                <admin-select asp-for="AddRewardPointsStoreId" asp-items="Model.RewardPointsAvailableStores" />
+                <span asp-validation-for="AddRewardPointsStoreId"></span>
             </div>
         </div>
     </div>

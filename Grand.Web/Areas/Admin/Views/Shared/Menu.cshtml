@@ -21,9 +21,7 @@
                 var rootNode = siteMap.RootNode;
 
                 //plugins
-                var adminMenuPlugins = EngineContext.Current.Resolve<Grand.Core.Plugins.IPluginFinder>()
-                    .GetPlugins<IAdminMenuPlugin>()
-                    .ToList();
+                var adminMenuPlugins = pluginFinder.GetPlugins<IAdminMenuPlugin>().ToList();
                 foreach (var adminMenuPlugin in adminMenuPlugins)
                 {
                     adminMenuPlugin.ManageSiteMap(rootNode);
@@ -32,7 +30,6 @@
                 var pluginNode = rootNode.ChildNodes.FirstOrDefault(x => x.SystemName == "Third party plugins");
                 if (pluginNode != null && pluginNode.Visible)
                 {
-                    var permissionService = EngineContext.Current.Resolve<Grand.Services.Security.IPermissionService>();
                     var hasManagePluginsPermission = permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManagePlugins);
                     pluginNode.Visible = hasManagePluginsPermission && pluginNode.ChildNodes.Any(x => x.Visible);
                 }

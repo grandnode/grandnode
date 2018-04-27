@@ -881,6 +881,12 @@ namespace Grand.Services.ExportImport
                             case "published":
                                 manufacturer.Published = property.BooleanValue;
                                 break;
+                            case "showonhomepage":
+                                manufacturer.ShowOnHomePage = property.BooleanValue;
+                                break;
+                            case "includeintopmenu":
+                                manufacturer.IncludeInTopMenu = property.BooleanValue;
+                                break;
                             case "displayorder":
                                 manufacturer.DisplayOrder = property.IntValue;
                                 break;
@@ -894,7 +900,7 @@ namespace Grand.Services.ExportImport
                     {
                         var _picture = LoadPicture(picture, manufacturer.Name,
                             isNew ? "" : manufacturer.PictureId);
-                        if (picture != null)
+                        if (_picture != null)
                             manufacturer.PictureId = _picture.Id;
                     }
                     manufacturer.UpdatedOnUtc = DateTime.UtcNow;
@@ -1032,7 +1038,7 @@ namespace Grand.Services.ExportImport
                                 category.ShowOnHomePage = property.BooleanValue;
                                 break;
                             case "includeintopmenu":
-                                category.ShowOnHomePage = property.BooleanValue;
+                                category.IncludeInTopMenu = property.BooleanValue;
                                 break;
                             case "showonsearchbox":
                                 category.ShowOnSearchBox = property.BooleanValue;
@@ -1044,7 +1050,8 @@ namespace Grand.Services.ExportImport
                                 picture = property.StringValue;
                                 break;
                             case "parentcategoryid":
-                                category.ParentCategoryId = property.StringValue;
+                                if(!string.IsNullOrEmpty(property.StringValue) && property.StringValue!="0")
+                                    category.ParentCategoryId = property.StringValue;
                                 break;
 
                         }

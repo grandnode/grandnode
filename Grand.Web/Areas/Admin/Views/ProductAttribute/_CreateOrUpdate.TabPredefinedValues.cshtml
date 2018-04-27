@@ -1,8 +1,6 @@
 ﻿@model ProductAttributeModel
-
 @{
-
-    if (!String.IsNullOrEmpty(Model.Id))
+    if (!string.IsNullOrEmpty(Model.Id))
     {
         <div class="note note-info">
             @T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Hint")
@@ -16,7 +14,7 @@
                 <input type="submit" id="btnRefresh" style="display:none" />
             </div>
         </div>
-        <script>
+        <script type="text/javascript">
             $(document).ready(function() {
                 $("#productattributevalues-grid").kendoGrid({
                     dataSource: {
@@ -62,7 +60,7 @@
                         info: false
                     },
                     editable: {
-                        confirmation: false,
+                        confirmation: true,
                         mode: "inline"
                     },
                     scrollable: false,
@@ -70,7 +68,8 @@
                         {
                             field: "Name",
                             title: "@T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Name")",
-                            width: 200
+                            width: 200,
+                            template: "<a class='k-link' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/ProductAttribute/PredefinedProductAttributeValueEditPopup/")#=Id#?productAttributeId=@Model.Id&btnId=btnRefresh&formId=productattribute-form', 800, 500, true); return false;\">#=Name#</a>"
                         }, {
                             field: "PriceAdjustmentStr",
                             title: "@T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.PriceAdjustment")",
@@ -90,11 +89,6 @@
                             field: "DisplayOrder",
                             title: "@T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.DisplayOrder")",
                             width: 100
-                        }, {
-                            field: "Id",
-                            title: "@T("Admin.Common.Edit")",
-                            width: 100,
-                            template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/ProductAttribute/PredefinedProductAttributeValueEditPopup/")#=Id#?productAttributeId=@Model.Id&btnId=btnRefresh&formId=productattribute-form', 800, 500, true); return false;\" class='k-button' />"
                         }, {
                             command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                             title: "@T("Admin.Common.Delete")",
@@ -123,6 +117,4 @@
             @T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.SaveBeforeEdit")
         </div>
     }
-
-
 }

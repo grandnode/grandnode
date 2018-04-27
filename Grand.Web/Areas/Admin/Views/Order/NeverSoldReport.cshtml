@@ -1,12 +1,10 @@
 ﻿@model NeverSoldReportModel
+@inject AdminAreaSettings adminAreaSettings
 @{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.SalesReport.NeverSold").Text;
 }
-@Html.AntiForgeryToken()
+<antiforgery-token />
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light form-fit">
@@ -15,7 +13,6 @@
                     <i class="fa fa-list-alt"></i>
                     @T("Admin.SalesReport.NeverSold")
                 </div>
-
             </div>
             <div class="portlet-body form">
                 <div class="form-horizontal">
@@ -24,15 +21,15 @@
                             <div class="form-horizontal">
                                 <div class="form-body">
                                     <div class="form-group">
-                                        @Html.GrandLabelFor(model => model.StartDate)
+                                        <admin-label asp-for="StartDate" />
                                         <div class="col-md-9 col-sm-9">
-                                            @Html.GrandEditorFor(model => model.StartDate)
+                                            <admin-input asp-for="StartDate" />
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        @Html.GrandLabelFor(model => model.EndDate)
+                                        <admin-label asp-for="EndDate" />
                                         <div class="col-md-9 col-sm-9">
-                                            @Html.GrandEditorFor(model => model.EndDate)
+                                            <admin-input asp-for="EndDate" />
                                         </div>
                                     </div>
                                 </div>
@@ -58,8 +55,6 @@
 </div>
 
 
-            
-
 <script>
     $(document).ready(function () {
         $("#neversoldreport-grid").kendoGrid({
@@ -82,14 +77,14 @@
                     // Cancel the changes
                     this.cancelChanges();
                 },
-                pageSize: @(defaultGridPageSize),
+                pageSize: @(adminAreaSettings.DefaultGridPageSize),
                 serverPaging: true,
                 serverFiltering: true,
                 serverSorting: true
             },
             pageable: {
                 refresh: true,
-                pageSizes: [@(gridPageSizes)]
+                pageSizes: [@(adminAreaSettings.GridPageSizes)]
             },
             editable: {
                 confirmation: false,
@@ -98,17 +93,12 @@
             scrollable: false,
             columns: [{
                 field: "ProductName",
-                title: "@T("Admin.SalesReport.NeverSold.Fields.Name")"
-            }, {
-                field: "ProductId",
-                title: "@T("Admin.Common.View")",
-                width: 100,
-                template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">@T("Admin.Common.View")</a>'
+                title: "@T("Admin.SalesReport.NeverSold.Fields.Name")",
+                template: '<a class="k-link" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#=ProductName#</a>'
             }]
         });
     });
 </script>
-
 <script type="text/javascript">
 
     $(document).ready(function () {
@@ -132,4 +122,3 @@
     }
 
 </script>
-        

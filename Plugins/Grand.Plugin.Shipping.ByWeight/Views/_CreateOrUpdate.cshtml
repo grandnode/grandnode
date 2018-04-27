@@ -1,8 +1,8 @@
 ﻿@model ShippingByWeightModel
 @using Grand.Plugin.Shipping.ByWeight.Models;
 @using Grand.Framework;
-@Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
 
 @if (ViewBag.RefreshPage == true)
 {
@@ -12,7 +12,6 @@
         window.close();
     </script>
 }
-
 <script type="text/javascript">
     $(function () {
         $("#@Html.FieldIdFor(model => model.CountryId)").change(function () {
@@ -41,110 +40,110 @@
     <div class="form-body">
         <div class="form-group">
             <div class="col-md-3 col-sm-3 text-right">
-                @Html.GrandLabelFor(model => model.StoreId, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="StoreId" class="control-label" />
             </div>
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.StoreId, Model.AvailableStores)
-                @Html.ValidationMessageFor(model => model.StoreId)
+                <admin-select asp-for="StoreId" asp-items="Model.AvailableStores" />
+                <span asp-validation-for="StoreId"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-3 col-sm-3 text-right">
-                @Html.GrandLabelFor(model => model.WarehouseId, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="WarehouseId" class="control-label" />
             </div>
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.WarehouseId, Model.AvailableWarehouses)
-                @Html.ValidationMessageFor(model => model.WarehouseId)
+                <admin-select asp-for="WarehouseId" asp-items="Model.AvailableWarehouses" />
+                <span asp-validation-for="WarehouseId"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-3 col-sm-3 text-right">
-                @Html.GrandLabelFor(model => model.CountryId, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="CountryId" class="control-label" />
             </div>
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.CountryId, Model.AvailableCountries)
-                @Html.ValidationMessageFor(model => model.CountryId)
+                <admin-select asp-for="CountryId" asp-items="Model.AvailableCountries" />
+                <span asp-validation-for="CountryId"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-3 col-sm-3 text-right">
-                @Html.GrandLabelFor(model => model.StateProvinceId, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="StateProvinceId" class="control-label" />
             </div>
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.StateProvinceId, Model.AvailableStates)
-                @Html.ValidationMessageFor(model => model.StateProvinceId)
+                <admin-select asp-for="StateProvinceId" asp-items="Model.AvailableStates" />
+                <span asp-validation-for="StateProvinceId"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-3 col-sm-3 text-right">
-                @Html.GrandLabelFor(model => model.Zip, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="Zip" class="control-label" />
             </div>
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.Zip)
-                @Html.ValidationMessageFor(model => model.Zip)
+                <admin-input asp-for="Zip" />
+                <span asp-validation-for="Zip"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-3 col-sm-3 text-right">
-                @Html.GrandLabelFor(model => model.ShippingMethodId, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="ShippingMethodId" class="control-label" />
             </div>
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.ShippingMethodId, Model.AvailableShippingMethods)
-                @Html.ValidationMessageFor(model => model.ShippingMethodId)
+                <admin-select asp-for="ShippingMethodId" asp-items="Model.AvailableShippingMethods" />
+                <span asp-validation-for="ShippingMethodId"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-3 col-sm-3 text-right">
-                @Html.GrandLabelFor(model => model.From, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="From" class="control-label" />
             </div>
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.From) [@Model.BaseWeightIn]
-                @Html.ValidationMessageFor(model => model.From)
+                <admin-input asp-for="From" /> [@Model.BaseWeightIn]
+                <span asp-validation-for="From"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-3 col-sm-3 text-right">
-                @Html.GrandLabelFor(model => model.To, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="To" class="control-label" />
             </div>
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.To) [@Model.BaseWeightIn]
-                @Html.ValidationMessageFor(model => model.To)
+                <admin-input asp-for="To" /> [@Model.BaseWeightIn]
+                <span asp-validation-for="To"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-3 col-sm-3 text-right">
-                @Html.GrandLabelFor(model => model.AdditionalFixedCost, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="AdditionalFixedCost" class="control-label" />
             </div>
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.AdditionalFixedCost) [@Model.PrimaryStoreCurrencyCode]
-                @Html.ValidationMessageFor(model => model.AdditionalFixedCost)
+                <admin-input asp-for="AdditionalFixedCost" /> [@Model.PrimaryStoreCurrencyCode]
+                <span asp-validation-for="AdditionalFixedCost"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-3 col-sm-3 text-right">
-                @Html.GrandLabelFor(model => model.LowerWeightLimit, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="LowerWeightLimit" class="control-label" />
             </div>
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.LowerWeightLimit)
-                @Html.ValidationMessageFor(model => model.LowerWeightLimit)
+                <admin-input asp-for="LowerWeightLimit" />
+                <span asp-validation-for="LowerWeightLimit"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-3 col-sm-3 text-right">
-                @Html.GrandLabelFor(model => model.RatePerWeightUnit, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="RatePerWeightUnit" class="control-label" />
             </div>
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.RatePerWeightUnit) [@Model.PrimaryStoreCurrencyCode]
-                @Html.ValidationMessageFor(model => model.RatePerWeightUnit)
+                <admin-input asp-for="RatePerWeightUnit" /> [@Model.PrimaryStoreCurrencyCode]
+                <span asp-validation-for="RatePerWeightUnit"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-3 col-sm-3 text-right">
-                @Html.GrandLabelFor(model => model.PercentageRateOfSubtotal, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="PercentageRateOfSubtotal" class="control-label" />
             </div>
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.PercentageRateOfSubtotal)
-                @Html.ValidationMessageFor(model => model.PercentageRateOfSubtotal)
+                <admin-input asp-for="PercentageRateOfSubtotal" />
+                <span asp-validation-for="PercentageRateOfSubtotal"></span>
             </div>
         </div>
     </div>

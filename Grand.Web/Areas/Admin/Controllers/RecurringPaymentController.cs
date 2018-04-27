@@ -93,6 +93,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             model.Id = history.Id;
             model.OrderId = history.OrderId;
+            model.OrderNumber = order != null ? order.OrderNumber: 0;
             model.RecurringPaymentId = history.RecurringPaymentId;
             model.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
             model.PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext);

@@ -1,7 +1,6 @@
 ﻿@model StoreModel
-
-@Html.ValidationSummary(true)
-@Html.HiddenFor(model => model.Id)
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -24,23 +23,23 @@
     @<div class="form-horizontal">
          <div class="form-body">
              <div class="form-group">
-                     @Html.GrandLabelFor(model => model.Locales[item].Name)
+                 <admin-label asp-for="@Model.Locales[item].Name" />
                  <div class="col-md-9 col-sm-9">
-                     @Html.GrandEditorFor(model => model.Locales[item].Name)
-                     @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                     <admin-input asp-for="@Model.Locales[item].Name" />
+                     <span asp-validation-for="@Model.Locales[item].Name"></span>
                  </div>
              </div>
-            @Html.HiddenFor(model => model.Locales[item].LanguageId)
+             <input asp-for="@Model.Locales[item].LanguageId" type="hidden" />
          </div>
     </div>
     ,
     @<div class="form-horizontal">
          <div class="form-body">
              <div class="form-group">
-                     @Html.GrandLabelFor(model => model.Name)
+                 <admin-label asp-for="Name" />
                  <div class="col-md-9 col-sm-9">
-                     @Html.GrandEditorFor(model => model.Name)
-                     @Html.ValidationMessageFor(model => model.Name)
+                     <admin-input asp-for="Name" />
+                     <span asp-validation-for="Name"></span>
                  </div>
              </div>
          </div>
@@ -49,20 +48,20 @@
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-                @Html.GrandLabelFor(model => model.Url)
+            <admin-label asp-for="Url" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.Url)
-                @Html.ValidationMessageFor(model => model.Url)
+                <admin-input asp-for="Url" />
+                <span asp-validation-for="Url"></span>
             </div>
         </div>
         <div class="form-group">
-                @Html.GrandLabelFor(model => model.SslEnabled)
+            <admin-label asp-for="SslEnabled" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.SslEnabled)
+                    <admin-input asp-for="SslEnabled" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.SslEnabled)
+                <span asp-validation-for="SslEnabled"></span>
             </div>
         </div>
         <div class="form-group">
@@ -71,66 +70,66 @@
             </div>
         </div>
         <div class="form-group" id="pnlSecureUrl">            
-                @Html.GrandLabelFor(model => model.SecureUrl)
+            <admin-label asp-for="SecureUrl" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.SecureUrl)
-                @Html.ValidationMessageFor(model => model.SecureUrl)
+                <admin-input asp-for="SecureUrl" />
+                <span asp-validation-for="SecureUrl"></span>
             </div>
         </div>
         <div class="form-group">
-                @Html.GrandLabelFor(model => model.Hosts)
+            <admin-label asp-for="Hosts" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.Hosts)
-                @Html.ValidationMessageFor(model => model.Hosts)
+                <admin-input asp-for="Hosts" />
+                <span asp-validation-for="Hosts"></span>
             </div>
         </div>
         <div class="form-group">
-                @Html.GrandLabelFor(model => model.DefaultLanguageId)
+            <admin-label asp-for="DefaultLanguageId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.DefaultLanguageId, Model.AvailableLanguages)
-                @Html.ValidationMessageFor(model => model.DefaultLanguageId)
+                <admin-select asp-for="DefaultLanguageId" asp-items="Model.AvailableLanguages" />
+                <span asp-validation-for="DefaultLanguageId"></span>
             </div>
         </div>
         <div class="form-group">
-                @Html.GrandLabelFor(model => model.DisplayOrder)
+            <admin-label asp-for="DisplayOrder" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.DisplayOrder)
-                @Html.ValidationMessageFor(model => model.DisplayOrder)
+                <admin-input asp-for="DisplayOrder" />
+                <span asp-validation-for="DisplayOrder"></span>
             </div>
         </div>
         <div class="form-group">
-                @Html.GrandLabelFor(model => model.CompanyName)
+            <admin-label asp-for="CompanyName" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.CompanyName)
-                @Html.ValidationMessageFor(model => model.CompanyName)
+                <admin-input asp-for="CompanyName" />
+                <span asp-validation-for="CompanyName"></span>
             </div>
         </div>
         <div class="form-group">
-                @Html.GrandLabelFor(model => model.CompanyAddress)
+            <admin-label asp-for="CompanyAddress" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.CompanyAddress)
-                @Html.ValidationMessageFor(model => model.CompanyAddress)
+                <admin-input asp-for="CompanyAddress" />
+                <span asp-validation-for="CompanyAddress"></span>
             </div>
         </div>
         <div class="form-group">
-                @Html.GrandLabelFor(model => model.CompanyPhoneNumber)
+            <admin-label asp-for="CompanyPhoneNumber" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.CompanyPhoneNumber)
-                @Html.ValidationMessageFor(model => model.CompanyPhoneNumber)
+                <admin-input asp-for="CompanyPhoneNumber" />
+                <span asp-validation-for="CompanyPhoneNumber"></span>
             </div>
         </div>
         <div class="form-group">
-                @Html.GrandLabelFor(model => model.CompanyVat)
+            <admin-label asp-for="CompanyVat" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.CompanyVat)
-                @Html.ValidationMessageFor(model => model.CompanyVat)
+                <admin-input asp-for="CompanyVat" />
+                <span asp-validation-for="CompanyVat"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.DefaultWarehouseId)
+            <admin-label asp-for="DefaultWarehouseId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.DefaultWarehouseId, Model.AvailableWarehouses)
-                @Html.ValidationMessageFor(model => model.DefaultWarehouseId)
+                <admin-select asp-for="DefaultWarehouseId" asp-items="Model.AvailableWarehouses" />
+                <span asp-validation-for="DefaultWarehouseId"></span>
             </div>
         </div>
     </div>

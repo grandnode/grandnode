@@ -1,14 +1,14 @@
-﻿@{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
-}
-@model PredefinedProductAttributeValueModel
+﻿@model PredefinedProductAttributeValueModel
 @{    
+    // layout
+    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
     //page title
     ViewBag.Title = T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.EditValueDetails").Text;
 }
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="ProductAttribute" asp-action="PredefinedProductAttributeValueEditPopup" method="post"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -27,7 +27,4 @@
             </div>
         </div>
     </div>
-
-
-
-}
+</form>

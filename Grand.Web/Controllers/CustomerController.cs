@@ -33,6 +33,7 @@ using Grand.Core.Infrastructure;
 using System.Net;
 using Grand.Framework.Mvc.Filters;
 using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 
 namespace Grand.Web.Controllers
 {
@@ -309,7 +310,7 @@ namespace Grand.Web.Controllers
             if (customer == null)
                 return RedirectToRoute("HomePage");
 
-            var model = _customerWebService.PreparePasswordRecovery();
+            var model = _customerWebService.PreparePasswordRecoveryConfirmModel(customer, token);
 
             return View(model);
         }
@@ -489,10 +490,26 @@ namespace Grand.Web.Controllers
                     //newsletter
                     if (_customerSettings.NewsletterEnabled)
                     {
+                        var categories = new List<string>();
+                        foreach (string formKey in form.Keys)
+                        {
+                            if (formKey.Contains("customernewsletterCategory_"))
+                            {
+                                try
+                                {
+                                    var category = formKey.Split('_')[1];
+                                    categories.Add(category);
+                                }
+                                catch { }
+                            }
+                        }
+
                         //save newsletter value
                         var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(model.Email, _storeContext.CurrentStore.Id);
                         if (newsletter != null)
                         {
+                            newsletter.Categories.Clear();
+                            categories.ForEach(x => newsletter.Categories.Add(x));
                             if (model.Newsletter)
                             {
                                 newsletter.Active = true;
@@ -503,7 +520,7 @@ namespace Grand.Web.Controllers
                         {
                             if (model.Newsletter)
                             {
-                                _newsLetterSubscriptionService.InsertNewsLetterSubscription(new NewsLetterSubscription
+                                var newsLetterSubscription = new NewsLetterSubscription
                                 {
                                     NewsLetterSubscriptionGuid = Guid.NewGuid(),
                                     Email = model.Email,
@@ -511,7 +528,9 @@ namespace Grand.Web.Controllers
                                     Active = true,
                                     StoreId = _storeContext.CurrentStore.Id,
                                     CreatedOnUtc = DateTime.UtcNow
-                                });
+                                };
+                                categories.ForEach(x => newsLetterSubscription.Categories.Add(x));
+                                _newsLetterSubscriptionService.InsertNewsLetterSubscription(newsLetterSubscription);
                             }
                         }
                     }
@@ -826,6 +845,19 @@ namespace Grand.Web.Controllers
                     //newsletter
                     if (_customerSettings.NewsletterEnabled)
                     {
+                        var categories = new List<string>();
+                        foreach (string formKey in form.Keys)
+                        {
+                            if (formKey.Contains("customernewsletterCategory_"))
+                            {
+                                try
+                                {
+                                    var category = formKey.Split('_')[1];
+                                    categories.Add(category);
+                                }
+                                catch { }
+                            }
+                        }
                         //save newsletter value
                         var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, _storeContext.CurrentStore.Id);
                         if (newsletter == null)
@@ -833,6 +865,9 @@ namespace Grand.Web.Controllers
 
                         if (newsletter != null)
                         {
+                            newsletter.Categories.Clear();
+                            categories.ForEach(x => newsletter.Categories.Add(x));
+
                             if (model.Newsletter)
                             {
                                 newsletter.Active = true;
@@ -848,7 +883,7 @@ namespace Grand.Web.Controllers
                         {
                             if (model.Newsletter)
                             {
-                                _newsLetterSubscriptionService.InsertNewsLetterSubscription(new NewsLetterSubscription
+                                var newsLetterSubscription = new NewsLetterSubscription
                                 {
                                     NewsLetterSubscriptionGuid = Guid.NewGuid(),
                                     Email = customer.Email,
@@ -856,7 +891,9 @@ namespace Grand.Web.Controllers
                                     Active = true,
                                     StoreId = _storeContext.CurrentStore.Id,
                                     CreatedOnUtc = DateTime.UtcNow
-                                });
+                                };
+                                categories.ForEach(x => newsLetterSubscription.Categories.Add(x));
+                                _newsLetterSubscriptionService.InsertNewsLetterSubscription(newsLetterSubscription);
                             }
                         }
                     }
@@ -910,6 +947,19 @@ namespace Grand.Web.Controllers
             });
         }
 
+
+        [HttpsRequirement(SslRequirement.Yes)]
+        public virtual IActionResult Export()
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            var customer = _workContext.CurrentCustomer;
+            var exportManager = EngineContext.Current.Resolve<Grand.Services.ExportImport.IExportManager>();
+            byte[] bytes = exportManager.ExportCustomerToXlsx(customer);
+            return File(bytes, "text/xls", "PersonalInfo.xlsx");
+
+        }
         #endregion
 
         #region My account / Addresses
@@ -1141,6 +1191,84 @@ namespace Grand.Web.Controllers
                     ModelState.AddModelError("", error);
             }
 
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        #endregion
+
+
+        #region My account / Delete account
+
+        [HttpsRequirement(SslRequirement.Yes)]
+        public virtual IActionResult DeleteAccount()
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if(!_customerSettings.AllowUsersToDeleteAccount)
+                return RedirectToRoute("CustomerInfo");
+
+            var model = new DeleteAccountModel();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [PublicAntiForgery]
+        public virtual IActionResult DeleteAccount(DeleteAccountModel model)
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if (!_customerSettings.AllowUsersToDeleteAccount)
+                return RedirectToRoute("CustomerInfo");
+
+            var customer = _workContext.CurrentCustomer;
+            if (ModelState.IsValid)
+            {
+                var loginResult = _customerRegistrationService.ValidateCustomer(_customerSettings.UsernamesEnabled ? customer.Username : customer.Email, model.Password);
+
+                switch (loginResult)
+                {
+                    case CustomerLoginResults.Successful:
+                        {
+                            //activity log
+                            _customerActivityService.InsertActivity("PublicStore.DeleteAccount", "", _localizationService.GetResource("ActivityLog.DeleteAccount"));
+
+                            //send notification to customer
+                            _workflowMessageService.SendCustomerDeleteStoreOwnerNotification(customer, _localizationSettings.DefaultAdminLanguageId);
+
+                            //delete account
+                            _customerService.DeleteCustomer(customer);
+
+                            //standard logout 
+                            _authenticationService.SignOut();
+
+                            return RedirectToRoute("HomePage");
+                        }
+                    case CustomerLoginResults.CustomerNotExist:
+                        ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials.CustomerNotExist"));
+                        break;
+                    case CustomerLoginResults.Deleted:
+                        ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials.Deleted"));
+                        break;
+                    case CustomerLoginResults.NotActive:
+                        ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials.NotActive"));
+                        break;
+                    case CustomerLoginResults.NotRegistered:
+                        ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials.NotRegistered"));
+                        break;
+                    case CustomerLoginResults.LockedOut:
+                        ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials.LockedOut"));
+                        break;
+                    case CustomerLoginResults.WrongPassword:
+                    default:
+                        ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials"));
+                        break;
+                }
+            }
 
             //If we got this far, something failed, redisplay form
             return View(model);

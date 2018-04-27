@@ -188,34 +188,40 @@ namespace Grand.Services.Catalog
         public virtual IPagedList<Category> GetAllCategories(string categoryName = "", string storeId = "",
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
-            var builder = Builders<Category>.Filter;
-            var filter = builder.Empty;
+            var query = from c in _categoryRepository.Table
+                        select c;
 
             if (!showHidden)
-                filter = filter & builder.Where(c => c.Published);
+                query = query.Where(c => c.Published);
             if (!String.IsNullOrWhiteSpace(categoryName))
-                filter = filter & builder.Where(c => c.Name != null && c.Name.ToLower().Contains(categoryName.ToLower()));
+                query = query.Where(m => m.Name != null && m.Name.ToLower().Contains(categoryName.ToLower()));
 
-            if ((!_catalogSettings.IgnoreAcl || (!String.IsNullOrEmpty(storeId) &&  !_catalogSettings.IgnoreStoreLimitations)))
+            if ((!_catalogSettings.IgnoreAcl || (!String.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations)))
             {
                 if (!_catalogSettings.IgnoreAcl)
                 {
                     //ACL (access control list)
                     var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
-                    filter = filter & (builder.AnyIn(x => x.CustomerRoles, allowedCustomerRolesIds) | builder.Where(x => !x.SubjectToAcl));
+                    query = from p in query
+                            where !p.SubjectToAcl || allowedCustomerRolesIds.Any(x => p.CustomerRoles.Contains(x))
+                            select p;
                 }
                 if (!String.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations)
                 {
                     //Store mapping
-                    var currentStoreId = new List<string> { storeId };
-                    filter = filter & (builder.AnyIn(x => x.Stores, currentStoreId) | builder.Where(x => !x.LimitedToStores));
+                    query = from p in query
+                            where !p.LimitedToStores || p.Stores.Contains(storeId)
+                            select p;
                 }
             }
 
-            var builderSort = Builders<Category>.Sort.Ascending(x => x.ParentCategoryId).Ascending(x => x.DisplayOrder);
+            query = query.OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder);
+            var unsortedCategories = query.ToList();
+            //sort categories
+            var sortedCategories = unsortedCategories.SortCategoriesForTree();
 
             //paging
-            return new PagedList<Category>(_categoryRepository.Collection, filter, builderSort, pageIndex, pageSize);
+            return new PagedList<Category>(sortedCategories, pageIndex, pageSize);
         }
 
         /// <summary>

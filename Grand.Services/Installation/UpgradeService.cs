@@ -46,6 +46,7 @@ namespace Grand.Services.Installation
         private const string version_390 = "3.90";
         private const string version_400 = "4.00";
         private const string version_410 = "4.10";
+        private const string version_420 = "4.20";
 
         #endregion
 
@@ -89,6 +90,11 @@ namespace Grand.Services.Installation
             {
                 From400To410();
                 fromversion = version_410;
+            }
+            if (fromversion == version_410)
+            {
+                From410To420();
+                fromversion = version_420;
             }
             if (fromversion == toversion)
             {
@@ -843,6 +849,63 @@ namespace Grand.Services.Installation
             #endregion
         }
 
+        private void From410To420()
+        {
+            var _settingService = EngineContext.Current.Resolve<ISettingService>();
+
+            #region Install String resources
+            InstallStringResources("410_420.nopres.xml");
+            #endregion
+            #region Update string resources
+
+            var _localeStringResource = EngineContext.Current.Resolve<IRepository<LocaleStringResource>>();
+
+            var filter = new BsonDocument();
+            var result = _localeStringResource.Collection.Find(filter).ForEachAsync((e) => {
+                e.ResourceName = e.ResourceName.ToLowerInvariant();
+                _localeStringResource.Update(e);
+            });
+
+            #endregion
+            #region Admin area settings
+
+            var adminareasettings = EngineContext.Current.Resolve<AdminAreaSettings>();
+            adminareasettings.AdminLayout = "Default";
+            adminareasettings.KendoLayout = "custom";
+            _settingService.SaveSetting(adminareasettings);
+
+            #endregion
+            #region ActivityLog
+
+            var _activityLogTypeRepository = EngineContext.Current.Resolve<IRepository<ActivityLogType>>();
+            _activityLogTypeRepository.Insert(new ActivityLogType()
+            {
+                SystemKeyword = "PublicStore.DeleteAccount",
+                Enabled = false,
+                Name = "Public store. Delete account"
+            });
+
+            #endregion
+            #region MessageTemplates
+
+            var emailAccount = EngineContext.Current.Resolve<IRepository<EmailAccount>>().Table.FirstOrDefault();
+            if (emailAccount == null)
+                throw new Exception("Default email account cannot be loaded");
+            var messageTemplates = new List<MessageTemplate>
+            {
+                new MessageTemplate
+                {
+                    Name = "CustomerDelete.StoreOwnerNotification",
+                    Subject = "%Store.Name%. Customer has been deleted.",
+                    Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> ,<br />%Customer.FullName% (%Customer.Email%) has just deleted from your database. </p>",
+                    IsActive = true,
+                    EmailAccountId = emailAccount.Id,
+                },
+            };
+            EngineContext.Current.Resolve<IRepository<MessageTemplate>>().Insert(messageTemplates);
+            #endregion
+
+        }
         private void InstallStringResources(string filenames)
         {
             //'English' language            

@@ -2,8 +2,7 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.EmailAccounts").Text;
 }
-@Html.AntiForgeryToken()
-
+<antiforgery-token />
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light form-fit">
@@ -22,8 +21,6 @@
         </div>
     </div>
 </div>
-
-
 <script>
     $(document).ready(function () {
         $("#email-accounts-grid").kendoGrid({
@@ -63,7 +60,8 @@
             scrollable: false,
             columns: [{
                 field: "Email",
-                title: "@T("Admin.Configuration.EmailAccounts.Fields.Email")"
+                title: "@T("Admin.Configuration.EmailAccounts.Fields.Email")",
+                template: '<a class="k-link" href="Edit/#=Id#">#=Email#</a>',
             }, {
                 field: "DisplayName",
                 title: "@T("Admin.Configuration.EmailAccounts.Fields.DisplayName")"
@@ -78,11 +76,6 @@
                 field: "Id",
                 title: "@T("Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail")",
                 template: '<a href="@Url.Content("~/Admin/EmailAccount/MarkAsDefaultEmail/")#=Id#" class="k-button">@T("Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail")</a>'
-            }, {
-                field: "Id",
-                title: "@T("Admin.Common.Edit")",
-                width: 100,
-                template: '<a class="btn btn-sm btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
             }]
         });
     });

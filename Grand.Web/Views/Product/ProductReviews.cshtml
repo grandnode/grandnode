@@ -121,6 +121,15 @@
                                     @Html.Raw(Grand.Core.Html.HtmlHelper.FormatText(review.ReviewText, false, true, false, false, false, false))
                                 </div>
                             </div>
+                            @if(!string.IsNullOrEmpty(review.ReplyText))
+                            {
+                                <div class="reply-content">
+                                    <blockquote class="blockquote-footer">
+                                        @Html.Raw(Grand.Core.Html.HtmlHelper.FormatText(review.ReplyText, false, true, false, false, false, false))
+                                        <p>@review.Signature</p>
+                                    </blockquote>
+                                </div>
+                            }
                         </div>
                         <div class="card-footer text-right">
                             @await Component.InvokeAsync("Widget", new { widgetZone = "productreviews_page_inside_review", additionalData = review.Id })

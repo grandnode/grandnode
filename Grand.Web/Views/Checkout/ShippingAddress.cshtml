@@ -51,8 +51,8 @@
                     {
                         if (Model.PickUpInStoreOnly)
                         {
-                        @Html.HiddenFor(x => x.PickUpInStore)
-                    }
+                            <input asp-for="PickUpInStore" type="hidden" />
+                        }
                     <div class="select-pickup-point">
                         @if (Model.PickupPoints.Count == 1)
                         {

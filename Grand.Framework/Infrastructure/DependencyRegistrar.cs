@@ -5,7 +5,6 @@ using System.Reflection;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Configuration;
@@ -298,8 +297,6 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<GoogleAnalyticsService>().As<IGoogleAnalyticsService>().InstancePerLifetimeScope();
 
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().SingleInstance();
-
-            builder.RegisterType<ActionContextAccessor>().As<IActionContextAccessor>().InstancePerLifetimeScope();
 
             //Register event consumers
             var consumers = typeFinder.FindClassesOfType(typeof(IConsumer<>)).ToList();

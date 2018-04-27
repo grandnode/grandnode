@@ -1,8 +1,9 @@
 ﻿@model CustomerReminderModel.ConditionModel
-@Html.ValidationSummary(true)
-@Html.HiddenFor(model => model.Id)
-@Html.HiddenFor(model => model.CustomerReminderId)
+@inject IEventPublisher eventPublisher
 
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+<input asp-for="CustomerReminderId" type="hidden" />
 <script type="text/javascript">
     $(document).ready(function () {
         $("#customerremindercondition-edit").kendoTabStrip({
@@ -15,7 +16,6 @@
         });
     });
 </script>
-
 <div id="customerremindercondition-edit">
     <ul>
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
@@ -68,16 +68,14 @@
         @Html.Partial("_ConditionCustomCustomerAttribute", Model)
     </div>
 </div>
-
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "customerremindercondition-edit");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock
     }
 }
-
 @*save selected tab index*@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">

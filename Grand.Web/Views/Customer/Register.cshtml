@@ -36,6 +36,23 @@
         });
     </script>
 }
+
+<script type="text/javascript">
+    $(function () {
+        $("#@Html.IdFor(model => model.Newsletter)").click(toggleNewsletterCat);
+        toggleNewsletterCat();
+
+        function toggleNewsletterCat() {
+            if ($('#@Html.FieldIdFor(model => model.Newsletter)').is(':checked')) {
+                $('.register-category-newsletter').show();
+            }
+            else {
+                $('.register-category-newsletter').hide();
+            }
+        }
+    });
+</script>
+
 <form asp-route="Register" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
     <div class="page registration-page">
         <div asp-validation-summary="ModelOnly" class="message-error"></div>
@@ -273,6 +290,7 @@
                                 </label>
                                 <span asp-validation-for="Newsletter"></span>
                             </div>
+                            @await Html.PartialAsync("_NewsLetterCategories", Model.NewsletterCategories)
                         }
                         @if (Model.CustomerAttributes.Any())
                         {

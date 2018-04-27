@@ -1,21 +1,19 @@
 ﻿@model CustomerActionConditionModel
-
-    @if (String.IsNullOrEmpty(Model.Id))
-    {
-        <div class="note note-info">
-            @T("Admin.Customers.CustomerActionCondition.SaveBeforeEdit")
+@if (String.IsNullOrEmpty(Model.Id))
+{
+    <div class="note note-info">
+        @T("Admin.Customers.CustomerActionCondition.SaveBeforeEdit")
+    </div>
+}
+@if (!String.IsNullOrEmpty(Model.Id))
+{
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="customerrole-grid"></div>
         </div>
-    }
+    </div>
 
-    @if (!String.IsNullOrEmpty(Model.Id))
-    {
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div id="customerrole-grid"></div>
-            </div>
-        </div>
-
-                <script>
+    <script>
                 $(document).ready(function () {
                 $("#customerrole-grid").kendoGrid({
                     dataSource: {
@@ -96,7 +94,6 @@
                 });
             });
 
-
             function customerRoleDropDownEditor(container, options) {
                 $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:CustomerRoleId"/>')
                     .appendTo(container)
@@ -111,6 +108,6 @@
                         optionLabel: " -- Select -- "
                     });
                 }
-                </script>
-            
-    }
+    </script>
+
+}

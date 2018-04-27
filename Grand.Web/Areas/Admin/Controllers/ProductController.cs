@@ -449,14 +449,16 @@ namespace Grand.Web.Areas.Admin.Controllers
             var productTagsToRemove = new List<string>();
             foreach (var existingProductTag in existingProductTags)
             {
+                var existingProductTagText = _productTagService.GetProductTagById(existingProductTag);
                 bool found = false;
                 foreach (string newProductTag in productTags)
                 {
-                    if (existingProductTag.Equals(newProductTag, StringComparison.OrdinalIgnoreCase))
-                    {
-                        found = true;
-                        break;
-                    }
+                    if (existingProductTagText != null)
+                        if (existingProductTagText.Name.Equals(newProductTag, StringComparison.OrdinalIgnoreCase))
+                        {
+                            found = true;
+                            break;
+                        }
                 }
                 if (!found)
                 {
@@ -862,13 +864,20 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.CustomerInfo = customer != null ? customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest") : "";
             model.Rating = productReview.Rating;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(productReview.CreatedOnUtc, DateTimeKind.Utc);
+            model.Signature = productReview.Signature;
             if (!excludeProperties)
             {
                 model.Title = productReview.Title;
                 if (formatReviewText)
+                {
                     model.ReviewText = Core.Html.HtmlHelper.FormatText(productReview.ReviewText, false, true, false, false, false, false);
+                    model.ReplyText = Core.Html.HtmlHelper.FormatText(productReview.ReplyText, false, true, false, false, false, false);
+                }
                 else
+                {
                     model.ReviewText = productReview.ReviewText;
+                    model.ReplyText = productReview.ReplyText;
+                }
                 model.IsApproved = productReview.IsApproved;
             }
         }
@@ -1423,7 +1432,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(new { Text = result });
         }
 
-        public IActionResult RequiredProductAddPopup(string btnId, string productIdsInput)
+        public IActionResult RequiredProductAddPopup(string productIdsInput)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1459,8 +1468,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
 
             ViewBag.productIdsInput = productIdsInput;
-            ViewBag.btnId = btnId;
-
             return View(model);
         }
 
@@ -1523,7 +1530,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 .Select(x => new ProductModel.ProductCategoryModel
                 {
                     Id = x.Id,
-                    Category = _categoryService.GetCategoryById(x.CategoryId).GetFormattedBreadCrumb(_categoryService),
+                    Category = _categoryService.GetCategoryById(x.CategoryId)?.GetFormattedBreadCrumb(_categoryService),
                     ProductId = product.Id,
                     CategoryId = x.CategoryId,
                     IsFeaturedProduct = x.IsFeaturedProduct,
@@ -1588,6 +1595,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             var productCategory = product.ProductCategories.Where(x => x.Id == model.Id).FirstOrDefault();
             if (productCategory == null)
                 throw new ArgumentException("No product category mapping found with the specified id");
+
+            if(product.ProductCategories.Where(x => x.Id != model.Id && x.CategoryId == model.CategoryId).Any())
+                return Json(new DataSourceResult { Errors = "This category is already mapped with this product" });
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -1728,6 +1738,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             var productManufacturer = product.ProductManufacturers.Where(x => x.Id == model.Id).FirstOrDefault();
             if (productManufacturer == null)
                 throw new ArgumentException("No product manufacturer mapping found with the specified id");
+
+            if (product.ProductManufacturers.Where(x => x.Id != model.Id && x.ManufacturerId == model.ManufacturerId).Any())
+                return Json(new DataSourceResult { Errors = "This manufacturer is already mapped with this product" });
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -1948,7 +1961,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult RelatedProductAddPopup(string btnId, string formId, ProductModel.AddRelatedProductModel model)
+        public IActionResult RelatedProductAddPopup(ProductModel.AddRelatedProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1986,8 +1999,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
             return View(model);
         }
 
@@ -2162,7 +2173,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult BundleProductAddPopup(string btnId, string formId, ProductModel.AddBundleProductModel model)
+        public IActionResult BundleProductAddPopup(ProductModel.AddBundleProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2201,8 +2212,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
             return View(model);
         }
 
@@ -2349,7 +2358,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult CrossSellProductAddPopup(string btnId, string formId, ProductModel.AddCrossSellProductModel model)
+        public IActionResult CrossSellProductAddPopup(ProductModel.AddCrossSellProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2382,8 +2391,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
+
             return View(model);
         }
 
@@ -2560,7 +2568,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult AssociatedProductAddPopup(string btnId, string formId, ProductModel.AddAssociatedProductModel model)
+        public IActionResult AssociatedProductAddPopup(ProductModel.AddAssociatedProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2585,8 +2593,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
             return View(model);
         }
 
@@ -3026,7 +3032,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditProductTag(string btnId, string formId, ProductTagModel model)
+        public IActionResult EditProductTag(ProductTagModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductTags))
                 return AccessDeniedView();
@@ -3043,8 +3049,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _productTagService.UpdateProductTag(productTag);
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
 
@@ -3677,7 +3681,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult TierPriceCreatePopup(string btnId, string formId, ProductModel.TierPriceModel model)
+        public IActionResult TierPriceCreatePopup(ProductModel.TierPriceModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3708,8 +3712,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _productService.UpdateHasTierPricesProperty(product.Id);
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
 
                 return View(model);
             }
@@ -3729,7 +3731,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        public IActionResult TierPriceEditPopup(string id, string productId, string btnId, string formId)
+        public IActionResult TierPriceEditPopup(string id, string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3768,14 +3770,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             foreach (var role in _customerService.GetAllCustomerRoles(true))
                 model.AvailableCustomerRoles.Add(new SelectListItem { Text = role.Name, Value = role.Id.ToString() });
 
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
-
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult TierPriceEditPopup(string productId, string btnId, string formId, ProductModel.TierPriceModel model)
+        public IActionResult TierPriceEditPopup(string productId, ProductModel.TierPriceModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3805,9 +3804,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _productService.UpdateTierPrice(tierPrice);
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
-
                 return View(model);
             }
 
@@ -4100,7 +4096,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ProductAttributeValidationRulesPopup(string btnId, string formId, ProductModel.ProductAttributeMappingModel model)
+        public IActionResult ProductAttributeValidationRulesPopup(ProductModel.ProductAttributeMappingModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4130,8 +4126,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _productAttributeService.UpdateProductAttributeMapping(productAttributeMapping);
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
 
@@ -4146,7 +4140,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Product attributes. Condition
 
-        public IActionResult ProductAttributeConditionPopup(string btnId, string productId, string formId, string productAttributeMappingId)
+        public IActionResult ProductAttributeConditionPopup(string productId, string productAttributeMappingId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4163,8 +4157,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List", "Product");
 
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
 
             var model = new ProductAttributeConditionModel();
             model.ProductAttributeMappingId = productAttributeMapping.Id;
@@ -4259,8 +4251,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ProductAttributeConditionPopup(string btnId, string formId,
-            ProductAttributeConditionModel model, IFormCollection form)
+        public IActionResult ProductAttributeConditionPopup(ProductAttributeConditionModel model, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4358,8 +4349,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             _productAttributeService.UpdateProductAttributeMapping(productAttributeMapping);
 
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
             return View(model);
         }
 
@@ -4514,7 +4503,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ProductAttributeValueCreatePopup(string btnId, string formId, ProductModel.ProductAttributeValueModel model)
+        public IActionResult ProductAttributeValueCreatePopup(ProductModel.ProductAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4579,8 +4568,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
                 _productAttributeService.InsertProductAttributeValue(pav);
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
 
@@ -4675,7 +4662,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ProductAttributeValueEditPopup(string productId, string btnId, string formId, ProductModel.ProductAttributeValueModel model)
+        public IActionResult ProductAttributeValueEditPopup(string productId, ProductModel.ProductAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4727,8 +4714,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _productAttributeService.UpdateProductAttributeValue(pav);
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
+
                 return View(model);
             }
 
@@ -4856,8 +4842,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult AssociateProductToAttributeValuePopup(string productIdInput,
-            string productNameInput, ProductModel.ProductAttributeValueModel.AssociateProductToAttributeValueModel model)
+        public IActionResult AssociateProductToAttributeValuePopup(ProductModel.ProductAttributeValueModel.AssociateProductToAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4873,8 +4858,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
             ViewBag.RefreshPage = true;
-            ViewBag.productIdInput = productIdInput;
-            ViewBag.productNameInput = productNameInput;
             ViewBag.productId = associatedProduct.Id;
             ViewBag.productName = associatedProduct.Name;
             return View(model);
@@ -4903,12 +4886,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             var combinationsModel = combinations
                 .Select(x =>
                 {
+                    var attributesXml = _productAttributeFormatter.FormatAttributes(_productService.GetProductById(product.Id), x.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false, true, true);
                     var pacModel = new ProductModel.ProductAttributeCombinationModel
                     {
                         Id = x.Id,
                         ProductId = product.Id,
-                        AttributesXml = _productAttributeFormatter.FormatAttributes(_productService.GetProductById(product.Id), x.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false),
-                        StockQuantity = product.UseMultipleWarehouses ? x.WarehouseInventory.Sum(y => y.StockQuantity - y.ReservedQuantity) : x.StockQuantity,
+                        AttributesXml = string.IsNullOrEmpty(attributesXml)? "(null)": attributesXml,
+                        StockQuantity = product.UseMultipleWarehouses ? x.WarehouseInventory.Sum(y=>y.StockQuantity-y.ReservedQuantity) : x.StockQuantity,
                         AllowOutOfStockOrders = x.AllowOutOfStockOrders,
                         Sku = x.Sku,
                         ManufacturerPartNumber = x.ManufacturerPartNumber,
@@ -4972,7 +4956,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit
-        public IActionResult AttributeCombinationPopup(string btnId, string formId, string productId, string Id)
+        public IActionResult AttributeCombinationPopup(string productId, string Id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4986,8 +4970,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List", "Product");
 
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
             var model = new ProductAttributeCombinationModel();
             var wim = new List<ProductAttributeCombinationModel.WarehouseInventoryModel>();
             foreach (var warehouse in _shippingService.GetAllWarehouses())
@@ -5039,7 +5021,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
 
-        public IActionResult AttributeCombinationPopup(string btnId, string formId, string productId,
+        public IActionResult AttributeCombinationPopup(string productId,
             ProductAttributeCombinationModel model, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
@@ -5053,9 +5035,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List", "Product");
-
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
 
             //attributes
             string attributesXml = "";

@@ -24,6 +24,10 @@ using Grand.Services.Discounts;
 using OfficeOpenXml.Style;
 using Grand.Core.Extensions;
 using OfficeOpenXml;
+using Grand.Services.Orders;
+using Grand.Services.Customers;
+using Grand.Core.Domain.Logging;
+using Grand.Services.Logging;
 
 namespace Grand.Services.ExportImport
 {
@@ -94,7 +98,7 @@ namespace Grand.Services.ExportImport
                     xmlWriter.WriteElementString("ShowOnHomePage", null, category.ShowOnHomePage.ToString());
                     xmlWriter.WriteElementString("IncludeInTopMenu", null, category.IncludeInTopMenu.ToString());
                     xmlWriter.WriteElementString("Published", null, category.Published.ToString());
-                    
+
                     xmlWriter.WriteElementString("DisplayOrder", null, category.DisplayOrder.ToString());
                     xmlWriter.WriteElementString("CreatedOnUtc", null, category.CreatedOnUtc.ToString());
                     xmlWriter.WriteElementString("UpdatedOnUtc", null, category.UpdatedOnUtc.ToString());
@@ -165,7 +169,7 @@ namespace Grand.Services.ExportImport
                 xmlWriter.WriteElementString("AllowCustomersToSelectPageSize", null, manufacturer.AllowCustomersToSelectPageSize.ToString());
                 xmlWriter.WriteElementString("PageSizeOptions", null, manufacturer.PageSizeOptions);
                 xmlWriter.WriteElementString("PriceRanges", null, manufacturer.PriceRanges);
-                xmlWriter.WriteElementString("Published", null, manufacturer.Published.ToString());                
+                xmlWriter.WriteElementString("Published", null, manufacturer.Published.ToString());
                 xmlWriter.WriteElementString("DisplayOrder", null, manufacturer.DisplayOrder.ToString());
                 xmlWriter.WriteElementString("CreatedOnUtc", null, manufacturer.CreatedOnUtc.ToString());
                 xmlWriter.WriteElementString("UpdatedOnUtc", null, manufacturer.UpdatedOnUtc.ToString());
@@ -305,7 +309,7 @@ namespace Grand.Services.ExportImport
             {
                 xmlWriter.WriteStartElement("Product");
 
-                xmlWriter.WriteElementString("ProductId", null, product.Id.ToString());
+                xmlWriter.WriteElementString("ProductId", null, product.Id);
                 xmlWriter.WriteElementString("ProductTypeId", null, product.ProductTypeId.ToString());
                 xmlWriter.WriteElementString("ParentGroupedProductId", null, product.ParentGroupedProductId);
                 xmlWriter.WriteElementString("VisibleIndividually", null, product.VisibleIndividually.ToString());
@@ -314,7 +318,7 @@ namespace Grand.Services.ExportImport
                 xmlWriter.WriteElementString("FullDescription", null, product.FullDescription);
                 xmlWriter.WriteElementString("AdminComment", null, product.AdminComment);
                 xmlWriter.WriteElementString("VendorId", null, product.VendorId);
-                xmlWriter.WriteElementString("ProductTemplateId", null, product.ProductTemplateId.ToString());
+                xmlWriter.WriteElementString("ProductTemplateId", null, product.ProductTemplateId);
                 xmlWriter.WriteElementString("ShowOnHomePage", null, product.ShowOnHomePage.ToString());
                 xmlWriter.WriteElementString("MetaKeywords", null, product.MetaKeywords);
                 xmlWriter.WriteElementString("MetaDescription", null, product.MetaDescription);
@@ -400,10 +404,8 @@ namespace Grand.Services.ExportImport
                 xmlWriter.WriteElementString("CreatedOnUtc", null, product.CreatedOnUtc.ToString());
                 xmlWriter.WriteElementString("UpdatedOnUtc", null, product.UpdatedOnUtc.ToString());
 
-
-
                 xmlWriter.WriteStartElement("ProductDiscounts");
-                
+
                 foreach (var appliedDiscount in product.AppliedDiscounts)
                 {
                     var discount = _discountService.GetDiscountById(appliedDiscount);
@@ -435,7 +437,7 @@ namespace Grand.Services.ExportImport
                 xmlWriter.WriteEndElement();
 
                 xmlWriter.WriteStartElement("ProductAttributes");
-                var productAttributMappings = product.ProductAttributeMappings; //_productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+                var productAttributMappings = product.ProductAttributeMappings;
                 foreach (var productAttributeMapping in productAttributMappings)
                 {
                     xmlWriter.WriteStartElement("ProductAttributeMapping");
@@ -497,36 +499,27 @@ namespace Grand.Services.ExportImport
                     xmlWriter.WriteEndElement();
                 }
                 xmlWriter.WriteEndElement();
-
-
-
-
-
-
-
-
-
                 xmlWriter.WriteStartElement("ProductPictures");
                 var productPictures = product.ProductPictures;
                 foreach (var productPicture in productPictures)
                 {
                     xmlWriter.WriteStartElement("ProductPicture");
-                    xmlWriter.WriteElementString("ProductPictureId", null, productPicture.Id.ToString());
-                    xmlWriter.WriteElementString("PictureId", null, productPicture.PictureId.ToString());
+                    xmlWriter.WriteElementString("ProductPictureId", null, productPicture.Id);
+                    xmlWriter.WriteElementString("PictureId", null, productPicture.PictureId);
                     xmlWriter.WriteElementString("DisplayOrder", null, productPicture.DisplayOrder.ToString());
                     xmlWriter.WriteEndElement();
                 }
                 xmlWriter.WriteEndElement();
-                
+
                 xmlWriter.WriteStartElement("ProductCategories");
-                var productCategories = product.ProductCategories; //_categoryService.GetProductCategoriesByProductId(product.Id);
+                var productCategories = product.ProductCategories;
                 if (productCategories != null)
                 {
                     foreach (var productCategory in productCategories)
                     {
                         xmlWriter.WriteStartElement("ProductCategory");
-                        xmlWriter.WriteElementString("ProductCategoryId", null, productCategory.Id.ToString());
-                        xmlWriter.WriteElementString("CategoryId", null, productCategory.CategoryId.ToString());
+                        xmlWriter.WriteElementString("ProductCategoryId", null, productCategory.Id);
+                        xmlWriter.WriteElementString("CategoryId", null, productCategory.CategoryId);
                         xmlWriter.WriteElementString("IsFeaturedProduct", null, productCategory.IsFeaturedProduct.ToString());
                         xmlWriter.WriteElementString("DisplayOrder", null, productCategory.DisplayOrder.ToString());
                         xmlWriter.WriteEndElement();
@@ -535,14 +528,14 @@ namespace Grand.Services.ExportImport
                 xmlWriter.WriteEndElement();
 
                 xmlWriter.WriteStartElement("ProductManufacturers");
-                var productManufacturers = product.ProductManufacturers; // _manufacturerService.GetProductManufacturersByProductId(product.Id);
+                var productManufacturers = product.ProductManufacturers;
                 if (productManufacturers != null)
                 {
                     foreach (var productManufacturer in productManufacturers)
                     {
                         xmlWriter.WriteStartElement("ProductManufacturer");
-                        xmlWriter.WriteElementString("ProductManufacturerId", null, productManufacturer.Id.ToString());
-                        xmlWriter.WriteElementString("ManufacturerId", null, productManufacturer.ManufacturerId.ToString());
+                        xmlWriter.WriteElementString("ProductManufacturerId", null, productManufacturer.Id);
+                        xmlWriter.WriteElementString("ManufacturerId", null, productManufacturer.ManufacturerId);
                         xmlWriter.WriteElementString("IsFeaturedProduct", null, productManufacturer.IsFeaturedProduct.ToString());
                         xmlWriter.WriteElementString("DisplayOrder", null, productManufacturer.DisplayOrder.ToString());
                         xmlWriter.WriteEndElement();
@@ -555,8 +548,8 @@ namespace Grand.Services.ExportImport
                 foreach (var productSpecificationAttribute in productSpecificationAttributes)
                 {
                     xmlWriter.WriteStartElement("ProductSpecificationAttribute");
-                    xmlWriter.WriteElementString("ProductSpecificationAttributeId", null, productSpecificationAttribute.Id.ToString());
-                    xmlWriter.WriteElementString("SpecificationAttributeOptionId", null, productSpecificationAttribute.SpecificationAttributeOptionId.ToString());
+                    xmlWriter.WriteElementString("ProductSpecificationAttributeId", null, productSpecificationAttribute.Id);
+                    xmlWriter.WriteElementString("SpecificationAttributeOptionId", null, productSpecificationAttribute.SpecificationAttributeOptionId);
                     xmlWriter.WriteElementString("CustomValue", null, productSpecificationAttribute.CustomValue);
                     xmlWriter.WriteElementString("AllowFiltering", null, productSpecificationAttribute.AllowFiltering.ToString());
                     xmlWriter.WriteElementString("ShowOnProductPage", null, productSpecificationAttribute.ShowOnProductPage.ToString());
@@ -564,7 +557,7 @@ namespace Grand.Services.ExportImport
                     xmlWriter.WriteEndElement();
                 }
                 xmlWriter.WriteEndElement();
-                
+
                 xmlWriter.WriteEndElement();
             }
 
@@ -672,8 +665,8 @@ namespace Grand.Services.ExportImport
                 new PropertyByName<Product>("Length", p => p.Length),
                 new PropertyByName<Product>("Width", p => p.Width),
                 new PropertyByName<Product>("Height", p => p.Height),
-                new PropertyByName<Product>("CategoryIds", p =>  string.Join(";", p.ProductCategories.Select(n => n.CategoryId.ToString()).ToArray())),
-                new PropertyByName<Product>("ManufacturerIds", p=>  string.Join(";", p.ProductManufacturers.Select(n => n.ManufacturerId.ToString()).ToArray())),
+                new PropertyByName<Product>("CategoryIds", p =>  string.Join(";", p.ProductCategories.Select(n => n.CategoryId).ToArray())),
+                new PropertyByName<Product>("ManufacturerIds", p=>  string.Join(";", p.ProductManufacturers.Select(n => n.ManufacturerId).ToArray())),
                 new PropertyByName<Product>("Picture1", p => GetPictures(p)[0]),
                 new PropertyByName<Product>("Picture2", p => GetPictures(p)[1]),
                 new PropertyByName<Product>("Picture3", p => GetPictures(p)[2])
@@ -704,7 +697,7 @@ namespace Grand.Services.ExportImport
             foreach (var order in orders)
             {
                 xmlWriter.WriteStartElement("Order");
-                
+
                 xmlWriter.WriteElementString("OrderId", null, order.Id.ToString());
                 xmlWriter.WriteElementString("OrderGuid", null, order.OrderGuid.ToString());
                 xmlWriter.WriteElementString("StoreId", null, order.StoreId.ToString());
@@ -767,7 +760,7 @@ namespace Grand.Services.ExportImport
                         xmlWriter.WriteElementString("OrderItemGuid", null, orderItem.OrderItemGuid.ToString());
                         xmlWriter.WriteElementString("ProductId", null, orderItem.ProductId.ToString());
 
-                        var product =  _productService.GetProductByIdIncludeArch(orderItem.ProductId);
+                        var product = _productService.GetProductByIdIncludeArch(orderItem.ProductId);
                         if (product != null)
                         {
                             xmlWriter.WriteElementString("ProductName", null, product.Name);
@@ -791,7 +784,7 @@ namespace Grand.Services.ExportImport
                 }
 
                 //shipments
-                
+
                 var shipments = EngineContext.Current.Resolve<IShipmentService>().GetShipmentsByOrder(order.Id);
                 if (shipments.Count > 0)
                 {
@@ -803,7 +796,7 @@ namespace Grand.Services.ExportImport
                         xmlWriter.WriteElementString("TrackingNumber", null, shipment.TrackingNumber);
                         xmlWriter.WriteElementString("TotalWeight", null, shipment.TotalWeight.HasValue ? shipment.TotalWeight.Value.ToString() : "");
 
-                        xmlWriter.WriteElementString("ShippedDateUtc", null,shipment.ShippedDateUtc.HasValue ? 
+                        xmlWriter.WriteElementString("ShippedDateUtc", null, shipment.ShippedDateUtc.HasValue ?
                             shipment.ShippedDateUtc.ToString() : "");
                         xmlWriter.WriteElementString("DeliveryDateUtc", null, shipment.DeliveryDateUtc.HasValue ?
                             shipment.DeliveryDateUtc.Value.ToString() : "");
@@ -828,66 +821,7 @@ namespace Grand.Services.ExportImport
         /// <param name="orders">Orders</param>
         public virtual byte[] ExportOrdersToXlsx(IList<Order> orders)
         {
-            //property array
-            var properties = new[]
-            {
-                    new PropertyByName<Order>("OrderId", p=>p.Id),
-                    new PropertyByName<Order>("StoreId", p=>p.StoreId),
-                    new PropertyByName<Order>("OrderGuid",p=>p.OrderGuid),
-                    new PropertyByName<Order>("CustomerId",p=>p.CustomerId),
-                    new PropertyByName<Order>("OrderStatusId", p=>p.OrderStatusId),
-                    new PropertyByName<Order>("PaymentStatusId", p=>p.PaymentStatusId),
-                    new PropertyByName<Order>("ShippingStatusId", p=>p.ShippingStatusId),
-                    new PropertyByName<Order>("OrderSubtotalInclTax", p=>p.OrderSubtotalInclTax),
-                    new PropertyByName<Order>("OrderSubtotalExclTax", p=>p.OrderSubtotalExclTax),
-                    new PropertyByName<Order>("OrderSubTotalDiscountInclTax", p=>p.OrderSubTotalDiscountInclTax),
-                    new PropertyByName<Order>("OrderSubTotalDiscountExclTax", p=>p.OrderSubTotalDiscountExclTax),
-                    new PropertyByName<Order>("OrderShippingInclTax", p=>p.OrderShippingInclTax),
-                    new PropertyByName<Order>("OrderShippingExclTax", p=>p.OrderShippingExclTax),
-                    new PropertyByName<Order>("PaymentMethodAdditionalFeeInclTax", p=>p.PaymentMethodAdditionalFeeInclTax),
-                    new PropertyByName<Order>("PaymentMethodAdditionalFeeExclTax", p=>p.PaymentMethodAdditionalFeeExclTax),
-                    new PropertyByName<Order>("TaxRates", p=>p.TaxRates),
-                    new PropertyByName<Order>("OrderTax", p=>p.OrderTax),
-                    new PropertyByName<Order>("OrderTotal", p=>p.OrderTotal),
-                    new PropertyByName<Order>("RefundedAmount", p=>p.RefundedAmount),
-                    new PropertyByName<Order>("OrderDiscount", p=>p.OrderDiscount),
-                    new PropertyByName<Order>("CurrencyRate", p=>p.CurrencyRate),
-                    new PropertyByName<Order>("CustomerCurrencyCode", p=>p.CustomerCurrencyCode),
-                    new PropertyByName<Order>("AffiliateId", p=>p.AffiliateId),
-                    new PropertyByName<Order>("PaymentMethodSystemName", p=>p.PaymentMethodSystemName),
-                    new PropertyByName<Order>("ShippingPickUpInStore", p=>p.PickUpInStore),
-                    new PropertyByName<Order>("ShippingMethod", p=>p.ShippingMethod),
-                    new PropertyByName<Order>("ShippingRateComputationMethodSystemName", p=>p.ShippingRateComputationMethodSystemName),
-                    new PropertyByName<Order>("CustomValuesXml", p=>p.CustomValuesXml),
-                    new PropertyByName<Order>("VatNumber", p=>p.VatNumber),
-                    new PropertyByName<Order>("CreatedOnUtc", p=>p.CreatedOnUtc.ToOADate()),
-                    new PropertyByName<Order>("BillingFirstName", p=>p.BillingAddress.Return(billingAddress=>billingAddress.FirstName, "")),
-                    new PropertyByName<Order>("BillingLastName", p=>p.BillingAddress.Return(billingAddress=>billingAddress.LastName, "")),
-                    new PropertyByName<Order>("BillingEmail", p=>p.BillingAddress.Return(billingAddress=>billingAddress.Email, "")),
-                    new PropertyByName<Order>("BillingCompany", p=>p.BillingAddress.Return(billingAddress=>billingAddress.Company, "")),
-                    new PropertyByName<Order>("BillingCountry",p=>p.BillingAddress.Return(billingAddress=>EngineContext.Current.Resolve<ICountryService>().GetCountryById(billingAddress.CountryId), null).Return(country=>country.Name,"")),
-                    new PropertyByName<Order>("BillingStateProvince",p=>p.BillingAddress.Return(billingAddress=>EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(billingAddress.StateProvinceId), null).Return(stateProvince=>stateProvince.Name,"")),
-                    new PropertyByName<Order>("BillingCity", p=>p.BillingAddress.Return(billingAddress=>billingAddress.City,"")),
-                    new PropertyByName<Order>("BillingAddress1",p=>p.BillingAddress.Return(billingAddress=>billingAddress.Address1,"")),
-                    new PropertyByName<Order>("BillingAddress2", p=>p.BillingAddress.Return(billingAddress=>billingAddress.Address2,"")),
-                    new PropertyByName<Order>("BillingZipPostalCode", p=>p.BillingAddress.Return(billingAddress=>billingAddress.ZipPostalCode,"")),
-                    new PropertyByName<Order>("BillingPhoneNumber", p=>p.BillingAddress.Return(billingAddress=>billingAddress.PhoneNumber,"")),
-                    new PropertyByName<Order>("BillingFaxNumber", p=>p.BillingAddress.Return(billingAddress=>billingAddress.FaxNumber,"")),
-                    new PropertyByName<Order>("ShippingFirstName", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.FirstName,"")),
-                    new PropertyByName<Order>("ShippingLastName", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.LastName, "")),
-                    new PropertyByName<Order>("ShippingEmail", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.Email, "")),
-                    new PropertyByName<Order>("ShippingCompany", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.Company, "")),
-                    new PropertyByName<Order>("ShippingCountry", p=>p.ShippingAddress.Return(shippingAddress=>EngineContext.Current.Resolve<ICountryService>().GetCountryById(shippingAddress.CountryId), null).Return(country=>country.Name,"")),
-                    new PropertyByName<Order>("ShippingStateProvince", p=>p.ShippingAddress.Return(shippingAddress=>EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(shippingAddress.StateProvinceId), null).Return(stateProvince=>stateProvince.Name,"")),
-                    new PropertyByName<Order>("ShippingCity", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.City, "")),
-                    new PropertyByName<Order>("ShippingAddress1", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.Address1, "")),
-                    new PropertyByName<Order>("ShippingAddress2", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.Address2, "")),
-                    new PropertyByName<Order>("ShippingZipPostalCode", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.ZipPostalCode, "")),
-                    new PropertyByName<Order>("ShippingPhoneNumber",p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.PhoneNumber, "")),
-                    new PropertyByName<Order>("ShippingFaxNumber", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.FaxNumber, ""))
-            };
-
-            return ExportToXlsx(properties, orders);
+            return ExportToXlsx(PropertyByOrder(), orders);
         }
 
         /// <summary>
@@ -897,48 +831,93 @@ namespace Grand.Services.ExportImport
         /// <param name="customers">Customers</param>
         public virtual byte[] ExportCustomersToXlsx(IList<Customer> customers)
         {
-
-            //property array
-            var properties = new[]
-            {
-                new PropertyByName<Customer>("CustomerId", p => p.Id),
-                new PropertyByName<Customer>("CustomerGuid", p => p.CustomerGuid),
-                new PropertyByName<Customer>("Email", p => p.Email),
-                new PropertyByName<Customer>("Username", p => p.Username),
-                new PropertyByName<Customer>("Password", p => p.Password),
-                new PropertyByName<Customer>("PasswordFormatId", p => p.PasswordFormatId),
-                new PropertyByName<Customer>("PasswordSalt", p => p.PasswordSalt),
-                new PropertyByName<Customer>("IsTaxExempt", p => p.IsTaxExempt),
-                new PropertyByName<Customer>("AffiliateId", p => p.AffiliateId),
-                new PropertyByName<Customer>("VendorId", p => p.VendorId),
-                new PropertyByName<Customer>("Active", p => p.Active),
-                new PropertyByName<Customer>("IsGuest", p => p.IsGuest()),
-                new PropertyByName<Customer>("IsRegistered", p => p.IsRegistered()),
-                new PropertyByName<Customer>("IsAdministrator", p => p.IsAdmin()),
-                new PropertyByName<Customer>("IsForumModerator", p => p.IsForumModerator()),
-                //attributes
-                new PropertyByName<Customer>("FirstName", p => p.GetAttribute<string>(SystemCustomerAttributeNames.FirstName)),
-                new PropertyByName<Customer>("LastName", p => p.GetAttribute<string>(SystemCustomerAttributeNames.LastName)),
-                new PropertyByName<Customer>("Gender", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Gender)),
-                new PropertyByName<Customer>("Company", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Company)),
-                new PropertyByName<Customer>("StreetAddress", p => p.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress)),
-                new PropertyByName<Customer>("StreetAddress2", p => p.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2)),
-                new PropertyByName<Customer>("ZipPostalCode", p => p.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode)),
-                new PropertyByName<Customer>("City", p => p.GetAttribute<string>(SystemCustomerAttributeNames.City)),
-                new PropertyByName<Customer>("CountryId", p => p.GetAttribute<int>(SystemCustomerAttributeNames.CountryId)),
-                new PropertyByName<Customer>("StateProvinceId", p => p.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId)),
-                new PropertyByName<Customer>("Phone", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Phone)),
-                new PropertyByName<Customer>("Fax", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Fax)),
-                new PropertyByName<Customer>("VatNumber", p => p.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber)),
-                new PropertyByName<Customer>("VatNumberStatusId", p => p.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId)),
-                new PropertyByName<Customer>("TimeZoneId", p => p.GetAttribute<string>(SystemCustomerAttributeNames.TimeZoneId)),
-                new PropertyByName<Customer>("AvatarPictureId", p => p.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId)),
-                new PropertyByName<Customer>("ForumPostCount", p => p.GetAttribute<int>(SystemCustomerAttributeNames.ForumPostCount)),
-                new PropertyByName<Customer>("Signature", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Signature)),
-            };
-
-            return ExportToXlsx(properties, customers);
+            return ExportToXlsx(PropertyByCustomer(), customers);
         }
+
+
+        /// <summary>
+        /// Export customer - personal info to XLSX
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        public virtual byte[] ExportCustomerToXlsx(Customer customer)
+        {
+            using (var stream = new MemoryStream())
+            {
+                using (var xlPackage = new ExcelPackage(stream))
+                {
+                    //customer info
+                    var worksheetCustomer = xlPackage.Workbook.Worksheets.Add("CustomerInfo");
+                    var managerCustomer = PrepareCustomer(customer);
+                    managerCustomer.WriteCaption(worksheetCustomer, SetCaptionStyle);
+                    managerCustomer.WriteToXlsx(worksheetCustomer);
+
+                    //orders
+                    var orderService = EngineContext.Current.Resolve<IOrderService>();
+                    var customerService = EngineContext.Current.Resolve<ICustomerService>();
+                    var orders = orderService.SearchOrders(customerId: customer.Id).ToList();
+
+                    var worksheetOrder = xlPackage.Workbook.Worksheets.Add("Orders");
+                    var managerOrder = new PropertyManager<Order>(PropertyByOrder());
+                    managerOrder.WriteCaption(worksheetOrder, SetCaptionStyle);
+
+                    var row = 2;
+                    foreach (var items in orders)
+                    {
+                        managerOrder.CurrentObject = items;
+                        managerOrder.WriteToXlsx(worksheetOrder, row++);
+                    }
+
+                    //activity log
+                    var customerActivityService = EngineContext.Current.Resolve<ICustomerActivityService>();
+                    var actlogs = customerActivityService.GetAllActivities(customerId: customer.Id).ToList();
+
+                    var worksheetLog = xlPackage.Workbook.Worksheets.Add("ActivityLogs");
+                    var managerLog = new PropertyManager<ActivityLog>(PropertyByActivityLog());
+                    managerLog.WriteCaption(worksheetLog, SetCaptionStyle);
+
+                    row = 2;
+                    foreach (var items in actlogs)
+                    {
+                        managerLog.CurrentObject = items;
+                        managerLog.WriteToXlsx(worksheetLog, row++);
+                    }
+
+                    //contact us
+                    var contactUsService = EngineContext.Current.Resolve<IContactUsService>();
+                    var contacts = contactUsService.GetAllContactUs(customerId: customer.Id).ToList();
+
+                    var worksheetContact = xlPackage.Workbook.Worksheets.Add("MessageContact");
+                    var managerContact = new PropertyManager<ContactUs>(PropertyByContactForm());
+                    managerContact.WriteCaption(worksheetContact, SetCaptionStyle);
+
+                    row = 2;
+                    foreach (var items in contacts)
+                    {
+                        managerContact.CurrentObject = items;
+                        managerContact.WriteToXlsx(worksheetContact, row++);
+                    }
+
+                    //emails
+                    var queuedEmailService = EngineContext.Current.Resolve<IQueuedEmailService>();
+                    var queuedEmails = queuedEmailService.SearchEmails("", customer.Email, null, null, false, true, 100, true);
+
+                    var worksheetEmails = xlPackage.Workbook.Worksheets.Add("Emails");
+                    var managerEmails = new PropertyManager<QueuedEmail>(PropertyByEmails());
+                    managerEmails.WriteCaption(worksheetEmails, SetCaptionStyle);
+
+                    row = 2;
+                    foreach (var items in queuedEmails)
+                    {
+                        managerEmails.CurrentObject = items;
+                        managerEmails.WriteToXlsx(worksheetEmails, row++);
+                    }
+
+                    xlPackage.Save();
+                }
+                return stream.ToArray();
+            }
+        }
+
 
         /// <summary>
         /// Export customer list to xml
@@ -1007,7 +986,7 @@ namespace Grand.Services.ExportImport
                 xmlWriter.WriteElementString("AvatarPictureId", null, customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId).ToString());
                 xmlWriter.WriteElementString("ForumPostCount", null, customer.GetAttribute<int>(SystemCustomerAttributeNames.ForumPostCount).ToString());
                 xmlWriter.WriteElementString("Signature", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.Signature));
-                
+
                 xmlWriter.WriteEndElement();
             }
 
@@ -1016,7 +995,7 @@ namespace Grand.Services.ExportImport
             xmlWriter.Flush();
             return stringWriter.ToString();
         }
-        
+
         /// <summary>
         /// Export newsletter subscribers to TXT
         /// </summary>
@@ -1106,7 +1085,6 @@ namespace Grand.Services.ExportImport
                 {
                     var worksheet = xlPackage.Workbook.Worksheets.Add(typeof(T).Name);
                     var manager = new PropertyManager<T>(properties);
-                    //manager.WriteCaption(worksheet, )
                     manager.WriteCaption(worksheet, SetCaptionStyle);
 
                     var row = 2;
@@ -1128,7 +1106,7 @@ namespace Grand.Services.ExportImport
             string picture2 = null;
             string picture3 = null;
             int i = 0;
-            foreach(var picture in product.ProductPictures.Take(3))
+            foreach (var picture in product.ProductPictures.Take(3))
             {
                 var pic = _pictureService.GetPictureById(picture.PictureId);
                 var pictureLocalPath = _pictureService.GetThumbLocalPath(pic);
@@ -1146,7 +1124,7 @@ namespace Grand.Services.ExportImport
                 }
                 i++;
             }
-              
+
             return new[] { picture1, picture2, picture3 };
         }
 
@@ -1166,6 +1144,205 @@ namespace Grand.Services.ExportImport
             style.Fill.PatternType = ExcelFillStyle.Solid;
             style.Fill.BackgroundColor.SetColor(System.Drawing.Color.FromArgb(184, 204, 228));
             style.Font.Bold = true;
+        }
+
+
+        private PropertyByName<Order>[] PropertyByOrder()
+        {
+            var properties = new[]
+            {
+                    new PropertyByName<Order>("OrderNumber", p=>p.OrderNumber),
+                    new PropertyByName<Order>("OrderId", p=>p.Id),
+                    new PropertyByName<Order>("StoreId", p=>p.StoreId),
+                    new PropertyByName<Order>("OrderGuid",p=>p.OrderGuid),
+                    new PropertyByName<Order>("CustomerId",p=>p.CustomerId),
+                    new PropertyByName<Order>("OrderStatusId", p=>p.OrderStatusId),
+                    new PropertyByName<Order>("PaymentStatusId", p=>p.PaymentStatusId),
+                    new PropertyByName<Order>("ShippingStatusId", p=>p.ShippingStatusId),
+                    new PropertyByName<Order>("OrderSubtotalInclTax", p=>p.OrderSubtotalInclTax),
+                    new PropertyByName<Order>("OrderSubtotalExclTax", p=>p.OrderSubtotalExclTax),
+                    new PropertyByName<Order>("OrderSubTotalDiscountInclTax", p=>p.OrderSubTotalDiscountInclTax),
+                    new PropertyByName<Order>("OrderSubTotalDiscountExclTax", p=>p.OrderSubTotalDiscountExclTax),
+                    new PropertyByName<Order>("OrderShippingInclTax", p=>p.OrderShippingInclTax),
+                    new PropertyByName<Order>("OrderShippingExclTax", p=>p.OrderShippingExclTax),
+                    new PropertyByName<Order>("PaymentMethodAdditionalFeeInclTax", p=>p.PaymentMethodAdditionalFeeInclTax),
+                    new PropertyByName<Order>("PaymentMethodAdditionalFeeExclTax", p=>p.PaymentMethodAdditionalFeeExclTax),
+                    new PropertyByName<Order>("TaxRates", p=>p.TaxRates),
+                    new PropertyByName<Order>("OrderTax", p=>p.OrderTax),
+                    new PropertyByName<Order>("OrderTotal", p=>p.OrderTotal),
+                    new PropertyByName<Order>("RefundedAmount", p=>p.RefundedAmount),
+                    new PropertyByName<Order>("OrderDiscount", p=>p.OrderDiscount),
+                    new PropertyByName<Order>("CurrencyRate", p=>p.CurrencyRate),
+                    new PropertyByName<Order>("CustomerCurrencyCode", p=>p.CustomerCurrencyCode),
+                    new PropertyByName<Order>("AffiliateId", p=>p.AffiliateId),
+                    new PropertyByName<Order>("PaymentMethodSystemName", p=>p.PaymentMethodSystemName),
+                    new PropertyByName<Order>("ShippingPickUpInStore", p=>p.PickUpInStore),
+                    new PropertyByName<Order>("ShippingMethod", p=>p.ShippingMethod),
+                    new PropertyByName<Order>("ShippingRateComputationMethodSystemName", p=>p.ShippingRateComputationMethodSystemName),
+                    new PropertyByName<Order>("CustomValuesXml", p=>p.CustomValuesXml),
+                    new PropertyByName<Order>("VatNumber", p=>p.VatNumber),
+                    new PropertyByName<Order>("CreatedOnUtc", p=>p.CreatedOnUtc.ToOADate()),
+                    new PropertyByName<Order>("BillingFirstName", p=>p.BillingAddress.Return(billingAddress=>billingAddress.FirstName, "")),
+                    new PropertyByName<Order>("BillingLastName", p=>p.BillingAddress.Return(billingAddress=>billingAddress.LastName, "")),
+                    new PropertyByName<Order>("BillingEmail", p=>p.BillingAddress.Return(billingAddress=>billingAddress.Email, "")),
+                    new PropertyByName<Order>("BillingCompany", p=>p.BillingAddress.Return(billingAddress=>billingAddress.Company, "")),
+                    new PropertyByName<Order>("BillingCountry",p=>p.BillingAddress.Return(billingAddress=>EngineContext.Current.Resolve<ICountryService>().GetCountryById(billingAddress.CountryId), null).Return(country=>country.Name,"")),
+                    new PropertyByName<Order>("BillingStateProvince",p=>p.BillingAddress.Return(billingAddress=>EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(billingAddress.StateProvinceId), null).Return(stateProvince=>stateProvince.Name,"")),
+                    new PropertyByName<Order>("BillingCity", p=>p.BillingAddress.Return(billingAddress=>billingAddress.City,"")),
+                    new PropertyByName<Order>("BillingAddress1",p=>p.BillingAddress.Return(billingAddress=>billingAddress.Address1,"")),
+                    new PropertyByName<Order>("BillingAddress2", p=>p.BillingAddress.Return(billingAddress=>billingAddress.Address2,"")),
+                    new PropertyByName<Order>("BillingZipPostalCode", p=>p.BillingAddress.Return(billingAddress=>billingAddress.ZipPostalCode,"")),
+                    new PropertyByName<Order>("BillingPhoneNumber", p=>p.BillingAddress.Return(billingAddress=>billingAddress.PhoneNumber,"")),
+                    new PropertyByName<Order>("BillingFaxNumber", p=>p.BillingAddress.Return(billingAddress=>billingAddress.FaxNumber,"")),
+                    new PropertyByName<Order>("ShippingFirstName", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.FirstName,"")),
+                    new PropertyByName<Order>("ShippingLastName", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.LastName, "")),
+                    new PropertyByName<Order>("ShippingEmail", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.Email, "")),
+                    new PropertyByName<Order>("ShippingCompany", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.Company, "")),
+                    new PropertyByName<Order>("ShippingCountry", p=>p.ShippingAddress.Return(shippingAddress=>EngineContext.Current.Resolve<ICountryService>().GetCountryById(shippingAddress.CountryId), null).Return(country=>country.Name,"")),
+                    new PropertyByName<Order>("ShippingStateProvince", p=>p.ShippingAddress.Return(shippingAddress=>EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(shippingAddress.StateProvinceId), null).Return(stateProvince=>stateProvince.Name,"")),
+                    new PropertyByName<Order>("ShippingCity", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.City, "")),
+                    new PropertyByName<Order>("ShippingAddress1", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.Address1, "")),
+                    new PropertyByName<Order>("ShippingAddress2", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.Address2, "")),
+                    new PropertyByName<Order>("ShippingZipPostalCode", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.ZipPostalCode, "")),
+                    new PropertyByName<Order>("ShippingPhoneNumber",p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.PhoneNumber, "")),
+                    new PropertyByName<Order>("ShippingFaxNumber", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.FaxNumber, ""))
+            };
+            return properties;
+        }
+
+        private PropertyByName<Customer>[] PropertyByCustomer()
+        {
+            var properties = new[]
+            {
+                new PropertyByName<Customer>("CustomerId", p => p.Id),
+                new PropertyByName<Customer>("CustomerGuid", p => p.CustomerGuid),
+                new PropertyByName<Customer>("Email", p => p.Email),
+                new PropertyByName<Customer>("Username", p => p.Username),
+                new PropertyByName<Customer>("Password", p => p.Password),
+                new PropertyByName<Customer>("PasswordFormatId", p => p.PasswordFormatId),
+                new PropertyByName<Customer>("PasswordSalt", p => p.PasswordSalt),
+                new PropertyByName<Customer>("IsTaxExempt", p => p.IsTaxExempt),
+                new PropertyByName<Customer>("AffiliateId", p => p.AffiliateId),
+                new PropertyByName<Customer>("VendorId", p => p.VendorId),
+                new PropertyByName<Customer>("Active", p => p.Active),
+                new PropertyByName<Customer>("IsGuest", p => p.IsGuest()),
+                new PropertyByName<Customer>("IsRegistered", p => p.IsRegistered()),
+                new PropertyByName<Customer>("IsAdministrator", p => p.IsAdmin()),
+                new PropertyByName<Customer>("IsForumModerator", p => p.IsForumModerator()),
+                //attributes
+                new PropertyByName<Customer>("FirstName", p => p.GetAttribute<string>(SystemCustomerAttributeNames.FirstName)),
+                new PropertyByName<Customer>("LastName", p => p.GetAttribute<string>(SystemCustomerAttributeNames.LastName)),
+                new PropertyByName<Customer>("Gender", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Gender)),
+                new PropertyByName<Customer>("Company", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Company)),
+                new PropertyByName<Customer>("StreetAddress", p => p.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress)),
+                new PropertyByName<Customer>("StreetAddress2", p => p.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2)),
+                new PropertyByName<Customer>("ZipPostalCode", p => p.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode)),
+                new PropertyByName<Customer>("City", p => p.GetAttribute<string>(SystemCustomerAttributeNames.City)),
+                new PropertyByName<Customer>("CountryId", p => p.GetAttribute<int>(SystemCustomerAttributeNames.CountryId)),
+                new PropertyByName<Customer>("StateProvinceId", p => p.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId)),
+                new PropertyByName<Customer>("Phone", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Phone)),
+                new PropertyByName<Customer>("Fax", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Fax)),
+                new PropertyByName<Customer>("VatNumber", p => p.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber)),
+                new PropertyByName<Customer>("VatNumberStatusId", p => p.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId)),
+                new PropertyByName<Customer>("TimeZoneId", p => p.GetAttribute<string>(SystemCustomerAttributeNames.TimeZoneId)),
+                new PropertyByName<Customer>("AvatarPictureId", p => p.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId)),
+                new PropertyByName<Customer>("ForumPostCount", p => p.GetAttribute<int>(SystemCustomerAttributeNames.ForumPostCount)),
+                new PropertyByName<Customer>("Signature", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Signature)),
+            };
+            return properties;
+        }
+
+        private PropertyByName<ActivityLog>[] PropertyByActivityLog()
+        {
+            var properties = new[]
+            {
+                new PropertyByName<ActivityLog>("IpAddress", p => p.IpAddress),
+                new PropertyByName<ActivityLog>("CreatedOnUtc", p => p.CreatedOnUtc.ToString()),
+                new PropertyByName<ActivityLog>("Comment", p => p.Comment),
+            };
+            return properties;
+        }
+        private PropertyByName<ContactUs>[] PropertyByContactForm()
+        {
+            var properties = new[]
+            {
+                new PropertyByName<ContactUs>("IpAddress", p => p.IpAddress),
+                new PropertyByName<ContactUs>("CreatedOnUtc", p => p.CreatedOnUtc.ToString()),
+                new PropertyByName<ContactUs>("Email", p => p.Email),
+                new PropertyByName<ContactUs>("FullName", p => p.FullName),
+                new PropertyByName<ContactUs>("Subject", p => p.Subject),
+                new PropertyByName<ContactUs>("Enquiry", p => p.Enquiry),
+            };
+            return properties;
+        }
+
+        private PropertyByName<QueuedEmail>[] PropertyByEmails()
+        {
+            var properties = new[]
+            {
+                new PropertyByName<QueuedEmail>("SentOnUtc", p => p.SentOnUtc.ToString()),
+                new PropertyByName<QueuedEmail>("From", p => p.From),
+                new PropertyByName<QueuedEmail>("FromName", p => p.FromName),
+                new PropertyByName<QueuedEmail>("Subject", p => p.Subject),
+                new PropertyByName<QueuedEmail>("Body", p => p.Body),
+            };
+            return properties;
+        }
+
+        private PropertyHelperList<Customer> PrepareCustomer(Customer customer)
+        {
+            var helper = new PropertyHelperList<Customer>(customer);
+            helper.ObjectList.Add(new PropertyHelperList<Customer>("CustomerId", p => p.Id));
+            helper.ObjectList.Add(new PropertyHelperList<Customer>("CustomerGuid", p => p.CustomerGuid));
+            helper.ObjectList.Add(new PropertyHelperList<Customer>("Email", p => p.Email));
+            helper.ObjectList.Add(new PropertyHelperList<Customer>("Username", p => p.Username));
+            helper.ObjectList.Add(new PropertyHelperList<Customer>("Password", p => p.Password));
+            helper.ObjectList.Add(new PropertyHelperList<Customer>("PasswordFormatId", p => p.PasswordFormatId));
+            helper.ObjectList.Add(new PropertyHelperList<Customer>("PasswordSalt", p => p.PasswordSalt));
+            helper.ObjectList.Add(new PropertyHelperList<Customer>("IsTaxExempt", p => p.IsTaxExempt));
+            helper.ObjectList.Add(new PropertyHelperList<Customer>("Active", p => p.Active));
+            helper.ObjectList.Add(new PropertyHelperList<Customer>("IsGuest", p => p.IsGuest()));
+            helper.ObjectList.Add(new PropertyHelperList<Customer>("IsRegistered", p => p.IsRegistered()));
+            helper.ObjectList.Add(new PropertyHelperList<Customer>("IsAdministrator", p => p.IsAdmin()));
+            helper.ObjectList.Add(new PropertyHelperList<Customer>("IsForumModerator", p => p.IsForumModerator()));
+            //attributes
+            helper.ObjectList.Add(new PropertyHelperList<Customer>("FirstName", p => p.GetAttribute<string>(SystemCustomerAttributeNames.FirstName)));
+            helper.ObjectList.Add(new PropertyHelperList<Customer>("LastName", p => p.GetAttribute<string>(SystemCustomerAttributeNames.LastName)));
+            helper.ObjectList.Add(new PropertyHelperList<Customer>("Gender", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Gender)));
+            helper.ObjectList.Add(new PropertyHelperList<Customer>("Company", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Company)));
+            helper.ObjectList.Add(new PropertyHelperList<Customer>("StreetAddress", p => p.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress)));
+            helper.ObjectList.Add(new PropertyHelperList<Customer>("StreetAddress2", p => p.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2)));
+            helper.ObjectList.Add(new PropertyHelperList<Customer>("ZipPostalCode", p => p.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode)));
+            helper.ObjectList.Add(new PropertyHelperList<Customer>("City", p => p.GetAttribute<string>(SystemCustomerAttributeNames.City)));
+            helper.ObjectList.Add(new PropertyHelperList<Customer>("Country",
+                p =>
+                {
+                    var countryid = p.GetAttribute<string>(SystemCustomerAttributeNames.CountryId);
+                    var countryName = "";
+                    if (!string.IsNullOrEmpty(countryid))
+                        countryName = EngineContext.Current.Resolve<ICountryService>().GetCountryById(countryid)?.Name;
+                    return countryName;
+                }
+                ));
+
+            helper.ObjectList.Add(new PropertyHelperList<Customer>("StateProvince",
+                p =>
+                {
+                    var stateId = p.GetAttribute<string>(SystemCustomerAttributeNames.StateProvinceId);
+                    var stateName = "";
+                    if (!string.IsNullOrEmpty(stateId))
+                        stateName = EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(stateId)?.Name;
+                    return stateName;
+                }
+                ));
+
+            helper.ObjectList.Add(new PropertyHelperList<Customer>("Phone", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Phone)));
+            helper.ObjectList.Add(new PropertyHelperList<Customer>("Fax", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Fax)));
+            helper.ObjectList.Add(new PropertyHelperList<Customer>("VatNumber", p => p.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber)));
+            helper.ObjectList.Add(new PropertyHelperList<Customer>("ForumPostCount", p => p.GetAttribute<int>(SystemCustomerAttributeNames.ForumPostCount)));
+            helper.ObjectList.Add(new PropertyHelperList<Customer>("Signature", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Signature)));
+
+            return helper;
         }
 
         #endregion

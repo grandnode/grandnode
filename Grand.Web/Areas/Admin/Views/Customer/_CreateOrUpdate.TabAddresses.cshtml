@@ -1,10 +1,4 @@
 ﻿@model CustomerModel
-@using Grand.Core.Domain.Orders;
-@using Grand.Services.Customers;
-@using System.Text;
-
-
-
 
 <div class="panel panel-default">
     <div class="panel-body">
@@ -16,80 +10,82 @@
 </div>
 
 <script>
-        $(document).ready(function () {
-            $("#customer-addresses-grid").kendoGrid({
-                dataSource: {
-                    transport: {
-                        read: {
-                            url: "@Html.Raw(Url.Action("AddressesSelect", "Customer", new { customerId = Model.Id }))",
-                            type: "POST",
-                            dataType: "json",
-                            data: addAntiForgeryToken
-                        },
-                        destroy: {
-                            url: "@Html.Raw(Url.Action("AddressDelete", "Customer", new { customerId = Model.Id }))",
-                            type: "POST",
-                            dataType: "json",
-                            data: addAntiForgeryToken
-                        }
-                    },
-                    schema: {
-                        data: "Data",
-                        total: "Total",
-                        errors: "Errors",
-                        model: {
-                            id: "Id"
-                        }
-                    },
-                    error: function(e) {
-                        display_kendoui_grid_error(e);
-                        // Cancel the changes
-                        this.cancelChanges();
-                    },
-                    serverPaging: true,
-                    serverFiltering: true,
-                    serverSorting: true
+$(document).ready(function () {
+    $("#customer-addresses-grid").kendoGrid({
+        dataSource: {
+            transport: {
+                read: {
+                    url: "@Html.Raw(Url.Action("AddressesSelect", "Customer", new { customerId = Model.Id }))",
+                    type: "POST",
+                    dataType: "json",
+                    data: addAntiForgeryToken
                 },
-                pageable: {
-                    refresh: true,
-                    numeric: false,
-                    previousNext: false,
-                    info: false
-                },
-                editable: {
-                    confirmation: false,
-                    mode: "inline"
-                },
-                scrollable: false,
-                columns: [{
-                    field: "FirstName",
-                    title: "@T("Admin.Address.Fields.FirstName")"
-                }, {
-                    field: "LastName",
-                    title: "@T("Admin.Address.Fields.LastName")"
-                }, {
-                    field: "Email",
-                    title: "@T("Admin.Address.Fields.Email")"
-                }, {
-                    field: "PhoneNumber",
-                    title: "@T("Admin.Address.Fields.PhoneNumber")"
-                }, {
-                    field: "FaxNumber",
-                    title: "@T("Admin.Address.Fields.FaxNumber")"
-                }, {
-                    field: "AddressHtml",
-                    title: "@T("Admin.Address")",
-                    encoded: false
-                }, {
-                    field: "Id",
-                    title: "@T("Admin.Common.Edit")",
-                    width: 100,
-                    template: '<a href="@Url.Content("~/Admin/Customer/AddressEdit?customerId=")@Model.Id&addressid=#=Id#">@T("Admin.Common.Edit")</a>'
-                }, {
-                    command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
-                    title: "@T("Admin.Common.Delete")",
-                    width: 100
-                }]
-            });
-        });
+                destroy: {
+                    url: "@Html.Raw(Url.Action("AddressDelete", "Customer", new { customerId = Model.Id }))",
+                    type: "POST",
+                    dataType: "json",
+                    data: addAntiForgeryToken
+                }
+            },
+            schema: {
+                data: "Data",
+                total: "Total",
+                errors: "Errors",
+                model: {
+                    id: "Id"
+                }
+            },
+            error: function(e) {
+                display_kendoui_grid_error(e);
+                // Cancel the changes
+                this.cancelChanges();
+            },
+            serverPaging: true,
+            serverFiltering: true,
+            serverSorting: true
+        },
+        pageable: {
+            refresh: true,
+            numeric: false,
+            previousNext: false,
+            info: false
+        },
+        editable: {
+            confirmation: false,
+            mode: "inline"
+        },
+        scrollable: false,
+        columns: [{
+            field: "FirstName",
+            title: "@T("Admin.Address.Fields.FirstName")"
+        }, {
+            field: "LastName",
+            title: "@T("Admin.Address.Fields.LastName")"
+        }, {
+            field: "Email",
+            title: "@T("Admin.Address.Fields.Email")"
+        }, {
+            field: "PhoneNumber",
+            title: "@T("Admin.Address.Fields.PhoneNumber")",
+            minScreenWidth: 1020,
+        }, {
+            field: "FaxNumber",
+            title: "@T("Admin.Address.Fields.FaxNumber")",
+            minScreenWidth: 1020,
+        }, {
+            field: "AddressHtml",
+            title: "@T("Admin.Address")",
+            encoded: false
+        }, {
+            field: "Id",
+            title: "@T("Admin.Common.Edit")",
+            width: 100,
+            template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/AddressEdit?customerId=")@Model.Id&addressid=#=Id#">@T("Admin.Common.Edit")</a>'
+        }, {
+            command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+            title: "@T("Admin.Common.Delete")",
+            width: 100
+        }]
+    });
+});
 </script>

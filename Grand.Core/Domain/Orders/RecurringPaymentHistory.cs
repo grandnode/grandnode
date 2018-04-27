@@ -22,10 +22,5 @@ namespace Grand.Core.Domain.Orders
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
         
-        /// <summary>
-        /// Gets the recurring payment
-        /// </summary>
-        public virtual RecurringPayment RecurringPayment { get; set; }
-
     }
 }

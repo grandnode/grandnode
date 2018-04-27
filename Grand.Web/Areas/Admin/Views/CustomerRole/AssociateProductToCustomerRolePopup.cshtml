@@ -1,18 +1,19 @@
-﻿@{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
-}
-@model CustomerRoleModel.AssociateProductToCustomerRoleModel
+﻿@model CustomerRoleModel.AssociateProductToCustomerRoleModel
+@inject AdminAreaSettings adminAreaSettings
 @{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
+    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
     //page title
     ViewBag.Title = T("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Choose").Text;
 }
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-   
+
+<form asp-controller="CustomerRole" asp-action="AssociateProductToCustomerRolePopup" method="post"
+      asp-route-CustomerRoleId="@Context.Request.Query["CustomerRoleId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-productIdInput="@Context.Request.Query["productIdInput"]"
+      asp-route-productNameInput="@Context.Request.Query["productNameInput"]"
+      >
+    <antiforgery-token />
+
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -23,43 +24,42 @@
                     </div>
                 </div>
                 <div class="portlet-body form">
-
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchProductName, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <admin-label asp-for="SearchProductName" class="col-sm-3 control-label" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.SearchProductName)
+                                    <admin-input asp-for="SearchProductName" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchCategoryId, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <admin-label asp-for="SearchCategoryId" class="col-sm-3 control-label" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandDropDownListFor(model => model.SearchCategoryId, Model.AvailableCategories)
+                                    <admin-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchManufacturerId, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <admin-label asp-for="SearchManufacturerId" class="col-sm-3 control-label" />
                                 <div class="col-md-9  col-sm-9">
-                                    @Html.GrandDropDownListFor(model => model.SearchManufacturerId, Model.AvailableManufacturers)
+                                    <admin-select asp-for="SearchManufacturerId" asp-items="Model.AvailableManufacturers" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchStoreId, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <admin-label asp-for="SearchStoreId" class="col-sm-3 control-label" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandDropDownListFor(model => model.SearchStoreId, Model.AvailableStores)
+                                    <admin-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchVendorId, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <admin-label asp-for="SearchVendorId" class="col-sm-3 control-label" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandDropDownListFor(model => model.SearchVendorId, Model.AvailableVendors)
+                                    <admin-select asp-for="SearchVendorId" asp-items="Model.AvailableVendors" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchProductTypeId, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <admin-label asp-for="SearchProductTypeId" class="col-sm-3 control-label" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandDropDownListFor(model => model.SearchProductTypeId, Model.AvailableProductTypes)
+                                    <admin-select asp-for="SearchProductTypeId" asp-items="Model.AvailableProductTypes" />
                                 </div>
                             </div>
                             <div class="form-actions">
@@ -81,81 +81,80 @@
     </div>
 
 
-    if (ViewBag.RefreshPage == true)
+    @if (ViewBag.RefreshPage == true)
     {
     <script type="text/javascript">
     try {
-        window.opener.document.getElementById('@(ViewBag.productIdInput)').value = '@(ViewBag.productId)';
-        window.opener.document.getElementById('@(ViewBag.productNameInput)').innerHTML = '@(ViewBag.productName)';
-        window.opener.document.getElementById('@(ViewBag.btnId)').click();
+            window.opener.document.getElementById('@(Context.Request.Query["productIdInput"])').value = '@(ViewBag.productId)';
+            window.opener.document.getElementById('@(Context.Request.Query["productNameInput"])').innerHTML = '@(ViewBag.productName)';
+            window.opener.document.getElementById('@(Context.Request.Query["btnId"])').click();
     }
     catch (e){}
     window.close();
     </script>
     }
 
-    @Html.HiddenFor(model => model.AssociatedToProductId)
-    
+    <input asp-for="AssociatedToProductId" type="hidden" />
 
-                <div id="products-grid"></div>
+    <div id="products-grid"></div>
 
-                <script>
-                    $(document).ready(function () {
-                        $("#products-grid").kendoGrid({
-                            dataSource: {
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("AssociateProductToCustomerRolePopupList", "CustomerRole"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: additionalData
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors"
-                                },
-                                error: function(e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                pageSize: @(defaultGridPageSize),
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
-                            },
-                            pageable: {
-                                refresh: true,
-                                pageSizes: [@(gridPageSizes)]
-                            },
-                            editable: {
-                                confirmation: false,
-                                mode: "inline"
-                            },
-                            scrollable: false,
-                            columns: [{
-                                field: "Name",
-                                title: "@T("Admin.Common.Select")",
-                                width: 50,
-                                template: '<input type="button" value="@T("Admin.Common.Select")" onclick="selectAssociatedProduct(\'#=Id#\')" class="k-button" />'
-                            },{
-                                field: "Name",
-                                title: "@T("Admin.Catalog.Products.Fields.Name")"
-                            }, {
-                                field: "Published",
-                                title: "@T("Admin.Catalog.Products.Fields.Published")",
-                                width: 100,
-                                headerAttributes: { style: "text-align:center" },
-                                attributes: { style: "text-align:center" },
-                                template: '# if(Published) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
-                            }]
-                        });
-                    });
-                </script>
-           
-    
+    <script>
+        $(document).ready(function () {
+            $("#products-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("AssociateProductToCustomerRolePopupList", "CustomerRole"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: additionalData
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(adminAreaSettings.DefaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "Name",
+                    title: "@T("Admin.Common.Select")",
+                    width: 50,
+                    template: '<input type="button" value="@T("Admin.Common.Select")" onclick="selectAssociatedProduct(\'#=Id#\')" class="k-button" />'
+                },{
+                    field: "Name",
+                    title: "@T("Admin.Catalog.Products.Fields.Name")"
+                }, {
+                    field: "Published",
+                    title: "@T("Admin.Catalog.Products.Fields.Published")",
+                    width: 100,
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
+                    template: '# if(Published) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+                }]
+            });
+        });
+    </script>
+
+
     <script type="text/javascript">
         $(document).ready(function () {
             $('#search-products').click(function () {
@@ -165,7 +164,7 @@
                 return false;
             });
         });
-        
+
         $("#@Html.FieldIdFor(model => model.SearchProductName)").keydown(function (event) {
             if (event.keyCode == 13) {
                 $("#search-products").click();
@@ -185,10 +184,10 @@
             addAntiForgeryToken(data);
             return data;
         }
-        
-        function selectAssociatedProduct(productid) {           
+
+        function selectAssociatedProduct(productid) {
             $("#@Html.FieldIdFor(model => model.AssociatedToProductId)").val(productid);
             $('#save').click();
         }
     </script>
-}
+</form>

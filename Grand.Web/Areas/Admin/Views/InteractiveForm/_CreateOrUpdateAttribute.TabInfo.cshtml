@@ -1,7 +1,4 @@
 ﻿@model InteractiveFormAttributeModel
-
-
-
 <script type="text/javascript">
 
         $(document).ready(function () {
@@ -39,23 +36,23 @@
     @<div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.Locales[item].Name)
+                <admin-label asp-for="@Model.Locales[item].Name" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.Locales[item].Name)
-                    @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                    <admin-input asp-for="@Model.Locales[item].Name" />
+                    <span asp-validation-for="@Model.Locales[item].Name"></span>
                 </div>
             </div>
-            @Html.HiddenFor(model => model.Locales[item].LanguageId)
+            <input asp-for="@Model.Locales[item].LanguageId" type="hidden" />
         </div>
     </div>
     ,
     @<div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.Name)
+                <admin-label asp-for="Name" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.Name)
-                    @Html.ValidationMessageFor(model => model.Name)
+                    <admin-input asp-for="Name" />
+                    <span asp-validation-for="Name"></span>
                 </div>
             </div>
         </div>
@@ -64,69 +61,69 @@
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.SystemName)
+            <admin-label asp-for="SystemName" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.SystemName)
-                @Html.ValidationMessageFor(model => model.SystemName)
+                <admin-input asp-for="SystemName" />
+                <span asp-validation-for="SystemName"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.Style)
+            <admin-label asp-for="Style" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.Style)
-                @Html.ValidationMessageFor(model => model.Style)
+                <admin-input asp-for="Style" />
+                <span asp-validation-for="Style"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.Class)
+            <admin-label asp-for="Class" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.Class)
-                @Html.ValidationMessageFor(model => model.Class)
+                <admin-input asp-for="Class" />
+                <span asp-validation-for="Class"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.IsRequired)
+            <admin-label asp-for="IsRequired" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.IsRequired)
+                    <admin-input asp-for="IsRequired" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.IsRequired)
+                <span asp-validation-for="IsRequired"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.FormControlTypeId)
+            <admin-label asp-for="FormControlTypeId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.FormControlTypeId, ((Grand.Core.Domain.Messages.FormControlType)Model.FormControlTypeId).ToSelectList())
-                @Html.ValidationMessageFor(model => model.FormControlTypeId)
+                <admin-select asp-for="FormControlTypeId" asp-items="((Grand.Core.Domain.Messages.FormControlType)Model.FormControlTypeId).ToSelectList()" />
+                <span asp-validation-for="FormControlTypeId"></span>
             </div>
         </div>
         <div class="form-group" id="pnlRegexValidation">
-            @Html.GrandLabelFor(model => model.RegexValidation)
+            <admin-label asp-for="RegexValidation" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.RegexValidation)
-                @Html.ValidationMessageFor(model => model.RegexValidation)
+                <admin-input asp-for="RegexValidation" />
+                <span asp-validation-for="RegexValidation"></span>
             </div>
         </div>
         <div class="form-group" id="pnlValidationMinLength">
-            @Html.GrandLabelFor(model => model.ValidationMinLength)
+            <admin-label asp-for="ValidationMinLength" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.ValidationMinLength)
-                @Html.ValidationMessageFor(model => model.ValidationMinLength)
+                <admin-input asp-for="ValidationMinLength" />
+                <span asp-validation-for="ValidationMinLength"></span>
             </div>
         </div>
         <div class="form-group" id="pnlValidationMaxLength">
-            @Html.GrandLabelFor(model => model.ValidationMaxLength)
+            <admin-label asp-for="ValidationMaxLength" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.ValidationMaxLength)
-                @Html.ValidationMessageFor(model => model.ValidationMaxLength)
+                <admin-input asp-for="ValidationMaxLength" />
+                <span asp-validation-for="ValidationMaxLength"></span>
             </div>
         </div>
         <div class="form-group" id="pnlDefaultValue">
-            @Html.GrandLabelFor(model => model.DefaultValue)
+            <admin-label asp-for="DefaultValue" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.DefaultValue)
-                @Html.ValidationMessageFor(model => model.DefaultValue)
+                <admin-input asp-for="DefaultValue" />
+                <span asp-validation-for="DefaultValue"></span>
             </div>
         </div>
     </div>

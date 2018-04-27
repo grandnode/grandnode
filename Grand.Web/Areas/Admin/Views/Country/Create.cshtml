@@ -3,9 +3,8 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Countries.AddNew").Text;
 }
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "country-form" }))
-{
-    @Html.AntiForgeryToken()    
+<form asp-controller="Country" asp-action="Create" method="post" id="country-form">
+    <antiforgery-token />    
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -28,7 +27,4 @@
             </div>
         </div>
     </div>
-
-
-
-}
+</form>

@@ -1,49 +1,44 @@
 ﻿@model CatalogSettingsModel
 
-
-
-
-
-
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.CompareProductsEnabled_OverrideForStore, model => model.CompareProductsEnabled, Model.ActiveStoreScopeConfiguration)
-                @Html.GrandLabelFor(model => model.CompareProductsEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="CompareProductsEnabled" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.CompareProductsEnabled)
+                    <admin-input asp-for="CompareProductsEnabled" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.CompareProductsEnabled)
+                <span asp-validation-for="CompareProductsEnabled"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.IncludeShortDescriptionInCompareProducts_OverrideForStore, model => model.IncludeShortDescriptionInCompareProducts, Model.ActiveStoreScopeConfiguration)
-                @Html.GrandLabelFor(model => model.IncludeShortDescriptionInCompareProducts, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="IncludeShortDescriptionInCompareProducts" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.IncludeShortDescriptionInCompareProducts)
+                    <admin-input asp-for="IncludeShortDescriptionInCompareProducts" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.IncludeShortDescriptionInCompareProducts)
+                <span asp-validation-for="IncludeShortDescriptionInCompareProducts"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.IncludeFullDescriptionInCompareProducts_OverrideForStore, model => model.IncludeFullDescriptionInCompareProducts, Model.ActiveStoreScopeConfiguration)
-                @Html.GrandLabelFor(model => model.IncludeFullDescriptionInCompareProducts, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="IncludeFullDescriptionInCompareProducts" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.IncludeFullDescriptionInCompareProducts)
+                    <admin-input asp-for="IncludeFullDescriptionInCompareProducts" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.IncludeFullDescriptionInCompareProducts)
+                <span asp-validation-for="IncludeFullDescriptionInCompareProducts"></span>
             </div>
         </div>
     </div>

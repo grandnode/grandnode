@@ -1,13 +1,10 @@
 ﻿@model ProductReviewListModel
+@inject AdminAreaSettings adminAreaSettings
 @{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.Catalog.ProductReviews").Text;
 }
-@Html.AntiForgeryToken()
-
+<antiforgery-token />
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light form-fit">
@@ -26,30 +23,30 @@
                 <div class="form-horizontal">
                     <div class="form-body">
                         <div class="form-group">
-                            @Html.GrandLabelFor(model => model.CreatedOnFrom)
+                            <admin-label asp-for="CreatedOnFrom" />
                             <div class="col-md-4 col-sm-6">
-                                @Html.GrandEditorFor(model => model.CreatedOnFrom)
+                                <admin-input asp-for="CreatedOnFrom" />
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.GrandLabelFor(model => model.CreatedOnTo)
+                            <admin-label asp-for="CreatedOnTo" />
                             <div class="col-md-4 col-sm-6">
-                                @Html.GrandEditorFor(model => model.CreatedOnTo)
+                                <admin-input asp-for="CreatedOnTo" />
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.GrandLabelFor(model => model.SearchText)
+                            <admin-label asp-for="SearchText" />
                             <div class="col-md-4 col-sm-6">
-                                @Html.GrandEditorFor(model => model.SearchText)
+                                <admin-input asp-for="SearchText" />
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.GrandLabelFor(model => model.SearchProductId)
+                            <admin-label asp-for="SearchProductId" />
                             <div class="col-md-4 col-sm-6">
                                 <input type="text" class="form-control text-box single-line" id="search-product-name" autocomplete="off" />
                                 <span id="search-product-friendly-name"></span>
                                 <input type="button" id="search-product-clear" class="k-button" style="display: none;" value="@T("Admin.Common.Clear")" />
-                                @Html.TextBoxFor(model => model.SearchProductId, new { autocomplete = "off", style = "display:none;" })
+                                <admin-textarea asp-for="SearchProductId" autocomplete="off" style="display: none;"></admin-textarea>
                                 <script type="text/javascript">
                                     $(document).ready(function() {
                                         $('#search-product-name').autocomplete({
@@ -76,9 +73,9 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.GrandLabelFor(model => model.SearchStoreId)
+                            <admin-label asp-for="SearchStoreId" />
                             <div class="col-md-4 col-sm-6">
-                                @Html.GrandDropDownListFor(model => model.SearchStoreId, Model.AvailableStores)
+                                <admin-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
                             </div>
                         </div>
                     </div>
@@ -101,225 +98,213 @@
     </div>
 </div>
 
-
-
-
-
-            <script>
-                $(document).ready(function () {
-                    $("#productreviews-grid").kendoGrid({
-                        dataSource: {
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("List", "ProductReview"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: additionalData
-                                }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors"
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            pageSize: @(defaultGridPageSize),
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            pageSizes: [@(gridPageSizes)]
-                        },
-                        scrollable: false,
-                        dataBound: onDataBound,
-                        columns: [{
-                            field: "Ids",
-                            headerTemplate: "<label class='mt-checkbox mt-checkbox-outline'><input id='mastercheckbox' type='checkbox'/><span></span></label>",
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: "<label class='mt-checkbox mt-checkbox-outline'><input type='checkbox' value='#=Ids#' class='checkboxGroups'/><span></span></label>",
-                            width: 50
-                        }, 
-                        {
-                            field: "StoreName",
-                            title: "@T("Admin.Catalog.ProductReviews.Fields.Store")",
-                            width: 150
-                        },
-                        {
-                            field: "ProductName",
-                            title: "@T("Admin.Catalog.ProductReviews.Fields.Product")",
-                            width: 200,
-                            template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:ProductName#</a>'
-                        }, {
-                            field: "CustomerId",
-                            title: "@T("Admin.Catalog.ProductReviews.Fields.Customer")",
-                            width: 200,
-                            template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerInfo#</a>'
-                        }, {
-                            field: "Title",
-                            title: "@T("Admin.Catalog.ProductReviews.Fields.Title")",
-                            width: 200
-                        }, {
-                            field: "Rating",
-                            title: "@T("Admin.Catalog.ProductReviews.Fields.Rating")",
-                            width: 100
-                        }, {
-                            field: "IsApproved",
-                            title: "@T("Admin.Catalog.ProductReviews.Fields.IsApproved")",
-                            width: 100,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '# if(IsApproved) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
-                        }, {
-                            field: "CreatedOn",
-                            title: "@T("Admin.Catalog.ProductReviews.Fields.CreatedOn")",
-                            width: 200,
-                            type: "date",
-                            format: "{0:G}"
-                        }, {
-                            field: "Id",
-                            title: "@T("Admin.Common.Edit")",
-                            width: 50,
-                            template: '<a class="btn btn-sm btn-default" href="Edit/#=Id#?ProductId=#=ProductId#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
-                        }]
-                    });
-                });
-            </script>
-            <script type="text/javascript">
-
-                var selectedIds = [];
-
-                $(document).ready(function () {
-
-                    //search button
-                    $('#search-productreviews').click(function () {
-                        //search
-                        var grid = $('#productreviews-grid').data('kendoGrid');
-                        grid.dataSource.page(1); //new search. Set page size to 1
-                        //grid.dataSource.read(); we already loaded the grid above using "page" function
-                        //clear selected checkboxes
-                        $('.checkboxGroups').prop('checked', false).change();
-                        selectedIds = [];
-                        return false;
-                    });
-
-                    //"approve selected" button
-                    $('#approve-selected').click(function (e) {
-                        e.preventDefault();
-
-                        var postData = {
-                            selectedIds: selectedIds,
-                        };
-                        addAntiForgeryToken(postData);
-
-                        $.ajax({
-                            cache:false,
-                            type: "POST",
-                            url: "@(Url.Action("ApproveSelected", "ProductReview"))",
-                            data: postData,
-                            complete: function (data) {
-                                //reload grid
-                                var grid = $('#productreviews-grid').data('kendoGrid');
-                                grid.dataSource.read();
-                            },
-                            error:function (xhr, ajaxOptions, thrownError){
-                                alert(thrownError);
-                            },
-                            traditional: true
-                        });
-                        return false;
-                    });
-
-                    //"disapprove selected" button
-                    $('#disapprove-selected').click(function (e) {
-                        e.preventDefault();
-
-                        var postData = {
-                            selectedIds: selectedIds,
-                        };
-                        addAntiForgeryToken(postData);
-
-                        $.ajax({
-                            cache:false,
-                            type: "POST",
-                            url: "@(Url.Action("DisapproveSelected", "ProductReview"))",
-                            data: postData,
-                            complete: function (data) {
-                                //reload grid
-                                var grid = $('#productreviews-grid').data('kendoGrid');
-                                grid.dataSource.read();
-                            },
-                            error:function (xhr, ajaxOptions, thrownError){
-                                alert(thrownError);
-                            },
-                            traditional: true
-                        });
-                        return false;
-                    });
-
-
-                    $('#mastercheckbox').click(function () {
-                        $('.checkboxGroups').prop('checked', $(this).is(':checked')).change();
-                    });
-
-                    //wire up checkboxes.
-                    $('#productreviews-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function (e) {
-                        var $check = $(this);
-                        if ($check.is(":checked") == true) {
-                            var checked = jQuery.inArray($check.val(), selectedIds);
-                            if (checked == -1) {
-                                //add id to selectedIds.
-                                selectedIds.push($check.val());
-                            }
-                        }
-                        else {
-                            var checked = jQuery.inArray($check.val(), selectedIds);
-                            if (checked > -1) {
-                                //remove id from selectedIds.
-                                selectedIds = $.grep(selectedIds, function (item, index) {
-                                    return item != $check.val();
-                                });
-                            }
-                        }
-                        updateMasterCheckbox();
-                    });
-                });
-
-                function additionalData() {
-                    var data = {
-                        CreatedOnFrom: $('#@Html.FieldIdFor(model => model.CreatedOnFrom)').val(),
-                        CreatedOnTo: $('#@Html.FieldIdFor(model => model.CreatedOnTo)').val(),
-                        SearchText: $('#@Html.FieldIdFor(model => model.SearchText)').val(),
-                        SearchStoreId: $('#@Html.FieldIdFor(model => model.SearchStoreId)').val(),
-                        SearchProductId: $('#@Html.FieldIdFor(model => model.SearchProductId)').val()
-                    };
-                    addAntiForgeryToken(data);
-                    return data;
+<script type="text/javascript">
+$(document).ready(function () {
+    $("#productreviews-grid").kendoGrid({
+        dataSource: {
+            transport: {
+                read: {
+                    url: "@Html.Raw(Url.Action("List", "ProductReview"))",
+                    type: "POST",
+                    dataType: "json",
+                    data: additionalData
                 }
+            },
+            schema: {
+                data: "Data",
+                total: "Total",
+                errors: "Errors"
+            },
+            error: function(e) {
+                display_kendoui_grid_error(e);
+                // Cancel the changes
+                this.cancelChanges();
+            },
+            pageSize: @(adminAreaSettings.DefaultGridPageSize),
+            serverPaging: true,
+            serverFiltering: true,
+            serverSorting: true
+        },
+        pageable: {
+            refresh: true,
+            pageSizes: [@(adminAreaSettings.GridPageSizes)]
+        },
+        scrollable: true,
+        dataBound: onDataBound,
+        columns: [{
+            field: "Ids",
+            headerTemplate: "<label class='mt-checkbox mt-checkbox-outline'><input id='mastercheckbox' type='checkbox'/><span></span></label>",
+            headerAttributes: { style: "text-align:center" },
+            attributes: { style: "text-align:center" },
+            template: "<label class='mt-checkbox mt-checkbox-outline'><input type='checkbox' value='#=Ids#' class='checkboxGroups'/><span></span></label>",
+            width: 40
+        },
+        {
+            field: "ProductName",
+            title: "@T("Admin.Catalog.ProductReviews.Fields.Product")",
+            width: 200,
+            template: '<a class="k-link" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:ProductName#</a>'
+        }, {
+            field: "CustomerId",
+            title: "@T("Admin.Catalog.ProductReviews.Fields.Customer")",
+            width: 200,
+            minScreenWidth: 750,
+            template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerInfo#</a>'
+        }, {
+            field: "Title",
+            title: "@T("Admin.Catalog.ProductReviews.Fields.Title")",
+            width: 200,
+            template: '<a class="k-link" href="Edit/#=Id#?ProductId=#=ProductId#">#:Title#</a>'
+        }, {
+            field: "Rating",
+            title: "@T("Admin.Catalog.ProductReviews.Fields.Rating")",
+            width: 60,
+            minScreenWidth: 750,
+        }, {
+            field: "IsApproved",
+            title: "@T("Admin.Catalog.ProductReviews.Fields.IsApproved")",
+            width: 80,
+            headerAttributes: { style: "text-align:center" },
+            attributes: { style: "text-align:center" },
+            template: '# if(IsApproved) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+        }, {
+            field: "CreatedOn",
+            title: "@T("Admin.Catalog.ProductReviews.Fields.CreatedOn")",
+            width: 120,
+            type: "date",
+            format: "{0:G}"
+        }]
+    });
+});
+</script>
+<script type="text/javascript">
 
-                function onDataBound(e) {
+    var selectedIds = [];
 
-                    $('#productreviews-grid input[type=checkbox][id!=mastercheckbox]').each(function () {
-                        var currentId = $(this).val();
-                        var checked = jQuery.inArray(currentId, selectedIds);
-                        //set checked based on if current checkbox's value is in selectedIds.
-                        $(this).prop('checked', checked > -1);
+    $(document).ready(function () {
+
+        //search button
+        $('#search-productreviews').click(function () {
+            //search
+            var grid = $('#productreviews-grid').data('kendoGrid');
+            grid.dataSource.page(1); //new search. Set page size to 1
+            //grid.dataSource.read(); we already loaded the grid above using "page" function
+            //clear selected checkboxes
+            $('.checkboxGroups').prop('checked', false).change();
+            selectedIds = [];
+            return false;
+        });
+
+        //"approve selected" button
+        $('#approve-selected').click(function (e) {
+            e.preventDefault();
+
+            var postData = {
+                selectedIds: selectedIds,
+            };
+            addAntiForgeryToken(postData);
+
+            $.ajax({
+                cache:false,
+                type: "POST",
+                url: "@(Url.Action("ApproveSelected", "ProductReview"))",
+                data: postData,
+                complete: function (data) {
+                    //reload grid
+                    var grid = $('#productreviews-grid').data('kendoGrid');
+                    grid.dataSource.read();
+                },
+                error:function (xhr, ajaxOptions, thrownError){
+                    alert(thrownError);
+                },
+                traditional: true
+            });
+            return false;
+        });
+
+        //"disapprove selected" button
+        $('#disapprove-selected').click(function (e) {
+            e.preventDefault();
+
+            var postData = {
+                selectedIds: selectedIds,
+            };
+            addAntiForgeryToken(postData);
+
+            $.ajax({
+                cache:false,
+                type: "POST",
+                url: "@(Url.Action("DisapproveSelected", "ProductReview"))",
+                data: postData,
+                complete: function (data) {
+                    //reload grid
+                    var grid = $('#productreviews-grid').data('kendoGrid');
+                    grid.dataSource.read();
+                },
+                error:function (xhr, ajaxOptions, thrownError){
+                    alert(thrownError);
+                },
+                traditional: true
+            });
+            return false;
+        });
+
+
+        $('#mastercheckbox').click(function () {
+            $('.checkboxGroups').prop('checked', $(this).is(':checked')).change();
+        });
+
+        //wire up checkboxes.
+        $('#productreviews-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function (e) {
+            var $check = $(this);
+            if ($check.is(":checked") == true) {
+                var checked = jQuery.inArray($check.val(), selectedIds);
+                if (checked == -1) {
+                    //add id to selectedIds.
+                    selectedIds.push($check.val());
+                }
+            }
+            else {
+                var checked = jQuery.inArray($check.val(), selectedIds);
+                if (checked > -1) {
+                    //remove id from selectedIds.
+                    selectedIds = $.grep(selectedIds, function (item, index) {
+                        return item != $check.val();
                     });
-
-                    updateMasterCheckbox();
                 }
+            }
+            updateMasterCheckbox();
+        });
+    });
 
-                function updateMasterCheckbox() {
-                    var numChkBoxes = $('#productreviews-grid input[type=checkbox][id!=mastercheckbox]').length;
-                    var numChkBoxesChecked = $('#productreviews-grid input[type=checkbox][id!=mastercheckbox]:checked').length;
-                    $('#mastercheckbox').prop('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
-                }
+    function additionalData() {
+        var data = {
+            CreatedOnFrom: $('#@Html.FieldIdFor(model => model.CreatedOnFrom)').val(),
+            CreatedOnTo: $('#@Html.FieldIdFor(model => model.CreatedOnTo)').val(),
+            SearchText: $('#@Html.FieldIdFor(model => model.SearchText)').val(),
+            SearchStoreId: $('#@Html.FieldIdFor(model => model.SearchStoreId)').val(),
+            SearchProductId: $('#@Html.FieldIdFor(model => model.SearchProductId)').val()
+        };
+        addAntiForgeryToken(data);
+        return data;
+    }
 
-            </script>
-       
+    function onDataBound(e) {
+
+        $('#productreviews-grid input[type=checkbox][id!=mastercheckbox]').each(function () {
+            var currentId = $(this).val();
+            var checked = jQuery.inArray(currentId, selectedIds);
+            //set checked based on if current checkbox's value is in selectedIds.
+            $(this).prop('checked', checked > -1);
+        });
+
+        updateMasterCheckbox();
+    }
+
+    function updateMasterCheckbox() {
+        var numChkBoxes = $('#productreviews-grid input[type=checkbox][id!=mastercheckbox]').length;
+        var numChkBoxesChecked = $('#productreviews-grid input[type=checkbox][id!=mastercheckbox]:checked').length;
+        $('#mastercheckbox').prop('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+    }
+
+</script>

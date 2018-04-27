@@ -1,17 +1,15 @@
 ﻿@model ProductModel
-@{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-}
+@inject AdminAreaSettings adminAreaSettings
+
 <div class="note note-info">
     @T("Admin.Catalog.Products.PurchasedWithOrders.Hint")
 </div>
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div id="purchased-with-orders-grid"></div>
-        </div>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div id="purchased-with-orders-grid"></div>
     </div>
-    <script>
+</div>
+<script>
         $(document).ready(function () {
             $("#purchased-with-orders-grid").kendoGrid({
                 dataSource: {
@@ -33,14 +31,14 @@
                         // Cancel the changes
                         this.cancelChanges();
                     },
-                    pageSize: @(defaultGridPageSize),
+                    pageSize: @(adminAreaSettings.DefaultGridPageSize),
                     serverPaging: true,
                     serverFiltering: true,
                     serverSorting: true
                 },
                 pageable: {
                     refresh: true,
-                    pageSizes: [@(gridPageSizes)]
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
                 },
                 editable: {
                     confirmation: false,
@@ -50,42 +48,40 @@
                 columns: [{
                     field: "OrderNumber",
                     title: "@T("Admin.Orders.Fields.ID")",
-                    width: 80
+                    width: 80,
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Order/Edit/")#=Id#">#=OrderNumber#</a>',
                 }, {
                     field: "CustomerEmail",
                     title: "@T("Admin.Orders.Fields.CustomerEmail")",
-                    width: 200
+                    width: 200,
+                    minScreenWidth: 500,
                 },
-                    @if (!Model.IsLoggedInAsVendor)
+                @if (!Model.IsLoggedInAsVendor)
                 {
                     <text>{
                         field: "OrderStatus",
                         title: "@T("Admin.Orders.Fields.OrderStatus")",
-                        width: 100
+                        width: 100,
+                        minScreenWidth: 500,
                     },{
                         field: "PaymentStatus",
                         title: "@T("Admin.Orders.Fields.PaymentStatus")",
-                        width: 100
+                        width: 100,
+                        minScreenWidth: 500,
                     },{
                         field: "ShippingStatus",
                         title: "@T("Admin.Orders.Fields.ShippingStatus")",
-                        width: 100
+                        width: 100,
+                        minScreenWidth: 500,
                     },</text>
                 }
-
                 {
                     field: "CreatedOn",
                     title: "@T("Admin.Orders.Fields.CreatedOn")",
-                    width: 200,
+                    width: 150,
                     type: "date",
                     format: "{0:G}"
-                },
-                {
-                    field: "Id",
-                    title: "@T("Admin.Common.View")",
-                    width: 100,
-                    template: '<a class="btn btn-sm btn-default" href="@Url.Content("~/Admin/Order/Edit/")#=Id#"><i class="fa fa-search"></i> @T("Admin.Common.View")</a>'
                 }]
             });
         });
-    </script>
+</script>

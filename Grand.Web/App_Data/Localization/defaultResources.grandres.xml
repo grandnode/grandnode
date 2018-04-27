@@ -267,6 +267,21 @@
   <LocaleResource Name="Account.CustomerReturnRequests.Title">
     <Value>Return #{0} - {1}</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.DeleteAccount">
+    <Value>Delete account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.DeleteAccount.Button">
+    <Value>Delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.DeleteAccount.DangerAlert">
+    <Value>You can delete your Account at any time. If you change your mind, you might not be able to recover it.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.DeleteAccount.Fields.Password">
+    <Value>Current password</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.DeleteAccount.Fields.Password.Required">
+    <Value>Password field is required</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.DownloadableProducts">
     <Value>Downloadable products</Value>
   </LocaleResource>
@@ -284,6 +299,9 @@
   </LocaleResource>
   <LocaleResource Name="Account.EmailUsernameErrors.UsernameTooLong">
     <Value>Username is too long</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerExportToXls">
+    <Value>Export data</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Fields.AcceptPrivacyPolicy">
     <Value>I accept privacy policy</Value>
@@ -782,6 +800,9 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.AddNewWidget">
     <Value>Added a new widget (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteAccount">
+    <Value>Customer was deleted</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteBid">
     <Value>Deleted a bid for product ('{0}')</Value>
@@ -2481,6 +2502,12 @@
   <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.Rating.Hint">
     <Value>The customer's product rating.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.ReplyText">
+    <Value>Reply text</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.ReplyText.Hint">
+    <Value>The reply text by a store owner.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.ReviewText">
     <Value>Review text</Value>
   </LocaleResource>
@@ -2489,6 +2516,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.ReviewText.Required">
     <Value>Review text is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.Signature">
+    <Value>Signature</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.Signature.Hint">
+    <Value>Signature by a store owner.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.Store">
     <Value>Store</Value>
@@ -4233,6 +4266,12 @@
   <LocaleResource Name="Admin.Common.Search">
     <Value>Search</Value>
   </LocaleResource>
+  <LocaleResource Name="admin.common.search.filter.close">
+    <Value>Hide filter</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.common.search.filter.open">
+    <Value>Show filter</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Common.Select">
     <Value>Select</Value>
   </LocaleResource>
@@ -5289,6 +5328,12 @@
   <LocaleResource Name="Admin.Configuration.Settings">
     <Value>Settings</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AdminLayout">
+    <Value>Admin layout</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AdminLayout.hint">
+    <Value>Allow to set administrator layout</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.AllSettings">
     <Value>All settings (advanced)</Value>
   </LocaleResource>
@@ -5901,6 +5946,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowUsersToChangeUsernames.Hint">
     <Value>A value indicating whether customers are allowed to change their usernames.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowUsersToDeleteAccount">
+    <Value>Allow users to delete account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowUsersToDeleteAccount.hint">
+    <Value>A value indicating whether users are allowed to delete account. Option appears in my account (left side).</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowViewingProfiles">
     <Value>Allow viewing of customer profiles</Value>
   </LocaleResource>
@@ -6356,6 +6407,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Forums.TopicsPageSize.Hint">
     <Value>Set the page size for topics in forums e.g. '10' topics per page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GridLayout">
+    <Value>Admin layout for tabs and grids</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GridLayout.hint">
+    <Value>Allow to set administrator layout for tabs and grid</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon">
     <Value>General settings</Value>
@@ -9291,6 +9348,9 @@
   <LocaleResource Name="Admin.ContentManagement.Topics.List.SearchStore.Hint">
     <Value>Search by a specific store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.NoStoresDefined">
+    <Value>No stores defined</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.ContentManagement.Topics.Stores">
     <Value>Stores</Value>
   </LocaleResource>
@@ -10966,7 +11026,7 @@
     <Value>Order Pending</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Dashboard.ActivityOverview.ReturnRequests">
-    <Value>Return Requests</Value>
+    <Value>Pending return requests</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Dashboard.ActivityOverview.TodayRegisteredCustomers">
     <Value>Today Registered Customers</Value>
@@ -11460,8 +11520,8 @@
   <LocaleResource Name="Admin.Orders.Fields.GiftCardInfo.Hint">
     <Value>Applied gift card.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Orders.Fields.ID">
-    <Value>Order ID</Value>
+  <LocaleResource Name="Admin.Orders.Fields.Id">
+    <Value>Id</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.ID.Hint">
     <Value>The unique ID of this order.</Value>

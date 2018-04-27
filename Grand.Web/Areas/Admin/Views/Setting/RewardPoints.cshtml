@@ -4,12 +4,9 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.RewardPoints").Text;
 }
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary(false)
-
-
+<form asp-controller="Setting" asp-action="RewardPoints" method="post">
+    <antiforgery-token />
+    <div asp-validation-summary="All"></div>
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -27,12 +24,11 @@
                 <div class="portlet-body">
                     <div class="form-horizontal">
                         <div class="form-body">
-                            @await Component.InvokeAsync("StoreScopeConfiguration") 
+                            @await Component.InvokeAsync("StoreScopeConfiguration")
                         </div>
                     </div>
                 </div>
                 <div class="portlet-body form">
-
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group">
@@ -43,36 +39,36 @@
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.Enabled_OverrideForStore, model => model.Enabled, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.Enabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="Enabled" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.Enabled)
+                                        <admin-input asp-for="Enabled" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.Enabled)
+                                    <span asp-validation-for="Enabled"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ExchangeRate_OverrideForStore, model => model.ExchangeRate, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.ExchangeRate, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="ExchangeRate" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     @T("Admin.Configuration.Settings.RewardPoints.ExchangeRate.Hint2")
-                                    @Html.GrandEditorFor(model => model.ExchangeRate)
+                                    <admin-input asp-for="ExchangeRate" />
                                     @Model.PrimaryStoreCurrencyCode
-                                    @Html.ValidationMessageFor(model => model.ExchangeRate)
+                                    <span asp-validation-for="ExchangeRate"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.MinimumRewardPointsToUse_OverrideForStore, model => model.MinimumRewardPointsToUse, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.MinimumRewardPointsToUse, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="MinimumRewardPointsToUse" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandEditorFor(model => model.MinimumRewardPointsToUse)
-                                    @Html.ValidationMessageFor(model => model.MinimumRewardPointsToUse)
+                                    <admin-input asp-for="MinimumRewardPointsToUse" />
+                                    <span asp-validation-for="MinimumRewardPointsToUse"></span>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -83,73 +79,73 @@
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.PointsForRegistration_OverrideForStore, model => model.PointsForRegistration, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.PointsForRegistration, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="PointsForRegistration" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandEditorFor(model => model.PointsForRegistration)
-                                    @Html.ValidationMessageFor(model => model.PointsForRegistration)
+                                    <admin-input asp-for="PointsForRegistration" />
+                                    <span asp-validation-for="PointsForRegistration"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.PointsForPurchases_OverrideForStore, model => model.PointsForPurchases_Amount, model => model.PointsForPurchases_Points, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.PointsForPurchases_Amount, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="PointsForPurchases_Amount" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     @T("Admin.Configuration.Settings.RewardPoints.Earning.Hint1")
-                                    @Html.GrandEditorFor(model => model.PointsForPurchases_Amount)
+                                    <admin-input asp-for="PointsForPurchases_Amount" />
                                     @Model.PrimaryStoreCurrencyCode
                                     &nbsp;
                                     @T("Admin.Configuration.Settings.RewardPoints.Earning.Hint2")
-                                    @Html.GrandEditorFor(model => model.PointsForPurchases_Points)
+                                    <admin-input asp-for="PointsForPurchases_Points" />
                                     @T("Admin.Configuration.Settings.RewardPoints.Earning.Hint3")
-                                    @Html.ValidationMessageFor(model => model.PointsForPurchases_Amount)
-                                    @Html.ValidationMessageFor(model => model.PointsForPurchases_Points)
+                                    <span asp-validation-for="PointsForPurchases_Amount"></span>
+                                    <span asp-validation-for="PointsForPurchases_Points"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.PointsForPurchases_Awarded_OverrideForStore, model => model.PointsForPurchases_Awarded, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.PointsForPurchases_Awarded, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="PointsForPurchases_Awarded" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandDropDownListFor(model => model.PointsForPurchases_Awarded, ((OrderStatus)Model.PointsForPurchases_Awarded).ToSelectList())
-                                    @Html.ValidationMessageFor(model => model.PointsForPurchases_Awarded)
+                                    <admin-select asp-for="PointsForPurchases_Awarded" asp-items="((OrderStatus)Model.PointsForPurchases_Awarded).ToSelectList()" />
+                                    <span asp-validation-for="PointsForPurchases_Awarded"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.PointsForPurchases_Canceled_OverrideForStore, model => model.PointsForPurchases_Canceled, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.PointsForPurchases_Canceled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="PointsForPurchases_Canceled" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandDropDownListFor(model => model.PointsForPurchases_Canceled, ((OrderStatus)Model.PointsForPurchases_Canceled).ToSelectList())
-                                    @Html.ValidationMessageFor(model => model.PointsForPurchases_Canceled)
+                                    <admin-select asp-for="PointsForPurchases_Canceled" asp-items="((OrderStatus)Model.PointsForPurchases_Canceled).ToSelectList()" />
+                                    <span asp-validation-for="PointsForPurchases_Canceled"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.DisplayHowMuchWillBeEarned_OverrideForStore, model => model.DisplayHowMuchWillBeEarned, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.DisplayHowMuchWillBeEarned, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="DisplayHowMuchWillBeEarned" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.DisplayHowMuchWillBeEarned)
+                                        <admin-input asp-for="DisplayHowMuchWillBeEarned" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.DisplayHowMuchWillBeEarned)
+                                    <span asp-validation-for="DisplayHowMuchWillBeEarned"></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-4 col-sm-4 text-right">
-                                    @Html.GrandLabelFor(model => model.PointsAccumulatedForAllStores, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                    <admin-label asp-for="PointsAccumulatedForAllStores" class="control-label" />
                                 </div>
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.PointsAccumulatedForAllStores)
+                                        <admin-input asp-for="PointsAccumulatedForAllStores" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.PointsAccumulatedForAllStores)
+                                    <span asp-validation-for="PointsAccumulatedForAllStores"></span>
                                 </div>
                             </div>
                         </div>
@@ -158,5 +154,4 @@
             </div>
         </div>
     </div>
-
-}
+</form>

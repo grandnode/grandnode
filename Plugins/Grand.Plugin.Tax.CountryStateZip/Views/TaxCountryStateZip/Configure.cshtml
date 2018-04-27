@@ -1,16 +1,14 @@
-﻿@{
-    Layout = "_ConfigurePlugin";
-
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
-}
-@model TaxRateListModel
+﻿@model TaxRateListModel
 @using Grand.Framework;
 @using Grand.Plugin.Tax.CountryStateZip.Models;
 @using Grand.Core.Infrastructure;
+@using Grand.Core.Domain.Common;
+@inject AdminAreaSettings adminAreaSettings
+@{
+    Layout = "_ConfigurePlugin";
+}
 <div id="tax-countrystatezip-grid"></div>
-<script>
+<script type="text/javascript">
     $(document).ready(function () {
         $("#tax-countrystatezip-grid").kendoGrid({
             dataSource: {
@@ -61,14 +59,14 @@
                     // Cancel the changes
                     this.cancelChanges();
                 },
-                pageSize: @(defaultGridPageSize),
+                pageSize: @(adminAreaSettings.DefaultGridPageSize),
                 serverPaging: true,
                 serverFiltering: true,
                 serverSorting: true
             },
             pageable: {
                 refresh: true,
-                pageSizes: [@(gridPageSizes)]
+                pageSizes: [@(adminAreaSettings.GridPageSizes)]
             },
             editable: {
                 confirmation: false,
@@ -143,9 +141,8 @@
         });
     });
 </script>
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="TaxCountryStateZip" asp-action="Configure" method="post">
+    <antiforgery-token />
     <div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">
@@ -155,56 +152,56 @@
             </div>
             <div class="form-group">
                 <div class="col-md-3 col-sm-3 text-right">
-                    @Html.GrandLabelFor(model => model.AddStoreId, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                    <admin-label asp-for="AddStoreId" class="control-label" />
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandDropDownListFor(model => model.AddStoreId, Model.AvailableStores)
-                    @Html.ValidationMessageFor(model => model.AddStoreId)
+                    <admin-select asp-for="AddStoreId" asp-items="Model.AvailableStores" />
+                    <span asp-validation-for="AddStoreId"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3 col-sm-3 text-right">
-                    @Html.GrandLabelFor(model => model.AddCountryId, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                    <admin-label asp-for="AddCountryId" class="control-label" />
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandDropDownListFor(model => model.AddCountryId, Model.AvailableCountries)
-                    @Html.ValidationMessageFor(model => model.AddCountryId)
+                    <admin-select asp-for="AddCountryId" asp-items="Model.AvailableCountries" />
+                    <span asp-validation-for="AddCountryId"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3 col-sm-3 text-right">
-                    @Html.GrandLabelFor(model => model.AddStateProvinceId, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                    <admin-label asp-for="AddStateProvinceId" class="control-label" />
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandDropDownListFor(model => model.AddStateProvinceId, Model.AvailableStates)
-                    @Html.ValidationMessageFor(model => model.AddStateProvinceId)
+                    <admin-select asp-for="AddStateProvinceId" asp-items="Model.AvailableStates" />
+                    <span asp-validation-for="AddStateProvinceId"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3 col-sm-3 text-right">
-                    @Html.GrandLabelFor(model => model.AddZip, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                    <admin-label asp-for="AddZip" class="control-label" />
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.AddZip)
-                    @Html.ValidationMessageFor(model => model.AddZip)
+                    <admin-input asp-for="AddZip" />
+                    <span asp-validation-for="AddZip"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3 col-sm-3 text-right">
-                    @Html.GrandLabelFor(model => model.AddTaxCategoryId, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                    <admin-label asp-for="AddTaxCategoryId" class="control-label" />
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandDropDownListFor(model => model.AddTaxCategoryId, Model.AvailableTaxCategories)
-                    @Html.ValidationMessageFor(model => model.AddTaxCategoryId)
+                    <admin-select asp-for="AddTaxCategoryId" asp-items="Model.AvailableTaxCategories" />
+                    <span asp-validation-for="AddTaxCategoryId"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3 col-sm-3 text-right">
-                    @Html.GrandLabelFor(model => model.AddPercentage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                    <admin-label asp-for="AddPercentage" class="control-label" />
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.AddPercentage)
-                    @Html.ValidationMessageFor(model => model.AddPercentage)
+                    <admin-input asp-for="AddPercentage" />
+                    <span asp-validation-for="AddPercentage"></span>
                 </div>
             </div>
         </div>
@@ -241,4 +238,4 @@
             });
         });
     </script>
-}
+</form>

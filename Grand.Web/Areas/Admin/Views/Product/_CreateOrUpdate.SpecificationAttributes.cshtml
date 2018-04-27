@@ -73,26 +73,26 @@
                             info: false
                         },
                         editable: {
-                            confirmation: false,
+                            confirmation: true,
                             mode: "inline"
                         },
-                        scrollable: false,
+                        scrollable: true,
                         columns: [{
                                 field: "AttributeTypeName",
                                 title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.AttributeType")",
-                                width: 150
+                                width: 100
                             },{
                                 field: "AttributeName",
                                 title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttribute")",
-                                width: 200
+                                width: 100
                             }, {
                                 field: "ValueRaw",
                                 title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.Value")",
-                                width: 200,
+                                width: 150,
                                 encoded: false,
                                 editor: function setDropDownEditor(container, options) {
                                                     if (options.model.AttributeTypeId == @((int)SpecificationAttributeType.Option)) {
-                                                        var dropDownList = $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:ValueRaw"/>')
+                                                        var dropDownList = $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:SpecificationAttributeOptionId"/>')
                                                             .appendTo(container).kendoDropDownList().data("kendoDropDownList");
                                                         $.ajax({
                                                             type: "GET",
@@ -121,14 +121,14 @@
                             }, {
                                 field: "AllowFiltering",
                                 title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.AllowFiltering")",
-                                width: 150,
+                                width: 80,
                                 headerAttributes: { style: "text-align:center" },
                                 attributes: { style: "text-align:center" },
                                 template: '# if(AllowFiltering) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
                             }, {
                                 field: "ShowOnProductPage",
                                 title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.ShowOnProductPage")",
-                                width: 150,
+                                width: 90,
                                 headerAttributes: { style: "text-align:center" },
                                 attributes: { style: "text-align:center" },
                                 template: '# if(ShowOnProductPage) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
@@ -136,7 +136,10 @@
                             {
                                 field: "DisplayOrder",
                                 title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.DisplayOrder")",
-                                width: 150,
+                                width: 100,
+                                minScreenWidth: 500,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
                                 //integer format
                                 format: "{0:0}"
                             }, {
@@ -276,58 +279,58 @@
     <div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.AddSpecificationAttributeModel.AttributeTypeId)
+                <admin-label asp-for="AddSpecificationAttributeModel.AttributeTypeId" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandDropDownListFor(model => model.AddSpecificationAttributeModel.AttributeTypeId, ((SpecificationAttributeType)Model.AddSpecificationAttributeModel.AttributeTypeId).ToSelectList())
-                    @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.AttributeTypeId)
+                    <admin-select asp-for="AddSpecificationAttributeModel.AttributeTypeId" asp-items="((SpecificationAttributeType)Model.AddSpecificationAttributeModel.AttributeTypeId).ToSelectList()" />
+                    <span asp-validation-for="AddSpecificationAttributeModel.AttributeTypeId"></span>
                 </div>
             </div>
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeId)
+                <admin-label asp-for="AddSpecificationAttributeModel.SpecificationAttributeId" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandDropDownListFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeId, Model.AddSpecificationAttributeModel.AvailableAttributes)
-                    @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeId)
+                    <admin-select asp-for="AddSpecificationAttributeModel.SpecificationAttributeId" asp-items="Model.AddSpecificationAttributeModel.AvailableAttributes" />
+                    <span asp-validation-for="AddSpecificationAttributeModel.SpecificationAttributeId"></span>
                 </div>
             </div>
             <div class="form-group" id="pnlSpecificationAttributeOptionId">
-                @Html.GrandLabelFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId)
+                <admin-label asp-for="AddSpecificationAttributeModel.SpecificationAttributeOptionId" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandDropDownListFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId, Model.AddSpecificationAttributeModel.AvailableOptions)
-                    @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId)
+                    <admin-select asp-for="AddSpecificationAttributeModel.SpecificationAttributeOptionId" asp-items="Model.AddSpecificationAttributeModel.AvailableOptions" />
+                    <span asp-validation-for="AddSpecificationAttributeModel.SpecificationAttributeOptionId"></span>
                 </div>
             </div>
             <div class="form-group" id="pnlCustomValue">
-                @Html.GrandLabelFor(model => model.AddSpecificationAttributeModel.CustomValue)
+                <admin-label asp-for="AddSpecificationAttributeModel.CustomValue" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.AddSpecificationAttributeModel.CustomValue)
-                    @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.CustomValue)
+                    <admin-input asp-for="AddSpecificationAttributeModel.CustomValue" />
+                    <span asp-validation-for="AddSpecificationAttributeModel.CustomValue"></span>
                 </div>
             </div>
             <div class="form-group" id="pnlAllowFiltering">
-                @Html.GrandLabelFor(model => model.AddSpecificationAttributeModel.AllowFiltering)
+                <admin-label asp-for="AddSpecificationAttributeModel.AllowFiltering" />
                 <div class="col-md-9 col-sm-9">
                     <label class="mt-checkbox mt-checkbox-outline">
-                        @Html.EditorFor(model => model.AddSpecificationAttributeModel.AllowFiltering)
+                        <admin-input asp-for="AddSpecificationAttributeModel.AllowFiltering" />
                         <span></span>
                     </label>
-                    @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.AllowFiltering)
+                    <span asp-validation-for="AddSpecificationAttributeModel.AllowFiltering"></span>
                 </div>
             </div>
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.AddSpecificationAttributeModel.ShowOnProductPage)
+                <admin-label asp-for="AddSpecificationAttributeModel.ShowOnProductPage" />
                 <div class="col-md-9 col-sm-9">
                     <label class="mt-checkbox mt-checkbox-outline">
-                        @Html.EditorFor(model => model.AddSpecificationAttributeModel.ShowOnProductPage)
+                        <admin-input asp-for="AddSpecificationAttributeModel.ShowOnProductPage" />
                         <span></span>
                     </label>
-                    @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.ShowOnProductPage)
+                    <span asp-validation-for="AddSpecificationAttributeModel.ShowOnProductPage"></span>
                 </div>
             </div>
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.AddSpecificationAttributeModel.DisplayOrder)
+                <admin-label asp-for="AddSpecificationAttributeModel.DisplayOrder" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.AddSpecificationAttributeModel.DisplayOrder)
-                    @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.DisplayOrder)
+                    <admin-input asp-for="AddSpecificationAttributeModel.DisplayOrder" />
+                    <span asp-validation-for="AddSpecificationAttributeModel.DisplayOrder"></span>
                 </div>
             </div>
             <div class="form-actions">

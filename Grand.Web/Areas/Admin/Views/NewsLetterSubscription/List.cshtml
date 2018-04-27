@@ -1,15 +1,12 @@
 ﻿@model NewsLetterSubscriptionListModel
+@inject AdminAreaSettings adminAreaSettings
 @{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.Promotions.newsLetterSubscriptions").Text;
 }
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-   
+<form asp-controller="NewsletterSubscription" asp-action="List" method="post">
+    <antiforgery-token />
+
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -27,27 +24,27 @@
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchEmail)
+                                <admin-label asp-for="SearchEmail" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.SearchEmail)
+                                    <admin-input asp-for="SearchEmail" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.ActiveId)
+                                <admin-label asp-for="ActiveId" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandDropDownListFor(model => model.ActiveId, Model.ActiveList)
+                                    <admin-select asp-for="ActiveId" asp-items="Model.ActiveList" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.StoreId)
+                                <admin-label asp-for="StoreId" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandDropDownListFor(model => model.StoreId, Model.AvailableStores)
+                                    <admin-select asp-for="StoreId" asp-items="Model.AvailableStores" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchCategoryIds)
+                                <admin-label asp-for="SearchCategoryIds" />
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.EditorFor(model => model.SearchCategoryIds, new { SelectList = Model.AvailableCategories })
+                                    <admin-input asp-for="SearchCategoryIds" asp-template="MultiSelect" asp-selectitem="Model.AvailableCategories" />
                                 </div>
                             </div>
                         </div>
@@ -119,14 +116,14 @@
                         // Cancel the changes
                         this.cancelChanges();
                     },
-                    pageSize: @(defaultGridPageSize),
+                    pageSize: @(adminAreaSettings.DefaultGridPageSize),
                     serverPaging: true,
                     serverFiltering: true,
                     serverSorting: true
                 },
                 pageable: {
                     refresh: true,
-                    pageSizes: [@(gridPageSizes)]
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
                 },
                 editable: {
                     confirmation: false,
@@ -179,7 +176,7 @@
             });
         });
     </script>
-           
+
     <script type="text/javascript">
         $(document).ready(function() {
             $('#search-subscriptions').click(function() {
@@ -214,31 +211,30 @@
             return data;
         }
     </script>
-}
+</form>
 
-@*import emails form*@
-<div id="importcsv-window" style="display:none;">
-    @using (Html.BeginForm("ImportCsv", "NewsLetterSubscription", FormMethod.Post, new { enctype = "multipart/form-data" }))
-    {
-        @Html.AntiForgeryToken()
-        <table style="text-align:left;">
-            <tr>
-                <td>
-                    @T("Admin.Common.CsvFile"):
-                </td>
-                <td>
-                    <input type="file" id="importcsvfile" name="importcsvfile" />
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <input type="submit" class="k-button" value="@T("Admin.Common.ImportFromCsv")" />
-                </td>
-            </tr>
-        </table>
-    }
-</div>
-<script type="text/javascript">
+    @*import emails form*@
+    <div id="importcsv-window" style="display:none;">
+        <form asp-controller="NewsLetterSubscription" asp-action="ImportCsv" method="post" enctype="multipart/form-data">
+            <antiforgery-token />
+            <table style="text-align:left;">
+                <tr>
+                    <td>
+                        @T("Admin.Common.CsvFile"):
+                    </td>
+                    <td>
+                        <input type="file" id="importcsvfile" name="importcsvfile" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input type="submit" class="k-button" value="@T("Admin.Common.ImportFromCsv")" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <script type="text/javascript">
     $(document).ready(function () {
         $("#importcsv").click(function (e) {
             e.preventDefault();
@@ -254,4 +250,4 @@
             window.data('kendoWindow').center().open();
         });
     });
-</script>
+    </script>
