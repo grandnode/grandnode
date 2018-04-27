@@ -43,6 +43,10 @@
             {
                 <a class="list-group-item list-group-item-action" href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a>
             }
+            @if (Model.KnowledgebaseEnabled)
+            {
+                <a class="list-group-item list-group-item-action" href="@Url.RouteUrl("Knowledgebase")">@T("Knowledgebase")</a>
+            }
             <a class="list-group-item list-group-item-action" href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a>
             <a class="list-group-item list-group-item-action" href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a>
             @if (Model.Topics.Any())
@@ -80,7 +84,7 @@
             </div>
         </div>
     }
-    @await Component.InvokeAsync("Widget", new { widgetZone = "sitemap_after"})
+    @await Component.InvokeAsync("Widget", new { widgetZone = "sitemap_after" })
 
 </div>
 

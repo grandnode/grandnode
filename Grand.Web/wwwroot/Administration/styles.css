@@ -233,6 +233,32 @@ a span.username {
     background-color: #ffffff;
 }
 
+
+.treeview .list-group-item {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.treeview span.indent {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.treeview span.icon {
+    width: 12px;
+    margin-right: 5px;
+}
+
+.treeview .node-disabled {
+    color: silver;
+    cursor: not-allowed;
+}
+
+.treeview .list-group-item span.pull-right {
+    margin-left: auto;
+}
+
 /* label icon*/
 .help.icon-question {
     padding-left: 3px;
@@ -294,5 +320,3 @@ a span.username {
 textarea.form-control.k-input {
     padding: 6px 12px;
 }
-
-

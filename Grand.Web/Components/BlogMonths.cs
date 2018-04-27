@@ -22,7 +22,6 @@ namespace Grand.Web.ViewComponents
 
             var model = _blogWebService.PrepareBlogPostYearModel();
             return View(model);
-
         }
     }
 }

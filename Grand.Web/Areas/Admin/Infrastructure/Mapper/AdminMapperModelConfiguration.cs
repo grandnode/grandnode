@@ -6,6 +6,7 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Discounts;
 using Grand.Core.Domain.Forums;
+using Grand.Core.Domain.Knowledgebase;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Logging;
 using Grand.Core.Domain.Messages;
@@ -34,6 +35,7 @@ using Grand.Web.Areas.Admin.Models.Directory;
 using Grand.Web.Areas.Admin.Models.Discounts;
 using Grand.Web.Areas.Admin.Models.ExternalAuthentication;
 using Grand.Web.Areas.Admin.Models.Forums;
+using Grand.Web.Areas.Admin.Models.Knowledgebase;
 using Grand.Web.Areas.Admin.Models.Localization;
 using Grand.Web.Areas.Admin.Models.Logging;
 using Grand.Web.Areas.Admin.Models.Messages;
@@ -260,7 +262,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore())
-                .ForMember(dest => dest.AppliedDiscounts, mo => mo.Ignore()); ;
+                .ForMember(dest => dest.AppliedDiscounts, mo => mo.Ignore());
+            ;
 
             //vendors
             CreateMap<Vendor, VendorModel>()
@@ -534,6 +537,24 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.LastPostTime, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore());
+
+            //knowledgebase
+            CreateMap<KnowledgebaseCategory, KnowledgebaseCategoryModel>()
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore());
+
+            CreateMap<KnowledgebaseCategoryModel, KnowledgebaseCategory>()
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
+                .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore());
+            CreateMap<KnowledgebaseArticle, KnowledgebaseArticleModel>()
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore());
+            CreateMap<KnowledgebaseArticleModel, KnowledgebaseArticle>()
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
+                .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore());
+
             //blogs
             CreateMap<BlogPost, BlogPostModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())

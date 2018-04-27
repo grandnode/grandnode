@@ -1,0 +1,15 @@
+﻿@model Grand.Web.Models.Knowledgebase.KnowledgebaseHomePageModel
+
+@if (Model.Categories.Any())
+{
+    <h5 class="generalTitle d-none d-lg-block"><strong>@T("Knowledgebase.Categories")</strong></h5>
+
+    <div class="viewBox listbox page">
+        <ul class="list">
+            @foreach (var category in Model.Categories)
+            {
+                @await Html.PartialAsync("_KnowledgebaseCategoryLine.Navigation", category)
+            }
+        </ul>
+    </div>
+}

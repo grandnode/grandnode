@@ -15266,7 +15266,7 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ManageInventoryMethod.ManageStockByBundleProducts">
     <Value>Track inventory by bundle products</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ProductSortingEnum.BestSellers">
     <Value>Best Sellers</Value>
   </LocaleResource>
@@ -17231,7 +17231,7 @@
   </LocaleResource>
   <LocaleResource Name="Products.Duration">
     <Value>Duration</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Products.EmailAFriend">
     <Value>Email a friend</Value>
   </LocaleResource>
@@ -18296,5 +18296,356 @@
   </LocaleResource>
   <LocaleResource Name="Wishlist.YourWishlistURL">
     <Value>Your wishlist URL for sharing</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase">
+    <Value>Knowledgebase</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.Manage">
+    <Value>Manage knowledgebase</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.CreateKnowledgebaseCategory">
+    <Value>Create knowledgebase category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.Name.Required">
+    <Value>Category name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.ParentCategoryId">
+    <Value>Parent category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Added">
+    <Value>Category added</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Updated">
+    <Value>Category updated</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Deleted">
+    <Value>Category deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowgledgebaseCategory.CreateKnowgledgebaseCategory">
+    <Value>Create knowledgebase category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowgledgebaseCategory.BackToList">
+    <Value>Back to list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowgledgebaseCategory.EditKnowgledgebaseCategory">
+    <Value>Edit knowledgebase category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.Name.Hint">
+    <Value>Name of knowledgebase category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.ParentCategoryId.Hint">
+    <Value>Parent category (id)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.Name">
+    <Value>Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.Content">
+    <Value>Content</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.ParentCategoryId">
+    <Value>Parent category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.Name.Hint">
+    <Value>Title of the article</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.ParentCategoryId.Hint">
+    <Value>Parent category (id)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.Name.Required">
+    <Value>Name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.ParentCategoryId.Required">
+    <Value>Parent category is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Added">
+    <Value>Article added</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Updated">
+    <Value>Article updated</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Deleted">
+    <Value>Article deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.CreateKnowledgebaseArticle">
+    <Value>Create article</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowgledgebaseArticle.CreateKnowgledgebaseArticle">
+    <Value>Create article</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowgledgebaseArticle.EditKnowgledgebaseArticle">
+    <Value>Edit article</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowgledgebaseArticle.BackToList">
+    <Value>Back to list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.ParentCategoryId.MustExist">
+    <Value>Parent category must exist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.ParentCategoryId.MustExist">
+    <Value>Parent category must exist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.ParentCategoryId.Required">
+    <Value>Parent category is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.EditKnowledgebaseCategory">
+    <Value>Edit category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.EditKnowledgebaseArticle">
+    <Value>Edit article</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.Description">
+    <Value>Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.Published">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.Published">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Info">
+    <Value>Info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.ActivityLog">
+    <Value>Acitivity log</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Articles">
+    <Value>Articles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.SaveBeforeEdit">
+    <Value>Save before editing</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.ActivityLogType">
+    <Value>Acitivty log type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.ActivityLog.Comment">
+    <Value>Comment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.ActivityLog.CreatedOn">
+    <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.ActivityLog.Customer">
+    <Value>Customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteKnowledgebaseCategory">
+    <Value>Deleted knowledgebase category ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.CreateKnowledgebaseCategory">
+    <Value>Created knowledgebase category ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.UpdateKnowledgebaseCategory">
+    <Value>Updated knowledgebase category ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteKnowledgebaseArticle">
+    <Value>Deleted knowledgebase article ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.CreateKnowledgebaseArticle">
+    <Value>Created knowledgebase article ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.UpdateKnowledgebaseArticle">
+    <Value>Updated knowledgebase article ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Info">
+    <Value>Info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.ActivityLog">
+    <Value>Activity log</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Articles.ActivityLog.ActivityLogType">
+    <Value>Activity log type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Articles.ActivityLog.Customer">
+    <Value>Customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Articles.ActivityLog.Comment">
+    <Value>Comment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Articles.ActivityLog.CreatedOn">
+    <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Acl">
+    <Value>Select customer roles for which the category will be shown.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Acl">
+    <Value>Select customer roles for which the article will be shown.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Knowledgebase">
+    <Value>Knowledgebase</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.Knowledgebase">
+    <Value>Knowledgebase</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.Description.Hint">
+    <Value>Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.Displayorder.Hint">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.Published.Hint">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.SubjectToAcl">
+    <Value>Subject to ACL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.SubjectToAcl.Hint">
+    <Value>Indicates whether to use ACL or not</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.Content.Hint">
+    <Value>Article content</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.Displayorder.Hint">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.Published.Hint">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.SubjectToAcl">
+    <Value>Subject to ACL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.SubjectToAcl.Hint">
+    <Value>Indicates whether to use ACL or not</Value>
+  </LocaleResource>
+  <LocaleResource Name="Knowledgebase.Categories">
+    <Value>Categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Knowledgebase.Search">
+    <Value>Search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Knowledgebase.SearchPlaceholder">
+    <Value>Search in knowledgebase...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Knowledgebase.Backtohomepage">
+    <Value>Back to knowledgebase homepage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Knowledgebase.Notfound">
+    <Value>No articles were found that matched your criteria</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.AclCustomerRoles">
+    <Value>Acl Customer Roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.AclCustomerRoles">
+    <Value>Acl Customer Roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.AclCustomerRoles.Hint">
+    <Value>Acl(Access control list) Customer Roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.AclCustomerRoles.Hint">
+    <Value>Acl(Access control list) Customer Roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.MetaKeywords">
+    <Value>Meta keywords</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.MetaDescription">
+    <Value>Meta description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.MetaTitle">
+    <Value>Meta title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.SeName">
+    <Value>SeName</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.MetaKeywords">
+    <Value>Meta keywords</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.MetaDescription">
+    <Value>Meta description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.MetaTitle">
+    <Value>Meta title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.SeName">
+    <Value>SeName</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.MetaKeywords.Hint">
+    <Value>Meta keywords to be added to page header.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.MetaDescription.Hint">
+    <Value>Meta description to be added to page header.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.MetaTitle.Hint">
+    <Value>Override the page title. The default is the name of the category.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.SeName.Hint">
+    <Value>Set a search engine friendly page name. Leave empty to generate it automatically based on the name of the article.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.MetaKeywords.Hint">
+    <Value>Meta keywords to be added to page header.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.MetaDescription.Hint">
+    <Value>Meta description to be added to page header.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.MetaTitle.Hint">
+    <Value>Override the page title. The default is the name of the category.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.SeName.Hint">
+    <Value>Set a search engine friendly page name. Leave empty to generate it automatically based on the name of the category.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Seo">
+    <Value>Seo</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Seo">
+    <Value>Seo</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.ShowOnHomepage">
+    <Value>Show on homepage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.ShowOnHomepage.Hint">
+    <Value>Indicates whether to show this article on knowledgebase homepage or not.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Cannotdeletewitharticles">
+    <Value>Cannot delete category with articles assigned to it</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Related">
+    <Value>Related articles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Related.AddNew">
+    <Value>Add new related article</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Related.SaveBeforeEdit">
+    <Value>Save article before editing this section</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Related.SearchArticleName">
+    <Value>Search article title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Knowledgebase.Article.RelatedArticles">
+    <Value>Related articles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.LimitedToStores">
+    <Value>Limited to stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.LimitedToStores">
+    <Value>Limited to stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.AvailableStores">
+    <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.AvailableStores">
+    <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.LimitedToStores.Hint">
+    <Value>Determines whether the category is available only at certain stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.LimitedToStores.Hint">
+    <Value>Determines whether the article is available only at certain stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.AvailableStores.Hint">
+    <Value>Select stores for which the category will be shown.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.AvailableStores.Hint">
+    <Value>Select stores for which the article will be shown.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Stores">
+    <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Stores">
+    <Value>Stores</Value>
   </LocaleResource>
 </Language>

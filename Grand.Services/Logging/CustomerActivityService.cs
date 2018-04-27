@@ -383,6 +383,64 @@ namespace Grand.Services.Logging
         }
 
         /// <summary>
+        /// Gets knowledgebase category activity log items
+        /// </summary>
+        /// <param name="createdOnFrom">Log item creation from; null to load all records</param>
+        /// <param name="createdOnTo">Log item creation to; null to load all records</param>
+        /// <param name="categoryId">Category identifier</param>        
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Activity log items</returns>
+        public virtual IPagedList<ActivityLog> GetKnowledgebaseCategoryActivities(DateTime? createdOnFrom = null,
+            DateTime? createdOnTo = null, string categoryId = "", int pageIndex = 0, int pageSize = int.MaxValue)
+        {
+            var query = _activityLogRepository.Table;
+            if (createdOnFrom.HasValue)
+                query = query.Where(al => createdOnFrom.Value <= al.CreatedOnUtc);
+            if (createdOnTo.HasValue)
+                query = query.Where(al => createdOnTo.Value >= al.CreatedOnUtc);
+
+            var activityTypes = GetAllActivityTypesCached();
+            var activityTypeIds = activityTypes.ToList().Where(at => _activityKeywordsProvider.GetKnowledgebaseCategorySystemKeywords().Contains(at.SystemKeyword)).Select(x => x.Id);
+
+            query = query.Where(al => activityTypeIds.Contains(al.ActivityLogTypeId));
+
+            query = query.Where(al => al.EntityKeyId == categoryId);
+            query = query.OrderByDescending(al => al.CreatedOnUtc);
+            var activityLog = new PagedList<ActivityLog>(query, pageIndex, pageSize);
+            return activityLog;
+        }
+
+        /// <summary>
+        /// Gets knowledgebase article activity log items
+        /// </summary>
+        /// <param name="createdOnFrom">Log item creation from; null to load all records</param>
+        /// <param name="createdOnTo">Log item creation to; null to load all records</param>
+        /// <param name="categoryId">Category identifier</param>        
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Activity log items</returns>
+        public virtual IPagedList<ActivityLog> GetKnowledgebaseArticleActivities(DateTime? createdOnFrom = null,
+            DateTime? createdOnTo = null, string categoryId = "", int pageIndex = 0, int pageSize = int.MaxValue)
+        {
+            var query = _activityLogRepository.Table;
+            if (createdOnFrom.HasValue)
+                query = query.Where(al => createdOnFrom.Value <= al.CreatedOnUtc);
+            if (createdOnTo.HasValue)
+                query = query.Where(al => createdOnTo.Value >= al.CreatedOnUtc);
+
+            var activityTypes = GetAllActivityTypesCached();
+            var activityTypeIds = activityTypes.ToList().Where(at => _activityKeywordsProvider.GetKnowledgebaseArticleSystemKeywords().Contains(at.SystemKeyword)).Select(x => x.Id);
+
+            query = query.Where(al => activityTypeIds.Contains(al.ActivityLogTypeId));
+
+            query = query.Where(al => al.EntityKeyId == categoryId);
+            query = query.OrderByDescending(al => al.CreatedOnUtc);
+            var activityLog = new PagedList<ActivityLog>(query, pageIndex, pageSize);
+            return activityLog;
+        }
+
+        /// <summary>
         /// Gets manufacturer activity log items
         /// </summary>
         /// <param name="createdOnFrom">Log item creation from; null to load all records</param>

@@ -177,6 +177,18 @@ namespace Grand.Framework.Seo
                     currentRouteData.Values["topicId"] = urlRecord.EntityId;
                     currentRouteData.Values["SeName"] = urlRecord.Slug;
                     break;
+                case "knowledgebasearticle":
+                    currentRouteData.Values["controller"] = "Knowledgebase";
+                    currentRouteData.Values["action"] = "KnowledgebaseArticle";
+                    currentRouteData.Values["articleId"] = urlRecord.EntityId;
+                    currentRouteData.Values["SeName"] = urlRecord.Slug;
+                    break;
+                case "knowledgebasecategory":
+                    currentRouteData.Values["controller"] = "Knowledgebase";
+                    currentRouteData.Values["action"] = "ArticlesByCategory";
+                    currentRouteData.Values["categoryId"] = urlRecord.EntityId;
+                    currentRouteData.Values["SeName"] = urlRecord.Slug;
+                    break;
                 default:
                     //no record found, thus generate an event this way developers could insert their own types
                     EngineContext.Current.Resolve<IEventPublisher>().Publish(new CustomUrlRecordEntityNameRequested(currentRouteData, urlRecord));

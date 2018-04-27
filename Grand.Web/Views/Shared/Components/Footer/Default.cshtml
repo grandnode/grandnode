@@ -48,6 +48,10 @@
                         {
                             <li class="list-group-item"><a href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
                         }
+                        @if (Model.KnowledgebaseEnabled)
+                        {
+                            <li class="list-group-item"><a href="@Url.RouteUrl("Knowledgebase")">@T("Knowledgebase")</a></li>
+                        }
                         @if (Model.RecentlyViewedProductsEnabled)
                         {
                             <li class="list-group-item"><a href="@Url.RouteUrl("RecentlyViewedProducts")">@T("Products.RecentlyViewedProducts")</a></li>

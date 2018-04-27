@@ -35,5 +35,27 @@ namespace Grand.Services.Logging
             return tokens;
         }
 
+        public IList<string> GetKnowledgebaseCategorySystemKeywords()
+        {
+            var tokens = new List<string>
+            {
+                "CreateKnowledgebaseCategory",
+                "UpdateKnowledgebaseCategory",
+                "DeleteKnowledgebaseCategory"
+            };
+            return tokens;
+        }
+
+
+        public IList<string> GetKnowledgebaseArticleSystemKeywords()
+        {
+            var tokens = new List<string>
+            {
+                "CreateKnowledgebaseArticle",
+                "UpdateKnowledgebaseArticle",
+                "DeleteKnowledgebaseArticle",
+            };
+            return tokens;
+        }
     }
 }

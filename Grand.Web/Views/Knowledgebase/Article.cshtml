@@ -1,0 +1,49 @@
+﻿@model Grand.Web.Models.Knowledgebase.KnowledgebaseArticleModel
+@inject SeoSettings seoSettings
+@{
+    Layout = "_ColumnsTwo";
+    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
+    Html.AddMetaDescriptionParts(Model.MetaDescription);
+    Html.AddMetaKeywordParts(Model.MetaKeywords);
+
+    var canonicalUrlsEnabled = seoSettings.CanonicalUrlsEnabled;
+    if (canonicalUrlsEnabled)
+    {
+        var articleUrl = Url.RouteUrl("KnowledgebaseArticle", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
+        Html.AddCanonicalUrlParts(articleUrl);
+    }
+}
+
+@Html.AntiForgeryToken()
+
+@section left {
+    @await Component.InvokeAsync("KnowledgebaseCategories", new Grand.Web.Models.Knowledgebase.KnowledgebaseHomePageModel { CurrentCategoryId = Model.ParentCategoryId })
+}
+
+<h1 class="h2 generalTitle">
+    @Model.Name
+    <a class=" fa fa-home pull-right" title="@T("Knowledgebase.Backtohomepage")" data-toggle="tooltip" data-placement="right" href="@Url.RouteUrl("Knowledgebase")"></a>
+</h1>
+
+@Html.Raw(@Model.Content)
+
+<div class="col-xs-12" style="height:100px;"></div>
+
+@if (Model.RelatedArticles.Any())
+{
+    <h4>@T("Knowledgebase.Article.RelatedArticles")</h4>
+    <div class="list-group">
+        @foreach (var article in Model.RelatedArticles)
+        {
+            <a class="list-group-item" href="@Url.RouteUrl("KnowledgebaseArticle", new { SeName = article.SeName })">
+                @article.Name
+            </a>
+        }
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
