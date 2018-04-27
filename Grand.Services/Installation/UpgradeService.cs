@@ -826,27 +826,6 @@ namespace Grand.Services.Installation
 
             #endregion
 
-            #region Install new Topics
-
-            var defaultTopicTemplate = EngineContext.Current.Resolve<IRepository<TopicTemplate>>().Table.FirstOrDefault(tt => tt.Name == "Default template");
-            if (defaultTopicTemplate == null)
-                defaultTopicTemplate = EngineContext.Current.Resolve<IRepository<TopicTemplate>>().Table.FirstOrDefault();
-
-            var knowledgebaseHomepageTopic = new Topic
-            {
-                SystemName = "KnowledgebaseHomePage",
-                IncludeInSitemap = false,
-                IsPasswordProtected = false,
-                DisplayOrder = 1,
-                Title = "",
-                Body = "<p>Knowledgebase homepage. You can edit this in the admin site.</p>",
-                TopicTemplateId = defaultTopicTemplate.Id
-            };
-
-            var topicService = EngineContext.Current.Resolve<ITopicService>();
-            topicService.InsertTopic(knowledgebaseHomepageTopic);
-
-            #endregion
         }
 
         private void From410To420()
@@ -904,7 +883,25 @@ namespace Grand.Services.Installation
             };
             EngineContext.Current.Resolve<IRepository<MessageTemplate>>().Insert(messageTemplates);
             #endregion
+            #region Install new Topics
+            var defaultTopicTemplate = EngineContext.Current.Resolve<IRepository<TopicTemplate>>().Table.FirstOrDefault(tt => tt.Name == "Default template");
+            if (defaultTopicTemplate == null)
+                defaultTopicTemplate = EngineContext.Current.Resolve<IRepository<TopicTemplate>>().Table.FirstOrDefault();
 
+            var knowledgebaseHomepageTopic = new Topic
+            {
+                SystemName = "KnowledgebaseHomePage",
+                IncludeInSitemap = false,
+                IsPasswordProtected = false,
+                DisplayOrder = 1,
+                Title = "",
+                Body = "<p>Knowledgebase homepage. You can edit this in the admin site.</p>",
+                TopicTemplateId = defaultTopicTemplate.Id
+            };
+
+            var topicService = EngineContext.Current.Resolve<ITopicService>();
+            topicService.InsertTopic(knowledgebaseHomepageTopic);
+            #endregion
         }
         private void InstallStringResources(string filenames)
         {
