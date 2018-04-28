@@ -4,8 +4,7 @@
     ViewBag.Title = T("Admin.ContentManagement.Knowledgebase.KnowgledgebaseArticle.EditKnowgledgebaseArticle").Text;
 }
 <form asp-controller="Knowledgebase" asp-action="EditArticle" method="post" id="article-form">
-    @Html.AntiForgeryToken()
-
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -34,4 +33,4 @@
         </div>
     </div>
 </form>
-    @Html.DeleteConfirmation("DeleteArticle", "knowledgebasearticle-delete")
+@Html.DeleteConfirmation("DeleteArticle", "knowledgebasearticle-delete")

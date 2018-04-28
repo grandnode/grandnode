@@ -3,8 +3,7 @@
     ViewBag.Title = T("Admin.ContentManagement.Knowledgebase.Manage").Text;
     Html.AppendScriptParts("~/Scripts/bootstrap-treeview.js");
 }
-
-@Html.AntiForgeryToken()
+<antiforgery-token />
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light form-fit">

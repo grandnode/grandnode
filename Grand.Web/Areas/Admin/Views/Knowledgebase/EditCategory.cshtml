@@ -3,10 +3,8 @@
     //page title
     ViewBag.Title = T("Admin.ContentManagement.Knowledgebase.KnowgledgebaseCategory.EditKnowgledgebaseCategory").Text;
 }
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-
+<form asp-controller="Knowledgebase" asp-action="EditCategory" method="post">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -34,5 +32,5 @@
             </div>
         </div>
     </div>
-}
+</form>
 @Html.DeleteConfirmation("DeleteCategory", "knowledgebasecategory-delete")

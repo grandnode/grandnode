@@ -1,13 +1,9 @@
 ﻿@model KnowledgebaseArticleModel
 <script type="text/javascript">
         $(document).ready(function () {
-
             $("#@Html.FieldIdFor(model => model.LimitedToStores)").click(toggleStoreMapping);
-
             toggleStoreMapping();
         });
-
-
         function toggleStoreMapping() {
             if ($('#@Html.FieldIdFor(model => model.LimitedToStores)').is(':checked')) {
                 $('#pnl-available-stores').show();
@@ -16,22 +12,21 @@
                 $('#pnl-available-stores').hide();
             }
         }
-
 </script>
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.LimitedToStores)
+            <admin-label asp-for="LimitedToStores" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.LimitedToStores)
+                    <admin-input asp-for="LimitedToStores" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.LimitedToStores)
+                <span asp-validation-for="LimitedToStores"></span>
             </div>
         </div>
         <div class="form-group" id="pnl-available-stores">
-            @Html.GrandLabelFor(model => model.AvailableStores)
+            <admin-label asp-for="AvailableStores" />
             <div class="col-md-9 col-sm-9">
                 @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
                 {

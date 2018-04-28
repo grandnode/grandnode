@@ -14,8 +14,6 @@
     }
 }
 
-@Html.AntiForgeryToken()
-
 @section left {
     @await Component.InvokeAsync("KnowledgebaseCategories", new Grand.Web.Models.Knowledgebase.KnowledgebaseHomePageModel { CurrentCategoryId = Model.ParentCategoryId })
 }
@@ -41,7 +39,6 @@
         }
     </div>
 }
-
 <script>
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();

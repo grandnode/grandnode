@@ -8791,6 +8791,9 @@
     <Value>Edit knowledgebase category</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Acl">
+    <Value>Access control list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Acl.hint">
     <Value>Select customer roles for which the article will be shown.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.ActivityLog">
@@ -8818,13 +8821,13 @@
     <Value>Content</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.Content.Hint">
-    <Value>Article content</Value>
+    <Value>The description of the knowledgebase article.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.DisplayOrder">
     <Value>Display order</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.Displayorder.Hint">
-    <Value>Display order</Value>
+    <Value>Set the knowledgebase article display order. 1 represents the top of the list.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.LimitedToStores">
     <Value>Limited to stores</Value>
@@ -8893,7 +8896,7 @@
     <Value>Subject to ACL</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.SubjectToAcl.Hint">
-    <Value>Indicates whether to use ACL or not</Value>
+    <Value>Determines whether the knowledgebase article is subject to ACL (access control list).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Info">
     <Value>Info</Value>
@@ -8920,6 +8923,9 @@
     <Value>Article updated</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Acl">
+    <Value>Access control list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Acl.hint">
     <Value>Select customer roles for which the category will be shown.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.ActivityLog">
@@ -8941,7 +8947,7 @@
     <Value>Acl Customer Roles</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.AclCustomerRoles.Hint">
-    <Value>Acl(Access control list) Customer Roles</Value>
+    <Value>Select customer roles for which the knowledgebase category will be shown.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.AvailableStores">
     <Value>Stores</Value>
@@ -8953,13 +8959,13 @@
     <Value>Description</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.Description.Hint">
-    <Value>Description</Value>
+    <Value>The description of the knowledgebase category.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.DisplayOrder">
     <Value>Display order</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.Displayorder.Hint">
-    <Value>Display order</Value>
+    <Value>Set the knowledgebase category display order. 1 represents the top of the list.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.LimitedToStores">
     <Value>Limited to stores</Value>
@@ -9010,7 +9016,7 @@
     <Value>Published</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.Published.Hint">
-    <Value>Published</Value>
+    <Value>Check to publish this category (visible in store). Uncheck to unpublish (category not available in store).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.SeName">
     <Value>SeName</Value>

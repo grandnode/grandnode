@@ -243,9 +243,15 @@
     <Value>Created on</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Acl">
+    <Value>Access control list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Acl.hint">
     <Value>Select customer roles for which the category will be shown.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Acl">
+    <Value>Access control list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Acl.hint">
     <Value>Select customer roles for which the article will be shown.</Value>
   </LocaleResource>
   <LocaleResource Name="Knowledgebase">
@@ -385,5 +391,38 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Stores">
     <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.SubjectToAcl">
+    <Value>Subject to ACL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.SubjectToAcl.Hint">
+    <Value>Indicates whether to use ACL or not</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.knowledgebase.knowledgebasecategory.fields.description.hint">
+    <Value>The description of the knowledgebase category.</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.knowledgebase.knowledgebasecategory.fields.aclcustomerroles.hint">
+    <Value>Select customer roles for which the knowledgebase category will be shown.</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.knowledgebase.knowledgebasecategory.fields.published.hint">
+    <Value>Check to publish this category (visible in store). Uncheck to unpublish (category not available in store).</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.knowledgebase.knowledgebasecategory.fields.displayorder.hint">
+    <Value>Set the knowledgebase category display order. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.knowledgebase.knowledgebasearticle.fields.content.hint">
+    <Value>The description of the knowledgebase article.</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.knowledgebase.knowledgebasearticle.fields.subjecttoacl">
+    <Value>Subject to ACL</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.knowledgebase.knowledgebasearticle.fields.subjecttoacl.hint">
+    <Value>Determines whether the knowledgebase article is subject to ACL (access control list).</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.knowledgebase.knowledgebasearticle.fields.displayorder.hint">
+    <Value>Set the knowledgebase article display order. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.knowledgebase.knowledgebasecategory.fields.displayorder.hint">
+    <Value>Set the knowledgebase category display order. 1 represents the top of the list.</Value>
   </LocaleResource>
 </Language>

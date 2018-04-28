@@ -30,6 +30,7 @@ using System.Threading;
 using Grand.Services.Topics;
 using Grand.Core.Domain.Discounts;
 using Grand.Core.Domain.Security;
+using Grand.Core.Domain.Knowledgebase;
 
 namespace Grand.Services.Installation
 {
@@ -831,10 +832,11 @@ namespace Grand.Services.Installation
         private void From410To420()
         {
             var _settingService = EngineContext.Current.Resolve<ISettingService>();
-
+            
             #region Install String resources
             InstallStringResources("410_420.nopres.xml");
             #endregion
+            
             #region Update string resources
 
             var _localeStringResource = EngineContext.Current.Resolve<IRepository<LocaleStringResource>>();
@@ -846,6 +848,7 @@ namespace Grand.Services.Installation
             });
 
             #endregion
+            
             #region Admin area settings
 
             var adminareasettings = EngineContext.Current.Resolve<AdminAreaSettings>();
@@ -854,6 +857,7 @@ namespace Grand.Services.Installation
             _settingService.SaveSetting(adminareasettings);
 
             #endregion
+            
             #region ActivityLog
 
             var _activityLogTypeRepository = EngineContext.Current.Resolve<IRepository<ActivityLogType>>();
@@ -863,8 +867,45 @@ namespace Grand.Services.Installation
                 Enabled = false,
                 Name = "Public store. Delete account"
             });
+            _activityLogTypeRepository.Insert(new ActivityLogType
+            {
+                SystemKeyword = "UpdateKnowledgebaseCategory",
+                Enabled = true,
+                Name = "Update knowledgebase category"
+            });
+            _activityLogTypeRepository.Insert(new ActivityLogType
+            {
+                SystemKeyword = "CreateKnowledgebaseCategory",
+                Enabled = true,
+                Name = "Create knowledgebase category"
+            });
+            _activityLogTypeRepository.Insert(new ActivityLogType
+            {
+                SystemKeyword = "DeleteKnowledgebaseCategory",
+                Enabled = true,
+                Name = "Delete knowledgebase category"
+            });
+            _activityLogTypeRepository.Insert(new ActivityLogType
+            {
+                SystemKeyword = "CreateKnowledgebaseArticle",
+                Enabled = true,
+                Name = "Create knowledgebase article"
+            });
+            _activityLogTypeRepository.Insert(new ActivityLogType
+            {
+                SystemKeyword = "UpdateKnowledgebaseArticle",
+                Enabled = true,
+                Name = "Update knowledgebase article"
+            });
+            _activityLogTypeRepository.Insert(new ActivityLogType
+            {
+                SystemKeyword = "DeleteKnowledgebaseArticle",
+                Enabled = true,
+                Name = "Delete knowledgebase category"
+            });
 
             #endregion
+            
             #region MessageTemplates
 
             var emailAccount = EngineContext.Current.Resolve<IRepository<EmailAccount>>().Table.FirstOrDefault();
@@ -883,6 +924,7 @@ namespace Grand.Services.Installation
             };
             EngineContext.Current.Resolve<IRepository<MessageTemplate>>().Insert(messageTemplates);
             #endregion
+            
             #region Install new Topics
             var defaultTopicTemplate = EngineContext.Current.Resolve<IRepository<TopicTemplate>>().Table.FirstOrDefault(tt => tt.Name == "Default template");
             if (defaultTopicTemplate == null)
@@ -902,6 +944,31 @@ namespace Grand.Services.Installation
             var topicService = EngineContext.Current.Resolve<ITopicService>();
             topicService.InsertTopic(knowledgebaseHomepageTopic);
             #endregion
+
+            #region Permisions
+
+            IPermissionProvider provider = new StandardPermissionProvider();
+            EngineContext.Current.Resolve<IPermissionService>().InstallPermissions(provider);
+
+            #endregion
+
+            #region Knowledge settings
+
+            var knowledgesettings = EngineContext.Current.Resolve<KnowledgebaseSettings>();
+            knowledgesettings.Enabled = false;
+            _settingService.SaveSetting(knowledgesettings);
+
+            #endregion
+
+            #region Knowledge table
+
+            EngineContext.Current.Resolve<IRepository<KnowledgebaseArticle>>().Collection.Indexes.CreateOneAsync(Builders<KnowledgebaseArticle>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            EngineContext.Current.Resolve<IRepository<KnowledgebaseArticle>>().Collection.Indexes.CreateOneAsync(Builders<KnowledgebaseArticle>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder", Unique = false });
+            EngineContext.Current.Resolve<IRepository<KnowledgebaseCategory>>().Collection.Indexes.CreateOneAsync(Builders<KnowledgebaseCategory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            EngineContext.Current.Resolve<IRepository<KnowledgebaseCategory>>().Collection.Indexes.CreateOneAsync(Builders<KnowledgebaseCategory>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder", Unique = false });
+
+            #endregion
+
         }
         private void InstallStringResources(string filenames)
         {

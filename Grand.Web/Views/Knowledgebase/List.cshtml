@@ -5,7 +5,7 @@
     Html.AppendScriptParts("~/Scripts/bootstrap-treeview.js");
 }
 
-@Html.AntiForgeryToken()
+<antiforgery-token />
 
 @section left {
     @await Component.InvokeAsync("KnowledgebaseCategories", @Model)

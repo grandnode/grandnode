@@ -1,11 +1,7 @@
 ﻿@model KnowledgebaseCategoryModel
+@inject AdminAreaSettings adminAreaSettings
 @if (!String.IsNullOrEmpty(Model.Id))
 {
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>
-    ().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>
-        ().GridPageSizes;
-
     <div class="panel panel-default">
         <div class="panel-body">
             <div id="articles-grid"></div>
@@ -51,14 +47,14 @@
                         // Cancel the changes
                         this.cancelChanges();
                     },
-                    pageSize: @(defaultGridPageSize),
+                    pageSize: @(adminAreaSettings.DefaultGridPageSize),
                     serverPaging: true,
                     serverFiltering: true,
                     serverSorting: true
                 },
                 pageable: {
                     refresh: true,
-                    pageSizes: [@(gridPageSizes)]
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
                 },
                 editable: {
                     confirmation: false,
@@ -67,7 +63,9 @@
                 scrollable: false,
                 columns: [{
                     field: "Name",
-                    title: "@T("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.Name")"
+                    title: "@T("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.Name")",
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Knowledgebase/EditArticle/")#=ArticleId#">#=Name#</a>'
+
                 }, {
                     field: "Published",
                     title: "@T("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.Published")",
@@ -78,10 +76,6 @@
                     field: "DisplayOrder",
                     title: "@T("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.DisplayOrder")",
                     format: "{0:0}",
-                }, {
-                    field: "ArticleId",
-                    title: "@T("Admin.Common.View")",
-                    template: '<a href="@Url.Content("~/Admin/Knowledgebase/EditArticle/")#=ArticleId#">@T("Admin.Common.View")</a>'
                 }]
             });
         });
