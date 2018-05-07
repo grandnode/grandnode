@@ -4962,7 +4962,7 @@ namespace Grand.Services.Installation
             });
             _settingService.SaveSetting(new SecuritySettings
             {
-                ForceSslForAllPages = false,
+                ForceSslForAllPages = true,
                 EncryptionKey = CommonHelper.GenerateRandomDigitCode(16),
                 AdminAreaAllowedIpAddresses = null,
                 EnableXsrfProtectionForAdminArea = true,
