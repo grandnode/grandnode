@@ -39,6 +39,10 @@ namespace Grand.Web.Controllers
             if (!_knowledgebaseSettings.Enabled)
                 return RedirectToRoute("HomePage");
 
+            var category = _knowledgebaseService.GetPublicKnowledgebaseCategory(categoryId);
+            if (category == null)
+                return RedirectToAction("List");
+
             var model = new KnowledgebaseHomePageModel();
             var articles = _knowledgebaseService.GetPublicKnowledgebaseArticlesByCategory(categoryId);
             articles.ForEach(x => model.Articles.Add(new KnowledgebaseArticleModel
@@ -51,9 +55,6 @@ namespace Grand.Web.Controllers
             }));
 
             model.CurrentCategoryId = categoryId;
-            var category = _knowledgebaseService.GetKnowledgebaseCategory(categoryId);
-            if (category == null)
-                return RedirectToAction("List");
 
             model.CurrentCategoryDescription = category.GetLocalized(y => y.Description);
             model.CurrentCategoryMetaDescription = category.GetLocalized(y => y.MetaDescription);
@@ -96,7 +97,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("HomePage");
 
             var model = new KnowledgebaseArticleModel();
-            var article = _knowledgebaseService.GetKnowledgebaseArticle(articleId);
+            var article = _knowledgebaseService.GetPublicKnowledgebaseArticle(articleId);
             if (article == null)
                 return RedirectToAction("List");
 

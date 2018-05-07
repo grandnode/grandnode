@@ -580,7 +580,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 .ToList();
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Added"));
-                return continueEditing ? RedirectToAction("EditArticle", new { knowledgebaseArticle.Id }) : RedirectToAction("List");
+                return continueEditing ? RedirectToAction("EditArticle", new { knowledgebaseArticle.Id }) : RedirectToAction("EditCategory", new { id = model.ParentCategoryId });
             }
 
             //If we got this far, something failed, redisplay form

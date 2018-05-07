@@ -37,45 +37,17 @@ namespace Grand.Services.Knowledgebase
 
         /// <summary>
         /// Key for caching
+        /// {0} : customer roles
+        /// {1} : store id
         /// </summary>
-        private const string CATEGORIES = "Knowledgebase.category.all";
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : article ID
-        /// </remarks>
-        private const string ARTICLE = "Knowledgebase.article.id-{0}";
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        private const string ARTICLES = "Knowledgebase.article.all";
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : category ID
-        /// {1} : page index
-        /// {2} : page size
-        /// </remarks>
-        private const string ARTICLES_BY_CATEGORY_ID = "Knowledgebase.category.id-{0}-{1}-{2}";
+        private const string CATEGORIES = "Knowledgebase.category.all-{0}-{1}";
 
         /// <summary>
         /// Key for caching
         /// {0} : customer roles
         /// {1} : store id
         /// </summary>
-        private const string PUBLIC_CATEGORIES = "Knowledgebase.category.public.all-{0}-{1}";
-
-        /// <summary>
-        /// Key for caching
-        /// {0} : customer roles
-        /// {1} : store id
-        /// </summary>
-        private const string PUBLIC_ARTICLES = "Knowledgebase.article.public.all-{0}-{1}";
+        private const string ARTICLES = "Knowledgebase.article.all-{0}-{1}";
 
         /// <summary>
         /// Key for caching
@@ -85,7 +57,7 @@ namespace Grand.Services.Knowledgebase
         /// {1} : customer roles
         /// {2} : store id
         /// </remarks>
-        private const string PUBLIC_ARTICLE_BY_ID = "Knowledgebase.article.public.id-{0}-{1}-{2}";
+        private const string ARTICLE_BY_ID = "Knowledgebase.article.id-{0}-{1}-{2}";
 
         /// <summary>
         /// Key for caching
@@ -95,7 +67,7 @@ namespace Grand.Services.Knowledgebase
         /// {1} : customer roles
         /// {2} : store id
         /// </remarks>
-        private const string PUBLIC_ARTICLES_BY_CATEGORY_ID = "Knowledgebase.article.public.categoryid-{0}-{1}-{2}";
+        private const string ARTICLES_BY_CATEGORY_ID = "Knowledgebase.article.categoryid-{0}-{1}-{2}";
 
         /// <summary>
         /// Key for caching
@@ -105,7 +77,7 @@ namespace Grand.Services.Knowledgebase
         /// {1} : customer roles
         /// {2} : store id
         /// </remarks>
-        private const string PUBLIC_ARTICLES_BY_KEYWORD = "Knowledgebase.article.public.keyword-{0}-{1}-{2}";
+        private const string ARTICLES_BY_KEYWORD = "Knowledgebase.article.keyword-{0}-{1}-{2}";
 
         /// <summary>
         /// Key for caching
@@ -113,28 +85,6 @@ namespace Grand.Services.Knowledgebase
         /// {1} : store id
         /// </summary>
         private const string HOMEPAGE_ARTICLES = "Knowledgebase.article.homepage-{0}-{1}";
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : name
-        /// {1} : page index
-        /// {2} : page size
-        /// </remarks>
-        private const string ARTICLES_BY_NAME = "Knowledgebase.article.name-{0}-{1}-{2}";
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : id
-        /// {1} : page index
-        /// {2} : page size
-        /// {3} : customer roles
-        /// {4} : store id
-        /// </remarks>
-        private const string RELATED_ARTICLES = "Knowledgebase.article.related-{0}-{1}-{2}-{3}-{4}";
 
         private readonly IRepository<KnowledgebaseCategory> _knowledgebaseCategoryRepository;
         private readonly IRepository<KnowledgebaseArticle> _knowledgebaseArticleRepository;
@@ -179,6 +129,7 @@ namespace Grand.Services.Knowledgebase
                 UpdateKnowledgebaseCategory(child);
             }
 
+            _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
 
             _eventPublisher.EntityDeleted(kc);
@@ -191,6 +142,7 @@ namespace Grand.Services.Knowledgebase
         public void UpdateKnowledgebaseCategory(KnowledgebaseCategory kc)
         {
             _knowledgebaseCategoryRepository.Update(kc);
+            _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             _eventPublisher.EntityUpdated(kc);
         }
@@ -202,9 +154,41 @@ namespace Grand.Services.Knowledgebase
         /// <returns>knowledgebase category</returns>
         public KnowledgebaseCategory GetKnowledgebaseCategory(string id)
         {
+            return _knowledgebaseCategoryRepository.Table.Where(x => x.Id == id).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Gets knowledgebase category
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>knowledgebase category</returns>
+        public KnowledgebaseCategory GetPublicKnowledgebaseCategory(string id)
+        {
             string key = string.Format(CATEGORY_BY_ID, id, _workContext.CurrentCustomer.GetCustomerRoleIds(),
                 _storeContext.CurrentStore.Id);
-            return _cacheManager.Get(key, () => _knowledgebaseCategoryRepository.Table.Where(x => x.Id == id).FirstOrDefault());
+            return _cacheManager.Get(key, () =>
+            {
+                var builder = Builders<KnowledgebaseCategory>.Filter;
+                var filter = FilterDefinition<KnowledgebaseCategory>.Empty;
+                filter = filter & builder.Where(x => x.Published);
+                filter = filter & builder.Where(x => x.Id == id);
+
+                if (!_catalogSettings.IgnoreAcl)
+                {
+                    var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
+                    filter = filter & (builder.AnyIn(x => x.CustomerRoles, allowedCustomerRolesIds) | builder.Where(x => !x.SubjectToAcl));
+                }
+
+                if (!_catalogSettings.IgnoreStoreLimitations)
+                {
+                    //Store mapping
+                    var currentStoreId = new List<string> { _storeContext.CurrentStore.Id };
+                    filter = filter & (builder.AnyIn(x => x.Stores, currentStoreId) | builder.Where(x => !x.LimitedToStores));
+                }
+
+                var toReturn = _knowledgebaseCategoryRepository.Collection.Find(filter);
+                return toReturn.FirstOrDefault();
+            });
         }
 
         /// <summary>
@@ -214,6 +198,7 @@ namespace Grand.Services.Knowledgebase
         public void InsertKnowledgebaseCategory(KnowledgebaseCategory kc)
         {
             _knowledgebaseCategoryRepository.Insert(kc);
+            _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             _eventPublisher.EntityInserted(kc);
         }
@@ -224,7 +209,7 @@ namespace Grand.Services.Knowledgebase
         /// <returns>List of knowledgebase categories</returns>
         public List<KnowledgebaseCategory> GetKnowledgebaseCategories()
         {
-            return _cacheManager.Get(CATEGORIES, () => _knowledgebaseCategoryRepository.Table.OrderBy(x => x.DisplayOrder).ToList());
+            return _knowledgebaseCategoryRepository.Table.OrderBy(x => x.DisplayOrder).ToList();
         }
 
         /// <summary>
@@ -234,8 +219,7 @@ namespace Grand.Services.Knowledgebase
         /// <returns>knowledgebase article</returns>
         public KnowledgebaseArticle GetKnowledgebaseArticle(string id)
         {
-            string key = string.Format(ARTICLE, id);
-            return _cacheManager.Get(key, () => _knowledgebaseArticleRepository.Table.Where(x => x.Id == id).FirstOrDefault());
+            return _knowledgebaseArticleRepository.Table.Where(x => x.Id == id).FirstOrDefault();
         }
 
         /// <summary>
@@ -244,7 +228,7 @@ namespace Grand.Services.Knowledgebase
         /// <returns>List of knowledgebase articles</returns>
         public List<KnowledgebaseArticle> GetKnowledgebaseArticles()
         {
-            return _cacheManager.Get(ARTICLES, () => _knowledgebaseArticleRepository.Table.OrderBy(x => x.DisplayOrder).ToList());
+            return _knowledgebaseArticleRepository.Table.OrderBy(x => x.DisplayOrder).ToList();
         }
 
         /// <summary>
@@ -255,6 +239,7 @@ namespace Grand.Services.Knowledgebase
         {
             _knowledgebaseArticleRepository.Insert(ka);
             _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             _eventPublisher.EntityInserted(ka);
         }
 
@@ -266,6 +251,7 @@ namespace Grand.Services.Knowledgebase
         {
             _knowledgebaseArticleRepository.Update(ka);
             _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             _eventPublisher.EntityUpdated(ka);
         }
 
@@ -277,6 +263,7 @@ namespace Grand.Services.Knowledgebase
         {
             _knowledgebaseArticleRepository.Delete(ka);
             _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             _eventPublisher.EntityDeleted(ka);
         }
 
@@ -287,12 +274,8 @@ namespace Grand.Services.Knowledgebase
         /// <returns>IPagedList<KnowledgebaseArticle></returns>
         public IPagedList<KnowledgebaseArticle> GetKnowledgebaseArticlesByCategoryId(string id, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var key = string.Format(ARTICLES_BY_CATEGORY_ID, id, pageIndex, pageSize);
-            return _cacheManager.Get(key, () =>
-            {
-                var articles = _knowledgebaseArticleRepository.Table.Where(x => x.ParentCategoryId == id).ToList();
-                return new PagedList<KnowledgebaseArticle>(articles, pageIndex, pageSize);
-            });
+            var articles = _knowledgebaseArticleRepository.Table.Where(x => x.ParentCategoryId == id).ToList();
+            return new PagedList<KnowledgebaseArticle>(articles, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -301,7 +284,7 @@ namespace Grand.Services.Knowledgebase
         /// <returns>List of public knowledgebase categories</returns>
         public List<KnowledgebaseCategory> GetPublicKnowledgebaseCategories()
         {
-            var key = string.Format(PUBLIC_CATEGORIES, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+            var key = string.Format(CATEGORIES, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
             return _cacheManager.Get(key, () =>
             {
@@ -334,7 +317,7 @@ namespace Grand.Services.Knowledgebase
         /// <returns>List of public knowledgebase articles</returns>
         public List<KnowledgebaseArticle> GetPublicKnowledgebaseArticles()
         {
-            var key = string.Format(PUBLIC_ARTICLES, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+            var key = string.Format(ARTICLES, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
             return _cacheManager.Get(key, () =>
             {
@@ -367,7 +350,7 @@ namespace Grand.Services.Knowledgebase
         /// <returns>knowledgebase article</returns>
         public KnowledgebaseArticle GetPublicKnowledgebaseArticle(string id)
         {
-            var key = string.Format(PUBLIC_ARTICLE_BY_ID, id, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+            var key = string.Format(ARTICLE_BY_ID, id, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
             return _cacheManager.Get(key, () =>
             {
@@ -400,7 +383,7 @@ namespace Grand.Services.Knowledgebase
         /// <returns>List of public knowledgebase articles</returns>
         public List<KnowledgebaseArticle> GetPublicKnowledgebaseArticlesByCategory(string categoryId)
         {
-            var key = string.Format(PUBLIC_ARTICLES_BY_CATEGORY_ID, categoryId, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+            var key = string.Format(ARTICLES_BY_CATEGORY_ID, categoryId, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
             return _cacheManager.Get(key, () =>
             {
@@ -434,7 +417,7 @@ namespace Grand.Services.Knowledgebase
         /// <returns>List of public knowledgebase articles</returns>
         public List<KnowledgebaseArticle> GetPublicKnowledgebaseArticlesByKeyword(string keyword)
         {
-            var key = string.Format(PUBLIC_ARTICLES_BY_KEYWORD, keyword, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+            var key = string.Format(ARTICLES_BY_KEYWORD, keyword, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
             return _cacheManager.Get(key, () =>
             {
@@ -515,35 +498,31 @@ namespace Grand.Services.Knowledgebase
         /// <returns>IPagedList<KnowledgebaseArticle></returns>
         public IPagedList<KnowledgebaseArticle> GetKnowledgebaseArticlesByName(string name, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var key = string.Format(ARTICLES_BY_NAME, name, pageIndex, pageSize);
-            return _cacheManager.Get(key, () =>
+            var builder = Builders<KnowledgebaseArticle>.Filter;
+            var filter = FilterDefinition<KnowledgebaseArticle>.Empty;
+            filter = filter & builder.Where(x => x.Published);
+
+            if (!string.IsNullOrEmpty(name))
             {
-                var builder = Builders<KnowledgebaseArticle>.Filter;
-                var filter = FilterDefinition<KnowledgebaseArticle>.Empty;
-                filter = filter & builder.Where(x => x.Published);
-
-                if (!string.IsNullOrEmpty(name))
+                if (_commonSettings.UseFullTextSearch)
                 {
-                    if (_commonSettings.UseFullTextSearch)
-                    {
-                        name = "\"" + name + "\"";
-                        name = name.Replace("+", "\" \"");
-                        name = name.Replace(" ", "\" \"");
-                        filter = filter & builder.Text(name);
-                    }
-                    else
-                    {
-                        filter = filter & builder.Where(p => p.Locales.Any(x => x.LocaleKey == "Name" && x.LocaleValue != null && x.LocaleValue.ToLower().
-                            Contains(name.ToLower()))
-                        || p.Name.ToLower().Contains(name.ToLower()));
-                    }
+                    name = "\"" + name + "\"";
+                    name = name.Replace("+", "\" \"");
+                    name = name.Replace(" ", "\" \"");
+                    filter = filter & builder.Text(name);
                 }
+                else
+                {
+                    filter = filter & builder.Where(p => p.Locales.Any(x => x.LocaleKey == "Name" && x.LocaleValue != null && x.LocaleValue.ToLower().
+                        Contains(name.ToLower()))
+                    || p.Name.ToLower().Contains(name.ToLower()));
+                }
+            }
 
-                var builderSort = Builders<KnowledgebaseArticle>.Sort.Ascending(x => x.DisplayOrder);
-                var toReturn = _knowledgebaseArticleRepository.Collection.Find(filter).Sort(builderSort);
+            var builderSort = Builders<KnowledgebaseArticle>.Sort.Ascending(x => x.DisplayOrder);
+            var toReturn = _knowledgebaseArticleRepository.Collection.Find(filter).Sort(builderSort);
 
-                return new PagedList<KnowledgebaseArticle>(toReturn.ToList(), pageIndex, pageSize);
-            });
+            return new PagedList<KnowledgebaseArticle>(toReturn.ToList(), pageIndex, pageSize);
         }
 
         /// <summary>
@@ -553,22 +532,17 @@ namespace Grand.Services.Knowledgebase
         /// <returns>IPagedList<KnowledgebaseArticle></returns>
         public IPagedList<KnowledgebaseArticle> GetRelatedKnowledgebaseArticles(string articleId, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var key = string.Format(RELATED_ARTICLES, articleId, pageIndex, pageSize, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
-                _storeContext.CurrentStore.Id);
-            return _cacheManager.Get(key, () =>
+            var article = GetKnowledgebaseArticle(articleId);
+            List<KnowledgebaseArticle> toReturn = new List<KnowledgebaseArticle>();
+
+            foreach (var id in article.RelatedArticles)
             {
-                var article = GetKnowledgebaseArticle(articleId);
-                List<KnowledgebaseArticle> toReturn = new List<KnowledgebaseArticle>();
+                var relatedArticle = GetKnowledgebaseArticle(id);
+                if (relatedArticle != null)
+                    toReturn.Add(relatedArticle);
+            }
 
-                foreach (var id in article.RelatedArticles)
-                {
-                    var relatedArticle = GetKnowledgebaseArticle(id);
-                    if (relatedArticle != null)
-                        toReturn.Add(relatedArticle);
-                }
-
-                return new PagedList<KnowledgebaseArticle>(toReturn.ToList(), pageIndex, pageSize);
-            });
+            return new PagedList<KnowledgebaseArticle>(toReturn.ToList(), pageIndex, pageSize);
         }
     }
 }

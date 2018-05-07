@@ -16,6 +16,13 @@ namespace Grand.Services.Knowledgebase
         KnowledgebaseCategory GetKnowledgebaseCategory(string id);
 
         /// <summary>
+        /// Gets public knowledgebase category
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>knowledgebase category</returns>
+        KnowledgebaseCategory GetPublicKnowledgebaseCategory(string id);
+
+        /// <summary>
         /// Gets knowledgebase categories
         /// </summary>
         /// <returns>List of knowledgebase categories</returns>
@@ -51,6 +58,13 @@ namespace Grand.Services.Knowledgebase
         /// <param name="id"></param>
         /// <returns>knowledgebase article</returns>
         KnowledgebaseArticle GetKnowledgebaseArticle(string id);
+
+        /// <summary>
+        /// Gets public knowledgebase article
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>knowledgebase article</returns>
+        KnowledgebaseArticle GetPublicKnowledgebaseArticle(string id);
 
         /// <summary>
         /// Gets knowledgebase articles
@@ -120,11 +134,5 @@ namespace Grand.Services.Knowledgebase
         /// <param name="name"></param>
         /// <returns>IPagedList<KnowledgebaseArticle></returns>
         IPagedList<KnowledgebaseArticle> GetRelatedKnowledgebaseArticles(string articleId, int pageIndex = 0, int pageSize = int.MaxValue);
-
-        /// <summary>
-        /// Gets knowledgebase article if it is published etc
-        /// </summary>
-        /// <returns>knowledgebase article</returns>
-        KnowledgebaseArticle GetPublicKnowledgebaseArticle(string id);
     }
 }

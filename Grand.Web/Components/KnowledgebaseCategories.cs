@@ -61,12 +61,27 @@ namespace Grand.Web.ViewComponents
                     Name = child.GetLocalized(y => y.Name),
                     Children = new List<KnowledgebaseCategoryModel>(),
                     IsCurrent = currentCategoryId == child.Id,
-                    SeName = child.GetLocalized(y => y.SeName)
+                    SeName = child.GetLocalized(y => y.SeName),
+                    Parent = parentNode
                 };
+
+                if (newNode.IsCurrent)
+                {
+                    MarkParentsAsCurrent(newNode);
+                }
 
                 FillChildNodes(newNode, nodes, currentCategoryId);
 
                 parentNode.Children.Add(newNode);
+            }
+        }
+
+        public void MarkParentsAsCurrent(KnowledgebaseCategoryModel node)
+        {
+            if (node.Parent != null)
+            {
+                node.Parent.IsCurrent = true;
+                MarkParentsAsCurrent(node.Parent);
             }
         }
     }
