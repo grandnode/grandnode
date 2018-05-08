@@ -177,7 +177,6 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         public static void AddGrandAuthentication(this IServiceCollection services)
         {
-
             //set default authentication schemes
             var authenticationBuilder = services.AddAuthentication(options =>
             {
@@ -185,19 +184,32 @@ namespace Grand.Framework.Infrastructure.Extensions
                 options.DefaultSignInScheme = GrandCookieAuthenticationDefaults.ExternalAuthenticationScheme;
             });
 
-            //register external authentication plugins now
-            var typeFinder = new WebAppTypeFinder();
-            var externalAuthConfigurations = typeFinder.FindClassesOfType<IExternalAuthenticationRegistrar>();
-            //create and sort instances of external authentication configurations
-            var externalAuthInstances = externalAuthConfigurations
-                .Where(x => PluginManager.FindPlugin(x)?.Installed ?? true) //ignore not installed plugins
-                .Select(x => (IExternalAuthenticationRegistrar)Activator.CreateInstance(x))
-                .OrderBy(x => x.Order);
+            //add main cookie authentication
+            authenticationBuilder.AddCookie(GrandCookieAuthenticationDefaults.AuthenticationScheme, options =>
+            {
+                options.Cookie.Name = GrandCookieAuthenticationDefaults.CookiePrefix + GrandCookieAuthenticationDefaults.AuthenticationScheme;
+                options.Cookie.HttpOnly = true;
+                options.LoginPath = GrandCookieAuthenticationDefaults.LoginPath;
+                options.AccessDeniedPath = GrandCookieAuthenticationDefaults.AccessDeniedPath;
 
-            //configure services
-            foreach (var instance in externalAuthInstances)
-                instance.Configure(authenticationBuilder);
+                //whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
+                options.Cookie.SecurePolicy = DataSettingsHelper.DatabaseIsInstalled() && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                    ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
+            });
 
+            //add external authentication
+            authenticationBuilder.AddCookie(GrandCookieAuthenticationDefaults.ExternalAuthenticationScheme, options =>
+            {
+                options.Cookie.Name = GrandCookieAuthenticationDefaults.CookiePrefix + GrandCookieAuthenticationDefaults.ExternalAuthenticationScheme;
+                options.Cookie.HttpOnly = true;
+                options.LoginPath = GrandCookieAuthenticationDefaults.LoginPath;
+                options.AccessDeniedPath = GrandCookieAuthenticationDefaults.AccessDeniedPath;
+
+                //whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
+                options.Cookie.SecurePolicy = DataSettingsHelper.DatabaseIsInstalled() && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                    ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
+            });
+            /*
             //enable main cookie authentication
             services.AddAuthentication(options =>
             {
@@ -250,6 +262,22 @@ namespace Grand.Framework.Infrastructure.Extensions
                     }
                 }
             );
+            */
+
+            //register external authentication plugins now
+            var typeFinder = new WebAppTypeFinder();
+            var externalAuthConfigurations = typeFinder.FindClassesOfType<IExternalAuthenticationRegistrar>();
+            //create and sort instances of external authentication configurations
+            var externalAuthInstances = externalAuthConfigurations
+                .Where(x => PluginManager.FindPlugin(x)?.Installed ?? true) //ignore not installed plugins
+                .Select(x => (IExternalAuthenticationRegistrar)Activator.CreateInstance(x))
+                .OrderBy(x => x.Order);
+
+            //configure services
+            foreach (var instance in externalAuthInstances)
+                instance.Configure(authenticationBuilder);
+
+
         }
 
         /// <summary>

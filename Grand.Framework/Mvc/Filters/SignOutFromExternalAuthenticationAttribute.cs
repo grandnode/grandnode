@@ -1,8 +1,8 @@
-﻿using System.Linq;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Grand.Services.Authentication;
 using Microsoft.AspNetCore.Authentication;
+using System;
 
 namespace Grand.Framework.Mvc.Filters
 {
@@ -31,17 +31,15 @@ namespace Grand.Framework.Mvc.Filters
             /// Called early in the filter pipeline to confirm request is authorized
             /// </summary>
             /// <param name="filterContext">Authorization filter context</param>
-            public void OnAuthorization(AuthorizationFilterContext filterContext)
+            public async void OnAuthorization(AuthorizationFilterContext filterContext)
             {
-                var authenticationManager = filterContext?.HttpContext;
-                if (authenticationManager == null)
-                    return;
+                if (filterContext == null)
+                    throw new ArgumentNullException(nameof(filterContext));
 
                 //sign out from the external authentication scheme
-                var userPrincipal = authenticationManager.AuthenticateAsync(GrandCookieAuthenticationDefaults.ExternalAuthenticationScheme).Result;
-                var userIdentity = userPrincipal?.Principal?.Identities?.FirstOrDefault(identity => identity.IsAuthenticated);
-                if (userIdentity != null)
-                    authenticationManager.SignOutAsync(GrandCookieAuthenticationDefaults.ExternalAuthenticationScheme).Wait();
+                var authenticateResult = await filterContext.HttpContext.AuthenticateAsync(GrandCookieAuthenticationDefaults.ExternalAuthenticationScheme);
+                if (authenticateResult.Succeeded)
+                    await filterContext.HttpContext.SignOutAsync(GrandCookieAuthenticationDefaults.ExternalAuthenticationScheme);
             }
 
             #endregion
