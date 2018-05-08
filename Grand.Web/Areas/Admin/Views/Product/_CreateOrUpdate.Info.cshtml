@@ -549,6 +549,13 @@
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
+            <admin-label asp-for="Flag"/>
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="Flag"/>
+                <span asp-validation-for="Flag"></span>
+            </div>
+        </div>
+        <div class="form-group">
             <admin-label asp-for="AdminComment" />
             <div class="col-md-9 col-sm-9">
                 <admin-textarea asp-for="AdminComment"></admin-textarea>

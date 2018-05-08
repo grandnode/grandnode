@@ -23,6 +23,7 @@ namespace Grand.Web.Models.Catalog
         public ProductType ProductType { get; set; }
         public bool MarkAsNew { get; set; }
         public string Sku { get; set; }
+        public string Flag { get; set; }
         public string Gtin { get; set; }
         public string ManufacturerPartNumber { get; set; }
         public bool IsFreeShipping { get; set; }

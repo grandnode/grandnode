@@ -555,6 +555,11 @@ namespace Grand.Core.Domain.Catalog
         public int OnSale { get; set; }
 
         /// <summary>
+        /// Gets or sets the flag
+        /// </summary>
+        public string Flag { get; set; }
+
+        /// <summary>
         /// Gets or sets the collection of locales
         /// </summary>
         public IList<LocalizedProperty> Locales { get; set; }

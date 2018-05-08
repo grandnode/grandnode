@@ -425,4 +425,10 @@
   <LocaleResource Name="admin.contentmanagement.knowledgebase.knowledgebasecategory.fields.displayorder.hint">
     <Value>Set the knowledgebase category display order. 1 represents the top of the list.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Flag">
+    <Value>Flag</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Flag.Hint">
+    <Value>The flag of the product.</Value>
+  </LocaleResource>
 </Language>

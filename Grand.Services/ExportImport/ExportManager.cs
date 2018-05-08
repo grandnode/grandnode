@@ -316,6 +316,7 @@ namespace Grand.Services.ExportImport
                 xmlWriter.WriteElementString("Name", null, product.Name);
                 xmlWriter.WriteElementString("ShortDescription", null, product.ShortDescription);
                 xmlWriter.WriteElementString("FullDescription", null, product.FullDescription);
+                xmlWriter.WriteElementString("Flag", null, product.Flag);
                 xmlWriter.WriteElementString("AdminComment", null, product.AdminComment);
                 xmlWriter.WriteElementString("VendorId", null, product.VendorId);
                 xmlWriter.WriteElementString("ProductTemplateId", null, product.ProductTemplateId);
@@ -584,6 +585,7 @@ namespace Grand.Services.ExportImport
                 new PropertyByName<Product>("Name", p => p.Name),
                 new PropertyByName<Product>("ShortDescription", p => p.ShortDescription),
                 new PropertyByName<Product>("FullDescription", p => p.FullDescription),
+                new PropertyByName<Product>("Flag", p => p.Flag),
                 new PropertyByName<Product>("VendorId", p => p.VendorId),
                 new PropertyByName<Product>("ProductTemplateId", p => p.ProductTemplateId),
                 new PropertyByName<Product>("ShowOnHomePage", p => p.ShowOnHomePage),

@@ -3087,6 +3087,12 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.DownloadExpirationDays.Hint">
     <Value>The number of days during customers keeps access to the file (e.g. 14). Leave this field blank to allow continuous downloads.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Flag">
+    <Value>Flag</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Flag.Hint">
+    <Value>The flag of the product.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.FullDescription">
     <Value>Full description</Value>
   </LocaleResource>

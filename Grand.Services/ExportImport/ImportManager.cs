@@ -410,6 +410,12 @@ namespace Grand.Services.ExportImport
                             case "notifyadminforquantitybelow":
                                 product.NotifyAdminForQuantityBelow = property.IntValue;
                                 break;
+                            case "admincomment":
+                                product.AdminComment = property.StringValue;
+                                break;
+                            case "flag":
+                                product.Flag = property.StringValue;
+                                break;
                             case "backordermodeid":
                                 product.BackorderModeId = property.IntValue;
                                 break;

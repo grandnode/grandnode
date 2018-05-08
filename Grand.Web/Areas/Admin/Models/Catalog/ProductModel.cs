@@ -64,19 +64,18 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         public IList<SelectListItem> AvailableProductTemplates { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Name")]
-        
         public string Name { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.ShortDescription")]
-        
         public string ShortDescription { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.FullDescription")]
-        
         public string FullDescription { get; set; }
 
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Flag")]
+        public string Flag { get; set; }
+
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.AdminComment")]
-        
         public string AdminComment { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Vendor")]

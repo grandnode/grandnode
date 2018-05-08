@@ -360,6 +360,7 @@ namespace Grand.Services.Catalog
                 .Set(x => x.DownloadActivationTypeId, product.DownloadActivationTypeId)
                 .Set(x => x.DownloadExpirationDays, product.DownloadExpirationDays)
                 .Set(x => x.DownloadId, product.DownloadId)
+                .Set(x => x.Flag, product.Flag)
                 .Set(x => x.FullDescription, product.FullDescription)
                 .Set(x => x.GiftCardTypeId, product.GiftCardTypeId)
                 .Set(x => x.Gtin, product.Gtin)
