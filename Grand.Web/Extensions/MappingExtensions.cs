@@ -26,6 +26,8 @@ namespace Grand.Web.Extensions
                 MetaDescription = entity.GetLocalized(x => x.MetaDescription),
                 MetaTitle = entity.GetLocalized(x => x.MetaTitle),
                 SeName = entity.GetSeName(),
+                Flag = entity.Flag,
+                FlagStyle = entity.FlagStyle
             };
             return model;
         }

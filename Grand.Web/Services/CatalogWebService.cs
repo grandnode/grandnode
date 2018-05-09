@@ -343,7 +343,9 @@ namespace Grand.Web.Services
                     Id = category.Id,
                     Name = category.GetLocalized(x => x.Name, langid),
                     SeName = category.GetSeName(langid),
-                    IncludeInTopMenu = category.IncludeInTopMenu
+                    IncludeInTopMenu = category.IncludeInTopMenu,
+                    Flag = category.Flag,
+                    FlagStyle = category.FlagStyle
                 };
 
                 //product number for each category
@@ -488,7 +490,9 @@ namespace Grand.Web.Services
                         Id = x.Id,
                         Name = x.GetLocalized(y => y.Name, languageId),
                         SeName = x.GetSeName(languageId),
-                        Description = x.GetLocalized(y => y.Description, languageId)
+                        Description = x.GetLocalized(y => y.Description, languageId),
+                        Flag = x.Flag,
+                        FlagStyle = x.FlagStyle
                     };
                     //prepare picture model
                     int pictureSize = _mediaSettings.CategoryThumbPictureSize;

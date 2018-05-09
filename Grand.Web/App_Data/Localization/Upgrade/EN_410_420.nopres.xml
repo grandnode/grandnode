@@ -431,4 +431,16 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.Flag.Hint">
     <Value>The flag of the product.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.Flag">
+    <Value>Flag</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.Flag.Hint">
+    <Value>The flag of the category.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.FlagStyle">
+    <Value>Flag style</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.FlagStyle.hint">
+    <Value>The flag style for the category.</Value>
+  </LocaleResource>
 </Language>

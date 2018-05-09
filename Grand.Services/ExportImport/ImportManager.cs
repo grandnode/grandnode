@@ -1055,6 +1055,12 @@ namespace Grand.Services.ExportImport
                             case "picture":
                                 picture = property.StringValue;
                                 break;
+                            case "flag":
+                                category.Flag = property.StringValue;
+                                break;
+                            case "flagstyle":
+                                category.FlagStyle = property.StringValue;
+                                break;
                             case "parentcategoryid":
                                 if(!string.IsNullOrEmpty(property.StringValue) && property.StringValue!="0")
                                     category.ParentCategoryId = property.StringValue;

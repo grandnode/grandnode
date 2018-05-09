@@ -128,6 +128,16 @@ namespace Grand.Core.Domain.Catalog
         public int DisplayOrder { get; set; }
 
         /// <summary>
+        /// Gets or sets the flag
+        /// </summary>
+        public string Flag { get; set; }
+
+        /// <summary>
+        /// Gets or sets the flag style
+        /// </summary>
+        public string FlagStyle { get; set; }
+
+        /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
