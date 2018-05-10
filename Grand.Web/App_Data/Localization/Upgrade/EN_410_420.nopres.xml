@@ -443,4 +443,10 @@
   <LocaleResource Name="Admin.Catalog.Categories.Fields.FlagStyle.hint">
     <Value>The flag style for the category.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.HideOnCatalog">
+    <Value>Hide category on category page (subcategory)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.HideOnCatalog.hint">
+    <Value>Allow store owner to hide some categories on category page (subcategories before the list of products).</Value>
+  </LocaleResource>
 </Language>

@@ -2079,7 +2079,7 @@
   <LocaleResource Name="Admin.Catalog.Categories.Fields.DisplayOrder.Hint">
     <Value>Set the category's display order. 1 represents the top of the list.</Value>
   </LocaleResource>
-    <LocaleResource Name="Admin.Catalog.Categories.Fields.Flag">
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.Flag">
     <Value>Flag</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.Flag.Hint">
@@ -2090,6 +2090,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.FlagStyle.hint">
     <Value>The flag style for the category.</Value>
+  </LocaleResource>
+    <LocaleResource Name="Admin.Catalog.Categories.Fields.HideOnCatalog">
+    <Value>Hide category on category page (subcategory)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.HideOnCatalog.hint">
+    <Value>Allow store owner to hide some categories on category page (subcategories before the list of products).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.IncludeInTopMenu">
     <Value>Include in top menu</Value>

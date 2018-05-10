@@ -138,6 +138,11 @@ namespace Grand.Core.Domain.Catalog
         public string FlagStyle { get; set; }
 
         /// <summary>
+        /// Gets or sets the hide on catalog page (subcategories)
+        /// </summary>
+        public bool HideOnCatalog { get; set; }
+
+        /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
