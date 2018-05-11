@@ -9,8 +9,6 @@ namespace Grand.Framework.Security.Captcha
 {
     public class GRecaptchaControl
     {
-        private const string RECAPTCHA_API_URL_HTTP_VERSION1 = "http://www.google.com/recaptcha/api/challenge?k={0}";
-        private const string RECAPTCHA_API_URL_HTTPS_VERSION1 = "https://www.google.com/recaptcha/api/challenge?k={0}";
         private const string RECAPTCHA_API_URL_VERSION2 = "https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit";
 
         public string Id { get; set; }
@@ -20,7 +18,7 @@ namespace Grand.Framework.Security.Captcha
 
         private readonly ReCaptchaVersion _version;
 
-        public GRecaptchaControl(ReCaptchaVersion version = ReCaptchaVersion.Version1)
+        public GRecaptchaControl(ReCaptchaVersion version = ReCaptchaVersion.Version2)
         {
             _version = version;
         }
@@ -29,24 +27,7 @@ namespace Grand.Framework.Security.Captcha
         {
             SetTheme();
 
-            if (_version == ReCaptchaVersion.Version1)
-            {
-                var scriptCaptchaOptionsTag = new TagBuilder("script");
-                scriptCaptchaOptionsTag.TagRenderMode = TagRenderMode.Normal;
-                scriptCaptchaOptionsTag.Attributes.Add("type", "text/javascript");
-                scriptCaptchaOptionsTag.InnerHtml.AppendHtml(string.Format("var RecaptchaOptions = {{ theme: '{0}', tabindex: 0 }}; ", Theme));
-                
-                var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-                var scriptLoadApiTag = new TagBuilder("script");
-                scriptLoadApiTag.TagRenderMode = TagRenderMode.Normal;
-                var scriptSrc = webHelper.IsCurrentConnectionSecured() ? 
-                    string.Format(RECAPTCHA_API_URL_HTTPS_VERSION1, PublicKey) :
-                    string.Format(RECAPTCHA_API_URL_HTTP_VERSION1, PublicKey);
-                scriptLoadApiTag.Attributes.Add("src", scriptSrc);
-
-                return scriptCaptchaOptionsTag.RenderHtmlContent() + scriptLoadApiTag.RenderHtmlContent();
-            }
-            else if (_version == ReCaptchaVersion.Version2)
+            if (_version == ReCaptchaVersion.Version2)
             {
                 var scriptCallbackTag = new TagBuilder("script");
                 scriptCallbackTag.TagRenderMode = TagRenderMode.Normal;
@@ -73,25 +54,7 @@ namespace Grand.Framework.Security.Captcha
         {
             var themes = new[] {"white", "blackglass", "red", "clean", "light", "dark"};
 
-            if (_version == ReCaptchaVersion.Version1)
-            {
-                switch (Theme.ToLower())
-                {
-                    case "light":
-                        Theme = "white";
-                        break;
-                    case "dark":
-                        Theme = "blackglass";
-                        break;
-                    default:
-                        if (!themes.Contains(Theme.ToLower()))
-                        {
-                            Theme = "white";
-                        }
-                        break;
-                }
-            }
-            else if (_version == ReCaptchaVersion.Version2)
+            if (_version == ReCaptchaVersion.Version2)
             {
                 switch (Theme.ToLower())
                 {
