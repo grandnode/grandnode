@@ -174,16 +174,16 @@ namespace Grand.Services.Customers
             filter = filter & builder.Where(o => o.CustomerRoles.Any(y => y.Id == customerRoleRegister));
 
             var daydiff = (endTimeUtc.Value - startTimeUtc.Value).TotalDays;
-            if (daydiff > 32)
+            if (daydiff > 31)
             {
                 var query = _customerRepository.Collection.Aggregate().Match(filter).Group(x =>
                     new { Year = x.CreatedOnUtc.Year, Month = x.CreatedOnUtc.Month },
-                    g => new { Okres = g.Key, Count = g.Count() }).SortBy(x => x.Okres).ToList();
+                    g => new { Period = g.Key, Count = g.Count() }).SortBy(x => x.Period).ToList();
                 foreach (var item in query)
                 {
                     report.Add(new CustomerByTimeReportLine()
                     {
-                        Time = item.Okres.Year.ToString() + "-" + item.Okres.Month.ToString(),
+                        Time = item.Period.Year.ToString() + "-" + item.Period.Month.ToString(),
                         Registered = item.Count,
                     });
                 }
@@ -192,12 +192,12 @@ namespace Grand.Services.Customers
             {
                 var query = _customerRepository.Collection.Aggregate().Match(filter).Group(x =>
                     new { Year = x.CreatedOnUtc.Year, Month = x.CreatedOnUtc.Month, Day = x.CreatedOnUtc.Day },
-                    g => new { Okres = g.Key, Count = g.Count() }).SortBy(x => x.Okres).ToList();
+                    g => new { Period = g.Key, Count = g.Count() }).SortBy(x => x.Period).ToList();
                 foreach (var item in query)
                 {
                     report.Add(new CustomerByTimeReportLine()
                     {
-                        Time = item.Okres.Year.ToString() + "-" + item.Okres.Month.ToString() + "-" + item.Okres.Day.ToString(),
+                        Time = item.Period.Year.ToString() + "-" + item.Period.Month.ToString() + "-" + item.Period.Day.ToString(),
                         Registered = item.Count,
                     });
                 }

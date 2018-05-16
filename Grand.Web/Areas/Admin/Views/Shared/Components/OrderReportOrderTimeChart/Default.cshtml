@@ -31,7 +31,7 @@
 
         $.ajax({
             type: "POST",
-            url: "@Html.Raw(Url.Action("ReportOrderTimeChar", "Order"))",
+            url: "@Html.Raw(Url.Action("ReportOrderTimeChart", "Order"))",
             dataType: "json",
             data: add,
             success: function (data) {
@@ -61,10 +61,6 @@
                     chartData.datasets[0].data[i] = data.Data[i].TotalOrders;
                     chartData.datasets[1].data[i] = data.Data[i].SumOrders;
                 }
-
-                //var Lmax = Math.ceil(Math.max.apply(Math, data.Data.map(function (o) { return o.SumOrders; })) * 1.1);
-                //var Rmax = Math.ceil(Math.max.apply(Math, data.Data.map(function (o) { return o.TotalOrders; })) * 1.1);
-
                 var ctx = document.getElementById('canvasReportOrderTimeChart').getContext('2d');
                 if (first) {
                     window.myReportOrderTimeChart = new Chart(ctx, {
@@ -82,7 +78,6 @@
                                     position: 'left',
                                     ticks: {
                                         min: 0,
-                                        //max: Lmax
                                     },
                                 }, {
                                     id: 'R',
@@ -93,7 +88,6 @@
                                     },
                                     ticks: {
                                         min: 0,
-                                        //max: Rmax
                                     },
                                 }]
                             }
@@ -101,8 +95,6 @@
                     });
                 } else {
                     window.myReportOrderTimeChart.data = chartData;
-                    //window.myReportOrderTimeChart.options.scales.yAxes[0].max = Lmax;
-                    //window.myReportOrderTimeChart.options.scales.yAxes[1].max = Rmax;
                     window.myReportOrderTimeChart.update();
                 }
             },

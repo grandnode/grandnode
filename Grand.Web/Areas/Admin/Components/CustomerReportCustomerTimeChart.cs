@@ -4,16 +4,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Grand.Web.Areas.Admin.Components
 {
-    public class CustomerReportCustomerTimeCharViewComponent : ViewComponent
+    public class CustomerReportCustomerTimeChartViewComponent : ViewComponent
     {
         private readonly IPermissionService _permissionService;
 
-        public CustomerReportCustomerTimeCharViewComponent(IPermissionService permissionService)
+        public CustomerReportCustomerTimeChartViewComponent(IPermissionService permissionService)
         {
             this._permissionService = permissionService;
         }
 
-        public IViewComponentResult Invoke()//original Action name: ReportCustomerTimeChar
+        public IViewComponentResult Invoke()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return Content("");

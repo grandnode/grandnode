@@ -3993,7 +3993,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ReportOrderTimeChar(DataSourceRequest command, DateTime? startDate, DateTime? endDate)
+        public IActionResult ReportOrderTimeChart(DataSourceRequest command, DateTime? startDate, DateTime? endDate)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");

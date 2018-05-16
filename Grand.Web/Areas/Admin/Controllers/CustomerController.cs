@@ -2029,7 +2029,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ReportCustomerTimeChar(DataSourceRequest command, DateTime? startDate, DateTime? endDate)
+        public IActionResult ReportCustomerTimeChart(DataSourceRequest command, DateTime? startDate, DateTime? endDate)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return Content("");
