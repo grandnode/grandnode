@@ -23,7 +23,7 @@
     var currentCustomer = this.WorkContext.CurrentCustomer;
     var usernamesEnabled = customerSettings.UsernamesEnabled;
     var currentVersion = GrandVersion.CurrentVersion;
-    var kendoVersion = "2016.2.504";
+    var kendoVersion = "2018.1.503";
     var supportRtl = workContext.WorkingLanguage.Rtl &&
         !localizationSettings.IgnoreRtlPropertyForAdminArea;
 
@@ -63,7 +63,8 @@
 
     //js
     Html.AppendScriptParts(string.Format("~/Scripts/kendo/{0}/cultures/kendo.culture.{1}.min.js", kendoVersion, System.Globalization.CultureInfo.CurrentCulture.Name), excludeFromBundle: true);
-    Html.AppendScriptParts(string.Format("~/Scripts/kendo/{0}/kendo.all.min.js", kendoVersion), excludeFromBundle: true);
+    Html.AppendScriptParts(string.Format("~/Scripts/kendo/{0}/kendo.grid.js", kendoVersion), excludeFromBundle: true);
+    Html.AppendScriptParts(string.Format("~/Scripts/kendo/{0}/kendo.ui.core.js", kendoVersion), excludeFromBundle: true);
     Html.AppendScriptParts("~/Scripts/admin.common.js", excludeFromBundle: true);
     Html.AppendScriptParts("~/Scripts/jquery-ui-1.10.3.custom.min.js", excludeFromBundle: true);
     Html.AppendScriptParts("~/Scripts/jquery.validate.unobtrusive.min.js", excludeFromBundle: true);
