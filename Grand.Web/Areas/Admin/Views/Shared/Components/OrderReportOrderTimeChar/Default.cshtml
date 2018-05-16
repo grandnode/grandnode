@@ -1,106 +1,114 @@
-﻿<div id="order-time-char"></div>
+﻿<div class="col-xs-12 text-center" style="height:50px;position:relative">
+    <span style="position: absolute;bottom: 0">
+        <strong>
+            Orders summary
+        </strong>
+    </span>
+</div>
+
+<div>
+    <canvas id="canvasReportOrderTimeChart"></canvas>
+</div>
+
+<script src="~/Scripts/Chart.min.js" type="text/javascript"></script>
 <script>
     $(document).ready(function () {
-        $("#order-time-char").kendoChart({
-                dataSource: {
-                    transport: {
-                        read: {
-                            url: "@Html.Raw(Url.Action("ReportOrderTimeChar", "Order"))",
-                            dataType: "json",
-                            type: "POST",
-                            data: additionalData
-                        }
-                    },
-                    schema: {
-                        data: "Data",
-                        total: "Total",
-                        errors: "Errors"
-                    },
-                },
-                theme: "Bootstrap",
-                title: {
-                    text: "@T("Admin.Dashboard.ReportOrderTime.TitleChart")",
-                    font: " 14px Open Sans, sans-serif",
-                },
-                legend: {
-                    visible: true
-                },
-                seriesDefaults: {
-                    type: "area",
-                    area: {
-                        line: {
-                            style: "smooth"
-                        }
-                    },
-                },
-                series: [{
-                    field: "SumOrders",
-                    type: "area",
-                    axis: "sal",
-                    tooltip: {
-                        visible: true,
-                        template: "#: kendo.format('{0:N2}', value) #",
-                    }
-                },
-                {
-                    field: "TotalOrders",
-                    type: "line",
-                    style: "smooth",
-                    axis: "qty",
-                    tooltip: {
-                        visible: true,
-                        template: "#: value #",
-                    }
+        initReportOrderTimeChart(true);
+    });
 
-                }],
-                valueAxis: [
-                    {
-                        name: "sal",
-                        title: {
-                            text: "@T("Admin.Dashboard.ReportOrderTime.TotalSales")",
-                            font: " 14px Open Sans, sans-serif",
-                        },
-                        format: '{0:N2}',
-                        visible: true
-                    },
-                    {
-                        name: "qty",
-                        title: {
-                            text: "@T("Admin.Dashboard.ReportOrderTime.Count")",
-                            font: " 14px Open Sans, sans-serif",
-                        },
-                        visible: true
-                }],
-                categoryAxis: {
-                    field: "Time",
-                    visible: true,
-                    labels: {
-                        rotation: -45,
-                    },
-                    axisCrossingValues: [0, 100],
-                    crosshair: {
-                        tooltip: {
-                            template: "#: value #",
-                            visible: true
-                        },
-                        visible: false
-                    },
-                }
-            });
-
-
+    function initReportOrderTimeChart(first) {
         function additionalData() {
             var data = {
-                startdate: $('#dashboard-report-range').data('daterangepicker').startDate.format('YYYY-MM-DD'),
+                startDate: $('#dashboard-report-range').data('daterangepicker').startDate.format('YYYY-MM-DD'),
                 endDate: $('#dashboard-report-range').data('daterangepicker').endDate.format('YYYY-MM-DD'),
             };
+
             addAntiForgeryToken(data);
             return data;
         }
 
+        var add = additionalData();
 
-    });
+        $.ajax({
+            type: "POST",
+            url: "@Html.Raw(Url.Action("ReportOrderTimeChar", "Order"))",
+            dataType: "json",
+            data: add,
+            success: function (data) {
+                var chartData = {
+                    labels: [],
+                    datasets: [{
+                        type: 'line',
+                        label: 'Number of orders',
+                        yAxisID: 'R',
+                        borderColor: 'rgb(54, 162, 235)',
+                        borderWidth: 2,
+                        fill: false,
+                        data: []
+                    }, {
+                        type: 'bar',
+                        label: 'Total sum',
+                        yAxisID: 'L',
+                        backgroundColor: 'rgba(255, 159, 64, 0.6)',
+                        borderColor: 'rgb(255, 159, 64)',
+                        data: [],
+                        borderWidth: 2
+                    }]
+                };
 
+                for (var i = 0; i < data.Data.length; i++) {
+                    chartData.labels[i] = data.Data[i].Time;
+                    chartData.datasets[0].data[i] = data.Data[i].TotalOrders;
+                    chartData.datasets[1].data[i] = data.Data[i].SumOrders;
+                }
 
+                //var Lmax = Math.ceil(Math.max.apply(Math, data.Data.map(function (o) { return o.SumOrders; })) * 1.1);
+                //var Rmax = Math.ceil(Math.max.apply(Math, data.Data.map(function (o) { return o.TotalOrders; })) * 1.1);
 
+                var ctx = document.getElementById('canvasReportOrderTimeChart').getContext('2d');
+                if (first) {
+                    window.myReportOrderTimeChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: chartData,
+                        options: {
+                            responsive: true,
+                            tooltips: {
+                                mode: 'index',
+                                intersect: true
+                            }, scales: {
+                                yAxes: [{
+                                    id: 'L',
+                                    type: 'linear',
+                                    position: 'left',
+                                    ticks: {
+                                        min: 0,
+                                        //max: Lmax
+                                    },
+                                }, {
+                                    id: 'R',
+                                    type: 'linear',
+                                    position: 'right',
+                                    gridLines: {
+                                        display: false
+                                    },
+                                    ticks: {
+                                        min: 0,
+                                        //max: Rmax
+                                    },
+                                }]
+                            }
+                        }
+                    });
+                } else {
+                    window.myReportOrderTimeChart.data = chartData;
+                    //window.myReportOrderTimeChart.options.scales.yAxes[0].max = Lmax;
+                    //window.myReportOrderTimeChart.options.scales.yAxes[1].max = Rmax;
+                    window.myReportOrderTimeChart.update();
+                }
+            },
+            error: function () {
+                alert('error');
+            }
+        });
+    }
 </script>

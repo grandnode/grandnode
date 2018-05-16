@@ -320,15 +320,9 @@
     Dashboard.init();
 
     $('#dashboard-report-range').on('apply.daterangepicker', function (ev, picker) {
-        var chartOrderTime = $('#order-time-char').data('kendoChart');
-        if(chartOrderTime!=undefined)
-        {
-            chartOrderTime.dataSource.read();
-        }
-        var chartCustomerTime = $('#customer-time-char').data('kendoChart');
-        if (chartCustomerTime != undefined) {
-            chartCustomerTime.dataSource.read();
-        }
+        initReportCustomerTimeChart(false);
+        initReportOrderTimeChart(false);
+
         var gridOrders = $('#latest-orders-grid').data('kendoGrid');
         if (gridOrders != undefined) {
             gridOrders.dataSource.read();
@@ -341,8 +335,6 @@
                 $(item).load(url);
             }
         });
-
-
     });
 
 </script>
