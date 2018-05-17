@@ -1035,7 +1035,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("Edit", "Product", new { id = product.Id });
 
             //not found
-            return List();
+            return RedirectToAction("List", "Product");
         }
 
         //create product
