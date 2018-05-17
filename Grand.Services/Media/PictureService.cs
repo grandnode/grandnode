@@ -818,7 +818,7 @@ namespace Grand.Services.Media
                 }
                 using (var ms2 = new MemoryStream())
                 {
-                    resized.Save(ms2, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    resized.Save(ms2, System.Drawing.Imaging.ImageFormat.Png);
                     return ms2.ToArray();
                 }
             };
