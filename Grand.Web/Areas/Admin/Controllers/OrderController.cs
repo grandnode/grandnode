@@ -1121,8 +1121,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             var order = _orderService.GetOrderByNumber(model.GoDirectlyToNumber);
             if (order == null)
-                return List();
-            
+                return RedirectToAction("List", "Order");
+
             return RedirectToAction("Edit", "Order", new { id = order.Id });
         }
 
