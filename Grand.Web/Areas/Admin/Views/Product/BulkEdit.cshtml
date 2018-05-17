@@ -92,6 +92,10 @@
 
                                     for (var member in entity) {
                                         result["products[" + i + "]." + member] = entity[member];
+                                        if (member == 'Price' || member == 'OldPrice') {
+                                            result["products[" + i + "]." + member] = kendo.toString(entity[member], "n4");
+                                        }
+                                        
                                     }
                                 }
 
