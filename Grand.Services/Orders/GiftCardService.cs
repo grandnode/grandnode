@@ -122,7 +122,7 @@ namespace Grand.Services.Orders
         {
             if (giftCard == null)
                 throw new ArgumentNullException("giftCard");
-
+            giftCard.GiftCardCouponCode = giftCard.GiftCardCouponCode.ToLowerInvariant();
             _giftCardRepository.Insert(giftCard);
 
             //event notification
@@ -138,6 +138,7 @@ namespace Grand.Services.Orders
             if (giftCard == null)
                 throw new ArgumentNullException("giftCard");
 
+            giftCard.GiftCardCouponCode = giftCard.GiftCardCouponCode.ToLowerInvariant();
             _giftCardRepository.Update(giftCard);
 
             //event notification

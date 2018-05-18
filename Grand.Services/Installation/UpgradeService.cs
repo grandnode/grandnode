@@ -969,6 +969,17 @@ namespace Grand.Services.Installation
 
             #endregion
 
+            #region Update gift card
+
+            IRepository<GiftCard> _giftCardRepository = EngineContext.Current.Resolve<IRepository<GiftCard>>();
+            foreach (var gift in _giftCardRepository.Table)
+            {
+                gift.GiftCardCouponCode = gift.GiftCardCouponCode.ToLowerInvariant();
+                _giftCardRepository.Update(gift);
+            }
+
+            #endregion
+
         }
         private void InstallStringResources(string filenames)
         {
