@@ -48,6 +48,7 @@ using Grand.Core.Data;
 using MongoDB.Driver;
 using Grand.Core.Caching;
 using Grand.Web.Areas.Admin.Helpers;
+using Grand.Core.Domain.Knowledgebase;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -2729,6 +2730,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.DisplayMenuSettings.DisplayContactUsMenu_OverrideForStore = _settingService.SettingExists(displayMenuItemSettings, x => x.DisplayContactUsMenu, storeScope);
             }
 
+            //knowledgebase
+            var knowledgebaseSettings = _settingService.LoadSetting<KnowledgebaseSettings>(storeScope);
+            model.KnowledgebaseSettings.Enabled = knowledgebaseSettings.Enabled;
+
 
             return View(model);
         }
@@ -3077,6 +3082,14 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(displayMenuItemSettings, x => x.DisplayContactUsMenu, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(displayMenuItemSettings, x => x.DisplayContactUsMenu, storeScope);
+
+            //Knowledgebase
+            var knowledgebaseSettings = _settingService.LoadSetting<KnowledgebaseSettings>(storeScope);
+            knowledgebaseSettings.Enabled = model.KnowledgebaseSettings.Enabled;
+            if (model.KnowledgebaseSettings.Enabled_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(knowledgebaseSettings, x => x.Enabled, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(knowledgebaseSettings, x => x.Enabled, storeScope);
 
             //now clear cache
             _cacheManager.Clear();

@@ -6819,6 +6819,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.InvoiceFooterTextColumn2.Hint">
     <Value>Enter the text that will appear at the bottom of generated invoices (right column).</Value>
   </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.KnowledgebaseSettings.Enabled">
+    <Value>Knowledge base enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.KnowledgebaseSettings.Enabled.hint">
+    <Value>Allow store owner to knowledge base enabled</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LoadAllLocaleRecordsOnStartup">
     <Value>Load all locale resources on startup</Value>
   </LocaleResource>

@@ -23,8 +23,9 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             FullTextSettings = new FullTextSettingsModel();
             GoogleAnalyticsSettings = new GoogleAnalyticsSettingsModel();
             DisplayMenuSettings = new DisplayMenuSettingsModel();
+            KnowledgebaseSettings = new KnowledgebaseSettingsModel();
         }
-
+        public string ActiveStoreScopeConfiguration { get; set; }
         public StoreInformationSettingsModel StoreInformationSettings { get; set; }
         public SeoSettingsModel SeoSettings { get; set; }
         public SecuritySettingsModel SecuritySettings { get; set; }
@@ -32,14 +33,11 @@ namespace Grand.Web.Areas.Admin.Models.Settings
         public LocalizationSettingsModel LocalizationSettings { get; set; }
         public FullTextSettingsModel FullTextSettings { get; set; }
         public GoogleAnalyticsSettingsModel GoogleAnalyticsSettings { get; set; }
-
         public DisplayMenuSettingsModel DisplayMenuSettings { get; set; }
-
-        public string ActiveStoreScopeConfiguration { get; set; }
+        public KnowledgebaseSettingsModel KnowledgebaseSettings { get; set; }
 
         [GrandResourceDisplayName("Admin.Configuration.Settings.AdminLayout")]
         public AdminLayout Layout { get; set; }
-
         [GrandResourceDisplayName("Admin.Configuration.Settings.GridLayout")]
         public KendoLayout GridLayout { get; set; }
 
@@ -353,6 +351,12 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayMenuSettings.DisplayContactUsMenu")]
             public bool DisplayContactUsMenu { get; set; }
             public bool DisplayContactUsMenu_OverrideForStore { get; set; }
+        }
+        public partial class KnowledgebaseSettingsModel : BaseGrandModel
+        {
+            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.KnowledgebaseSettings.Enabled")]
+            public bool Enabled { get; set; }
+            public bool Enabled_OverrideForStore { get; set; }
         }
 
         #endregion
