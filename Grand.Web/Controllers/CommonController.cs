@@ -38,6 +38,7 @@ namespace Grand.Web.Controllers
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
+        private readonly ILanguageService _languageService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerActionEventService _customerActionEventService;
         private readonly IPopupService _popupService;
@@ -65,6 +66,7 @@ namespace Grand.Web.Controllers
             IPopupService popupService,
             IInteractiveFormService interactiveFormService,
             ILogger logger,
+            ILanguageService languageService,
             StoreInformationSettings storeInformationSettings,
             CommonSettings commonSettings,
             ForumSettings forumSettings,
@@ -83,6 +85,7 @@ namespace Grand.Web.Controllers
             this._popupService = popupService;
             this._interactiveFormService = interactiveFormService;
             this._logger = logger;
+            this._languageService = languageService;
             this._storeInformationSettings = storeInformationSettings;
             this._commonSettings = commonSettings;
             this._forumSettings = forumSettings;
@@ -119,10 +122,12 @@ namespace Grand.Web.Controllers
         public virtual IActionResult SetLanguage(string langid, string returnUrl = "")
         {
 
-            _commonWebService.SetLanguage(langid);
+            var language = _languageService.GetLanguageById(langid);
+            if (!language?.Published ?? false)
+                language = _workContext.WorkingLanguage;
 
             //home page
-            if (String.IsNullOrEmpty(returnUrl))
+            if (string.IsNullOrEmpty(returnUrl))
                 returnUrl = Url.RouteUrl("HomePage");
 
             //prevent open redirection attack
@@ -133,12 +138,15 @@ namespace Grand.Web.Controllers
             if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
             {
                 //remove current language code if it's already localized URL
-                if (returnUrl.IsLocalizedUrl(this.Request.PathBase, true, out Language urlLanguage))
+                if (returnUrl.IsLocalizedUrl(this.Request.PathBase, true, out Language _))
                     returnUrl = returnUrl.RemoveLanguageSeoCodeFromUrl(this.Request.PathBase, true);
 
                 //and add code of passed language
-                returnUrl = returnUrl.AddLanguageSeoCodeToUrl(this.Request.PathBase, true, _workContext.WorkingLanguage);
+                returnUrl = returnUrl.AddLanguageSeoCodeToUrl(this.Request.PathBase, true, language);
             }
+
+            _workContext.WorkingLanguage = language;
+
             return Redirect(returnUrl);
         }
 
