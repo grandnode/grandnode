@@ -3,6 +3,8 @@
 <input id="@Html.IdForModel()" name="@Html.NameForModel()" value="@((Model > DateTime.MinValue ? Model : DateTime.Today).ToString(CultureInfo.CurrentCulture.DateTimeFormat))" />
 <script>
     $(document).ready(function () {
-        $("#@Html.IdForModel()").kendoDateTimePicker();
+        $("#@Html.IdForModel()").kendoDateTimePicker({
+                culture: "@System.Globalization.CultureInfo.CurrentCulture.Name"
+        });
     });   
 </script>
