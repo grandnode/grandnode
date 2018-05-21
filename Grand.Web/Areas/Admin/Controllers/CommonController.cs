@@ -574,6 +574,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                         case "vendor":
                             detailsUrl = Url.Action("Edit", "Vendor", new { id = x.EntityId });
                             break;
+                        case "knowledgebasecategory":
+                            detailsUrl = Url.Action("EditCategory", "Knowledgebase", new { id = x.EntityId });
+                            break;
+                        case "knowledgebasearticle":
+                            detailsUrl = Url.Action("EditArticle", "Knowledgebase", new { id = x.EntityId });
+                            break;
                         default:
                             break;
                     }
