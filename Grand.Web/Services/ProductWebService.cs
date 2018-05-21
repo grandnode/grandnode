@@ -1265,7 +1265,7 @@ namespace Grand.Web.Services
 
                 if (reservations.Any())
                 {
-                    var first = reservations.Where(x => x.Date.Date >= DateTime.UtcNow.Date).OrderBy(x => x.Date).FirstOrDefault();
+                    var first = reservations.Where(x => x.Date >= DateTime.UtcNow).OrderBy(x => x.Date).FirstOrDefault();
                     if (first != null)
                     {
                         model.StartDate = first.Date;
