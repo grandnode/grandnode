@@ -264,19 +264,6 @@ a span.username {
     padding-left: 3px;
 }
 
-@media only screen and (min-width: 1200px) {
-    .k-grid-header {
-        padding-right: 0px !important
-    }
-
-    .k-grid-content::-webkit-scrollbar {
-        width: 0px !important;
-    }
-
-    .k-grid.k-widget {
-        overflow-x: hidden;
-    }
-}
 
 @media only screen and (min-device-width : 375px) and (max-device-width : 667px) {
     .form-horizontal .form-body.col-md-6.advanced-filter {
