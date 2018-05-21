@@ -227,7 +227,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// </remarks>
         public const string CATEGORY_ALL_SEARCHBOX = "Grand.pres.category.all.searchbox-{0}-{1}";
 
-        public const string CATEGORY_ALL_PATTERN_KEY = "Grand.pres.category.all";
+        public const string CATEGORY_ALL_PATTERN_KEY = "Grand.pres.category.";
 
         /// <summary>
         /// Key for caching
