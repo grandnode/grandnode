@@ -1243,6 +1243,14 @@ namespace Grand.Web.Controllers
                             //delete emails
                             EngineContext.Current.Resolve<IQueuedEmailService>().DeleteCustomerEmail(customer.Email);
 
+                            //delete newsletter subscription
+                            var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByCustomerId(customer.Id);
+                            if (newsletter != null)
+                                _newsLetterSubscriptionService.DeleteNewsLetterSubscription(newsletter);
+                            newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, _storeContext.CurrentStore.Id);
+                            if (newsletter != null)
+                                _newsLetterSubscriptionService.DeleteNewsLetterSubscription(newsletter);
+
                             //delete account
                             _customerService.DeleteCustomer(customer);
 
