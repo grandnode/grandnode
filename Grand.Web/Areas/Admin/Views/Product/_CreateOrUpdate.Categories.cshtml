@@ -95,13 +95,13 @@
                         confirmation: true,
                         mode: "inline"
                     },
-                    scrollable: true,
+                    scrollable: false,
                     columns: [{
                             field: "CategoryId",
                             title: "@T("Admin.Catalog.Products.Categories.Fields.Category")",
                             width: 200,
                             editor: categoryDropDownEditor,
-                            template: "#:Category#"
+                            template: '<a class="k-link" href="@Url.Content("~/Admin/Category/Edit/")#=CategoryId#">#:Category#</a>'
                         },
                         @if (!Model.IsLoggedInAsVendor)
                         {

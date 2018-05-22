@@ -94,13 +94,13 @@
                             confirmation: true,
                             mode: "inline"
                         },
-                        scrollable: true,
+                        scrollable: false,
                         columns: [{
                             field: "ManufacturerId",
                                 title: "@T("Admin.Catalog.Products.Manufacturers.Fields.Manufacturer")",
                                 width: 200,
                                 editor: manufacturerDropDownEditor,
-                                template: "#:Manufacturer#"
+                                template: '<a class="k-link" href="@Url.Content("~/Admin/Manufacturer/Edit/")#=ManufacturerId#">#:Manufacturer#</a>'
                             },
                             @if (!Model.IsLoggedInAsVendor)
                             {

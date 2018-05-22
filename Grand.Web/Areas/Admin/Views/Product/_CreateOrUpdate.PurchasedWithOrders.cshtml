@@ -55,6 +55,7 @@
                     title: "@T("Admin.Orders.Fields.CustomerEmail")",
                     width: 200,
                     minScreenWidth: 500,
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerEmail#</a>'
                 },
                 @if (!Model.IsLoggedInAsVendor)
                 {
