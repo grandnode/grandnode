@@ -26,6 +26,12 @@ namespace Grand.Services.Messages
         void DeleteQueuedEmail(QueuedEmail queuedEmail);
 
         /// <summary>
+        /// Deleted a customer emails
+        /// </summary>
+        /// <param name="email">email</param>
+        void DeleteCustomerEmail(string email);
+
+        /// <summary>
         /// Gets a queued email by identifier
         /// </summary>
         /// <param name="queuedEmailId">Queued email identifier</param>

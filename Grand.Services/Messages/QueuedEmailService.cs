@@ -6,6 +6,7 @@ using Grand.Core.Data;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Messages;
 using Grand.Services.Events;
+using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
 namespace Grand.Services.Messages
@@ -79,6 +80,20 @@ namespace Grand.Services.Messages
 
             //event notification
             _eventPublisher.EntityDeleted(queuedEmail);
+        }
+
+        /// <summary>
+        /// Deleted a customer emails
+        /// </summary>
+        /// <param name="email">email</param>
+        public virtual void DeleteCustomerEmail(string email)
+        {
+            if (email == null)
+                throw new ArgumentNullException("email");
+
+            var builder = Builders<QueuedEmail>.Filter;
+            var filter = builder.Eq(x => x.To, email);
+            _queuedEmailRepository.Collection.DeleteMany(filter);
         }
 
         /// <summary>

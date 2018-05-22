@@ -1240,6 +1240,9 @@ namespace Grand.Web.Controllers
                             //send notification to customer
                             _workflowMessageService.SendCustomerDeleteStoreOwnerNotification(customer, _localizationSettings.DefaultAdminLanguageId);
 
+                            //delete emails
+                            EngineContext.Current.Resolve<IQueuedEmailService>().DeleteCustomerEmail(customer.Email);
+
                             //delete account
                             _customerService.DeleteCustomer(customer);
 
