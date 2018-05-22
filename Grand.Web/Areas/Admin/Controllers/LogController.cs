@@ -129,7 +129,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 FullMessage = log.FullMessage,
                 IpAddress = log.IpAddress,
                 CustomerId = log.CustomerId,
-                CustomerEmail = !String.IsNullOrEmpty(log.CustomerId) ? EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(log.CustomerId).Email: "",
+                CustomerEmail = !String.IsNullOrEmpty(log.CustomerId) ? EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(log.CustomerId)?.Email: "",
                 PageUrl = log.PageUrl,
                 ReferrerUrl = log.ReferrerUrl,
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(log.CreatedOnUtc, DateTimeKind.Utc)

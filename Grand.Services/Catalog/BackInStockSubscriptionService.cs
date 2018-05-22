@@ -190,7 +190,7 @@ namespace Grand.Services.Catalog
             {
                 var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(subscription.CustomerId);
                 //ensure that customer is registered (simple and fast way)
-                if (CommonHelper.IsValidEmail(customer.Email))
+                if (customer != null && CommonHelper.IsValidEmail(customer.Email))
                 {
                     var customerLanguageId = customer.GetAttribute<string>(SystemCustomerAttributeNames.LanguageId, subscription.StoreId);
                     _workflowMessageService.SendBackInStockNotification(subscription, customerLanguageId);

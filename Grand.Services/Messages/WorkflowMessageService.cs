@@ -314,7 +314,8 @@ namespace Grand.Services.Messages
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             _messageTokenProvider.AddOrderTokens(tokens, order, languageId, vendor.Id);
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            if(customer != null)
+                _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
@@ -351,7 +352,8 @@ namespace Grand.Services.Messages
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             _messageTokenProvider.AddOrderTokens(tokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            if (customer != null)
+                _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
@@ -389,7 +391,8 @@ namespace Grand.Services.Messages
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             _messageTokenProvider.AddOrderTokens(tokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            if (customer != null)
+                _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
@@ -430,7 +433,8 @@ namespace Grand.Services.Messages
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             _messageTokenProvider.AddOrderTokens(tokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            if (customer != null)
+                _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
@@ -475,7 +479,8 @@ namespace Grand.Services.Messages
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             _messageTokenProvider.AddOrderTokens(tokens, order, languageId, vendor.Id);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            if (customer != null)
+                _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
@@ -516,7 +521,8 @@ namespace Grand.Services.Messages
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             _messageTokenProvider.AddOrderTokens(tokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            if (customer != null)
+                _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
@@ -560,7 +566,8 @@ namespace Grand.Services.Messages
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             _messageTokenProvider.AddShipmentTokens(tokens, shipment, languageId);
             _messageTokenProvider.AddOrderTokens(tokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            if (customer != null)
+                _messageTokenProvider.AddCustomerTokens(tokens, customer);
             
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
@@ -602,7 +609,8 @@ namespace Grand.Services.Messages
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             _messageTokenProvider.AddShipmentTokens(tokens, shipment, languageId);
             _messageTokenProvider.AddOrderTokens(tokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            if (customer != null)
+                _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
@@ -644,7 +652,8 @@ namespace Grand.Services.Messages
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             _messageTokenProvider.AddOrderTokens(tokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            if (customer != null)
+                _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
@@ -685,7 +694,8 @@ namespace Grand.Services.Messages
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             _messageTokenProvider.AddOrderTokens(tokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            if (customer != null)
+                _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
@@ -724,7 +734,8 @@ namespace Grand.Services.Messages
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             _messageTokenProvider.AddOrderTokens(tokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            if (customer != null)
+                _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
@@ -762,7 +773,8 @@ namespace Grand.Services.Messages
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             _messageTokenProvider.AddOrderTokens(tokens, order, languageId);
             _messageTokenProvider.AddOrderRefundedTokens(tokens, order, refundedAmount);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            if (customer != null)
+                _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
@@ -802,7 +814,8 @@ namespace Grand.Services.Messages
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             _messageTokenProvider.AddOrderTokens(tokens, order, languageId);
             _messageTokenProvider.AddOrderRefundedTokens(tokens, order, refundedAmount);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            if (customer != null)
+                _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
@@ -843,7 +856,8 @@ namespace Grand.Services.Messages
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             _messageTokenProvider.AddOrderNoteTokens(tokens, orderNote);
             _messageTokenProvider.AddOrderTokens(tokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            if (customer != null)
+                _messageTokenProvider.AddCustomerTokens(tokens, customer);
             
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
@@ -882,7 +896,9 @@ namespace Grand.Services.Messages
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             _messageTokenProvider.AddOrderTokens(tokens, recurringPayment.InitialOrder, languageId);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            if (customer != null)
+                _messageTokenProvider.AddCustomerTokens(tokens, customer);
+
             _messageTokenProvider.AddRecurringPaymentTokens(tokens, recurringPayment);
 
             //event notification
@@ -1170,7 +1186,9 @@ namespace Grand.Services.Messages
             //tokens
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            if (customer != null)
+                _messageTokenProvider.AddCustomerTokens(tokens, customer);
+
             _messageTokenProvider.AddReturnRequestTokens(tokens, returnRequest, orderItem);
 
             //event notification
@@ -1208,7 +1226,9 @@ namespace Grand.Services.Messages
             //tokens
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            if (customer != null)
+                _messageTokenProvider.AddCustomerTokens(tokens, customer);
+
             _messageTokenProvider.AddReturnRequestTokens(tokens, returnRequest, orderItem);
 
             //event notification
@@ -1251,7 +1271,9 @@ namespace Grand.Services.Messages
             //tokens
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            if (customer != null)
+                _messageTokenProvider.AddCustomerTokens(tokens, customer);
+
             _messageTokenProvider.AddReturnRequestTokens(tokens, returnRequest, orderItem);
 
             //event notification
@@ -1391,7 +1413,8 @@ namespace Grand.Services.Messages
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             _messageTokenProvider.AddPrivateMessageTokens(tokens, privateMessage);
             var tocustomer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(privateMessage.ToCustomerId);
-            _messageTokenProvider.AddCustomerTokens(tokens, tocustomer);
+            if (tocustomer != null)
+                _messageTokenProvider.AddCustomerTokens(tokens, tocustomer);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
@@ -1551,7 +1574,8 @@ namespace Grand.Services.Messages
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             _messageTokenProvider.AddProductReviewTokens(tokens, productReview);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            if (customer != null)
+                _messageTokenProvider.AddCustomerTokens(tokens, customer);
             
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
@@ -1591,7 +1615,9 @@ namespace Grand.Services.Messages
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             _messageTokenProvider.AddVendorReviewTokens(tokens, vendorReview);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            if (customer != null)
+                _messageTokenProvider.AddCustomerTokens(tokens, customer);
+
             _messageTokenProvider.AddVendorTokens(tokens, vendor);
 
             //event notification
@@ -1780,7 +1806,8 @@ namespace Grand.Services.Messages
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             _messageTokenProvider.AddBlogCommentTokens(tokens, blogComment);
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(blogComment.CustomerId);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            if (customer != null)
+                _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
@@ -1818,7 +1845,8 @@ namespace Grand.Services.Messages
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             _messageTokenProvider.AddNewsCommentTokens(tokens, newsComment);
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(newsComment.CustomerId);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            if (customer != null)
+                _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
@@ -1855,7 +1883,9 @@ namespace Grand.Services.Messages
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(subscription.CustomerId);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            if (customer != null)
+                _messageTokenProvider.AddCustomerTokens(tokens, customer);
+
             _messageTokenProvider.AddBackInStockTokens(tokens, subscription);
 
             //event notification

@@ -769,8 +769,11 @@ namespace Grand.Services.Messages
             if (language != null && !String.IsNullOrEmpty(language.LanguageCulture))
             {
                 var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
-                DateTime createdOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, TimeZoneInfo.Utc, _dateTimeHelper.GetCustomerTimeZone(customer));
-                tokens.Add(new Token("Order.CreatedOn", createdOn.ToString("D", new CultureInfo(language.LanguageCulture))));
+                if (customer != null)
+                {
+                    DateTime createdOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, TimeZoneInfo.Utc, _dateTimeHelper.GetCustomerTimeZone(customer));
+                    tokens.Add(new Token("Order.CreatedOn", createdOn.ToString("D", new CultureInfo(language.LanguageCulture))));
+                }
             }
             else
             {
