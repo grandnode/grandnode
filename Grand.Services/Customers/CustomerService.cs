@@ -278,16 +278,24 @@ namespace Grand.Services.Customers
                 throw new GrandException(string.Format("System customer account ({0}) could not be deleted", customer.SystemName));
 
             customer.Deleted = true;
+            customer.Email = $"DELETED@{DateTime.UtcNow.Ticks}.COM";
+            customer.Username = customer.Email;
 
-            if (_customerSettings.SuffixDeletedCustomers)
-            {
-                if (!String.IsNullOrEmpty(customer.Email))
-                    customer.Email += "-DELETED";
-                if (!String.IsNullOrEmpty(customer.Username))
-                    customer.Username += "-DELETED";
-            }
-
-            UpdateCustomer(customer);
+            //delete address
+            customer.Addresses.Clear();
+            customer.BillingAddress = null;
+            customer.ShippingAddress = null;
+            //delete generic attr
+            customer.GenericAttributes.Clear();
+            //delete shopping cart
+            customer.ShoppingCartItems.Clear();
+            customer.HasShoppingCartItems = false;
+            //delete customer roles
+            customer.CustomerRoles.Clear();
+            //clear customer tags
+            customer.CustomerTags.Clear();
+            //update customer
+            _customerRepository.Update(customer);
         }
 
         /// <summary>
