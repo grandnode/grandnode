@@ -860,9 +860,7 @@ namespace Grand.Web.Controllers
                         }
                         //save newsletter value
                         var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, _storeContext.CurrentStore.Id);
-                        if (newsletter == null)
-                            newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByCustomerId(customer.Id);
-
+                        
                         if (newsletter != null)
                         {
                             newsletter.Categories.Clear();
@@ -959,7 +957,7 @@ namespace Grand.Web.Controllers
 
             var customer = _workContext.CurrentCustomer;
             var exportManager = EngineContext.Current.Resolve<Grand.Services.ExportImport.IExportManager>();
-            byte[] bytes = exportManager.ExportCustomerToXlsx(customer);
+            byte[] bytes = exportManager.ExportCustomerToXlsx(customer, _storeContext.CurrentStore.Id);
             return File(bytes, "text/xls", "PersonalInfo.xlsx");
 
         }

@@ -846,7 +846,7 @@ namespace Grand.Services.ExportImport
         /// Export customer - personal info to XLSX
         /// </summary>
         /// <param name="customer">Customer</param>
-        public virtual byte[] ExportCustomerToXlsx(Customer customer)
+        public virtual byte[] ExportCustomerToXlsx(Customer customer, string stroreId)
         {
             using (var stream = new MemoryStream())
             {
@@ -929,6 +929,31 @@ namespace Grand.Services.ExportImport
                     {
                         managerEmails.CurrentObject = items;
                         managerEmails.WriteToXlsx(worksheetEmails, row++);
+                    }
+
+                    //Newsletter subscribe - history of change
+                    var newsletterService = EngineContext.Current.Resolve<INewsLetterSubscriptionService>();
+                    var newsletter = newsletterService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, stroreId);
+                    if (newsletter != null)
+                    {
+                        var worksheetNewsletter = xlPackage.Workbook.Worksheets.Add("Newsletter subscribe - history of change");
+                        var managerNewsletter = new PropertyManager<NewsLetterSubscription>(PropertyByNewsLetterSubscription());
+                        managerNewsletter.WriteCaption(worksheetNewsletter, SetCaptionStyle);
+                        var newsletterhistory = newsletter.GetHistoryObject();
+                        row = 2;
+                        foreach (var item in newsletterhistory)
+                        {
+                            var _tmp = (NewsLetterSubscription)item.Object;
+
+                            var newslettertml = new NewsLetterSubscription()
+                            {
+                                Active = _tmp.Active,
+                                CreatedOnUtc = item.CreatedOnUtc
+                            };
+                            _tmp.Categories.ToList().ForEach(x => newslettertml.Categories.Add(x));
+                            managerNewsletter.CurrentObject = newslettertml;
+                            managerNewsletter.WriteToXlsx(worksheetNewsletter, row++);
+                        }
                     }
 
                     xlPackage.Save();
@@ -1322,6 +1347,38 @@ namespace Grand.Services.ExportImport
                 new PropertyByName<QueuedEmail>("FromName", p => p.FromName),
                 new PropertyByName<QueuedEmail>("Subject", p => p.Subject),
                 new PropertyByName<QueuedEmail>("Body", p => p.Body),
+            };
+            return properties;
+        }
+
+        private PropertyByName<NewsLetterSubscription>[] PropertyByNewsLetterSubscription()
+        {
+            var newsletterCategoryService = EngineContext.Current.Resolve<INewsletterCategoryService>();
+
+            string GetCategoryNames(IList<string> categoryNames, string separator = ",")
+            {
+                var sb = new StringBuilder();
+                for (int i = 0; i < categoryNames.Count; i++)
+                {
+                    var category = newsletterCategoryService.GetNewsletterCategoryById(categoryNames[i]);
+                    if (category != null)
+                    {
+                        sb.Append(category.Name);
+                        if (i != categoryNames.Count - 1)
+                        {
+                            sb.Append(separator);
+                            sb.Append(" ");
+                        }
+                    }
+                }
+                return sb.ToString();
+            }
+            var properties = new[]
+            {
+                new PropertyByName<NewsLetterSubscription>("CreatedOnUtc", p => p.CreatedOnUtc.ToString()),
+                new PropertyByName<NewsLetterSubscription>("Active", p => p.Active.ToString()),
+                new PropertyByName<NewsLetterSubscription>("Categories", p => GetCategoryNames(p.Categories.ToList())),
+
             };
             return properties;
         }

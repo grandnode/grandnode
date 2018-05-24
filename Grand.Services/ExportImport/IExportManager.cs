@@ -72,7 +72,7 @@ namespace Grand.Services.ExportImport
         /// Export customer - personal info to XLSX
         /// </summary>
         /// <param name="customer">Customer</param>
-        byte[] ExportCustomerToXlsx(Customer customer);
+        byte[] ExportCustomerToXlsx(Customer customer, string stroreId);
 
         /// <summary>
         /// Export customer list to xml

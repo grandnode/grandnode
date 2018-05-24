@@ -156,10 +156,7 @@ namespace Grand.Web.Services
             EngineContext.Current.Resolve<IQueuedEmailService>().DeleteCustomerEmail(customer.Email);
 
             //delete newsletter subscription
-            var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByCustomerId(customer.Id);
-            if (newsletter != null)
-                _newsLetterSubscriptionService.DeleteNewsLetterSubscription(newsletter);
-            newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, _storeContext.CurrentStore.Id);
+            var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, _storeContext.CurrentStore.Id);
             if (newsletter != null)
                 _newsLetterSubscriptionService.DeleteNewsLetterSubscription(newsletter);
 
