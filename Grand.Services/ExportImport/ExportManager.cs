@@ -28,6 +28,7 @@ using Grand.Services.Orders;
 using Grand.Services.Customers;
 using Grand.Core.Domain.Logging;
 using Grand.Services.Logging;
+using Grand.Core.Domain.Common;
 
 namespace Grand.Services.ExportImport
 {
@@ -857,6 +858,18 @@ namespace Grand.Services.ExportImport
                     managerCustomer.WriteCaption(worksheetCustomer, SetCaptionStyle);
                     managerCustomer.WriteToXlsx(worksheetCustomer);
 
+                    //address
+                    var worksheetAddress = xlPackage.Workbook.Worksheets.Add("Address");
+                    var managerAddress = new PropertyManager<Address>(PropertyByAddress());
+                    managerAddress.WriteCaption(worksheetAddress, SetCaptionStyle);
+
+                    var row = 2;
+                    foreach (var item in customer.Addresses)
+                    {
+                        managerAddress.CurrentObject = item;
+                        managerAddress.WriteToXlsx(worksheetAddress, row++);
+                    }
+
                     //orders
                     var orderService = EngineContext.Current.Resolve<IOrderService>();
                     var customerService = EngineContext.Current.Resolve<ICustomerService>();
@@ -866,7 +879,7 @@ namespace Grand.Services.ExportImport
                     var managerOrder = new PropertyManager<Order>(PropertyByOrder());
                     managerOrder.WriteCaption(worksheetOrder, SetCaptionStyle);
 
-                    var row = 2;
+                    row = 2;
                     foreach (var items in orders)
                     {
                         managerOrder.CurrentObject = items;
@@ -1212,6 +1225,24 @@ namespace Grand.Services.ExportImport
                     new PropertyByName<Order>("ShippingZipPostalCode", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.ZipPostalCode, "")),
                     new PropertyByName<Order>("ShippingPhoneNumber",p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.PhoneNumber, "")),
                     new PropertyByName<Order>("ShippingFaxNumber", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.FaxNumber, ""))
+            };
+            return properties;
+        }
+
+        private PropertyByName<Address>[] PropertyByAddress()
+        {
+            var properties = new[]
+            {
+                    new PropertyByName<Address>("Email", p=>p.Email),
+                    new PropertyByName<Address>("FirstName", p=>p.FirstName),
+                    new PropertyByName<Address>("LastName", p=>p.LastName),
+                    new PropertyByName<Address>("PhoneNumber", p=>p.PhoneNumber),
+                    new PropertyByName<Address>("FaxNumber", p=>p.FaxNumber),
+                    new PropertyByName<Address>("Address1", p=>p.Address1),
+                    new PropertyByName<Address>("Address2", p=>p.Address2),
+                    new PropertyByName<Address>("City", p=>p.City),
+                    new PropertyByName<Address>("Country", p=> !string.IsNullOrEmpty(p.CountryId) ? EngineContext.Current.Resolve<ICountryService>().GetCountryById(p.CountryId)?.Name : ""),
+                    new PropertyByName<Address>("StateProvince", p=> !string.IsNullOrEmpty(p.StateProvinceId) ? EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(p.StateProvinceId)?.Name : ""),
             };
             return properties;
         }
