@@ -240,7 +240,7 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<MessageTokenProvider>().As<IMessageTokenProvider>().InstancePerLifetimeScope();
             builder.RegisterType<Tokenizer>().As<ITokenizer>().InstancePerLifetimeScope();
             builder.RegisterType<EmailSender>().As<IEmailSender>().InstancePerLifetimeScope();
-
+            builder.RegisterType<HistoryService>().As<IHistoryService>().InstancePerLifetimeScope();
             builder.RegisterType<CheckoutAttributeFormatter>().As<ICheckoutAttributeFormatter>().InstancePerLifetimeScope();
             builder.RegisterType<CheckoutAttributeParser>().As<ICheckoutAttributeParser>().InstancePerLifetimeScope();
             builder.RegisterType<CheckoutAttributeService>().As<ICheckoutAttributeService>().InstancePerLifetimeScope();
