@@ -5217,7 +5217,8 @@ namespace Grand.Services.Installation
                 StoreLastVisitedPage = false,
                 SaveVisitedPage = false,
                 SuffixDeletedCustomers = true,
-                AllowUsersToDeleteAccount = false
+                AllowUsersToDeleteAccount = false,
+                AllowUsersToExportData = false
             });
 
             _settingService.SaveSetting(new AddressSettings

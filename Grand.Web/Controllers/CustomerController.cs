@@ -954,6 +954,9 @@ namespace Grand.Web.Controllers
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
 
+            if(!_customerSettings.AllowUsersToExportData)
+                return Challenge();
+
             var customer = _workContext.CurrentCustomer;
             var exportManager = EngineContext.Current.Resolve<Grand.Services.ExportImport.IExportManager>();
             byte[] bytes = exportManager.ExportCustomerToXlsx(customer);

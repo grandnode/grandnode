@@ -66,6 +66,9 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AllowUsersToDeleteAccount")]
             public bool AllowUsersToDeleteAccount { get; set; }
 
+            [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AllowUsersToExportData")]
+            public bool AllowUsersToExportData { get; set; }
+
             [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.CustomerNameFormat")]
             public int CustomerNameFormat { get; set; }
 

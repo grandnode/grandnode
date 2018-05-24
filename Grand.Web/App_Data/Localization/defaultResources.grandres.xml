@@ -6006,6 +6006,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowUsersToDeleteAccount.hint">
     <Value>A value indicating whether users are allowed to delete account. Option appears in my account (left side).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowUsersToExportData">
+    <Value>Allow users to export account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowUsersToExportData.hint">
+    <Value>A value indicating whether users are allowed to export account to XLS. Option appears in account info.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowViewingProfiles">
     <Value>Allow viewing of customer profiles</Value>
   </LocaleResource>
