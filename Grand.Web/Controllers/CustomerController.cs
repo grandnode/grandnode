@@ -1219,13 +1219,13 @@ namespace Grand.Web.Controllers
         [PublicAntiForgery]
         public virtual IActionResult DeleteAccount(DeleteAccountModel model)
         {
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            var customer = _workContext.CurrentCustomer;
+            if (!customer.IsRegistered())
                 return Challenge();
 
             if (!_customerSettings.AllowUsersToDeleteAccount)
                 return RedirectToRoute("CustomerInfo");
 
-            var customer = _workContext.CurrentCustomer;
             if (ModelState.IsValid)
             {
                 var loginResult = _customerRegistrationService.ValidateCustomer(_customerSettings.UsernamesEnabled ? customer.Username : customer.Email, model.Password);
@@ -1237,22 +1237,8 @@ namespace Grand.Web.Controllers
                             //activity log
                             _customerActivityService.InsertActivity("PublicStore.DeleteAccount", "", _localizationService.GetResource("ActivityLog.DeleteAccount"));
 
-                            //send notification to customer
-                            _workflowMessageService.SendCustomerDeleteStoreOwnerNotification(customer, _localizationSettings.DefaultAdminLanguageId);
-
-                            //delete emails
-                            EngineContext.Current.Resolve<IQueuedEmailService>().DeleteCustomerEmail(customer.Email);
-
-                            //delete newsletter subscription
-                            var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByCustomerId(customer.Id);
-                            if (newsletter != null)
-                                _newsLetterSubscriptionService.DeleteNewsLetterSubscription(newsletter);
-                            newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, _storeContext.CurrentStore.Id);
-                            if (newsletter != null)
-                                _newsLetterSubscriptionService.DeleteNewsLetterSubscription(newsletter);
-
-                            //delete account
-                            _customerService.DeleteCustomer(customer);
+                            //delete account 
+                            _customerWebService.DeleteAccount(customer);
 
                             //standard logout 
                             _authenticationService.SignOut();

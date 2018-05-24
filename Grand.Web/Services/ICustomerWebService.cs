@@ -10,7 +10,7 @@ namespace Grand.Web.Services
     public partial interface ICustomerWebService
     {
         void TryAssociateAccountWithExternalAccount(Customer customer);
-
+        void DeleteAccount(Customer customer);
         IList<CustomerAttributeModel> PrepareCustomAttributes(Customer customer,
             string overrideAttributesXml = "");
         CustomerInfoModel PrepareInfoModel(CustomerInfoModel model, Customer customer,
