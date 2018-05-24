@@ -39,5 +39,14 @@ namespace Grand.Services.Common
             var history = _historyRepository.Table.Where(x => x.Object.Id == entity.Id).Select(x => (T)x.Object).ToList();
             return history;
         }
+
+        public virtual IList<HistoryObject> GetHistoryObjectForEntity(BaseEntity entity)
+        {
+            if (entity == null)
+                throw new ArgumentNullException("entity");
+
+            var history = _historyRepository.Table.Where(x => x.Object.Id == entity.Id).ToList();
+            return history;
+        }
     }
 }

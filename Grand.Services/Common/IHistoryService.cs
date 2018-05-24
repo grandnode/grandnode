@@ -10,5 +10,6 @@ namespace Grand.Services.Common
     {
         void SaveObject<T>(T entity) where T : BaseEntity;
         IList<T> GetHistoryForEntity<T>(BaseEntity entity) where T : BaseEntity;
+        IList<HistoryObject> GetHistoryObjectForEntity(BaseEntity entity);
     }
 }

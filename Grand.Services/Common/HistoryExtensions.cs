@@ -25,5 +25,11 @@ namespace Grand.Services.Common
             var historyService = EngineContext.Current.Resolve<IHistoryService>();
             return historyService.GetHistoryForEntity<T>(entity);
         }
+
+        public static IList<HistoryObject> GetHistoryObject(this BaseEntity entity)
+        {
+            var historyService = EngineContext.Current.Resolve<IHistoryService>();
+            return historyService.GetHistoryObjectForEntity(entity);
+        }
     }
 }
