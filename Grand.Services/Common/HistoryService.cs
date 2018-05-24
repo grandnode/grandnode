@@ -33,7 +33,9 @@ namespace Grand.Services.Common
 
         public virtual IList<T> GetHistoryForEntity<T>(BaseEntity entity) where T : BaseEntity
         {
-            var type = entity.GetType();
+            if (entity == null)
+                throw new ArgumentNullException("entity");
+
             var history = _historyRepository.Table.Where(x => x.Object.Id == entity.Id).Select(x => (T)x.Object).ToList();
             return history;
         }
