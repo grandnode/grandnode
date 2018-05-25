@@ -18253,7 +18253,7 @@
     <Value>The gift card you entered couldn't be applied to your order</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.HeaderQuantity">
-    <Value>({0})</Value>
+    <Value>{0}</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Image">
     <Value>Image</Value>
@@ -18673,7 +18673,7 @@
     <Value>Enter your email</Value>
   </LocaleResource>
   <LocaleResource Name="Wishlist.HeaderQuantity">
-    <Value>({0})</Value>
+    <Value>{0}</Value>
   </LocaleResource>
   <LocaleResource Name="Wishlist.TaxShipping.ExclTax">
     <Value><![CDATA[All prices are entered excluding tax. Excluding <a href="{0}">shipping</a>]]></Value>

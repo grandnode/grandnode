@@ -5745,6 +5745,8 @@ namespace Grand.Services.Installation
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 1,
+                Flag = "New",
+                FlagStyle = "badge-danger",
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
@@ -5959,6 +5961,8 @@ namespace Grand.Services.Installation
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 5,
+                Flag = "Promo!",
+                FlagStyle = "bg-success",
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
@@ -6429,9 +6433,9 @@ namespace Grand.Services.Installation
                 ShortDescription = "A groundbreaking Retina display. A new force-sensing trackpad. All-flash architecture. Powerful dual-core and quad-core Intel processors. Together, these features take the notebook to a new level of performance. And they will do the same for you in everything you create.",
                 FullDescription = "<p>With fifth-generation Intel Core processors, the latest graphics, and faster flash storage, the incredibly advanced MacBook Pro with Retina display moves even further ahead in performance and battery life.* *Compared with the previous generation.</p><p>Retina display with 2560-by-1600 resolution</p><p>Fifth-generation dual-core Intel Core i5 processor</p><p>Intel Iris Graphics</p><p>Up to 9 hours of battery life1</p><p>Faster flash storage2</p><p>802.11ac Wi-Fi</p><p>Two Thunderbolt 2 ports for connecting high-performance devices and transferring data at lightning speed</p><p>Two USB 3 ports (compatible with USB 2 devices) and HDMI</p><p>FaceTime HD camera</p><p>Pages, Numbers, Keynote, iPhoto, iMovie, GarageBand included</p><p>OS X, the world's most advanced desktop operating system</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "asus-eee-pc-1000ha-10-inch-netbook",
                 AllowCustomerReviews = true,
                 Price = 1800M,
+                OldPrice = 2000M,
                 IsShipEnabled = true,
                 IsFreeShipping = true,
                 Weight = 3,
@@ -7298,6 +7302,7 @@ namespace Grand.Services.Installation
                 ShortDescription = "HTC - One (M8) 4G LTE Cell Phone with 32GB Memory - Gunmetal (Sprint)",
                 FullDescription = "<p><b>HTC One (M8) Cell Phone for Sprint:</b> With its brushed-metal design and wrap-around unibody frame, the HTC One (M8) is designed to fit beautifully in your hand. It's fun to use with amped up sound and a large Full HD touch screen, and intuitive gesture controls make it seem like your phone almost knows what you need before you do. <br><br>Sprint Easy Pay option available in store.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
+                Flag = "New",
                 AllowCustomerReviews = true,
                 Price = 245M,
                 IsShipEnabled = true,

@@ -461,4 +461,10 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowUsersToExportData.hint">
     <Value>A value indicating whether users are allowed to export account to XLS. Option appears in account info.</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.HeaderQuantity">
+    <Value>{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.HeaderQuantity">
+    <Value>{0}</Value>
+  </LocaleResource>
 </Language>

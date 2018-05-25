@@ -9,7 +9,7 @@
     <a id="@Model.Category.Id-menu" class="pr-3 pl-3 @(Model.Category.SubCategories.Count() == 0 ? "nav-link": "nav-link dropdown-toggle")  @(Model.Category.IncludeInTopMenu ? "": "d-lg-none")" @(Model.Category.SubCategories.Count() == 0 ? "" : "data-toggle=dropdown aria-haspopup=true aria-expanded=false" ) href="@Url.RouteUrl("Category", new { SeName = Model.Category.SeName })">
         @Model.Category.Name
     </a>
-    <label class="badge badge-@Model.Category.FlagStyle">@Model.Category.Flag</label>
+    <label class="badge @Model.Category.FlagStyle">@Model.Category.Flag</label>
     @{
         //subcategories
         var subCategories =

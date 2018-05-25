@@ -418,7 +418,6 @@ $(document).ready(function () {
             var old_p = $(this).find(".old-price").text().replace(",", "").replace(/^\D+/g, '');
             var promo = (Math.round((1 - actual_p / old_p) * 100));
             if (isNaN(promo)) {
-                //$(".change-percent", this).remove();
                 $(this).parent().parent().find(".change-percent").remove();
             } else {
                 if (parseInt(promo) <= 0) {
@@ -426,7 +425,6 @@ $(document).ready(function () {
                 }
                 else {
                     var promo = "-" + (Math.round((1 - actual_p / old_p) * 100)) + "%";
-                    //$(".change-percent", this).text(promo);
                     $(this).parent().find(".change-percent").text(promo).css("opacity", "1");
                     $(this).find(".new-product-label").addClass("with-promo");
                 }
@@ -445,8 +443,6 @@ $(document).ready(function () {
     $("#topcartlink .btn-group").click(function () {
         if ($(this).parent().is(".fly-in")) {
             console.log(this);
-            //$('body').removeAttr('overflow', 'auto');
-            //$('body').css('position', 'static');
             $("#topcartlink").removeClass("fly-in");
             $(".shadow-layer").removeClass("fly-in");
             $("body").removeClass("fly-in");
@@ -454,8 +450,6 @@ $(document).ready(function () {
             $(".dropdowns-container").removeClass("fly-in");
         }
         else {
-            //$('body').css('overflow', 'auto');
-            //$('body').css('position', 'fixed');
             $(this).parent().addClass("fly-in");
             $(".shadow-layer").addClass("fly-in");
             $("body").addClass("fly-in");
@@ -467,8 +461,6 @@ $(document).ready(function () {
             $(".shadow-layer").attr("style", "display:none!important;");
             $("#topcartlink").removeClass("fly-in");
             $(".shadow-layer").removeClass("fly-in");
-            //$('body').css('overflow', 'auto');
-            //$('body').css('position', 'static');
             $("body").removeClass("fly-in");
             $(".navUp .container").removeClass("fly-in");
             $(".dropdowns-container").removeClass("fly-in");
@@ -481,27 +473,9 @@ $(document).ready(function () {
         $("#topcartlink").removeClass("fly-in");
         $(".shadow-layer").removeClass("fly-in");
         $("body").removeClass("fly-in");
-        //$('body').css('overflow', 'auto');
-        //$('body').css('position', 'static');
         $(".navUp .container").removeClass("fly-in");
         $(".dropdowns-container").removeClass("fly-in");
     }
-
-
-$(document).ready(function () {
-    $(window).bind('scroll', function () {
-        var navHeight = $('header').height();
-
-        if ($(window).scrollTop() > navHeight) {
-            $('.mainNav').addClass('fixed');
-            $('.page-container').addClass('fixed');
-        }
-        else {
-            $('.mainNav').removeClass('fixed');
-            $('.page-container').removeClass('fixed');
-        }
-    });
-});
 
 $(document).mouseup(function (e) {
     var container = $("#topcartlink");
@@ -509,8 +483,6 @@ $(document).mouseup(function (e) {
         $("#topcartlink").removeClass("fly-in");
         $(".shadow-layer").removeClass("fly-in");
         $("body").removeClass("fly-in");
-        //$('body').css('overflow', 'auto');
-        //$('body').css('position', 'static');
         $(".navUp .container").removeClass("fly-in");
         $(".dropdowns-container").removeClass("fly-in");
     }
@@ -518,8 +490,6 @@ $(document).mouseup(function (e) {
         $("#topcartlink").removeClass("fly-in");
         $(".shadow-layer").removeClass("fly-in");
         $("body").removeClass("fly-in");
-        //$('body').css('overflow', 'auto');
-        //$('body').css('position', 'static');
         $(".navUp .container").removeClass("fly-in");
         $(".dropdowns-container").removeClass("fly-in");
     });
@@ -547,8 +517,6 @@ $(document).ready(function () {
             $(".shadow-layer").attr("style", "display:none!important;");
             $("#topcartlink").removeClass("fly-in");
             $(".shadow-layer").removeClass("fly-in");
-            //$('body').css('overflow', 'auto');
-            //$('body').css('position', 'static');
             $("body").removeClass("fly-in");
             $(".navUp .container").removeClass("fly-in");
             $(".dropdowns-container").removeClass("fly-in");
