@@ -10,7 +10,7 @@
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Auctions })
 }
 
-<div class="page account-page auction-list-page">
+<div class="page account-page auction-list-page pl-lg-3">
     <h1 class="h2 generalTitle">@T("Account.CustomerAuctions")</h1>
         @if (Model.ProductBidList.Any())
         {
@@ -22,7 +22,7 @@
                     <a class="nav-link" data-toggle="tab" href="#ended" role="tab" aria-controls="ended">@T("Account.Auctions.Tab.Ended")</a>
                 </li>
             </ul>
-            <div class="tab-content">
+            <div class="tab-content mt-3">
                 <div class="tab-pane active" id="ongoing" role="tabpanel">
                     @if (Model.ProductBidList.Where(x => !x.Ended).Any())
                     {

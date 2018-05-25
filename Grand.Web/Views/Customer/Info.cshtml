@@ -58,7 +58,7 @@
         }
     });
 </script>
-<div class="page account-page customer-info-page">
+<div class="page account-page customer-info-page pl-lg-3">
     @if (customerSettings.AllowUsersToExportData)
     {
         <button type="button" class="btn btn-info btn-sm float-sm-right" onclick="location.href='/customer/export'">
@@ -82,14 +82,14 @@
                         </div>
                         <div class="gender">
                             <div class="flex-row">
-                                <label class="custom-control custom-radio male">
+                                <label class="custom-control custom-radio male d-inline-block">
                                     <input type="radio" asp-for="Gender" value="M" checked="@(Model.Gender == "M")" id="gender-male" class="custom-control-input" />
-                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-label"></span>
                                     <span class="custom-control-description forcheckbox" for="gender-male">@T("Account.Fields.Gender.Male")</span>
                                 </label>
-                                <label class="custom-control custom-radio female">
+                                <label class="custom-control custom-radio female d-inline-block">
                                     <input type="radio" asp-for="Gender" value="F" checked="@(Model.Gender == "F")" id="gender-female" class="custom-control-input" />
-                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-label"></span>
                                     <span class="custom-control-description forcheckbox" for="gender-female">@T("Account.Fields.Gender.Female")</span>
                                 </label>
                             </div>
@@ -119,7 +119,7 @@
                                 @T("Account.Fields.DateOfBirth"):
                             </div>
                         </div>
-                        <div class="d-flex justify-content-between flex-row">
+                        <div class="input-group">
                             @Html.DatePickerDropDowns(Html.FieldNameFor(x => x.DateOfBirthDay),
                                                   Html.FieldNameFor(x => x.DateOfBirthMonth),
                                                   Html.FieldNameFor(x => x.DateOfBirthYear),
@@ -200,10 +200,10 @@
             </div>
         }
         @if (Model.StreetAddressEnabled ||
-         Model.StreetAddress2Enabled ||
-         Model.ZipPostalCodeEnabled ||
-         Model.CityEnabled ||
-         Model.CountryEnabled)
+        Model.StreetAddress2Enabled ||
+        Model.ZipPostalCodeEnabled ||
+        Model.CityEnabled ||
+        Model.CountryEnabled)
         {
             <div class="card mb-3">
                 <h3 class="card-header">
@@ -315,7 +315,7 @@
                             <div class="form-group">
                                 <label class="custom-control custom-checkbox">
                                     <input class="custom-control-input" asp-for="Newsletter" />
-                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-label"></span>
                                     <label asp-for="Newsletter" class="custom-control-description">@T("Account.Fields.Newsletter")</label>
                                 </label>
                             </div>

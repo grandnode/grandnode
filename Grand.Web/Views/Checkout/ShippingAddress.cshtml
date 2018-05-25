@@ -16,7 +16,7 @@
 
                     <label class="custom-control custom-checkbox">
                         @Html.CheckBoxFor(x => x.PickUpInStore, new { @class = "custom-control-input" } )
-                        <span class="custom-control-indicator"></span>
+                        <span class="custom-control-label"></span>
                         <span for="@Html.IdFor(model => model.PickUpInStore)" class="custom-control-description">@T("Checkout.PickupPoints").Text</span>
                     </label>
 
@@ -237,7 +237,7 @@
             </div>
         }
         <div class="buttons col-12 mb-2 mt-2">
-           <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="btn btn-success new-address-next-step-button" />
+           <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="btn btn-info new-address-next-step-button" />
         </div>
     </form>
 

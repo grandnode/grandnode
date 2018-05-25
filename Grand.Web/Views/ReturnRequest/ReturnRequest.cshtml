@@ -6,7 +6,7 @@
     //title
     Html.AddTitleParts(T("PageTitle.ReturnItems").Text);
 }
-<div class="page return-request-page">
+<div class="page return-request-page my-3">
     <h2 class="text-xs-center text-xs-center generalTitle">@string.Format(T("ReturnRequests.Title").Text, Model.OrderNumber)</h2>
     @if (!String.IsNullOrEmpty(Model.Result))
     {
@@ -18,7 +18,7 @@
     {
         <form asp-route="ReturnRequest" method="post">
             <div class="AntiForgeryToken mt-2">
-                    <h2 class="h4 generalTitle"><strong>@T("ReturnRequests.SelectProduct(s)")</strong></h2>
+                    <h2 class="h5 mt-3"><strong>@T("ReturnRequests.SelectProduct(s)")</strong></h2>
                 <div class="table-responsive">
                     <table class="table table-hover data-table">
                         <colgroup>
@@ -69,7 +69,7 @@
                     </table>
                 </div>
             </div>
-            <h5><strong>@T("ReturnRequests.WhyReturning")</strong></h5>
+            <h5 class="mb-3"><strong>@T("ReturnRequests.WhyReturning")</strong></h5>
             <div class="form-fields">
                 <div class="form-group">
                     @{

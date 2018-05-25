@@ -12,7 +12,7 @@ namespace Grand.Framework.TagHelpers.Admin
 {
 
     /// <summary>
-    /// nop-editor tag helper
+    /// input tag helper
     /// </summary>
     [HtmlTargetElement("admin-input", Attributes = ForAttributeName, TagStructure = TagStructure.WithoutEndTag)]
     public class AdminInputTagHelper : TagHelper

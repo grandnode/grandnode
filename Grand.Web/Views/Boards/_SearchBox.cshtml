@@ -1,9 +1,9 @@
 ﻿    <div class="forum-search-box">
         <form asp-route="Search" method="get">
-            <div class="input-group flex-row">
+            <div class="input-group">
                 <input type="text" class="form-control search-box-text" id="forums-small-searchterms" name="searchterms" placeholder="@T("Forum.SearchForumsTooltip")" />
-                <span class="input-group-btn">
-                    <button type="submit" class="btn btn-success search-box-button">
+                <span class="input-group-append">
+                    <button type="submit" class="btn btn-primary search-box-button">
                         @T("Forum.SearchButton")
                     </button>
                 </span>

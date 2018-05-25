@@ -9,7 +9,7 @@
 {
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Orders})
 }
-<div class="page account-page order-list-page">
+<div class="page account-page order-list-page pl-lg-3">
         <h2 class="generalTitle">@T("Account.CustomerOrders")</h2>
         @if (Model.RecurringOrders.Any())
         {
@@ -131,11 +131,11 @@
                                     </div>
                                     <div class="card-footer">
                                         <div class="buttons">
-                                            <input type="button" value="@T("Account.CustomerOrders.OrderDetails")" class="btn btn-sm btn-success order-details-button" onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = order.Id })')" />
+                                            <input type="button" value="@T("Account.CustomerOrders.OrderDetails")" class="btn btn-sm btn-info order-details-button" onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = order.Id })')" />
 
                                             @if (order.IsReturnRequestAllowed)
                                             {
-                                                <input type="button" value="@T("Account.CustomerOrders.ReturnItems")" class="btn btn-sm btn-outline-warning return-items-button" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = order.Id })')" />
+                                                <input type="button" value="@T("Account.CustomerOrders.ReturnItems")" class="btn btn-sm btn-warning text-white return-items-button" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = order.Id })')" />
                                             }
                                         </div>
                                     </div>

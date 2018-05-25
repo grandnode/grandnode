@@ -11,7 +11,7 @@
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.DeleteAccount })
 }
 <form asp-route="CustomerDeleteAccount" method="post">
-    <section class="page account-page change-password-page">
+    <section class="page account-page change-password-page pl-lg-3">
         <h1 class="h2 generalTitle">@T("Account.DeleteAccount")</h1>
 
         <div asp-validation-summary="ModelOnly" class="message-error"></div>
@@ -28,7 +28,7 @@
             </div>
         </fieldset>
         <div class="text-xs-center">
-            <input type="submit" class="btn btn-success change-password-button" value="@T("Account.DeleteAccount.Button")" onclick="return confirm('@T("Admin.Common.AreYouSure")'); " />
+            <input type="submit" class="btn btn-danger change-password-button" value="@T("Account.DeleteAccount.Button")" onclick="return confirm('@T("Admin.Common.AreYouSure")'); " />
         </div>
     </section>
 </form>

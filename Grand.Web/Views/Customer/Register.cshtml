@@ -72,12 +72,12 @@
                             <div class="d-flex row">
                                 <label class="male custom-control custom-radio">
                                     <input id="gender-male" name="Gender" type="radio" value="M" checked="@(Model.Gender == "M")" class="custom-control-input">
-                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-label"></span>
                                     <span class="forcheckbox custom-control-description">@T("Account.Fields.Gender.Male")</span>
                                 </label>
-                                <label class="female custom-control custom-radio">
+                                <label class="female custom-control custom-radio ml-2">
                                     <input id="gender-female" name="Gender" type="radio" value="F" checked="@(Model.Gender == "F")" class="custom-control-input">
-                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-label"></span>
                                     <span class="forcheckbox custom-control-description">@T("Account.Fields.Gender.Female")</span>
                                 </label>
                             </div>
@@ -281,11 +281,10 @@
                         @if (Model.NewsletterEnabled)
                         {
                             <div class="form-group">
-                                <span class="col-form-label">@T("account.fields.newsletter")</span>
                                 <label for="Newsletter" class="ml-1 custom-control custom-checkbox">
                                     <input class="custom-control-input" asp-for="Newsletter" />
-                                    <span class="custom-control-indicator"></span>
-                                    <span class="custom-control-description">&nbsp;</span>
+                                    <span class="custom-control-label"></span>
+                                    <span class="custom-control-description">@T("account.fields.newsletter")</span>
                                     <span class="sr-only">@T("account.fields.newsletter")</span>
                                 </label>
                                 <span asp-validation-for="Newsletter"></span>
@@ -366,7 +365,7 @@
             </script>
             <label class="custom-control custom-checkbox">
                 <input id="accept-privacy-policy" name="accept-privacy-policy" type="checkbox" class="custom-control-input">
-                <span class="custom-control-indicator"></span>
+                <span class="custom-control-label"></span>
                 <span class="custom-control-description">@T("Account.Fields.AcceptPrivacyPolicy")</span>
                 <span class="read" onclick="javascript:OpenWindow('@Url.RouteUrl("TopicPopup", new { SystemName = "privacyinfo" })', 450, 500, true)">@T("Account.Fields.AcceptPrivacyPolicy.Read")</span>
             </label>

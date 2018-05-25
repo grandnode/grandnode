@@ -7,19 +7,23 @@
     Html.AddMetaDescriptionParts(Model.MetaDescription);
     Html.AddMetaKeywordParts(Model.MetaKeywords);
 }
-<div class="page news-item-page">
-        @if (!string.IsNullOrEmpty(Model.PictureModel.ImageUrl))
-        {
-            <img class="card-img-top img-fluid" alt="@Model.PictureModel.AlternateText" src="@Model.PictureModel.ImageUrl" title="@Model.PictureModel.Title">
-        }
-        <h1 class="h2 generalTitle">@Model.Title</h1>
+<div class="page news-item-page mt-3">
+       <div class="card p-3">
+            @if (!string.IsNullOrEmpty(Model.PictureModel.ImageUrl))
+            {
+                <div class="img-container mb-2">
+                     <img class="card-img-top img-fluid py-0" alt="@Model.PictureModel.AlternateText" src="@Model.PictureModel.ImageUrl" title="@Model.PictureModel.Title">
+                </div>
+            }
+        <h1 class="h2 generalTitle mt-0">@Model.Title</h1>
         <div class="news-date">
-            <h5 class="text-muted">@Model.CreatedOn.ToString("D")</h5>
+            <h5 class="text-muted"><i class="far fa-clock mr-2"></i>@Model.CreatedOn.ToString("D")</h5>
         </div>
         @await Component.InvokeAsync("Widget", new { widgetZone = "newsitem_page_before_body", additionalData = Model.Id })
         <div class="news-body">
             @Html.Raw(Model.Full)
         </div>
+    </div>
         @await Component.InvokeAsync("Widget", new { widgetZone = "newsitem_page_before_comments", additionalData = Model.Id })
         @if (Model.AllowComments)
         {
@@ -53,7 +57,7 @@
                             </div>
                         }
                     <div class="buttons pt-1 pb-1">
-                        <input type="submit" name="add-comment" class="btn btn-sm btn-success news-item-add-comment-button" value="@T("News.Comments.SubmitButton")" />
+                        <input type="submit" name="add-comment" class="btn btn-sm btn-info news-item-add-comment-button" value="@T("News.Comments.SubmitButton")" />
                     </div>
                 </form>
             </fieldset>
@@ -78,7 +82,7 @@
                                             <div class="card-body flex-row row">
                                                 @if (!String.IsNullOrEmpty(comment.CustomerAvatarUrl))
                                                 {
-                                                    <div class="col-sm-3 col-12 comment-info">
+                                                    <div class="col-sm-3 col-12 d-flex justify-content-center comment-info">
                                                         <div class="user-info">
                                                                 <div class="avatar">
                                                                     @if (comment.AllowViewingProfiles)

@@ -7,12 +7,13 @@
 @if (Model.Any())
 {
     <div class="attributes">
-        <dl>
+        <table class="table">
             @foreach (var attribute in Model)
             {
                 string controlId = string.Format("product_attribute_{0}", attribute.Id);
                 string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
-                <dt id="@string.Format("product_attribute_label_{0}", attribute.Id)">
+                <tr>
+                <td id="@string.Format("product_attribute_label_{0}", attribute.Id)">
                     <span class="text-prompt">
                         @textPrompt
                     </span>
@@ -22,8 +23,8 @@
                             @Html.Raw(attribute.Description)
                         </span>
                     }
-                </dt>
-                <dd id="@string.Format("product_attribute_input_{0}", attribute.Id)">
+                </td>
+                <td id="@string.Format("product_attribute_input_{0}", attribute.Id)">
                     @switch (attribute.AttributeControlType)
                     {
                         case AttributeControlType.DropdownList:
@@ -55,7 +56,7 @@
                                         <li>
                                             <label class="custom-control custom-radio">
                                                 <input class="custom-control-input" id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
-                                                <span class="custom-control-indicator"></span>
+                                                <span class="custom-control-label"></span>
                                                 <span class="custom-control-description">@attributeName</span>
                                             </label>
                                         </li>
@@ -75,7 +76,7 @@
                                         <li>
                                             <label class="custom-control custom-checkbox">
                                                 <input class="custom-control-input" id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
-                                                <span class="custom-control-indicator"></span>
+                                                <span class="custom-control-label"></span>
                                                 <span class="sr-only">@attributeName</span>
                                                 <span class="custom-control-description">@attributeName</span>
                                             </label>
@@ -267,9 +268,10 @@
                                 }
                                 break;
                     }
-                </dd>
+                </td>
+                    </tr>
             }
-        </dl>
+        </table>
     </div>
 }
 @if (Model.Any())

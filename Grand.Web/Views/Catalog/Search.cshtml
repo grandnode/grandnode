@@ -40,7 +40,7 @@
                             <label for="adv" class="custom-control custom-checkbox">
                                 <span class="sr-only">adv</span>
                                 <input asp-for="adv" class="custom-control-input" />
-                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-label"></span>
                                 <span class="custom-control-description">@T("search.advancedsearch")</span>
                             </label>
                         </div>
@@ -56,7 +56,7 @@
                                 <label for="isc" class="custom-control custom-checkbox">
                                     <span class="sr-only">isc</span>
                                     <input asp-for="isc" class="custom-control-input"/>
-                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-label"></span>
                                     <span class="custom-control-description">@T("admin.catalog.products.list.searchincludesubcategories.hint")</span>
                                 </label>
 
@@ -94,7 +94,7 @@
                         <div class="inputs reversed">
                             <label for="sid" class="custom-control custom-checkbox">
                                 <input asp-for="sid" class="custom-control-input"/>
-                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-label"></span>
                                 <span class="custom-control-description">@T("search.searchindescriptions")</span>
                             </label>
                         </div>
@@ -103,7 +103,7 @@
                 </div>
             </div>
             <div class="buttons mt-1 mb-1">
-                <input type="submit" class="btn btn-success search-button" value="@T("Search.Button")" />
+                <input type="submit" class="btn btn-info search-button" value="@T("Search.Button")" />
             </div>
         </form>
     </div>

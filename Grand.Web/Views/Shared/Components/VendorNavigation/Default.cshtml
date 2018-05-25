@@ -2,7 +2,8 @@
 @if (Model.Vendors.Any())
 {
     <div id="block-vendor-navigation" class="block block-vendor-navigation">
-            <h2 class="h5"><strong>@T("Vendors")</strong></h2>
+        <h2 class="h5 bg-light p-3 d-lg-none"><strong>@T("Vendors")</strong><i id="Vendors" class="fa fa-angle-down fa-1x float-xs-right"></i></h2>
+            <h2 class="h5 generalTitle d-none d-lg-block"><strong>@T("Vendors")</strong></h2>
         <div class="viewBox">
             <ul class="list">
                 @foreach (var vendor in Model.Vendors)

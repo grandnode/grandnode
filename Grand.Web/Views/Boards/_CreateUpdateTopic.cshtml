@@ -46,9 +46,9 @@
                 @if (Model.IsCustomerAllowedToSubscribe)
                 {
                     <fieldset class="form-group">
-                        <label class="custom-control custom-checkbox text-sm-center">
+                        <label class="custom-control custom-checkbox">
                             <input class="custom-control-input" id="Subscribed" type="checkbox" name="Subscribed" value="true" @(Model.Subscribed ? Html.Raw("checked") : Html.Raw("")) />
-                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-label"></span>
                             <span class="custom-control-description">@T("Forum.NotifyWhenSomeonePostsInThisTopic")</span>
                         </label>
                     </fieldset>

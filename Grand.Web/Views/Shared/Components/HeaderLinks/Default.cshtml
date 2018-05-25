@@ -15,79 +15,77 @@
             <span class="d-none d-lg-block">@T("Account.Logout")</span>
         </a>
     </li>
-    <li class="nav-item d-flex d-lg-none align-self-start" id="mobile-hl-opener">
+    <li class="nav-item col d-flex d-lg-none align-self-start" id="mobile-hl-opener">
         <a class="ico-account nav-link d-flex justify-content-center" href="@Url.RouteUrl("CustomerInfo")">
             <span class="align-self-center"><span class="fa fa-user"></span></span>
             <span class="d-none d-lg-block">@T("Account.MyAccount")</span>
+            <span class="d-lg-none d-block text-muted mt-1 mobile-desc">@T("Account.MyAccount")</span>
         </a>
     </li>
-    <li class="nav-item d-flex d-lg-none align-self-start">
+    <li class="nav-item col d-flex d-lg-none align-self-start">
         <a class="nav-link ico-logout" href="@Url.RouteUrl("Logout")">
             <span class="align-self-center"><span class="fa fa-power-off"></span></span>
             <span class="d-none d-lg-block">@T("Account.Logout")</span>
+            <span class="d-lg-none d-block text-muted mt-1 mobile-desc">@T("Account.Logout")</span>
         </a>
     </li>
 }
 else
 {
-    <li class="nav-item d-none d-lg-block"><a class="nav-link ico-register" href="@Url.RouteUrl("Register")"><span class="fa fa-user-plus align-self-center"></span><span class="d-none d-lg-block">@T("Account.Register")</span></a></li>
     <li class="nav-item d-none d-lg-block"><a class="nav-link ico-login" href="@Url.RouteUrl("Login")"><span class="fa fa-user align-self-center"></span><span class="d-none d-lg-block">@T("Account.Login")</span></a></li>
-    <li class="nav-item d-flex d-lg-none justify-content-center align-self-start">
+    <li class="nav-item col d-flex d-lg-none justify-content-center align-self-start">
         <a class="nav-link ico-login admin" href="@Url.RouteUrl("Login")">
             <span class="fa fa-user align-self-center"></span>
             <span class="d-none d-lg-block">@T("Account.Login")</span>
+            <span class="d-lg-none d-block text-muted mt-1 mobile-desc">@T("Account.Login")</span>
         </a>
     </li>
 }
 @if (Model.AllowPrivateMessages)
 {
-    <li class="nav-item">
+    <li class="nav-item col inbox-col">
         <a class="nav-link ico-inbox" href="@Url.RouteUrl("PrivateMessages", new { tab = "" })">
-            <span class="fa fa-envelope-o align-self-center"></span>
+            <span class="fa fa-envelope align-self-center"></span>
             <span class="inbox-label d-none d-lg-block">@T("PrivateMessages.Inbox")</span>
             <span class="inbox-unread d-none d-lg-block">@Model.UnreadPrivateMessages</span>
+            <span class="d-lg-none d-block text-muted mt-1 mobile-desc">@T("PrivateMessages.Inbox")</span>
         </a>
     </li>
 }
 @if (Model.WishlistEnabled)
 {
-    <li class="nav-item">
+    <li class="nav-item col wishlist-container">
         <a class="nav-link" href="@Url.RouteUrl("Wishlist")">
             <span class="wishlist-label align-self-center">
-                <span class="fa fa-heart-o"></span>
+                <span class="far fa-heart"></span>
             </span>
-            <span class="d-none d-lg-block">
+            <span class="d-none d-lg-block wish-name">
                 @T("Wishlist")
             </span>
-            <span class="wishlist-qty d-none d-lg-block">@T("Wishlist.HeaderQuantity", Model.WishlistItems)</span>
+            <span class="wishlist-qty d-none d-lg-flex">@T("Wishlist.HeaderQuantity", Model.WishlistItems)</span>
+            <span class="d-lg-none d-block text-muted mt-1 mobile-desc">@T("Wishlist")</span>
         </a>
     </li>
 }
 @if (Model.ShoppingCartEnabled)
 {
-    <li class="nav-item" id="topcartlink">
+    <li class="nav-item col" id="topcartlink">
         <div class="btn-group dropdown">
-            <a class="nav-link dropdown-toggle" href="@Url.RouteUrl("ShoppingCart")">
+            <a class="nav-link dropdown-toggle">
                 <span class="cart-label align-self-center">
                     <span class="fa fa-shopping-cart"></span>
                 </span>
-                <span class="d-none d-lg-block">
+                <span class="d-none d-lg-block cart-name">
                     @T("ShoppingCart")
                 </span>
                 <span class="cart-qty">@T("ShoppingCart.HeaderQuantity", Model.ShoppingCartItems)</span>
+                <span class="d-lg-none d-block text-muted mt-1 mobile-desc">@T("shoppingcart")</span>
             </a>
-            <div class="dropdown-menu dropdown-menu-right">
-                @await Component.InvokeAsync("FlyoutShoppingCart")
-            </div>
+        </div>
+        <div class="fly-cart-container">
+            @await Component.InvokeAsync("FlyoutShoppingCart")
         </div>
     </li>
-    <script>
-        if ($("#topcartlink .dropdown-menu").height() > 1) {
-        }
-        else {
-            $("#topcartlink .dropdown-menu").hide();
-        }
-    </script>
 }
 @await Component.InvokeAsync("Widget", new { widgetZone = "header_links_after" })
 @if (Model.AllowPrivateMessages && !string.IsNullOrEmpty(Model.AlertMessage))

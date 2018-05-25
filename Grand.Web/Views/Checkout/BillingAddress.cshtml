@@ -17,7 +17,7 @@
                     <div  class="ship-to-same-address">
                         <label class="custom-control custom-checkbox">
                             @Html.CheckBoxFor(x => x.ShipToSameAddress, new { @class = "custom-control-input" })
-                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-label"></span>
                             <span class="custom-control-description">@T("Checkout.ShipToSameAddress")</span>
                         </label>
                      </div>
@@ -150,7 +150,7 @@
                 @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_billing_address_bottom" })
                 </div>
                 <div class="col-12 buttons mt-1 mb-1 pl-0">
-                    <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="btn btn-success new-address-next-step-button" />
+                    <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="btn btn-info new-address-next-step-button" />
                 </div>
         </form>
         <div class="order-summary">

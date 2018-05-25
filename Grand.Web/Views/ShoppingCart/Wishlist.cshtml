@@ -115,6 +115,12 @@
                                     }
                                     <td class="product">
                                         <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })" class="product-name">@item.ProductName</a>
+                                        @if (Model.ShowSku && !string.IsNullOrEmpty(item.Sku))
+                                        {
+                                            <div class="sku">
+                                                <span class="sku-number mt-1">@item.Sku</span>
+                                            </div>
+                                        }
                                         @if (!string.IsNullOrEmpty(item.AttributeInfo))
                                         {
                                             <div class="attributes small">
@@ -137,7 +143,7 @@
                                         {
                                             var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName });
                                             editCartItemUrl = webHelper.ModifyQueryString(editCartItemUrl, "updatecartitemid=" + item.Id, null);
-                                            <div class="edit-item mb-1 mt-1 text-center text-md-left">
+                                            <div class="edit-item mb-1 mt-1 text-center text-xl-left">
                                                 <a class="btn btn-sm btn-secondary" href="@editCartItemUrl">@T("Common.Edit")</a>
                                             </div>
                                         }
@@ -150,12 +156,6 @@
                                                         <li>@warning</li>
                                                     }
                                                 </ul>
-                                            </div>
-                                        }
-                                        @if (Model.ShowSku && !string.IsNullOrEmpty(item.Sku))
-                                        {
-                                            <div class="sku">
-                                                <span class="sku-number mt-1">SKU: @item.Sku</span>
                                             </div>
                                         }
                                     </td>
@@ -181,7 +181,7 @@
                                             <td class="quantity">
                                                 <div class="d-inline-flex">
                                                     <div class="plus" onclick="$(this).parent().find('.qty-input').val(function (i, oldval) {return ++oldval;})"></div>
-                                                    <input id="itemquantity@(item.Id)" name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input text-center" />
+                                                    <input id="itemquantity@(item.Id)" name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input form-control text-center" />
                                                     <div class="minus" onclick="$(this).parent().find('.qty-input').val(function (i, oldval) {if(oldval>1){ return --oldval; } else { return oldval}})"></div>
                                                 </div>
                                             </td>
@@ -191,7 +191,7 @@
                                     else
                                     {
                                         <td class="quantity">
-                                            <input id="itemquantity@(item.Id)" name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input-ro text-center" readonly />
+                                            <input id="itemquantity@(item.Id)" name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input-ro form-control text-center" readonly />
                                         </td>
                                     }
                                     <td class="subtotal">
@@ -227,25 +227,26 @@
                     </div>
                 }
 
-                <div class="btn-section my-3">
+                <div class="btn-group my-3 w-100">
                     @if (Model.IsEditable)
                     {
-                        <button type="submit" name="updatecart" class="btn btn-success update-wishlist-button">
-                            <span>@T("Wishlist.UpdateCart")</span>
+                        <button type="submit" name="updatecart" class="btn btn-info update-wishlist-button">
+                            <i class="fas fa-sync-alt pr-sm-2"></i>
+                            <span class="d-sm-block d-none">@T("Wishlist.UpdateCart")</span>
                         </button>
                     }
                     @if (Model.DisplayAddToCart)
                     {
-                        <button type="submit" name="addtocartbutton" class="btn btn-secondary wishlist-add-to-cart-button">
-                            <span class="hidden-down">@T("ShoppingCart.AddToCart")</span>
-                            <i class="fa fa-cart-plus d-md-none" aria-hidden="true"></i>
+                        <button type="submit" name="addtocartbutton" class="btn btn-info ml-1 wishlist-add-to-cart-button d-sm-flex justify-content-center">
+                            <i class="fas fa-shopping-cart d-sm-none d-block pr-sm-0 pr-2"></i>
+                            <span class="hidden-down">@T("ShoppingCart.AddToCart")</span> 
                         </button>
                     }
                     @if (Model.IsEditable && Model.EmailWishlistEnabled)
                     {
-                        <button type="button" class="btn btn-secondary email-a-friend-wishlist-button" onclick="setLocation('@Url.RouteUrl("EmailWishlist")')">
-                            <span class="hidden-down">@T("Wishlist.EmailAFriend")</span>
-                            <i class="fa fa-envelope-o d-md-none" aria-hidden="true"></i>
+                        <button type="button" class="btn btn-secondary email-a-friend-wishlist-button ml-1" onclick="setLocation('@Url.RouteUrl("EmailWishlist")')">
+                            <i class="far fa-envelope pr-sm-2"></i>
+                            <span class="hidden-down d-sm-block d-none">@T("Wishlist.EmailAFriend")</span>
                         </button>
                     }
                 </div>
@@ -254,7 +255,7 @@
     }
     else
     {
-        <div class="no-data">
+        <div class="no-data text-center">
             @T("Wishlist.CartIsEmpty")
         </div>
     }

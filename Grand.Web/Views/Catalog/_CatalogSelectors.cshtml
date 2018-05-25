@@ -45,10 +45,10 @@
                             var gridMode = Model.AvailableViewModes[0];
                             var listMode = Model.AvailableViewModes[1];
 
-                            <div class="col justify-content-end d-flex flex-row">
-                                    <a class="btn btn-secondary viewmode-icon grid ml-1 @if(gridMode.Selected){<text>selected</text>}" href="@gridMode.Value" title="@gridMode.Text"><i class="fa fa-th-large"></i>
+                            <div class="col justify-content-end btn-group">
+                                    <a class="btn btn-secondary viewmode-icon grid @if(gridMode.Selected){<text>selected</text>}" href="@gridMode.Value" title="@gridMode.Text"><i class="fa fa-th-large"></i>
                                     <span class="sr-only">viewmode grid</span></a>
-                                    <a class="btn btn-secondary viewmode-icon list ml-1 @if (listMode.Selected){<text>selected</text>}" href="@listMode.Value" title="@listMode.Text"><i class="fa fa-th-list"></i><span class="sr-only">viewmode list</span></a>
+                                    <a class="btn btn-secondary viewmode-icon list @if (listMode.Selected){<text>selected</text>}" href="@listMode.Value" title="@listMode.Text"><i class="fa fa-th-list"></i><span class="sr-only">viewmode list</span></a>
                             </div>
                         }
                 </div>

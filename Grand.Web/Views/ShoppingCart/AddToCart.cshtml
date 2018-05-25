@@ -15,8 +15,8 @@
     }
 }
 <div class="modal-dialog d-flex flex-column justify-content-center my-0" role="document">
-    <div class="modal-content rounded-0">
-        <div class="modal-header bg-success rounded-0">
+    <div class="modal-content rounded-0 p-3">
+        <div class="modal-header bg-info rounded-0">
             <h5 class="text-center text-white w-100 mb-0">
                 @if (Model.CartType == ShoppingCartType.ShoppingCart)
                 {
@@ -35,23 +35,23 @@
                 <span>&times;</span>
             </button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body px-0 pt-md-3 pt-0 pb-0">
             <div class="col-12">
                 <div class="row">
-                    <div class="col-md-4 col-12 mb-3 pl-0">
+                    <div class="col-md-3 col-12 mb-3 d-none d-md-block pl-0">
                         <img class="img-fluid" alt="@Model.Picture.AlternateText" src="@Model.Picture.ImageUrl" title="@Model.Picture.Title" />
                     </div>
-                    <div class="col-md-8 col-12 mb-3 modal-border d-flex">
-                        <div class="row pr-2">
-                            <div class="form-group">
-                                <h4>
+                    <div class="col-md-9 col-12 mb-3 modal-border d-flex">
+                        <div class="row">
+                            <div class="form-group mb-0">
+                                <h4 class="mb-0">
                                     <a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })" class="text-center">@Model.ProductName</a>
                                 </h4>
                             </div>
                             @if (!string.IsNullOrEmpty(Model.AttributeDescription))
                             {
-                                <div class="form-group col-12 px-0 d-none d-md-block">
-                                    <label class="w-100"><strong>@T("AddToCart.Attributes")</strong></label>
+                                <div class="form-group col-12 px-0 d-none d-md-block my-2">
+                                    <label class="w-100 mb-0"><strong>@T("AddToCart.Attributes")</strong></label>
                                     <div class="attributes">
                                         @Html.Raw(Model.AttributeDescription)
                                     </div>
@@ -68,14 +68,14 @@
                             }
                             @if (!Model.IsAuction)
                             {
-                                <div class="form-group col-12 pl-0 mb-1 d-flex">
-                                    <label class=""><strong>@T("AddToCart.Qty")</strong></label>
-                                    <label class="pl-3">@Model.Quantity</label>
+                                <div class="form-group col-12 pl-0 mb-0 d-flex">
+                                    <label class="mb-0"><strong>@T("AddToCart.Qty")</strong></label>
+                                    <label class="pl-3 mb-0">@Model.Quantity</label>
                                 </div>
                             }
                             else
                             {
-                                <div class="form-group col-12 pl-0 mb-1 d-flex">
+                                <div class="form-group col-12 pl-0 mb-0 d-flex">
                                     @if (Model.EndTime.HasValue)
                                     {
                                         <div>
@@ -111,28 +111,28 @@
                                 @if (Model.IsAuction)
                                 {
                                     <label class=""><strong>@T("AddToCart.Yourbid"):</strong></label>
-                                    <label class="pl-3">@Model.HighestBid</label>
+                                    <label class="pl-3 mb-0">@Model.HighestBid</label>
                                 }
                                 else
                                 {
                                     <label class=""><strong>@T("AddToCart.Price")</strong></label>
-                                    <label class="pl-3">@Model.Price</label>
+                                    <label class="pl-3 mb-0">@Model.Price</label>
                                 }
                             </div>
-                            <div class="text-center modal-padding-off w-100">
-                                <h5 class="w-100">@text</h5>
+                            <div class="text-center modal-padding-off w-100 p-3">
+                                <h5 class="w-100 mb-0">@text</h5>
                                 @if (!string.IsNullOrEmpty(Model.SubTotalDiscount))
                                 {
                                     <div class="form-group mb-1 d-flex">
-                                        <label class="text-muted">@T("AddToCart.SubTotalDiscount")</label>
-                                        <label class="pl-3 text-muted">@Model.SubTotalDiscount</label>
+                                        <label class="text-muted mb-0">@T("AddToCart.SubTotalDiscount")</label>
+                                        <label class="pl-3 mb-0 text-muted">@Model.SubTotalDiscount</label>
                                     </div>
                                 }
                                 @if (!string.IsNullOrEmpty(Model.SubTotal))
                                 {
-                                    <div class="form-group mb-1 d-flex justify-content-center">
-                                        <label class="text-dark">@T("AddToCart.SubTotal")</label>
-                                        <label class="pl-3 text-dark">@Model.SubTotal</label>
+                                    <div class="form-group mb-0 d-flex justify-content-center">
+                                        <label class="text-dark mb-0">@T("AddToCart.SubTotal")</label>
+                                        <label class="pl-3 mb-0 text-dark mb-0">@Model.SubTotal</label>
                                     </div>
                                 }
                             </div>
@@ -141,19 +141,19 @@
                 </div>
             </div>
             <div class="modal-footer px-0 pb-0">
-                <div class="d-inline-flex offset-md-5 col-md-7 col-12 px-0">
-                    <button type="button" class="btn btn-primary text-white w-100 text-uppercase border-right-0 mr-1" data-dismiss="modal">@T("AddToCart.Continue")</button>
+                <div class="btn-group offset-md-5 col-md-7 col-12 px-0">
+                    <button type="button" class="btn btn-outline-info w-100 text-uppercase mr-1 d-flex justify-content-center" data-dismiss="modal">@T("AddToCart.Continue")</button>
                     @if (Model.CartType == ShoppingCartType.ShoppingCart)
                     {
-                        <button type="button" class="btn btn-primary w-100 text-uppercase ml-0 border-left-0" onclick="setLocation('@(Url.RouteUrl("ShoppingCart"))')">@T("AddToCart.ViewCart")</button>
+                        <button type="button" class="btn btn-info w-100 d-flex justify-content-center text-uppercase ml-0 border-left-0" onclick="setLocation('@(Url.RouteUrl("ShoppingCart"))')">@T("AddToCart.ViewCart")</button>
                     }
                     else if (Model.CartType == ShoppingCartType.Wishlist)
                     {
-                        <button type="button" class="btn btn-primary w-100 text-uppercase ml-0 border-left-0" onclick="setLocation('@(Url.RouteUrl("Wishlist"))')">@T("AddToCart.ViewWishlist")</button>
+                        <button type="button" class="btn btn-info w-100 d-flex justify-content-center text-uppercase ml-0 border-left-0" onclick="setLocation('@(Url.RouteUrl("Wishlist"))')">@T("AddToCart.ViewWishlist")</button>
                     }
                     else if (Model.CartType == ShoppingCartType.Auctions)
                     {
-                        <button type="button" class="btn btn-primary w-100 text-uppercase ml-0 border-left-0" onclick="setLocation('@(Url.RouteUrl("CustomerAuctions"))')">@T("AddToCart.ViewAuctions")</button>
+                        <button type="button" class="btn btn-info w-100 d-flex justify-content-center text-uppercase ml-0 border-left-0" onclick="setLocation('@(Url.RouteUrl("CustomerAuctions"))')">@T("AddToCart.ViewAuctions")</button>
                     }
                 </div>
             </div>

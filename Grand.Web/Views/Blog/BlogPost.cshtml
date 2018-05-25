@@ -19,13 +19,15 @@
     @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_top", additionalData = Model.Id })
     <div class="card">
         @if (!string.IsNullOrEmpty(Model.PictureModel.ImageUrl))
-        {
-            <img class="card-img-top img-fluid p-3" alt="@Model.PictureModel.AlternateText" src="@Model.PictureModel.ImageUrl" title="@Model.PictureModel.Title">
+        {   
+            <div class="img-container mx-3 mt-3">
+                <img class="card-img-top img-fluid" alt="@Model.PictureModel.AlternateText" src="@Model.PictureModel.ImageUrl" title="@Model.PictureModel.Title">
+            </div>
         }
-        <h4 class="card-header">@Model.Title</h4>
-        <div class="card-body">
+        <h4 class="card-header border-bottom-0 pb-0">@Model.Title</h4>
+        <div class="card-body pt-0">
             <div class="post-date generalMarginSupporter text-muted">
-                <strong>@Model.CreatedOn.ToString("D")</strong>
+                <strong><i class="far fa-clock mr-2"></i>@Model.CreatedOn.ToString("D")</strong>
             </div>
             @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_before_body", additionalData = Model.Id })
             <div class="post-body">
@@ -76,7 +78,7 @@
                     }
                 </div>
                     <div class="buttons text-xs-center text-md-left generalMarginSupporter">
-                        <input type="submit" name="add-comment" class="btn btn-success blog-post-add-comment-button" value="@T("Blog.Comments.SubmitButton")" />
+                        <input type="submit" name="add-comment" class="btn btn-info blog-post-add-comment-button" value="@T("Blog.Comments.SubmitButton")" />
                     </div>
             </form>
         </div>
@@ -101,7 +103,7 @@
                                         <div class="card-body row">
                                             @if (!String.IsNullOrEmpty(comment.CustomerAvatarUrl))
                                             {
-                                            <div class="col-12 col-xl-2 col-lg-3 col-sm-4 col-md-3 user-info">
+                                            <div class="col-12 col-xl-2 col-lg-3 col-sm-4 col-md-3 d-flex justify-content-center user-info">
                                                     <div class="avatar">
                                                         @if (comment.AllowViewingProfiles)
                                                         {

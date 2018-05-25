@@ -50,7 +50,7 @@
                 </div>
             </div>
             <div class="card-body row flex-row mb-3">
-                    <div class="col-lg-3 col-md-4 col-12 text-center text-md-left">
+                    <div class="col-lg-2 col-md-3 col-12 text-center text-md-left forum-post">
                         @if (!String.IsNullOrEmpty(Model.CustomerAvatarUrl))
                         {
                             <div class="avatar mb-1">
@@ -107,7 +107,7 @@
                             </div>
                         }
                     </div>
-                    <div class="col-lg-8 col-md-6 col-9">
+                    <div class="col-lg-9 col-md-7 col-9">
                         <div class="post-text pt-2">
                             @Html.Raw(Model.FormattedText)
                             @Html.Hidden("Id", Model.Id)

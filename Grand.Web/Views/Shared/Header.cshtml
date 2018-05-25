@@ -1,17 +1,25 @@
 ﻿<header>
     @await Component.InvokeAsync("Widget", new { widgetZone = "header" })
-    <nav class="navbar fixed-top navbar-light bg-light navUp p-0">
-        <div class="container">
-            <ul class="nav navbar-nav header-links pl-0 flex-row w-100">
-                <li class="nav-item mobile-menu-button d-lg-none align-self-center">
+    <nav class="navbar fixed-top navbar-light bg-dark navUp p-0">
+            <ul class="mobile-top-menu d-lg-none d-flex mb-0 w-100">
+                <li class="logo-mobile">@await Component.InvokeAsync("Logo")</li>
+                <li class="nav-item d-flex align-items-center d-lg-none mobile-search" data-toggle="modal" data-target="#searchModal">
+                    <a class="nav-link">
+                        <span class="fa fa-search"></span>
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav header-links flex-row container px-lg-3 ">
+                <li class="nav-item col mobile-menu-button d-lg-none align-self-center">
                     <a id="mobile-menu-opener"><span></span><span></span><span></span></a>
+                    <span class="d-lg-none d-block text-muted mt-1 mobile-desc">@T("menu")</span>
                 </li>
                 <li class="nav-item float-xs-right d-lg-none d-none ml-auto">
-                    <a class="btn btn-outlined-info general-opener" data-toggle="collapse" aria-expanded="false" aria-controls="generalDropDown">
+                    <a class="btn btn-outlined-info general-opener" data-toggle="collapse" aria-expanded="false">
                         <span class="fa fa-cogs" aria-hidden="true"></span>
                     </a>
                 </li>
-                <li class="nav-item float-xs-right d-none d-lg-block mr-auto">
+                <li class="nav-item float-xs-right d-none d-lg-block mr-auto dropdowns-container">
                     <div class="generalDropDown btn-toolbar float-xs-right">
                         @await Component.InvokeAsync("TaxTypeSelector")
                         @await Component.InvokeAsync("CurrencySelector")
@@ -20,15 +28,10 @@
                         @await Component.InvokeAsync("Widget", new { widgetZone = "header_selectors" })
                     </div>
                 </li>
-                <li class="nav-item d-flex d-lg-none mobile-search" data-toggle="modal" data-target="#searchModal">
-                    <a class="nav-link">
-                        <span class="fa fa-search"></span>
-                    </a>
-                </li>
                 @await Component.InvokeAsync("AdminHeaderLinks")
                 @await Component.InvokeAsync("HeaderLinks")
             </ul>
-        </div>
+
         <div class="collapse navbar-collapse" id="mobile-collapsing-menu">
             <div class="col-12 options-container">
                 <div class="row justify-content-center">
@@ -38,30 +41,25 @@
                     @await Component.InvokeAsync("StoreSelector")
                 </div>
             </div>
-            <ul class="nav navbar-nav">
-                @await Component.InvokeAsync("TopMenu")
-            </ul>
+       
         </div>
     </nav>
-    <div class="headBottom d-flex align-items-center d-lg-inline-flex text-lg-left text-center mt-0 mb-0">
-        <div class="col header-logo pr-0 pl-0">
-            @await Component.InvokeAsync("Logo")
-        </div>
-        <div class="col formSearch pr-0 pl-0 d-none d-lg-block">
-            @await Component.InvokeAsync("SearchBox")
+    <div class="container">
+        <div class="headBottom d-flex align-items-center d-lg-inline-flex text-lg-left text-center mt-0 mb-0">
+            <div class="col header-logo pr-0 pl-0 d-lg-block d-none">
+                @await Component.InvokeAsync("Logo")
+            </div>
+            <div class="col formSearch pr-0 pl-0 d-none d-lg-block">
+                @await Component.InvokeAsync("SearchBox")
+            </div>
         </div>
     </div>
     <!-- Modal -->
-    <div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
 
             </div>
         </div>
     </div>
-    <script>
-        $(document).ready(function () {
-            $(".settingSellector").appendTo(".generalDropDown");
-        });
-    </script>
 </header>

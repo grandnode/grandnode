@@ -62,7 +62,7 @@
                     });
         </script>
         <div class="col-6 col-md-3 col-lg-2 px-0">
-            <button type="button" id="add-to-cart-button-@Model.ProductId" class="btn btn btn-success add-to-cart-button" data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;">
+            <button type="button" id="add-to-cart-button-@Model.ProductId" class="btn btn btn-info add-to-cart-button" data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;">
                 <span class="fa fa-shopping-cart"></span> @T("ShoppingCart.AddToCart").Text
             </button>
         </div>

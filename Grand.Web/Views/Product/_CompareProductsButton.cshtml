@@ -5,7 +5,7 @@
 @if (Model.CompareProductsEnabled)
 {
     <button class="btn btn-secondary add-to-compare-list-button mr-1" onclick="AjaxCart.addproducttocomparelist('@addtocomparelink');return false;">
-        <i class="fa fa-retweet mr-0"></i><span class="d-none d-lg-block"> @T("Products.Compare.AddToCompareList")</span>
+        <i class="fa fa-retweet mr-0"></i><span class="d-none"> @T("Products.Compare.AddToCompareList")</span>
         <span class="sr-only">@T("Products.Compare.AddToCompareList")</span>
     </button>
 }

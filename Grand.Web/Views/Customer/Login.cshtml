@@ -65,11 +65,11 @@
                                     <div class="inputs d-flex flex-row">
                                         <label class="custom-control custom-checkbox">
                                             <input class="custom-control-input" asp-for="RememberMe" />
-                                            <input class="custom-control-indicator" name="RememberMe" type="hidden" value="false">
-                                            <span class="custom-control-indicator"></span>
+                                            <input class="custom-control-label" name="RememberMe" type="hidden" value="false">
+                                            <span class="custom-control-label"></span>
                                             <span class="custom-control-description">@T("Account.Login.Fields.RememberMe")</span>
                                         </label>
-                                        <span class="forgot-password">
+                                        <span class="ml-3 forgot-password">
                                             <a asp-route="PasswordRecovery">@T("Account.Login.ForgotPassword")</a>
                                         </span>
                                     </div>
@@ -84,7 +84,7 @@
                         </div>
                         <div class="card-footer">
                             <div class="buttons">
-                                <input class="btn btn-success login-button" type="submit" value="@T("Account.Login.LoginButton")" />
+                                <input class="btn btn-info login-button" type="submit" value="@T("Account.Login.LoginButton")" />
                             </div>
                         </div>
                     </form>

@@ -32,12 +32,20 @@
     var addtocomparelink = Url.RouteUrl("AddProductToCompare", new { productId = Model.Id });
 }
     <div class="card rowHelper col-12 mb-3" data-productid="@Model.Id">
-        <div class="row flex-row">
+        <div class="row flex-row prod-list">
             <div class="col-12 col-md-4 col-sm-5">
                 <div class="row">
                     <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
                         <img class="img-fluid" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
                     </a>
+                    @if (!string.IsNullOrEmpty(Model.Flag))
+                    {
+                        <span class="new-product-label bg-info text-white">@Model.Flag</span>
+                    }
+                    @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
+                    {
+                        <span class="change-percent bg-success text-white"></span>
+                    }
                 </div>
             </div>
             <div class="col-12 col-md-8 col-sm-7">
@@ -70,21 +78,21 @@
                     </div>
                 }
                 @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_before", additionalData = Model.Id })
-                <ul class="pl-0">
+                <ul class="pl-0 mb-2">
 
-                    @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
-                    {
-                        <li>
-                            <span class="price old-price">@Model.ProductPrice.OldPrice</span>
-                        </li>
-                    }
                     @if (Model.ProductType != ProductType.Auction)
                     {
-                        <li class="price actual-price">@Model.ProductPrice.Price</li>
+                        <li class="price actual-price d-inline-flex">@Model.ProductPrice.Price</li>
                     }
                     else
                     {
-                        <li class="price actual-price">@(Model.ProductPrice.HighestBidValue > 0 ? Model.ProductPrice.HighestBid : Model.ProductPrice.StartPrice)</li>
+                        <li class="price actual-price d-inline-flex">@(Model.ProductPrice.HighestBidValue > 0 ? Model.ProductPrice.HighestBid : Model.ProductPrice.StartPrice)</li>
+                    }
+                    @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
+                    {
+                        <li class="d-inline-flex ml-2">
+                            <span class="price old-price">@Model.ProductPrice.OldPrice</span>
+                        </li>
                     }
 
                     @if (Model.ProductPrice.DisplayTaxShippingInfo)
@@ -140,6 +148,11 @@
                         }
 
                     }
+                        @*<button type="button" value="Quick View" title="Quick View" class="btn btn-secondary" onclick="">
+                            <span class="sr-only">Quick View</span>
+                            <span class="fas fa-search"></span>
+                        </button>*@
+
                     @if (!Model.ProductPrice.DisableAddToCompareListButton && Model.ProductType == ProductType.SimpleProduct)
                     {
                         <button type="button" value="@T("ShoppingCart.AddToCompareList")" title="@T("ShoppingCart.AddToCompareList")" class="btn btn-secondary" onclick="AjaxCart.addproducttocomparelist('@addtocomparelink');return false;">
@@ -150,7 +163,7 @@
                     @if (!Model.ProductPrice.DisableWishlistButton && Model.ProductType == ProductType.SimpleProduct)
                     {
                         <button type="button" value="@T("ShoppingCart.AddToWishlist")" title="@T("ShoppingCart.AddToWishlist")" class="btn btn-secondary" onclick="AjaxCart.addproducttocart_catalog('@addtowishlistlink', '@Model.ShowQty', '@Model.Id');return false;">
-                            <span class="fa fa-heart-o"></span>
+                            <span class="far fa-heart"></span>
                             <span class="sr-only">@T("ShoppingCart.AddToWishlist")</span>
                         </button>
                     }

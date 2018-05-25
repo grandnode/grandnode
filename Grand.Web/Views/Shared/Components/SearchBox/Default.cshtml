@@ -4,40 +4,40 @@
     <label for="small-searchterms" class="sr-only">@T("Search.SearchBox.Tooltip")</label>
 
     <div class="input-group flex-row">
-        <input type="text" class="form-control search-box-text" id="small-searchterms" autocomplete="off" name="q" placeholder="@T("Search.SearchBox.Tooltip")">
-        @if (Model.AvailableCategories.Any())
-        {
-            <select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" class="search-box-select custom-select input-group-addon"></select>
-        }
-        @await Component.InvokeAsync("Widget", new { widgetZone = "searchbox_before_search_button" })
-        @if (Model.SearchTermMinimumLength > 0)
-        {
-            <script type="text/javascript">
-                $("#small-search-box-form").submit(function(event) {
-                    if ($("#small-searchterms").val() == "") {
-                        alert('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Search.EnterSearchTerms").Text))');
-                        $("#small-searchterms").focus();
-                        event.preventDefault();
-                    }
-                });
-            </script>
-        }
-        <span class="input-group-btn">
-            <button type="submit" class="btn btn-primary search-box-button float-sm-right">
-                <span class="sr-only">@T("Search.SearchBox.Tooltip")</span>
-                <span class="fa fa-search align-self-center"></span>
-                <span class="pl-2 d-none d-lg-block">@T("search")</span>
-            </button>
-        </span>
-        @await Component.InvokeAsync("AdminHeaderLinks")
+            <input type="text" class="form-control search-box-text" id="small-searchterms" autocomplete="off" name="q" placeholder="@T("Search.SearchBox.Tooltip")">
+            @if (Model.AvailableCategories.Any())
+            {
+                <select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" class="search-box-select custom-select input-group-addon"></select>
+            }
+            @await Component.InvokeAsync("Widget", new { widgetZone = "searchbox_before_search_button" })
+            @if (Model.SearchTermMinimumLength > 0)
+            {
+                <script>
+                    $("#small-search-box-form").submit(function(event) {
+                        if ($("#small-searchterms").val() == "") {
+                            alert('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Search.EnterSearchTerms").Text))');
+                            $("#small-searchterms").focus();
+                            event.preventDefault();
+                        }
+                    });
+                </script>
+            }
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-info search-box-button float-sm-right d-inline-flex">
+                            <span class="sr-only">@T("Search.SearchBox.Tooltip")</span>
+                            <span class="fa fa-search align-self-center"></span>
+                            <span class="pl-2 d-none d-lg-block">@T("search")</span>
+                </button>
+                @await Component.InvokeAsync("AdminHeaderLinks")
+            </div>
     </div>
     @if (Model.AutoCompleteEnabled)
     {
         <text>
-            <script type="text/javascript">
+            <script>
                 $(document).ready(function () {
                     $('#small-searchterms').autocomplete({
-                        delay: 500,
+                        delay: 300,
                         minLength: @(Model.SearchTermMinimumLength.ToString()),
                         source: function (request, response) {
                             var category = '';
@@ -69,7 +69,7 @@
                             t = htmlEncode(t);
                             return $("<li class=\"list-group-item\"></li>")
                                 .data("item.autocomplete", item)
-                                .append("<a class=\"generalImg\">@(Model.ShowProductImagesInSearchAutoComplete ? Html.Raw("<img src='\" + item.productpictureurl + \"'>") : null)<span>" + t + "</span></a>")
+                                .append("<a class=\"generalImg row mx-0\">@(Model.ShowProductImagesInSearchAutoComplete ? Html.Raw("<img class='d-inline-flex col-2 col-lg-2 col-md-1 col-sm-2 pl-0' src='\" + item.productpictureurl + \"'>") : null)<span class='d-inline-flex align-items-center col px-0'>" + t + "</span></a>")
                                 .appendTo(ul);
                         };
                 });

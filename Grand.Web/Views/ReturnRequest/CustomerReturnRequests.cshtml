@@ -11,7 +11,7 @@
 {
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.ReturnRequests })
 }
-<div class="page account-page return-request-list-page">
+<div class="page account-page return-request-list-page pl-lg-3">
     <h1 class="h2 generalTitle">@T("Account.CustomerReturnRequests")</h1>
         <div class="row flex-grid">
             @foreach (var item in Model.Items)

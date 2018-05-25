@@ -76,7 +76,7 @@
                                 <div class="row">
                                     <label class="custom-control custom-checkbox">
                                         <input id="termsofservice" type="checkbox" name="termsofservice" class="custom-control-input">
-                                        <span class="custom-control-indicator"></span>
+                                        <span class="custom-control-label"></span>
                                         <span class="custom-control-description">@T("Checkout.TermsOfService.IAccept")<a class="read" onclick="javascript:OpenWindow('@Url.RouteUrl("TopicPopup", new { SystemName = "conditionsofuse" })', 450, 500, true)"> - <strong>@T("Checkout.TermsOfService.Read")</strong></a></span>
                                     </label>
                                 </div>
@@ -84,7 +84,7 @@
                         }
                         <div class="col-lg-1 col-sm-2 col-12  ml-auto mb-1 buttons">
                             <div class="row">
-                                <input type="submit" name="nextstep" value="@T("Checkout.ConfirmButton")" class="btn btn-success btn-block confirm-order-next-step-button" />
+                                <input type="submit" name="nextstep" value="@T("Checkout.ConfirmButton")" class="btn btn-info btn-block confirm-order-next-step-button" />
                             </div>
                         </div>
                     </div>

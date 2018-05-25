@@ -15,7 +15,7 @@
 }
 <div class="page blog-page mt-1">
     <h1 class="h2 generalTitle">
-        <a href="@Url.RouteUrl("BlogRSS", new { languageId = Model.WorkingLanguageId })" class="btn btn-sm btn-outline-success link-rss" title="@T("Blog.RSS.Hint")">@T("Blog.RSS")</a>
+        <a href="@Url.RouteUrl("BlogRSS", new { languageId = Model.WorkingLanguageId })" class="btn btn-sm btn-outline-info link-rss" title="@T("Blog.RSS.Hint")">@T("Blog.RSS")</a>
         @if (String.IsNullOrEmpty(Model.PagingFilteringContext.Tag))
             {
                 if (Model.PagingFilteringContext.GetParsedMonth().HasValue)
@@ -33,20 +33,23 @@
         }
     </h1>
     @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_before_posts" })
-    <div class="blog-posts">
+    <div class="blog-posts row">
         @foreach (var item in Model.BlogPosts)
             {
             @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_before_post", additionalData = item.Id })
-            <div class="card mb-3">
-                <a class="post-title p-3" href="@Url.RouteUrl("BlogPost", new {SeName = item.SeName})">
+            <div class="col-xl-6 col-12">
+                <div class="card mb-3">
+                <a class="post-title pt-3 px-3" href="@Url.RouteUrl("BlogPost", new {SeName = item.SeName})">
                     @if (!string.IsNullOrEmpty(item.PictureModel.ImageUrl))
                     {
-                        <img class="card-img-top img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title">
+                    <div class="img-container">
+                        <img class="card-img-top img-fluid rounded-0" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title">
+                    </div>
                     }
                     <h4 class="card-header">@item.Title</h4>
                 </a>
-                <div class="card-body">
-                    <h6 class="card-subtitle text-muted">-@item.CreatedOn.ToString("D")</h6>
+                <div class="card-body pt-2">
+                    <h6 class="card-subtitle text-muted"><i class="far fa-clock mr-2"></i>@item.CreatedOn.ToString("D")</h6>
                     @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_before_post_body", additionalData = item.Id })
                     @*//post content*@
                     @Html.Raw(!String.IsNullOrEmpty(item.BodyOverview) ? item.BodyOverview : item.Body)
@@ -60,11 +63,11 @@
                             {
                                 var tag = item.Tags[i];
 
-                                <a class="btn btn-sm btn-secondary" href="@Url.RouteUrl("BlogByTag", new {tag = tag})">@tag</a>
+                                <a class="btn btn-sm btn-secondary my-2" href="@Url.RouteUrl("BlogByTag", new {tag = tag})">@tag</a>
                             }
                         </div>
                     }
-                    <div class="buttons">
+                    <div class="buttons mt-3">
                         @if (item.AllowComments)
                         {
                             <a href="@Url.RouteUrl("BlogPost", new {SeName = item.SeName})#comments" class="btn btn-secondary read-comments">@string.Format(T("Blog.CommentsLink").Text, item.NumberOfComments)</a>
@@ -74,6 +77,8 @@
                 </div>
                 @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_inside_post", additionalData = item.Id })
             </div>
+            </div>
+                
                 @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_after_post", additionalData = item.Id })
         }
     </div>

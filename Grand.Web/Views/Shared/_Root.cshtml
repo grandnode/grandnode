@@ -5,23 +5,24 @@
 @await Html.PartialAsync("_Notifications")
 @await Component.InvokeAsync("JavaScriptDisabledWarning")
 @await Html.PartialAsync("OldInternetExplorerWarning")
-<div class="container">
-    @await Html.PartialAsync("Header")
-    <nav class="navbar navbar-expand-md bg-dark container mainNav d-none d-lg-flex mb-1 pl-0 pr-0">
-        <div class="collapse navbar-collapse" id="collapsing-navbar-2">
+@await Html.PartialAsync("Header")
+    <nav class="navbar navbar-expand-md mainNav d-none d-lg-flex w-100 mb-1 px-3">
+        <div class="collapse navbar-collapse container" id="collapsing-navbar-2">
+            <div class="d-none" id="menu_standing"></div>
             <ul class="nav navbar-nav">
                 @await Component.InvokeAsync("TopMenu")
             </ul>
         </div>
     </nav>
-    @await Component.InvokeAsync("Widget", new { widgetZone = "content_before"})
-    @if (IsSectionDefined("Breadcrumb"))
-    {
-        @RenderSection("Breadcrumb")
-    }
-    @RenderBody()
-    @await Component.InvokeAsync("Widget", new { widgetZone = "content_after" })
-</div>
+    <div class="container page-container">
+        @await Component.InvokeAsync("Widget", new { widgetZone = "content_before"})
+        @if (IsSectionDefined("Breadcrumb"))
+        {
+            @RenderSection("Breadcrumb")
+        }
+        @RenderBody()
+        @await Component.InvokeAsync("Widget", new { widgetZone = "content_after" })
+    </div>
 @await Component.InvokeAsync("Footer")
 <script>
     AjaxCart.init('.header-links .cart-qty', '.header-links .wishlist-qty', '.flyout-cart');

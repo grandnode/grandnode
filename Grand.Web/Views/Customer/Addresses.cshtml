@@ -10,19 +10,19 @@
 {
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Addresses })
 }
-<div class="page account-page address-list-page">
-    <button type="button" class="btn btn-success btn-sm add-address-button float-sm-right" onclick="location.href='@Url.RouteUrl("CustomerAddressAdd")'">
+<div class="page account-page address-list-page pl-lg-3">
+    <button type="button" class="btn btn-info btn-sm add-address-button float-sm-right" onclick="location.href='@Url.RouteUrl("CustomerAddressAdd")'">
         <i class="fa fa-plus" aria-hidden="true"></i> @T("Common.AddNew")
     </button>
     <h1 class="h2 generalTitle">@T("Account.CustomerAddresses")</h1>
     @if (Model.Addresses.Any())
     {
             <div class="col-12 address-list">
-                <div class="row">
+                <div class="row px-0">
                     @for (int i = 0; i < Model.Addresses.Count; i++)
                     {
                         var address = Model.Addresses[i];
-                        <div class="col-md-6 col-12">
+                        <div class="col-md-6 col-12 pl-lg-0">
                             <div class="card">
                                 <div class="card-body">
                                     <div class="address-item">

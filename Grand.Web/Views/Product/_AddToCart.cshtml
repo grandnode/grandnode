@@ -5,7 +5,7 @@
 }
 @if (Model.CustomerEntersPrice)
 {
-    <div class="customer-entered-price mb-1">
+    <div class="customer-entered-price mb-3 d-flex w-100 flex-column">
         <div class="price-input">
             <label asp-for="CustomerEnteredPrice" class="enter-price-label">@("Products.EnterProductPrice"):</label>
             @*round price*@
@@ -85,8 +85,8 @@
                     });
                 });
             </script>
-            <button type="button" id="add-to-cart-button-@Model.ProductId" class="btn btn-success add-to-cart-button" data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;">
-                <span class="fa fa-shopping-cart"></span> <span>@addToCartText</span>
+            <button type="button" id="add-to-cart-button-@Model.ProductId" class="btn btn-info add-to-cart-button d-inline-flex" data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;">
+                <span class="fa fa-shopping-cart d-sm-block"></span><span class="d-lg-block d-none">@addToCartText</span>
             </button>
     }
 

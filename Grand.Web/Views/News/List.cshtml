@@ -7,27 +7,31 @@
 }
 <div class="page news-list-page">
         
-        <h1 class="h2 generalTitle"><a href="@Url.RouteUrl("NewsRSS", new { languageId = Model.WorkingLanguageId })" class="btn btn-sm btn-outline-success link-rss" title="@T("News.RSS.Hint")">@T("News.RSS")</a> @T("News")</h1>
+        <h1 class="h2 generalTitle"><a href="@Url.RouteUrl("NewsRSS", new { languageId = Model.WorkingLanguageId })" class="btn btn-sm btn-outline-info link-rss" title="@T("News.RSS.Hint")">@T("News.RSS")</a> @T("News")</h1>
         @await Component.InvokeAsync("Widget", new { widgetZone = "newslist_page_before_items"})
 
-    <div class="news-items">
+    <div class="news-items row">
         @foreach (var item in Model.NewsItems)
         {
-            <div class="card mb-3">
-                <a class="news-title" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">
-                @if (!string.IsNullOrEmpty(item.PictureModel.ImageUrl))
-                {
-                    <img class="card-img-top img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title">
-                }
-                <h4 class="card-header">@item.Title</h4>
-                </a>
-                <div class="card-body">
-                    <h6 class="card-subtitle text-muted">-@item.CreatedOn.ToString("D")</h6>
-                    @Html.Raw(item.Short)
-                    <div class="buttons pb-1 pt-1">
-                        <a class="btn btn-sm btn-primary read-more" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">@T("News.MoreInfo") - @item.Title</a>
+            <div class="col-xl-6 col-12">
+                <div class="card mb-3">
+                    <a class="news-title" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">
+                    @if (!string.IsNullOrEmpty(item.PictureModel.ImageUrl))
+                    {
+                        <div class="img-container mt-3 mx-3 mb-0">
+                            <img class="card-img-top img-fluid rounded-0" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title">
+                        </div>
+                    }
+                    <h4 class="card-header border-bottom-0 pb-0">@item.Title</h4>
+                    </a>
+                    <div class="card-body pt-0">
+                        <h6 class="card-subtitle text-muted"><i class="far fa-clock mr-2"></i>@item.CreatedOn.ToString("D")</h6>
+                        @Html.Raw(item.Short)
+                        <div class="buttons pt-3 text-center">
+                            <a class="btn btn-sm btn-primary read-more" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">@T("News.MoreInfo")</a>
+                        </div>
+                        @await Component.InvokeAsync("Widget", new { widgetZone = "newslist_page_inside_item", additionalData = item.Id })
                     </div>
-                    @await Component.InvokeAsync("Widget", new { widgetZone = "newslist_page_inside_item", additionalData = item.Id })
                 </div>
             </div>
         }

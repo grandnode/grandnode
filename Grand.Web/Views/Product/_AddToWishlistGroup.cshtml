@@ -10,10 +10,10 @@
     {
         addToWishlistText = T("ShoppingCart.AddToWishlist").Text;
     }
-    <div class="col-md-2 col">
+    <div class="col-md-2 col px-0">
         <button id="add-to-wishlist-button-@Model.ProductId" class="btn btn-secondary add-to-wishlist-button mr-1" value="@addToWishlistText" data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.Wishlist })', '#product-details-form');return false;">
             <span class="sr-only">@addToWishlistText</span>
-            <span class="fa fa-heart-o mr-0"></span>
+            <span class="far fa-heart mr-0"></span>
         </button>
 	</div>
     }

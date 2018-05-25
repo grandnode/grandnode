@@ -116,7 +116,7 @@
                             <div nowrap="nowrap" align="left">
                                 <label class="custom-control custom-checkbox my-3">
                                     <input asp-for="InstallSampleData" class="custom-control-input"/>
-                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-label"></span>
                                     <span class="custom-control-description">@ILS.GetResource("CreateSampleData")</span>
                                 </label>
                             </div>
@@ -157,7 +157,7 @@
 
                         <label class="custom-control custom-checkbox my-3">
                             <input asp-for="MongoDBConnectionInfo" class="custom-control-input" />
-                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-label"></span>
                             <span class="custom-control-description">@ILS.GetResource("ConnectionString"):</span>
                         </label>
                         <div id="MongoDBDatabaseConnectionString">

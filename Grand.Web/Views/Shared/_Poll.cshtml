@@ -9,11 +9,11 @@
             <div class="d-flex justify-content-center">
                 <ul class="list-group col-md-6">
                     @foreach (var item in Model.Answers)
-                {
+                    {
                         <li class="list-group-item flex-column">
                             @string.Format(T("Polls.VotesResultLine").Text, item.Name, item.NumberOfVotes, item.PercentOfTotalVotes.ToString("0.0"))
                             <div class="progress">
-                                <div class="progress-bar bg-success"></div>
+                                <div class="progress-bar" role="progressbar" style="width:@string.Format(item.PercentOfTotalVotes.ToString("0"))%" aria-valuenow="@string.Format(item.PercentOfTotalVotes.ToString("0"))" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                         </li>
                     }
@@ -21,7 +21,7 @@
             </div>
         </div>
         <div class="col-12">
-                <h4 class="poll-total-votes ">@string.Format(T("Polls.TotalVotes").Text, Model.TotalVotes)</h4>
+                <h4 class="poll-total-votes text-center">@string.Format(T("Polls.TotalVotes").Text, Model.TotalVotes)</h4>
         </div>
 
     }
@@ -34,7 +34,7 @@
                 <label for="pollanswers-@(item.Id)-@(Model.Id)" class="custom-control custom-radio">
                     <input id="pollanswers-@(item.Id)-@(Model.Id)" class="custom-control-input" type="radio" name="pollanswers-@(Model.Id)" value="@item.Id" />
                     <span class="sr-only">pollanswers</span>
-                    <span class="custom-control-indicator"></span>
+                    <span class="custom-control-label"></span>
                     <span class="custom-control-description">@item.Name</span>
                 </label>
                 
@@ -47,7 +47,7 @@
             </div>
         </div>
         
-        <script type="text/javascript">
+        <script>
             $(document).ready(function () {
                 $('#vote-poll-@(Model.Id)').click(function () {
                 var pollAnswerId = $("input:radio[name=pollanswers-@(Model.Id)]:checked").val();
@@ -91,7 +91,6 @@
             var putter = $(this).text();
             putter = putter.split('(s) - ');
             putter = putter[1].split(')');
-            console.log(this);
             $(this).find(".progress-bar").width(putter[0]);
             if (putter[0] == "0.0%") {
                 $(this).find(".progress-bar").css("display", "none");

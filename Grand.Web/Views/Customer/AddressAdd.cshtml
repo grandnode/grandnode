@@ -11,7 +11,7 @@
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Addresses })
 }
 <form asp-route="CustomerAddressAdd" method="post">
-    <div class="page account-page address-edit-page">
+    <div class="page account-page address-edit-page pl-lg-3 mb-3">
         <h2 class="generalTitle">@T("Account.CustomerAddresses.AddNew")</h2>
         <div asp-validation-summary="ModelOnly" class="message-error"></div>
         @{
@@ -20,7 +20,7 @@
             @await Html.PartialAsync("_CreateOrUpdateAddress", Model.Address, dataDictAddress)
         }
         <div class="buttons generalMarginSupporter mt-1 mb-1">
-            <input type="submit" class="btn btn-success save-address-button" value="@T("Common.Save")" />
+            <input type="submit" class="btn btn-info save-address-button" value="@T("Common.Save")" />
         </div>
     </div>
 </form>

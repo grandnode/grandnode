@@ -29,7 +29,8 @@
         <ul class="pl-0 mb-0">
             @foreach (var item in taxTypes)
             {
-                <li>
+                var className = item.Selected ? "active" : "";
+                <li class="@className">
                     <a href="@item.Value">@item.Text</a>
                 </li>
             }

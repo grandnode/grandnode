@@ -9,7 +9,7 @@
             </div>
             <div @(Model.CheckoutProgressStep == CheckoutProgressStep.Address || Model.CheckoutProgressStep == CheckoutProgressStep.Shipping || Model.CheckoutProgressStep == CheckoutProgressStep.Payment || Model.CheckoutProgressStep == CheckoutProgressStep.Confirm || Model.CheckoutProgressStep == CheckoutProgressStep.Complete ? @Html.Raw(" class=\"col-12 col-md-4 col-lg-2 mb-1 active-step\"") : @Html.Raw(" class=\"col-12 col-md-4 col-lg-2 mb-1 inactive-step\""))>
                 <a @(Model.CheckoutProgressStep != CheckoutProgressStep.Cart && Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? @Html.Raw(string.Format(" href=\"{0}\" class=\"col-sm-12 btn btn-block btn-secondary p-3\"", Url.RouteUrl("CheckoutBillingAddress"))) :  @Html.Raw(string.Format(" class=\"col-sm-12 btn btn-block btn-secondary p-3 disabled\"")))>
-                    <span class="fa fa-address-book-o fa-1x pt-1" aria-hidden="true"></span> 
+                    <span class="fa fa-address-book fa-1x pt-1" aria-hidden="true"></span> 
                     <span class="col-sm-12 p-0 pt-1">2. @T("Checkout.Progress.Address")</span>
                 </a>
             </div>
@@ -21,19 +21,19 @@
             </div>
             <div @(Model.CheckoutProgressStep == CheckoutProgressStep.Payment || Model.CheckoutProgressStep == CheckoutProgressStep.Confirm || Model.CheckoutProgressStep == CheckoutProgressStep.Complete ? @Html.Raw(" class=\"col-12 col-md-4 col-lg-2 mb-1 active-step\"") : @Html.Raw(" class=\"col-12 col-md-4 col-lg-2 mb-1 inactive-step\""))>
                 <a  @(Model.CheckoutProgressStep != CheckoutProgressStep.Cart && Model.CheckoutProgressStep != CheckoutProgressStep.Address && Model.CheckoutProgressStep != CheckoutProgressStep.Shipping && Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? @Html.Raw(string.Format(" href=\"{0}\" class=\"col-sm-12 btn btn-block btn-secondary p-3\"", Url.RouteUrl("CheckoutPaymentMethod"))) : @Html.Raw(string.Format(" class=\"col-sm-12 btn btn-block btn-secondary p-3 disabled\"")))>
-                    <span class="fa fa-credit-card-alt fa-1x pt-1" aria-hidden="true"></span> 
+                    <span class="fa fa-credit-card fa-1x pt-1" aria-hidden="true"></span> 
                     <span class="col-sm-12 p-0 pt-1">4. @T("Checkout.Progress.Payment")</span>
                 </a>
             </div>
             <div @(Model.CheckoutProgressStep == CheckoutProgressStep.Confirm || Model.CheckoutProgressStep == CheckoutProgressStep.Complete ? @Html.Raw(" class=\"col-12 col-md-4 col-lg-2 mb-1 active-step\"") : @Html.Raw(" class=\"col-12 col-md-4 col-lg-2 mb-1 inactive-step\""))>
                 <a @(Model.CheckoutProgressStep != CheckoutProgressStep.Cart && Model.CheckoutProgressStep != CheckoutProgressStep.Address && Model.CheckoutProgressStep != CheckoutProgressStep.Shipping && Model.CheckoutProgressStep != CheckoutProgressStep.Payment && Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? @Html.Raw(string.Format(" href=\"{0}\" class=\"col-sm-12 btn btn-block btn-secondary p-3\" ", Url.RouteUrl("CheckoutConfirm"))) : @Html.Raw(string.Format(" class=\"col-sm-12 btn btn-block btn-secondary p-3 disabled\"")))>
-                    <span class="fa fa-check-circle-o fa-1x pt-1" aria-hidden="true"></span> 
+                    <span class="fa fa-check-circle fa-1x pt-1" aria-hidden="true"></span> 
                     <span class="col-sm-12 p-0 pt-1">5. @T("Checkout.Progress.Confirm")</span>
                 </a>
             </div>
             <div @(Model.CheckoutProgressStep == CheckoutProgressStep.Complete ? @Html.Raw(" class=\"col-12 col-md-4 col-lg-2 mb-1 active-step\"") : @Html.Raw(" class=\"col-12 col-md-4 col-lg-2 mb-1 inactive-step\""))>
                 <a @(Model.CheckoutProgressStep != CheckoutProgressStep.Cart && Model.CheckoutProgressStep != CheckoutProgressStep.Address && Model.CheckoutProgressStep != CheckoutProgressStep.Shipping && Model.CheckoutProgressStep != CheckoutProgressStep.Payment && Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? @Html.Raw(string.Format(" href=\"{0}\" class=\"col-sm-12 btn btn-block btn-secondary p-3\"", Url.RouteUrl("CheckoutConfirm"))) : @Html.Raw(string.Format(" class=\"col-sm-12 btn btn-block btn-secondary p-3 disabled\"")))>
-                    <span class="fa fa-handshake-o fa-1x pt-1" aria-hidden="true"></span> 
+                    <span class="fa fa-handshake fa-1x pt-1" aria-hidden="true"></span> 
                     <span class="col-sm-12 p-0 pt-1">6. @T("Checkout.Progress.Complete")</span>
                 </a>
             </div>

@@ -80,7 +80,7 @@
                                     <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })" class="product-name">@item.ProductName</a>
                                     @if (Model.ShowSku && !String.IsNullOrEmpty(item.Sku))
                                     {
-                                        <span class="sku-number text-center">@item.Sku</span>
+                                        <span class="sku-number">@item.Sku</span>
                                     }
 
                                     @if (!String.IsNullOrEmpty(item.AttributeInfo))
@@ -149,7 +149,7 @@
                                         <td class="quantity">
                                             <div class="d-inline-flex">
                                                 <div class="plus" onclick="$(this).parent().find('.qty-input').val(function (i, oldval) {return ++oldval;})"></div>
-                                                <input id="itemquantity@(item.Id)" name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input text-center" />
+                                                <input id="itemquantity@(item.Id)" name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input form-control text-center" />
                                                 <div class="minus" onclick="$(this).parent().find('.qty-input').val(function (i, oldval) {if(oldval>1){ return --oldval; } else { return oldval}})"></div>
                                             </div>
                                         </td>
@@ -159,7 +159,7 @@
                                 else
                                 {
                                     <td class="quantity">
-                                        <input id="itemquantity@(item.Id)" name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input-ro text-center" readonly />
+                                        <input id="itemquantity@(item.Id)" name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input-ro form-control text-center" readonly />
                                     </td>
                                 }
                                 <td class="subtotal">
@@ -190,9 +190,9 @@
             @if (Model.IsEditable)
                 {
                 <div class="common-buttons btn-group btn-group-sm text-sm-right d-flex justify-content-end">
-                    <button type="submit" name="updatecart" class="btn btn-secondary d-flex justify-content-center update-cart-button fa fa-refresh">@T("ShoppingCart.UpdateCart")</button>
-                    <button type="submit" name="clearcart" class="btn btn-secondary d-flex justify-content-center removeAll-cart-button fa fa-trash">@T("shoppingcart.clearcart")</button>
-                    <button type="submit" name="continueshopping" class="btn btn-secondary d-flex justify-content-center continue-shopping-button fa fa-mail-reply">@T("ShoppingCart.ContinueShopping")</button>
+                    <button type="submit" name="updatecart" class="btn btn-info d-flex justify-content-center update-cart-button"><i class="fas fa-sync-alt pr-1"></i><span class="d-sm-block">@T("ShoppingCart.UpdateCart")</span></button>
+                    <button type="submit" name="clearcart" class="btn btn-danger d-flex justify-content-center removeAll-cart-button ml-sm-1"><i class="fa fa-trash pr-1"></i><span class="d-sm-block">@T("shoppingcart.clearcart")</span></button>
+                    <button type="submit" name="continueshopping" class="btn btn-secondary d-flex justify-content-center continue-shopping-button ml-sm-1"><i class="fas fa-reply pr-1"></i><span class="d-sm-block">@T("ShoppingCart.ContinueShopping")</span></button>
                 </div>
             }
             <div class="row cart-options cart-options">
@@ -253,7 +253,7 @@
                                     <label class="custom-control custom-checkbox">
                                         <input class="custom-control-input" id="termsofservice" type="checkbox" name="termsofservice" />
                                         <span class="sr-only">checkbox</span>
-                                        <span class="custom-control-indicator"></span>
+                                        <span class="custom-control-label"></span>
                                         @if (Model.TermsOfServicePopup)
                                         {
                                             <span>@T("Checkout.TermsOfService.IAccept")<a class="custom-control-description read pl-1 font-weight-bold" onclick="javascript:OpenWindow('@Url.RouteUrl("TopicPopup", new { SystemName = "conditionsofuse" })', 450, 500, true)">@T("Checkout.TermsOfService.Read")</a></span>
@@ -305,7 +305,7 @@
 
 
                                     </script>
-                                    <button type="submit" id="checkout" name="checkout" value="checkout" class="float-sm-right btn btn-success checkout-button">
+                                    <button type="submit" id="checkout" name="checkout" value="checkout" class="float-sm-right btn btn-info checkout-button">
                                         @T("Checkout.Button")
                                     </button>
                                 }
@@ -329,7 +329,7 @@
     }
     else
     {
-        <div class="no-data">
+        <div class="no-data text-center">
             @T("ShoppingCart.CartIsEmpty")
         </div>
     }

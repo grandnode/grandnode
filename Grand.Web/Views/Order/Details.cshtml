@@ -19,7 +19,7 @@
         });
     </script>
 }
-<div class="page order-details-page">
+<div class="page order-details-page mb-3">
     @if (!Model.PrintMode)
     {
         <h1 class="generalTitle">@T("Order.OrderInformation")</h1>
@@ -455,11 +455,11 @@
                 <div class="actions">
                     @if (Model.IsReOrderAllowed)
                     {
-                        <input type="button" value="@T("Order.Reorder")" class="btn btn-outline-success re-order-button" onclick="setLocation('@Url.RouteUrl("ReOrder", new { orderId = Model.Id })    ')" />
+                        <input type="button" value="@T("Order.Reorder")" class="btn btn-outline-info re-order-button" onclick="setLocation('@Url.RouteUrl("ReOrder", new { orderId = Model.Id })    ')" />
                     }
                     @if (Model.IsReturnRequestAllowed)
                     {
-                        <input type="button" value="@T("Order.ReturnItems")" class="btn btn-outline-success return-items-button" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = Model.Id })    ')" />
+                        <input type="button" value="@T("Order.ReturnItems")" class="btn btn-outline-info return-items-button" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = Model.Id })    ')" />
                     }
                 </div>
             }

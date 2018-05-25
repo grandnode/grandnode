@@ -9,7 +9,7 @@
 {
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.RewardPoints })
 }
-<section class="page account-page reward-points-page">
+<section class="page account-page reward-points-page pl-lg-3">
         <h1 class="h2 generalTitle">@T("Account.MyAccount") - @T("Account.RewardPoints")</h1>
         <div class="reward-points-overview">
             <div class="current-balance text-success">@T("RewardPoints.CurrentBalance", Model.RewardPointsBalance, Model.RewardPointsAmount)</div>

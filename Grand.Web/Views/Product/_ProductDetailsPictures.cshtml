@@ -1,62 +1,94 @@
 ﻿@model ProductDetailsModel
+@inject IWorkContext workContext
+@inject IThemeContext themeContext
+@{
+    var themeName = themeContext.WorkingThemeName;
+    Html.AppendCssFileParts("~/Content/smoothproducts/smoothproducts.css");
+    Html.AppendScriptParts("~/Scripts/smoothproducts.min.js");
+}
+
 <div class="gallery col-12 col-md-6">
+    <span class="change-percent bg-success text-white"></span>
+    @if (!string.IsNullOrEmpty(Model.Flag))
+    {
+        <span class="new-product-label bg-info text-white">@Model.Flag</span>
+    }
     <div class="row">
-        <div class="picture mb-1">
-            @if (Model.DefaultPictureZoomEnabled)
+        @if (Model.DefaultPictureZoomEnabled)
+        {
+            <div class="picture sp-wrap mb-1">
+                @if (Model.PictureModels.Count > 1)
+                {
+
+                    @foreach (var picture in Model.PictureModels)
+                    {
+                        <a class="thumb-popup-link" href="@picture.FullSizeImageUrl" title="@picture.Title">
+                            <img class="img-thumbnail" src="@picture.FullSizeImageUrl" alt="@picture.AlternateText" title="@picture.Title" />
+                        </a>
+                    }
+
+                }
+                else
+                {
+                    <a href="@Model.DefaultPictureModel.FullSizeImageUrl" title="@Model.DefaultPictureModel.Title" id="main-product-img-lightbox-anchor-@Model.Id">
+                        <img class="img-fluid" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" itemprop="image" id="main-product-img-@Model.Id" />
+                    </a>
+                }
+            </div>
+        }
+        else
+        {
+
+            @if (Model.PictureModels.Count > 1)
             {
-                <a href="@Model.DefaultPictureModel.FullSizeImageUrl" title="@Model.DefaultPictureModel.Title" id="main-product-img-lightbox-anchor-@Model.Id">
-                    <img class="img-fluid" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" itemprop="image" id="main-product-img-@Model.Id" />
-                </a>
+                <div class="picture">
+                    <a title="@Model.DefaultPictureModel.Title" id="main-product-img-lightbox-anchor-@Model.Id">
+                        <img class="img-fluid" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" itemprop="image" id="main-product-img-@Model.Id" />
+                    </a>
+                </div>
+
+                <div class="thumbnails">
+                    @foreach (var picture in Model.PictureModels)
+                    {
+                        <a class="thumb-popup-link" href="@picture.FullSizeImageUrl" title="@picture.Title">
+                            <img class="img-thumbnail" src="@picture.FullSizeImageUrl" alt="@picture.AlternateText" title="@picture.Title" />
+                        </a>
+                    }
+                </div>
                 <script type="text/javascript">
-                    $(document).ready(function () {
-                        $('#main-product-img-lightbox-anchor-@Model.Id').magnificPopup(
-                        {
-                            type: 'image',
-                            removalDelay: 300,
-                            gallery: {
-                                enabled: true,
-                                tPrev: '@T("Media.MagnificPopup.Previous")',
-                                tNext: '@T("Media.MagnificPopup.Next")',
-                                tCounter: '@T("Media.MagnificPopup.Counter")'
-                            },
-                            tClose: '@T("Media.MagnificPopup.Close")',
-                            tLoading: '@T("Media.MagnificPopup.Loading")'
+                        $(document).ready(function () {
+                            $('.thumb-popup-link').magnificPopup(
+                            {
+                                type: 'image',
+                                removalDelay: 300,
+                                gallery: {
+                                    enabled: true,
+                                    tPrev: '@T("Media.MagnificPopup.Previous")',
+                                    tNext: '@T("Media.MagnificPopup.Next")',
+                                    tCounter: '@T("Media.MagnificPopup.Counter")'
+                                },
+                                tClose: '@T("Media.MagnificPopup.Close")',
+                                tLoading: '@T("Media.MagnificPopup.Loading")'
+                            });
                         });
-                    });
                 </script>
             }
             else
             {
-                <img class="img-fluid" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" itemprop="image" id="main-product-img-@Model.Id" />
+                <div class="picture">
+                    <img class="img-fluid img-solo" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" itemprop="image" id="main-product-img-@Model.Id" />
+                </div>
             }
-        </div>
-        @if (Model.PictureModels.Count > 1)
-        {
-            <div class="picture-thumbs">
-                @foreach (var picture in Model.PictureModels)
-                {
-                    <a class="thumb-popup-link" href="@picture.FullSizeImageUrl" title="@picture.Title">
-                        <img class="img-thumbnail" src="@picture.ImageUrl" alt="@picture.AlternateText" title="@picture.Title" />
-                    </a>
-                }
-            </div>
-            <script type="text/javascript">
-                $(document).ready(function () {
-                    $('.thumb-popup-link').magnificPopup(
-                    {
-                        type: 'image',
-                        removalDelay: 300,
-                        gallery: {
-                            enabled: true,
-                            tPrev: '@T("Media.MagnificPopup.Previous")',
-                            tNext: '@T("Media.MagnificPopup.Next")',
-                            tCounter: '@T("Media.MagnificPopup.Counter")'
-                        },
-                        tClose: '@T("Media.MagnificPopup.Close")',
-                        tLoading: '@T("Media.MagnificPopup.Loading")'
-                    });
-                });
-            </script>
         }
     </div>
 </div>
+
+<script>
+    $(window).load(function () {
+        $('.sp-wrap').smoothproducts();
+    });
+
+    $(".sp-lightbox").ready(function () {
+        $("<span class='close'></span>").appendTo(".sp-lightbox");
+    });
+</script>

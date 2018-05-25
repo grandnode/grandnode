@@ -1,34 +1,29 @@
 ﻿@model NewsletterBoxModel
-<div class="newsletter d-flex justify-content-center justify-content-lg-start px-0 pt-3">
-        <div class="newsletter-subscribe" id="newsletter-subscribe-block">
-            <strong>@T("Newsletter.Title")</strong>
-            <div class="input-group flex-row">
-                <input asp-for="NewsletterEmail" id="newsletter-email" class="form-control newsletter-subscribe-text" placeholder=@T("Newsletter.Email.Placeholder") />
-                <label for="newsletter-email" class="sr-only">newsletter</label>
-                <span id="newsletter-subscribe-button" class="btn btn-secondary input-group-addon">
-                    <span class="fa fa-envelope-open-o"></span>
-                </span>
+<div class="newsletter d-flex justify-content-center justify-content-lg-start px-0">
+        <div class="newsletter-subscribe w-100" id="newsletter-subscribe-block">
+            <div class="d-flex flex-row row">
+                <span class="strong h3 col-md-4 col-12 mb-md-0 pl-0">@T("Newsletter.Title")</span>
+                <div class="input-group flex-row col-md-8 col-12 px-md-0">
+                    <input type="text" class="form-control" asp-for="NewsletterEmail" id="newsletter-email" placeholder="@T("Newsletter.Email.Placeholder")" aria-label="@T("Newsletter.Email.Placeholder")" />
+                    <label for="newsletter-email" class="sr-only">newsletter</label>
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" id="newsletter-subscribe-button" type="button"><span class="fas fa-envelope-open"></span></button>
+                    </div>
+                </div>
             </div>
             @if (Model.AllowToUnsubscribe)
             {
-                <div class="custom-controls-stacked col-12 pt-1 px-0">
-                    <div class="d-flex flex-row">
-                        <fieldset>
-                            <legend>
-                                @T("Newsletter.Title")
-                            </legend>
-                        <label for="newsletter_subscribe" class="custom-control custom-radio flex-row">
+                <div class="custom-controls-stacked d-flex justify-content-center col-lg-9 offset-lg-3 col-12 pt-1 px-0">
+                    <fieldset>
+                        <label for="newsletter_subscribe" class="custom-control custom-radio float-left">
                             <input value="newsletter_unsubscribe" id="newsletter_subscribe" name="newsletter_block" type="radio" class="custom-control-input">
-                            <span class="custom-control-indicator"></span>
-                            <span class="custom-control-description">@T("Newsletter.Options.Subscribe")</span>
+                            <span class="custom-control-label" for="newsletter_subscribe">@T("Newsletter.Options.Subscribe")</span>
                         </label>
-                        <label for="newsletter_unsubscribe" class="custom-control custom-radio flex-row">
+                        <label for="newsletter_unsubscribe" class="custom-control custom-radio float-left ml-3">
                             <input value="newsletter_unsubscribe" id="newsletter_unsubscribe" name="newsletter_block" type="radio" class="custom-control-input">
-                            <span class="custom-control-indicator"></span>
-                            <span class="custom-control-description">@T("Newsletter.Options.Unsubscribe")</span>
+                            <span class="custom-control-label" for="newsletter_unsubscribe">@T("Newsletter.Options.Unsubscribe")</span>
                         </label>
-                        </fieldset>
-                    </div>
+                    </fieldset>
                 </div>
             }
             <div class="col-12 newsletter-validation">
@@ -36,7 +31,7 @@
                 <span asp-validation-for="NewsletterEmail"></span>
             </div>
         </div>
-        <script type="text/javascript">
+        <script>
             function newsletter_subscribe(subscribe) {
                 var subscribeProgress = $("#subscribe-loading-progress");
                 subscribeProgress.show();

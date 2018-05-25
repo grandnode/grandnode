@@ -13,7 +13,7 @@
 
 <h1 class="h2 generalTitle">
     @T("Knowledgebase")
-    <a class=" fa fa-home pull-right" title="@T("Knowledgebase.Backtohomepage")" data-toggle="tooltip" data-placement="right" href="@Url.RouteUrl("Knowledgebase")"></a>
+    <a class=" fa fa-home float-right text-info" title="@T("Knowledgebase.Backtohomepage")" data-toggle="tooltip" data-placement="right" href="@Url.RouteUrl("Knowledgebase")"></a>
 </h1>
 
 @if (string.IsNullOrEmpty(Model.CurrentCategoryId))
@@ -21,12 +21,12 @@
     Html.AddTitleParts(T("PageTitle.Knowledgebase").Text);
 
     <form method="get" id="small-search-box-form" asp-action="ArticlesByKeyword" asp-controller="knowledgebase" novalidate="novalidate">
-        <div class="input-group flex-row">
+        <div class="input-group">
             <span role="status" aria-live="polite" class="ui-helper-hidden-accessible"></span>
             <input type="text" class="form-control search-box-text ui-autocomplete-input" id="small-searchterms" autocomplete="off" name="keyword" placeholder="@T("Knowledgebase.SearchPlaceholder")">
 
-            <span class="input-group-btn">
-                <button type="submit" class="btn btn-primary search-box-button float-sm-right">
+            <span class="input-group-append">
+                <button type="submit" class="btn btn-primary search-box-button d-flex float-sm-right">
                     <span class="sr-only">Search store</span>
                     <span class="fa fa-search align-self-center"></span>
                     <span class="pl-2 d-none d-lg-block">@T("Knowledgebase.Search")</span>

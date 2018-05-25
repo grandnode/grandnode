@@ -48,8 +48,8 @@
                 @T("Topic.EnterPassword")
             </div>
             <div class="enter-password-form">
-                @Html.Password("password", null, new { id = "password-" + @Model.Id })
-                <input type="submit" id="button-password-@Model.Id" value="@T("Topic.Button")" class="button-1 topic-password-button" />
+                @Html.Password("password", null, new { id = "password-" + @Model.Id, @class = "form-control mt-1" })
+                <input type="submit" id="button-password-@Model.Id" value="@T("Topic.Button")" class="btn btn-secondary topic-password-button mt-1 mb-1" />
             </div>
             <div class="password-error">
                 <span id="password-error-@Model.Id"></span>

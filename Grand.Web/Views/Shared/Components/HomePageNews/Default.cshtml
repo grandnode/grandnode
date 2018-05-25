@@ -10,20 +10,22 @@
                 {
                     <div class="col-lg-4 col-md-6 col-12 mb-3">
                         <div class="card">
-                            <div class="card-header">
+                            <div class="card-header border-bottom-0 pb-0">
                                 <a href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">
                                 @if (item.PictureModel != null && !string.IsNullOrEmpty(item.PictureModel.ImageUrl))
-                                {
-                                    <img class="card-img-top img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title">
+                                {   
+                                    <div class="img-container">
+                                        <img class="card-img-top img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title">
+                                    </div>
                                 }
                                 <h3 class="h5">@item.Title</h3></a>
-                                <span class="news-date">-@item.CreatedOn.ToString("D")</span>
+                                <span class="news-date text-muted"><i class="far fa-clock mr-2"></i>@item.CreatedOn.ToString("D")</span>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body pb-0">
                                 @Html.Raw(item.Short)
                             </div>
-                            <div class="card-footer">
-                                <a class="btn btn-sm btn-primary read-more" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">@T("News.MoreInfo") - @item.Title</a>
+                            <div class="card-footer text-center border-top-0">
+                                <a class="btn btn-sm btn-primary read-more text-capitalize" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">@T("News.MoreInfo")</a>
                             </div>
                         </div>
                     </div>

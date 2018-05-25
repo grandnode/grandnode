@@ -21,7 +21,7 @@
                 </div>
                 <div class="buttons text-center">
                     <a class="btn btn-secondary mb-1" href="@Url.RouteUrl("OrderDetails", new { orderID = Model.OrderId })">@T("Checkout.PlacedOrderDetails")</a>
-                    <button type="button" class="btn btn-success order-completed-continue-button mb-1" onclick="setLocation('@Url.RouteUrl("HomePage")')" >
+                    <button type="button" class="btn btn-info order-completed-continue-button mb-1" onclick="setLocation('@Url.RouteUrl("HomePage")')" >
                         @T("Checkout.ThankYou.Continue")
                     </button>
                 </div>

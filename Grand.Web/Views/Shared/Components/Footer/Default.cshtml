@@ -1,14 +1,76 @@
 ﻿@model FooterModel
 @inject IWorkContext workContext
-<footer class="mt-3 py-3">
-    <div class="container max-100">
+<footer class="bg-dark mt-3">
+    <div class="newsletter-container">
+        <div class="container">
+            <div class="px-0 py-3 text-center d-flex flex-row row">
+                <div class="newsleter col-12 col-lg-6 align-self-center px-md-0">
+                    @await Component.InvokeAsync("NewsletterBox")
+                </div>
+                <div class="col-12 col-lg-6 px-0 social d-flex justify-content-center align-items-center">
+                    <ol class="d-flex flex-row list-group justify-content-center justify-content-lg-start list-pad pb-0">
+                        @if (!string.IsNullOrEmpty(Model.FacebookLink))
+                        {
+                            <li class="list-group-item facebook">
+                                <a title="facebook" href="@Model.FacebookLink" target="facebook">
+                                    <span class="sr-only">Facebook</span>
+                                    <span class="fab fa-facebook-square fa-2x"></span>
+                                </a>
+                            </li>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.TwitterLink))
+                        {
+                            <li class="list-group-item twitter">
+                                <a href="@Model.TwitterLink" target="twitter">
+                                    <span class="fab fa-twitter fa-2x"></span>
+                                    <span class="sr-only">twitter</span>
+                                </a>
+                            </li>
+                        }
+                        @if (Model.NewsEnabled)
+                        {
+                            <li class="list-group-item rss">
+                                <a href="@Url.RouteUrl("NewsRSS", new {languageId = Model.WorkingLanguageId})">
+                                    <span class="fa fa-rss fa-2x"></span>
+                                    <span class="sr-only">@T("NewsRSS")</span>
+                                </a>
+                            </li>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.YoutubeLink))
+                        {
+                            <li class="list-group-item youtube">
+                                <a href="@Model.YoutubeLink" target="youtube">
+                                    <span class="fab fa-youtube fa-2x"></span>
+                                    <span class="sr-only">youtube</span>
+                                </a>
+                            </li>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.GooglePlusLink))
+                        {
+                            <li class="list-group-item google-plus">
+                                <a href="@Model.GooglePlusLink" target="google-plus"><span class="fab fa-google-plus fa-2x"></span><span class="sr-only">google plus</span></a>
+                            </li>
+                        }
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="color-holder d-flex flex-row mb-3">
+        <div class="col color-1"></div>
+        <div class="col color-2"></div>
+        <div class="col color-3"></div>
+        <div class="col color-4"></div>
+        <div class="col color-5"></div>
+    </div>
+    <div class="container max-100 py-3">
         <div class="row flex-row">
-            <div id="footer-block-information" class="col-lg-3 col-md-12 col-sm-12 footer-block information block">
-                <h2 class="h5 d-none d-lg-block"><strong>@T("Footer.Information")</strong></h2>
+            <div id="footer-block-information" class="col-lg-4 col-md-12 col-sm-12 footer-block information block">
+                <h2 class="h4 d-none d-lg-block"><strong>@T("Footer.Information")</strong></h2>
                 <div class="step-title card card-grey mb-1 p-3 d-lg-none">
                     <blockquote class="card-bodyquote">
                         <span class="fa fa-angle-down d-lg-none float-sm-right fa-2x" aria-hidden="true"></span>
-                        <span class="h6"><strong>@T("Footer.Information")</strong></span>
+                        <span class="h5"><strong>@T("Footer.Information")</strong></span>
                     </blockquote>
                 </div>
                 <div class="viewBox">
@@ -25,11 +87,11 @@
                     </ul>
                 </div>
             </div>
-            <div id="footer-block-customer-service" class="col-lg-3 col-md-12 col-sm-12 footer-block customer-service block">
-                <h2 class="h5 d-none d-lg-block"><strong>@T("Footer.CustomerService")</strong></h2>
+            <div id="footer-block-customer-service" class="col-lg-4 col-md-12 col-sm-12 footer-block customer-service block">
+                <h2 class="h4 d-none d-lg-block"><strong>@T("Footer.CustomerService")</strong></h2>
                 <div class="step-title card card-grey mb-1 p-3 d-lg-none">
                     <blockquote class="card-bodyquote">
-                        <span class="h6"><strong>@T("Footer.CustomerService")</strong></span>
+                        <span class="h5"><strong>@T("Footer.CustomerService")</strong></span>
                         <span class="fa fa-angle-down d-lg-none float-sm-right fa-2x"></span>
                     </blockquote>
                 </div>
@@ -71,11 +133,11 @@
                     </ul>
                 </div>
             </div>
-            <div id="footer-block-my-account" class="col-lg-3 col-md-12 col-sm-12 footer-block my-account block">
-                <h2 class="h5 d-none d-lg-block"><strong>@T("Footer.MyAccount")</strong></h2>
+            <div id="footer-block-my-account" class="col-lg-4 col-md-12 col-sm-12 footer-block my-account block">
+                <h2 class="h4 d-none d-lg-block"><strong>@T("Footer.MyAccount")</strong></h2>
                 <div class="step-title card card-grey mb-1 p-3 d-lg-none">
                     <blockquote class="card-bodyquote">
-                        <span class="h6"><strong>@T("Footer.MyAccount")</strong></span>
+                        <span class="h5"><strong>@T("Footer.MyAccount")</strong></span>
                         <span class="fa fa-angle-down d-lg-none float-sm-right fa-2x" aria-hidden="true"></span>
                     </blockquote>
                 </div>
@@ -103,62 +165,10 @@
                     </ol>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-12 col-sm-12 block">
-                <div class="social">
-                    <h2 class="h5 d-none d-lg-block"><strong>@T("Footer.FollowUs")</strong></h2>
-                    <ol class="d-flex flex-row list-group justify-content-center justify-content-lg-start list-pad">
-                        @if (!string.IsNullOrEmpty(Model.FacebookLink))
-                        {
-                            <li class="list-group-item facebook">
-                                <a title="facebook" href="@Model.FacebookLink" target="facebook">
-                                    <span class="sr-only">Facebook</span>
-                                    <span class="fa fa-facebook-square fa-2x"></span>
-                                </a>
-                            </li>
-                        }
-                        @if (!string.IsNullOrEmpty(Model.TwitterLink))
-                        {
-                            <li class="list-group-item twitter">
-                                <a href="@Model.TwitterLink" target="twitter">
-                                    <span class="fa fa-twitter fa-2x"></span>
-                                    <span class="sr-only">twitter</span>
-                                </a>
-                            </li>
-                        }
-                        @if (Model.NewsEnabled)
-                        {
-                            <li class="list-group-item rss">
-                                <a href="@Url.RouteUrl("NewsRSS", new {languageId = Model.WorkingLanguageId})">
-                                    <span class="fa fa-rss fa-2x"></span>
-                                    <span class="sr-only">@T("NewsRSS")</span>
-                                </a>
-                            </li>
-                        }
-                        @if (!string.IsNullOrEmpty(Model.YoutubeLink))
-                        {
-                            <li class="list-group-item youtube">
-                                <a href="@Model.YoutubeLink" target="youtube">
-                                    <span class="fa fa-youtube fa-2x"></span>
-                                    <span class="sr-only">youtube</span>
-                                </a>
-                            </li>
-                        }
-                        @if (!string.IsNullOrEmpty(Model.GooglePlusLink))
-                        {
-                            <li class="list-group-item google-plus">
-                                <a href="@Model.GooglePlusLink" target="google-plus"><span class="fa fa-google-plus fa-2x"></span><span class="sr-only">google plus</span></a>
-                            </li>
-                        }
-                    </ol>
-                </div>
-                <div class="newsleter px-0">
-                    @await Component.InvokeAsync("NewsletterBox")
-                </div>
-            </div>
         </div>
         <div class="footer-lower small row mt-3">
             <div class="col-12 col-md pb-1 pt-1 flex-column text-lg-left text-center">
-                <span class="footer-disclaimer">@T("Content.CopyrightNotice", DateTime.Now.Year, Model.StoreName)</span>
+                <span class="footer-disclaimer text-white">@T("Content.CopyrightNotice", DateTime.Now.Year, Model.StoreName)</span>
                 @if (Model.DisplayTaxShippingInfoFooter)
                 {
                     var inclTax = workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
@@ -169,7 +179,7 @@
             </div>
             @await Component.InvokeAsync("StoreThemeSelector")
             <div class="col-12 col-md-4  pb-1 pt-1 text-center text-lg-right">
-                <a class="pr-1" href="http://www.grandNode.com/">GrandNode</a>- Powered by <a href="http://www.nopcommerce.com/">nopCommerce </a>
+                <a class="pr-1 text-success" href="http://www.grandNode.com/">GrandNode</a><span class="text-white">- Powered by </span><a class="text-white" href="http://www.nopcommerce.com/">nopCommerce </a>
             </div>
         </div>
     </div>
