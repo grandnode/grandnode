@@ -18282,6 +18282,9 @@
   <LocaleResource Name="ShoppingCart.Mini.ItemsText">
     <Value>There are {0} in your cart.</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Mini.NoDataText">
+    <Value>Your shopping cart is empty. Use the "Add to cart" button to add a product to your cart.</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart.Mini.NoItems">
     <Value>You have no items in your shopping cart.</Value>
   </LocaleResource>

@@ -467,4 +467,7 @@
   <LocaleResource Name="Wishlist.HeaderQuantity">
     <Value>{0}</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Mini.NoDataText">
+    <Value>Your shopping cart is empty. Use the "Add to cart" button to add a product to your cart.</Value>
+  </LocaleResource>
 </Language>

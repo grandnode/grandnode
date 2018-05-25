@@ -91,8 +91,11 @@ section {
 	padding-right: 0;
 	margin-bottom: 5px;
 }
+.breadcrumb-item.active strong {
+    font-weight: 500;
+}
 .page {
-	min-height: 445px;
+    min-height: 445px;
 }
 input {
 	height: 38px;

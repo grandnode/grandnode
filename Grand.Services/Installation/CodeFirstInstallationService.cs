@@ -4988,7 +4988,7 @@ namespace Grand.Services.Installation
                 AutoCompleteSearchThumbPictureSize = 20,
                 ImageSquarePictureSize = 32,
                 MaximumImageSize = 1980,
-                DefaultPictureZoomEnabled = false,
+                DefaultPictureZoomEnabled = true,
                 DefaultImageQuality = 80,
                 MultipleThumbDirectories = false
             });
@@ -5726,6 +5726,8 @@ namespace Grand.Services.Installation
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_computers.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Computers")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
+                Flag = "New",
+                FlagStyle = "badge-danger",
                 DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
@@ -5745,8 +5747,6 @@ namespace Grand.Services.Installation
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 1,
-                Flag = "New",
-                FlagStyle = "badge-danger",
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
