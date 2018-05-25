@@ -241,7 +241,7 @@ span.rotate {
 }
 .basic-search label,
 .advanced-search label {
-	font-weight: 500;
+	font-weight: 400;
 }
 /*autocomplete*/
 
@@ -556,9 +556,6 @@ nav .nav-item.list-inline {
 	display: flex;
 	color: #fff;
 	transition: all .3s ease;
-}
-.navUp.navbar-light .navbar-nav .nav-link:focus, .navUp.navbar-light .navbar-nav .nav-link:hover {
-    color: rgba(255, 255, 255, .7) !important;
 }
 .navUp .dropdown-menu {
 	margin-top: 0;
@@ -1715,7 +1712,7 @@ list settings .list__item,
 	width: 100%;
 }
 .generalLeftSide .generalTitle strong {
-	font-weight: 300;
+	font-weight: 400;
 }
 .product-price-filter .btn-sm {
 	min-width: 185px;
@@ -1756,7 +1753,7 @@ list settings .list__item,
 }
 .product-details-page .overview .product-price,
 .product-details-page .overview .non-discounted-price {
-	padding-left: 15px;
+	padding-left: 0;
 }
 .product-details-page .overview .old-price {
 	font-size: 17px;
@@ -3432,6 +3429,9 @@ footer .list-group .list-group-item {
 	}
 }
 @media (min-width: 992px) {
+    .navUp.navbar-light .navbar-nav .nav-link:focus, .navUp.navbar-light .navbar-nav .nav-link:hover {
+        color: rgba(255, 255, 255, .7) !important;
+    }
     .mainNav .nav-item {
         position: relative;
     }
@@ -3598,6 +3598,7 @@ footer .list-group .list-group-item {
         position: absolute;
         top: 1px;
         left: 25px;
+        color: #fff;
         font-size: 50%;
         font-weight: 500;
         padding: .2rem .3rem;
