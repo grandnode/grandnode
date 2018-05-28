@@ -1960,6 +1960,68 @@ ul.opc .order-summary-content h5 {
 	top: 16px !important;
 	left: 7px !important;
 }
+/* product quickview */
+
+.product-quickview .product-details-page {
+    background: #fff;
+    padding: 15px;
+}
+.product-quickview .close {
+    right: 0;
+    top: 0;
+    z-index: 1;
+    opacity: 1;
+    width: 50px;
+    height: 50px;
+    cursor: pointer !important;
+}
+.product-quickview .quick-close {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+.product-quickview .quick-close:before {
+    content: "";
+    position: absolute;
+    top: 25px;
+    right: 15px;
+    width: 15px;
+    height: 3px;
+    background: #000;
+    transform: rotate(45deg);
+}
+.product-quickview .quick-close:after {
+    content: "";
+    position: absolute;
+    top: 25px;
+    right: 15px;
+    width: 15px;
+    height: 3px;
+    background: #000;
+    transform: rotate(-45deg);
+}
+@media (min-width: 576px) {
+    .product-quickview .modal-dialog.container {
+        max-width: 540px;
+    }
+}
+@media (min-width: 768px) {
+    .product-quickview .modal-dialog.container {
+        max-width: 720px;
+    }
+}
+@media (min-width: 992px) {
+    .product-quickview .modal-dialog.container {
+        max-width: 960px;
+    }
+}
+@media (min-width: 1200px) {
+    .product-quickview .modal-dialog.container {
+        max-width: 1140px;
+    }
+}
 /*rating*/
 
 .product-review-list .rating {
@@ -4542,6 +4604,15 @@ footer .list-group .list-group-item {
 	.admin-icon {
 		display: none !important;
 	}
+    .product-quickview .quick-close, .product-quickview .close {
+        right: -4px;
+        top: -8px;
+        opacity: 1;
+    }
+    .product-quickview .container {
+        padding-left: 0;
+        padding-right: 0;
+    }
 	.generalTitle {
 		font-size: 24px;
 	}

@@ -64,6 +64,12 @@ function displayPopupAddToCart(html) {
     $("body.modal-open").removeAttr("style");
     $(".navUp").removeAttr("style");
 }
+function displayPopupQuickView(html) {
+    $('#ModalQuickView').html(html).modal('show');
+    $("body.modal-open").removeAttr("style");
+    $(".navUp").removeAttr("style");
+    $('.sp-wrap').smoothproducts();
+}
 
 var barNotificationTimeout;
 function displayBarNotification(message, messagetype, timeout) {
@@ -213,15 +219,15 @@ function productRatingStarFinal(whole, half, empty, elem) {
         emptyStarr = "<i class=\"far fa-star pr-1\"></i>",
         id = "";
 
-    if(whole == 0 && half == 0 && empty == 0 ){
+    if (whole == 0 && half == 0 && empty == 0) {
         stars = "";
     } else {
-        for(var i=0; i<whole; i++){ stars.push( fullStarr ); };
-        for(var i=0; i<half; i++){ stars.push( halfStarr ); };
-        for(var i=0; i<empty; i++){ stars.push( emptyStarr ); };
+        for (var i = 0; i < whole; i++) { stars.push(fullStarr); };
+        for (var i = 0; i < half; i++) { stars.push(halfStarr); };
+        for (var i = 0; i < empty; i++) { stars.push(emptyStarr); };
         stars = stars.join("");
     };
-    $("."+elem+"").html(stars);
+    $("." + elem + "").html(stars);
 
 };
 
@@ -398,7 +404,7 @@ $(document).ready(function () {
     $('[data-countdown]').each(function () {
         var $this = $(this), finalDate = $(this).data('countdown');
         $this.countdown(finalDate, function (event) {
-            if (event.strftime('%D') > 0){
+            if (event.strftime('%D') > 0) {
                 $this.html(event.strftime('%D days %H:%M:%S'));
             }
             else {
@@ -469,13 +475,13 @@ $(document).ready(function () {
 });
 
 
-   function minicartclose() {
-        $("#topcartlink").removeClass("fly-in");
-        $(".shadow-layer").removeClass("fly-in");
-        $("body").removeClass("fly-in");
-        $(".navUp .container").removeClass("fly-in");
-        $(".dropdowns-container").removeClass("fly-in");
-    }
+function minicartclose() {
+    $("#topcartlink").removeClass("fly-in");
+    $(".shadow-layer").removeClass("fly-in");
+    $("body").removeClass("fly-in");
+    $(".navUp .container").removeClass("fly-in");
+    $(".dropdowns-container").removeClass("fly-in");
+}
 
 $(document).mouseup(function (e) {
     var container = $("#topcartlink");
@@ -536,7 +542,7 @@ $(document).ready(function () {
     }
     else {
         $('.mainNav li.dropdown > .dropdown-toggle').click(function () {
-                window.location = $(this).attr('href');
+            window.location = $(this).attr('href');
         });
     }
 });

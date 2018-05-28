@@ -3,6 +3,8 @@
     //prepare "Add to cart" AJAX link
     string addtocartlink = "";
     string addtowishlistlink = "";
+    string quickviewurl = Url.RouteUrl("QuickView-Product", new { productId = Model.Id });
+
     var shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart;
     var quantity = 1;
     if (!Model.ShowQty)
@@ -120,7 +122,7 @@
                     {
                         var qtyId = "addtocart_" + @Model.Id + "_EnteredQuantity";
                         <input class="form-control input-group-addon catalog-quantity"
-                               type="text" id="@qtyId" name="@qtyId" value="1" >
+                               type="text" id="@qtyId" name="@qtyId" value="1">
                     }
                     @if (!Model.ProductPrice.DisableBuyButton)
                     {
@@ -148,11 +150,10 @@
                         }
 
                     }
-                        @*<button type="button" value="Quick View" title="Quick View" class="btn btn-secondary" onclick="">
-                            <span class="sr-only">Quick View</span>
-                            <span class="fas fa-search"></span>
-                        </button>*@
-
+                    <button type="button" value="Quick View" title="Quick View" class="btn btn-secondary" onclick="AjaxCart.quickview_product('@quickviewurl')">
+                        <span class="sr-only">Quick View</span>
+                        <span class="fas fa-search"></span>
+                    </button>
                     @if (!Model.ProductPrice.DisableAddToCompareListButton && Model.ProductType == ProductType.SimpleProduct)
                     {
                         <button type="button" value="@T("ShoppingCart.AddToCompareList")" title="@T("ShoppingCart.AddToCompareList")" class="btn btn-secondary" onclick="AjaxCart.addproducttocomparelist('@addtocomparelink');return false;">

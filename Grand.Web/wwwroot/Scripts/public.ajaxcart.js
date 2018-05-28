@@ -19,6 +19,17 @@ var AjaxCart = {
         this.loadWaiting = display;
     },
 
+    quickview_product: function (quickviewurl) {
+        this.setLoadWaiting(true);
+        $.ajax({
+            cache: false,
+            url: quickviewurl,
+            success: this.success_process,
+            complete: this.resetLoadWaiting,
+            error: this.ajaxFailure
+        })
+    },
+
     //add a product to the cart/wishlist from the catalog pages
     addproducttocart_catalog: function (urladd, showqty, productid) {
         if (showqty.toLowerCase() == 'true') {
@@ -50,7 +61,7 @@ var AjaxCart = {
         if (this.loadWaiting != false) {
             return;
         }
-        this.setLoadWaiting(true);        
+        this.setLoadWaiting(true);
         $.ajax({
             cache: false,
             url: urladd,
@@ -114,10 +125,19 @@ var AjaxCart = {
             }
             return false;
         }
+        if (response.product) {
+            if (response.success == true) {
+                $("#ModalQuickView .product-quickview").remove();
+                displayPopupQuickView(response.html);
+            }
+        }
+
+
         if (response.message) {
             //display notification
             if (response.success == true) {
                 //success
+                $("#ModalQuickView .close").click();
                 displayPopupAddToCart(response.html);
 
                 if (response.refreshreservation == true) {

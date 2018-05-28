@@ -169,6 +169,13 @@ namespace Grand.Web.Infrastructure
                             new { productId = @"\w+", shoppingCartTypeId = @"\d+" },
                             new[] { "Grand.Web.Controllers" });
 
+            //quick view product.
+            routeBuilder.MapLocalizedRoute("QuickView-Product",
+                            "quickview/product/{productId}",
+                            new { controller = "Product", action = "QuickView" },
+                            new { productId = @"\w+" },
+                            new[] { "Grand.Web.Controllers" });
+
             //product tags
             routeBuilder.MapLocalizedRoute("ProductsByTag",
                             "producttag/{productTagId}/{SeName}",

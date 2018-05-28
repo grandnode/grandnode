@@ -1,12 +1,4 @@
 ﻿@model ProductDetailsModel
-@inject IWorkContext workContext
-@inject IThemeContext themeContext
-@{
-    var themeName = themeContext.WorkingThemeName;
-    Html.AppendCssFileParts("~/Content/smoothproducts/smoothproducts.css");
-    Html.AppendScriptParts("~/Scripts/smoothproducts.min.js");
-}
-
 <div class="gallery col-12 col-md-6">
     <span class="change-percent bg-success text-white"></span>
     @if (!string.IsNullOrEmpty(Model.Flag))

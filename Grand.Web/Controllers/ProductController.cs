@@ -203,6 +203,99 @@ namespace Grand.Web.Controllers
             return View(productTemplateViewPath, model);
         }
 
+        #region Quick view product
+
+        [HttpsRequirement(SslRequirement.No)]
+        public virtual IActionResult QuickView(string productId)
+        {
+            var product = _productService.GetProductById(productId);
+            if (product == null)
+                return Json(new
+                {
+                    success = false,
+                    message = "No product found with the specified ID"
+                });
+
+            var customer = _workContext.CurrentCustomer;
+
+            //published?
+            if (!_catalogSettings.AllowViewUnpublishedProductPage)
+            {
+                //Check whether the current user has a "Manage catalog" permission
+                //It allows him to preview a product before publishing
+                if (!product.Published && !_permissionService.Authorize(StandardPermissionProvider.ManageProducts, customer))
+                    return Json(new
+                    {
+                        success = false,
+                        message = "No product found with the specified ID"
+                    });
+            }
+
+            //ACL (access control list)
+            if (!_aclService.Authorize(product, customer))
+                return Json(new
+                {
+                    success = false,
+                    message = "No product found with the specified ID"
+                });
+
+            //Store mapping
+            if (!_storeMappingService.Authorize(product))
+                return Json(new
+                {
+                    success = false,
+                    message = "No product found with the specified ID"
+                });
+
+            //availability dates
+            if (!product.IsAvailable() && !(product.ProductType == ProductType.Auction))
+                return Json(new
+                {
+                    success = false,
+                    message = "No product found with the specified ID"
+                });
+
+            //visible individually?
+            if (!product.VisibleIndividually)
+            {
+                //is this one an associated products?
+                var parentGroupedProduct = _productService.GetProductById(product.ParentGroupedProductId);
+                if (parentGroupedProduct == null)
+                {
+                    return Json(new
+                    {
+                        redirect = Url.RouteUrl("HomePage"),
+                    });
+                }
+                return Json(new
+                {
+                    redirect = Url.RouteUrl("Product", new { SeName = product.GetSeName() }),
+                });
+            }
+
+            //prepare the model
+            var model = _productWebService.PrepareProductDetailsPage(product, null, false);
+
+            //product template
+            var productTemplateViewPath = _productWebService.PrepareProductTemplateViewPath(product.ProductTemplateId);
+
+            //save as recently viewed
+            _recentlyViewedProductsService.AddProductToRecentlyViewedList(customer.Id, product.Id);
+
+            //activity log
+            _customerActivityService.InsertActivity("PublicStore.ViewProduct", product.Id, _localizationService.GetResource("ActivityLog.PublicStore.ViewProduct"), product.Name);
+            _customerActionEventService.Viewed(customer, this.HttpContext.Request.Path.ToString(), this.Request.Headers[HeaderNames.Referer].ToString() != null ? Request.Headers[HeaderNames.Referer].ToString() : "");
+            _productService.UpdateMostView(productId, 1);
+            var qhtml = this.RenderPartialViewToString(productTemplateViewPath + ".QuickView", model);
+            return Json(new
+            {
+                success = true,
+                product = true,
+                html = qhtml,
+            });
+        }
+        #endregion
+
         #endregion
 
         #region Recently viewed products
