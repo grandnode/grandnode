@@ -203,6 +203,57 @@ span.rotate {
 	overflow: auto;
 	padding-right: 0 !important;
 }
+/*loading animation*/
+
+#loading {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: fixed;
+    display: block;
+    opacity: 1;
+    background-color: transparent;
+    z-index: 99999;
+    text-align: center;
+}
+
+.loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-style: solid;
+    border-radius: 50%;
+    border-color: transparent;
+    animation: 1s pulse infinite;
+    animation-delay: 500ms;
+}
+
+@keyframes pulse {
+    0% {
+        height: 0px;
+        width: 0px;
+        border-color: #28a745;
+        border-width: 32px;
+        opacity: 0;
+    }
+
+    40% {
+        opacity: 1;
+    }
+
+    80% {
+        height: 64px;
+        width: 64px;
+        border-width: 0px;
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
 /*back to top*/
 
 #back-to-top {
@@ -1943,6 +1994,9 @@ ul.opc .order-summary-content h5 {
 .sp-lightbox #sp-next {
 	background: transparent !important;
 	border: 0 !important;
+}
+.sp-large {
+    display: block !important;
 }
 #sp-next:before {
 	content: '';
