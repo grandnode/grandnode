@@ -903,6 +903,24 @@ namespace Grand.Services.Installation
                 Enabled = true,
                 Name = "Delete knowledgebase category"
             });
+            _activityLogTypeRepository.Insert(new ActivityLogType
+            {
+                SystemKeyword = "AddNewContactAttribute",
+                Enabled = true,
+                Name = "Add a new contact attribute"
+            });
+            _activityLogTypeRepository.Insert(new ActivityLogType
+            {
+                SystemKeyword = "EditContactAttribute",
+                Enabled = true,
+                Name = "Edit a contact attribute"
+            });
+            _activityLogTypeRepository.Insert(new ActivityLogType
+            {
+                SystemKeyword = "DeleteContactAttribute",
+                Enabled = true,
+                Name = "Delete a contact attribute"
+            });
 
             #endregion
             

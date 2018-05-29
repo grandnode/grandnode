@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Http;
 
 namespace Grand.Web.Services
 {
@@ -33,6 +34,8 @@ namespace Grand.Web.Services
         StoreThemeSelectorModel PrepareStoreThemeSelector();
         FaviconModel PrepareFavicon();
         string PrepareRobotsTextFile();
-
+        string ParseContactAttributes(IFormCollection form);
+        IList<string> GetContactAttributesWarnings(string contactAttributesXml);
+        IList<ContactUsModel.ContactAttributeModel> PrepareContactAttributeModel(string selectedContactAttributes);
     }
 }

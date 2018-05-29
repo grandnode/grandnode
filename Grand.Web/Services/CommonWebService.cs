@@ -39,6 +39,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Hosting;
 using Grand.Services.Stores;
 using Grand.Core.Domain.Knowledgebase;
+using Microsoft.AspNetCore.Http;
 
 namespace Grand.Web.Services
 {
@@ -64,6 +65,8 @@ namespace Grand.Web.Services
         private readonly ISitemapGenerator _sitemapGenerator;
         private readonly IThemeProvider _themeProvider;
         private readonly IForumService _forumservice;
+        private readonly IContactAttributeService _contactAttributeService;
+        private readonly IContactAttributeParser _contactAttributeParser;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly LocalizationSettings _localizationSettings;
@@ -98,6 +101,8 @@ namespace Grand.Web.Services
             ISitemapGenerator sitemapGenerator,
             IThemeProvider themeProvider,
             IForumService forumservice,
+            IContactAttributeService contactAttributeService,
+            IContactAttributeParser contactAttributeParser,
             IHostingEnvironment hostingEnvironment,
             StoreInformationSettings storeInformationSettings,
             LocalizationSettings localizationSettings,
@@ -133,6 +138,8 @@ namespace Grand.Web.Services
             this._sitemapGenerator = sitemapGenerator;
             this._themeProvider = themeProvider;
             this._forumservice = forumservice;
+            this._contactAttributeService = contactAttributeService;
+            this._contactAttributeParser = contactAttributeParser;
             this._hostingEnvironment = hostingEnvironment;
 
             this._storeInformationSettings = storeInformationSettings;
@@ -413,6 +420,325 @@ namespace Grand.Web.Services
 
             return model;
         }
+
+        public virtual string ParseContactAttributes(IFormCollection form)
+        {
+
+            if (form == null)
+                throw new ArgumentNullException("form");
+
+            string attributesXml = "";
+            var checkoutAttributes = _contactAttributeService.GetAllContactAttributes(_storeContext.CurrentStore.Id);
+            foreach (var attribute in checkoutAttributes)
+            {
+                string controlId = string.Format("contact_attribute_{0}", attribute.Id);
+                switch (attribute.AttributeControlType)
+                {
+                    case AttributeControlType.DropdownList:
+                    case AttributeControlType.RadioList:
+                    case AttributeControlType.ColorSquares:
+                    case AttributeControlType.ImageSquares:
+                        {
+                            var ctrlAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            {
+                                attributesXml = _contactAttributeParser.AddContactAttribute(attributesXml,
+                                        attribute, ctrlAttributes);
+
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Checkboxes:
+                        {
+                            var cblAttributes = form[controlId].ToString();
+                            if (!String.IsNullOrEmpty(cblAttributes))
+                            {
+                                foreach (var item in cblAttributes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                {
+                                    attributesXml = _contactAttributeParser.AddContactAttribute(attributesXml, attribute, item);
+                                }
+                            }
+                        }
+                        break;
+                    case AttributeControlType.ReadonlyCheckboxes:
+                        {
+                            //load read-only (already server-side selected) values
+                            var attributeValues = attribute.ContactAttributeValues;
+                            foreach (var selectedAttributeId in attributeValues
+                                .Where(v => v.IsPreSelected)
+                                .Select(v => v.Id)
+                                .ToList())
+                            {
+                                attributesXml = _contactAttributeParser.AddContactAttribute(attributesXml,
+                                            attribute, selectedAttributeId.ToString());
+                            }
+                        }
+                        break;
+                    case AttributeControlType.TextBox:
+                    case AttributeControlType.MultilineTextbox:
+                        {
+                            var ctrlAttributes = form[controlId].ToString();
+                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            {
+                                string enteredText = ctrlAttributes.Trim();
+                                attributesXml = _contactAttributeParser.AddContactAttribute(attributesXml,
+                                    attribute, enteredText);
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Datepicker:
+                        {
+                            var date = form[controlId + "_day"];
+                            var month = form[controlId + "_month"];
+                            var year = form[controlId + "_year"];
+                            DateTime? selectedDate = null;
+                            try
+                            {
+                                selectedDate = new DateTime(Int32.Parse(year), Int32.Parse(month), Int32.Parse(date));
+                            }
+                            catch { }
+                            if (selectedDate.HasValue)
+                            {
+                                attributesXml = _contactAttributeParser.AddContactAttribute(attributesXml,
+                                    attribute, selectedDate.Value.ToString("D"));
+                            }
+                        }
+                        break;
+                    case AttributeControlType.FileUpload:
+                        {
+                            Guid downloadGuid;
+                            Guid.TryParse(form[controlId], out downloadGuid);
+                            var _downloadService = Grand.Core.Infrastructure.EngineContext.Current.Resolve<IDownloadService>();
+                            var download = _downloadService.GetDownloadByGuid(downloadGuid);
+                            if (download != null)
+                            {
+                                attributesXml = _contactAttributeParser.AddContactAttribute(attributesXml,
+                                           attribute, download.DownloadGuid.ToString());
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            //save checkout attributes
+            //validate conditional attributes (if specified)
+            foreach (var attribute in checkoutAttributes)
+            {
+                var conditionMet = _contactAttributeParser.IsConditionMet(attribute, attributesXml);
+                if (conditionMet.HasValue && !conditionMet.Value)
+                    attributesXml = _contactAttributeParser.RemoveContactAttribute(attributesXml, attribute);
+            }
+
+            return attributesXml;
+        }
+
+        public virtual IList<string> GetContactAttributesWarnings(string contactAttributesXml)
+        {
+            var warnings = new List<string>();
+
+            //selected attributes
+            var attributes1 = _contactAttributeParser.ParseContactAttributes(contactAttributesXml);
+
+            //existing checkout attributes
+            var attributes2 = _contactAttributeService.GetAllContactAttributes(_storeContext.CurrentStore.Id);
+            foreach (var a2 in attributes2)
+            {
+                if (a2.IsRequired)
+                {
+                    bool found = false;
+                    //selected checkout attributes
+                    foreach (var a1 in attributes1)
+                    {
+                        if (a1.Id == a2.Id)
+                        {
+                            var attributeValuesStr = _contactAttributeParser.ParseValues(contactAttributesXml, a1.Id);
+                            foreach (string str1 in attributeValuesStr)
+                                if (!String.IsNullOrEmpty(str1.Trim()))
+                                {
+                                    found = true;
+                                    break;
+                                }
+                        }
+                    }
+
+                    //if not found
+                    if (!found)
+                    {
+                        if (!string.IsNullOrEmpty(a2.GetLocalized(a => a.TextPrompt)))
+                            warnings.Add(a2.GetLocalized(a => a.TextPrompt));
+                        else
+                            warnings.Add(string.Format(_localizationService.GetResource("ContactUs.SelectAttribute"), a2.GetLocalized(a => a.Name)));
+                    }
+                }
+            }
+
+            //now validation rules
+
+            //minimum length
+            foreach (var ca in attributes2)
+            {
+                if (ca.ValidationMinLength.HasValue)
+                {
+                    if (ca.AttributeControlType == AttributeControlType.TextBox ||
+                        ca.AttributeControlType == AttributeControlType.MultilineTextbox)
+                    {
+                        var valuesStr = _contactAttributeParser.ParseValues(contactAttributesXml, ca.Id);
+                        var enteredText = valuesStr.FirstOrDefault();
+                        int enteredTextLength = String.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
+
+                        if (ca.ValidationMinLength.Value > enteredTextLength)
+                        {
+                            warnings.Add(string.Format(_localizationService.GetResource("ContactUs.TextboxMinimumLength"), ca.GetLocalized(a => a.Name), ca.ValidationMinLength.Value));
+                        }
+                    }
+                }
+
+                //maximum length
+                if (ca.ValidationMaxLength.HasValue)
+                {
+                    if (ca.AttributeControlType == AttributeControlType.TextBox ||
+                        ca.AttributeControlType == AttributeControlType.MultilineTextbox)
+                    {
+                        var valuesStr = _contactAttributeParser.ParseValues(contactAttributesXml, ca.Id);
+                        var enteredText = valuesStr.FirstOrDefault();
+                        int enteredTextLength = String.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
+
+                        if (ca.ValidationMaxLength.Value < enteredTextLength)
+                        {
+                            warnings.Add(string.Format(_localizationService.GetResource("ContactUs.TextboxMaximumLength"), ca.GetLocalized(a => a.Name), ca.ValidationMaxLength.Value));
+                        }
+                    }
+                }
+            }
+
+            return warnings;
+        }
+
+        public virtual IList<ContactUsModel.ContactAttributeModel> PrepareContactAttributeModel(string selectedContactAttributes)
+        {
+            var model = new List<ContactUsModel.ContactAttributeModel>();
+
+            var contactAttributes = _contactAttributeService.GetAllContactAttributes(_storeContext.CurrentStore.Id);
+            foreach (var attribute in contactAttributes)
+            {
+                var attributeModel = new ContactUsModel.ContactAttributeModel
+                {
+                    Id = attribute.Id,
+                    Name = attribute.GetLocalized(x => x.Name),
+                    TextPrompt = attribute.GetLocalized(x => x.TextPrompt),
+                    IsRequired = attribute.IsRequired,
+                    AttributeControlType = attribute.AttributeControlType,
+                    DefaultValue = attribute.DefaultValue
+                };
+                if (!String.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
+                {
+                    attributeModel.AllowedFileExtensions = attribute.ValidationFileAllowedExtensions
+                        .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                        .ToList();
+                }
+
+                if (attribute.ShouldHaveValues())
+                {
+                    //values
+                    var attributeValues = attribute.ContactAttributeValues;
+                    foreach (var attributeValue in attributeValues)
+                    {
+                        var attributeValueModel = new ContactUsModel.ContactAttributeValueModel
+                        {
+                            Id = attributeValue.Id,
+                            Name = attributeValue.GetLocalized(x => x.Name),
+                            ColorSquaresRgb = attributeValue.ColorSquaresRgb,
+                            IsPreSelected = attributeValue.IsPreSelected,
+                        };
+                        attributeModel.Values.Add(attributeValueModel);
+                    }
+                }
+
+                switch (attribute.AttributeControlType)
+                {
+                    case AttributeControlType.DropdownList:
+                    case AttributeControlType.RadioList:
+                    case AttributeControlType.Checkboxes:
+                    case AttributeControlType.ColorSquares:
+                    case AttributeControlType.ImageSquares:
+                        {
+                            if (!String.IsNullOrEmpty(selectedContactAttributes))
+                            {
+                                //clear default selection
+                                foreach (var item in attributeModel.Values)
+                                    item.IsPreSelected = false;
+
+                                //select new values
+                                var selectedValues = _contactAttributeParser.ParseContactAttributeValues(selectedContactAttributes);
+                                foreach (var attributeValue in selectedValues)
+                                    if (attributeModel.Id == attributeValue.ContactAttributeId)
+                                        foreach (var item in attributeModel.Values)
+                                            if (attributeValue.Id == item.Id)
+                                                item.IsPreSelected = true;
+                            }
+                        }
+                        break;
+                    case AttributeControlType.ReadonlyCheckboxes:
+                        {
+                            //do nothing
+                            //values are already pre-set
+                        }
+                        break;
+                    case AttributeControlType.TextBox:
+                    case AttributeControlType.MultilineTextbox:
+                        {
+                            if (!String.IsNullOrEmpty(selectedContactAttributes))
+                            {
+                                var enteredText = _contactAttributeParser.ParseValues(selectedContactAttributes, attribute.Id);
+                                if (enteredText.Any())
+                                    attributeModel.DefaultValue = enteredText[0];
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Datepicker:
+                        {
+                            //keep in mind my that the code below works only in the current culture
+                            var selectedDateStr = _contactAttributeParser.ParseValues(selectedContactAttributes, attribute.Id);
+                            if (selectedDateStr.Any())
+                            {
+                                DateTime selectedDate;
+                                if (DateTime.TryParseExact(selectedDateStr[0], "D", CultureInfo.CurrentCulture,
+                                                       DateTimeStyles.None, out selectedDate))
+                                {
+                                    //successfully parsed
+                                    attributeModel.SelectedDay = selectedDate.Day;
+                                    attributeModel.SelectedMonth = selectedDate.Month;
+                                    attributeModel.SelectedYear = selectedDate.Year;
+                                }
+                            }
+
+                        }
+                        break;
+                    case AttributeControlType.FileUpload:
+                        {
+                            if (!String.IsNullOrEmpty(selectedContactAttributes))
+                            {
+                                var downloadGuidStr = _contactAttributeParser.ParseValues(selectedContactAttributes, attribute.Id).FirstOrDefault();
+                                Guid downloadGuid;
+                                Guid.TryParse(downloadGuidStr, out downloadGuid);
+                                var download = Grand.Core.Infrastructure.EngineContext.Current.Resolve<IDownloadService>().GetDownloadByGuid(downloadGuid);
+                                if (download != null)
+                                    attributeModel.DefaultValue = download.DownloadGuid.ToString();
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+                model.Add(attributeModel);
+            }
+
+            return model;
+        }
+
         public virtual ContactUsModel PrepareContactUs()
         {
             var model = new ContactUsModel
@@ -422,6 +748,7 @@ namespace Grand.Web.Services
                 SubjectEnabled = _commonSettings.SubjectFieldOnContactUsForm,
                 DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage
             };
+            model.ContactAttributes = PrepareContactAttributeModel("");
             return model;
         }
 
@@ -432,7 +759,7 @@ namespace Grand.Web.Services
             string subject = _commonSettings.SubjectFieldOnContactUsForm ? model.Subject : null;
             string body = Core.Html.HtmlHelper.FormatText(model.Enquiry, false, true, false, false, false, false);
 
-            _workflowMessageService.SendContactUsMessage(_workContext.CurrentCustomer, _workContext.WorkingLanguage.Id, model.Email.Trim(), model.FullName, subject, body);
+            _workflowMessageService.SendContactUsMessage(_workContext.CurrentCustomer, _workContext.WorkingLanguage.Id, model.Email.Trim(), model.FullName, subject, body, model.ContactAttributeInfo, model.ContactAttributeXml);
 
             model.SuccessfullySent = true;
             model.Result = _localizationService.GetResource("ContactUs.YourEnquiryHasBeenSent");

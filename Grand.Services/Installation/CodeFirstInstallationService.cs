@@ -9986,6 +9986,12 @@ namespace Grand.Services.Installation
                                               },
                                           new ActivityLogType
                                               {
+                                                  SystemKeyword = "AddNewContactAttribute",
+                                                  Enabled = true,
+                                                  Name = "Add a new contact attribute"
+                                              },
+                                          new ActivityLogType
+                                              {
                                                   SystemKeyword = "AddNewCustomer",
                                                   Enabled = true,
                                                   Name = "Add a new customer"
@@ -10067,6 +10073,12 @@ namespace Grand.Services.Installation
                                                   SystemKeyword = "DeleteCheckoutAttribute",
                                                   Enabled = true,
                                                   Name = "Delete a checkout attribute"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "DeleteContactAttribute",
+                                                  Enabled = true,
+                                                  Name = "Delete a contact attribute"
                                               },
                                           new ActivityLogType
                                               {
@@ -10157,6 +10169,12 @@ namespace Grand.Services.Installation
                                                   SystemKeyword = "EditCheckoutAttribute",
                                                   Enabled = true,
                                                   Name = "Edit a checkout attribute"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "EditContactAttribute",
+                                                  Enabled = true,
+                                                  Name = "Edit a contact attribute"
                                               },
                                           new ActivityLogType
                                               {

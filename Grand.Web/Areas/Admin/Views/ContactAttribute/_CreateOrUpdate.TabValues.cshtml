@@ -1,0 +1,108 @@
+﻿@model ContactAttributeModel
+@{
+
+    if (!String.IsNullOrEmpty(Model.Id))
+    {
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="contactattributevalues-grid"></div>
+            </div>
+            <div class="panel-footer">
+                <input type="submit" id="btnAddNewValue" value="@T("Admin.Catalog.Attributes.ContactAttributes.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "ContactAttribute", new { contactAttributeId = Model.Id, btnId = "btnRefresh", formId = "contactattribute-form" }))', 800, 350, true); return false;" class="k-button" />
+                <input type="submit" id="btnRefresh" style="display: none" />
+            </div>
+        </div>
+
+        <script>
+            $(document).ready(function () {
+                $("#contactattributevalues-grid").kendoGrid({
+                    dataSource: {
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("ValueList", "ContactAttribute", new { contactAttributeId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                            destroy: {
+                                url: "@Html.Raw(Url.Action("ValueDelete", "ContactAttribute"))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "Id"
+                            }
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        numeric: false,
+                        previousNext: false,
+                        info: false
+                    },
+                    editable: {
+                        confirmation: true,
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    columns: [{
+                        field: "Name",
+                        title: "@T("Admin.Catalog.Attributes.ContactAttributes.Values.Fields.Name")",
+                        template: "<a class='k-link' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/ContactAttribute/ValueEditPopup/")#=Id#?contactAttributeId=@Model.Id&btnId=btnRefresh&formId=contactattribute-form', 800, 350, true); return false;\">#=Name#</a>"
+                    }, {
+                        field: "IsPreSelected",
+                        title: "@T("Admin.Catalog.Attributes.ContactAttributes.Values.Fields.IsPreSelected")",
+                        width: 100,
+                        minScreenWidth: 500,
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        template: '# if(IsPreSelected) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+                    }, {
+                        field: "DisplayOrder",
+                        title: "@T("Admin.Catalog.Attributes.ContactAttributes.Values.Fields.DisplayOrder")",
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        width: 100
+                    }, {
+                        command: {name: "destroy", text: "@T("Admin.Common.Delete")"},
+                        title: "@T("Admin.Common.Delete")",
+                        width: 100
+                    }]
+                });
+            });
+        </script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#btnRefresh').click(function () {
+                    //refresh grid
+                    var grid = $("#contactattributevalues-grid").data('kendoGrid');
+                    grid.dataSource.read();
+
+                    //return false to don't reload a page
+                    return false;
+                });
+            });
+        </script>
+
+    }
+    else
+    {
+        <div class="note note-info">
+            @T("Admin.Catalog.Attributes.ContactAttributes.Values.SaveBeforeEdit")
+        </div>
+    }
+}

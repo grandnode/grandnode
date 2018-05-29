@@ -236,7 +236,25 @@ namespace Grand.Web.Areas.Admin.Extensions
         }
 
         #endregion
+        #region Contact attributes
 
+        //attributes
+        public static ContactAttributeModel ToModel(this ContactAttribute entity)
+        {
+            return entity.MapTo<ContactAttribute, ContactAttributeModel>();
+        }
+
+        public static ContactAttribute ToEntity(this ContactAttributeModel model)
+        {
+            return model.MapTo<ContactAttributeModel, ContactAttribute>();
+        }
+
+        public static ContactAttribute ToEntity(this ContactAttributeModel model, ContactAttribute destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
         #region Customer attributes
 
         //attributes

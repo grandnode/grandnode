@@ -47,6 +47,12 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <admin-label asp-for="ContactAttributeDescription" />
+                                <div class="col-md-9 col-sm-9">
+                                    <label class="control-label" style="text-align:left">@Html.Raw(Model.ContactAttributeDescription)</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <admin-label asp-for="IpAddress" />
                                 <div class="col-md-9 col-sm-9">
                                     <label class="control-label">@Model.IpAddress</label>

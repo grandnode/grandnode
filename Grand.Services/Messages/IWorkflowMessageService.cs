@@ -433,7 +433,7 @@ namespace Grand.Services.Messages
         /// <param name="subject">Email subject. Pass null if you want a message template subject to be used.</param>
         /// <param name="body">Email body</param>
         /// <returns>Queued email identifier</returns>
-        int SendContactUsMessage(Customer customer, string languageId, string senderEmail, string senderName, string subject, string body);
+        int SendContactUsMessage(Customer customer, string languageId, string senderEmail, string senderName, string subject, string body, string attrInfo, string attrXml);
 
         /// <summary>
         /// Sends "contact vendor" message

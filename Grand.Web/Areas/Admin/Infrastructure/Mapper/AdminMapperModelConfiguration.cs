@@ -721,6 +721,25 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.AttributeControlType, mo => mo.Ignore())
                 .ForMember(dest => dest.ConditionAttributeXml, mo => mo.Ignore())
                 .ForMember(dest => dest.CheckoutAttributeValues, mo => mo.Ignore());
+
+            //contact attributes
+            CreateMap<ContactAttribute, ContactAttributeModel>()
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.AttributeControlTypeName, mo => mo.Ignore())
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
+                .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
+                .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
+                .ForMember(dest => dest.SelectedCustomerRoleIds, mo => mo.Ignore())
+                .ForMember(dest => dest.ConditionAllowed, mo => mo.Ignore())
+                .ForMember(dest => dest.ConditionModel, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            CreateMap<ContactAttributeModel, ContactAttribute>()
+                .ForMember(dest => dest.Id, mo => mo.Ignore())
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.AttributeControlType, mo => mo.Ignore())
+                .ForMember(dest => dest.ConditionAttributeXml, mo => mo.Ignore())
+                .ForMember(dest => dest.ContactAttributeValues, mo => mo.Ignore());
             //customer attributes
             CreateMap<CustomerAttribute, CustomerAttributeModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())

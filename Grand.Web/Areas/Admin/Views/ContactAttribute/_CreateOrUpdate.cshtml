@@ -1,0 +1,72 @@
+﻿@model ContactAttributeModel
+@inject IEventPublisher eventPublisher
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<script>
+    $(document).ready(function () {
+        $("#contactattribute-edit").show();
+        $("#contactattribute-edit").kendoTabStrip({
+            animation: {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
+
+<div id="contactattribute-edit" style="display:none">
+    <ul>
+        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+            @T("Admin.Catalog.Attributes.ContactAttributes.Info")
+        </li>
+        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex()) id="tab-contactAttributesValues">
+            @T("Admin.Catalog.Attributes.ContactAttributes.Values")
+        </li>
+        <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+            @T("Admin.Catalog.Attributes.ContactAttributes.Stores")
+        </li>
+        <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
+            @T("Admin.Catalog.Attributes.ContactAttributes.Acl")
+        </li>
+        @if (Model.ConditionAllowed)
+        {
+            <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
+                @T("Admin.Catalog.Attributes.ContactAttributes.Condition")
+            </li>
+        }
+    </ul>
+    <div>
+        @Html.Partial("_CreateOrUpdate.TabInfo", Model)
+    </div>
+    <div>
+        @Html.Partial("_CreateOrUpdate.TabValues", Model)
+    </div>
+    <div>
+        @Html.Partial("_CreateOrUpdate.TabStores", Model)
+    </div>
+    <div>
+        @Html.Partial("_CreateOrUpdate.TabAcl", Model)
+    </div>
+    @if (Model.ConditionAllowed)
+    {
+        <div>
+            @Html.Partial("_CreateOrUpdate.TabCondition", Model)
+        </div>
+    }
+</div>
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "contactattribute-edit");
+    eventPublisher.Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+@*save selected tab index*@
+<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">

@@ -1908,7 +1908,7 @@ namespace Grand.Services.Messages
         /// <param name="body">Email body</param>
         /// <returns>Queued email identifier</returns>
         public virtual int SendContactUsMessage(Customer customer, string languageId, string senderEmail,
-            string senderName, string subject, string body)
+            string senderName, string subject, string body, string attrInfo, string attrXml)
         {
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
@@ -1943,6 +1943,7 @@ namespace Grand.Services.Messages
             tokens.Add(new Token("ContactUs.SenderEmail", senderEmail));
             tokens.Add(new Token("ContactUs.SenderName", senderName));
             tokens.Add(new Token("ContactUs.Body", body, true));
+            tokens.Add(new Token("ContactUs.AttributeDescription", attrInfo, true));
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
@@ -1964,7 +1965,9 @@ namespace Grand.Services.Messages
                     Subject = String.IsNullOrEmpty(subject) ? "Contact Us (form)" : subject,
                     Enquiry = body,
                     EmailAccountId = emailAccount.Id,
-                    IpAddress = EngineContext.Current.Resolve<IWebHelper>().GetCurrentIpAddress()
+                    IpAddress = EngineContext.Current.Resolve<IWebHelper>().GetCurrentIpAddress(),
+                    ContactAttributeDescription = attrInfo,
+                    ContactAttributesXml = attrXml
                 };
                 EngineContext.Current.Resolve<IContactUsService>().InsertContactUs(contactus);
             }

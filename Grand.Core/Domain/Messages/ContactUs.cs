@@ -58,5 +58,15 @@ namespace Grand.Core.Domain.Messages
         /// </summary>
         public string VendorId { get; set; }
 
+        /// <summary>
+        /// Gets or sets the contact attribute description
+        /// </summary>
+        public string ContactAttributeDescription { get; set; }
+
+        /// <summary>
+        /// Gets or sets the contact attributes in XML format
+        /// </summary>
+        public string ContactAttributesXml { get; set; }
+
     }
 }

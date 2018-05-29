@@ -1334,6 +1334,7 @@ namespace Grand.Services.ExportImport
                 new PropertyByName<ContactUs>("FullName", p => p.FullName),
                 new PropertyByName<ContactUs>("Subject", p => p.Subject),
                 new PropertyByName<ContactUs>("Enquiry", p => p.Enquiry),
+                new PropertyByName<ContactUs>("ContactAttributeDescription", p => p.ContactAttributeDescription),
             };
             return properties;
         }

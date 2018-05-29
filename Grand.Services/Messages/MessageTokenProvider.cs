@@ -1267,6 +1267,7 @@ namespace Grand.Services.Messages
                 "%ContactUs.SenderEmail%",
                 "%ContactUs.SenderName%",
                 "%ContactUs.Body%",
+                "%ContactUs.AttributeDescription%",
                 "%Vendor.Address1%",
                 "%Vendor.Address2%",
                 "%Vendor.City%",

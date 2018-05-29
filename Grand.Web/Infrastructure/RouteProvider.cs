@@ -462,6 +462,11 @@ namespace Grand.Web.Infrastructure
                             "uploadfilecheckoutattribute/{attributeId}",
                             new { controller = "ShoppingCart", action = "UploadFileCheckoutAttribute" });
 
+            // contact attributes with "upload file" type
+            routeBuilder.MapLocalizedRoute("UploadFileContactAttribute",
+                            "uploadfilecontactattribute/{attributeId}",
+                            new { controller = "Common", action = "UploadFileContactAttribute" });
+
             //forums
             routeBuilder.MapLocalizedRoute("ActiveDiscussions",
                             "boards/activediscussions",

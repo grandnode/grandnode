@@ -756,6 +756,9 @@
   <LocaleResource Name="ActivityLog.AddNewCheckoutAttribute">
     <Value>Added a new checkout attribute ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewContactAttribute">
+    <Value>Added a new contact attribute ('{0}')</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.AddNewCustomer">
     <Value>Added a new customer (ID = {0})</Value>
   </LocaleResource>
@@ -819,6 +822,9 @@
   <LocaleResource Name="ActivityLog.DeleteCheckoutAttribute">
     <Value>Deleted a checkout attribute ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteContactAttribute">
+    <Value>Deleted a contact attribute ('{0}')</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteCustomer">
     <Value>Deleted a customer (ID = {0})</Value>
   </LocaleResource>
@@ -878,6 +884,9 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditCheckoutAttribute">
     <Value>Edited a checkout attribute ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditContactAttribute">
+    <Value>Edited a contact attribute ('{0}')</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditCustomer">
     <Value>Edited a customer (ID = {0})</Value>
@@ -1763,6 +1772,189 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Values.SaveBeforeEdit">
     <Value>You need to save the checkout attribute before you can add values for this checkout attribute page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes">
+    <Value>Contact Attributes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Acl">
+    <Value>Access control list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Added">
+    <Value>The new attribute has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.AddNew">
+    <Value>Add a new Contact attribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.BackToList">
+    <Value>back to Contact attribute list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Condition">
+    <Value>Condition</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Condition.Attributes">
+    <Value>Attribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Condition.Attributes.Hint">
+    <Value>Choose an attribute.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Condition.EnableCondition">
+    <Value>Enable condition</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Condition.EnableCondition.Hint">
+    <Value>Check to specify a condition (depending on other attribute) when this attribute should be enabled (visible).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Condition.NoAttributeExists">
+    <Value>No attribute exists that could be used as condition.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Condition.SaveBeforeEdit">
+    <Value>You need to save the Contact attribute before you can edit conditional attributes.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Deleted">
+    <Value>The attribute has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.EditAttributeDetails">
+    <Value>Edit Contact attribute details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Fields.AclCustomerRoles">
+    <Value>Customer roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Fields.AclCustomerRoles.Hint">
+    <Value>Select customer roles for which the manufacturer will be shown.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Fields.AttributeControlType">
+    <Value>Control type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Fields.AttributeControlType.Hint">
+    <Value>Choose how to display your attribute values.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Fields.AvailableStores">
+    <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Fields.AvailableStores.Hint">
+    <Value>Select stores for which the attribute will be shown.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Fields.DefaultValue">
+    <Value>Default value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Fields.DefaultValue.Hint">
+    <Value>Enter default value for attribute.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Fields.DisplayOrder.Hint">
+    <Value>The Contact attribute display order. 1 represents the first item in the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Fields.FileAllowedExtensions">
+    <Value>Allowed file extensions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Fields.FileAllowedExtensions.Hint">
+    <Value>Specify a comma-separated list of allowed file extensions. Leave empty to allow any file extension.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Fields.FileMaximumSize">
+    <Value>Maximum file size (KB)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Fields.FileMaximumSize.Hint">
+    <Value>Specify maximum file size in kilobytes. Leave empty to skip this validation.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Fields.IsRequired">
+    <Value>Required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Fields.IsRequired.Hint">
+    <Value>When an attribute is required, the customer must choose an appropriate attribute value before they can continue.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Fields.IsTaxExempt">
+    <Value>Tax exempt</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Fields.IsTaxExempt.Hint">
+    <Value>Determines whether this option is tax exempt (tax will not be applied to this option at Contact).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Fields.LimitedToStores">
+    <Value>Limited to stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Fields.LimitedToStores.Hint">
+    <Value>Determines whether the attribute is available only at certain stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Fields.MaxLength">
+    <Value>Maximum length</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Fields.MaxLength.Hint">
+    <Value>Specify maximum length. Leave empty to skip this validation.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Fields.MinLength">
+    <Value>Minimum length</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Fields.MinLength.Hint">
+    <Value>Specify minimum length. Leave empty to skip this validation.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Fields.Name.Hint">
+    <Value>The name of the Contact attribute.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Fields.Name.Required">
+    <Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Fields.SubjectToAcl">
+    <Value>Subject to ACL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Fields.SubjectToAcl.Hint">
+    <Value>Determines whether the Contact attrubutes is subject to ACL (access control list).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Fields.TextPrompt">
+    <Value>Text prompt</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Fields.TextPrompt.Hint">
+    <Value>Enter text prompt.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Info">
+    <Value>Attribute info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Stores">
+    <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Updated">
+    <Value>The attribute has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Values">
+    <Value>Attribute values</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Values.AddNew">
+    <Value>Add a new Contact value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Values.EditValueDetails">
+    <Value>Edit Contact value details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Values.Fields.ColorSquaresRgb">
+    <Value>RGB color</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Values.Fields.ColorSquaresRgb.Hint">
+    <Value>Choose color to be used with the color squares attribute control.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Values.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Values.Fields.DisplayOrder.Hint">
+    <Value>The display order of the attribute value. 1 represents the first item in attribute value list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Values.Fields.IsPreSelected">
+    <Value>Pre-selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Values.Fields.IsPreSelected.Hint">
+    <Value>Determines whether this attribute value is pre selected for the customer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Values.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Values.Fields.Name.Hint">
+    <Value>The name of the Contact value.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Values.Fields.Name.Required">
+    <Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ContactAttributes.Values.SaveBeforeEdit">
+    <Value>You need to save the Contact attribute before you can add values for this Contact attribute page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes">
     <Value>Product Attributes</Value>
@@ -13911,6 +14103,12 @@
   <LocaleResource Name="Admin.System.ContactForm.Details">
     <Value>Contact form - details</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.ContactForm.Fields.ContactAttributeDescription">
+    <Value>Attribute description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ContactForm.Fields.ContactAttributeDescription.hint">
+    <Value>Selected attribute description</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.ContactForm.Fields.CreatedOn">
     <Value>Created on</Value>
   </LocaleResource>
@@ -15453,6 +15651,9 @@
   <LocaleResource Name="ContactUs.FullName.Required">
     <Value>Enter your name</Value>
   </LocaleResource>
+  <LocaleResource Name="ContactUs.SelectAttribute">
+    <Value>Please select: {0}</Value>
+  </LocaleResource>
   <LocaleResource Name="ContactUs.Subject">
     <Value>Subject</Value>
   </LocaleResource>
@@ -15461,6 +15662,12 @@
   </LocaleResource>
   <LocaleResource Name="ContactUs.Subject.Required">
     <Value>Please enter subject</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactUs.TextboxMaximumLength">
+    <Value>{0} : maximum length is {1} chars</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactUs.TextboxMinimumLength">
+    <Value>{0} : minimum length is {1} chars</Value>
   </LocaleResource>
   <LocaleResource Name="ContactUs.YourEnquiryHasBeenSent">
     <Value>Your enquiry has been successfully sent to the store owner.</Value>
