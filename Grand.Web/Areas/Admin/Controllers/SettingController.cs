@@ -49,6 +49,8 @@ using MongoDB.Driver;
 using Grand.Core.Caching;
 using Grand.Web.Areas.Admin.Helpers;
 using Grand.Core.Domain.Knowledgebase;
+using Grand.Core.Domain.PushNotifications;
+using Grand.Web.Areas.Admin.Models.PushNotifications;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -3278,6 +3280,97 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return Json(gridModel);
         }
+
+        public IActionResult PushNotifications()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var settings = _settingService.LoadSetting<PushNotificationsSettings>(storeScope);
+
+            var model = new ConfigurationModel();
+            model.AllowGuestNotifications = settings.AllowGuestNotifications;
+            model.AuthDomain = settings.AuthDomain;
+            model.DatabaseUrl = settings.DatabaseUrl;
+            model.ProjectId = settings.ProjectId;
+            model.PushApiKey = settings.PublicApiKey;
+            model.SenderId = settings.SenderId;
+            model.StorageBucket = settings.StorageBucket;
+            model.PrivateApiKey = settings.PrivateApiKey;
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [AdminAntiForgery(true)]
+        public IActionResult PushNotifications(DataSourceRequest command, ConfigurationModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var settings = _settingService.LoadSetting<PushNotificationsSettings>(storeScope);
+            settings.AllowGuestNotifications = model.AllowGuestNotifications;
+            settings.AuthDomain = model.AuthDomain;
+            settings.DatabaseUrl = model.DatabaseUrl;
+            settings.ProjectId = model.ProjectId;
+            settings.PublicApiKey = model.PushApiKey;
+            settings.SenderId = model.SenderId;
+            settings.StorageBucket = model.StorageBucket;
+            settings.PrivateApiKey = model.PrivateApiKey;
+            settings.Enabled = model.Enabled;
+            _settingService.SaveSetting(settings);
+
+            //edit js file needed by firebase
+            var jsFilePath = CommonHelper.MapPath("~/wwwroot/firebase-messaging-sw.js");
+            if (System.IO.File.Exists(jsFilePath))
+            {
+                string[] lines = System.IO.File.ReadAllLines(jsFilePath);
+
+                int i = 0;
+                foreach (var line in lines)
+                {
+                    if (line.Contains("apiKey"))
+                    {
+                        lines[i] = "apiKey: \"" + model.PushApiKey + "\",";
+                    }
+
+                    if (line.Contains("authDomain"))
+                    {
+                        lines[i] = "authDomain: \"" + model.AuthDomain + "\",";
+                    }
+
+                    if (line.Contains("databaseURL"))
+                    {
+                        lines[i] = "databaseURL: \"" + model.DatabaseUrl + "\",";
+                    }
+
+                    if (line.Contains("projectId"))
+                    {
+                        lines[i] = "projectId: \"" + model.ProjectId + "\",";
+                    }
+
+                    if (line.Contains("storageBucket"))
+                    {
+                        lines[i] = "storageBucket: \"" + model.StorageBucket + "\",";
+                    }
+
+                    if (line.Contains("messagingSenderId"))
+                    {
+                        lines[i] = "messagingSenderId: \"" + model.SenderId + "\",";
+                    }
+
+                    i++;
+                }
+
+                System.IO.File.WriteAllLines(jsFilePath, lines);
+            }
+
+            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
+            return PushNotifications();
+        }
+
         [HttpPost]
         [AdminAntiForgery(true)]
         public IActionResult SettingUpdate(SettingModel model)

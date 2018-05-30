@@ -164,12 +164,6 @@ namespace Grand.Services.PushNotifications
             var data = new
             {
                 registration_ids = ids,
-                //data = new
-                //{
-                //    body = text,
-                //    title = title,
-                //    icon = pictureUrl
-                //}
                 notification = new
                 {
                     body = text,
