@@ -38,7 +38,7 @@ namespace Grand.Services.PushNotifications
         /// Inserts push receiver
         /// </summary>
         /// <param name="model"></param>
-        public void InsertPushReceiver(PushRegistration registration)
+        public virtual void InsertPushReceiver(PushRegistration registration)
         {
             _pushRegistratiosnRepository.Insert(registration);
             _eventPublisher.EntityInserted(registration);
@@ -48,7 +48,7 @@ namespace Grand.Services.PushNotifications
         /// Deletes push receiver
         /// </summary>
         /// <param name="model"></param>
-        public void DeletePushReceiver(PushRegistration registration)
+        public virtual void DeletePushReceiver(PushRegistration registration)
         {
             _pushRegistratiosnRepository.Delete(registration);
             _eventPublisher.EntityDeleted(registration);
@@ -58,7 +58,7 @@ namespace Grand.Services.PushNotifications
         /// Gets push receiver
         /// </summary>
         /// <param name="CustomerId"></param>
-        public PushRegistration GetPushReceiverByCustomerId(string CustomerId)
+        public virtual PushRegistration GetPushReceiverByCustomerId(string CustomerId)
         {
             return _pushRegistratiosnRepository.Table.Where(x => x.CustomerId == CustomerId).FirstOrDefault();
         }
@@ -67,7 +67,7 @@ namespace Grand.Services.PushNotifications
         /// Updates push receiver
         /// </summary>
         /// <param name="registration"></param>
-        public void UpdatePushReceiver(PushRegistration registration)
+        public virtual void UpdatePushReceiver(PushRegistration registration)
         {
             _pushRegistratiosnRepository.Update(registration);
             _eventPublisher.EntityUpdated(registration);
@@ -76,7 +76,7 @@ namespace Grand.Services.PushNotifications
         /// <summary>
         /// Gets all push receivers
         /// </summary>
-        public List<PushRegistration> GetPushReceivers()
+        public virtual List<PushRegistration> GetPushReceivers()
         {
             return _pushRegistratiosnRepository.Table.Where(x => x.Allowed).ToList();
         }
@@ -84,7 +84,7 @@ namespace Grand.Services.PushNotifications
         /// <summary>
         /// Gets number of customers that accepted push notifications permission popup
         /// </summary>
-        public int GetAllowedReceivers()
+        public virtual int GetAllowedReceivers()
         {
             return _pushRegistratiosnRepository.Table.Where(x => x.Allowed).Count();
         }
@@ -92,7 +92,7 @@ namespace Grand.Services.PushNotifications
         /// <summary>
         /// Gets number of customers that denied push notifications permission popup
         /// </summary>
-        public int GetDeniedReceivers()
+        public virtual int GetDeniedReceivers()
         {
             return _pushRegistratiosnRepository.Table.Where(x => !x.Allowed).Count();
         }
@@ -101,7 +101,7 @@ namespace Grand.Services.PushNotifications
         /// Inserts push message
         /// </summary>
         /// <param name="registration"></param>
-        public void InsertPushMessage(PushMessage message)
+        public virtual void InsertPushMessage(PushMessage message)
         {
             _pushMessagesRepository.Insert(message);
             _eventPublisher.EntityInserted(message);
@@ -110,7 +110,7 @@ namespace Grand.Services.PushNotifications
         /// <summary>
         /// Gets all push messages
         /// </summary>
-        public IPagedList<PushMessage> GetPushMessages(int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual IPagedList<PushMessage> GetPushMessages(int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var allMessages = _pushMessagesRepository.Table.OrderByDescending(x => x.SentOn).ToList();
             return new PagedList<PushMessage>(allMessages.Skip(pageIndex * pageSize).Take(pageSize).ToList(), pageIndex, pageSize, allMessages.Count);
@@ -119,7 +119,7 @@ namespace Grand.Services.PushNotifications
         /// <summary>
         /// Gets all push receivers
         /// </summary>
-        public IPagedList<PushRegistration> GetPushReceivers(int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual IPagedList<PushRegistration> GetPushReceivers(int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var allReceivers = _pushRegistratiosnRepository.Table.OrderByDescending(x => x.RegisteredOn).ToList();
             return new PagedList<PushRegistration>(allReceivers.Skip(pageIndex * pageSize).Take(pageSize).ToList(), pageIndex, pageSize, allReceivers.Count);
@@ -134,7 +134,7 @@ namespace Grand.Services.PushNotifications
         /// <param name="registrationIds"></param>
         /// <param name="clickUrl"></param>
         /// <returns>Bool indicating whether message was sent successfully and string result to display</returns>
-        public Tuple<bool, string> SendPushNotification(string title, string text, string pictureUrl, string clickUrl, List<string> registrationIds = null)
+        public virtual Tuple<bool, string> SendPushNotification(string title, string text, string pictureUrl, string clickUrl, List<string> registrationIds = null)
         {
             WebRequest tRequest = WebRequest.Create("https://fcm.googleapis.com/fcm/send");
             tRequest.Method = "post";
@@ -164,12 +164,6 @@ namespace Grand.Services.PushNotifications
             var data = new
             {
                 registration_ids = ids,
-                //data = new
-                //{
-                //    body = text,
-                //    title = title,
-                //    icon = pictureUrl
-                //}
                 notification = new
                 {
                     body = text,
@@ -233,7 +227,7 @@ namespace Grand.Services.PushNotifications
         /// <param name="customerId"></param>
         /// <param name="clickUrl"></param>
         /// <returns>Bool indicating whether message was sent successfully and string result to display</returns>
-        public Tuple<bool, string> SendPushNotification(string title, string text, string pictureUrl, string customerId, string clickUrl)
+        public virtual Tuple<bool, string> SendPushNotification(string title, string text, string pictureUrl, string customerId, string clickUrl)
         {
             return SendPushNotification(title, text, pictureUrl, clickUrl, new List<string> { GetPushReceiverByCustomerId(customerId).Id.ToString() });
         }
@@ -242,7 +236,7 @@ namespace Grand.Services.PushNotifications
         /// Gets all push receivers
         /// </summary>
         /// <param name="Id"></param>
-        public PushRegistration GetPushReceiver(string Id)
+        public virtual PushRegistration GetPushReceiver(string Id)
         {
             return _pushRegistratiosnRepository.Table.Where(x => x.Id == Id).FirstOrDefault();
         }

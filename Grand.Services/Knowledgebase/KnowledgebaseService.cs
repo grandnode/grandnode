@@ -119,7 +119,7 @@ namespace Grand.Services.Knowledgebase
         /// Deletes knowledgebase category
         /// </summary>
         /// <param name="id"></param>
-        public void DeleteKnowledgebaseCategory(KnowledgebaseCategory kc)
+        public virtual void DeleteKnowledgebaseCategory(KnowledgebaseCategory kc)
         {
             var children = _knowledgebaseCategoryRepository.Table.Where(x => x.ParentCategoryId == kc.Id).ToList();
             _knowledgebaseCategoryRepository.Delete(kc);
@@ -139,7 +139,7 @@ namespace Grand.Services.Knowledgebase
         /// Edits knowledgebase category
         /// </summary>
         /// <param name="kc"></param>
-        public void UpdateKnowledgebaseCategory(KnowledgebaseCategory kc)
+        public virtual void UpdateKnowledgebaseCategory(KnowledgebaseCategory kc)
         {
             _knowledgebaseCategoryRepository.Update(kc);
             _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
@@ -152,7 +152,7 @@ namespace Grand.Services.Knowledgebase
         /// </summary>
         /// <param name="id"></param>
         /// <returns>knowledgebase category</returns>
-        public KnowledgebaseCategory GetKnowledgebaseCategory(string id)
+        public virtual KnowledgebaseCategory GetKnowledgebaseCategory(string id)
         {
             return _knowledgebaseCategoryRepository.Table.Where(x => x.Id == id).FirstOrDefault();
         }
@@ -162,7 +162,7 @@ namespace Grand.Services.Knowledgebase
         /// </summary>
         /// <param name="id"></param>
         /// <returns>knowledgebase category</returns>
-        public KnowledgebaseCategory GetPublicKnowledgebaseCategory(string id)
+        public virtual KnowledgebaseCategory GetPublicKnowledgebaseCategory(string id)
         {
             string key = string.Format(CATEGORY_BY_ID, id, _workContext.CurrentCustomer.GetCustomerRoleIds(),
                 _storeContext.CurrentStore.Id);
@@ -195,7 +195,7 @@ namespace Grand.Services.Knowledgebase
         /// Inserts knowledgebase category
         /// </summary>
         /// <param name="kc"></param>
-        public void InsertKnowledgebaseCategory(KnowledgebaseCategory kc)
+        public virtual void InsertKnowledgebaseCategory(KnowledgebaseCategory kc)
         {
             _knowledgebaseCategoryRepository.Insert(kc);
             _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
@@ -207,7 +207,7 @@ namespace Grand.Services.Knowledgebase
         /// Gets knowledgebase categories
         /// </summary>
         /// <returns>List of knowledgebase categories</returns>
-        public List<KnowledgebaseCategory> GetKnowledgebaseCategories()
+        public virtual List<KnowledgebaseCategory> GetKnowledgebaseCategories()
         {
             return _knowledgebaseCategoryRepository.Table.OrderBy(x => x.DisplayOrder).ToList();
         }
@@ -217,7 +217,7 @@ namespace Grand.Services.Knowledgebase
         /// </summary>
         /// <param name="id"></param>
         /// <returns>knowledgebase article</returns>
-        public KnowledgebaseArticle GetKnowledgebaseArticle(string id)
+        public virtual KnowledgebaseArticle GetKnowledgebaseArticle(string id)
         {
             return _knowledgebaseArticleRepository.Table.Where(x => x.Id == id).FirstOrDefault();
         }
@@ -226,7 +226,7 @@ namespace Grand.Services.Knowledgebase
         /// Gets knowledgebase articles
         /// </summary>
         /// <returns>List of knowledgebase articles</returns>
-        public List<KnowledgebaseArticle> GetKnowledgebaseArticles()
+        public virtual List<KnowledgebaseArticle> GetKnowledgebaseArticles()
         {
             return _knowledgebaseArticleRepository.Table.OrderBy(x => x.DisplayOrder).ToList();
         }
@@ -235,7 +235,7 @@ namespace Grand.Services.Knowledgebase
         /// Inserts knowledgebase article
         /// </summary>
         /// <param name="ka"></param>
-        public void InsertKnowledgebaseArticle(KnowledgebaseArticle ka)
+        public virtual void InsertKnowledgebaseArticle(KnowledgebaseArticle ka)
         {
             _knowledgebaseArticleRepository.Insert(ka);
             _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
@@ -247,7 +247,7 @@ namespace Grand.Services.Knowledgebase
         /// Edits knowledgebase article
         /// </summary>
         /// <param name="ka"></param>
-        public void UpdateKnowledgebaseArticle(KnowledgebaseArticle ka)
+        public virtual void UpdateKnowledgebaseArticle(KnowledgebaseArticle ka)
         {
             _knowledgebaseArticleRepository.Update(ka);
             _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
@@ -259,7 +259,7 @@ namespace Grand.Services.Knowledgebase
         /// Deletes knowledgebase article
         /// </summary>
         /// <param name="id"></param>
-        public void DeleteKnowledgebaseArticle(KnowledgebaseArticle ka)
+        public virtual void DeleteKnowledgebaseArticle(KnowledgebaseArticle ka)
         {
             _knowledgebaseArticleRepository.Delete(ka);
             _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
@@ -272,7 +272,7 @@ namespace Grand.Services.Knowledgebase
         /// </summary>
         /// <param name="id"></param>
         /// <returns>IPagedList<KnowledgebaseArticle></returns>
-        public IPagedList<KnowledgebaseArticle> GetKnowledgebaseArticlesByCategoryId(string id, int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual IPagedList<KnowledgebaseArticle> GetKnowledgebaseArticlesByCategoryId(string id, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var articles = _knowledgebaseArticleRepository.Table.Where(x => x.ParentCategoryId == id).ToList();
             return new PagedList<KnowledgebaseArticle>(articles, pageIndex, pageSize);
@@ -282,7 +282,7 @@ namespace Grand.Services.Knowledgebase
         /// Gets public(published etc) knowledgebase categories
         /// </summary>
         /// <returns>List of public knowledgebase categories</returns>
-        public List<KnowledgebaseCategory> GetPublicKnowledgebaseCategories()
+        public virtual List<KnowledgebaseCategory> GetPublicKnowledgebaseCategories()
         {
             var key = string.Format(CATEGORIES, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
@@ -315,7 +315,7 @@ namespace Grand.Services.Knowledgebase
         /// Gets public(published etc) knowledgebase articles
         /// </summary>
         /// <returns>List of public knowledgebase articles</returns>
-        public List<KnowledgebaseArticle> GetPublicKnowledgebaseArticles()
+        public virtual List<KnowledgebaseArticle> GetPublicKnowledgebaseArticles()
         {
             var key = string.Format(ARTICLES, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
@@ -348,7 +348,7 @@ namespace Grand.Services.Knowledgebase
         /// Gets knowledgebase article if it is published etc
         /// </summary>
         /// <returns>knowledgebase article</returns>
-        public KnowledgebaseArticle GetPublicKnowledgebaseArticle(string id)
+        public virtual KnowledgebaseArticle GetPublicKnowledgebaseArticle(string id)
         {
             var key = string.Format(ARTICLE_BY_ID, id, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
@@ -381,7 +381,7 @@ namespace Grand.Services.Knowledgebase
         /// Gets public(published etc) knowledgebase articles for category id
         /// </summary>
         /// <returns>List of public knowledgebase articles</returns>
-        public List<KnowledgebaseArticle> GetPublicKnowledgebaseArticlesByCategory(string categoryId)
+        public virtual List<KnowledgebaseArticle> GetPublicKnowledgebaseArticlesByCategory(string categoryId)
         {
             var key = string.Format(ARTICLES_BY_CATEGORY_ID, categoryId, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
@@ -415,7 +415,7 @@ namespace Grand.Services.Knowledgebase
         /// Gets public(published etc) knowledgebase articles for keyword
         /// </summary>
         /// <returns>List of public knowledgebase articles</returns>
-        public List<KnowledgebaseArticle> GetPublicKnowledgebaseArticlesByKeyword(string keyword)
+        public virtual List<KnowledgebaseArticle> GetPublicKnowledgebaseArticlesByKeyword(string keyword)
         {
             var key = string.Format(ARTICLES_BY_KEYWORD, keyword, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
@@ -461,7 +461,7 @@ namespace Grand.Services.Knowledgebase
         /// Gets homepage knowledgebase articles
         /// </summary>
         /// <returns>List of homepage knowledgebase articles</returns>
-        public List<KnowledgebaseArticle> GetHomepageKnowledgebaseArticles()
+        public virtual List<KnowledgebaseArticle> GetHomepageKnowledgebaseArticles()
         {
             var key = string.Format(HOMEPAGE_ARTICLES, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
@@ -496,7 +496,7 @@ namespace Grand.Services.Knowledgebase
         /// </summary>
         /// <param name="name"></param>
         /// <returns>IPagedList<KnowledgebaseArticle></returns>
-        public IPagedList<KnowledgebaseArticle> GetKnowledgebaseArticlesByName(string name, int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual IPagedList<KnowledgebaseArticle> GetKnowledgebaseArticlesByName(string name, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var builder = Builders<KnowledgebaseArticle>.Filter;
             var filter = FilterDefinition<KnowledgebaseArticle>.Empty;
@@ -530,7 +530,7 @@ namespace Grand.Services.Knowledgebase
         /// </summary>
         /// <param name="name"></param>
         /// <returns>IPagedList<KnowledgebaseArticle></returns>
-        public IPagedList<KnowledgebaseArticle> GetRelatedKnowledgebaseArticles(string articleId, int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual IPagedList<KnowledgebaseArticle> GetRelatedKnowledgebaseArticles(string articleId, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var article = GetKnowledgebaseArticle(articleId);
             List<KnowledgebaseArticle> toReturn = new List<KnowledgebaseArticle>();

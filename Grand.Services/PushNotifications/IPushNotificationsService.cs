@@ -2,9 +2,8 @@
 using Grand.Core.Domain.PushNotifications;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace Grand.Services
+namespace Grand.Services.PushNotifications
 {
     public interface IPushNotificationsService
     {

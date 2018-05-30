@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Grand.Core.Domain.PushNotifications
+﻿namespace Grand.Services.PushNotifications
 {
     public class JsonResponse
     {
