@@ -14,6 +14,5 @@ namespace Grand.Web.Models.PushNotifications
         public string DatabaseUrl { get; set; }
         public string ProjectId { get; set; }
         public string StorageBucket { get; set; }
-        public bool AddScript { get; set; }
     }
 }

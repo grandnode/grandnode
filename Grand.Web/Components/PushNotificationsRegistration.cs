@@ -32,19 +32,15 @@ namespace Grand.Web.Components
             model.ProjectId = _pushNotificationsSettings.ProjectId;
             model.StorageBucket = _pushNotificationsSettings.StorageBucket;
             model.DatabaseUrl = _pushNotificationsSettings.DatabaseUrl;
-            model.AddScript = true;
-
-            if (!_pushNotificationsSettings.Enabled)
-            {
-                model.AddScript = false;
-            }
-            else
+            if (_pushNotificationsSettings.Enabled)
             {
                 if (!_pushNotificationsSettings.AllowGuestNotifications && _workContext.CurrentCustomer.IsGuest())
-                    model.AddScript = false;
+                    return Content("");
+
+                return View(model);
             }
 
-            return View(model);
+            return Content("");
         }
     }
 }
