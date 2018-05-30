@@ -18900,4 +18900,115 @@
   <LocaleResource Name="Wishlist.YourWishlistURL">
     <Value>Your wishlist URL for sharing</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.PushNotifications.Configure">
+    <Value>Configure</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PushNotifications.Messages">
+    <Value>Messages</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PushNotifications.Receivers">
+    <Value>Receivers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PushNotifications.Send">
+    <Value>Send</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.Fields.PrivateApiKey">
+    <Value>Private Api Key</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.Fields.PushApiKey">
+    <Value>Public Api Key</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.Fields.SenderId">
+    <Value>Sender Id</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.Fields.AuthDomain">
+    <Value>Auth Domain</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.Fields.DatabaseUrl">
+    <Value>Database URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.Fields.ProjectId">
+    <Value>Project Id</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.Fields.StorageBucket">
+    <Value>Storage Bucket</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.Fields.AllowGuestNotifications">
+    <Value>Allow guest notifications</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.Fields.AllowGuestNotifications.Hint">
+    <Value>Should be checked if you want to allow guest to register for push notifications</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.Fields.ClickUrl">
+    <Value>Click Url</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.Fields.ClickUrl.Hint">
+    <Value>Page that will be opened after user clicks on notification</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.Fields.PictureId">
+    <Value>Picture Id</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.Fields.PushMessageText">
+    <Value>Message text</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.Fields.PushTitle">
+    <Value>Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.Error.NoReceivers">
+    <Value>No receviers yet. Wait for someone to register for push notifications.</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.MessageSent">
+    <Value>Notification sent</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.Message.Fields.Id">
+    <Value>Id</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.Message.Fields.Title">
+    <Value>Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.Message.Fields.Text">
+    <Value>Text</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.Message.Fields.NumberOfReceivers">
+    <Value>Number of receivers</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.Message.Fields.SentOn">
+    <Value>Sent on</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.Message.Fields.CustomerEmail">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.Message.Fields.Allowed">
+    <Value>Allowed</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.Message.Fields.RegisteredOn">
+    <Value>Registered on</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.PushNotications">
+    <Value>Push notifications</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.PushNotications.Info">
+    <Value>We are using firebase for push notifications. You can find more info in our manuals or on firebase docs.</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.SendPush">
+    <Value>Send</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.MessageTextPlaceholder">
+    <Value>Message text</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.MessageTitlePlaceholder">
+    <Value>Message title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.PushNotifications">
+    <Value>Push notifications</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.Fields.NotificationsEnabled">
+    <Value>Enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.Fields.NotificationsEnabled.Hint">
+    <Value>If left unchecked, registration script won't be added to homepage.</Value>
+  </LocaleResource>
+  <LocaleResource Name="PushNotifications.PushNotications.Warning">
+    <Value>Warning! Press "Save" button every time you upgrade GrandNode to new version, as the settings will be wiped out in registration script.</Value>
+  </LocaleResource>
 </Language>

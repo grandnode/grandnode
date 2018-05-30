@@ -10,6 +10,6 @@ namespace Grand.Framework.UI
         /// <summary>
         /// Footer
         /// </summary>
-        Foot,
+        Footer,
     }
 }

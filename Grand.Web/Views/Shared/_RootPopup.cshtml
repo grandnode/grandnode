@@ -23,7 +23,7 @@
     @await Component.InvokeAsync("Widget", new { widgetZone = "body_start_html_tag_after" })
     @RenderBody()
     @await Component.InvokeAsync("Widget", new { widgetZone = "body_end_html_tag_before" })
-    @Html.GrandCssFiles(this.Url, ResourceLocation.Foot)
-    @Html.GrandScripts(this.Url, ResourceLocation.Foot)
+    @Html.GrandCssFiles(this.Url, ResourceLocation.Footer)
+    @Html.GrandScripts(this.Url, ResourceLocation.Footer)
 </body>
 </html>

@@ -49,6 +49,7 @@ using Grand.Core.Caching;
 using Grand.Services.Events;
 using Microsoft.AspNetCore.Hosting;
 using Grand.Core.Domain.Knowledgebase;
+using Grand.Core.Domain.PushNotifications;
 
 namespace Grand.Services.Installation
 {
@@ -5425,6 +5426,12 @@ namespace Grand.Services.Installation
             _settingService.SaveSetting(new KnowledgebaseSettings
             {
                 Enabled = false
+            });
+
+            _settingService.SaveSetting(new PushNotificationsSettings
+            {
+                Enabled = false,
+                AllowGuestNotifications = true
             });
 
             _settingService.SaveSetting(new NewsSettings

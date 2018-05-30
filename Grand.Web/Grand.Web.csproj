@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <Copyright>Copyright © UNIT-SOFT Sp. z o.o.</Copyright>
@@ -19,5 +19,5 @@
     <Content Include="Plugins\**" CopyToPublishDirectory="PreserveNewest" Exclude="Plugins\**\*.cshtml;Plugins\**\*.json;Plugins\bin\**" />
     <Content Remove="wwwroot\Content\Images\Thumbs\*.jpeg;wwwroot\Content\Images\Thumbs\*.jpg;wwwroot\Content\Images\Thumbs\*.png" />
     <Content Remove="wwwroot\bundles\*.css;wwwroot\bundles\*.js" />
-  </ItemGroup> 
+  </ItemGroup>
 </Project>
