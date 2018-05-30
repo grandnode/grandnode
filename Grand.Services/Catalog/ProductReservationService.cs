@@ -34,7 +34,7 @@ namespace Grand.Services.Catalog
         /// Deletes a product reservation
         /// </summary>
         /// <param name="productReservation">Product reservation</param>
-        public void DeleteProductReservation(ProductReservation productReservation)
+        public virtual void DeleteProductReservation(ProductReservation productReservation)
         {
             if (productReservation == null)
                 throw new ArgumentNullException("productReservation");
@@ -48,7 +48,7 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="productId">Product Id</param>
         /// <returns>Product reservations</returns>
-        public IPagedList<ProductReservation> GetProductReservationsByProductId(string productId, bool? showVacant, DateTime? date,
+        public virtual IPagedList<ProductReservation> GetProductReservationsByProductId(string productId, bool? showVacant, DateTime? date,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _productReservationRepository.Table.Where(x => x.ProductId == productId);
@@ -82,7 +82,7 @@ namespace Grand.Services.Catalog
         /// Adds product reservation
         /// </summary>
         /// <param name="productReservation">Product reservation</param>
-        public void InsertProductReservation(ProductReservation productReservation)
+        public virtual void InsertProductReservation(ProductReservation productReservation)
         {
             if (productReservation == null)
                 throw new ArgumentNullException("productAttribute");
@@ -95,7 +95,7 @@ namespace Grand.Services.Catalog
         /// Updates product reservation
         /// </summary>
         /// <param name="productReservation">Product reservation</param>
-        public void UpdateProductReservation(ProductReservation productReservation)
+        public virtual void UpdateProductReservation(ProductReservation productReservation)
         {
             if (productReservation == null)
                 throw new ArgumentNullException("productAttribute");
@@ -109,7 +109,7 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="Id">Product Id</param>
         /// <returns>Product reservation</returns>
-        public ProductReservation GetProductReservation(string Id)
+        public virtual ProductReservation GetProductReservation(string Id)
         {
             return _productReservationRepository.GetById(Id);
         }
@@ -118,7 +118,7 @@ namespace Grand.Services.Catalog
         /// Adds customer reservations helper
         /// </summary>
         /// <param name="crh"></param>
-        public void InsertCustomerReservationsHelper(CustomerReservationsHelper crh)
+        public virtual void InsertCustomerReservationsHelper(CustomerReservationsHelper crh)
         {
             if (crh == null)
                 throw new ArgumentNullException("CustomerReservationsHelper");
@@ -131,7 +131,7 @@ namespace Grand.Services.Catalog
         /// Deletes customer reservations helper
         /// </summary>
         /// <param name="crh"></param>
-        public void DeleteCustomerReservationsHelper(CustomerReservationsHelper crh)
+        public virtual void DeleteCustomerReservationsHelper(CustomerReservationsHelper crh)
         {
             if (crh == null)
                 throw new ArgumentNullException("CustomerReservationsHelper");
@@ -145,7 +145,7 @@ namespace Grand.Services.Catalog
         /// Cancel reservations by orderId 
         /// </summary>
         /// <param name="orderId"></param>
-        public void CancelReservationsByOrderId(string orderId)
+        public virtual void CancelReservationsByOrderId(string orderId)
         {
             if (!string.IsNullOrEmpty(orderId))
             {
@@ -159,7 +159,7 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="Id"></param>
         /// <returns>CustomerReservationsHelper</returns>
-        public CustomerReservationsHelper GetCustomerReservationsHelperById(string Id)
+        public virtual CustomerReservationsHelper GetCustomerReservationsHelperById(string Id)
         {
             return _customerReservationsHelperRepository.GetById(Id);
         }
@@ -168,7 +168,7 @@ namespace Grand.Services.Catalog
         /// Gets customer reservations helpers
         /// </summary>
         /// <returns>List<CustomerReservationsHelper></returns>
-        public List<CustomerReservationsHelper> GetCustomerReservationsHelpers()
+        public virtual List<CustomerReservationsHelper> GetCustomerReservationsHelpers()
         {
             return _customerReservationsHelperRepository.Table.Where(x => x.CustomerId == _workContext.CurrentCustomer.Id).ToList();
         }
@@ -178,7 +178,7 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="Id"></param>
         /// <returns>List<CustomerReservationsHelper></returns>
-        public List<CustomerReservationsHelper> GetCustomerReservationsHelperBySciId(string sciId)
+        public virtual List<CustomerReservationsHelper> GetCustomerReservationsHelperBySciId(string sciId)
         {
             return _customerReservationsHelperRepository.Table.Where(x => x.ShoppingCartItemId == sciId).ToList();
         }
