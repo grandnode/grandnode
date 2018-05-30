@@ -3,6 +3,7 @@
 }
 <div class="page home-page">
     <div class="page home-page">
+        @await Component.InvokeAsync("PushNotificationsRegistration")
         @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_top" })
         @await Component.InvokeAsync("TopicBlock", new { systemName = "HomePageText" })
         @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_before_categories" })

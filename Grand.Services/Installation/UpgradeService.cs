@@ -31,6 +31,8 @@ using Grand.Services.Topics;
 using Grand.Core.Domain.Discounts;
 using Grand.Core.Domain.Security;
 using Grand.Core.Domain.Knowledgebase;
+using Grand.Core.Domain;
+using Grand.Core.Domain.PushNotifications;
 
 namespace Grand.Services.Installation
 {
@@ -975,6 +977,15 @@ namespace Grand.Services.Installation
             var knowledgesettings = EngineContext.Current.Resolve<KnowledgebaseSettings>();
             knowledgesettings.Enabled = false;
             _settingService.SaveSetting(knowledgesettings);
+
+            #endregion
+
+            #region Push notifications settings
+
+            var pushNotificationSettings = EngineContext.Current.Resolve<PushNotificationsSettings>();
+            pushNotificationSettings.Enabled = false;
+            pushNotificationSettings.AllowGuestNotifications = true;
+            _settingService.SaveSetting(pushNotificationSettings);
 
             #endregion
 
