@@ -9,7 +9,6 @@ namespace Grand.Web.Models.Customer
     [Validator(typeof(DeleteAccountValidator))]
     public partial class DeleteAccountModel : BaseGrandModel
     {
-        [NoTrim]
         [DataType(DataType.Password)]
         [GrandResourceDisplayName("Account.DeleteAccount.Fields.Password")]
         public string Password { get; set; }

@@ -120,7 +120,6 @@ namespace Grand.Web.Areas.Admin.Models.Settings
         {
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PageTitleSeparator")]
             
-            [NoTrim]
             public string PageTitleSeparator { get; set; }
             public bool PageTitleSeparator_OverrideForStore { get; set; }
             

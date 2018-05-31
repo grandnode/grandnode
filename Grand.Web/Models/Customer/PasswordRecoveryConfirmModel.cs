@@ -11,12 +11,10 @@ namespace Grand.Web.Models.Customer
     [Validator(typeof(PasswordRecoveryConfirmValidator))]
     public partial class PasswordRecoveryConfirmModel : BaseGrandModel
     {
-        [NoTrim]
         [DataType(DataType.Password)]
         [GrandResourceDisplayName("Account.PasswordRecovery.NewPassword")]
         public string NewPassword { get; set; }
 
-        [NoTrim]
         [DataType(DataType.Password)]
         [GrandResourceDisplayName("Account.PasswordRecovery.ConfirmNewPassword")]
         public string ConfirmNewPassword { get; set; }

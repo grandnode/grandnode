@@ -19,14 +19,11 @@ namespace Grand.Web.Models.Install
 
         public string AdminEmail { get; set; }
 
-        [NoTrim]
         [DataType(DataType.Password)]
         public string AdminPassword { get; set; }
 
-        [NoTrim]
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
-
 
         public string DatabaseConnectionString { get; set; }
 

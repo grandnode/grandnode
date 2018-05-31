@@ -32,12 +32,10 @@ namespace Grand.Web.Models.Customer
         public bool CheckUsernameAvailabilityEnabled { get; set; }
 
         [DataType(DataType.Password)]
-        [NoTrim]
         [GrandResourceDisplayName("Account.Fields.Password")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [NoTrim]
         [GrandResourceDisplayName("Account.Fields.ConfirmPassword")]
         public string ConfirmPassword { get; set; }
 

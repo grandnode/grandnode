@@ -296,9 +296,6 @@ namespace Grand.Framework.Infrastructure.Extensions
             //add custom display metadata provider
             mvcBuilder.AddMvcOptions(options => options.ModelMetadataDetailsProviders.Add(new GrandMetadataProvider()));
 
-            //add custom model binder provider (to the top of the provider list)
-            mvcBuilder.AddMvcOptions(options => options.ModelBinderProviders.Insert(0, new GrandModelBinderProvider()));
-
             //add fluent validation
             mvcBuilder.AddFluentValidation(configuration => configuration.ValidatorFactoryType = typeof(GrandValidatorFactory));
 

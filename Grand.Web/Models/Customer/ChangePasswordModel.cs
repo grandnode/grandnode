@@ -11,17 +11,14 @@ namespace Grand.Web.Models.Customer
     [Validator(typeof(ChangePasswordValidator))]
     public partial class ChangePasswordModel : BaseGrandModel
     {
-        [NoTrim]
         [DataType(DataType.Password)]
         [GrandResourceDisplayName("Account.ChangePassword.Fields.OldPassword")]
         public string OldPassword { get; set; }
 
-        [NoTrim]
         [DataType(DataType.Password)]
         [GrandResourceDisplayName("Account.ChangePassword.Fields.NewPassword")]
         public string NewPassword { get; set; }
 
-        [NoTrim]
         [DataType(DataType.Password)]
         [GrandResourceDisplayName("Account.ChangePassword.Fields.ConfirmNewPassword")]
         public string ConfirmNewPassword { get; set; }
