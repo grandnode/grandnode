@@ -102,9 +102,9 @@
                             <legend class="sr-only">@T("Account.Fields.DateOfBirth")</legend>
                             <div class="row">
                                 <span class="col-form-label col-12 py-0 px-0">@T("Account.Fields.DateOfBirth"):</span>
-                                @Html.DatePickerDropDowns(Html.FieldNameFor(x => x.DateOfBirthDay),
-                                            Html.FieldNameFor(x => x.DateOfBirthMonth),
-                                            Html.FieldNameFor(x => x.DateOfBirthYear),
+                                @Html.DatePickerDropDowns(Html.NameFor(x => x.DateOfBirthDay),
+                                            Html.NameFor(x => x.DateOfBirthMonth),
+                                            Html.NameFor(x => x.DateOfBirthYear),
                                             DateTime.Now.Year - 110,
                                             DateTime.Now.Year,
                                             Model.DateOfBirthDay,

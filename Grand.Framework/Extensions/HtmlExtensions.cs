@@ -153,130 +153,7 @@ namespace Grand.Framework
             return new HtmlString(window.ToString());
         }
 
-        public static IHtmlContent GrandLabelFor<TModel, TValue>(
-            this IHtmlHelper<TModel> helper,
-            Expression<Func<TModel, TValue>> expression,
-            IDictionary<string, object> htmlAttributes = null,
-            bool withColumns = true)
-        {
-            var metadata = ExpressionMetadataProvider.FromLambdaExpression(expression, helper.ViewData, helper.MetadataProvider);
-            string htmlFieldName = ExpressionHelper.GetExpressionText(expression);
-            string labelText = metadata.Metadata.DisplayName ?? metadata.Metadata.PropertyName ?? htmlFieldName.Split('.').Last();
-            if (String.IsNullOrEmpty(labelText))
-            {
-                return HtmlString.Empty;
-            }
-
-            TagBuilder tag = new TagBuilder("label");
-            tag.MergeAttributes(htmlAttributes);
-            tag.Attributes.Add("for", helper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(htmlFieldName));
-            if (withColumns)
-                tag.AddCssClass("control-label col-md-3 col-sm-3");
-            tag.InnerHtml.SetHtmlContent(labelText);
-
-            object value;
-            var hintResource = string.Empty;
-            if (metadata.Metadata.AdditionalValues.TryGetValue("GrandResourceDisplayNameAttribute", out value))
-            {
-                var resourceDisplayName = value as GrandResourceDisplayNameAttribute;
-                if (resourceDisplayName != null)
-                {
-                    var langId = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Id;
-                    hintResource = EngineContext.Current.Resolve<ILocalizationService>()
-                        .GetResource(resourceDisplayName.ResourceKey + ".Hint", langId);
-                    if (!String.IsNullOrEmpty(hintResource))
-                    {
-                        TagBuilder i = new TagBuilder("i");
-                        i.AddCssClass("help icon-question");
-                        i.Attributes.Add("title", hintResource);
-                        i.Attributes.Add("data-toggle", "tooltip");
-                        i.Attributes.Add("data-placement", "bottom");
-                        tag.InnerHtml.SetHtmlContent(string.Format("{0} {1}", labelText, i.ToHtmlString()));
-                    }
-                }
-            }
-            return new HtmlString(tag.ToHtmlString());
-        }
-
-        public static IHtmlContent GrandEditorFor<TModel, TValue>(this IHtmlHelper<TModel> helper,
-            Expression<Func<TModel, TValue>> expression, string postfix = "",
-            bool? renderFormControlClass = null, bool required = false)
-        {
-            object htmlAttributes = null;
-            var metadata = ExpressionMetadataProvider.FromLambdaExpression(expression, helper.ViewData, helper.MetadataProvider);
-            if ((!renderFormControlClass.HasValue && metadata.ModelType.Name.Equals("String")) ||
-                (renderFormControlClass.HasValue && renderFormControlClass.Value))
-                htmlAttributes = new { @class = "form-control" };
-
-            string result = "";
-            var editorHtml = helper.EditorFor(expression, new { htmlAttributes, postfix }).ToHtmlString();
-            if (required)
-                result = string.Format("<div class=\"input-group input-group-required\">{0}<div class=\"input-group-btn\"><span class=\"required\">*</span></div></div>", editorHtml);
-            else
-                result = editorHtml;
-
-            return new HtmlString(result);
-        }
-
-        public static IHtmlContent GrandDropDownListFor<TModel, TValue>(this IHtmlHelper<TModel> helper,
-            Expression<Func<TModel, TValue>> expression, IEnumerable<SelectListItem> itemList,
-            object htmlAttributes = null)
-        {
-            var attrs = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-            attrs = AddFormControlClassToHtmlAttributes(attrs);
-            return helper.DropDownListFor(expression, itemList, attrs);
-        }
-
-        public static IHtmlContent GrandDropDownList<TModel>(this IHtmlHelper<TModel> helper, string name,
-            IEnumerable<SelectListItem> itemList, object htmlAttributes = null,
-            bool renderFormControlClass = true, bool required = false)
-        {
-            var result = new StringBuilder();
-
-            var attrs = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-            if (renderFormControlClass)
-                attrs = AddFormControlClassToHtmlAttributes(attrs);
-
-            if (required)
-                result.AppendFormat("<div class=\"input-group input-group-required\">{0}<div class=\"input-group-btn\"><span class=\"required\">*</span></div></div>",
-                    helper.DropDownList(name, itemList, attrs).ToHtmlString());
-            else
-                result.Append(helper.DropDownList(name, itemList, attrs).ToHtmlString());
-
-            return new HtmlString(result.ToString());
-        }
-
-        public static IHtmlContent GrandTextAreaFor<TModel, TValue>(this IHtmlHelper<TModel> helper,
-            Expression<Func<TModel, TValue>> expression, object htmlAttributes = null,
-            bool renderFormControlClass = true, int rows = 4, int columns = 20, bool required = false)
-        {
-            var result = new StringBuilder();
-
-            var attrs = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-            if (renderFormControlClass)
-                attrs = AddFormControlClassToHtmlAttributes(attrs);
-
-            if (required)
-                result.AppendFormat("<div class=\"input-group input-group-required\">{0}<div class=\"input-group-btn\"><span class=\"required\">*</span></div></div>",
-                    helper.TextAreaFor(expression, rows, columns, attrs).ToHtmlString());
-            else
-                result.Append(helper.TextAreaFor(expression, rows, columns, attrs).ToHtmlString());
-
-            return new HtmlString(result.ToString());
-        }
-
-
-        public static RouteValueDictionary AddFormControlClassToHtmlAttributes(IDictionary<string, object> htmlAttributes)
-        {
-            if (!htmlAttributes.ContainsKey("class") || htmlAttributes["class"] == null || string.IsNullOrEmpty(htmlAttributes["class"].ToString()))
-                htmlAttributes["class"] = "form-control";
-            else
-                if (!htmlAttributes["class"].ToString().Contains("form-control"))
-                htmlAttributes["class"] += " form-control";
-
-            return new RouteValueDictionary(htmlAttributes);
-        }
-
+        
         public static IHtmlContent OverrideStoreCheckboxFor<TModel, TValue>(this IHtmlHelper<TModel> helper,
             Expression<Func<TModel, bool>> expression,
             Expression<Func<TModel, TValue>> forInputExpression,
@@ -355,11 +232,6 @@ namespace Grand.Framework
             return new HtmlString(result.ToString());
         }
 
-        public static string FieldNameFor<T, TResult>(this IHtmlHelper<T> html, Expression<Func<T, TResult>> expression)
-        {
-            //TO DO remove this method and use in cshtml files
-            return html.NameFor(expression);
-        }
         public static string FieldIdFor<T, TResult>(this IHtmlHelper<T> html, Expression<Func<T, TResult>> expression)
         {
             //TO DO remove this method and use in cshtml files
@@ -437,11 +309,6 @@ namespace Grand.Framework
                 tag.WriteTo(writer, HtmlEncoder.Default);
                 return writer.ToString();
             }
-        }
-
-        public static string FieldNameFor<T, TResult>(this HtmlHelper<T> html, Expression<Func<T, TResult>> expression)
-        {
-            return html.ViewData.TemplateInfo.GetFullHtmlFieldName(ExpressionHelper.GetExpressionText(expression));
         }
 
         /// <summary>

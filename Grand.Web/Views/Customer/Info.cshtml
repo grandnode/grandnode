@@ -120,9 +120,9 @@
                             </div>
                         </div>
                         <div class="input-group">
-                            @Html.DatePickerDropDowns(Html.FieldNameFor(x => x.DateOfBirthDay),
-                                                  Html.FieldNameFor(x => x.DateOfBirthMonth),
-                                                  Html.FieldNameFor(x => x.DateOfBirthYear),
+                            @Html.DatePickerDropDowns(Html.NameFor(x => x.DateOfBirthDay),
+                                                  Html.NameFor(x => x.DateOfBirthMonth),
+                                                  Html.NameFor(x => x.DateOfBirthYear),
                                                   DateTime.Now.Year - 110,
                                                   DateTime.Now.Year,
                                                   Model.DateOfBirthDay,

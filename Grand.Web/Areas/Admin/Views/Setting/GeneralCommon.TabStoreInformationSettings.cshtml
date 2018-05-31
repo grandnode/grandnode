@@ -44,7 +44,7 @@
                         {
                             <li style="float: left; width: 210px;">
                                 <p style="float: left; padding-top: 55px;">
-                                    <input type="radio" name="@Html.FieldNameFor(x => x.StoreInformationSettings.DefaultStoreTheme)" value="@theme.ThemeName" id="id_image_@theme.ThemeName"
+                                    <input type="radio" name="@Html.NameFor(x => x.StoreInformationSettings.DefaultStoreTheme)" value="@theme.ThemeName" id="id_image_@theme.ThemeName"
                                            @if (theme.ThemeName == Model.StoreInformationSettings.DefaultStoreTheme) { <text> checked="checked" </text> }>
                                 </p>
                                 <p style="float: left;">

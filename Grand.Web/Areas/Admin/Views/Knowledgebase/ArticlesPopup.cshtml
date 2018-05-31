@@ -24,9 +24,9 @@
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchArticleName, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <admin-label asp-for="SearchArticleName" class="col-sm-3 control-label" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.SearchArticleName)
+                                    <admin-input asp-for="SearchArticleName" />
                                 </div>
                             </div>
                             <div class="form-actions">
