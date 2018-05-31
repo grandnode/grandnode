@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using Grand.Core;
 using Grand.Core.Infrastructure;
 using Grand.Services.Localization;
 using Grand.Services.Stores;
@@ -18,9 +16,6 @@ using System.IO;
 using System.Text.Encodings.Web;
 using Grand.Framework.Mvc.Models;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
-using Grand.Framework.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Routing;
 
 namespace Grand.Framework
 {
@@ -238,19 +233,6 @@ namespace Grand.Framework
             return html.IdFor(expression);
         }
 
-        public static IHtmlContent Hint(this IHtmlHelper helper, string value)
-        {
-            //create tag builder
-            var builder = new TagBuilder("i");
-            builder.MergeAttribute("title", value);
-            builder.MergeAttribute("class", "ico-question");
-            var icon = new StringBuilder();
-            icon.Append("<i class='fa fa-question-circle'></i>");
-            builder.InnerHtml.AppendHtml(icon.ToString());
-            //render tag
-            return new HtmlString(builder.ToHtmlString());
-
-        }
         public static string RenderHtmlContent(this IHtmlContent htmlContent)
         {
             using (var writer = new StringWriter())
@@ -288,19 +270,6 @@ namespace Grand.Framework
         #endregion
 
         #region Common extensions
-
-        public static IHtmlContent RequiredHint(this IHtmlHelper helper, string additionalText = null)
-        {
-            // Create tag builder
-            var tagBuilder = new TagBuilder("span");
-            tagBuilder.AddCssClass("required");
-            var innerText = "*";
-            //add additional text if specified
-            if (!String.IsNullOrEmpty(additionalText))
-                innerText += " " + additionalText;
-            tagBuilder.InnerHtml.AppendHtml(innerText);
-            return new HtmlString(tagBuilder.RenderHtmlContent());
-        }
 
         public static string ToHtmlString(this IHtmlContent tag)
         {
@@ -418,44 +387,7 @@ namespace Grand.Framework
                 return new HtmlString(string.Concat(daysList.RenderHtmlContent(), monthsList.RenderHtmlContent(), yearsList.RenderHtmlContent()));
             }
 
-        }
-
-        /// <summary>
-        /// Renders the standard label with a specified suffix added to label text
-        /// </summary>
-        /// <typeparam name="TModel">Model</typeparam>
-        /// <typeparam name="TValue">Value</typeparam>
-        /// <param name="html">HTML helper</param>
-        /// <param name="expression">Expression</param>
-        /// <param name="htmlAttributes">HTML attributes</param>
-        /// <param name="suffix">Suffix</param>
-        /// <returns>Label</returns>
-        public static IHtmlContent LabelFor<TModel, TValue>(this IHtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, object htmlAttributes, string suffix)
-        {
-            //TODO refactor the way it's implemented in \Microsoft.AspNetCore.Mvc.ViewFeatures\ViewFeatures\HtmlHelperOfT.cs - "IHtmlContent LabelFor<TResult>"
-            string htmlFieldName = ExpressionHelper.GetExpressionText(expression);
-
-            var metadata = ExpressionMetadataProvider.FromLambdaExpression(expression, html.ViewData, html.MetadataProvider);
-            string resolvedLabelText = metadata.Metadata.DisplayName ?? (metadata.Metadata.PropertyName ?? htmlFieldName.Split(new[] { '.' }).Last());
-            if (string.IsNullOrEmpty(resolvedLabelText))
-            {
-                return new HtmlString("");
-            }
-            var tag = new TagBuilder("label");
-            tag.Attributes.Add("for", TagBuilder.CreateSanitizedId(html.IdFor(expression), ""));
-            if (!String.IsNullOrEmpty(suffix))
-            {
-                resolvedLabelText = String.Concat(resolvedLabelText, suffix);
-            }
-            tag.InnerHtml.AppendHtml(resolvedLabelText);
-
-            var dictionary = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-            tag.MergeAttributes(dictionary, true);
-
-            return new HtmlString(tag.ToHtmlString());
-
-        }
-
+        }       
         #endregion
     }
 }
