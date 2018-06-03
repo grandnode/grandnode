@@ -1,7 +1,6 @@
-FROM microsoft/dotnet:2.1-aspnetcore-runtime AS base
+FROM microsoft/dotnet:2.1-sdk AS build-env
 
 WORKDIR /app
-FROM microsoft/dotnet:2.1-sdk AS build
 
 COPY GrandNode.sln .
 COPY Grand.Core/Grand.Core.csproj Grand.Core/Grand.Core.csproj
@@ -27,7 +26,6 @@ COPY Plugins/Grand.Plugin.Widgets.Slider/Grand.Plugin.Widgets.Slider.csproj Plug
 
 # Copy everything else and build
 COPY . ./
-FROM build AS publish
 RUN dotnet publish Grand.Web -c Release -o out
 RUN dotnet build Plugins/Grand.Plugin.DiscountRequirements.Standard
 RUN dotnet build Plugins/Grand.Plugin.ExchangeRate.McExchange
@@ -47,15 +45,14 @@ RUN dotnet build Plugins/Grand.Plugin.Widgets.Slider
 
 
 # Build runtime image
-FROM build AS publish
+FROM microsoft/dotnet:2.1-aspnetcore-runtime 
 RUN apt-get update && \
   apt-get -y install libgdiplus
 RUN ln -s /lib/x86_64-linux-gnu/libdl.so.2 /lib/x86_64-linux-gnu/libdl.so
 
-FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/Grand.Web/out/ .
-COPY --from=publish /app/Grand.Web/Plugins/ ./Plugins/
+COPY --from=build-env /app/Grand.Web/out/ .
+COPY --from=build-env /app/Grand.Web/Plugins/ ./Plugins/
 
 VOLUME /app/App_Data /app/wwwroot /app/Plugins /app/Themes
 
