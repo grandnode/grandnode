@@ -1,4 +1,4 @@
-FROM microsoft/aspnetcore-build:2.0 AS build-env
+FROM microsoft/dotnet:2.1-aspnetcore-runtime AS base
 
 WORKDIR /app
 COPY GrandNode.sln .
@@ -44,11 +44,12 @@ RUN dotnet build Plugins/Grand.Plugin.Widgets.Slider
 
 
 # Build runtime image
-FROM microsoft/aspnetcore:2.0
+FROM microsoft/dotnet:2.1-sdk AS build
 RUN apt-get update && \
   apt-get -y install libgdiplus
 RUN ln -s /lib/x86_64-linux-gnu/libdl.so.2 /lib/x86_64-linux-gnu/libdl.so
 
+FROM base AS final
 WORKDIR /app
 COPY --from=build-env /app/Grand.Web/out/ .
 COPY --from=build-env /app/Grand.Web/Plugins/ ./Plugins/

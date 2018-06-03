@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <Copyright>Copyright © UNIT-SOFT Sp. z o.o.</Copyright>
     <Company>UNIT-SOFT Sp. z o.o.</Company>
     <Authors>UNIT-SOFT Sp. z o.o.</Authors>
@@ -9,15 +9,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BundlerMinifier.Core" Version="2.6.375" />
-    <PackageReference Include="FluentValidation" Version="7.5.2" />
-    <PackageReference Include="FluentValidation.AspNetCore" Version="7.5.2" />
-    <PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.0.0-alpha6-79" />
-    <PackageReference Include="System.IO.FileSystem.AccessControl" Version="4.4.0" />
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.8.3" />
+    <PackageReference Include="BundlerMinifier.Core" Version="2.8.391" />
+    <PackageReference Include="FluentValidation" Version="7.6.0" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="7.6.0" />
+    <PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.0.0" />
+    <PackageReference Include="System.IO.FileSystem.AccessControl" Version="4.5.0" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.8.9" />
     <PackageReference Include="System.Reflection.Extensions" Version="4.3.0" />
-    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.4.0" />
-    <PackageReference Include="System.Security.AccessControl" Version="4.4.1" />
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.5.0" />
+    <PackageReference Include="System.Security.AccessControl" Version="4.5.0" />
   </ItemGroup>
 
   <ItemGroup>

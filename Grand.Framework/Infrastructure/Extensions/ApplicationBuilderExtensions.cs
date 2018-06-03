@@ -214,7 +214,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// Create and configure MiniProfiler service
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
-        public static void UseMiniProfiler(this IApplicationBuilder application)
+        public static void UseProfiler(this IApplicationBuilder application)
         {
             //whether database is already installed
             if (!DataSettingsHelper.DatabaseIsInstalled())
@@ -223,17 +223,7 @@ namespace Grand.Framework.Infrastructure.Extensions
             //whether MiniProfiler should be displayed
             if (EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore)
             {
-                var memoryCache = EngineContext.Current.Resolve<IMemoryCache>();
-                application.UseMiniProfiler(new MiniProfilerOptions
-                {
-                    //use memory cache provider for storing each result
-                    Storage = new MemoryCacheStorage(memoryCache, TimeSpan.FromMinutes(60)),
-
-                    //determine who can access the MiniProfiler results
-                    ResultsAuthorize = request =>
-                        !EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore ||
-                        EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.AccessAdminPanel)
-                });
+                application.UseMiniProfiler();
             }
         }
 

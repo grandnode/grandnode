@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   ci-build:
-    image: microsoft/aspnetcore-build:1.0-2.0
+    image: microsoft/dotnet:2.1-sdk
     volumes:
       - .:/src
     working_dir: /src
