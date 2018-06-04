@@ -18999,6 +18999,9 @@
   <LocaleResource Name="Admin.PushNotifications">
     <Value>Push notifications</Value>
   </LocaleResource>
+  <LocaleResource Name="PushNotifications.Error.PushApiMessage">
+    <Value>API Key and Message text is required	</Value>
+  </LocaleResource>
   <LocaleResource Name="PushNotifications.Fields.NotificationsEnabled">
     <Value>Enabled</Value>
   </LocaleResource>

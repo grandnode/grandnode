@@ -82,7 +82,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             else
             {
-                ErrorNotification(_localizationService.GetResource("PushNotifications.Plugin.Error.PushApiMessage"));
+                ErrorNotification(_localizationService.GetResource("PushNotifications.Error.PushApiMessage"));
             }
 
             return RedirectToAction("Send");

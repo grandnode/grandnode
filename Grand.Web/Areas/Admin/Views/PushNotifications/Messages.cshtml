@@ -1,14 +1,11 @@
-﻿@inject AdminAreaSettings adminAreaSettings
+﻿@model Grand.Web.Areas.Admin.Models.PushNotifications.MessagesModel
+@inject AdminAreaSettings adminAreaSettings
 @{
     Layout = "_AdminLayout";
-    Html.SetActiveMenuItemSystemName("PushNotifications_Messages");
 }
-
 @using Grand.Core.Domain.Common
 
-@model Grand.Web.Areas.Admin.Models.PushNotifications.MessagesModel
-
-@Html.AntiForgeryToken()
+<antiforgery-token />
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light form-fit">
