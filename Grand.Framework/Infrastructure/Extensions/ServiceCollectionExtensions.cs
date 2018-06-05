@@ -209,61 +209,7 @@ namespace Grand.Framework.Infrastructure.Extensions
                 options.Cookie.SecurePolicy = DataSettingsHelper.DatabaseIsInstalled() && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
                     ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
-            /*
-            //enable main cookie authentication
-            services.AddAuthentication(options =>
-            {
-                options.DefaultScheme = GrandCookieAuthenticationDefaults.AuthenticationScheme;
-            })
-            .AddCookie(GrandCookieAuthenticationDefaults.AuthenticationScheme,
-                options =>
-                {
-                    options.ClaimsIssuer = GrandCookieAuthenticationDefaults.ClaimsIssuer;
-                    options.Cookie = new CookieBuilder()
-                    {
-                        Name = GrandCookieAuthenticationDefaults.CookiePrefix + GrandCookieAuthenticationDefaults.AuthenticationScheme,
-                        HttpOnly = true,
-                    };
-                    options.LoginPath = GrandCookieAuthenticationDefaults.LoginPath;
-                    options.AccessDeniedPath = GrandCookieAuthenticationDefaults.AccessDeniedPath;
-                    options.LogoutPath = GrandCookieAuthenticationDefaults.LogoutPath;
-                    if (DataSettingsHelper.DatabaseIsInstalled())
-                    {
-                        //whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
-                        options.Cookie.SecurePolicy = EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
-                        ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
-                    }
-                }
-            );
-
-            //enable external authentication
-            services.AddAuthentication(options =>
-            {
-                options.DefaultScheme = GrandCookieAuthenticationDefaults.ExternalAuthenticationScheme;
-            })
-            .AddCookie(GrandCookieAuthenticationDefaults.ExternalAuthenticationScheme,
-                options =>
-                {
-                    options.ClaimsIssuer = GrandCookieAuthenticationDefaults.ClaimsIssuer;
-                    options.Cookie = new CookieBuilder()
-                    {
-                        Name = GrandCookieAuthenticationDefaults.CookiePrefix + GrandCookieAuthenticationDefaults.AuthenticationScheme,
-                        HttpOnly = true,
-                    };
-                    options.LoginPath = GrandCookieAuthenticationDefaults.LoginPath;
-                    options.AccessDeniedPath = GrandCookieAuthenticationDefaults.AccessDeniedPath;
-                    options.LogoutPath = GrandCookieAuthenticationDefaults.LogoutPath;
-
-                    // whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
-                    if (DataSettingsHelper.DatabaseIsInstalled())
-                    {
-                        options.Cookie.SecurePolicy = EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
-                         ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
-                    }
-                }
-            );
-            */
-
+            
             //register external authentication plugins now
             var typeFinder = new WebAppTypeFinder();
             var externalAuthConfigurations = typeFinder.FindClassesOfType<IExternalAuthenticationRegistrar>();
