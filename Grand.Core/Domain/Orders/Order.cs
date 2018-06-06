@@ -80,9 +80,34 @@ namespace Grand.Core.Domain.Orders
         public int CustomerTaxDisplayTypeId { get; set; }
 
         /// <summary>
-        /// Gets or sets the VAT number (the European Union Value Added Tax)
+        /// Gets or sets the VAT number 
         /// </summary>
         public string VatNumber { get; set; }
+
+        /// <summary>
+        /// Gets or sets the VAT number status id
+        /// </summary>
+        public int VatNumberStatusId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Company name
+        /// </summary>
+        public string CompanyName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the CustomerEmail
+        /// </summary>
+        public string CustomerEmail { get; set; }
+
+        /// <summary>
+        /// Gets or sets the FirstName
+        /// </summary>
+        public string FirstName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the LastName
+        /// </summary>
+        public string LastName { get; set; }
 
         /// <summary>
         /// Gets or sets the order subtotal (incl tax)
