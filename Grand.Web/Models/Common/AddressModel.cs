@@ -32,6 +32,11 @@ namespace Grand.Web.Models.Common
         [GrandResourceDisplayName("Address.Fields.Company")]
         public string Company { get; set; }
 
+        public bool VatNumberEnabled { get; set; }
+        public bool VatNumberRequired { get; set; }
+        [GrandResourceDisplayName("Address.Fields.VatNumber")]
+        public string VatNumber { get; set; }
+
         public bool CountryEnabled { get; set; }
         [GrandResourceDisplayName("Address.Fields.Country")]
         public string CountryId { get; set; }

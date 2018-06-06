@@ -1,9 +1,9 @@
 ﻿@model CustomerUserSettingsModel
-@using Grand.Core.Domain.Customers;
 <script type="text/javascript">
     $(document).ready(function () {
         $("#@Html.FieldIdFor(model => model.AddressSettings.CountryEnabled)").click(toggleAddressCountryFormField);
         $("#@Html.FieldIdFor(model => model.AddressSettings.CompanyEnabled)").click(toggleAddressRequiredFormField);
+        $("#@Html.FieldIdFor(model => model.AddressSettings.VatNumberEnabled)").click(toggleAddressRequiredFormField);
         $("#@Html.FieldIdFor(model => model.AddressSettings.StreetAddressEnabled)").click(toggleAddressRequiredFormField);
         $("#@Html.FieldIdFor(model => model.AddressSettings.StreetAddress2Enabled)").click(toggleAddressRequiredFormField);
         $("#@Html.FieldIdFor(model => model.AddressSettings.ZipPostalCodeEnabled)").click(toggleAddressRequiredFormField);
@@ -30,6 +30,12 @@
         }
         else {
             $('#pnlAddressCompanyRequired').hide();
+        }
+        if ($('#@Html.FieldIdFor(model => model.AddressSettings.VatNumberEnabled)').is(':checked')) {
+            $('#pnlAddressVatNumberRequired').show();
+        }
+        else {
+            $('#pnlAddressVatNumberRequired').hide();
         }
 
         if ($('#@Html.FieldIdFor(model => model.AddressSettings.StreetAddressEnabled)').is(':checked')) {
@@ -84,7 +90,7 @@
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
-                <admin-label asp-for="AddressSettings.CompanyEnabled" class="control-label"/>
+                <admin-label asp-for="AddressSettings.CompanyEnabled" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
@@ -96,7 +102,7 @@
         </div>
         <div class="form-group" id="pnlAddressCompanyRequired">
             <div class="col-md-4 col-sm-4 text-right">
-                <admin-label asp-for="AddressSettings.CompanyRequired" class="control-label"/>
+                <admin-label asp-for="AddressSettings.CompanyRequired" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
@@ -108,7 +114,31 @@
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
-                <admin-label asp-for="AddressSettings.StreetAddressEnabled" class="control-label"/>
+                <admin-label asp-for="AddressSettings.VatNumberEnabled" class="control-label" />
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    <admin-input asp-for="AddressSettings.VatNumberEnabled" />
+                    <span></span>
+                </label>
+                <span asp-validation-for="AddressSettings.VatNumberEnabled"></span>
+            </div>
+        </div>
+        <div class="form-group" id="pnlAddressVatNumberRequired">
+            <div class="col-md-4 col-sm-4 text-right">
+                <admin-label asp-for="AddressSettings.VatNumberRequired" class="control-label" />
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    <admin-input asp-for="AddressSettings.VatNumberRequired" />
+                    <span></span>
+                </label>
+                <span asp-validation-for="AddressSettings.VatNumberRequired"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                <admin-label asp-for="AddressSettings.StreetAddressEnabled" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
@@ -120,7 +150,7 @@
         </div>
         <div class="form-group" id="pnlAddressStreetAddressRequired">
             <div class="col-md-4 col-sm-4 text-right">
-                <admin-label asp-for="AddressSettings.StreetAddressRequired" class="control-label"/>
+                <admin-label asp-for="AddressSettings.StreetAddressRequired" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
@@ -132,7 +162,7 @@
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
-                <admin-label asp-for="AddressSettings.StreetAddress2Enabled" class="control-label"/>
+                <admin-label asp-for="AddressSettings.StreetAddress2Enabled" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
@@ -144,7 +174,7 @@
         </div>
         <div class="form-group" id="pnlAddressStreetAddress2Required">
             <div class="col-md-4 col-sm-4 text-right">
-                <admin-label asp-for="AddressSettings.StreetAddress2Required" class="control-label"/>
+                <admin-label asp-for="AddressSettings.StreetAddress2Required" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
@@ -156,7 +186,7 @@
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
-                <admin-label asp-for="AddressSettings.ZipPostalCodeEnabled" class="control-label"/>
+                <admin-label asp-for="AddressSettings.ZipPostalCodeEnabled" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
@@ -168,7 +198,7 @@
         </div>
         <div class="form-group" id="pnlAddressZipPostalCodeRequired">
             <div class="col-md-4 col-sm-4 text-right">
-                <admin-label asp-for="AddressSettings.ZipPostalCodeRequired" class="control-label"/>
+                <admin-label asp-for="AddressSettings.ZipPostalCodeRequired" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
@@ -180,7 +210,7 @@
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
-                <admin-label asp-for="AddressSettings.CityEnabled" class="control-label"/>
+                <admin-label asp-for="AddressSettings.CityEnabled" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
@@ -192,7 +222,7 @@
         </div>
         <div class="form-group" id="pnlAddressCityRequired">
             <div class="col-md-4 col-sm-4 text-right">
-                <admin-label asp-for="AddressSettings.CityRequired" class="control-label"/>
+                <admin-label asp-for="AddressSettings.CityRequired" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
@@ -204,7 +234,7 @@
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
-                <admin-label asp-for="AddressSettings.CountryEnabled" class="control-label"/>
+                <admin-label asp-for="AddressSettings.CountryEnabled" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
@@ -216,7 +246,7 @@
         </div>
         <div class="form-group" id="pnlAddressStateProvinceEnabled">
             <div class="col-md-4 col-sm-4 text-right">
-                <admin-label asp-for="AddressSettings.StateProvinceEnabled" class="control-label"/>
+                <admin-label asp-for="AddressSettings.StateProvinceEnabled" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
@@ -228,7 +258,7 @@
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
-                <admin-label asp-for="AddressSettings.PhoneEnabled" class="control-label"/>
+                <admin-label asp-for="AddressSettings.PhoneEnabled" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
@@ -240,7 +270,7 @@
         </div>
         <div class="form-group" id="pnlAddressPhoneRequired">
             <div class="col-md-4 col-sm-4 text-right">
-                <admin-label asp-for="AddressSettings.PhoneRequired" class="control-label"/>
+                <admin-label asp-for="AddressSettings.PhoneRequired" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
@@ -252,7 +282,7 @@
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
-                <admin-label asp-for="AddressSettings.FaxEnabled" class="control-label"/>
+                <admin-label asp-for="AddressSettings.FaxEnabled" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
@@ -264,7 +294,7 @@
         </div>
         <div class="form-group" id="pnlAddressFaxRequired">
             <div class="col-md-4 col-sm-4 text-right">
-                <admin-label asp-for="AddressSettings.FaxRequired" class="control-label"/>
+                <admin-label asp-for="AddressSettings.FaxRequired" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">

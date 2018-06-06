@@ -552,6 +552,7 @@ namespace Grand.Web.Controllers
                         LastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName),
                         Email = customer.Email,
                         Company = customer.GetAttribute<string>(SystemCustomerAttributeNames.Company),
+                        VatNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber),
                         CountryId = !String.IsNullOrEmpty(customer.GetAttribute<string>(SystemCustomerAttributeNames.CountryId)) ? 
                             customer.GetAttribute<string>(SystemCustomerAttributeNames.CountryId) : "",
                         StateProvinceId = !String.IsNullOrEmpty(customer.GetAttribute<string>(SystemCustomerAttributeNames.StateProvinceId))?

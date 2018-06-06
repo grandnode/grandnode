@@ -37,6 +37,9 @@ namespace Grand.Web.Areas.Admin.Models.Common
         
         public string Company { get; set; }
 
+        [GrandResourceDisplayName("Admin.Address.Fields.VatNumber")]
+        public string VatNumber { get; set; }
+
         [GrandResourceDisplayName("Admin.Address.Fields.Country")]
         public string CountryId { get; set; }
 
@@ -97,6 +100,8 @@ namespace Grand.Web.Areas.Admin.Models.Common
         public bool EmailRequired { get; set; }
         public bool CompanyEnabled { get; set; }
         public bool CompanyRequired { get; set; }
+        public bool VatNumberEnabled { get; set; }
+        public bool VatNumberRequired { get; set; }
         public bool CountryEnabled { get; set; }
         public bool StateProvinceEnabled { get; set; }
         public bool CityEnabled { get; set; }

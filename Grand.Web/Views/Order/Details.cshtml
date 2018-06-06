@@ -85,6 +85,12 @@
                                 @Model.BillingAddress.Company
                             </li>
                         }
+                        @if (Model.BillingAddress.VatNumberEnabled && !String.IsNullOrEmpty(Model.BillingAddress.VatNumber))
+                        {
+                            <li class="company">
+                                @Model.BillingAddress.VatNumber
+                            </li>
+                        }
                         @if (Model.BillingAddress.StreetAddressEnabled)
                         {
                             <li class="address1">
@@ -98,8 +104,8 @@
                             </li>
                         }
                         @if (Model.BillingAddress.CityEnabled ||
-                    Model.BillingAddress.StateProvinceEnabled ||
-                    Model.BillingAddress.ZipPostalCodeEnabled)
+                   Model.BillingAddress.StateProvinceEnabled ||
+                   Model.BillingAddress.ZipPostalCodeEnabled)
                         {
                             <li class="city-state-zip">
                                 @if (Model.BillingAddress.CityEnabled)
@@ -148,14 +154,14 @@
                             <li class="title">
                                 <h5 class="generalMarginSupporter generalTitle">@T("Order.Payment")</h5>
                             </li>
-                                <li class="payment-method">
-                                    <span class="label">
-                                        @T("Order.Payment.Method"):
-                                    </span>
-                                    <span class="value">
-                                        @Model.PaymentMethod
-                                    </span>
-                                </li>
+                            <li class="payment-method">
+                                <span class="label">
+                                    @T("Order.Payment.Method"):
+                                </span>
+                                <span class="value">
+                                    @Model.PaymentMethod
+                                </span>
+                            </li>
                             if (!Model.PrintMode)
                             {
                                 <li class="payment-method-status">

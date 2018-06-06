@@ -723,6 +723,7 @@ namespace Grand.Services.Messages
             tokens.Add(new Token("Order.BillingEmail", order.BillingAddress.Email));
             tokens.Add(new Token("Order.BillingFaxNumber", order.BillingAddress.FaxNumber));
             tokens.Add(new Token("Order.BillingCompany", order.BillingAddress.Company));
+            tokens.Add(new Token("Order.BillingVatNumber", order.BillingAddress.VatNumber));
             tokens.Add(new Token("Order.BillingAddress1", order.BillingAddress.Address1));
             tokens.Add(new Token("Order.BillingAddress2", order.BillingAddress.Address2));
             tokens.Add(new Token("Order.BillingCity", order.BillingAddress.City));

@@ -74,6 +74,8 @@ namespace Grand.Web.Extensions
                     model.Email = model.Email.Trim();
                 if (model.Company != null)
                     model.Company = model.Company.Trim();
+                if (model.VatNumber != null)
+                    model.VatNumber = model.VatNumber.Trim();
                 if (model.City != null)
                     model.City = model.City.Trim();
                 if (model.Address1 != null)
@@ -91,6 +93,7 @@ namespace Grand.Web.Extensions
             destination.LastName = model.LastName;
             destination.Email = model.Email;
             destination.Company = model.Company;
+            destination.VatNumber = model.VatNumber;
             destination.CountryId = !String.IsNullOrEmpty(model.CountryId) ? model.CountryId : "";
             destination.StateProvinceId = !String.IsNullOrEmpty(model.StateProvinceId) ? model.StateProvinceId : "";
             destination.City = model.City;

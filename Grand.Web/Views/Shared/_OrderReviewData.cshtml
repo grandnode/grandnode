@@ -33,6 +33,12 @@
                                 @Model.BillingAddress.Company
                             </li>
                         }
+                        @if (Model.BillingAddress.VatNumberEnabled && !String.IsNullOrEmpty(Model.BillingAddress.VatNumber))
+                        {
+                            <li class="vatnumber">
+                                @Model.BillingAddress.VatNumber
+                            </li>
+                        }
                         @if (Model.BillingAddress.StreetAddressEnabled)
                         {
                             <li class="address1">
@@ -46,8 +52,8 @@
                             </li>
                         }
                         @if (Model.BillingAddress.CityEnabled ||
-                            Model.BillingAddress.StateProvinceEnabled ||
-                            Model.BillingAddress.ZipPostalCodeEnabled)
+                           Model.BillingAddress.StateProvinceEnabled ||
+                           Model.BillingAddress.ZipPostalCodeEnabled)
                         {
                             <li class="city-state-zip">
                                 @if (Model.BillingAddress.CityEnabled)
@@ -98,15 +104,15 @@
                         {
                             foreach (var item in Model.CustomValues)
                             {
-                                        <li class="custom-value">
-                                            <span class="label">
-                                                @item.Key:
-                                            </span>
-                                            <span class="value">
-                                                @(item.Value != null ? item.Value.ToString() : "")
-                                            </span>
-                                        </li>
-                             }
+                                <li class="custom-value">
+                                    <span class="label">
+                                        @item.Key:
+                                    </span>
+                                    <span class="value">
+                                        @(item.Value != null ? item.Value.ToString() : "")
+                                    </span>
+                                </li>
+                            }
                         }
                     </ul>
                 </div>

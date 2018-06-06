@@ -811,6 +811,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.Address.EmailRequired = true;
             model.Address.CompanyEnabled = _addressSettings.CompanyEnabled;
             model.Address.CompanyRequired = _addressSettings.CompanyRequired;
+            model.Address.VatNumberEnabled = _addressSettings.VatNumberEnabled;
+            model.Address.VatNumberRequired = _addressSettings.VatNumberRequired;
             model.Address.CountryEnabled = _addressSettings.CountryEnabled;
             model.Address.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
             model.Address.CityEnabled = _addressSettings.CityEnabled;

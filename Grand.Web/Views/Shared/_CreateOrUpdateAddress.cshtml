@@ -51,8 +51,16 @@
     {
         <div class="form-group col-sm-12">
             <label asp-for="Company" class="col-form-label">@T("Address.Fields.Company"):</label>
-            <input asp-for="Company" class="form-control"/>
+            <input asp-for="Company" class="form-control" />
             <span asp-validation-for="Company"></span>
+        </div>
+    }
+    @if (Model.VatNumberEnabled)
+    {
+        <div class="form-group col-sm-12">
+            <label asp-for="VatNumber" class="col-form-label">@T("Address.Fields.VatNumber"):</label>
+            <input asp-for="VatNumber" class="form-control" />
+            <span asp-validation-for="VatNumber"></span>
         </div>
     }
     @if (Model.CountryEnabled)
@@ -77,7 +85,7 @@
     {
         <div class="form-group col-sm-12">
             <label asp-for="City" class="col-form-label">@T("Address.Fields.City"):</label>
-            <input asp-for="City" class="form-control"/>
+            <input asp-for="City" class="form-control" />
             <span asp-validation-for="City"></span>
         </div>
     }
@@ -85,7 +93,7 @@
     {
         <div class="form-group col-sm-12 col-md-6">
             <label asp-for="Address1" class="col-form-label">@T("Address.Fields.Address1"):</label>
-            <input asp-for="Address1" class="form-control"/>
+            <input asp-for="Address1" class="form-control" />
             <span asp-validation-for="Address1"></span>
         </div>
     }
@@ -117,7 +125,7 @@
     {
         <div class="form-group col-sm-12 col-md-6">
             <label asp-for="FaxNumber" class="col-form-label">@T("Address.Fields.FaxNumber"):</label>
-            <input asp-for="FaxNumber" class="form-control"/>
+            <input asp-for="FaxNumber" class="form-control" />
             <span asp-validation-for="FaxNumber"></span>
         </div>
     }

@@ -34,6 +34,8 @@
 <input asp-for="EmailRequired" type="hidden" />
 <input asp-for="CompanyEnabled" type="hidden" />
 <input asp-for="CompanyRequired" type="hidden" />
+<input asp-for="VatNumberEnabled" type="hidden" />
+<input asp-for="VatNumberRequired" type="hidden" />
 <input asp-for="CountryEnabled" type="hidden" />
 <input asp-for="StateProvinceEnabled" type="hidden" />
 <input asp-for="CityEnabled" type="hidden" />
@@ -87,6 +89,16 @@
                 <div class="col-md-9 col-sm-9">
                     <admin-input asp-for="Company" />
                     <span asp-validation-for="Company"></span>
+                </div>
+            </div>
+        }
+        @if (Model.VatNumberEnabled)
+        {
+            <div class="form-group">
+                <admin-label asp-for="VatNumber" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="VatNumber" />
+                    <span asp-validation-for="VatNumber"></span>
                 </div>
             </div>
         }

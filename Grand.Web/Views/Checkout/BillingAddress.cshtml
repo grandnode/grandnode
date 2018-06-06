@@ -61,6 +61,12 @@
                                                                 @item.Company
                                                             </li>
                                                         }
+                                                        @if (item.VatNumberEnabled && !String.IsNullOrEmpty(item.VatNumber))
+                                                        {
+                                                            <li class="vatnumber">
+                                                                @item.VatNumber
+                                                            </li>
+                                                        }
                                                         @if (item.StreetAddressEnabled)
                                                         {
                                                             <li class="address1">

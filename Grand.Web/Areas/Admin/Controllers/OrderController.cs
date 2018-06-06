@@ -503,6 +503,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.BillingAddress.EmailRequired = true;
             model.BillingAddress.CompanyEnabled = _addressSettings.CompanyEnabled;
             model.BillingAddress.CompanyRequired = _addressSettings.CompanyRequired;
+            model.BillingAddress.VatNumberEnabled = _addressSettings.VatNumberEnabled;
+            model.BillingAddress.VatNumberRequired = _addressSettings.VatNumberRequired;
             model.BillingAddress.CountryEnabled = _addressSettings.CountryEnabled;
             model.BillingAddress.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
             model.BillingAddress.CityEnabled = _addressSettings.CityEnabled;
@@ -538,6 +540,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                         model.ShippingAddress.EmailRequired = true;
                         model.ShippingAddress.CompanyEnabled = _addressSettings.CompanyEnabled;
                         model.ShippingAddress.CompanyRequired = _addressSettings.CompanyRequired;
+                        model.ShippingAddress.VatNumberEnabled = _addressSettings.VatNumberEnabled;
+                        model.ShippingAddress.VatNumberRequired = _addressSettings.VatNumberRequired;
                         model.ShippingAddress.CountryEnabled = _addressSettings.CountryEnabled;
                         model.ShippingAddress.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
                         model.ShippingAddress.CityEnabled = _addressSettings.CityEnabled;
@@ -2708,6 +2712,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.Address.EmailRequired = true;
             model.Address.CompanyEnabled = _addressSettings.CompanyEnabled;
             model.Address.CompanyRequired = _addressSettings.CompanyRequired;
+            model.Address.VatNumberEnabled = _addressSettings.VatNumberEnabled;
+            model.Address.VatNumberRequired = _addressSettings.VatNumberRequired;
             model.Address.CountryEnabled = _addressSettings.CountryEnabled;
             model.Address.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
             model.Address.CityEnabled = _addressSettings.CityEnabled;
@@ -2807,6 +2813,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.Address.EmailRequired = true;
             model.Address.CompanyEnabled = _addressSettings.CompanyEnabled;
             model.Address.CompanyRequired = _addressSettings.CompanyRequired;
+            model.Address.VatNumberEnabled = _addressSettings.VatNumberEnabled;
+            model.Address.VatNumberRequired = _addressSettings.VatNumberRequired;
             model.Address.CountryEnabled = _addressSettings.CountryEnabled;
             model.Address.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
             model.Address.CityEnabled = _addressSettings.CityEnabled;

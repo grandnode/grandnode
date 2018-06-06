@@ -15,6 +15,15 @@ namespace Grand.Core.Domain.Common
         public bool CompanyRequired { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether 'Vat number' is enabled
+        /// </summary>
+        public bool VatNumberEnabled { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Vat number' is required
+        /// </summary>
+        public bool VatNumberRequired { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether 'Street address' is enabled
         /// </summary>
         public bool StreetAddressEnabled { get; set; }

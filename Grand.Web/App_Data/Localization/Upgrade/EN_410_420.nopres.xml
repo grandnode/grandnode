@@ -798,4 +798,29 @@
   <LocaleResource Name="PushNotifications.Error.PushApiMessage">
     <Value>API Key and Message text is required	</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Fields.VatNumber.Required">
+    <Value>Vat number is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.Fields.VatNumber.Required">
+    <Value>Vat number is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.Fields.VatNumber">
+    <Value>Vat number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Address.Fields.VatNumer">
+    <Value>Vat number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.VatNumberEnabled">
+    <Value>'Vat number' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.VatNumberEnabled.Hint">
+    <Value>Set if 'Vat number' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.VatNumberRequired">
+    <Value>'Vat number' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.VatNumberRequired.Hint">
+    <Value>Check if 'Vat number' is required.</Value>
+  </LocaleResource>
+
 </Language>
