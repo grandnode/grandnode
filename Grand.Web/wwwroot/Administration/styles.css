@@ -156,7 +156,8 @@ select.form-control {
 }
 
 label.mt-checkbox.mt-checkbox-outline{
-        margin-top: 6px;
+    margin-top: 6px;
+    padding-left: 20px;
 }
 
 a span.username {
@@ -306,4 +307,10 @@ a span.username {
 
 textarea.form-control.k-input {
     padding: 6px 12px;
+}
+
+.k-grid input[type=checkbox] {
+    position: unset;
+    width: 0;
+    height: 0;
 }
