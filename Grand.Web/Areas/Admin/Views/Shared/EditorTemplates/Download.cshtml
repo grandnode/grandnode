@@ -27,11 +27,16 @@
                 type: "POST",
                 url: "@(Url.Action("SaveDownloadUrl", "Download"))",
                 data: { "downloadUrl": downloadUrl },
-                success: function(data) {
-                    $('#pnlDownloadURLResult@(randomNumber)').fadeIn("slow").delay(1000).fadeOut("slow");
-                    $("#@(clientId + "value") input").val(data.downloadId);
-                    $('#saveDownloadUrl@(randomNumber)').attr('disabled', false);
-
+                success: function (data) {
+                    if (data.success) {
+                        $('#pnlDownloadURLResult@(randomNumber)').fadeIn("slow").delay(1000).fadeOut("slow");
+                        $("#@(clientId + "value") input").val(data.downloadId);
+                        $('#saveDownloadUrl@(randomNumber)').attr('disabled', false);
+                    }
+                    else {
+                        alert(data.error);
+                        $('#saveDownloadUrl@(randomNumber)').attr('disabled', false);
+                    }
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
                     alert('Failed to save download object.');
@@ -66,8 +71,11 @@
                     @T("Admin.Download.UseDownloadURL"):
                 </div>
                 <div class="col-md-6 col-sm-6">
-                    <input type="checkbox" name="cbUseDownloadURL@(randomNumber)" id="cbUseDownloadURL@(randomNumber)"
-                           @if (download != null && download.UseDownloadUrl) { <text> checked="checked" </text>    } />
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        <input type="checkbox" name="cbUseDownloadURL@(randomNumber)" id="cbUseDownloadURL@(randomNumber)"
+                               @if (download != null && download.UseDownloadUrl) { <text> checked="checked" </text> } />
+                        <span></span>
+                    </label>
                 </div>
             </div>
         }

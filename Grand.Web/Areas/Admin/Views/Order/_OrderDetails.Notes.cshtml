@@ -152,13 +152,16 @@
     $(document).ready(function () {
         $('#addOrderNote').click(function () {
             var orderNoteMessage = $("#@Html.FieldIdFor(model => model.AddOrderNoteMessage)").val();
+            if (orderNoteMessage.length == 0) {
+                alert('Message text is required');
+                return;
+            }
             var orderNoteDownloadId = '';
             if ($('#@Html.FieldIdFor(model => model.AddOrderNoteHasDownload)').is(':checked')) {
                 orderNoteDownloadId = $("#@Html.FieldIdFor(model => model.AddOrderNoteDownloadId)").val();
             }
             var orderNoteDisplayToCustomer = $("#@Html.FieldIdFor(model => model.AddOrderNoteDisplayToCustomer)").is(':checked');
             $('#addOrderNote').attr('disabled', true);
-            
             var postData = {
                 DisplayToCustomer: orderNoteDisplayToCustomer,
                 message: orderNoteMessage, 
