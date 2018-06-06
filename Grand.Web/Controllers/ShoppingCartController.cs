@@ -465,9 +465,9 @@ namespace Grand.Web.Controllers
             {
                 foreach (string formKey in form.Keys)
                 {
-                    if (formKey.Contains("Reservation_"))
+                    if (formKey.Contains("Reservation"))
                     {
-                        reservationId = formKey.Replace("Reservation_", "");
+                        reservationId = form["Reservation"].ToString();
                         break;
                     }
                 }
