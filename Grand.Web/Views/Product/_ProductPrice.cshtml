@@ -1,7 +1,7 @@
 ﻿@model ProductDetailsModel.ProductPriceModel
 @using System.Text.RegularExpressions;
 @inject IWorkContext workContext
-<div class="prices d-flex align-items-center" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+<div class="prices d-flex align-items-center flex-column" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
     @if (Model.CustomerEntersPrice)
     {
         @*display nothing*@
@@ -17,7 +17,7 @@
     {
         if (Model.IsReservation)
         {
-            <div class="rental-price col-12 mb-3">
+            <div class="rental-price col-12 mb-3 px-0">
                 <label class="mb-0">@T("Products.Price.ReservationPrice"):</label>
                 <span>@Model.ReservationPrice</span>
             </div>
@@ -48,7 +48,7 @@
         if (!(Model.IsAuction && Model.DisableBuyButton))
         {
             <div class="@if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
-        {<text>product-price</text>}
+        {<text>product-price col-12</text>}
         else
         {<text>non-discounted-price</text>}">
                 @if ((!String.IsNullOrWhiteSpace(Model.OldPrice) || !String.IsNullOrWhiteSpace(Model.PriceWithDiscount)) && Model.IsAuction)
