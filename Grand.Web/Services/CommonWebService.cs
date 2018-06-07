@@ -651,6 +651,7 @@ namespace Grand.Web.Services
                             Name = attributeValue.GetLocalized(x => x.Name),
                             ColorSquaresRgb = attributeValue.ColorSquaresRgb,
                             IsPreSelected = attributeValue.IsPreSelected,
+                            DisplayOrder = attributeValue.DisplayOrder,
                         };
                         attributeModel.Values.Add(attributeValueModel);
                     }

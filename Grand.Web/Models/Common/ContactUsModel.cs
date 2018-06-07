@@ -83,6 +83,8 @@ namespace Grand.Web.Models.Common
         {
             public string Name { get; set; }
 
+            public int DisplayOrder { get; set; }
+
             public string ColorSquaresRgb { get; set; }
 
 
