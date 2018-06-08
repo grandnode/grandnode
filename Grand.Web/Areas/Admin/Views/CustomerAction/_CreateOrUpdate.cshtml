@@ -1,6 +1,5 @@
 ﻿@model CustomerActionModel
 @inject IEventPublisher eventPublisher
-<div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 @{
     var validationSummary = Html.ValidationSummary(false);

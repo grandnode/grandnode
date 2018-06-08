@@ -799,38 +799,33 @@ namespace Grand.Services.Customers
 
         public virtual void AddOrder(Order order, Customer customer)
         {
-            Task.Run(() =>
+            var actionType = GetAllCustomerActionType().Where(x => x.SystemKeyword == CustomerActionTypeEnum.AddOrder.ToString()).FirstOrDefault();
+            if (actionType.Enabled)
             {
-                var actionType = GetAllCustomerActionType().Where(x => x.SystemKeyword == CustomerActionTypeEnum.AddOrder.ToString()).FirstOrDefault();
-                if (actionType.Enabled)
+                var datetimeUtcNow = DateTime.UtcNow;
+                var query = from a in _customerActionRepository.Table
+                            where a.Active == true && a.ActionTypeId == actionType.Id
+                                    && datetimeUtcNow >= a.StartDateTimeUtc && datetimeUtcNow <= a.EndDateTimeUtc
+                            select a;
+
+                foreach (var item in query.ToList())
                 {
-                    var datetimeUtcNow = DateTime.UtcNow;
-                    var query = from a in _customerActionRepository.Table
-                                where a.Active == true && a.ActionTypeId == actionType.Id
-                                        && datetimeUtcNow >= a.StartDateTimeUtc && datetimeUtcNow <= a.EndDateTimeUtc
-                                select a;
-
-                    foreach (var item in query.ToList())
+                    if (!UsedAction(item.Id, order.CustomerId))
                     {
-                        Task.Run(() =>
+                        foreach (var orderItem in order.OrderItems)
                         {
-                            if (!UsedAction(item.Id, order.CustomerId))
+                            var product = _productService.GetProductById(orderItem.ProductId);
+                            if (Condition(item, product, orderItem.AttributesXml, customer, null, null))
                             {
-                                foreach (var orderItem in order.OrderItems)
-                                {
-                                    var product = _productService.GetProductById(orderItem.ProductId);
-                                    if (Condition(item, product, orderItem.AttributesXml, customer, null, null))
-                                    {
-                                        Reaction(item, customer, null, order);
-                                        break;
-                                    }
-                                }
+                                Reaction(item, customer, null, order);
+                                break;
                             }
-                        });
+                        }
                     }
-
                 }
-            });
+
+            }
+            
         }
 
         public virtual void Url(Customer customer, string currentUrl, string previousUrl)
