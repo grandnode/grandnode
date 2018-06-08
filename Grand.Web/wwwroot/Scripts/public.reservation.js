@@ -45,6 +45,7 @@
             onChangeMonthYear: function (year, month, inst) {
                 $("#hoursDiv").html('');
                 Reservation.fillAvailableDates(year, month, Reservation._parameter, false);
+                Reservation.onDatePickerDateChange();
             },
             defaultDate: this.startDate
         }
