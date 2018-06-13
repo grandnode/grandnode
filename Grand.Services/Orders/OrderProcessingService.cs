@@ -1332,11 +1332,7 @@ namespace Grand.Services.Orders
                                 }
                                 if (!string.IsNullOrEmpty(sc.Parameter))
                                 {
-                                    reservationInfo += "<br>" + _localizationService.GetResource("Products.AdditionalOption") + ": " + sc.Parameter;
-                                }
-                                if (!string.IsNullOrEmpty(sc.Parameter))
-                                {
-                                    reservationInfo = sc.Parameter;
+                                    reservationInfo += "<br>" + string.Format(_localizationService.GetResource("ShoppingCart.Reservation.Option"), sc.Parameter);
                                 }
                                 if (!string.IsNullOrEmpty(sc.Duration))
                                 {
