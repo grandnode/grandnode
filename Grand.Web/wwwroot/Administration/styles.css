@@ -309,7 +309,7 @@ textarea.form-control.k-input {
     padding: 6px 12px;
 }
 
-.k-grid input[type=checkbox] {
+.k-grid label input[type=checkbox] {
     position: unset;
     width: 0;
     height: 0;
