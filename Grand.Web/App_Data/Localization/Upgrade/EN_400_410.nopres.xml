@@ -463,7 +463,7 @@
     <Value>Duration</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Reservation.Option">
-    <Value>Additional parameter {0}</Value>
+    <Value>Additional parameter: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.Address">
     <Value>Vendor address</Value>

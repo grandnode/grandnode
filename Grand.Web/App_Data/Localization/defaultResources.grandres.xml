@@ -18580,7 +18580,7 @@
     <Value>Reservation not found</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Reservation.Option">
-    <Value>Additional parameter {0}</Value>
+    <Value>Additional parameter: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Reservation.Reservationdatesmustbelaterthantoday">
     <Value>Reservation date must be later than today</Value>

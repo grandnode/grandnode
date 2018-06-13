@@ -471,13 +471,7 @@ namespace Grand.Web.Controllers
                         break;
                     }
                 }
-                foreach (var f in form)
-                {
-                    if (f.Key == "parameterDropdown")
-                    {
-                        parameter = f.Value;
-                    }
-                }
+
                 if (product.IntervalUnitType == IntervalUnit.Hour || product.IntervalUnitType == IntervalUnit.Minute)
                 {
                     if (string.IsNullOrEmpty(reservationId))
@@ -499,6 +493,7 @@ namespace Grand.Web.Controllers
                     }
                     duration = reservation.Duration;
                     rentalStartDate = reservation.Date;
+                    parameter = reservation.Parameter;
                 }
                 else if (product.IntervalUnitType == IntervalUnit.Day)
                 {
