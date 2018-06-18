@@ -21,7 +21,6 @@
     <PackageReference Include="System.ServiceModel.Http" Version="4.5.0" />
     <PackageReference Include="System.ServiceModel.NetTcp" Version="4.5.0" />
     <PackageReference Include="System.ServiceModel.Security" Version="4.5.0" />
-    <PackageReference Include="System.Xml.XmlSerializer" Version="4.3.0" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.2.0" />
   </ItemGroup>
 
