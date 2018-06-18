@@ -40,18 +40,9 @@
             },
             scrollable: false,
             columns: [{
-                field: "Id",
-                title: "ID",
-                width: 50
-            }, {
                 field: "Name",
                 title: "@T("Admin.Affiliates.Customers.Name")",
-                width: 200
-            }, {
-                field: "Id",
-                title: "@T("Admin.Common.View")",
-                width: 100,
-                template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=Id#">@T("Admin.Common.View")</a>'
+                template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/Edit/")#=Id#"">#=Name#</a>'
             }]
         });
     });
