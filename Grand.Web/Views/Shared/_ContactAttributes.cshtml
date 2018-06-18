@@ -5,21 +5,23 @@
 @if (Model.Any())
 {
     var attributeChangeScriptsBuilder = new StringBuilder();
-    <div class="contact-attributes">
-        @foreach (var attribute in Model)
-        {
-            string controlId = string.Format("contact_attribute_{0}", attribute.Id);
-            string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
-        <div id="@string.Format("contact_attribute_label_{0}", attribute.Id)" class="col-12 media-pad-off p-0 mb-3">
-            <span class="col-form-label text-prompt">
-                @textPrompt
-            </span>
+<div class="contact-attributes">
+    @foreach (var attribute in Model)
+    {
+        string controlId = string.Format("contact_attribute_{0}", attribute.Id);
+        string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
+        <span class="col-form-label text-prompt">
+            @textPrompt
             @if (attribute.IsRequired)
             {
                 <span class="text-prompt">
                     <text>*</text>
                 </span>
             }
+        </span>
+        <div id="@string.Format("contact_attribute_label_{0}", attribute.Id)" class="col-12 px-0 d-flex">
+
+            
             @switch (attribute.AttributeControlType)
             {
                 case AttributeControlType.TextBox:
@@ -72,9 +74,9 @@
                 case AttributeControlType.Checkboxes:
                 case AttributeControlType.ReadonlyCheckboxes:
                     {
-                        <fieldset>                            
+                        <fieldset>
                             <ul class="option-list pl-0">
-                                @foreach (var attributeValue in attribute.Values.OrderBy(x=>x.DisplayOrder))
+                                @foreach (var attributeValue in attribute.Values.OrderBy(x => x.DisplayOrder))
                                 {
                                     var attributeName = attributeValue.Name;
                                     <li>
@@ -98,7 +100,7 @@
                     break;
                 case AttributeControlType.Datepicker:
                     {
-                        @Html.DatePickerDropDowns(controlId + "_day", controlId + "_month", controlId + "_year", DateTime.Now.Year, DateTime.Now.Year + 1, attribute.SelectedDay, attribute.SelectedMonth, attribute.SelectedYear)
+                        @Html.DatePickerDropDowns(controlId + "_day", controlId + "_month", controlId + "_year", DateTime.Now.Year, DateTime.Now.Year + 1, attribute.SelectedDay, attribute.SelectedMonth, attribute.SelectedYear, htmlAttributes: new { @class = "form-control" })
                     }
                     break;
                 case AttributeControlType.FileUpload:
@@ -208,12 +210,12 @@
                     break;
                 case AttributeControlType.ColorSquares:
                     {
-                        <ul class="option-list color-squares pl-0" id="color-squares-@(attribute.Id)">
+                        <ul class="option-list color-squares pl-0 d-flex" id="color-squares-@(attribute.Id)">
                             @foreach (var attributeValue in attribute.Values)
                             {
                                 var attributeName = attributeValue.Name;
-                                <li @(attributeValue.IsPreSelected ? @Html.Raw(" class=\"selected-value\"") : null)>
-                                    <label for="@(controlId)_@(attributeValue.Id)">
+                                <li class="mr-1 p-0" @(attributeValue.IsPreSelected ? @Html.Raw(" class=\"selected-value border border-primary\"") : null)>
+                                    <label for="@(controlId)_@(attributeValue.Id)" class="mb-0">
                                         <span class="color-container" title="@attributeName">
                                             <span class="color" style="background-color:@(attributeValue.ColorSquaresRgb);">&nbsp;</span>
                                         </span>
@@ -226,8 +228,8 @@
                         <script type="text/javascript">
                                     $(document).ready(function() {
                                         $('.contact-attributes #color-squares-@(attribute.Id)').delegate('input', 'click', function (event) {
-                                            $('.contact-attributes #color-squares-@(attribute.Id)').find('li').removeClass('selected-value');
-                                            $(this).closest('li').addClass('selected-value');
+                                            $('.contact-attributes #color-squares-@(attribute.Id)').find('li').removeClass('selected-value border border-primary');
+                                            $(this).closest('li').addClass('selected-value border border-primary');
                                         });
                                    });
                         </script>
@@ -240,8 +242,8 @@
                     break;
             }
         </div>
-        }
-    </div>
+    }
+</div>
 
     <script type="text/javascript">
         $(document).ready(function() {
