@@ -48,7 +48,8 @@
             columns: [{
                 field: "ProductName",
                 title: "@T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Product")",
-                width: 400
+                width: 400,
+                template: '<a class="k-link" href="@Url.Content("~/Admin/Product/Edit/")#=Id#">#=ProductName#</a>',
             }, {
                 field: "Published",
                 title: "@T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Published")",
@@ -56,12 +57,6 @@
                 headerAttributes: { style: "text-align:center" },
                 attributes: { style: "text-align:center" },
                 template: '# if(Published) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
-            },
-            {
-                field: "Id",
-                title: "@T("Admin.Common.View")",
-                width: 100,
-                template: '<a class="k-button k-button-icontext" href="@Url.Content("~/Admin/Product/Edit/")#=Id#"><i class="fa fa-eye"></i> @T("Admin.Common.View")</a>'
             }]
         });
     });
