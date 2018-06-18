@@ -195,7 +195,7 @@
                     <button type="submit" name="continueshopping" class="btn btn-secondary d-flex justify-content-center continue-shopping-button ml-sm-1"><i class="fas fa-reply pr-1"></i><span class="d-sm-block">@T("ShoppingCart.ContinueShopping")</span></button>
                 </div>
             }
-            <div class="row cart-options cart-options">
+            <div class="row px-3 cart-options cart-options">
                 @if (Model.IsEditable)
                 {
                     <div class="col-12 col-md-6 checkoutAttributes">
@@ -204,7 +204,7 @@
                 }
                 @if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo))
                 {
-                    <div class="col-sm-3 col-md-6 col-12 d-flex align-items-center selected-checkout-attributes ml-auto text-right">
+                    <div class="col-sm-3 col-md-6 col-12 d-flex selected-checkout-attributes ml-auto justify-content-end text-right mt-3">
                         @Html.Raw(Model.CheckoutAttributeInfo)
                     </div>
                 }
