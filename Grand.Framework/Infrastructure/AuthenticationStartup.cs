@@ -35,11 +35,10 @@ namespace Grand.Framework.Infrastructure
             if (!DataSettingsHelper.DatabaseIsInstalled())
                 return;
 
-            //configure authentication
-            application.UseGrandAuthentication();
-
             //set request culture
             application.UseCulture();
+            //configure authentication
+            application.UseGrandAuthentication();
         }
 
         /// <summary>

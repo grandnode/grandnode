@@ -5,6 +5,7 @@
 @inject CustomerSettings customerSettings
 @inject LocalizationSettings localizationSettings
 @inject AdminAreaSettings adminAreaSettings
+
 @using System.Globalization
 @using System.Text.Encodings.Web
 @using Microsoft.AspNetCore.Http
@@ -62,7 +63,8 @@
     Html.AppendCssFileParts("~/Administration/font-awesome/css/font-awesome.min.css", excludeFromBundle: true);
 
     //js
-    Html.AppendScriptParts(string.Format("~/Scripts/kendo/{0}/cultures/kendo.culture.{1}.min.js", kendoVersion, System.Globalization.CultureInfo.CurrentCulture.Name), excludeFromBundle: true);
+    Html.AppendScriptParts(string.Format("~/Scripts/kendo/{0}/cultures/kendo.culture.{1}.min.js", kendoVersion, "en-US"), excludeFromBundle: true);
+    Html.AppendScriptParts(string.Format("~/Scripts/kendo/{0}/cultures/kendo.culture.{1}.min.js", kendoVersion, @CultureInfo.CurrentCulture.Name), excludeFromBundle: true);
     Html.AppendScriptParts(string.Format("~/Scripts/kendo/{0}/kendo.grid.js", kendoVersion), excludeFromBundle: true);
     Html.AppendScriptParts(string.Format("~/Scripts/kendo/{0}/kendo.ui.core.js", kendoVersion), excludeFromBundle: true);
     Html.AppendScriptParts("~/Scripts/admin.common.js", excludeFromBundle: true);

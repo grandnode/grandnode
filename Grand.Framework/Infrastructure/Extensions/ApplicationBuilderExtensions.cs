@@ -176,7 +176,7 @@ namespace Grand.Framework.Infrastructure.Extensions
             {
                 supportedCultures.Add(new CultureInfo(item.LanguageCulture));
             }
-
+            
             application.UseRequestLocalization(new RequestLocalizationOptions
             {
                 DefaultRequestCulture = new RequestCulture("en-US"),

@@ -2,10 +2,8 @@
 <input id="@Html.IdForModel()" name="@Html.NameForModel()" value="@((Model > DateTime.MinValue ? Model : DateTime.Today).ToString())" />
 <script>
     $(document).ready(function () {
-        $("#@Html.IdForModel()").kendoDatePicker(
-        {
-                culture: "@System.Globalization.CultureInfo.CurrentCulture.Name"
-        }
-        );
+        $("#@Html.IdForModel()").kendoDatePicker({
+            culture: "en-US"
+        });
     });
 </script>

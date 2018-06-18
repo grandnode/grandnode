@@ -3,7 +3,7 @@
 <script>
     $(document).ready(function () {
         $("#@Html.IdForModel()").kendoNumericTextBox({
-            decimals: 2 //always display 2 digits
+            decimals: 2, //always display 2 digits
         });
         $("#@Html.IdForModel()").rules("remove", "number");
     });
