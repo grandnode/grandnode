@@ -80,18 +80,22 @@
             },
             scrollable: false,
             columns: [{
-                field: "Id",
+                field: "OrderNumber",
                 title: "@T("Admin.Affiliates.Orders.Order")",
-                width: 50
+                width: 80,
+                template: '<a class="k-link" href="@Url.Content("~/Admin/Order/Edit/")#=Id#">#=OrderNumber#</a>'
             }, {
                 field: "OrderStatus",
-                title: "@T("Admin.Affiliates.Orders.OrderStatus")"
+                title: "@T("Admin.Affiliates.Orders.OrderStatus")",
+                template: '<a class="k-link" href="@Url.Content("~/Admin/Order/Edit/")#=Id#">#=OrderStatus#</a>'
             }, {
                 field: "PaymentStatus",
-                title: "@T("Admin.Affiliates.Orders.PaymentStatus")"
+                title: "@T("Admin.Affiliates.Orders.PaymentStatus")",
+                template: '<a class="k-link" href="@Url.Content("~/Admin/Order/Edit/")#=Id#">#=PaymentStatus#</a>'
             },{
                 field: "ShippingStatus",
-                title: "@T("Admin.Affiliates.Orders.ShippingStatus")"
+                title: "@T("Admin.Affiliates.Orders.ShippingStatus")",
+                template: '<a class="k-link" href="@Url.Content("~/Admin/Order/Edit/")#=Id#">#=ShippingStatus#</a>'
             },{
                 field: "OrderTotal",
                 title: "@T("Admin.Affiliates.Orders.OrderTotal")"
@@ -100,11 +104,6 @@
                 title: "@T("Admin.Affiliates.Orders.CreatedOn")",
                 type: "date",
                 format: "{0:G}"
-            },{
-                field: "Id",
-                title: "@T("Admin.Common.View")",
-                width: 100,
-                template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=Id#">@T("Admin.Common.View")</a>'
             }]
         });
     });

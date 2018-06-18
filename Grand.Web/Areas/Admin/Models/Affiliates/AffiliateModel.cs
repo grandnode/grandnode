@@ -38,6 +38,7 @@ namespace Grand.Web.Areas.Admin.Models.Affiliates
         {
             [GrandResourceDisplayName("Admin.Affiliates.Orders.Order")]
             public override string Id { get; set; }
+            public int OrderNumber { get; set; }
 
             [GrandResourceDisplayName("Admin.Affiliates.Orders.OrderStatus")]
             public string OrderStatus { get; set; }
