@@ -2,10 +2,8 @@
 @{
     Layout = "_ColumnsTwo";
 
-    Html.AppendScriptParts("~/Scripts/bootstrap-treeview.js");
+    Html.AppendScriptParts("~/Scripts/bootstrap-treeview.js");   
 }
-
-<antiforgery-token />
 
 @section left {
     @await Component.InvokeAsync("KnowledgebaseCategories", @Model)
@@ -19,7 +17,6 @@
 @if (string.IsNullOrEmpty(Model.CurrentCategoryId))
 {
     Html.AddTitleParts(T("PageTitle.Knowledgebase").Text);
-
     <form method="get" id="small-search-box-form" asp-action="ArticlesByKeyword" asp-controller="knowledgebase" novalidate="novalidate">
         <div class="input-group">
             <span role="status" aria-live="polite" class="ui-helper-hidden-accessible"></span>
@@ -43,7 +40,7 @@ else
     @inject SeoSettings seoSettings
     {
         Layout = "_ColumnsTwo";
-        Html.AddTitleParts(!String.IsNullOrEmpty(Model.CurrentCategoryDescription) ? Model.CurrentCategoryMetaTitle : Model.CurrentCategoryName);
+        Html.AddTitleParts(!String.IsNullOrEmpty(Model.CurrentCategoryMetaTitle) ? Model.CurrentCategoryMetaTitle : Model.CurrentCategoryName);
         Html.AddMetaDescriptionParts(Model.CurrentCategoryMetaDescription);
         Html.AddMetaKeywordParts(Model.CurrentCategoryMetaKeywords);
 
