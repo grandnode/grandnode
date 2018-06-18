@@ -17,6 +17,9 @@
                         <span class="custom-control-label"></span>
                         <span class="custom-control-description">@category.Name</span>
                     </label>
+                    <div>
+                        @Html.Raw(category.Description)
+                    </div>
                 }
             <div class="newsletter-category-save pt-1 pb-1">
                 <input type="button" value="@T("NewsletterCategory.Options.Save")" id="newsletter-category-button" class="btn btn-success newsletter-subscribe-button" />
