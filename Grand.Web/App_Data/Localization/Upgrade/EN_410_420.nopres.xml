@@ -822,5 +822,13 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.VatNumberRequired.Hint">
     <Value>Check if 'Vat number' is required.</Value>
   </LocaleResource>
-
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.AddNew">
+    <Value>Add new message template.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.BackToList">
+    <Value>back to message template list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Added">
+    <Value>The message template has been added successfully.</Value>
+  </LocaleResource>
 </Language>

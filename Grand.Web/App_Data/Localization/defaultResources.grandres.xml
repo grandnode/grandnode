@@ -9279,11 +9279,14 @@
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates">
     <Value>Message templates</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.AddNew">
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Added">
     <Value>The message template has been added successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.AddNew">
+    <Value>Add new message template.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.BackToList">
-    <Value>back to return message template list</Value>
+    <Value>back to message template list</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Copy">
     <Value>Copy template</Value>
