@@ -807,7 +807,7 @@
   <LocaleResource Name="Admin.Address.Fields.VatNumber">
     <Value>Vat number</Value>
   </LocaleResource>
-  <LocaleResource Name="Address.Fields.VatNumer">
+  <LocaleResource Name="Address.Fields.VatNumber">
     <Value>Vat number</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.VatNumberEnabled">
