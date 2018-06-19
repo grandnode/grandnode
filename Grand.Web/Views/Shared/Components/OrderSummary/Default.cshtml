@@ -224,13 +224,16 @@
                 <div class="row">
                     @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_cart_footer" })
                     @if (Model.IsEditable)
-                {
+                    {
                         <div class="col-sm-6 col-12 cart-collaterals">
-                            <div class="deals">
-                                @await Html.PartialAsync("_GiftCardBox", Model.GiftCardBox)
-                                @await Html.PartialAsync("_DiscountBox", Model.DiscountBox)
-                                @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_content_deals" })
-                            </div>
+                            @if (Model.GiftCardBox.Display || Model.DiscountBox.Display)
+                            {
+                                <div class="deals">
+                                    @await Html.PartialAsync("_GiftCardBox", Model.GiftCardBox)
+                                    @await Html.PartialAsync("_DiscountBox", Model.DiscountBox)
+                                    @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_content_deals" })
+                                </div>
+                            }
                             @await Component.InvokeAsync("EstimateShipping")
                         </div>
                     }
