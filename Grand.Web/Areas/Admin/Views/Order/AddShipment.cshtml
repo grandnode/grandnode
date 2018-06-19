@@ -96,125 +96,121 @@
             }
     </script>
     }
-    <table class="table table-bordered table-striped table-hover">
-        <tr>
-            <td>
-                <strong>@T("Admin.Orders.Shipments.Products")</strong>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <table class="table table-bordered table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th>
-                                @T("Admin.Orders.Shipments.Products.ProductName")
-                            </th>
-                            <th>
-                                @T("Admin.Orders.Shipments.Products.SKU")
-                            </th>
-                            <th>
-                                @T("Admin.Orders.Shipments.Products.Warehouse")
-                            </th>
-                            <th>
-                                @T("Admin.Orders.Shipments.Products.ItemWeight")
-                            </th>
-                            <th>
-                                @T("Admin.Orders.Shipments.Products.ItemDimensions")
-                            </th>
-                            <th>
-                                @T("Admin.Orders.Shipments.Products.QtyOrdered")
-                            </th>
-                            <th>
-                                @T("Admin.Orders.Shipments.Products.QtyShipped")
-                            </th>
-                            <th>
-                                @T("Admin.Orders.Shipments.Products.QtyToShip")
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.Items)
-                        {
+
+                <h4><strong>@T("Admin.Orders.Shipments.Products")</strong></h4>
+
+                <div class="table-responsive visible-xs-block visible-sm-block visible-md-block visible-lg-block">
+                    <table class="table table-bordered table-striped table-hover">
+                        <thead>
                             <tr>
-                                <td>
-                                    <div style="padding-left:10px;padding-right:10px;">
-                                        <em><a href="@Url.Action("Edit", "Product", new {id = item.ProductId})">@item.ProductName</a></em>
-                                        @if (!String.IsNullOrEmpty(item.AttributeInfo))
-                                        {
-                                            <p>
-                                                @Html.Raw(item.AttributeInfo)
-                                            </p>
-                                        }
-                                        @if (item.ShipSeparately)
-                                        {
-                                            <p>
-                                                <strong>@T("Admin.Orders.Shipments.Products.ShipSeparately.Warning")</strong>
-                                                @T("Admin.Orders.Shipments.Products.ShipSeparately")
-                                            </p>
-                                        }
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="padding-left:10px;padding-right:10px;">
-                                        @item.Sku
-                                    </div>
-                                </td>
-                                <td>
-                                    <div>
-                                        @if (item.AllowToChooseWarehouse)
-                                        {
-                                            if (item.AvailableWarehouses.Count > 0)
+                                <th>
+                                    @T("Admin.Orders.Shipments.Products.ProductName")
+                                </th>
+                                <th>
+                                    @T("Admin.Orders.Shipments.Products.SKU")
+                                </th>
+                                <th>
+                                    @T("Admin.Orders.Shipments.Products.Warehouse")
+                                </th>
+                                <th>
+                                    @T("Admin.Orders.Shipments.Products.ItemWeight")
+                                </th>
+                                <th>
+                                    @T("Admin.Orders.Shipments.Products.ItemDimensions")
+                                </th>
+                                <th>
+                                    @T("Admin.Orders.Shipments.Products.QtyOrdered")
+                                </th>
+                                <th>
+                                    @T("Admin.Orders.Shipments.Products.QtyShipped")
+                                </th>
+                                <th>
+                                    @T("Admin.Orders.Shipments.Products.QtyToShip")
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Items)
+                            {
+                                <tr>
+                                    <td>
+                                        <div style="padding-left:10px;padding-right:10px;">
+                                            <em><a href="@Url.Action("Edit", "Product", new {id = item.ProductId})">@item.ProductName</a></em>
+                                            @if (!String.IsNullOrEmpty(item.AttributeInfo))
                                             {
-                                                <select name="warehouse_@(item.OrderItemId)" id="warehouse_@(item.OrderItemId)">
-                                                    @foreach (var warehouse in item.AvailableWarehouses)
-                                                    {
-                                                        <option value="@warehouse.WarehouseId" data-stock-qty="@warehouse.StockQuantity" data-reserved-qty="@warehouse.ReservedQuantity" data-planned-qty="@warehouse.PlannedQuantity" @(warehouse.WarehouseId= =item.WarehouseId ? "selected" : "" )>
-                                                            @T("Admin.Orders.Shipments.Products.Warehouse.ChooseQty", warehouse.WarehouseName, warehouse.StockQuantity, warehouse.ReservedQuantity, warehouse.PlannedQuantity)
-                                                        </option>
-                                                    }
-                                                </select>
+                                                <p>
+                                                    @Html.Raw(item.AttributeInfo)
+                                                </p>
+                                            }
+                                            @if (item.ShipSeparately)
+                                            {
+                                                <p>
+                                                    <strong>@T("Admin.Orders.Shipments.Products.ShipSeparately.Warning")</strong>
+                                                    @T("Admin.Orders.Shipments.Products.ShipSeparately")
+                                                </p>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="padding-left:10px;padding-right:10px;">
+                                            @item.Sku
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            @if (item.AllowToChooseWarehouse)
+                                            {
+                                                if (item.AvailableWarehouses.Count > 0)
+                                                {
+                                                    <select name="warehouse_@(item.OrderItemId)" id="warehouse_@(item.OrderItemId)">
+                                                        @foreach (var warehouse in item.AvailableWarehouses)
+                                                        {
+                                                            <option value="@warehouse.WarehouseId" data-stock-qty="@warehouse.StockQuantity" data-reserved-qty="@warehouse.ReservedQuantity" data-planned-qty="@warehouse.PlannedQuantity" @(warehouse.WarehouseId= =item.WarehouseId ? "selected" : "" )>
+                                                                @T("Admin.Orders.Shipments.Products.Warehouse.ChooseQty", warehouse.WarehouseName, warehouse.StockQuantity, warehouse.ReservedQuantity, warehouse.PlannedQuantity)
+                                                            </option>
+                                                        }
+                                                    </select>
+                                                }
+                                                else
+                                                {
+                                                    <div>@T("Admin.Orders.Shipments.Products.Warehouse.NotAvailabe")</div>
+                                                }
                                             }
                                             else
                                             {
-                                                <div>@T("Admin.Orders.Shipments.Products.Warehouse.NotAvailabe")</div>
-                                            }
-                                        }
-                                        else
-                                        {
-                                            //display warehouses
-                                            for (int i = 0; i < item.AvailableWarehouses.Count; i++)
-                                            {
-                                                var warehouse = item.AvailableWarehouses[i];
-                                                @warehouse.WarehouseName
-                                                if (i != item.AvailableWarehouses.Count - 1)
+                                                //display warehouses
+                                                for (int i = 0; i < item.AvailableWarehouses.Count; i++)
                                                 {
-                                                    <br />
+                                                    var warehouse = item.AvailableWarehouses[i];
+                                                    @warehouse.WarehouseName
+                                                    if (i != item.AvailableWarehouses.Count - 1)
+                                                    {
+                                                        <br />
+                                                    }
                                                 }
                                             }
-                                        }
-                                    </div>
-                                </td>
-                                <td>
-                                    @item.ItemWeight
-                                </td>
-                                <td>
-                                    @item.ItemDimensions
-                                </td>
-                                <td>
-                                    @item.QuantityOrdered
-                                </td>
-                                <td>
-                                    @item.QuantityInAllShipments
-                                </td>
-                                <td>
-                                    <input name="qtyToAdd@(item.OrderItemId)" type="text" value="@item.QuantityToAdd" id="qtyToAdd@(item.OrderItemId)" class="form-control" style="width:100px;" />
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </td>
-        </tr>
-    </table>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @item.ItemWeight
+                                    </td>
+                                    <td>
+                                        @item.ItemDimensions
+                                    </td>
+                                    <td>
+                                        @item.QuantityOrdered
+                                    </td>
+                                    <td>
+                                        @item.QuantityInAllShipments
+                                    </td>
+                                    <td>
+                                        <input name="qtyToAdd@(item.OrderItemId)" type="text" value="@item.QuantityToAdd" id="qtyToAdd@(item.OrderItemId)" class="form-control" style="width:100px;" />
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+               
+
 </form>
