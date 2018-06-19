@@ -4984,7 +4984,7 @@ namespace Grand.Services.Installation
                 ManufacturerThumbPictureSize = 420,
                 VendorThumbPictureSize = 450,
                 CartThumbPictureSize = 80,
-                MiniCartThumbPictureSize = 70,
+                MiniCartThumbPictureSize = 100,
                 AddToCartThumbPictureSize = 200,
                 AutoCompleteSearchThumbPictureSize = 20,
                 ImageSquarePictureSize = 32,
