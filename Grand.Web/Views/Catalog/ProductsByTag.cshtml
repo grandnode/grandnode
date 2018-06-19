@@ -31,7 +31,7 @@
                     <div class="row flex-grid">
                         @foreach (var product in Model.Products)
                         {
-                                <div class="col-12 col-md-6 col-lg-4">
+                                <div class="col-6 col-sm-6  col-md-6 col-lg-4 product-container">
                                     @await Html.PartialAsync("_ProductBox", product)
                                 </div>
                         }

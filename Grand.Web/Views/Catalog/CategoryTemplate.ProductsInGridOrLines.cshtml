@@ -76,7 +76,7 @@
 
                                 <img class="card-img-top img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title">
 
-                                <h2 class="h6 p-3 mb-0 card-title">
+                                <h2 class="h6 p-sm-3 p-2 mb-0 card-title">
                                     @item.Name
                                 </h2>
 
@@ -99,7 +99,7 @@
                 <div class="row glex-grid">
                     @foreach (var item in Model.FeaturedProducts)
                     {
-                        <div class="col-lg-4 col-sm-6 col-12">
+                        <div class="col-lg-4 col-sm-6 col-6 product-container">
                             @await Html.PartialAsync("_ProductBox", item)
                         </div>
                     }
@@ -123,7 +123,7 @@
                     <div class="row glex-grid">
                         @foreach (var product in Model.Products)
                         {
-                            <div class="col-lg-4 col-sm-6 col-12">
+                            <div class="col-lg-4 col-sm-6 col-6 product-container">
                                 @await Html.PartialAsync("_ProductBox", product)
                             </div>
                         }

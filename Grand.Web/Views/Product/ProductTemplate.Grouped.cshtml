@@ -86,46 +86,34 @@
                     </div>
                 </div>
 
-                <div class="col-12 mt-3 mb-3 px-0">       
-                    <div class="row">
-                      <div class="col-xl-3 col-lg-4 col-12">
-                        <div class="nav flex-lg-column flex-row nav-pills mb-3 mb-lg-0" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                                <a class="nav-link active" id="v-pills-desc-tab" data-toggle="pill" href="#v-pills-desc" role="tab" aria-controls="v-pills-desc" aria-selected="true">
-                                   <i class="fa fa-sticky-note d-lg-none"></i>
-                                   <span class="d-none d-md-inline-block">@T("Products.Description")</span>
-                                </a>
-                             @if (Model.ProductTags.Any())
-                             {
-                                <a class="nav-link" id="v-pills-tags-tab" data-toggle="pill" href="#v-pills-tags" role="tab" aria-controls="v-pills-tags" aria-selected="false">
-                                    <i class="fa fa-tags d-lg-none"></i>
-                                    <span class="d-none d-md-inline-block">@T("Products.Tags")</span>
-                                </a>
-                             }
-                             @if (Model.ProductSpecifications.Any())
-                             {
-                                <a class="nav-link" id="v-pills-spec-tab" data-toggle="pill" href="#v-pills-spec" role="tab" aria-controls="v-pills-spec" aria-selected="false">
-                                    <i class="fa fa-puzzle-piece d-lg-none"></i>
-                                    <span class="d-none d-md-inline-block">@T("Products.Specs")</span>
-                                </a>
-                             }
-                        </div>
-                      </div>
-                      <div class="col-xl-9 col-lg-8 col-12">
-                        <div class="tab-content" id="v-pills-tabContent">
-                         
-                            <div class="tab-pane fade show active" id="v-pills-desc" role="tabpanel" aria-labelledby="v-pills-desc-tab">@Html.Raw(Model.FullDescription)</div>
-                          
-                            @if (Model.ProductTags.Any())
-                            {
-                                <div class="tab-pane fade" id="v-pills-tags" role="tabpanel" aria-labelledby="v-pills-tags-tab">@await Html.PartialAsync("_ProductTags", Model.ProductTags)</div>
-                            }
-                            @if (Model.ProductSpecifications.Any())
-                            {
-                                <div class="tab-pane fade" id="v-pills-spec" role="tabpanel" aria-labelledby="v-pills-spec-tab">@await Html.PartialAsync("_ProductSpecifications", Model.ProductSpecifications)</div>
-                            }
-
-                        </div>
-                      </div>
+                <div class="col-12 mt-2 mb-2 px-0">
+                    <ul class="nav nav-tabs product-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="desc-tab" data-toggle="tab" href="#desc" role="tab" aria-controls="desc" aria-selected="true"><span class="d-none d-md-block">@T("Products.Description")</span><i class="fa fa-sticky-note d-md-none"></i></a>
+                        </li>
+                        @if (Model.ProductTags.Any())
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" id="tags-tab" data-toggle="tab" href="#tags" role="tab" aria-controls="tags" aria-selected="false"><span class="d-none d-md-block">@T("Products.Tags")</span><i class="fa fa-tags d-md-none"></i></a>
+                            </li>
+                        }
+                        @if (Model.ProductSpecifications.Any())
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" id="spec-tab" data-toggle="tab" href="#spec" role="tab" aria-controls="spec" aria-selected="false"><span class="d-none d-md-block">@T("Products.Specs")</span><i class="fa fa-puzzle-piece d-md-none"></i></a>
+                            </li>
+                        }
+                    </ul>
+                    <div class="tab-content" id="product_tab_content">
+                        <div class="tab-pane fade show active" id="desc" role="tabpanel" aria-labelledby="desc-tab">@Html.Raw(Model.FullDescription)</div>
+                        @if (Model.ProductTags.Any())
+                        {
+                            <div class="tab-pane fade" id="tags" role="tabpanel" aria-labelledby="tags-tab">@await Html.PartialAsync("_ProductTags", Model.ProductTags)</div>
+                        }
+                        @if (Model.ProductSpecifications.Any())
+                        {
+                            <div class="tab-pane fade" id="spec" role="tabpanel" aria-labelledby="spec-tab">@await Html.PartialAsync("_ProductSpecifications", Model.ProductSpecifications)</div>
+                        }
                     </div>
                 </div>
                 @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_before_collateral", additionalData = Model.Id })

@@ -68,7 +68,8 @@
                             <button type="button" class="btn btn-primary" onclick="AjaxCart.addproducttocart_catalog('@addtocartlink', '@Model.ShowQty', '@Model.Id');return false;">
                                 @if (!Model.ShowQty)
                                 {
-                                    <span class="add-cart-text">@(addToCartText)</span>
+                                    <span class="add-cart-text d-sm-block d-none">@(addToCartText)</span>
+                                    <span class="fas fa-shopping-cart d-sm-none d-block"></span>
                                 }
                                 <span class="sr-only">AddToCart</span>
                             </button>
