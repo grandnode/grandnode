@@ -101,41 +101,51 @@
                 </div>
             </div>
             <div class="form-group">
-                @Html.OverrideStoreCheckboxFor(model => model.GoogleId_OverrideForStore, model => model.GoogleId, Model.ActiveStoreScopeConfiguration)
-                <admin-label asp-for="GoogleId" />
-                <div class="col-md-9 col-sm-9">
+                <div class="col-md-4 col-sm-4 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.GoogleId_OverrideForStore, model => model.GoogleId, Model.ActiveStoreScopeConfiguration)
+                    <admin-label asp-for="GoogleId" class="control-label" />
+                </div>
+                <div class="col-md-8 col-sm-8">
                     <admin-input asp-for="GoogleId" />
                     <span asp-validation-for="GoogleId"></span>
                 </div>
             </div>
             <div class="form-group">
-                @Html.OverrideStoreCheckboxFor(model => model.TrackingScript_OverrideForStore, model => model.TrackingScript, Model.ActiveStoreScopeConfiguration)
-                <admin-label asp-for="TrackingScript" />
-                <div class="col-md-9 col-sm-9">
+                <div class="col-md-4 col-sm-4 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.TrackingScript_OverrideForStore, model => model.TrackingScript, Model.ActiveStoreScopeConfiguration)
+                    <admin-label asp-for="TrackingScript" class="control-label" />
+                </div>
+                <div class="col-md-8 col-sm-8">
                     <admin-textarea asp-for="TrackingScript"></admin-textarea>
                     <span asp-validation-for="TrackingScript"></span>
                 </div>
             </div>
             <div class="form-group">
-                @Html.OverrideStoreCheckboxFor(model => model.EcommerceScript_OverrideForStore, model => model.EcommerceScript, Model.ActiveStoreScopeConfiguration)
-                <admin-label asp-for="EcommerceScript" />
-                <div class="col-md-9 col-sm-9">
+                <div class="col-md-4 col-sm-4 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.EcommerceScript_OverrideForStore, model => model.EcommerceScript, Model.ActiveStoreScopeConfiguration)
+                    <admin-label asp-for="EcommerceScript" class="control-label" />
+                </div>
+                <div class="col-md-8 col-sm-8">
                     <admin-textarea asp-for="EcommerceScript"></admin-textarea>
                     <span asp-validation-for="EcommerceScript"></span>
                 </div>
             </div>
             <div class="form-group">
-                @Html.OverrideStoreCheckboxFor(model => model.EcommerceDetailScript_OverrideForStore, model => model.EcommerceDetailScript, Model.ActiveStoreScopeConfiguration)
-                <admin-label asp-for="EcommerceDetailScript" />
-                <div class="col-md-9 col-sm-9">
+                <div class="col-md-4 col-sm-4 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.EcommerceDetailScript_OverrideForStore, model => model.EcommerceDetailScript, Model.ActiveStoreScopeConfiguration)
+                    <admin-label asp-for="EcommerceDetailScript" class="control-label" />
+                </div>
+                <div class="col-md-8 col-sm-8">
                     <admin-textarea asp-for="EcommerceDetailScript"></admin-textarea>
                     <span asp-validation-for="EcommerceDetailScript"></span>
                 </div>
             </div>
             <div class="form-group">
-                @Html.OverrideStoreCheckboxFor(model => model.IncludingTax_OverrideForStore, model => model.IncludingTax, Model.ActiveStoreScopeConfiguration)
-                <admin-label asp-for="IncludingTax" />
-                <div class="col-md-9 col-sm-9">
+                <div class="col-md-4 col-sm-4 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.IncludingTax_OverrideForStore, model => model.IncludingTax, Model.ActiveStoreScopeConfiguration)
+                    <admin-label asp-for="IncludingTax" class="control-label" />
+                </div>
+                <div class="col-md-8 col-sm-8">
                     <label class="mt-checkbox mt-checkbox-outline">
                         <admin-input asp-for="IncludingTax" />
                         <span></span>
@@ -152,10 +162,8 @@
             </div>
         </div>
         <div class="form-actions">
-            <div class="row">
-                <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
-                    <input type="submit" name="save" class="btn green" value="@T("Admin.Common.Save")" />
-                </div>
+            <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
+                <input type="submit" name="save" class="btn green" value="@T("Admin.Common.Save")" />
             </div>
         </div>
     </div>
