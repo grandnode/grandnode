@@ -1171,14 +1171,14 @@ pagination .pagination a:not([href]) {
 	display: none;
 }
 .impersonated-container {
-	border: 1px solid rgba(0, 0, 0, .3);
-	border-radius: .25rem;
-	padding: 5px;
-	height: 30px;
-	margin-top: 6px;
-	display: inline-flex;
-	flex-wrap: wrap;
-	align-items: center;
+    border: 1px solid #ffffff;
+    border-radius: .25rem;
+    padding: 5px;
+    height: 30px;
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    color: #fff;
 }
 /* mobile - search */
 
