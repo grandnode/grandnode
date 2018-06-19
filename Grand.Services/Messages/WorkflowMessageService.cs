@@ -2220,8 +2220,23 @@ namespace Grand.Services.Messages
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-            var toEmail = emailAccount.Email;
-            var toName = emailAccount.DisplayName;
+            var toEmail = string.Empty;
+            var toName = string.Empty;
+
+            if (order.BillingAddress != null)
+            {
+                toEmail = order.BillingAddress.Email;
+                toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
+            }
+            else
+            {
+                if (order.ShippingAddress != null)
+                {
+                    toEmail = order.ShippingAddress.Email;
+                    toName = string.Format("{0} {1}", order.ShippingAddress.FirstName, order.ShippingAddress.LastName);
+                }
+            }
+
             return SendNotification(messageTemplate, emailAccount,
                 languageId, tokens,
                 toEmail, toName);
