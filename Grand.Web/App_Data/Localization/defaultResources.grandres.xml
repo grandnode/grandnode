@@ -15315,6 +15315,9 @@
   <LocaleResource Name="Checkout.Button">
     <Value>Checkout</Value>
   </LocaleResource>
+  <LocaleResource Name="checkout.button.login">
+    <Value>Login and Checkout</Value>
+  </LocaleResource>
   <LocaleResource Name="Checkout.ConfirmButton">
     <Value>Confirm</Value>
   </LocaleResource>

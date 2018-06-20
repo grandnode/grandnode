@@ -831,4 +831,7 @@
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Added">
     <Value>The message template has been added successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="checkout.button.login">
+    <Value>Login and Checkout</Value>
+  </LocaleResource>
 </Language>

@@ -283,36 +283,58 @@
                                     </div>
                                 </div>
                             }
-                            <div class="checkout-buttons text-center float-sm-right">
-                                @if (String.IsNullOrEmpty(Model.MinOrderSubtotalWarning))
-                                {
-                                    <script type="text/javascript">
-                                        $(document).ready(function () {
-                                            $('#checkout').click(function () {
-                                                //terms of service
-                                                var termOfServiceOk = true;
-                                                if ($('#termsofservice').length > 0) {
-                                                    //terms of service element exists
-                                                    if (!$('#termsofservice').is(':checked')) {
-                                                        $("#ModalConditionsOfUse").modal('show');
-                                                        $("body").removeAttr("style");
-                                                        $(".navUp").removeAttr("style");
-                                                        termOfServiceOk = false;
-                                                    } else {
-                                                        termOfServiceOk = true;
+                                <div class="checkout-buttons text-center float-sm-right">
+                                    @if (String.IsNullOrEmpty(Model.MinOrderSubtotalWarning))
+                                    {
+                                        <script type="text/javascript">
+                                            $(document).ready(function () {
+                                                function checkTermOfService() {
+                                                    var termOfServiceOk = true;
+                                                    if ($('#termsofservice').length > 0) {
+                                                        //terms of service element exists
+                                                        if (!$('#termsofservice').is(':checked')) {
+                                                            $("#ModalConditionsOfUse").modal('show');
+                                                            $("body").removeAttr("style");
+                                                            $(".navUp").removeAttr("style");
+                                                            termOfServiceOk = false;
+                                                        } else {
+                                                            termOfServiceOk = true;
+                                                        }
                                                     }
+                                                    return termOfServiceOk;
                                                 }
-                                                return termOfServiceOk;
+                                                $('#checkoutasguest').click(function () {
+                                                    //terms of service
+                                                    if (checkTermOfService()) {
+                                                        location.href='@Url.RouteUrl("Checkout")'
+                                                    }
+                                                });
+                                                $('#checkout').click(function () {
+                                                    //terms of service
+                                                    return checkTermOfService();
+                                                });
                                             });
-                                        });
 
 
-                                    </script>
-                                    <button type="submit" id="checkout" name="checkout" value="checkout" class="float-sm-right btn btn-info checkout-button">
-                                        @T("Checkout.Button")
-                                    </button>
-                                }
-                            </div>
+                                        </script>
+                                        @if (Model.ShowCheckoutAsGuestButton)
+                                        {
+                                            <button type="button" id="checkoutasguest" class="btn btn-secondary checkout-as-guest-button mr-1">
+                                                @T("Account.Login.CheckoutAsGuest")
+                                            </button>
+                                        }
+                                        <button type="submit" id="checkout" name="checkout" value="checkout" class="float-sm-right btn btn-info checkout-button">
+                                            @if (Model.IsGuest)
+                                            {
+                                                @T("Checkout.Button.Login")
+                                            }
+                                            else
+                                            {
+                                                @T("Checkout.Button")
+                                            }
+                                        </button>
+                                    }
+                                </div>
                             <div class="addon-buttons">
                                 @*Payment method buttons (e.g. GoogleCheckoutButton, Paypal Express)*@
                                 @foreach (var pm in Model.ButtonPaymentMethodViewComponentNames)
