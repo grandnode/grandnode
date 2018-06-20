@@ -20,10 +20,12 @@
             }
             @if (Model.EndTime > DateTime.UtcNow)
             {
-                <input asp-for="HighestBidValue" type="number" class="form-control" style="max-width: 100px;" value="@(Model.HighestBidValue > 0 ? (Model.HighestBidValue + 1).ToString(System.Globalization.CultureInfo.InvariantCulture) : (Model.StartPrice + 1).ToString(System.Globalization.CultureInfo.InvariantCulture))" />
-                <button type="button" id="bid-button-@Model.Id" class="btn btn-success add-to-cart-button" data-productid="@Model.Id" onclick="AjaxCart.addbid('@Url.RouteUrl("AddBid", new { productId = Model.Id, shoppingCartTypeId = (int)ShoppingCartType.Auctions })', '#product-details-form');return false;">
-                    <span class="fa fa-gavel"></span> <span>@T("ShoppingCart.Bid")</span>
-                </button>
+                <div class="btn-group">
+                    <input asp-for="HighestBidValue" type="number" class="form-control" style="max-width: 100px;" value="@(Model.HighestBidValue > 0 ? (Model.HighestBidValue + 1).ToString(System.Globalization.CultureInfo.InvariantCulture) : (Model.StartPrice + 1).ToString(System.Globalization.CultureInfo.InvariantCulture))" />
+                    <button type="button" id="bid-button-@Model.Id" class="btn btn-primary add-to-cart-button" data-productid="@Model.Id" onclick="AjaxCart.addbid('@Url.RouteUrl("AddBid", new { productId = Model.Id, shoppingCartTypeId = (int)ShoppingCartType.Auctions })', '#product-details-form');return false;">
+                        <span class="fa fa-gavel"></span> <span>@T("ShoppingCart.Bid")</span>
+                    </button>
+                </div>
             }
         </div>
     </div>
