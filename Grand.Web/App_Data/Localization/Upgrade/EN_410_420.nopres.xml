@@ -834,4 +834,7 @@
   <LocaleResource Name="checkout.button.login">
     <Value>Login and Checkout</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Header.Profile">
+    <Value>My profile</Value>
+  </LocaleResource>
 </Language>
