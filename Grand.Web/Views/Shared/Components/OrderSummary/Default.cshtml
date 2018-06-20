@@ -188,7 +188,7 @@
                 </table>
             </div>
             @if (Model.IsEditable)
-                {
+            {
                 <div class="common-buttons btn-group btn-group-sm text-sm-right d-flex justify-content-end">
                     <button type="submit" name="updatecart" class="btn btn-info d-flex justify-content-center update-cart-button"><i class="fas fa-sync-alt pr-1"></i><span class="d-sm-block">@T("ShoppingCart.UpdateCart")</span></button>
                     <button type="submit" name="clearcart" class="btn btn-danger d-flex justify-content-center removeAll-cart-button ml-sm-1"><i class="fa fa-trash pr-1"></i><span class="d-sm-block">@T("shoppingcart.clearcart")</span></button>
@@ -243,8 +243,12 @@
                         {
                             if (!String.IsNullOrEmpty(Model.MinOrderSubtotalWarning))
                             {
-                                <div class="min-amount-warning">
-                                    @Model.MinOrderSubtotalWarning
+                                <div class="card text-white card-danger text-center min-amount-warning">
+                                    <div class="card-body p-3">
+                                        <blockquote class="card-bodyquote mb-0">
+                                            <span>@Model.MinOrderSubtotalWarning</span>
+                                        </blockquote>
+                                    </div>
                                 </div>
                             }
                         }

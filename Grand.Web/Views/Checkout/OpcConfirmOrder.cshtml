@@ -1,47 +1,55 @@
 ﻿@model CheckoutConfirmModel
 <div class="checkout-data col-12 px-0">
     @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_confirm_top" })
+    <div class="order-summary">
+        @await Component.InvokeAsync("OrderSummary", new { prepareAndDisplayOrderReviewData = true })
+    </div>
     <div class="confirm-order">
         <div>
             @if (!String.IsNullOrEmpty(Model.MinOrderTotalWarning))
             {
-                <span class="min-order-warning">@Model.MinOrderTotalWarning</span>
+                <div class="card text-white card-danger min-amount-warning">
+                    <div class="card-body p-3">
+                        <blockquote class="card-bodyquote mb-0">
+                            <span>@Model.MinOrderTotalWarning</span>
+                        </blockquote>
+                    </div>
+                </div>
             }
         </div>
         @if (Model.Warnings.Any())
         {
-            <div class="message-error">
-                <ul>
+            <div class="card text-white card-danger">
+                <div class="card-body p-3">
                     @foreach (var warning in Model.Warnings)
                     {
-                        <li>@warning</li>
+                        <blockquote class="card-bodyquote mb-0">
+                            <span>@warning</span>
+                        </blockquote>
                     }
-                </ul>
+                </div>
             </div>
         }
     </div>
     @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_confirm_bottom" })
-    <div class="order-summary">
-        @await Component.InvokeAsync("OrderSummary", new { prepareAndDisplayOrderReviewData = true })
-    </div>    
+
     @if (String.IsNullOrEmpty(Model.MinOrderTotalWarning) && Model.TermsOfServiceOnOrderConfirmPage)
     {
         <div class="col-12">
-
-                <div class="modal fade" id="terms-of-service-warning-box" tabindex="-1" title="@T("Checkout.TermsOfService")" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="display:none;">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <p>@T("Checkout.TermsOfService.PleaseAccept")</p>
-                            </div>
+            <div class="modal fade" id="terms-of-service-warning-box" tabindex="-1" title="@T("Checkout.TermsOfService")" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="display:none;">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>@T("Checkout.TermsOfService.PleaseAccept")</p>
                         </div>
                     </div>
                 </div>
+            </div>
 
             <div class="terms-of-service">
                 <label class="custom-control custom-checkbox">
