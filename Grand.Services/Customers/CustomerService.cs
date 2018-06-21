@@ -807,14 +807,25 @@ namespace Grand.Services.Customers
         {
             var builder = Builders<CustomerReminderHistory>.Filter;
             var filter = builder.Eq(x => x.CustomerId, customerId);
-            filter = filter & builder.Eq(x => x.Status, (int)CustomerReminderHistoryStatusEnum.Started);
+            var customerReminderRepository = Grand.Core.Infrastructure.EngineContext.Current.Resolve<IRepository<CustomerReminderHistory>>();
 
+            //update started reminders
+            filter = filter & builder.Eq(x => x.Status, (int)CustomerReminderHistoryStatusEnum.Started);
             var update = Builders<CustomerReminderHistory>.Update
                 .Set(x => x.EndDate, DateTime.UtcNow)
                 .Set(x => x.Status, (int)CustomerReminderHistoryStatusEnum.CompletedOrdered)
                 .Set(x => x.OrderId, orderId);
+            customerReminderRepository.Collection.UpdateManyAsync(filter, update);
 
-            var customerReminderRepository = Grand.Core.Infrastructure.EngineContext.Current.Resolve<IRepository<CustomerReminderHistory>>();
+            //update Ended reminders
+            filter = builder.Eq(x => x.CustomerId, customerId);
+            filter = filter & builder.Eq(x => x.Status, (int)CustomerReminderHistoryStatusEnum.CompletedReminder);
+            filter = filter & builder.Gt(x => x.EndDate, DateTime.UtcNow.AddHours(-36));
+
+            update = Builders<CustomerReminderHistory>.Update
+                .Set(x => x.Status, (int)CustomerReminderHistoryStatusEnum.CompletedOrdered)
+                .Set(x => x.OrderId, orderId);
+
             customerReminderRepository.Collection.UpdateManyAsync(filter, update);
 
         }
