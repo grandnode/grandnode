@@ -9,11 +9,11 @@
             <div class="form-group">
                 <div class="form-group">
                     <admin-label asp-for="CalendarModel.StartDateUtc" />
-                    <div class="col-md-2 col-sm-2">
+                    <div class="col-md-3 col-sm-3">
                         <admin-input asp-for="CalendarModel.StartDateUtc" />
                     </div>
                     <div class="col-md-6" id="pnlStartTime">
-                        <label class="col-md-2 control-label">@T("Admin.Catalog.Products.Fields.Calendar.StartTime")</label>
+                        <label class="col-md-3 control-label">@T("Admin.Catalog.Products.Fields.Calendar.StartTime")</label>
                         <div class="col-md-3 col-sm-3">
                             <admin-input asp-for="CalendarModel.StartTime" />
                         </div>
@@ -22,11 +22,11 @@
                 </div>
                 <div class="form-group">
                     <admin-label asp-for="CalendarModel.EndDateUtc" />
-                    <div class="col-md-2 col-sm-2">
+                    <div class="col-md-3 col-sm-3">
                         <admin-input asp-for="CalendarModel.EndDateUtc" />
                     </div>
                     <div class="col-md-6" id="pnlEndTime">
-                        <label class="col-md-2 control-label">@T("Admin.Catalog.Products.Fields.Calendar.EndTime")</label>
+                        <label class="col-md-3 control-label">@T("Admin.Catalog.Products.Fields.Calendar.EndTime")</label>
                         <div class="col-md-3 col-sm-3">
                             <admin-input asp-for="CalendarModel.EndTime" />
                         </div>
@@ -48,7 +48,7 @@
                     <span id="pnlInterval">
                         <admin-input asp-for="CalendarModel.Interval" />
                     </span>
-                    <admin-select asp-for="CalendarModel.IntervalUnit" asp-items="((IntervalUnit)Model.CalendarModel.IntervalUnit).ToSelectList()" class = "form-control input-xsmall" style = "height: 30px;padding: 0px; margin-bottom: 3px; margin-top: 3px; "/>
+                    <admin-select asp-for="CalendarModel.IntervalUnit" asp-items="((IntervalUnit)Model.CalendarModel.IntervalUnit).ToSelectList()" class="form-control input-xsmall" style="height: 30px;padding: 0px; margin-bottom: 3px; margin-top: 3px; " />
                 </div>
             </div>
             <div class="form-group" id="pnlQuantity">
@@ -122,6 +122,7 @@
     <div class="panel panel-default">
         <div class="panel-footer">
             <button id="generateCalendar" type="button" class="btn btn-primary">@T("Admin.Catalog.Products.Calendar.Generatecalendar")</button>
+            <button id="clearOld" type="button" class="btn btn-secondary" style="margin-left:10px">@T("Admin.Catalog.Products.Calendar.Clearold")</button>
             <button id="clearCalendar" type="button" class="btn btn-danger" style="margin-left:10px">@T("Admin.Catalog.Products.Calendar.Clearcalendar")</button>
         </div>
         <div class="panel-body">
@@ -131,112 +132,112 @@
 
 
     <script type="text/javascript">
-
         $(document).ready(function () {
-                function toggleInternalType() {
-                    var selectedInternalTypeId = $("#@Html.FieldIdFor(model => model.CalendarModel.IntervalUnit)").val();
-                    if (selectedInternalTypeId == @(((int)IntervalUnit.Day).ToString())) {
-                        $("#pnlStartTime").hide();
-                        $("#pnlEndTime").hide();
-                        $("#pnlResource").show();
-                        $("#pnlIncludeBothDates").show();
-                        $("#pnlParameter").hide();
-                        $("#pnlQuantity").hide();
-                        $("#pnlInterval").hide();
-                        $("#@Html.FieldIdFor(model => model.CalendarModel.Interval)").data("kendoNumericTextBox").value(1);
-                    } else {
-                        $("#pnlStartTime").show();
-                        $("#pnlEndTime").show();
-                        $("#pnlResource").hide();
-                        $("#pnlIncludeBothDates").hide();
-                        $("#pnlParameter").show();
-                        $("#pnlQuantity").show();
-                        $("#pnlInterval").show();
-                        $("#@Html.FieldIdFor(model => model.CalendarModel.Interval)").data("kendoNumericTextBox").value(0);
-                    }
-
+            function toggleInternalType() {
+                var selectedInternalTypeId = $("#@Html.FieldIdFor(model => model.CalendarModel.IntervalUnit)").val();
+                if (selectedInternalTypeId == @(((int)IntervalUnit.Day).ToString())) {
+                    $("#pnlStartTime").hide();
+                    $("#pnlEndTime").hide();
+                    $("#pnlResource").show();
+                    $("#pnlIncludeBothDates").show();
+                    $("#pnlParameter").hide();
+                    $("#pnlQuantity").hide();
+                    $("#pnlInterval").hide();
+                    $("#@Html.FieldIdFor(model => model.CalendarModel.Interval)").data("kendoNumericTextBox").value(1);
+                } else {
+                    $("#pnlStartTime").show();
+                    $("#pnlEndTime").show();
+                    $("#pnlResource").hide();
+                    $("#pnlIncludeBothDates").hide();
+                    $("#pnlParameter").show();
+                    $("#pnlQuantity").show();
+                    $("#pnlInterval").show();
+                    $("#@Html.FieldIdFor(model => model.CalendarModel.Interval)").data("kendoNumericTextBox").value(0);
                 }
-                toggleInternalType();
-                $("#@Html.FieldIdFor(model => model.CalendarModel.IntervalUnit)").change(toggleInternalType);
+
+            }
+            toggleInternalType();
+            $("#@Html.FieldIdFor(model => model.CalendarModel.IntervalUnit)").change(toggleInternalType);
 
 
-                $("#generateCalendar").click(function () {
+            $("#generateCalendar").click(function () {
 
-                    var datepickerFrom = $("#@Html.FieldIdFor(model => model.CalendarModel.StartDateUtc)").data("kendoDatePicker");
-                    var dateFrom = datepickerFrom.value();
-                    dateFrom = kendo.toString(dateFrom, "@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern");
+                var datepickerFrom = $("#@Html.FieldIdFor(model => model.CalendarModel.StartDateUtc)").data("kendoDatePicker");
+                var dateFrom = datepickerFrom.value();
+                dateFrom = kendo.toString(dateFrom, "@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern");
 
-                    var datepickerTo = $("#@Html.FieldIdFor(model => model.CalendarModel.EndDateUtc)").data("kendoDatePicker");
-                    var dateTo = datepickerTo.value();
-                    dateTo = kendo.toString(dateTo, "@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern");
+                var datepickerTo = $("#@Html.FieldIdFor(model => model.CalendarModel.EndDateUtc)").data("kendoDatePicker");
+                var dateTo = datepickerTo.value();
+                dateTo = kendo.toString(dateTo, "@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern");
 
-                    var timeFrom = $("#@Html.FieldIdFor(model => model.CalendarModel.StartTime)").data("kendoTimePicker");
-                    var hourFrom = timeFrom.value();
-                    hourFrom = kendo.toString(hourFrom, "HH:mm");
+                var timeFrom = $("#@Html.FieldIdFor(model => model.CalendarModel.StartTime)").data("kendoTimePicker");
+                var hourFrom = timeFrom.value();
+                hourFrom = kendo.toString(hourFrom, "HH:mm");
 
-                    var timeTo = $("#@Html.FieldIdFor(model => model.CalendarModel.EndTime)").data("kendoTimePicker");
-                    var hourTo = timeTo.value();
-                    hourTo = kendo.toString(hourTo, "HH:mm");
+                var timeTo = $("#@Html.FieldIdFor(model => model.CalendarModel.EndTime)").data("kendoTimePicker");
+                var hourTo = timeTo.value();
+                hourTo = kendo.toString(hourTo, "HH:mm");
 
-                    var interval = $("#@Html.FieldIdFor(model => model.CalendarModel.Interval)").val();
-                    var intervalUnit = $("#@Html.FieldIdFor(model => model.CalendarModel.IntervalUnit)").val();
-                    var incBothDate = $("#@Html.FieldIdFor(model => model.CalendarModel.IncBothDate)").prop("checked");
-                    var quantity = $("#@Html.FieldIdFor(model => model.CalendarModel.Quantity)").val();
-                    var monday = $("#@Html.FieldIdFor(model => model.CalendarModel.Monday)").prop("checked");
-                    var tuesday = $("#@Html.FieldIdFor(model => model.CalendarModel.Tuesday)").prop("checked");
-                    var wednesday = $("#@Html.FieldIdFor(model => model.CalendarModel.Wednesday)").prop("checked");
-                    var thursday = $("#@Html.FieldIdFor(model => model.CalendarModel.Thursday)").prop("checked");
-                    var friday = $("#@Html.FieldIdFor(model => model.CalendarModel.Friday)").prop("checked");
-                    var saturday = $("#@Html.FieldIdFor(model => model.CalendarModel.Saturday)").prop("checked");
-                    var sunday = $("#@Html.FieldIdFor(model => model.CalendarModel.Sunday)").prop("checked");
-                    var resource = $("#@Html.FieldIdFor(model => model.CalendarModel.Resource)").val()
-                    var parameter = $("#@Html.FieldIdFor(model => model.CalendarModel.Parameter)").val()
+                var interval = $("#@Html.FieldIdFor(model => model.CalendarModel.Interval)").val();
+                var intervalUnit = $("#@Html.FieldIdFor(model => model.CalendarModel.IntervalUnit)").val();
+                var incBothDate = $("#@Html.FieldIdFor(model => model.CalendarModel.IncBothDate)").prop("checked");
+                var quantity = $("#@Html.FieldIdFor(model => model.CalendarModel.Quantity)").val();
+                var monday = $("#@Html.FieldIdFor(model => model.CalendarModel.Monday)").prop("checked");
+                var tuesday = $("#@Html.FieldIdFor(model => model.CalendarModel.Tuesday)").prop("checked");
+                var wednesday = $("#@Html.FieldIdFor(model => model.CalendarModel.Wednesday)").prop("checked");
+                var thursday = $("#@Html.FieldIdFor(model => model.CalendarModel.Thursday)").prop("checked");
+                var friday = $("#@Html.FieldIdFor(model => model.CalendarModel.Friday)").prop("checked");
+                var saturday = $("#@Html.FieldIdFor(model => model.CalendarModel.Saturday)").prop("checked");
+                var sunday = $("#@Html.FieldIdFor(model => model.CalendarModel.Sunday)").prop("checked");
+                var resource = $("#@Html.FieldIdFor(model => model.CalendarModel.Resource)").val()
+                var parameter = $("#@Html.FieldIdFor(model => model.CalendarModel.Parameter)").val()
 
-                    var postData = {
-                        productId: '@(Model.Id)',
-                        StartDateUtc: dateFrom,
-                        StartTime: hourFrom,
-                        EndDateUtc: dateTo,
-                        EndTime: hourTo,
-                        Interval: interval,
-                        IntervalUnit: intervalUnit,
-                        IncBothDate: incBothDate,
-                        Quantity: quantity,
-                        Monday: monday,
-                        Tuesday: tuesday,
-                        Wednesday: wednesday,
-                        Thursday: thursday,
-                        Friday: friday,
-                        Saturday: saturday,
-                        Sunday: sunday,
-                        Resource: resource,
-                        Parameter: parameter
-                    };
+                var postData = {
+                    productId: '@(Model.Id)',
+                    StartDateUtc: dateFrom,
+                    StartTime: hourFrom,
+                    EndDateUtc: dateTo,
+                    EndTime: hourTo,
+                    Interval: interval,
+                    IntervalUnit: intervalUnit,
+                    IncBothDate: incBothDate,
+                    Quantity: quantity,
+                    Monday: monday,
+                    Tuesday: tuesday,
+                    Wednesday: wednesday,
+                    Thursday: thursday,
+                    Friday: friday,
+                    Saturday: saturday,
+                    Sunday: sunday,
+                    Resource: resource,
+                    Parameter: parameter
+                };
 
-                    addAntiForgeryToken(postData);
+                addAntiForgeryToken(postData);
 
-                    $.ajax({
-                        cache: false,
-                        type: "POST",
-                        url: "@(Url.Action("GenerateCalendar", "Product"))",
-                        dataType: 'json',
-                        data: postData,
-                        success: function (data) {
-                            if (data.success) {
-                                var grid = $("#reservations-grid").data('kendoGrid');
-                                grid.dataSource.read();
-                            }
-                            else {
-                                alert(data.errors);
-                            }
-                        },
-                        error: function () {
-                            alert('Error');
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "@(Url.Action("GenerateCalendar", "Product"))",
+                    dataType: 'json',
+                    data: postData,
+                    success: function (data) {
+                        if (data.success) {
+                            var grid = $("#reservations-grid").data('kendoGrid');
+                            grid.dataSource.read();
                         }
-                    });
+                        else {
+                            alert(data.errors);
+                        }
+                    },
+                    error: function () {
+                        alert('Error');
+                    }
                 });
+            });
 
-                $("#clearCalendar").click(function () {
+            $("#clearCalendar").click(function () {
+                if (confirm('@T("Admin.Common.AreYouSure")')) {
                     var postData = {
                         productId: '@(Model.Id)'
                     };
@@ -257,8 +258,31 @@
                             alert('Error');
                         }
                     });
-                });
+                }
+            });
 
+            $("#clearOld").click(function () {
+                var postData = {
+                    productId: '@(Model.Id)'
+                };
+
+                addAntiForgeryToken(postData);
+
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "@(Url.Action("ClearOld", "Product"))",
+                    dataType: 'json',
+                    data: postData,
+                    success: function (data) {
+                        var grid = $("#reservations-grid").data('kendoGrid');
+                        grid.dataSource.read();
+                    },
+                    error: function () {
+                        alert('Error');
+                    }
+                });
+            });
         });
 
 

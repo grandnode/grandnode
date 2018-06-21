@@ -19053,4 +19053,7 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.VatNumberRequired.Hint">
     <Value>Check if 'Vat number' is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.Clearold">
+    <Value>Clear old, unused records</Value>
+  </LocaleResource>
 </Language>

@@ -1596,7 +1596,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (productCategory == null)
                 throw new ArgumentException("No product category mapping found with the specified id");
 
-            if(product.ProductCategories.Where(x => x.Id != model.Id && x.CategoryId == model.CategoryId).Any())
+            if (product.ProductCategories.Where(x => x.Id != model.Id && x.CategoryId == model.CategoryId).Any())
                 return Json(new DataSourceResult { Errors = "This category is already mapped with this product" });
 
             //a vendor should have access only to his products
@@ -4892,8 +4892,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                     {
                         Id = x.Id,
                         ProductId = product.Id,
-                        AttributesXml = string.IsNullOrEmpty(attributesXml)? "(null)": attributesXml,
-                        StockQuantity = product.UseMultipleWarehouses ? x.WarehouseInventory.Sum(y=>y.StockQuantity-y.ReservedQuantity) : x.StockQuantity,
+                        AttributesXml = string.IsNullOrEmpty(attributesXml) ? "(null)" : attributesXml,
+                        StockQuantity = product.UseMultipleWarehouses ? x.WarehouseInventory.Sum(y => y.StockQuantity - y.ReservedQuantity) : x.StockQuantity,
                         AllowOutOfStockOrders = x.AllowOutOfStockOrders,
                         Sku = x.Sku,
                         ManufacturerPartNumber = x.ManufacturerPartNumber,
@@ -5677,7 +5677,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 model.Resource = "";
             }
+
             List<DateTime> dates = new List<DateTime>();
+            int counter = 0;
             for (DateTime iterator = _dateFrom; iterator <= _dateTo; iterator += new TimeSpan(0, minutesToAdd, 0))
             {
                 if ((IntervalUnit)model.IntervalUnit != IntervalUnit.Day)
@@ -5704,17 +5706,18 @@ namespace Grand.Web.Areas.Admin.Controllers
                         continue;
                     }
                 }
+
                 if ((iterator.DayOfWeek == DayOfWeek.Monday && !model.Monday) ||
                    (iterator.DayOfWeek == DayOfWeek.Tuesday && !model.Tuesday) ||
                    (iterator.DayOfWeek == DayOfWeek.Wednesday && !model.Wednesday) ||
                    (iterator.DayOfWeek == DayOfWeek.Thursday && !model.Thursday) ||
                    (iterator.DayOfWeek == DayOfWeek.Friday && !model.Friday) ||
                    (iterator.DayOfWeek == DayOfWeek.Saturday && !model.Saturday) ||
-                   (iterator.DayOfWeek == DayOfWeek.Sunday && !model.Sunday)
-                   )
+                   (iterator.DayOfWeek == DayOfWeek.Sunday && !model.Sunday))
                 {
                     continue;
                 }
+
                 for (int i = 0; i < model.Quantity; i++)
                 {
                     dates.Add(iterator);
@@ -5726,7 +5729,9 @@ namespace Grand.Web.Areas.Admin.Controllers
                             if (reservations.Where(x => x.Resource == model.Resource && x.Date == iterator).Any())
                                 insert = false;
                         }
-                        if (insert)
+
+
+                        if (insert && counter++ < 1000)
                         {
                             _productReservationService.InsertProductReservation(new ProductReservation
                             {
@@ -5749,6 +5754,17 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult ClearCalendar(string productId)
         {
             var toDelete = _productReservationService.GetProductReservationsByProductId(productId, true, null);
+            foreach (var record in toDelete)
+            {
+                _productReservationService.DeleteProductReservation(record);
+            }
+
+            return Json("");
+        }
+
+        public IActionResult ClearOld(string productId)
+        {
+            var toDelete = _productReservationService.GetProductReservationsByProductId(productId, true, null).Where(x => x.Date < DateTime.UtcNow);
             foreach (var record in toDelete)
             {
                 _productReservationService.DeleteProductReservation(record);

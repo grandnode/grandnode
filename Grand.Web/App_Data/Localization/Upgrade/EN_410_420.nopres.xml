@@ -837,4 +837,7 @@
   <LocaleResource Name="Admin.Header.Profile">
     <Value>My profile</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.Clearold">
+    <Value>Clear old, unused records</Value>
+  </LocaleResource>
 </Language>
