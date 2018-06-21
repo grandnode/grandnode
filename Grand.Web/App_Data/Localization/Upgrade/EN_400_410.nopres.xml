@@ -644,7 +644,7 @@
     <Value>Deleted a bid for product ('{0}')</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Auctions.NoEndedAuctions">
-    <Value>You haven't won any auction.</Value>
+    <Value>You haven't won any auctions.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Auctions.NoOngoingAuctions">
     <Value>You don't participate in any auctions.</Value>
