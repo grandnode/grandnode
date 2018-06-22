@@ -1,20 +1,6 @@
 ﻿@model LanguageModel
 
-
-
-
-
-<script type="text/javascript">
-        function toggleFlags() {
-            $('#pnlAllFlags').toggle();
-            if ($('#pnlAllFlags').css('display') == 'none') {
-                $('#displayAllFlags').html('@T("Admin.Common.Show")');
-            }
-            else {
-                $('#displayAllFlags').html('@T("Admin.Common.Hide")');
-            }
-        }
-</script>
+ 
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
@@ -47,22 +33,23 @@
                 @Html.ValidationMessageFor(model => model.UniqueSeoCode)
             </div>
         </div>
+         
         <div class="form-group">
             @Html.GrandLabelFor(model => model.FlagImageFileName)
-            <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.FlagImageFileName)
-                @Html.ValidationMessageFor(model => model.FlagImageFileName)
-                <br />
-                <a id="displayAllFlags" href="javascript:toggleFlags();">@T("Admin.Common.Show")</a>
-                <div id="pnlAllFlags" style="display: none">
+            <div class="col-md-8 col-sm-8">
+                <select id="FlagImageFileName" class="form-control" Name="FlagImageFileName">
                     @foreach (var fileName in Model.FlagFileNames)
                     {
-                        <img alt="" src="@Url.Content("~/Content/Images/flags/" + fileName)" />
+                        <option value="@fileName" img="@Url.Content("~/Content/Images/flags/" + fileName)">
                             @fileName
-                            <text>, </text>
+                        </option>
                     }
-                </div>
+                </select>
+
+                @Html.ValidationMessageFor(model => model.FlagImageFileName)
+                <br />
             </div>
+            <div class="col-md-1"><img id="FlagDisplay" style="width:98%" /></div>
         </div>
         <div class="form-group">
             @Html.GrandLabelFor(model => model.Rtl)
@@ -100,3 +87,20 @@
         </div>
     </div>
 </div>
+<script>
+    $().ready(function () {
+        $("#@Html.IdFor(x=>x.FlagImageFileName)").change(function (e) {
+            var img = $(e.target).find(":selected").attr("img");
+            $("#FlagDisplay").attr("src", img);
+        }).val('@Model.FlagImageFileName').change();
+        $("#@Html.IdFor(x=>x.LanguageCulture)").change(function (e) {
+            var val = $(e.target).find(":selected").val();
+            var parts = val.split("-");
+            if (parts.length > 1) {
+                $("#@Html.IdFor(x=>x.UniqueSeoCode)").val(parts[1]);
+            }
+
+        });
+
+    })
+</script>
