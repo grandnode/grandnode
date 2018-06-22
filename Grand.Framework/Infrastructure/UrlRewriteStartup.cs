@@ -39,8 +39,16 @@ namespace Grand.Framework.Infrastructure
                     {
                         urlRewriteOptions.AddIISUrlRewrite(streamReader);
                     }
-                    application.UseRewriter(urlRewriteOptions);
                 }
+                if (grandConfig.UrlRewriteHttpsOptions)
+                {
+                    urlRewriteOptions.AddRedirectToHttps(grandConfig.UrlRewriteHttpsOptionsStatusCode, grandConfig.UrlRewriteHttpsOptionsPort);
+                }
+                if (grandConfig.UrlRedirectToHttpsPermanent)
+                {
+                    urlRewriteOptions.AddRedirectToHttpsPermanent();
+                }
+                application.UseRewriter(urlRewriteOptions);
             }
         }
 
