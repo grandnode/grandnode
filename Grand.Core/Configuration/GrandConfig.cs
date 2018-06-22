@@ -105,6 +105,12 @@ namespace Grand.Core.Configuration
         public bool UseResponseCompression { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether we use url rewrite
+        /// </summary>
+        public bool UseUrlRewrite { get; set; }
+
+
+        /// <summary>
         /// Gets or sets a value indicating whether ignore InstallUrlMiddleware
         /// </summary>
         public bool IgnoreInstallUrlMiddleware { get; set; }
