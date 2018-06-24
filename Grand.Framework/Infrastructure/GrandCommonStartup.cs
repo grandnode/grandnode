@@ -58,6 +58,17 @@ namespace Grand.Framework.Infrastructure
         {
             var grandConfig = EngineContext.Current.Resolve<GrandConfig>();
 
+            //use hsts
+            if(grandConfig.UseHsts)
+            {
+                application.UseHsts();
+            }
+            //enforce HTTPS in ASP.NET Core
+            if (grandConfig.UseHttpsRedirection)
+            {
+                application.UseHttpsRedirection();
+            }
+
             //compression
             if (grandConfig.UseResponseCompression)
             {

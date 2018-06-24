@@ -114,6 +114,17 @@ namespace Grand.Core.Configuration
         public bool UrlRedirectToHttpsPermanent { get; set; }
 
         /// <summary>
+        /// HTTP Strict Transport Security Protocol
+        /// isn't recommended in development because the HSTS header is highly cacheable by browsers
+        /// </summary>
+        public bool UseHsts { get; set; }
+
+        /// <summary>
+        /// Enforce HTTPS in ASP.NET Core
+        /// </summary>
+        public bool UseHttpsRedirection { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether ignore InstallUrlMiddleware
         /// </summary>
         public bool IgnoreInstallUrlMiddleware { get; set; }
