@@ -4,15 +4,10 @@ using Grand.Framework.Security;
 using Grand.Services.Knowledgebase;
 using Grand.Web.Models.Knowledgebase;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Grand.Services.Localization;
 
 namespace Grand.Web.Controllers
 {
-    [HttpsRequirement(SslRequirement.No)]
     public class KnowledgebaseController : BasePublicController
     {
         private readonly KnowledgebaseSettings _knowledgebaseSettings;

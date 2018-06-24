@@ -136,7 +136,6 @@ namespace Grand.Web.Controllers
 
         #region Login / logout
         
-        [HttpsRequirement(SslRequirement.Yes)]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed
@@ -264,7 +263,6 @@ namespace Grand.Web.Controllers
 
         #region Password recovery
 
-        [HttpsRequirement(SslRequirement.Yes)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual IActionResult PasswordRecovery()
@@ -300,8 +298,6 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-
-        [HttpsRequirement(SslRequirement.Yes)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual IActionResult PasswordRecoveryConfirm(string token, string email)
@@ -368,7 +364,6 @@ namespace Grand.Web.Controllers
 
         #region Register
 
-        [HttpsRequirement(SslRequirement.Yes)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual IActionResult Register()
@@ -692,7 +687,6 @@ namespace Grand.Web.Controllers
             return Json(new { Available = usernameAvailable, Text = statusText });
         }
         
-        [HttpsRequirement(SslRequirement.Yes)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual IActionResult AccountActivation(string token, string email)
@@ -725,7 +719,6 @@ namespace Grand.Web.Controllers
 
         #region My account / Info
 
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult Info()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -918,7 +911,6 @@ namespace Grand.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult RemoveExternalAssociation(string id)
         {
 
@@ -947,7 +939,6 @@ namespace Grand.Web.Controllers
         }
 
 
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult Export()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -966,7 +957,6 @@ namespace Grand.Web.Controllers
 
         #region My account / Addresses
 
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult Addresses()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -978,7 +968,6 @@ namespace Grand.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult AddressDelete(string addressId)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1002,7 +991,6 @@ namespace Grand.Web.Controllers
 
         }
 
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult AddressAdd()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1056,7 +1044,6 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult AddressEdit(string addressId)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1127,7 +1114,6 @@ namespace Grand.Web.Controllers
 
         #region My account / Downloadable products
 
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult DownloadableProducts()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1153,7 +1139,6 @@ namespace Grand.Web.Controllers
 
         #region My account / Change password
 
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult ChangePassword()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1203,7 +1188,6 @@ namespace Grand.Web.Controllers
 
         #region My account / Delete account
 
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult DeleteAccount()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1277,7 +1261,6 @@ namespace Grand.Web.Controllers
 
         #region My account / Avatar
 
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult Avatar()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1378,7 +1361,6 @@ namespace Grand.Web.Controllers
 
         #region My account / Auctions
 
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult Auctions()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())

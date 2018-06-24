@@ -153,7 +153,7 @@ namespace Grand.Plugin.Feed.GoogleShopping
         }
         protected virtual string GetHttpProtocol()
         {
-            return _securitySettings.ForceSslForAllPages? "https" : "http";
+            return _webHelper.IsCurrentConnectionSecured() ? "https" : "http";
         }
 
     #endregion
@@ -314,7 +314,7 @@ namespace Grand.Plugin.Feed.GoogleShopping
                         //additional images [additional_image_link]
                         //up to 10 pictures
                         const int maximumPictures = 10;
-                        var storeLocation = _securitySettings.ForceSslForAllPages ? 
+                        var storeLocation = _webHelper.IsCurrentConnectionSecured() ? 
                             (!string.IsNullOrWhiteSpace(store.SecureUrl) ? store.SecureUrl : store.Url.Replace("http://", "https://")) : 
                             store.Url;
 

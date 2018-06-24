@@ -14,7 +14,6 @@ using Grand.Framework.Controllers;
 using Grand.Framework.Security;
 using Grand.Core.Infrastructure;
 using Grand.Web.Services;
-using Grand.Framework.Mvc.Filters;
 using Microsoft.AspNetCore.Http;
 
 namespace Grand.Web.Controllers
@@ -54,7 +53,6 @@ namespace Grand.Web.Controllers
         #region Methods
 
         //My account / Orders
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult CustomerOrders()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -101,7 +99,6 @@ namespace Grand.Web.Controllers
         }
 
         //My account / Reward points
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult CustomerRewardPoints()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -117,7 +114,6 @@ namespace Grand.Web.Controllers
         }
 
         //My account / Order details page
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult Details(string orderId)
         {
             var order = _orderService.GetOrderById(orderId);
@@ -130,7 +126,6 @@ namespace Grand.Web.Controllers
         }
 
         //My account / Order details page / Print
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult PrintOrderDetails(string orderId)
         {
             var order = _orderService.GetOrderById(orderId);
@@ -144,7 +139,6 @@ namespace Grand.Web.Controllers
         }
 
         //My account / Order details page / Cancel Unpaid Order
-        [HttpsRequirement(SslRequirement.Yes)]
         public IActionResult CancelOrder(string orderId)
         {
             var orderSettings = EngineContext.Current.Resolve<OrderSettings>();
@@ -222,7 +216,6 @@ namespace Grand.Web.Controllers
         }
 
         //My account / Order details page / Shipment details page
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult ShipmentDetails(string shipmentId)
         {
             var shipment = EngineContext.Current.Resolve<IShipmentService>().GetShipmentById(shipmentId);

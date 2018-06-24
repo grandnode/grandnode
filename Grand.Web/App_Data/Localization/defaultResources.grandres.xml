@@ -6888,12 +6888,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FacebookLink.Hint">
     <Value>Specify your Facebook page URL. Leave empty if you have no such page.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.ForceSslForAllPages">
-    <Value>Force SSL for all site pages</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.ForceSslForAllPages.Hint">
-    <Value>By default not all site pages are SSL protected. Check to force SSL for the entire site. This setting is useful only when you have SSL enabled on your store details pages.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FullTextSettings">
     <Value>Full-Text settings</Value>
   </LocaleResource>

@@ -18,9 +18,7 @@ using Grand.Services.Authentication.External;
 using Grand.Core;
 using System.IO;
 using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Mvc.Internal;
 using Grand.Framework.Mvc.Routing;
-using Grand.Core.Domain.Security;
 using Grand.Services.Authentication;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 
@@ -114,8 +112,7 @@ namespace Grand.Framework.Infrastructure.Extensions
                 if (DataSettingsHelper.DatabaseIsInstalled())
                 {
                     //whether to allow the use of anti-forgery cookies from SSL protected page on the other store pages which are not
-                    options.Cookie.SecurePolicy = EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
-                    ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
                 }
             });
         }
@@ -135,9 +132,7 @@ namespace Grand.Framework.Infrastructure.Extensions
                 };
                 if (DataSettingsHelper.DatabaseIsInstalled())
                 {
-                    //whether to allow the use of session values from SSL protected page on the other store pages which are not
-                    options.Cookie.SecurePolicy = EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
-                        ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
                 }
             });
         }
@@ -192,9 +187,7 @@ namespace Grand.Framework.Infrastructure.Extensions
                 options.LoginPath = GrandCookieAuthenticationDefaults.LoginPath;
                 options.AccessDeniedPath = GrandCookieAuthenticationDefaults.AccessDeniedPath;
 
-                //whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
-                options.Cookie.SecurePolicy = DataSettingsHelper.DatabaseIsInstalled() && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
-                    ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
             });
 
             //add external authentication
@@ -204,10 +197,7 @@ namespace Grand.Framework.Infrastructure.Extensions
                 options.Cookie.HttpOnly = true;
                 options.LoginPath = GrandCookieAuthenticationDefaults.LoginPath;
                 options.AccessDeniedPath = GrandCookieAuthenticationDefaults.AccessDeniedPath;
-
-                //whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
-                options.Cookie.SecurePolicy = DataSettingsHelper.DatabaseIsInstalled() && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
-                    ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
             });
             
             //register external authentication plugins now

@@ -111,7 +111,6 @@ namespace Grand.Web.Controllers
 
         #region Categories
         
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult Category(string categoryId, CatalogPagingFilteringModel command)
         {
             var category = _catalogWebService.GetCategoryById(categoryId);
@@ -159,7 +158,6 @@ namespace Grand.Web.Controllers
 
         #region Manufacturers
 
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult Manufacturer(string manufacturerId, CatalogPagingFilteringModel command)
         {
             var manufacturer = _catalogWebService.GetManufacturerById(manufacturerId);
@@ -204,7 +202,6 @@ namespace Grand.Web.Controllers
             return View(templateViewPath, model);
         }
 
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult ManufacturerAll()
         {
             var model = _catalogWebService.PrepareManufacturerAll();
@@ -215,7 +212,6 @@ namespace Grand.Web.Controllers
 
         #region Vendors
 
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult Vendor(string vendorId, CatalogPagingFilteringModel command)
         {
             var vendor = _vendorService.GetVendorById(vendorId);
@@ -243,7 +239,6 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult VendorAll()
         {
             //we don't allow viewing of vendors if "vendors" block is hidden
@@ -259,7 +254,6 @@ namespace Grand.Web.Controllers
 
         #region Vendor reviews
 
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult VendorReviews(string vendorId)
         {
             var vendor = _vendorService.GetVendorById(vendorId);
@@ -403,8 +397,6 @@ namespace Grand.Web.Controllers
 
         #region Product tags
 
-
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult ProductsByTag(string productTagId, CatalogPagingFilteringModel command)
         {
             var productTag = _productTagService.GetProductTagById(productTagId);
@@ -415,7 +407,6 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult ProductTagsAll()
         {
             var model = _catalogWebService.PrepareProductTagsAll();
@@ -426,7 +417,6 @@ namespace Grand.Web.Controllers
 
         #region Searching
 
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult Search(SearchModel model, CatalogPagingFilteringModel command)
         {
             //'Continue shopping' URL

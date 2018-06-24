@@ -14,13 +14,11 @@ using Grand.Web.Models.Boards;
 using Grand.Core.Infrastructure;
 using Grand.Framework.Mvc;
 using Grand.Web.Services;
-using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Mvc.Rss;
 using Microsoft.AspNetCore.Http;
 
 namespace Grand.Web.Controllers
 {
-    [HttpsRequirement(SslRequirement.No)]
     public partial class BoardsController : BasePublicController
     {
         #region Fields
@@ -364,7 +362,6 @@ namespace Grand.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult TopicDelete(string id)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -725,7 +722,6 @@ namespace Grand.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult PostDelete(string id)
         {
             if (!_forumSettings.ForumsEnabled)

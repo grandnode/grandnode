@@ -11,7 +11,6 @@ using Grand.Services.Orders;
 using Grand.Framework.Security;
 using Grand.Web.Models.Order;
 using Grand.Web.Services;
-using Grand.Framework.Mvc.Filters;
 using Microsoft.AspNetCore.Http;
 
 namespace Grand.Web.Controllers
@@ -64,7 +63,6 @@ namespace Grand.Web.Controllers
 
         #region Methods
 
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult CustomerReturnRequests()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -75,7 +73,6 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult ReturnRequest(string orderId)
         {
             var order = _orderService.GetOrderById(orderId);

@@ -3,9 +3,7 @@ using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Services.Topics;
-using Grand.Framework.Security;
 using Grand.Web.Services;
-using Grand.Framework.Mvc.Filters;
 
 namespace Grand.Web.Controllers
 {
@@ -42,7 +40,6 @@ namespace Grand.Web.Controllers
 
         #region Methods
 
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult TopicDetails(string topicId)
         {
             var model = _topicWebService.TopicDetails(topicId);

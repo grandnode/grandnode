@@ -11,12 +11,10 @@ using Grand.Services.Logging;
 using Grand.Framework.Controllers;
 using Grand.Framework.Security;
 using Grand.Web.Models.PrivateMessages;
-using Grand.Framework.Mvc.Filters;
 using Microsoft.AspNetCore.Http;
 
 namespace Grand.Web.Controllers
 {
-    [HttpsRequirement(SslRequirement.Yes)]
     public partial class PrivateMessagesController : BasePublicController
     {
         #region Fields

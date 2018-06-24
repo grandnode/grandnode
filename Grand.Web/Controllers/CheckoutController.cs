@@ -18,17 +18,14 @@ using Grand.Services.Payments;
 using Grand.Services.Shipping;
 using Grand.Web.Extensions;
 using Grand.Framework.Controllers;
-using Grand.Framework.Security;
 using Grand.Web.Models.Checkout;
 using Grand.Core.Infrastructure;
 using Grand.Web.Services;
 using Microsoft.AspNetCore.Http;
-using Grand.Framework.Mvc.Filters;
 using Grand.Core.Http;
 
 namespace Grand.Web.Controllers
 {
-    [HttpsRequirement(SslRequirement.Yes)]
     public partial class CheckoutController : BasePublicController
     {
         #region Fields

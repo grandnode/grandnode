@@ -14,6 +14,7 @@ using Grand.Core.Domain.News;
 using Grand.Core.Domain.Security;
 using Grand.Services.Catalog;
 using Grand.Services.Topics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Grand.Services.Seo
@@ -122,7 +123,7 @@ namespace Grand.Services.Seo
         /// <returns>Protocol name as string</returns>
         protected virtual string GetHttpProtocol()
         {
-            return _securitySettings.ForceSslForAllPages ? "https" : "http";
+            return _webHelper.IsCurrentConnectionSecured() ? "https" : "http";
         }
 
         /// <summary>

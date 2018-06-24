@@ -9,14 +9,11 @@ using Grand.Services.Forums;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Media;
-using Grand.Framework.Security;
 using Grand.Web.Models.Profile;
 using Grand.Services.Security;
-using Grand.Framework.Mvc.Filters;
 
 namespace Grand.Web.Controllers
 {
-    [HttpsRequirement(SslRequirement.No)]
     public partial class ProfileController : BasePublicController
     {
         private readonly IForumService _forumService;

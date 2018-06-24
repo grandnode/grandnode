@@ -192,9 +192,6 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             
             public string AdminAreaAllowedIpAddresses { get; set; }
 
-            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.ForceSslForAllPages")]
-            public bool ForceSslForAllPages { get; set; }
-
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForAdminArea")]
             public bool EnableXsrfProtectionForAdminArea { get; set; }
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForPublicStore")]
