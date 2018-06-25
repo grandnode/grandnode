@@ -3,8 +3,8 @@
 }
 @await Component.InvokeAsync("Widget", new { widgetZone = "body_start_html_tag_after" })
 @await Html.PartialAsync("_Notifications")
-@await Component.InvokeAsync("JavaScriptDisabledWarning")
-@await Html.PartialAsync("OldInternetExplorerWarning")
+@await Html.PartialAsync("_JavaScriptDisabledWarning")
+@await Html.PartialAsync("_OldInternetExplorerWarning")
 @await Html.PartialAsync("Header")
     <nav class="navbar navbar-expand-md mainNav d-none d-lg-flex w-100 mb-1 px-3">
         <div class="collapse navbar-collapse container" id="collapsing-navbar-2">
