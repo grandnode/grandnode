@@ -215,7 +215,7 @@ function productStarProgress10(procent, elem) {
 function productRatingStarFinal(whole, half, empty, elem) {
     var stars = [],
         fullStarr = "<i class=\"fas fa-star pr-1\"></i>",
-        halfStarr = "<i class=\"fas fa-star-half pr-1\"></i><i class='far fa-star fix-star'></i>",
+        halfStarr = "<i class=\"fas fa-star-half pr-1\"></i><i class=\"far fa-star fix-star\"></i>",
         emptyStarr = "<i class=\"far fa-star pr-1\"></i>",
         id = "";
 
@@ -242,6 +242,10 @@ $(document).ready(function () {
 
     if ($(window).width() < 991) {
         $(".mainNav .navbar-nav").insertAfter("#mobile-collapsing-menu .options-container");
+        $(".header-links .tax-list-mobile").insertAfter(".header-links-append");
+        $(".header-links .currency-list-mobile").insertAfter(".header-links-append");
+        $(".header-links .language-list-mobile").insertAfter(".header-links-append");
+        $(".header-links .store-list-mobile").insertAfter(".header-links-append");
         if ($(window).width() < 650) {
             $('#mobile-collapsing-menu li.dropdown > .dropdown-toggle').click(function () {
                 window.location = $(this).attr('href');
@@ -254,6 +258,10 @@ $(document).ready(function () {
     $(window).resize(function () {
         if ($(window).width() < 991) {
             $(".mainNav .navbar-nav").insertAfter("#mobile-collapsing-menu .options-container");
+            $(".header-links .tax-list-mobile").insertAfter(".header-links-append");
+            $(".header-links .currency-list-mobile").insertAfter(".header-links-append");
+            $(".header-links .language-list-mobile").insertAfter(".header-links-append");
+            $(".header-links .store-list-mobile").insertAfter(".header-links-append");
             if ($(window).width() < 650) {
                 $('#mobile-collapsing-menu li.dropdown > .dropdown-toggle').click(function () {
                     window.location = $(this).attr('href');
@@ -265,6 +273,9 @@ $(document).ready(function () {
         }
         else {
             $("#mobile-collapsing-menu .navbar-nav").insertAfter(".mainNav #menu_standing");
+            $(".mobile-header-container .tax-list-mobile").insertAfter(".dropdowns-container .generalDropDown");
+            $(".mobile-header-container .currency-list-mobile").insertAfter(".dropdowns-container .generalDropDown");
+            $(".mobile-header-container .language-list-mobile").insertAfter(".dropdowns-container .generalDropDown");
         }
     });
 

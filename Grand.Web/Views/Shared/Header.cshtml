@@ -1,46 +1,42 @@
 ﻿<header>
     @await Component.InvokeAsync("Widget", new { widgetZone = "header" })
     <nav class="navbar fixed-top navbar-light bg-dark navUp p-0">
-            <ul class="mobile-top-menu d-lg-none d-flex mb-0 w-100">
-                <li class="logo-mobile">@await Component.InvokeAsync("Logo")</li>
-                <li class="nav-item d-flex align-items-center d-lg-none mobile-search" data-toggle="modal" data-target="#searchModal">
-                    <a class="nav-link">
-                        <span class="fa fa-search"></span>
-                    </a>
-                </li>
-            </ul>
-            <ul class="nav navbar-nav header-links flex-row container px-lg-3 ">
-                <li class="nav-item col mobile-menu-button d-lg-none align-self-center">
-                    <a id="mobile-menu-opener"><span></span><span></span><span></span></a>
-                    <span class="d-lg-none d-block text-muted mt-1 mobile-desc">@T("menu")</span>
-                </li>
-                <li class="nav-item float-xs-right d-lg-none d-none ml-auto">
-                    <a class="btn btn-outlined-info general-opener" data-toggle="collapse" aria-expanded="false">
-                        <span class="fa fa-cogs" aria-hidden="true"></span>
-                    </a>
-                </li>
-                <li class="nav-item float-xs-right d-none d-lg-block mr-auto dropdowns-container">
-                    <div class="generalDropDown btn-toolbar float-xs-right">
-                        @await Component.InvokeAsync("TaxTypeSelector")
-                        @await Component.InvokeAsync("CurrencySelector")
-                        @await Component.InvokeAsync("LanguageSelector")
-                        @await Component.InvokeAsync("StoreSelector")
-                        @await Component.InvokeAsync("Widget", new { widgetZone = "header_selectors" })
-                    </div>
-                </li>
-                @await Component.InvokeAsync("HeaderLinks")
-            </ul>
-
-        <div class="collapse navbar-collapse" id="mobile-collapsing-menu">
-            <div class="col-12 options-container">
-                <div class="row justify-content-center">
+        <ul class="mobile-top-menu d-lg-none d-flex mb-0 w-100">
+            <li class="logo-mobile">@await Component.InvokeAsync("Logo")</li>
+            <li class="nav-item d-flex align-items-center d-lg-none mobile-search" data-toggle="modal" data-target="#searchModal">
+                <a class="nav-link">
+                    <span class="fa fa-search"></span>
+                </a>
+            </li>
+        </ul>
+        <ul class="nav navbar-nav header-links flex-row container px-lg-3 ">
+            <li class="nav-item col mobile-menu-button d-lg-none align-self-center">
+                <a id="mobile-menu-opener"><span></span><span></span><span></span></a>
+                <span class="d-lg-none d-block text-muted mt-1 mobile-desc">@T("menu")</span>
+            </li>
+            <li class="nav-item float-xs-right d-lg-none d-none ml-auto">
+                <a class="btn btn-outlined-info general-opener" data-toggle="collapse" aria-expanded="false">
+                    <span class="fa fa-cogs" aria-hidden="true"></span>
+                </a>
+            </li>
+            <li class="nav-item float-xs-right d-none d-lg-block mr-auto dropdowns-container">
+                <div class="generalDropDown btn-toolbar float-xs-right">
                     @await Component.InvokeAsync("TaxTypeSelector")
                     @await Component.InvokeAsync("CurrencySelector")
                     @await Component.InvokeAsync("LanguageSelector")
                     @await Component.InvokeAsync("StoreSelector")
+                    @await Component.InvokeAsync("Widget", new { widgetZone = "header_selectors" })
+                </div>
+            </li>
+            @await Component.InvokeAsync("HeaderLinks")
+        </ul>
+        <div class="collapse navbar-collapse" id="mobile-collapsing-menu">
+            <div class="col-12 options-container">
+                <div class="row justify-content-center mobile-header-container">
+                    <div class="header-links-append"></div>
                 </div>
             </div>
-       
+
         </div>
     </nav>
     <div class="container">
