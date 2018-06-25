@@ -35,12 +35,8 @@
          
         <div class="form-group">
             <admin-label asp-for="FlagImageFileName" />
-            <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="FlagImageFileName" />
-                <span asp-validation-for="FlagImageFileName"></span>
-                <br />
-                <a id="displayAllFlags" href="javascript:toggleFlags();">@T("Admin.Common.Show")</a>
-                <div id="pnlAllFlags" style="display: none">
+            <div class="col-md-3 col-sm-3">
+                <select id="FlagImageFileName" class="form-control" Name="FlagImageFileName">
                     @foreach (var fileName in Model.FlagFileNames)
                     {
                         <option value="@fileName" img="@Url.Content("~/Content/Images/flags/" + fileName)">
@@ -48,11 +44,10 @@
                         </option>
                     }
                 </select>
-
-                @Html.ValidationMessageFor(model => model.FlagImageFileName)
+                <span asp-validation-for="FlagImageFileName"></span>
                 <br />
             </div>
-            <div class="col-md-1"><img id="FlagDisplay" style="width:98%" /></div>
+            <div class="col-md-1"><img id="FlagDisplay" style="width:50%" /></div>
         </div>
         <div class="form-group">
             <admin-label asp-for="Rtl" />

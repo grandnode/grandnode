@@ -91,7 +91,17 @@
             <div class="form-group">
                 <admin-label asp-for="Body" />
                 <div class="col-md-9 col-sm-9">
-                    <admin-input asp-for="Body" asp-template="RichEditor" />
+                    <div>
+                        <label>@T("Admin.ContentManagement.MessageTemplates.Fields.AllowedTokens")</label>
+                        <input type="search" name="SearchTokens" class="form-control SearchTokens" placeholder="@T("Search")" />
+                    </div>
+                    <div class="AllowedTokens">
+                        @foreach (var token in Model.AllowedTokens)
+                        {
+                            <button type="button" onclick="AddTokenToEditor(this)" class="btn btn-info">@token</button>
+                        }
+                    </div>
+                    <admin-input asp-for="Body" asp-template="RichEditor"/>
                     <span asp-validation-for="Body"></span>
                 </div>
             </div>
@@ -163,7 +173,6 @@
     </div>
 </div>
 <script type="text/javascript">
-    var onInputFocus;
         $(document).ready(function () {
             $("#@Html.FieldIdFor(model => model.HasAttachedDownload)").change(toggleHasAttachedDownload);
             $("#@Html.FieldIdFor(model => model.SendImmediately)").click(sendImmediately);
@@ -171,8 +180,11 @@
             sendImmediately();
             $(".SearchTokens").on("input", function (e) { SearchTokens(e); })
             $("input").click(function (e) {
-                onInputFocus = $(e.target); 
-            })
+                onInputFocus = $(e.target);
+            });
+            setTimeout(function () {
+                tinyMCE.editors[0].focus();
+            }, 2000)
         });
 
         function toggleHasAttachedDownload() {
@@ -193,11 +205,11 @@
 
     function SearchTokens(e) {
         var searchVal = $(e.target).val();
-        var TokensPnl = $(e.target).closest(".form-group").find(".AllowedTokens");//Get The Closest Token (there will bel multiple for languages)
-        $(TokensPnl).find(".btn").show()//Show Previously hidden buttons
+        var TokensPnl = $(e.target).closest(".form-group").find(".AllowedTokens");
+        $(TokensPnl).find(".btn").show()
             .each(function (i, c) {
                 var Token = $(c).text();
-                if (Token.search(new RegExp(searchVal, "i")) == -1)//Hide un matched
+                if (Token.search(new RegExp(searchVal, "i")) == -1)
                 {
                     $(c).hide();
                 }
@@ -205,29 +217,17 @@
 
     }
     function AddTokenToEditor(e) {
-        if (onInputFocus) {
-            var cursorPos = $(onInputFocus).prop('selectionStart');
-            var  EditValue = $(onInputFocus).val();
-            var textBefore = EditValue.substring(0, cursorPos);
-            var textAfter = EditValue.substring(cursorPos, EditValue.length);
-            $(onInputFocus).val(textBefore + $(e).text() + textAfter);
-        } else { 
-            tinyMCE.activeEditor.execCommand('mceInsertContent', false, $(e).text());
-        }
-
-        
+        tinyMCE.activeEditor.execCommand('mceInsertContent', false, $(e).text());
     }
-
-    //.tinymce().focus();
 </script>
 <style>
-    .AllowedTokens {
-        height: 300px;
-        overflow: scroll;
-        padding: 3px;
-    }
-
-        .AllowedTokens .btn {
-            margin: 2px;
-        }
+.AllowedTokens {
+    height: 200px;
+    overflow: scroll;
+    overflow-x: hidden;
+    padding: 3px;
+}
+.AllowedTokens .btn {
+    margin: 2px;
+}
 </style>
