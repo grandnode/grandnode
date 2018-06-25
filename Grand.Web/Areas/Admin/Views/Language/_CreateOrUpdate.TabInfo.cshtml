@@ -1,16 +1,5 @@
 ﻿@model LanguageModel
 
-<script type="text/javascript">
-        function toggleFlags() {
-            $('#pnlAllFlags').toggle();
-            if ($('#pnlAllFlags').css('display') == 'none') {
-                $('#displayAllFlags').html('@T("Admin.Common.Show")');
-            }
-            else {
-                $('#displayAllFlags').html('@T("Admin.Common.Hide")');
-            }
-        }
-</script>
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
@@ -43,6 +32,7 @@
                 <span asp-validation-for="UniqueSeoCode"></span>
             </div>
         </div>
+         
         <div class="form-group">
             <admin-label asp-for="FlagImageFileName" />
             <div class="col-md-9 col-sm-9">
@@ -53,12 +43,16 @@
                 <div id="pnlAllFlags" style="display: none">
                     @foreach (var fileName in Model.FlagFileNames)
                     {
-                        <img alt="" src="@Url.Content("~/Content/Images/flags/" + fileName)" />
+                        <option value="@fileName" img="@Url.Content("~/Content/Images/flags/" + fileName)">
                             @fileName
-                            <text>, </text>
+                        </option>
                     }
-                </div>
+                </select>
+
+                @Html.ValidationMessageFor(model => model.FlagImageFileName)
+                <br />
             </div>
+            <div class="col-md-1"><img id="FlagDisplay" style="width:98%" /></div>
         </div>
         <div class="form-group">
             <admin-label asp-for="Rtl" />
@@ -96,3 +90,20 @@
         </div>
     </div>
 </div>
+<script>
+    $().ready(function () {
+        $("#@Html.IdFor(x=>x.FlagImageFileName)").change(function (e) {
+            var img = $(e.target).find(":selected").attr("img");
+            $("#FlagDisplay").attr("src", img);
+        }).val('@Model.FlagImageFileName').change();
+        $("#@Html.IdFor(x=>x.LanguageCulture)").change(function (e) {
+            var val = $(e.target).find(":selected").val();
+            var parts = val.split("-");
+            if (parts.length > 1) {
+                $("#@Html.IdFor(x=>x.UniqueSeoCode)").val(parts[1]);
+            }
+
+        });
+
+    })
+</script>

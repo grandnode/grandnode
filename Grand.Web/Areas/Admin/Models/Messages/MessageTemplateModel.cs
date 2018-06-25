@@ -25,7 +25,7 @@ namespace Grand.Web.Areas.Admin.Models.Messages
 
 
         [GrandResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.AllowedTokens")]
-        public string AllowedTokens { get; set; }
+        public string[] AllowedTokens { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.Name")]
         

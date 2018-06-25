@@ -65,19 +65,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         
         #region Utilities
 
-        private string FormatTokens(string[] tokens)
-        {
-            var sb = new StringBuilder();
-            for (int i = 0; i < tokens.Length; i++)
-            {
-                string token = tokens[i];
-                sb.Append(token);
-                if (i != tokens.Length - 1)
-                    sb.Append(", ");
-            }
-
-            return sb.ToString();
-        }
+       
 
         [NonAction]
         protected virtual List<LocalizedProperty> UpdateLocales(MessageTemplate mt, MessageTemplateModel model)
@@ -201,7 +189,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             
             //Stores
             PrepareStoresMappingModel(model, null, false);
-            model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfAllowedTokens());
+            model.AllowedTokens = _messageTokenProvider.GetListOfAllowedTokens();
             //available email accounts
             foreach (var ea in _emailAccountService.GetAllEmailAccounts())
                 model.AvailableEmailAccounts.Add(ea.ToModel());
@@ -241,7 +229,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //If we got this far, something failed, redisplay form
             model.HasAttachedDownload = !String.IsNullOrEmpty(model.AttachedDownloadId);
-            model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfAllowedTokens());
+            model.AllowedTokens = _messageTokenProvider.GetListOfAllowedTokens();
             //available email accounts
             foreach (var ea in _emailAccountService.GetAllEmailAccounts())
                 model.AvailableEmailAccounts.Add(ea.ToModel());
@@ -265,7 +253,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var model = messageTemplate.ToModel();
             model.SendImmediately = !model.DelayBeforeSend.HasValue;
             model.HasAttachedDownload = !String.IsNullOrEmpty(model.AttachedDownloadId);
-            model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfAllowedTokens());
+            model.AllowedTokens = _messageTokenProvider.GetListOfAllowedTokens();
             //available email accounts
             foreach (var ea in _emailAccountService.GetAllEmailAccounts())
                 model.AvailableEmailAccounts.Add(ea.ToModel());
@@ -324,7 +312,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //If we got this far, something failed, redisplay form
             model.HasAttachedDownload = !String.IsNullOrEmpty(model.AttachedDownloadId);
-            model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfAllowedTokens());
+            model.AllowedTokens =_messageTokenProvider.GetListOfAllowedTokens();
             //available email accounts
             foreach (var ea in _emailAccountService.GetAllEmailAccounts())
                 model.AvailableEmailAccounts.Add(ea.ToModel());

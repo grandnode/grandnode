@@ -3,12 +3,6 @@
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            <admin-label asp-for="AllowedTokens" />
-            <div class="col-md-9 col-sm-9">
-                @Model.AllowedTokens
-            </div>
-        </div>
-        <div class="form-group">
             <admin-label asp-for="Name" />
             <div class="col-md-9 col-sm-9">
                 @if (!String.IsNullOrEmpty(Model.Id))
@@ -169,11 +163,16 @@
     </div>
 </div>
 <script type="text/javascript">
+    var onInputFocus;
         $(document).ready(function () {
             $("#@Html.FieldIdFor(model => model.HasAttachedDownload)").change(toggleHasAttachedDownload);
             $("#@Html.FieldIdFor(model => model.SendImmediately)").click(sendImmediately);
             toggleHasAttachedDownload();
             sendImmediately();
+            $(".SearchTokens").on("input", function (e) { SearchTokens(e); })
+            $("input").click(function (e) {
+                onInputFocus = $(e.target); 
+            })
         });
 
         function toggleHasAttachedDownload() {
@@ -190,6 +189,45 @@
                 $('#pnl-send-after').hide();
             else
                 $('#pnl-send-after').show();
+    }
+
+    function SearchTokens(e) {
+        var searchVal = $(e.target).val();
+        var TokensPnl = $(e.target).closest(".form-group").find(".AllowedTokens");//Get The Closest Token (there will bel multiple for languages)
+        $(TokensPnl).find(".btn").show()//Show Previously hidden buttons
+            .each(function (i, c) {
+                var Token = $(c).text();
+                if (Token.search(new RegExp(searchVal, "i")) == -1)//Hide un matched
+                {
+                    $(c).hide();
+                }
+             });
+
+    }
+    function AddTokenToEditor(e) {
+        if (onInputFocus) {
+            var cursorPos = $(onInputFocus).prop('selectionStart');
+            var  EditValue = $(onInputFocus).val();
+            var textBefore = EditValue.substring(0, cursorPos);
+            var textAfter = EditValue.substring(cursorPos, EditValue.length);
+            $(onInputFocus).val(textBefore + $(e).text() + textAfter);
+        } else { 
+            tinyMCE.activeEditor.execCommand('mceInsertContent', false, $(e).text());
         }
 
+        
+    }
+
+    //.tinymce().focus();
 </script>
+<style>
+    .AllowedTokens {
+        height: 300px;
+        overflow: scroll;
+        padding: 3px;
+    }
+
+        .AllowedTokens .btn {
+            margin: 2px;
+        }
+</style>
