@@ -1,19 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <Copyright>Copyright © UNIT-SOFT Sp. z o.o.</Copyright>
     <Company>UNIT-SOFT Sp. z o.o.</Company>
     <Authors>UNIT-SOFT Sp. z o.o.</Authors>
     <PackageProjectUrl>https://grandnode.com/</PackageProjectUrl>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="MongoDB.Bson" Version="2.4.4" />
-    <PackageReference Include="MongoDB.Driver" Version="2.4.4" />
-    <PackageReference Include="MongoDB.Driver.Core" Version="2.4.4" />
-  </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Grand.Core\Grand.Core.csproj" />
   </ItemGroup>

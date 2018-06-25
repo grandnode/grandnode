@@ -17,5 +17,9 @@ namespace Grand.Core.Domain.Catalog
         /// Track inventory for product by product attributes
         /// </summary>
         ManageStockByAttributes = 2,
+        /// <summary>
+        /// Track inventory for product by bundle products
+        /// </summary>
+        ManageStockByBundleProducts = 3,
     }
 }

@@ -1,0 +1,67 @@
+﻿@model KnowledgebaseCategoryModel
+@inject AdminAreaSettings adminAreaSettings
+@{
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="activitylog-grid"></div>
+        </div>
+    </div>
+    <script>
+    $(document).ready(function () {
+        $("#activitylog-grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("ListCategoryActivityLog", "Knowledgebase", new { categoryId = Model.Id }))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors"
+                },
+                error: function(e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                pageSize: @(adminAreaSettings.DefaultGridPageSize),
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: [@(adminAreaSettings.GridPageSizes)]
+            },
+            editable: {
+                confirmation: false,
+                mode: "inline"
+            },
+            scrollable: false,
+            columns: [{
+                field: "ActivityLogTypeName",
+                title: "@T("Admin.Catalog.Categories.ActivityLog.ActivityLogType")",
+                width: 200,
+            }, {
+                field: "CustomerId",
+                title: "@T("Admin.Catalog.Categories.ActivityLog.Customer")",
+                width: 200,
+                template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerEmail#</a>'
+            }, {
+                field: "Comment",
+                title: "@T("Admin.Catalog.Categories.ActivityLog.Comment")"
+            }, {
+                field: "CreatedOn",
+                title: "@T("Admin.Catalog.Categories.ActivityLog.CreatedOn")",
+                width: 200,
+                type: "date",
+                format: "{0:G}"
+            }]
+        });
+    });
+    </script>
+}

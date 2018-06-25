@@ -2,9 +2,15 @@
 using StackExchange.Redis;
 using System;
 using System.Net;
+using RedLockNet.SERedis;
+using System.Linq;
+using RedLockNet.SERedis.Configuration;
 
 namespace Grand.Core.Caching
 {
+    /// <summary>
+    /// Represents Redis connection wrapper implementation
+    /// </summary>
     public class RedisConnectionWrapper : IRedisConnectionWrapper
     {
         #region Fields
@@ -13,16 +19,22 @@ namespace Grand.Core.Caching
 
         private readonly Lazy<string> _connectionString;
         private volatile ConnectionMultiplexer _connection;
+        private volatile RedLockFactory _redLockFactory;
         private readonly object _lock = new object();
 
         #endregion
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="config">Config</param>
         public RedisConnectionWrapper(GrandConfig config)
         {
             this._config = config;
             this._connectionString = new Lazy<string>(GetConnectionString);
+            this._redLockFactory = CreateRedisLockFactory();
         }
 
         #endregion
@@ -50,11 +62,8 @@ namespace Grand.Core.Caching
             {
                 if (_connection != null && _connection.IsConnected) return _connection;
 
-                if (_connection != null)
-                {
-                    //Connection disconnected. Disposing connection...
-                    _connection.Dispose();
-                }
+                //Connection disconnected. Disposing connection...
+                _connection?.Dispose();
 
                 //Creating new instance of Redis Connection
                 _connection = ConnectionMultiplexer.Connect(_connectionString.Value);
@@ -63,12 +72,43 @@ namespace Grand.Core.Caching
             return _connection;
         }
 
+        /// <summary>
+        /// Create instance of RedisLockFactory
+        /// </summary>
+        /// <returns>RedisLockFactory</returns>
+        protected RedLockFactory CreateRedisLockFactory()
+        {
+            //get password and value whether to use ssl from connection string
+            var password = string.Empty;
+            var useSsl = false;
+            foreach (var option in _connectionString.Value.Split(',').Where(option => option.Contains('=')))
+            {
+                switch (option.Substring(0, option.IndexOf('=')).Trim().ToLowerInvariant())
+                {
+                    case "password":
+                        password = option.Substring(option.IndexOf('=') + 1).Trim();
+                        break;
+                    case "ssl":
+                        bool.TryParse(option.Substring(option.IndexOf('=') + 1).Trim(), out useSsl);
+                        break;
+                }
+            }
+            var points = GetEndPoints().Select(endPoint => new RedLockEndPoint
+            {
+                EndPoint = endPoint,
+                Password = password,
+                Ssl = useSsl
+            }).ToList();
+
+            return RedLockFactory.Create(points);
+        }
+
         #endregion
 
         #region Methods
 
         /// <summary>
-        /// Obtain an interactive connection to a database inside redis
+        /// Obtain an interactive connection to a database inside Redis
         /// </summary>
         /// <param name="db">Database number; pass null to use the default value</param>
         /// <returns>Redis cache database</returns>
@@ -99,7 +139,7 @@ namespace Grand.Core.Caching
         /// <summary>
         /// Delete all the keys of the database
         /// </summary>
-        /// <param name="db">Database number; pass null to use the default value<</param>
+        /// <param name="db">Database number; pass null to use the default value</param>
         public void FlushDatabase(int? db = null)
         {
             var endPoints = GetEndPoints();
@@ -110,14 +150,17 @@ namespace Grand.Core.Caching
             }
         }
 
+
         /// <summary>
         /// Release all resources associated with this object
         /// </summary>
         public void Dispose()
         {
             //dispose ConnectionMultiplexer
-            if (_connection != null)
-                _connection.Dispose();
+            _connection?.Dispose();
+
+            //dispose RedisLockFactory
+            _redLockFactory?.Dispose();
         }
 
         #endregion

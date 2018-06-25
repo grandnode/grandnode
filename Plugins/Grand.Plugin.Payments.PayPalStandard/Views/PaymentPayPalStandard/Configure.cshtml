@@ -6,29 +6,8 @@
 @using Grand.Framework;
 @await Component.InvokeAsync("StoreScopeConfiguration")
 
-<script type="text/javascript">
-	$(document).ready(function () {
-
-		$("#@Html.FieldIdFor(model => model.EnableIpn)").click(toggleEnableIpn);
-
-		toggleEnableIpn();
-	});
-
-
-	function toggleEnableIpn() {
-	    if ($('#@Html.FieldIdFor(model => model.EnableIpn)').is(':checked')) {
-			$('#pnlIpnUrl').show();
-		}
-		else {
-			$('#pnlIpnUrl').hide();
-		}
-	}
-
-
-</script>
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="PaymentPayPalStandard" asp-action="Configure" method="post">
+    <antiforgery-token />
     <div class="form-horizontal">
         <div class="form-body">
             <div class="note note-info">
@@ -89,113 +68,83 @@
             <div class="form-group">
                 <div class="col-md-3 col-sm-3 text-right">
                     @Html.OverrideStoreCheckboxFor(model => model.UseSandbox_OverrideForStore, model => model.UseSandbox, Model.ActiveStoreScopeConfiguration)
-                    @Html.GrandLabelFor(model => model.UseSandbox, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                    <admin-label asp-for="UseSandbox" class="control-label" />
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.UseSandbox)
-                    @Html.ValidationMessageFor(model => model.UseSandbox)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        <admin-input asp-for="UseSandbox" />
+                        <span></span>
+                    </label>
+                    <span asp-validation-for="UseSandbox"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3 col-sm-3 text-right">
                     @Html.OverrideStoreCheckboxFor(model => model.BusinessEmail_OverrideForStore, model => model.BusinessEmail, Model.ActiveStoreScopeConfiguration)
-                    @Html.GrandLabelFor(model => model.BusinessEmail, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                    <admin-label asp-for="BusinessEmail" class="control-label" />
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.BusinessEmail)
-                    @Html.ValidationMessageFor(model => model.BusinessEmail)
+                    <admin-input asp-for="BusinessEmail" />
+                    <span asp-validation-for="BusinessEmail"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3 col-sm-3 text-right">
                     @Html.OverrideStoreCheckboxFor(model => model.PdtToken_OverrideForStore, model => model.PdtToken, Model.ActiveStoreScopeConfiguration)
-                    @Html.GrandLabelFor(model => model.PdtToken, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                    <admin-label asp-for="PdtToken" class="control-label" />
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.PdtToken)
-                    @Html.ValidationMessageFor(model => model.PdtToken)
+                    <admin-input asp-for="PdtToken" />
+                    <span asp-validation-for="PdtToken"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3 col-sm-3 text-right">
                     @Html.OverrideStoreCheckboxFor(model => model.PdtValidateOrderTotal_OverrideForStore, model => model.PdtValidateOrderTotal, Model.ActiveStoreScopeConfiguration)
-                    @Html.GrandLabelFor(model => model.PdtValidateOrderTotal, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                    <admin-label asp-for="PdtValidateOrderTotal" class="control-label" />
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.PdtValidateOrderTotal)
-                    @Html.ValidationMessageFor(model => model.PdtValidateOrderTotal)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        <admin-input asp-for="PdtValidateOrderTotal" />
+                        <span></span>
+                    </label>
+                    <span asp-validation-for="PdtValidateOrderTotal"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3 col-sm-3 text-right">
                     @Html.OverrideStoreCheckboxFor(model => model.AdditionalFee_OverrideForStore, model => model.AdditionalFee, Model.ActiveStoreScopeConfiguration)
-                    @Html.GrandLabelFor(model => model.AdditionalFee, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                    <admin-label asp-for="AdditionalFee" class="control-label" />
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.AdditionalFee)
-                    @Html.ValidationMessageFor(model => model.AdditionalFee)
+                    <admin-input asp-for="AdditionalFee" />
+                    <span asp-validation-for="AdditionalFee"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3 col-sm-3 text-right">
                     @Html.OverrideStoreCheckboxFor(model => model.AdditionalFeePercentage_OverrideForStore, model => model.AdditionalFeePercentage, Model.ActiveStoreScopeConfiguration)
-                    @Html.GrandLabelFor(model => model.AdditionalFeePercentage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                    <admin-label asp-for="AdditionalFeePercentage" class="control-label" />
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.AdditionalFeePercentage)
-                    @Html.ValidationMessageFor(model => model.AdditionalFeePercentage)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        <admin-input asp-for="AdditionalFeePercentage" />
+                        <span></span>
+                    </label>
+                    <span asp-validation-for="AdditionalFeePercentage"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-3 col-sm-3 text-right">
                     @Html.OverrideStoreCheckboxFor(model => model.PassProductNamesAndTotals_OverrideForStore, model => model.PassProductNamesAndTotals, Model.ActiveStoreScopeConfiguration)
-                    @Html.GrandLabelFor(model => model.PassProductNamesAndTotals, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                    <admin-label asp-for="PassProductNamesAndTotals" class="control-label" />
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.PassProductNamesAndTotals)
-                    @Html.ValidationMessageFor(model => model.PassProductNamesAndTotals)
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-3 col-sm-3 text-right">
-                    @Html.OverrideStoreCheckboxFor(model => model.EnableIpn_OverrideForStore, model => model.EnableIpn, Model.ActiveStoreScopeConfiguration)
-                    @Html.GrandLabelFor(model => model.EnableIpn, new Dictionary<string, object> { { "class", "control-label" } }, false)
-                </div>
-                <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.EnableIpn)
-                    @Html.ValidationMessageFor(model => model.EnableIpn)
-                </div>
-            </div>
-            <div class="form-group" id="pnlIpnUrl">
-                <div class="col-md-3 col-sm-3 text-right">
-                    @Html.OverrideStoreCheckboxFor(model => model.IpnUrl_OverrideForStore, model => model.IpnUrl, Model.ActiveStoreScopeConfiguration)
-                    @Html.GrandLabelFor(model => model.IpnUrl, new Dictionary<string, object> { { "class", "control-label" } }, false)
-                    <br />
-                    <em>@T("Plugins.Payments.PayPalStandard.Fields.EnableIpn.Hint2")</em>
-                </div>
-                <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.IpnUrl)
-                    @Html.ValidationMessageFor(model => model.IpnUrl)
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-3 col-sm-3 text-right">
-                    @Html.OverrideStoreCheckboxFor(model => model.AddressOverride_OverrideForStore, model => model.AddressOverride, Model.ActiveStoreScopeConfiguration)
-                    @Html.GrandLabelFor(model => model.AddressOverride, new Dictionary<string, object> { { "class", "control-label" } }, false)
-                </div>
-                <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.AddressOverride)
-                    @Html.ValidationMessageFor(model => model.AddressOverride)
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-3 col-sm-3 text-right">
-                    @Html.OverrideStoreCheckboxFor(model => model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage_OverrideForStore, model => model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage, Model.ActiveStoreScopeConfiguration)
-                    @Html.GrandLabelFor(model => model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
-                </div>
-                <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage)
-                    @Html.ValidationMessageFor(model => model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        <admin-input asp-for="PassProductNamesAndTotals" />
+                        <span></span>
+                    </label>
+                    <span asp-validation-for="PassProductNamesAndTotals"></span>
                 </div>
             </div>
         </div>
@@ -207,5 +156,4 @@
             </div>
         </div>
     </div>
-
-}
+</form>

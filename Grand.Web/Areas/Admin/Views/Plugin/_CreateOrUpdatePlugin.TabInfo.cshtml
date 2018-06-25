@@ -4,23 +4,23 @@
     @<div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.Locales[item].FriendlyName)
+                <admin-label asp-for="@Model.Locales[item].FriendlyName" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.Locales[item].FriendlyName)
-                    @Html.ValidationMessageFor(model => model.Locales[item].FriendlyName)
+                    <admin-input asp-for="@Model.Locales[item].FriendlyName" />
+                    <span asp-validation-for="@Model.Locales[item].FriendlyName"></span>
                 </div>
             </div>
-            @Html.HiddenFor(model => model.Locales[item].LanguageId)
+            <input asp-for="@Model.Locales[item].LanguageId" type="hidden" />
         </div>
     </div>
         ,
     @<div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.FriendlyName)
+                <admin-label asp-for="FriendlyName" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.FriendlyName)
-                    @Html.ValidationMessageFor(model => model.FriendlyName)
+                    <admin-input asp-for="FriendlyName" />
+                    <span asp-validation-for="FriendlyName"></span>
                 </div>
             </div>
         </div>
@@ -29,22 +29,22 @@
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.DisplayOrder)
+            <admin-label asp-for="DisplayOrder" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.DisplayOrder)
-                @Html.ValidationMessageFor(model => model.DisplayOrder)
+                <admin-input asp-for="DisplayOrder" />
+                <span asp-validation-for="DisplayOrder"></span>
             </div>
         </div>
         @if (Model.CanChangeEnabled)
             {
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.IsEnabled)
+                <admin-label asp-for="IsEnabled" />
                 <div class="col-md-9 col-sm-9">
                     <label class="mt-checkbox mt-checkbox-outline">
-                        @Html.GrandEditorFor(model => model.IsEnabled)
+                        <admin-input asp-for="IsEnabled" />
                         <span></span>
                     </label>
-                    @Html.ValidationMessageFor(model => model.IsEnabled)
+                    <span asp-validation-for="IsEnabled"></span>
                 </div>
             </div>
         }

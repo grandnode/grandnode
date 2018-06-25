@@ -3,16 +3,15 @@
     //page title
     ViewBag.Title = T("Admin.ContentManagement.MessageTemplates.AddNew").Text;
 }
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="MessageTemplate" asp-action="Create" method="post">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
                 <div class="portlet-title">
                     <div class="caption">
                         <i class="fa fa-envelope-o"></i>
-                        @T("Admin.ContentManagement.MessageTemplates.AddNew") - @Model.Name 
+                        @T("Admin.ContentManagement.MessageTemplates.AddNew") - @Model.Name
                         <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.ContentManagement.MessageTemplates.BackToList").Text, "List")</small>
                     </div>
                     <div class="actions">
@@ -28,5 +27,4 @@
             </div>
         </div>
     </div>
-
-}
+</form>

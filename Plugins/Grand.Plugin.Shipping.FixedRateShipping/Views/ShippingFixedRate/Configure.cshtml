@@ -1,13 +1,12 @@
 ﻿@{
     Layout = "_ConfigurePlugin";
 }
-@Html.AntiForgeryToken()
-<table class="adminContent">
-    <tr>
-        <td>
+<antiforgery-token />
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
             <div id="shipping-rate-grid"></div>
-
-            <script>
+            <script type="text/javascript">
                 $(document).ready(function () {
                     $("#shipping-rate-grid").kendoGrid({
                         dataSource: {
@@ -24,6 +23,14 @@
                                     type: "POST",
                                     dataType: "json",
                                     data: addAntiForgeryToken
+                                },
+                                parameterMap: function (data, operation) {
+                                    if (operation != "read") {
+                                        data.Rate = kendo.toString(data.Rate, "n8");
+                                        return data;
+                                    } else {
+                                        return data;
+                                    }
                                 }
                             },
                             schema: {
@@ -88,6 +95,6 @@
                     });
                 });
             </script>
-        </td>
-    </tr>
-</table>
+        </div>
+    </div>
+</div>

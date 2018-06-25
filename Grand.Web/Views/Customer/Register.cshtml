@@ -36,13 +36,30 @@
         });
     </script>
 }
+
+<script type="text/javascript">
+    $(function () {
+        $("#@Html.IdFor(model => model.Newsletter)").click(toggleNewsletterCat);
+        toggleNewsletterCat();
+
+        function toggleNewsletterCat() {
+            if ($('#@Html.FieldIdFor(model => model.Newsletter)').is(':checked')) {
+                $('.register-category-newsletter').show();
+            }
+            else {
+                $('.register-category-newsletter').hide();
+            }
+        }
+    });
+</script>
+
 <form asp-route="Register" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
     <div class="page registration-page">
         <div asp-validation-summary="ModelOnly" class="message-error"></div>
         @await Html.PartialAsync("_ExternalAuthentication.AssociateMessage")
         <div class="card mb-3">
             <h3 class="h4 card-header">@T("Account.YourPersonalDetails")</h3>
-            <div class="card-block">
+            <div class="card-body">
                     @if (Model.GenderEnabled)
                     {
                         <div class="col-lg-3 col-sm-12">
@@ -55,12 +72,12 @@
                             <div class="d-flex row">
                                 <label class="male custom-control custom-radio">
                                     <input id="gender-male" name="Gender" type="radio" value="M" checked="@(Model.Gender == "M")" class="custom-control-input">
-                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-label"></span>
                                     <span class="forcheckbox custom-control-description">@T("Account.Fields.Gender.Male")</span>
                                 </label>
-                                <label class="female custom-control custom-radio">
+                                <label class="female custom-control custom-radio ml-2">
                                     <input id="gender-female" name="Gender" type="radio" value="F" checked="@(Model.Gender == "F")" class="custom-control-input">
-                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-label"></span>
                                     <span class="forcheckbox custom-control-description">@T("Account.Fields.Gender.Female")</span>
                                 </label>
                             </div>
@@ -85,9 +102,9 @@
                             <legend class="sr-only">@T("Account.Fields.DateOfBirth")</legend>
                             <div class="row">
                                 <span class="col-form-label col-12 py-0 px-0">@T("Account.Fields.DateOfBirth"):</span>
-                                @Html.DatePickerDropDowns(Html.FieldNameFor(x => x.DateOfBirthDay),
-                                            Html.FieldNameFor(x => x.DateOfBirthMonth),
-                                            Html.FieldNameFor(x => x.DateOfBirthYear),
+                                @Html.DatePickerDropDowns(Html.NameFor(x => x.DateOfBirthDay),
+                                            Html.NameFor(x => x.DateOfBirthMonth),
+                                            Html.NameFor(x => x.DateOfBirthYear),
                                             DateTime.Now.Year - 110,
                                             DateTime.Now.Year,
                                             Model.DateOfBirthDay,
@@ -133,7 +150,7 @@
         {
             <div class="card mb-3">
                 <h3 class="h5 card-header">@T("Account.CompanyDetails")</h3>
-                <div class="card-block">
+                <div class="card-body">
                     <div class="form-group">
                         <label asp-for="Company" class="col-form-label">@T("Account.Fields.Company"):</label>
                         <input asp-for="Company"  class="form-control"/>
@@ -146,7 +163,7 @@
         @if (Model.DisplayVatNumber)
         {
             <div class="card mb-3">
-                <div class="card-block">
+                <div class="card-body">
                     <div class="form-group">
                         <label asp-for="VatNumber" class="col-form-label">@T("Account.Fields.VatNumber"):</label>
                         <input asp-for="VatNumber" class="form-control" />
@@ -165,7 +182,7 @@
                 <h3 class="h5 card-header">
                     @T("Account.YourAddress")
                 </h3>
-                <div class="card-block">
+                <div class="card-body">
                     <div class="form-fields d-flex row">
                         @if (Model.StreetAddressEnabled)
                         {
@@ -231,7 +248,7 @@
         {
             <div class="card mb-3">
                 <h3 class="h5 card-header">@T("Account.YourContactInformation")</h3>
-                <div class="card-block">
+                <div class="card-body">
                     <div class="d-flex row">
                         @if (Model.PhoneEnabled)
                         {
@@ -256,25 +273,25 @@
             </div>
         }
 
-        @if (Model.NewsletterEnabled || Model.CustomerAttributes.Count > 0)
+        @if (Model.NewsletterEnabled || Model.CustomerAttributes.Any())
         {
             <div class="card mb-3">
                 <h3 class="h5 card-header">@T("Account.Options")</h3>
-                <div class="card-block">
+                <div class="card-body">
                         @if (Model.NewsletterEnabled)
                         {
                             <div class="form-group">
-                                <span class="col-form-label">@T("account.fields.newsletter")</span>
                                 <label for="Newsletter" class="ml-1 custom-control custom-checkbox">
                                     <input class="custom-control-input" asp-for="Newsletter" />
-                                    <span class="custom-control-indicator"></span>
-                                    <span class="custom-control-description">&nbsp;</span>
+                                    <span class="custom-control-label"></span>
+                                    <span class="custom-control-description">@T("account.fields.newsletter")</span>
                                     <span class="sr-only">@T("account.fields.newsletter")</span>
                                 </label>
                                 <span asp-validation-for="Newsletter"></span>
                             </div>
+                            @await Html.PartialAsync("_NewsLetterCategories", Model.NewsletterCategories)
                         }
-                        @if (Model.CustomerAttributes.Count > 0)
+                        @if (Model.CustomerAttributes.Any())
                         {
                             @await Html.PartialAsync("_CustomerAttributes", Model.CustomerAttributes)
                         }
@@ -285,7 +302,7 @@
         {
             <div class="card mb-3">
                 <h3 class="h5 card-header">@T("Account.Preferences")</h3>
-                <div class="card-block">
+                <div class="card-body">
                     @if (Model.AllowCustomersToSetTimeZone)
                     {
                         <div class="form-group col-12 text-left px-0">
@@ -299,7 +316,7 @@
         }
         <div class="card mb-3">
             <h3 class="h5 card-header">@T("Account.YourPassword")</h3>
-            <div class="card-block">
+            <div class="card-body">
                 <div class="form-group col-12">
                     <div class="row">
                         <label asp-for="Password" class="col-form-label">@T("Account.Fields.Password"):</label>
@@ -348,7 +365,7 @@
             </script>
             <label class="custom-control custom-checkbox">
                 <input id="accept-privacy-policy" name="accept-privacy-policy" type="checkbox" class="custom-control-input">
-                <span class="custom-control-indicator"></span>
+                <span class="custom-control-label"></span>
                 <span class="custom-control-description">@T("Account.Fields.AcceptPrivacyPolicy")</span>
                 <span class="read" onclick="javascript:OpenWindow('@Url.RouteUrl("TopicPopup", new { SystemName = "privacyinfo" })', 450, 500, true)">@T("Account.Fields.AcceptPrivacyPolicy.Read")</span>
             </label>

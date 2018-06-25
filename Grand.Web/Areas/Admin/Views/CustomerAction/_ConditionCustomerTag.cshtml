@@ -1,25 +1,19 @@
 ﻿@model CustomerActionConditionModel
 
-
-@if (String.IsNullOrEmpty(Model.Id))
-{
-    <div class="note note-info">
-        @T("Admin.Customers.CustomerActionCondition.SaveBeforeEdit")
-    </div>
-}
-
-@if (!String.IsNullOrEmpty(Model.Id))
-{
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div id="customertag-grid"></div>
+    @if (String.IsNullOrEmpty(Model.Id))
+    {
+        <div class="note note-info">
+            @T("Admin.Customers.CustomerActionCondition.SaveBeforeEdit")
         </div>
-    </div>
-
-
-                
-
-    <script>
+    }
+    @if (!String.IsNullOrEmpty(Model.Id))
+    {
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="customertag-grid"></div>
+            </div>
+        </div>
+        <script>
     $(document).ready(function () {
     $("#customertag-grid").kendoGrid({
         dataSource: {
@@ -101,20 +95,19 @@
 });
 
 
-function customerTagDropDownEditor(container, options) {
-    $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:CustomerTagId"/>')
-        .appendTo(container)
-        .kendoDropDownList({
-            autoBind: false,
-            dataSource:
-            {
-                transport: {
-                    read: "@Html.Raw(Url.Action("CustomerTags", "CustomerAction"))"
-                }
-            },
-            optionLabel: " -- Select -- "
-        });
-    }
+    function customerTagDropDownEditor(container, options) {
+        $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:CustomerTagId"/>')
+            .appendTo(container)
+            .kendoDropDownList({
+                autoBind: false,
+                dataSource:
+                {
+                    transport: {
+                        read: "@Html.Raw(Url.Action("CustomerTags", "CustomerAction"))"
+                    }
+                },
+                optionLabel: " -- Select -- "
+            });
+        }
     </script>
-
     }

@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Payments;
@@ -19,44 +16,6 @@ namespace Grand.Core.Domain.Orders
 
         private ICollection<OrderItem> _orderItems;
 
-        #region Utilities
-
-        protected virtual SortedDictionary<decimal, decimal> ParseTaxRates(string taxRatesStr)
-        {
-            var taxRatesDictionary = new SortedDictionary<decimal, decimal>();
-            if (String.IsNullOrEmpty(taxRatesStr))
-                return taxRatesDictionary;
-
-            string[] lines = taxRatesStr.Split(new [] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (string line in lines)
-            {
-                if (String.IsNullOrEmpty(line.Trim()))
-                    continue;
-
-                string[] taxes = line.Split(new [] { ':' });
-                if (taxes.Length == 2)
-                {
-                    try
-                    {
-                        decimal taxRate = decimal.Parse(taxes[0].Trim(), CultureInfo.InvariantCulture);
-                        decimal taxValue = decimal.Parse(taxes[1].Trim(), CultureInfo.InvariantCulture);
-                        taxRatesDictionary.Add(taxRate, taxValue);
-                    }
-                    catch (Exception exc)
-                    {
-                        Debug.WriteLine(exc.ToString());
-                    }
-                }
-            }
-
-            //add at least one tax rate (0%)
-            if (!taxRatesDictionary.Any())
-                taxRatesDictionary.Add(decimal.Zero, decimal.Zero);
-
-            return taxRatesDictionary;
-        }
-
-        #endregion
 
         #region Properties
 
@@ -121,9 +80,34 @@ namespace Grand.Core.Domain.Orders
         public int CustomerTaxDisplayTypeId { get; set; }
 
         /// <summary>
-        /// Gets or sets the VAT number (the European Union Value Added Tax)
+        /// Gets or sets the VAT number 
         /// </summary>
         public string VatNumber { get; set; }
+
+        /// <summary>
+        /// Gets or sets the VAT number status id
+        /// </summary>
+        public int VatNumberStatusId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Company name
+        /// </summary>
+        public string CompanyName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the CustomerEmail
+        /// </summary>
+        public string CustomerEmail { get; set; }
+
+        /// <summary>
+        /// Gets or sets the FirstName
+        /// </summary>
+        public string FirstName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the LastName
+        /// </summary>
+        public string LastName { get; set; }
 
         /// <summary>
         /// Gets or sets the order subtotal (incl tax)
@@ -444,7 +428,7 @@ namespace Grand.Core.Domain.Orders
         {
             get
             {
-                return ParseTaxRates(this.TaxRates);
+                return this.ParseTaxRates(this.TaxRates);
             }
         }
         

@@ -189,16 +189,6 @@ namespace Grand.Services.Messages
                     sb.AppendLine("<br />");
                     sb.AppendLine(orderItem.AttributeDescription);
                 }
-                //rental info
-                if (product.IsRental)
-                {
-                    var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
-                    var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
-                    var rentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
-                        rentalStartDate, rentalEndDate);
-                    sb.AppendLine("<br />");
-                    sb.AppendLine(rentalInfo);
-                }
                 //sku
                 if (_catalogSettings.ShowSkuOnProductDetailsPage)
                 {
@@ -500,16 +490,6 @@ namespace Grand.Services.Messages
                     sb.AppendLine("<br />");
                     sb.AppendLine(orderItem.AttributeDescription);
                 }
-                //rental info
-                if (product.IsRental)
-                {
-                    var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
-                    var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
-                    var rentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
-                        rentalStartDate, rentalEndDate);
-                    sb.AppendLine("<br />");
-                    sb.AppendLine(rentalInfo);
-                }
                 //sku
                 if (_catalogSettings.ShowSkuOnProductDetailsPage)
                 {
@@ -743,6 +723,7 @@ namespace Grand.Services.Messages
             tokens.Add(new Token("Order.BillingEmail", order.BillingAddress.Email));
             tokens.Add(new Token("Order.BillingFaxNumber", order.BillingAddress.FaxNumber));
             tokens.Add(new Token("Order.BillingCompany", order.BillingAddress.Company));
+            tokens.Add(new Token("Order.BillingVatNumber", order.BillingAddress.VatNumber));
             tokens.Add(new Token("Order.BillingAddress1", order.BillingAddress.Address1));
             tokens.Add(new Token("Order.BillingAddress2", order.BillingAddress.Address2));
             tokens.Add(new Token("Order.BillingCity", order.BillingAddress.City));
@@ -789,8 +770,11 @@ namespace Grand.Services.Messages
             if (language != null && !String.IsNullOrEmpty(language.LanguageCulture))
             {
                 var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
-                DateTime createdOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, TimeZoneInfo.Utc, _dateTimeHelper.GetCustomerTimeZone(customer));
-                tokens.Add(new Token("Order.CreatedOn", createdOn.ToString("D", new CultureInfo(language.LanguageCulture))));
+                if (customer != null)
+                {
+                    DateTime createdOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, TimeZoneInfo.Utc, _dateTimeHelper.GetCustomerTimeZone(customer));
+                    tokens.Add(new Token("Order.CreatedOn", createdOn.ToString("D", new CultureInfo(language.LanguageCulture))));
+                }
             }
             else
             {
@@ -984,6 +968,16 @@ namespace Grand.Services.Messages
         {
             tokens.Add(new Token("Vendor.Name", vendor.Name));
             tokens.Add(new Token("Vendor.Email", vendor.Email));
+            tokens.Add(new Token("Vendor.Description", vendor.Description));
+            tokens.Add(new Token("Vendor.Address1", vendor.Address?.Address1));
+            tokens.Add(new Token("Vendor.Address2", vendor.Address?.Address2));
+            tokens.Add(new Token("Vendor.City", vendor.Address?.City));
+            tokens.Add(new Token("Vendor.Company", vendor.Address?.Company));
+            tokens.Add(new Token("Vendor.FaxNumber", vendor.Address?.FaxNumber));
+            tokens.Add(new Token("Vendor.PhoneNumber", vendor.Address?.PhoneNumber));
+            tokens.Add(new Token("Vendor.ZipPostalCode", vendor.Address?.ZipPostalCode));
+            tokens.Add(new Token("Vendor.StateProvince", !String.IsNullOrEmpty(vendor.Address?.StateProvinceId) ? EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(vendor.Address?.StateProvinceId).GetLocalized(x => x.Name) : ""));
+            tokens.Add(new Token("Vendor.Country", !String.IsNullOrEmpty(vendor.Address?.CountryId) ? EngineContext.Current.Resolve<ICountryService>().GetCountryById(vendor.Address?.CountryId).GetLocalized(x => x.Name) : ""));
 
             //event notification
             _eventPublisher.EntityTokensAdded(vendor, tokens);
@@ -1045,11 +1039,14 @@ namespace Grand.Services.Messages
 
         public virtual void AddProductTokens(IList<Token> tokens, Product product, string languageId)
         {
+            var defaultCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+
             tokens.Add(new Token("Product.ID", product.Id.ToString()));
             tokens.Add(new Token("Product.Name", product.GetLocalized(x => x.Name, languageId)));
             tokens.Add(new Token("Product.ShortDescription", product.GetLocalized(x => x.ShortDescription, languageId), true));
             tokens.Add(new Token("Product.SKU", product.Sku));
             tokens.Add(new Token("Product.StockQuantity", product.GetTotalStockQuantity().ToString()));
+            tokens.Add(new Token("Product.Price", _priceFormatter.FormatPrice(product.Price, true, defaultCurrency)));
 
             //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
             var productUrl = string.Format("{0}{1}", GetStoreUrl(), product.GetSeName());
@@ -1139,6 +1136,17 @@ namespace Grand.Services.Messages
 
             //event notification
             _eventPublisher.EntityTokensAdded(subscription, tokens);
+        }
+
+        public virtual void AddAuctionTokens(IList<Token> tokens, Product product, Bid bid)
+        {
+            var defaultCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+            tokens.Add(new Token("Auctions.ProductName", product.Name));
+            tokens.Add(new Token("Auctions.Price", _priceFormatter.FormatPrice(bid.Amount, true, defaultCurrency)));
+            tokens.Add(new Token("Auctions.EndTime", product.AvailableEndDateTimeUtc.ToString()));
+            tokens.Add(new Token("Auctions.ProductSeName", product.SeName));
+
+            _eventPublisher.EntityTokensAdded(bid, tokens);
         }
 
         /// <summary>
@@ -1260,8 +1268,19 @@ namespace Grand.Services.Messages
                 "%ContactUs.SenderEmail%",
                 "%ContactUs.SenderName%",
                 "%ContactUs.Body%",
-                "%Vendor.Name%",
+                "%ContactUs.AttributeDescription%",
+                "%Vendor.Address1%",
+                "%Vendor.Address2%",
+                "%Vendor.City%",
+                "%Vendor.Company%",
+                "%Vendor.Country%",
+                "%Vendor.Description%",
                 "%Vendor.Email%",
+                "%Vendor.FaxNumber%",
+                "%Vendor.Name%",
+                "%Vendor.PhoneNumber%",
+                "%Vendor.StateProvince%",
+                "%Vendor.ZipPostalCode%",
                 "%Wishlist.URLForCustomer%", 
                 "%NewsLetterSubscription.Email%", 
                 "%NewsLetterSubscription.ActivationUrl%",
@@ -1288,6 +1307,10 @@ namespace Grand.Services.Messages
                 "%PrivateMessage.Text%",
                 "%BackInStockSubscription.ProductName%",
                 "%BackInStockSubscription.ProductUrl%",
+                "%Auctions.ProductName%",
+                "%Auctions.Price%",
+                "%Auctions.EndTime%",
+                "%Auctions.ProductSeName%"
             };
             return allowedTokens.ToArray();
         }

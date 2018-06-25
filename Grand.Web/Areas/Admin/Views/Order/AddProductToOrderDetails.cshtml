@@ -2,18 +2,15 @@
 @model OrderModel.AddOrderProductModel.ProductDetailsModel
 @{
     //page title
-    ViewBag.Title = string.Format(T("Admin.Orders.Products.AddNew.Title2").Text, Model.Name, Model.OrderId);
+    ViewBag.Title = string.Format(T("Admin.Orders.Products.AddNew.Title2").Text, Model.Name, Model.OrderNumber);
 }
 @*we add enctype = "multipart/form-data" because "File upload" attribute control type requries it*@
-@using (Html.BeginForm("AddProductToOrderDetails", "Order",
-            new { orderId = Model.OrderId, productId = Model.ProductId },
-            FormMethod.Post,
-            false,
-             new Dictionary<string, Object> { { "enctype", "multipart/form-data" } })
-             )
-{
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary(false)
+
+<form asp-controller="Order" asp-action="AddProductToOrderDetails" asp-route-orderId="@Model.OrderId"
+      asp-route-productId="@Model.ProductId" enctype="multipart/form-data" method="post" id="product-details-form">
+    
+    <antiforgery-token />
+    <div asp-validation-summary="All"></div>
 
     <div class="row">
         <div class="col-md-12">
@@ -21,7 +18,7 @@
                 <div class="portlet-title">
                     <div class="caption">
                         <i class="fa fa-cubes"></i>
-                        @string.Format(T("Admin.Orders.Products.AddNew.Title2").Text, Model.Name, Model.OrderId)
+                        @string.Format(T("Admin.Orders.Products.AddNew.Title2").Text, Model.Name, Model.OrderNumber)
                         @Html.ActionLink("(" + T("Admin.Orders.Products.AddNew.BackToList") + ")", "AddProductToOrder", new { orderId = Model.OrderId })
                     </div>
                 </div>
@@ -38,44 +35,41 @@
                             </div>
                         }
                     </div>
-
                     @if (Model.ProductType == ProductType.SimpleProduct)
                     {
                         <div class="form-horizontal">
                             <div class="form-body">
                                 <div class="form-group">
-                                    @Html.GrandLabelFor(model => model.UnitPriceInclTax)
+                                    <admin-label asp-for="UnitPriceInclTax" />
                                     <div class="col-md-9 col-sm-9">
-                                        @Html.GrandEditorFor(model => model.UnitPriceInclTax)
+                                        <admin-input asp-for="UnitPriceInclTax" />
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    @Html.GrandLabelFor(model => model.UnitPriceExclTax)
+                                    <admin-label asp-for="UnitPriceExclTax" />
                                     <div class="col-md-9 col-sm-9">
-                                        @Html.GrandEditorFor(model => model.UnitPriceExclTax)
+                                        <admin-input asp-for="UnitPriceExclTax" />
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    @Html.GrandLabelFor(model => model.Quantity)
+                                    <admin-label asp-for="Quantity" />
                                     <div class="col-md-9 col-sm-9">
-                                        @Html.GrandEditorFor(model => model.Quantity)
+                                        <admin-input asp-for="Quantity" />
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    @Html.GrandLabelFor(model => model.SubTotalInclTax)
+                                    <admin-label asp-for="SubTotalInclTax" />
                                     <div class="col-md-9 col-sm-9">
-                                        @Html.GrandEditorFor(model => model.SubTotalInclTax)
+                                        <admin-input asp-for="SubTotalInclTax" />
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    @Html.GrandLabelFor(model => model.SubTotalExclTax)
+                                    <admin-label asp-for="SubTotalExclTax" />
                                     <div class="col-md-9 col-sm-9">
-                                        @Html.GrandEditorFor(model => model.SubTotalExclTax)
+                                        <admin-input asp-for="SubTotalExclTax" />
                                     </div>
                                 </div>
-                                
-                                @*@Html.Partial("_ProductAddAttributes", Model.ProductAttributes)*@
-                                @{ 
+                                @{
                                     var dataDict = new ViewDataDictionary(ViewData) { new KeyValuePair<string, object>("productId", Model.ProductId) };
                                     @await Html.PartialAsync("_ProductAddAttributes", Model.ProductAttributes, dataDict)
                                 }
@@ -86,40 +80,43 @@
                                     @await Html.PartialAsync("_ProductAddGiftCardInfo", Model.GiftCard, dataDictGiftCard)
 
                                 }
-                                <div class="form-group">
-                                    @Html.Partial("_ProductAddRentalInfo", Model)
-                                </div>
                                 <div class="form-actions">
                                     <div class="row">
                                         <div class="col-md-offset-3 col-md-9 col-sm-9">
                                             <div class="note note-info">
                                                 <strong>@T("Admin.Orders.Products.AddNew.Note2")</strong>
                                             </div>
-
                                             <input type="submit" class="btn default" value="@T("Admin.Orders.Products.AddNew")" />
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                                    }
-                                    else if (Model.ProductType == ProductType.GroupedProduct)
-                                    {
-                                    <div>
-                                        @*TODO add support for grouped products to be added to an existing order*@
-                                        <div class="note note-info">
-                                            Grouped products are not currently supported for adding to an existing order
-                                        </div>
-                                    </div>
-                                    }
-                                    else
-                                    {
-                                    <div class="note note-info">
-                                        This product type (unknown) is not currently supported for adding to an existing order
-                                    </div>
-                                    }
+                    }
+                    else if (Model.ProductType == ProductType.GroupedProduct)
+                    {
+                        <div>
+                            <div class="note note-info">
+                                Grouped products are not currently supported for adding to an existing order
+                            </div>
+                        </div>
+                    }
+                    else if (Model.ProductType == ProductType.Reservation)
+                    {
+                        <div>
+                            <div class="note note-info">
+                                Reservation products are not currently supported for adding to an existing order
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="note note-info">
+                            This product type (unknown) is not currently supported for adding to an existing order
+                        </div>
+                    }
                 </div>
             </div>
         </div>
     </div>
-                                    }
+</form>

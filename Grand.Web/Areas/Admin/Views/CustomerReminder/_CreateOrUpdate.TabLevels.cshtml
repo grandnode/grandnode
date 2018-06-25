@@ -1,7 +1,4 @@
 ﻿@model CustomerReminderModel
-
-
-
 @{
 
     if (String.IsNullOrEmpty(Model.Id))
@@ -12,9 +9,7 @@
     }
     if (!String.IsNullOrEmpty(Model.Id))
     {
-        var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-        var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
+        
         <div class="panel panel-default">
             <div class="panel-body">
                 <div id="levels-grid"></div>
@@ -65,7 +60,7 @@
                         info: false
                     },
                     editable: {
-                        confirmation: false,
+                        confirmation: true,
                         mode: "inline"
                     },
                     scrollable: false,
@@ -74,19 +69,12 @@
                         field: "Name",
                         title: "@T("Admin.Customers.CustomerReminder.Fields.Name")",
                         width: 300,
-                        filterable: false,
-                        sortable: false
+                        template: '<a class="k-link" href="@Url.Content("~/Admin/CustomerReminder/EditLevel")?customerReminderId=@(Model.Id)&cid=#=Id#">#=Name#</a>',
                     },
                     {
                         field: "Level",
                         title: "@T("Admin.Customers.CustomerReminder.Fields.Level")",
                         width: 100,
-                    },
-                    {
-                        field: "Id",
-                        title: "@T("Admin.Common.Edit")",
-                        width: 100,
-                        template: '<a href="@Url.Content("~/Admin/CustomerReminder/EditLevel")?customerReminderId=@(Model.Id)&cid=#=Id#">@T("Admin.Common.Edit")</a>'
                     },
                     {
                         command: { name: "destroy", text: "@T("Admin.Common.Delete")" },

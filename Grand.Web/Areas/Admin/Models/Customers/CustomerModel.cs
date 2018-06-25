@@ -45,7 +45,6 @@ namespace Grand.Web.Areas.Admin.Models.Customers
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.Password")]
         
         [DataType(DataType.Password)]
-        [NoTrim]
         public string Password { get; set; }
 
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.CustomerTags")]

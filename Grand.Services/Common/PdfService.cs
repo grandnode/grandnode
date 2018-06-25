@@ -163,7 +163,7 @@ namespace Grand.Services.Common
                 throw new ArgumentNullException("order");
 
             string fileName = string.Format("order_{0}_{1}.pdf", order.OrderGuid, CommonHelper.GenerateRandomDigitCode(4));
-            string filePath = Path.Combine(CommonHelper.MapPath("~/wwwroot/content/files/ExportImport"), fileName);
+            string filePath = Path.Combine(CommonHelper.MapPath("~/wwwroot/Content/files/ExportImport"), fileName);
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
                 var orders = new List<Order>();
@@ -516,17 +516,7 @@ namespace Grand.Services.Common
                         var attributesParagraph = new Paragraph(HtmlHelper.ConvertHtmlToPlainText(orderItem.AttributeDescription, true, true), attributesFont);
                         pAttribTable.AddCell(attributesParagraph);
                     }
-                    //rental info
-                    if (product.IsRental)
-                    {
-                        var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
-                        var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
-                        var rentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
-                            rentalStartDate, rentalEndDate);
-
-                        var rentalInfoParagraph = new Paragraph(rentalInfo, attributesFont);
-                        pAttribTable.AddCell(rentalInfoParagraph);
-                    }
+                    
                     productsTable.AddCell(pAttribTable);
 
                     //SKU
@@ -1150,17 +1140,7 @@ namespace Grand.Services.Common
                         var attributesParagraph = new Paragraph(HtmlHelper.ConvertHtmlToPlainText(orderItem.AttributeDescription, true, true), attributesFont);
                         productAttribTable.AddCell(attributesParagraph);
                     }
-                    //rental info
-                    if (product.IsRental)
-                    {
-                        var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
-                        var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
-                        var rentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
-                            rentalStartDate, rentalEndDate);
-
-                        var rentalInfoParagraph = new Paragraph(rentalInfo, attributesFont);
-                        productAttribTable.AddCell(rentalInfoParagraph);
-                    }
+                    
                     productsTable.AddCell(productAttribTable);
 
                     //SKU
@@ -1240,13 +1220,13 @@ namespace Grand.Services.Common
                 productTable.AddCell(new Paragraph(HtmlHelper.StripTags(HtmlHelper.ConvertHtmlToPlainText(productDescription, decode: true)), font));
                 productTable.AddCell(new Paragraph(" "));
 
-                if (product.ProductType == ProductType.SimpleProduct)
+                if (product.ProductType != ProductType.GroupedProduct)
                 {
                     //simple product
                     //render its properties such as price, weight, etc
                     var priceStr = string.Format("{0} {1}", product.Price.ToString("0.00"), _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode);
-                    if (product.IsRental)
-                        priceStr = _priceFormatter.FormatRentalProductPeriod(product, priceStr);
+                    if (product.ProductType == ProductType.Reservation)
+                        priceStr = _priceFormatter.FormatReservationProductPeriod(product, priceStr);
                     productTable.AddCell(new Paragraph(String.Format("{0}: {1}", _localizationService.GetResource("PDFProductCatalog.Price", lang.Id), priceStr), font));
                     productTable.AddCell(new Paragraph(String.Format("{0}: {1}", _localizationService.GetResource("PDFProductCatalog.SKU", lang.Id), product.Sku), font));
 

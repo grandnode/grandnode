@@ -1,14 +1,11 @@
 ﻿@model ContactFormListModel
+@inject AdminAreaSettings adminAreaSettings
 @{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.System.ContactForm").Text;
 }
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="ContactForm" asp-action="List">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -25,30 +22,29 @@
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchStartDate)
+                                <admin-label asp-for="SearchStartDate" />
                                 <div class="col-md-4 col-sm-6">
-                                    @Html.GrandEditorFor(model => model.SearchStartDate)
+                                    <admin-input asp-for="SearchStartDate" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchEndDate)
+                                <admin-label asp-for="SearchEndDate" />
                                 <div class="col-md-4 col-sm-6">
-                                    @Html.GrandEditorFor(model => model.SearchEndDate)
+                                    <admin-input asp-for="SearchEndDate" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchEmail)
+                                <admin-label asp-for="SearchEmail" />
                                 <div class="col-md-4 col-sm-6">
-                                    @Html.GrandEditorFor(model => model.SearchEmail)
+                                    <admin-input asp-for="SearchEmail" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.StoreId)
+                                <admin-label asp-for="StoreId" />
                                 <div class="col-md-4 col-sm-6">
-                                    @Html.GrandDropDownListFor(model => model.StoreId, Model.AvailableStores)
+                                    <admin-select asp-for="StoreId" asp-items="Model.AvailableStores" />
                                 </div>
                             </div>
-
                         </div>
                         <div class="form-actions">
                             <div class="row">
@@ -67,101 +63,96 @@
             </div>
         </div>
     </div>
-
+</form>
 <script>
-    $(document).ready(function () {
-        $("#contactform-grid").kendoGrid({
-            dataSource: {
-                transport: {
-                    read: {
-                        url: "@Html.Raw(Url.Action("ContactFormList", "ContactForm"))",
-                        type: "POST",
-                        dataType: "json",
-                        data: additionalData
-                    }
-                },
-                schema: {
-                    data: "Data",
-                    total: "Total",
-                    errors: "Errors"
-                },
-                error: function(e) {
-                    display_kendoui_grid_error(e);
-                    // Cancel the changes
-                    this.cancelChanges();
-                },
-                pageSize: @(defaultGridPageSize),
-                serverPaging: true,
-                serverFiltering: true,
-                serverSorting: true
+$(document).ready(function () {
+    $("#contactform-grid").kendoGrid({
+        dataSource: {
+            transport: {
+                read: {
+                    url: "@Html.Raw(Url.Action("ContactFormList", "ContactForm"))",
+                    type: "POST",
+                    dataType: "json",
+                    data: additionalData
+                }
             },
-            pageable: {
-                refresh: true,
-                pageSizes: [@(gridPageSizes)]
+            schema: {
+                data: "Data",
+                total: "Total",
+                errors: "Errors"
             },
-            scrollable: false,
-            columns: [{
-                field: "CreatedOn",
-                title: "@T("Admin.System.ContactForm.Fields.CreatedOn")",
-                width: 100,
-                type: "date",
-                format: "{0:G}"
-            }, {
-                field: "Store",
-                title: "@T("Admin.System.ContactForm.Fields.Store")",
-                width: 100
-            }, {
-                field: "Email",
-                title: "@T("Admin.System.ContactForm.Fields.FullName")",
-                width: 150
-            }, {
-                field: "IpAddress",
-                title: "@T("Admin.System.ContactForm.Fields.IpAddress")",
-                width: 50
-            }, {
-                field: "Subject",
-                title: "@T("Admin.System.ContactForm.Fields.Subject")",
-                width: 300
-            }, {
-                field: "Id",
-                title: "@T("Admin.Common.View")",
-                width: 30,
-                template: '<a class="btn btn-sm btn-default" href="Details/#=Id#"><i class="fa fa-search"></i> @T("admin.common.view")</a>'
-            }]
-        });
+            error: function(e) {
+                display_kendoui_grid_error(e);
+                // Cancel the changes
+                this.cancelChanges();
+            },
+            pageSize: @(adminAreaSettings.DefaultGridPageSize),
+            serverPaging: true,
+            serverFiltering: true,
+            serverSorting: true
+        },
+        pageable: {
+            refresh: true,
+            pageSizes: [@(adminAreaSettings.GridPageSizes)]
+        },
+        scrollable: false,
+        columns: [{
+            field: "CreatedOn",
+            title: "@T("Admin.System.ContactForm.Fields.CreatedOn")",
+            width: 100,
+            type: "date",
+            format: "{0:G}"
+        }, {
+            field: "Store",
+            title: "@T("Admin.System.ContactForm.Fields.Store")",
+            width: 100
+        }, {
+            field: "Email",
+            title: "@T("Admin.System.ContactForm.Fields.FullName")",
+            width: 150
+        }, {
+            field: "IpAddress",
+            title: "@T("Admin.System.ContactForm.Fields.IpAddress")",
+            width: 50
+        }, {
+            field: "Subject",
+            title: "@T("Admin.System.ContactForm.Fields.Subject")",
+            width: 300,
+            template: '<a class="k-link" href="Details/#=Id#">#=Subject#</a>',
+        }]
     });
+});
 </script>
 <script type="text/javascript">
-    $(document).ready(function () {
+$(document).ready(function () {
 
-        //search button
-        $('#search-contactform').click(function () {
-            //search
-            var grid = $('#contactform-grid').data('kendoGrid');
-            grid.dataSource.page(1); //new search. Set page size to 1
-            //grid.dataSource.read(); we already loaded the grid above using "page" function
-            return false;
-        });
-
-        $("#@Html.FieldIdFor(model => model.SearchEmail)").keydown(function (event) {
-            if (event.keyCode == 13) {
-                $("#search-contactform").click();
-                return false;
-            }
-        });
-
+    //search button
+    $('#search-contactform').click(function () {
+        //search
+        var grid = $('#contactform-grid').data('kendoGrid');
+        grid.dataSource.page(1); //new search. Set page size to 1
+        //grid.dataSource.read(); we already loaded the grid above using "page" function
+        return false;
     });
 
-    function additionalData() {
-        var data = {
-            SearchStartDate: $('#@Html.FieldIdFor(model => model.SearchStartDate)').val(),
-            SearchEndDate: $('#@Html.FieldIdFor(model => model.SearchEndDate)').val(),
-            SearchEmail: $('#@Html.FieldIdFor(model => model.SearchEmail)').val(),
-            StoreId: $('#@Html.FieldIdFor(model => model.StoreId)').val(),
-        };
-        addAntiForgeryToken(data);
-        return data;
-    }
+    $("#@Html.FieldIdFor(model => model.SearchEmail)").keydown(function (event) {
+        if (event.keyCode == 13) {
+            $("#search-contactform").click();
+            return false;
+        }
+    });
+
+});
+
+function additionalData() {
+    var data = {
+        SearchStartDate: $('#@Html.FieldIdFor(model => model.SearchStartDate)').val(),
+        SearchEndDate: $('#@Html.FieldIdFor(model => model.SearchEndDate)').val(),
+        SearchEmail: $('#@Html.FieldIdFor(model => model.SearchEmail)').val(),
+        StoreId: $('#@Html.FieldIdFor(model => model.StoreId)').val(),
+    };
+    addAntiForgeryToken(data);
+    return data;
+}
 
 </script>
-}

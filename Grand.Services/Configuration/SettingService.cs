@@ -8,7 +8,11 @@ using Grand.Core.Caching;
 using Grand.Core.Configuration;
 using Grand.Core.Data;
 using Grand.Core.Domain.Configuration;
+using Grand.Core.ComponentModel;
 using Grand.Services.Events;
+using System.ComponentModel;
+using MongoDB.Driver;
+using MongoDB.Bson;
 
 namespace Grand.Services.Configuration
 {
@@ -269,7 +273,7 @@ namespace Grand.Services.Configuration
             if (key == null)
                 throw new ArgumentNullException("key");
             key = key.Trim().ToLowerInvariant();
-            string valueStr = CommonHelper.GetNopCustomTypeConverter(typeof(T)).ConvertToInvariantString(value);
+            var valueStr = TypeDescriptor.GetConverter(typeof(T)).ConvertToInvariantString(value);
 
             var allSettings = GetAllSettingsCached();
             var settingForCaching = allSettings.ContainsKey(key) ?
@@ -300,11 +304,7 @@ namespace Grand.Services.Configuration
         /// <returns>Settings</returns>
         public virtual IList<Setting> GetAllSettings()
         {
-            var query = from s in _settingRepository.Table
-                        orderby s.Name, s.StoreId
-                        select s;
-            var settings = query.ToList();
-            return settings;
+            return _settingRepository.Collection.Find(new BsonDocument()).SortBy(x => x.Name).ToList();
         }
 
         /// <summary>
@@ -330,40 +330,50 @@ namespace Grand.Services.Configuration
         /// Load settings
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
-        /// <param name="storeId">Store identifier for which settigns should be loaded</param>
+        /// <param name="storeId">Store identifier for which settings should be loaded</param>
         public virtual T LoadSetting<T>(string storeId = "") where T : ISettings, new()
         {
             string cachekey = string.Format("{0}{1}.{2}", SETTINGS_PATTERN_KEY, typeof(T).Name, storeId);
             return _cacheManager.Get<T>(cachekey, () =>
             {
-
-                var settings = Activator.CreateInstance<T>();
-
-                foreach (var prop in typeof(T).GetProperties())
-                {
-                    // get properties we can read and write to
-                    if (!prop.CanRead || !prop.CanWrite)
-                        continue;
-
-                    var key = typeof(T).Name + "." + prop.Name;
-                    //load by store
-                    var setting = GetSettingByKey<string>(key, storeId: storeId, loadSharedValueIfNotFound: true);
-                    if (setting == null)
-                        continue;
-
-                    if (!CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).CanConvertFrom(typeof(string)))
-                        continue;
-
-                    if (!CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).IsValid(setting))
-                        continue;
-
-                    object value = CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).ConvertFromInvariantString(setting);
-
-                    //set property
-                    prop.SetValue(settings, value, null);
-                }
-                return settings;
+                return (T)LoadSetting(typeof(T), storeId);
             });
+        }
+
+        /// <summary>
+        /// Load settings
+        /// </summary>
+        /// <param name="type">Type</param>
+        /// <param name="storeId">Store identifier for which settings should be loaded</param>
+        public virtual ISettings LoadSetting(Type type, string storeId = "")
+        {
+            var settings = Activator.CreateInstance(type);
+
+            foreach (var prop in type.GetProperties())
+            {
+                // get properties we can read and write to
+                if (!prop.CanRead || !prop.CanWrite)
+                    continue;
+
+                var key = type.Name + "." + prop.Name;
+                //load by store
+                var setting = GetSettingByKey<string>(key, storeId: storeId, loadSharedValueIfNotFound: true);
+                if (setting == null)
+                    continue;
+
+                if (!TypeDescriptor.GetConverter(prop.PropertyType).CanConvertFrom(typeof(string)))
+                    continue;
+
+                if (!TypeDescriptor.GetConverter(prop.PropertyType).IsValid(setting))
+                    continue;
+
+                var value = TypeDescriptor.GetConverter(prop.PropertyType).ConvertFromInvariantString(setting);
+
+                //set property
+                prop.SetValue(settings, value, null);
+            }
+
+            return settings as ISettings;
         }
 
         /// <summary>
@@ -374,19 +384,16 @@ namespace Grand.Services.Configuration
         /// <param name="settings">Setting instance</param>
         public virtual void SaveSetting<T>(T settings, string storeId = "") where T : ISettings, new()
         {
-            /* We do not clear cache after each setting update.
-             * This behavior can increase performance because cached settings will not be cleared 
-             * and loaded from database after each update */
             foreach (var prop in typeof(T).GetProperties())
             {
                 // get properties we can read and write to
                 if (!prop.CanRead || !prop.CanWrite)
                     continue;
 
-                if (!CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).CanConvertFrom(typeof(string)))
+                if (!TypeDescriptor.GetConverter(prop.PropertyType).CanConvertFrom(typeof(string)))
                     continue;
 
-                string key = typeof(T).Name + "." + prop.Name;
+                var key = typeof(T).Name + "." + prop.Name;
                 //Duck typing is not supported in C#. That's why we're using dynamic type
                 dynamic value = prop.GetValue(settings, null);
                 if (value != null)

@@ -1,15 +1,12 @@
 ﻿@model CustomerListModel
-@using System.Globalization;
+@inject AdminAreaSettings adminAreaSettings
 @{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.Customers.Customers").Text;
 }
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+
+<form asp-controller="Customer" asp-action="List" method="post">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -48,21 +45,21 @@
                     <div class="form-horizontal">
                         <div class="form-body col-md-6">
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchCustomerRoleIds, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="SearchCustomerRoleIds" class="control-label col-md-4 col-sm-4" />
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.EditorFor(model => model.SearchCustomerRoleIds, new { SelectList = Model.AvailableCustomerRoles })
+                                    <admin-input asp-for="SearchCustomerRoleIds" asp-template="MultiSelect" asp-selectitem="Model.AvailableCustomerRoles" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchCustomerTagIds, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="SearchCustomerTagIds" class="control-label col-md-4 col-sm-4" />
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.EditorFor(model => model.SearchCustomerTagIds, new { SelectList = Model.AvailableCustomerTags })
+                                    <admin-input asp-for="SearchCustomerTagIds" asp-template="MultiSelect" asp-selectitem="Model.AvailableCustomerTags" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchEmail, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="SearchEmail" class="control-label col-md-4 col-sm-4" />
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandEditorFor(model => model.SearchEmail)
+                                    <admin-input asp-for="SearchEmail" />
                                 </div>
                             </div>
                         </div>
@@ -70,48 +67,48 @@
                             @if (Model.UsernamesEnabled)
                             {
                                 <div class="form-group">
-                                    @Html.GrandLabelFor(model => model.SearchUsername, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                    <admin-label asp-for="SearchUsername" class="control-label col-md-4 col-sm-4" />
                                     <div class="col-md-8 col-sm-8">
-                                        @Html.GrandEditorFor(model => model.SearchUsername)
+                                        <admin-input asp-for="SearchUsername" />
                                     </div>
                                 </div>
                             }
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchFirstName, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="SearchFirstName" class="control-label col-md-4 col-sm-4" />
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandEditorFor(model => model.SearchFirstName)
+                                    <admin-input asp-for="SearchFirstName" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchLastName, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="SearchLastName" class="control-label col-md-4 col-sm-4" />
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandEditorFor(model => model.SearchLastName)
+                                    <admin-input asp-for="SearchLastName" />
                                 </div>
                             </div>
                             @if (Model.CompanyEnabled)
                             {
                                 <div class="form-group">
-                                    @Html.GrandLabelFor(model => model.SearchCompany, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                    <admin-label asp-for="SearchCompany" class="control-label col-md-4 col-sm-4" />
                                     <div class="col-md-8 col-sm-8">
-                                        @Html.GrandEditorFor(model => model.SearchCompany)
+                                        <admin-input asp-for="SearchCompany" />
                                     </div>
                                 </div>
                             }
                             @if (Model.PhoneEnabled)
                             {
                                 <div class="form-group">
-                                    @Html.GrandLabelFor(model => model.SearchPhone, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                    <admin-label asp-for="SearchPhone" class="control-label col-md-4 col-sm-4" />
                                     <div class="col-md-8 col-sm-8">
-                                        @Html.GrandEditorFor(model => model.SearchPhone)
+                                        <admin-input asp-for="SearchPhone" />
                                     </div>
                                 </div>
                             }
                             @if (Model.ZipPostalCodeEnabled)
                             {
                                 <div class="form-group">
-                                    @Html.GrandLabelFor(model => model.SearchZipPostalCode, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                    <admin-label asp-for="SearchZipPostalCode" class="control-label col-md-4 col-sm-4" />
                                     <div class="col-md-8 col-sm-8">
-                                        @Html.GrandEditorFor(model => model.SearchZipPostalCode)
+                                        <admin-input asp-for="SearchZipPostalCode" />
                                     </div>
                                 </div>
                             }
@@ -136,7 +133,7 @@
 
 
 
-        <script>
+    <script>
             $(document).ready(function () {
                 $("#customers-grid").kendoGrid({
                     dataSource: {
@@ -158,14 +155,14 @@
                             // Cancel the changes
                             this.cancelChanges();
                         },
-                        pageSize: @(defaultGridPageSize),
+                        pageSize: @(adminAreaSettings.DefaultGridPageSize),
                         serverPaging: true,
                         serverFiltering: true,
                         serverSorting: true
                     },
                     pageable: {
                         refresh: true,
-                        pageSizes: [@(gridPageSizes)]
+                        pageSizes: [@(adminAreaSettings.GridPageSizes)]
                     },
                     scrollable: false,
                     dataBound: onDataBound,
@@ -175,11 +172,12 @@
                             headerAttributes: { style: "text-align:center" },
                             attributes: { style: "text-align:center" },
                             template: "<label class='mt-checkbox mt-checkbox-outline'><input type='checkbox' value='#=Id#' class='checkboxGroups'/><span></span></label>",
-                            width: 50
+                            width: 40
                         }, {
                             field: "Email",
                             title: "@T("Admin.Customers.Customers.Fields.Email")",
-                            width: 200
+                            width: 200,
+                            template: '<a class="k-link" href="Edit/#=Id#">#=Email#</a>',
                         },
                         @if (Model.UsernamesEnabled)
                         {
@@ -192,38 +190,42 @@
                         {
                             field: "FullName",
                             title: "@T("Admin.Customers.Customers.Fields.FullName")",
-                            width: 200
+                            width: 200,
+                            template: '<a class="k-link" href="Edit/#=Id#">#=FullName#</a>',
                         }, {
                             field: "CustomerRoleNames",
                             title: "@T("Admin.Customers.Customers.Fields.CustomerRoles")",
                             width: 200
-                        }, 
-            
+                        },
+
                         @if (Model.CompanyEnabled)
                         {
-                                                    <text>{
-                                field: "Company",
-                                                    title: "@T("Admin.Customers.Customers.Fields.Company")",
-                            width: 200
-                        },</text>
-                                                }
-        
-                                                @if (Model.PhoneEnabled)
-                                                {
-                                                    <text>{
-                                field: "Phone",
-                                    title: "@T("Admin.Customers.Customers.Fields.Phone")",
-                            width: 200
-                        },</text>
-                                                }
-        
-                                                @if (Model.ZipPostalCodeEnabled)
-                                                {
-                                                    <text>{
-                                field: "ZipPostalCode",
-                                    title: "@T("Admin.Customers.Customers.Fields.ZipPostalCode")",
-                            width: 200
-                        },</text>
+                          <text>{
+                            field: "Company",
+                            title: "@T("Admin.Customers.Customers.Fields.Company")",
+                            width: 200,
+                            minScreenWidth: 770,
+                            },</text>
+                        }
+/**/
+                        @if (Model.PhoneEnabled)
+                        {
+                            <text>{
+                            field: "Phone",
+                            title: "@T("Admin.Customers.Customers.Fields.Phone")",
+                            width: 200,
+                            minScreenWidth: 770,
+                            },</text>
+                        }
+/**/
+                        @if (Model.ZipPostalCodeEnabled)
+                        {
+                            <text>{
+                            field: "ZipPostalCode",
+                            title: "@T("Admin.Customers.Customers.Fields.ZipPostalCode")",
+                            width: 200,
+                            minScreenWidth: 770,
+                            },</text>
                         }
                     {
                         field: "Active",
@@ -237,24 +239,20 @@
                         title: "@T("Admin.Customers.Customers.Fields.CreatedOn")",
                         width: 200,
                         type: "date",
-                        format: "{0:G}"
+                        format: "{0:G}",
+                        minScreenWidth: 770,
                     }, {
                         field: "LastActivityDate",
                         title: "@T("Admin.Customers.Customers.Fields.LastActivityDate")",
                         width: 200,
                         type: "date",
                         format: "{0:G}"
-                    }, {
-                        field: "Id",
-                        title: "@T("Admin.Common.Edit")",
-                        width: 50,
-                        template: '<a class="btn btn-sm btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
                     }]
                 });
             });
-        </script>
+    </script>
 
-        <script type="text/javascript">
+    <script type="text/javascript">
 
             var selectedIds = [];
 
@@ -398,17 +396,16 @@
                 addAntiForgeryToken(data);
                 return data;
             }
-        </script>
-}
+    </script>
+</form>
 
 @*export selected (XML). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
-@using (Html.BeginForm("ExportXmlSelected", "Customer", FormMethod.Post, new { id = "export-xml-selected-form" }))
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Customer" asp-action="ExportXmlSelected" method="post" id="export-xml-selected-form">
+    <antiforgery-token />
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
-}
-<script type="text/javascript">
+</form>
 
+<script type="text/javascript">
     $(document).ready(function () {
         $('#exportxml-selected').click(function (e) {
             e.preventDefault();
@@ -422,11 +419,11 @@
 </script>
 
 @*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
-@using (Html.BeginForm("ExportExcelSelected", "Customer", FormMethod.Post, new { id = "export-excel-selected-form" }))
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Customer" asp-action="ExportExcelSelected" method="post" id="export-excel-selected-form">
+    <antiforgery-token />
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
-}
+</form>
+
 <script type="text/javascript">
 
     $(document).ready(function () {

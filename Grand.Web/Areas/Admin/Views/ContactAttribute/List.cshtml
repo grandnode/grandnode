@@ -1,0 +1,95 @@
+﻿@{
+    //page title
+    ViewBag.Title = T("Admin.Catalog.Attributes.ContactAttributes").Text;
+}
+<antiforgery-token />
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light form-fit">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-list-alt"></i>
+                    @T("Admin.Catalog.Attributes.ContactAttributes")
+                </div>
+                <div class="actions btn-group btn-group-devided">
+                    <a href="@Url.Action("Create")" class="btn green"><i class="fa fa-plus"></i><span class="hidden-xs"> @T("Admin.Common.AddNew") </span></a>
+                </div>
+
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal">
+                    <div class="form-body">
+                        <div class="portlet-body">
+                            <div id="contactattributes-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#contactattributes-grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("List", "ContactAttribute"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors"
+                },
+                error: function(e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                numeric: false,
+                previousNext: false,
+                info: false
+            },
+            editable: {
+                confirmation: false,
+                mode: "inline"
+            },
+            scrollable: false,
+            columns: [{
+                field: "Name",
+                title: "@T("Admin.Catalog.Attributes.ContactAttributes.Fields.Name")",
+                template: '<a class="k-link" href="Edit/#=Id#">#=Name#</a>',
+            }, {
+                field: "AttributeControlTypeName",
+                title: "@T("Admin.Catalog.Attributes.ContactAttributes.Fields.AttributeControlType")",
+                headerAttributes: { style: "text-align:center" },
+                attributes: { style: "text-align:center" },
+                width: 200,
+                minScreenWidth: 750,
+            },{
+                field: "IsRequired",
+                title: "@T("Admin.Catalog.Attributes.ContactAttributes.Fields.IsRequired")",
+                width: 100,
+                headerAttributes: { style: "text-align:center" },
+                attributes: { style: "text-align:center" },
+                template: '# if(IsRequired) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+            }, {
+                field: "DisplayOrder",
+                title: "@T("Admin.Catalog.Attributes.ContactAttributes.Fields.DisplayOrder")",
+                width: 100,
+                minScreenWidth: 750,
+            }]
+        });
+    });
+</script>

@@ -11,13 +11,13 @@
     @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_payment_method_top" })
     <div class="payment-method">
         <form asp-route="CheckoutPaymentMethod" method="post">
-            @if (Model.DisplayRewardPoints && Model.PaymentMethods.Count > 0)
+            @if (Model.DisplayRewardPoints && Model.PaymentMethods.Any())
             {
                 <div class="use-reward-points pt-1 pb-1">
 
                     <label class="custom-control custom-checkbox">
                         @Html.CheckBoxFor(model => model.UseRewardPoints, new { @class = "custom-control-input" })
-                        <span class="custom-control-indicator"></span>
+                        <span class="custom-control-label"></span>
                         <span class="custom-control-description">@string.Format(T("Checkout.UseRewardPoints").Text, Model.RewardPointsBalance, Model.RewardPointsAmount)</span>
                     </label>
                     @if (Model.RewardPointsEnoughToPayForOrder)
@@ -39,7 +39,7 @@
 
                 </div>
             }
-            @if (Model.PaymentMethods.Count > 0)
+            @if (Model.PaymentMethods.Any())
             {
                 <ul id="payment-method-block">
                     @for (int i = 0; i < Model.PaymentMethods.Count; i++)
@@ -54,7 +54,7 @@
                             <div class="col-12 method-name">
                                 <label class="custom-control custom-radio">
                                     <input id="paymentmethod_@(i)" type="radio" name="paymentmethod" value="@(paymentMethod.PaymentMethodSystemName)" checked="@paymentMethod.Selected" class="custom-control-input">
-                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-label"></span>
 
                                     @if (!String.IsNullOrEmpty(paymentMethod.LogoUrl))
                                     {
@@ -73,7 +73,7 @@
                 </ul>
 
                     <div class="col-12 buttons mt-1 mb-1">
-                        <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="btn btn-success new-address-next-step-button" />
+                        <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="btn btn-info new-address-next-step-button" />
                     </div>
             }
             else

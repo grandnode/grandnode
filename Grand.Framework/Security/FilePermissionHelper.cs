@@ -162,11 +162,11 @@ namespace Grand.Framework.Security
             var dirsToCheck = new List<string>();
             dirsToCheck.Add(Path.Combine(rootDir, "App_Data"));
             dirsToCheck.Add(Path.Combine(rootDir, "bin"));
-            dirsToCheck.Add(Path.Combine(rootDir, "content"));
-            dirsToCheck.Add(Path.Combine(rootDir, "content\\images"));
-            dirsToCheck.Add(Path.Combine(rootDir, "content\\images\\thumbs"));
-            dirsToCheck.Add(Path.Combine(rootDir, "content\\images\\uploaded"));
-            dirsToCheck.Add(Path.Combine(rootDir, "content\\files\\exportimport"));
+            dirsToCheck.Add(Path.Combine(rootDir, "Content"));
+            dirsToCheck.Add(Path.Combine(rootDir, "Content\\Images"));
+            dirsToCheck.Add(Path.Combine(rootDir, "Content\\Images\\Thumbs"));
+            dirsToCheck.Add(Path.Combine(rootDir, "Content\\Images\\uploaded"));
+            dirsToCheck.Add(Path.Combine(rootDir, "Content\\files\\Exportimport"));
             dirsToCheck.Add(Path.Combine(rootDir, "plugins"));
             dirsToCheck.Add(Path.Combine(rootDir, "plugins\\bin"));
             return dirsToCheck;
@@ -182,8 +182,16 @@ namespace Grand.Framework.Security
             string rootDir = CommonHelper.MapPath("~/");
             var filesToCheck = new List<string>();
             filesToCheck.Add(Path.Combine(rootDir, "web.config"));
-            filesToCheck.Add(Path.Combine(rootDir, "App_Data\\InstalledPlugins.txt"));
-            filesToCheck.Add(Path.Combine(rootDir, "App_Data\\Settings.txt"));
+            if (Grand.Core.OperatingSystem.IsWindows())
+            {
+                filesToCheck.Add(Path.Combine(rootDir, "App_Data\\InstalledPlugins.txt"));
+                filesToCheck.Add(Path.Combine(rootDir, "App_Data\\Settings.txt"));
+            }
+            else
+            {
+                filesToCheck.Add(Path.Combine(rootDir, "App_Data/InstalledPlugins.txt"));
+                filesToCheck.Add(Path.Combine(rootDir, "App_Data/Settings.txt"));
+            }
             return filesToCheck;
         }
     }

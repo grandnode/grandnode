@@ -20,22 +20,22 @@ namespace Grand.Services.Tasks
                 switch (task.TimeIntervalChoice)
                 {
                     #region choice cases
-                    case TimeIntervalChoice.EVERY_MINUTES: 
+                    case TimeIntervalChoice.EveryMinutes: 
                         {
                             Schedule(() => ExecuteTask(task)).ToRunEvery(task.TimeInterval).Minutes();
                             break;
                         }
-                    case TimeIntervalChoice.EVERY_HOURS: 
+                    case TimeIntervalChoice.EveryHours: 
                         {
                             Schedule(() => ExecuteTask(task)).ToRunEvery(task.TimeInterval).Hours().At(task.MinuteOfHour);
                             break;
                         }
-                    case TimeIntervalChoice.EVERY_DAYS: 
+                    case TimeIntervalChoice.EveryDays: 
                         {
                             Schedule(() => ExecuteTask(task)).ToRunEvery(task.TimeInterval).Days().At(task.HourOfDay, task.MinuteOfHour);
                             break;
                         }
-                    case TimeIntervalChoice.EVERY_WEEKS:
+                    case TimeIntervalChoice.EveryWeeks:
                         {
                             Schedule(() => ExecuteTask(task))
                                 .ToRunEvery(task.TimeInterval)
@@ -44,11 +44,11 @@ namespace Grand.Services.Tasks
                                 .At(task.HourOfDay, task.MinuteOfHour);
                             break;
                         }
-                    case TimeIntervalChoice.EVERY_MONTHS: 
+                    case TimeIntervalChoice.EveryMonths: 
                         {
                             switch (task.MonthOptionChoice)
                             {
-                                case MonthOptionChoice.ON_SPECIFIC_DAY:
+                                case MonthOptionChoice.OnSpecificDay:
                                     {
                                         Schedule(() => ExecuteTask(task))
                                             .ToRunEvery(task.TimeInterval)
@@ -57,7 +57,7 @@ namespace Grand.Services.Tasks
                                             .At(task.HourOfDay, task.MinuteOfHour);
                                         break;
                                     }
-                                case MonthOptionChoice.ON_THE_FIRST_WEEK_OF_MONTH:
+                                case MonthOptionChoice.OnTheFirstWeekOfMonth:
                                     {
                                         Schedule(() => ExecuteTask(task))
                                             .ToRunEvery(task.TimeInterval)
@@ -66,7 +66,7 @@ namespace Grand.Services.Tasks
                                             .At(task.HourOfDay, task.MinuteOfHour);
                                         break;
                                     }
-                                case MonthOptionChoice.ON_THE_SECOND_WEEK_OF_MONTH:
+                                case MonthOptionChoice.OnTheSecondWeekOfMonth:
                                     {
                                         Schedule(() => ExecuteTask(task))
                                             .ToRunEvery(task.TimeInterval)
@@ -75,7 +75,7 @@ namespace Grand.Services.Tasks
                                             .At(task.HourOfDay, task.MinuteOfHour);
                                         break;
                                     }
-                                case MonthOptionChoice.ON_THE_THIRD_WEEK_OF_MONTH:
+                                case MonthOptionChoice.OnTheThirdWeekOfMonth:
                                     {
                                         Schedule(() => ExecuteTask(task))
                                             .ToRunEvery(task.TimeInterval)
@@ -84,7 +84,7 @@ namespace Grand.Services.Tasks
                                             .At(task.HourOfDay, task.MinuteOfHour);
                                         break;
                                     }
-                                case MonthOptionChoice.ON_THE_FOURTH_WEEK_OF_MONTH:
+                                case MonthOptionChoice.OnTheFourtWeekOfMonth:
                                     {
                                         Schedule(() => ExecuteTask(task))
                                             .ToRunEvery(task.TimeInterval)
@@ -93,7 +93,7 @@ namespace Grand.Services.Tasks
                                             .At(task.HourOfDay, task.MinuteOfHour);
                                         break;
                                     }
-                                case MonthOptionChoice.ON_THE_LAST_WEEK_OF_MONTH:
+                                case MonthOptionChoice.OnTheLastWeekOfMonth:
                                     {
                                         Schedule(() => ExecuteTask(task))
                                             .ToRunEvery(task.TimeInterval)
@@ -102,7 +102,7 @@ namespace Grand.Services.Tasks
                                             .At(task.HourOfDay, task.MinuteOfHour);
                                         break;
                                     }
-                                case MonthOptionChoice.ON_THE_LAST_DAY_OF_MONTH:
+                                case MonthOptionChoice.OnTheLastDayOfMonth:
                                     {
                                         Schedule(() => ExecuteTask(task))
                                             .ToRunEvery(task.TimeInterval)
@@ -127,43 +127,39 @@ namespace Grand.Services.Tasks
             }
         }
 
-        private static void ExecuteTask(IScheduleTask scheduleTask, bool throwException = false, bool dispose = true, bool ensureRunOnOneWebFarmInstance = true)
+        private static void ExecuteTask(IScheduleTask scheduleTask, bool manualstart = false)
         {
             try
             {
+                if (!scheduleTask.Enabled && !manualstart)
+                    return;
 
-                //task is run on one farm node at a time?
-                if (ensureRunOnOneWebFarmInstance) 
+                bool runTask = true;
+                //is web farm enabled (multiple instances)?
+                var grandConfig = EngineContext.Current.Resolve<GrandConfig>();
+                if (grandConfig.MultipleInstancesEnabled)
                 {
-                    //is web farm enabled (multiple instances)?
-                    var grandConfig = EngineContext.Current.Resolve<GrandConfig>();
-                    if (grandConfig.MultipleInstancesEnabled)
+                    var machineNameProvider = EngineContext.Current.Resolve<IMachineNameProvider>();
+                    var machineName = machineNameProvider.GetMachineName();
+                    if (String.IsNullOrEmpty(machineName))
                     {
-                        var machineNameProvider = EngineContext.Current.Resolve<IMachineNameProvider>();
-                        var machineName = machineNameProvider.GetMachineName();
-                        if (String.IsNullOrEmpty(machineName))
-                        {
-                            throw new Exception("Machine name cannot be detected. You cannot run in web farm.");
-                            //actually in this case we can generate some unique string (e.g. Guid) and store it in some "static" (!!!) variable
-                            //then it can be used as a machine name
-                        }
+                        throw new Exception("Machine name cannot be detected. You cannot run in web farm.");
+                        //actually in this case we can generate some unique string (e.g. Guid) and store it in some "static" (!!!) variable
+                        //then it can be used as a machine name
+                    }
 
-                        //lease can't be aquired only if for a different machine and it has not expired
-                        if (scheduleTask.LeasedUntilUtc.HasValue &&
-                            scheduleTask.LeasedUntilUtc.Value >= DateTime.UtcNow &&
-                            scheduleTask.LeasedByMachineName != machineName)
-                            return;
-
-                        //lease the task. so it's run on one farm node at a time
-                        scheduleTask.LeasedByMachineName = machineName;
-                        scheduleTask.LeasedUntilUtc = DateTime.UtcNow.AddMinutes(30);
+                    if (!string.IsNullOrEmpty(scheduleTask.LeasedByMachineName) && (machineName != scheduleTask.LeasedByMachineName))
+                    {
+                        runTask = false;
                     }
                 }
-
-                scheduleTask.LastStartUtc = DateTime.UtcNow;
-                scheduleTask.Execute();
-                scheduleTask.LastSuccessUtc = DateTime.UtcNow;
-                scheduleTask.LastNonSuccessEndUtc = null;
+                if (runTask == true)
+                {
+                    scheduleTask.LastStartUtc = DateTime.UtcNow;
+                    scheduleTask.Execute();
+                    scheduleTask.LastSuccessUtc = DateTime.UtcNow;
+                    scheduleTask.LastNonSuccessEndUtc = null;
+                }
             }
             catch (Exception exc)
             {
@@ -174,8 +170,6 @@ namespace Grand.Services.Tasks
                 //log error
                 var logger = EngineContext.Current.Resolve<ILogger>();
                 logger.Error(string.Format("Error while running the '{0}' schedule task. {1}", scheduleTask.ScheduleTaskName, exc.Message), exc);
-                if (throwException)
-                    throw;
             }
             finally
             {
@@ -186,7 +180,6 @@ namespace Grand.Services.Tasks
                 taskToUpdate.LastStartUtc = scheduleTask.LastStartUtc;
                 taskToUpdate.LastNonSuccessEndUtc = scheduleTask.LastNonSuccessEndUtc;
                 taskToUpdate.LastSuccessUtc = scheduleTask.LastSuccessUtc;
-                taskToUpdate.LeasedByMachineName = scheduleTask.LeasedByMachineName;
                 taskToUpdate.LeasedUntilUtc = scheduleTask.LeasedUntilUtc;
                 scheduleTaskService.UpdateTask(taskToUpdate);
 
@@ -195,9 +188,9 @@ namespace Grand.Services.Tasks
 
         public static void RunTaskNow(ScheduleTask scheduleTask)
         {
-            var task = ScheduleTaskManager.Instance.ChangeTypeToRightOne(scheduleTask);
+            var task = ScheduleTaskManager.Instance.ChangeType(scheduleTask);
             if(task!=null)
-                ExecuteTask(task);
+                ExecuteTask(task, true);
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿@model PopularProductTagsModel
-@if (Model.Tags.Count > 0)
+@if (Model.Tags.Any())
 {
     <div id="block-popular-tags" class="block block-popular-tags">
-            <h2 class="h5 bg-faded p-3 hidden-lg-up pt-1"><strong>@T("Products.Tags.Popular")</strong><i id="computers-navigator" class="fa fa-angle-down fa-1x float-xs-right" aria-hidden="true"></i></h2>
-            <h2 class="h5 generalTitle hidden-md-down"><strong>@T("Products.Tags.Popular")</strong></h2>
+            <h2 class="h5 bg-light p-3 d-lg-none pt-1"><strong>@T("Products.Tags.Popular")</strong><i id="computers-navigator" class="fa fa-angle-down fa-1x float-xs-right" aria-hidden="true"></i></h2>
+            <h2 class="h5 generalTitle d-none d-lg-block"><strong>@T("Products.Tags.Popular")</strong></h2>
             <div class="viewBox btn-toolbar">
                 @foreach (var item in Model.Tags)
                 {

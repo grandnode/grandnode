@@ -1,5 +1,4 @@
 ﻿using System;
-//using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
@@ -8,19 +7,20 @@ using Newtonsoft.Json.Serialization;
 using Grand.Core.Configuration;
 using Grand.Core.Data;
 using Grand.Core.Infrastructure;
-using Grand.Services.Authentication;
 using Grand.Services.Logging;
-using Grand.Services.Tasks;
 using Grand.Framework.FluentValidation;
-using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Themes;
-using Grand.Service.Authentication;
 using FluentValidation.AspNetCore;
-using FluentScheduler;
 using System.Linq;
 using Grand.Core.Plugins;
 using Grand.Services.Authentication.External;
+using Grand.Core;
+using System.IO;
+using Microsoft.AspNetCore.DataProtection;
+using Grand.Framework.Mvc.Routing;
+using Grand.Services.Authentication;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace Grand.Framework.Infrastructure.Extensions
 {
@@ -37,7 +37,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <returns>Configured service provider</returns>
         public static IServiceProvider ConfigureApplicationServices(this IServiceCollection services, IConfiguration configuration)
         {
-            //add NopConfig configuration parameters
+            //add GrandConfig configuration parameters
             services.ConfigureStartupConfig<GrandConfig>(configuration.GetSection("Grand"));
             //add hosting configuration parameters
             services.ConfigureStartupConfig<HostingConfig>(configuration.GetSection("Hosting"));
@@ -51,14 +51,9 @@ namespace Grand.Framework.Infrastructure.Extensions
 
             if (DataSettingsHelper.DatabaseIsInstalled())
             {
-                //implement schedule tasks
-                //database is already installed, so start scheduled tasks
-
-                var scheduleTasks = ScheduleTaskManager.Instance.LoadScheduleTasks();       //load records from db to collection
-                JobManager.Initialize(new RegistryGrandNode(scheduleTasks));                //init registry and start scheduled tasks
-
                 //log application start
-                EngineContext.Current.Resolve<ILogger>().Information("Application started", null, null);
+                var logger = EngineContext.Current.Resolve<ILogger>();
+                logger.Information("Application started", null, null);
             }
 
             return serviceProvider;
@@ -98,6 +93,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         public static void AddHttpContextAccessor(this IServiceCollection services)
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
         }
 
         /// <summary>
@@ -113,6 +109,11 @@ namespace Grand.Framework.Infrastructure.Extensions
                 {
                     Name = ".Grand.Antiforgery"
                 };
+                if (DataSettingsHelper.DatabaseIsInstalled())
+                {
+                    //whether to allow the use of anti-forgery cookies from SSL protected page on the other store pages which are not
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+                }
             });
         }
 
@@ -129,6 +130,10 @@ namespace Grand.Framework.Infrastructure.Extensions
                     Name = ".Grand.Session",
                     HttpOnly = true,
                 };
+                if (DataSettingsHelper.DatabaseIsInstalled())
+                {
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+                }
             });
         }
 
@@ -149,19 +154,52 @@ namespace Grand.Framework.Infrastructure.Extensions
         }
 
         /// <summary>
+        /// Adds data protection services
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddGrandDataProtection(this IServiceCollection services)
+        {
+            var dataProtectionKeysPath = CommonHelper.MapPath("~/App_Data/DataProtectionKeys");
+            var dataProtectionKeysFolder = new DirectoryInfo(dataProtectionKeysPath);
+
+            //configure the data protection system to persist keys to the specified directory
+            services.AddDataProtection().PersistKeysToFileSystem(dataProtectionKeysFolder);
+        }
+
+        /// <summary>
         /// Adds authentication service
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
         public static void AddGrandAuthentication(this IServiceCollection services)
         {
-
             //set default authentication schemes
             var authenticationBuilder = services.AddAuthentication(options =>
             {
-                options.DefaultChallengeScheme = GrandCookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultScheme = GrandCookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultSignInScheme = GrandCookieAuthenticationDefaults.ExternalAuthenticationScheme;
             });
 
+            //add main cookie authentication
+            authenticationBuilder.AddCookie(GrandCookieAuthenticationDefaults.AuthenticationScheme, options =>
+            {
+                options.Cookie.Name = GrandCookieAuthenticationDefaults.CookiePrefix + GrandCookieAuthenticationDefaults.AuthenticationScheme;
+                options.Cookie.HttpOnly = true;
+                options.LoginPath = GrandCookieAuthenticationDefaults.LoginPath;
+                options.AccessDeniedPath = GrandCookieAuthenticationDefaults.AccessDeniedPath;
+
+                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+            });
+
+            //add external authentication
+            authenticationBuilder.AddCookie(GrandCookieAuthenticationDefaults.ExternalAuthenticationScheme, options =>
+            {
+                options.Cookie.Name = GrandCookieAuthenticationDefaults.CookiePrefix + GrandCookieAuthenticationDefaults.ExternalAuthenticationScheme;
+                options.Cookie.HttpOnly = true;
+                options.LoginPath = GrandCookieAuthenticationDefaults.LoginPath;
+                options.AccessDeniedPath = GrandCookieAuthenticationDefaults.AccessDeniedPath;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+            });
+            
             //register external authentication plugins now
             var typeFinder = new WebAppTypeFinder();
             var externalAuthConfigurations = typeFinder.FindClassesOfType<IExternalAuthenticationRegistrar>();
@@ -174,49 +212,6 @@ namespace Grand.Framework.Infrastructure.Extensions
             //configure services
             foreach (var instance in externalAuthInstances)
                 instance.Configure(authenticationBuilder);
-
-            //enable main cookie authentication
-            services.AddAuthentication(options =>
-            {
-                options.DefaultScheme = GrandCookieAuthenticationDefaults.AuthenticationScheme;
-            })
-            .AddCookie(GrandCookieAuthenticationDefaults.AuthenticationScheme,
-                options =>
-                {
-                    options.ClaimsIssuer = GrandCookieAuthenticationDefaults.ClaimsIssuer;
-                    options.Cookie = new CookieBuilder()
-                    {
-                        Name = GrandCookieAuthenticationDefaults.CookiePrefix + GrandCookieAuthenticationDefaults.AuthenticationScheme,
-                        HttpOnly = true,
-                    };
-                    options.LoginPath = GrandCookieAuthenticationDefaults.LoginPath;
-                    options.AccessDeniedPath = GrandCookieAuthenticationDefaults.AccessDeniedPath;
-                    options.LogoutPath = GrandCookieAuthenticationDefaults.LogoutPath;
-                }
-            );
-
-            //enable external authentication
-            services.AddAuthentication(options =>
-            {
-                options.DefaultScheme = GrandCookieAuthenticationDefaults.ExternalAuthenticationScheme;
-            })
-            .AddCookie(GrandCookieAuthenticationDefaults.ExternalAuthenticationScheme,
-                options =>
-                {
-                    options.ClaimsIssuer = GrandCookieAuthenticationDefaults.ClaimsIssuer;
-                    options.Cookie = new CookieBuilder()
-                    {
-                        Name = GrandCookieAuthenticationDefaults.CookiePrefix + GrandCookieAuthenticationDefaults.AuthenticationScheme,
-                        HttpOnly = true,
-                    };
-                    options.LoginPath = GrandCookieAuthenticationDefaults.LoginPath;
-                    options.AccessDeniedPath = GrandCookieAuthenticationDefaults.AccessDeniedPath;
-                    options.LogoutPath = GrandCookieAuthenticationDefaults.LogoutPath;
-                }
-            );
-
-
-
 
 
         }
@@ -237,13 +232,20 @@ namespace Grand.Framework.Infrastructure.Extensions
             //add custom display metadata provider
             mvcBuilder.AddMvcOptions(options => options.ModelMetadataDetailsProviders.Add(new GrandMetadataProvider()));
 
-            //add custom model binder provider (to the top of the provider list)
-            mvcBuilder.AddMvcOptions(options => options.ModelBinderProviders.Insert(0, new GrandModelBinderProvider()));
-
             //add fluent validation
             mvcBuilder.AddFluentValidation(configuration => configuration.ValidatorFactoryType = typeof(GrandValidatorFactory));
 
             return mvcBuilder;
+        }
+
+        /// <summary>
+        /// Register custom RedirectResultExecutor
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddGrandRedirectResultExecutor(this IServiceCollection services)
+        {
+            //we use custom redirect executor as a workaround to allow using non-ASCII characters in redirect URLs
+            services.AddSingleton<RedirectResultExecutor, GrandRedirectResultExecutor>();
         }
     }
 }

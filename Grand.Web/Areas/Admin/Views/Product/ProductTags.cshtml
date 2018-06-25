@@ -1,14 +1,10 @@
-﻿@{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
+﻿@inject AdminAreaSettings adminAreaSettings
+@{
     //page title
     ViewBag.Title = T("Admin.Catalog.ProductTags").Text;
 }
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "product-tags-form" }))
-{
-    @Html.AntiForgeryToken()
-
+<form asp-controller="Product" asp-action="ProductTags" method="post" id = "product-tags-form">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -73,33 +69,31 @@
                         // Cancel the changes
                         this.cancelChanges();
                     },
-                    pageSize: @(defaultGridPageSize),
+                    pageSize: @(adminAreaSettings.DefaultGridPageSize),
                     serverPaging: true,
                     serverFiltering: true,
                     serverSorting: true
                 },
                 pageable: {
                     refresh: true,
-                    pageSizes: [@(gridPageSizes)]
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
                 },
                 editable: {
-                    confirmation: false,
+                    confirmation: true,
                     mode: "inline"
                 },
                 scrollable: false,
                 columns: [{
                     field: "Name",
                     title: "@T("Admin.Catalog.ProductTags.Fields.Name")",
-                    width: 300
+                    width: 300,
+                    template: "<a class='k-link' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Product/EditProductTag/")#=Id#?btnId=btnRefresh&formId=product-tags-form', 800, 350, true); return false;\" >#=Name#</a>",
                 }, {
                     field: "ProductCount",
                     title: "@T("Admin.Catalog.ProductTags.Fields.ProductCount")",
-                    width: 150
-                }, {
-                    field: "Id",
-                    title: "@T("Admin.Common.Edit")",
-                    width: 150,
-                    template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Product/EditProductTag/")#=Id#?btnId=btnRefresh&formId=product-tags-form', 800, 350, true); return false;\" class='k-button' />"
+                    width: 100,
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
                 }, {
                     command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                     title: "@T("Admin.Common.Delete")",
@@ -107,8 +101,8 @@
                 }]
             });
         });
-    </script>       
-            
+    </script>
+
     <input type="submit" id="btnRefresh" style="display: none" />
     <script type="text/javascript">
         $(document).ready(function () {
@@ -122,5 +116,4 @@
             });
         });
     </script>
-           
-}
+</form>

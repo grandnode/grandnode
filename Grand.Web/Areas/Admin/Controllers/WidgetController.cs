@@ -120,22 +120,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return new NullJsonResult();
         }
-        
-        public IActionResult ConfigureWidget(string systemName)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
-                return AccessDeniedView();
-
-            var widget = _widgetService.LoadWidgetBySystemName(systemName);
-            if (widget == null)
-                //No widget found with the specified id
-                return RedirectToAction("List");
-
-            var model = widget.ToModel();
-            model.ConfigurationUrl = widget.GetConfigurationPageUrl();
-
-            return View(model);
-        }
 
         #endregion
     }

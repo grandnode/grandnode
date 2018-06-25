@@ -8,4 +8,814 @@
   <LocaleResource Name="Products.Price.CatalogPrice">
     <Value>Catalog Price</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.TierPrices">
+    <Value>Tier prices</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.TierPrices.CustomerRole">
+    <Value>Customer role</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.TierPrices.Price">
+    <Value>Price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.TierPrices.Store">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.TierPrices.Quantity">
+    <Value>Quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.CityEnabled">
+    <Value>'City' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.CityEnabled.Hint">
+    <Value>Set if 'City' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.CityRequired">
+    <Value>'City' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.CityRequired.Hint">
+    <Value>Check if 'City' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.CompanyEnabled">
+    <Value>'Company' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.CompanyEnabled.Hint">
+    <Value>Set if 'Company' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.CompanyRequired">
+    <Value>'Company' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.CompanyRequired.Hint">
+    <Value>Check if 'Company' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.CountryEnabled">
+    <Value>'Country' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.CountryEnabled.Hint">
+    <Value>Set if 'Country' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.FaxEnabled">
+    <Value>'Fax number' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.FaxEnabled.Hint">
+    <Value>Set if 'Fax number' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.FaxRequired">
+    <Value>'Fax number' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.FaxRequired.Hint">
+    <Value>Check if 'Fax number' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.PhoneEnabled">
+    <Value>'Phone number' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.PhoneEnabled.Hint">
+    <Value>Set if 'Phone number' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.PhoneRequired">
+    <Value>'Phone number' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.PhoneRequired.Hint">
+    <Value>Check if 'Phone number' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.StateProvinceEnabled">
+    <Value>'State/province' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.StateProvinceEnabled.Hint">
+    <Value>Set if 'State/province' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.StreetAddress2Enabled">
+    <Value>'Street address 2' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.StreetAddress2Enabled.Hint">
+    <Value>Set if 'Street address 2' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.StreetAddress2Required">
+    <Value>'Street address 2' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.StreetAddress2Required.Hint">
+    <Value>Check if 'Street address 2' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.StreetAddressEnabled">
+    <Value>'Street address' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.StreetAddressEnabled.Hint">
+    <Value>Set if 'Street address' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.StreetAddressRequired">
+    <Value>'Street address' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.StreetAddressRequired.Hint">
+    <Value>Check if 'Street address' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.ZipPostalCodeEnabled">
+    <Value>'Zip / postal code' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.ZipPostalCodeEnabled.Hint">
+    <Value>Set if 'Zip / postal code' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.ZipPostalCodeRequired">
+    <Value>'Zip / postal code' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AddressFormFields.ZipPostalCodeRequired.Hint">
+    <Value>Check if 'Zip / postal code' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.Address">
+    <Value>Address settings for Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.City">
+    <Value>City</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.City.Required">
+    <Value>City is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Company">
+    <Value>Company name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Company.Required">
+    <Value>Company name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Country">
+    <Value>Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Country.Required">
+    <Value>Country is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.faxnumber">
+    <Value>Fax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.faxnumber.Required">
+    <Value>Fax is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.phonenumber">
+    <Value>Phone</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.phonenumber.Required">
+    <Value>Phone is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.StateProvince">
+    <Value>State / province</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.StateProvince.Required">
+    <Value>State / province is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Address1">
+    <Value>Street address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Address1.Required">
+    <Value>Street address is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Address2">
+    <Value>Street address 2</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Address2.Required">
+    <Value>Street address 2 is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.ZipPostalCode">
+    <Value>Zip / postal code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.ZipPostalCode.Required">
+    <Value>Zip / postal code is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Email.hint">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="account.vendorinfo.name.hint">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.ShowOnSearchBox">
+    <Value>Show category on search box</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.ShowOnSearchBox.hint">
+    <Value>You can show which category will shown on search box</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.SearchBoxDisplayOrder">
+    <Value>Display order for search box</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.SearchBoxDisplayOrder.hint">
+    <Value>Display order for search box</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.Attributes">
+    <Value>Attributes:</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.Continue">
+    <Value>Continue</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.ProductName">
+    <Value>Product Name:</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.Price">
+    <Value>Price:</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.Qty">
+    <Value>Qty:</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.ShoppingCart">
+    <Value>Product was successfully added to cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.ViewCart">
+    <Value>Go to cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.Wishlist">
+    <Value>Product was successfully added to wishlist</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.ViewWishlist">
+    <Value>Go to wishlist</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.TotalPrice">
+    <Value>Total price</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.SubTotal">
+    <Value>Sub-Total</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.SubTotalDiscount">
+    <Value>Discount</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.Cart.Items">
+    <Value>There are {0} in your cart.</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.Wishlist.Items">
+    <Value>There are {0} in your wishlist.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.CartsSharedBetweenStores">
+    <Value>Carts shared between stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.CartsSharedBetweenStores.Hint">
+    <Value>Determines whether shopping carts (and wishlists) are shared between stores (in multi-store environment).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Price.ReservationPrice">
+    <Value>Reservation price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar">
+    <Value>Reservation calendar</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.Calendarconfiguration">
+    <Value>Calendar configuration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.StartDateUtc">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.EndDateUtc">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.StartTime">
+    <Value>From hour</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.EndTime">
+    <Value>To hour</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Interval">
+    <Value>Interval</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Quantity">
+    <Value>Quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Resource">
+    <Value>Resource</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Parameter">
+    <Value>Additional parameter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Monday">
+    <Value>Monday</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Tuesday">
+    <Value>Tuesday</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Wednesday">
+    <Value>Wednesday</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Thursday">
+    <Value>Thursday</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Friday">
+    <Value>Friday</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Saturday">
+    <Value>Saturday</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Sunday">
+    <Value>Sunday</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.Generatecalendar">
+    <Value>Generate calendar</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.Clearcalendar">
+    <Value>Clear calendar</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.Date">
+    <Value>Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.Parameter">
+    <Value>Parameter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.Duration">
+    <Value>Duration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.OrderId">
+    <Value>Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.Resource">
+    <Value>Resource</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.AdditionalParameter">
+    <Value>Additional parameter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Reservation.DateFrom">
+    <Value>Reservation start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Reservation.DateTo">
+    <Value>Reservation end date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Reservation.Date">
+    <Value>Reservation date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Reservation.Hour">
+    <Value>Reservation hour</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Noavailablereservations">
+    <Value>No available reservations</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Reservation.Reservationdeleted">
+    <Value>Reservation was deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Reservation.Noreservationfound">
+    <Value>Reservation not found</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Reservation.Alreadyreserved">
+    <Value>Already reserved</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Reservation.Choosebothdates">
+    <Value>Please choose both dates</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Reservation.Enddatemustbelaterthanstartdate">
+    <Value>End date must be later than start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Reservation.Reservationdatesmustbelaterthantoday">
+    <Value>Reservation date must be later than today</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Reservation.Nofreereservationsinthisperiod">
+    <Value>No free bookings in this period</Value>
+  </LocaleResource>
+  <LocaleResource Name="Product.Addtocart.Hourisrequired">
+    <Value>Hour is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReservations.Fields.Days.Finaldatemustbegreaterthanstartdate">
+    <Value>Final date must be greater than start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReservations.Fields.Interval.Intervalmustbegreaterthanzero">
+    <Value>Interval must be greater than zero</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReservations.Fields.Quantity.Quantitymustbegreaterthanzero">
+    <Value>Quantity must be greater than zero</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReservations.Fields.Resource.Required">
+    <Value>Resource name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.CannotChangeInterval">
+    <Value>You can't change interval because records with conflicting interval exist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReservations.CantDeleteWithOrder">
+    <Value>You can't delete reservation with the order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Product.Addtocart.Reservation.Required">
+    <Value>Please select hour</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.ReservationInfo">
+    <Value>Reservation info</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Reservation">
+    <Value>Reservation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Price.Reservation.Days">
+    <Value>{0} per {1} day(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Price.Reservation.Hour">
+    <Value>{0} per {1} hour(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Price.Reservation.Minute">
+    <Value>{0} per {1} minute(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.SaveBeforeEdit">
+    <Value>You need to save the product before you can generate calendar</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.productreservations.fields.endtime.required">
+    <Value>End date is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.productreservations.fields.starttime.required">
+    <Value>Start time is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Calendar.WeekDay">
+    <Value>Week day</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.IntervalUnit.Minute">
+    <Value>Minute(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.IntervalUnit.Hour">
+    <Value>Hour(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.IntervalUnit.Day">
+    <Value>Day(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="shoppingcart.reservation.date">
+    <Value>Reservation from: {0} to: {1}</Value>
+  </LocaleResource>
+  <LocaleResource Name="shoppingcart.reservation.duration">
+    <Value>Duration: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="shoppingcart.reservation.startdate">
+    <Value>Date: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ProductType.BundledProduct">
+    <Value>Bundled product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ProductType.Reservation">
+    <Value>Reservation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.BundleProducts">
+    <Value>Bundle product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.BundleProducts.Fields.Product">
+    <Value>Product name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.BundleProducts.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.BundleProducts.Fields.Quantity">
+    <Value>Quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.BundleProducts.AddNew">
+    <Value>Add new products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.BundleProducts.SaveBeforeEdit">
+    <Value>You need to save the product before you can add new bundle product</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Enums.Grand.Core.Domain.Catalog.ManageInventoryMethod.ManageStockByBundleProducts">
+    <Value>Track inventory by bundle products</Value>
+  </LocaleResource>  
+  <LocaleResource Name="ShoppingCart.OutOfStock.BundleProduct">
+    <Value>Out of stock for product {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Products.Warehouse.Choose">
+    <Value>{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Duration">
+    <Value>Duration</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Reservation.Option">
+    <Value>Additional parameter: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.Address">
+    <Value>Vendor address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Picture">
+    <Value>Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Picture.Hint">
+    <Value>Choose a picture associated to this attribute combination. This picture will replace the main product image when this product attribute combination is selected.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Picture.NoPicture">
+    <Value>No picture</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="Admin.Configuration.Settings.Blog.ShowBlogOnHomePage">
+    <Value>Show on home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Blog.ShowBlogOnHomePage.Hint">
+    <Value>Check to display your blog posts on your store home page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Blog.HomePageBlogCount">
+    <Value>Number of blog post to display</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.News.HomePageBlogCount.Hint">
+    <Value>The number of blog post to display on your home page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Blog.MaxTextSizeHomePage">
+    <Value>Maximum size of the text on home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.News.MaxTextSizeHomePage.Hint">
+    <Value>Maximum size of the text on home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Blog.Latest">
+    <Value>Latest From Our Blog</Value>
+  </LocaleResource>
+  <LocaleResource Name="Blog.ViewAll">
+    <Value>View All Blog Posts</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.GiftCardCouponCode.WrongGiftCard">
+    <Value>The gift card you entered couldn't be applied to your order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.LastEnd">
+    <Value>Last no success end date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.LastEndUtc">
+    <Value>Last no success end date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.LeasedByMachineName">
+    <Value>The name of the machine</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.LeasedByMachineName.hint">
+    <Value>The name of the machine where the task should be run, leave empty if you have only one server.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Price.Currentprice">
+    <Value>Current bid</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.BuyNowPrice">
+    <Value>Buy now price</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.BuyNow">
+    <Value>Buy now</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Bid">
+    <Value>Bid</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Auctionends">
+    <Value>Auction ends</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Mustberegisteredtobid">
+    <Value>You must be registered to bid</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.Yourbid">
+    <Value>Your bid</Value>
+  </LocaleResource>
+  <LocaleResource Name="shoppingcart.yourbidhasbeenplaced">
+    <Value>Your bid has been placed</Value>
+  </LocaleResource>
+  <LocaleResource Name="AddToCart.ViewAuctions">
+    <Value>Go to your auctions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Addtocart.Auctions.Ongoing">
+    <Value>You have {0} ongoing auctions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Bids">
+    <Value>Bids</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Bids.SaveBeforeEdit">
+    <Value>You need to save before editing this section</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Bids.Date">
+    <Value>Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Bids.CustomerId">
+    <Value>Customer Id</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Bids.Amount">
+    <Value>Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Bids.CantDeleteWithOrder">
+    <Value>Cannot delete bid wiht order id</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Auctionwonon">
+    <Value>Auction won on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Bids.OrderId">
+    <Value>Order Id</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Cannoteditauction">
+    <Value>Cannot edit ended auctions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Customerauctions">
+    <Value>Auctions</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.Auctions">
+    <Value>Auctions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Auctions.NoAuctions">
+    <Value>You don't have any auctions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions.ProductName">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions.Status">
+    <Value>Status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions.Status.Ended">
+    <Value>Ended</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions.Status.Ongoing">
+    <Value>Ongoing</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions.Status.Won">
+    <Value>Won</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions.AuctionEndTime">
+    <Value>Auction end time</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions.Highestbid">
+    <Value>Highest bid</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions.Product">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions.OrderDetails">
+    <Value>Order details</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Bids">
+    <Value>Bids</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.BidMustbeHigher">
+    <Value>Bid must be higher</Value>
+  </LocaleResource>
+  <LocaleResource Name="products.price.startprice">
+    <Value>Start price</Value>
+  </LocaleResource>
+  <LocaleResource Name="addtocart.timeleft">
+    <Value>Time left</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.StartPrice">
+    <Value>Start price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Auctions.Tab.Ongoing">
+    <Value>Ongoing Auctions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Auctions.Tab.Ended">
+    <Value>Ended auctions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions.Status.HighestBidder">
+    <Value>Highest bidder</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerAuctions.Status.Outbid">
+    <Value>Outbid</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.PublicStore.AddToBid">
+    <Value>A new bid has been added ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteBid">
+    <Value>Deleted a bid for product ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Auctions.NoEndedAuctions">
+    <Value>You haven't won any auctions.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Auctions.NoOngoingAuctions">
+    <Value>You don't participate in any auctions.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.AvailableEndDateTime.Required">
+    <Value>Available end date is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.IncBothDate">
+    <Value>Include both dates</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.fields.calendar.parameter.hint">
+		<Value>Enter the parameter of reservation</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.catalog.products.fields.calendar.resource.hint">
+		<Value>Enter the resource of reservation</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.catalog.products.fields.calendar.quantity.hint">
+		<Value>Enter the amount of time. How many minutes or hours has one reservation </Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.catalog.products.fields.calendar.interval.hint">
+		<Value>Enter the interval between reservations</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.catalog.products.fields.calendar.incbothdate.hint">
+		<Value>Distinguish if you would like to count reservation from start date or not. Useful when you want to book a course from Friday to Sunday).</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.catalog.products.fields.calendar.enddateutc.hint">
+		<Value>Select the end date of reservations</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.catalog.products.fields.calendar.startdateutc.hint">
+		<Value>Select the start date of reservations</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.catalog.products.fields.startprice.hint">
+		<Value>Enter the start price of auction</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.vendors.fields.allowcustomerreviews.hint">
+		<Value>Check if you want to allow for vendor reviews</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.vendorreviews.list.searchvendor.hint">
+		<Value>Search for vendor</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.vendorreviews.list.searchtext.hint">
+		<Value>Enter the text which you want to search</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.vendorreviews.list.createdonto.hint">
+		<Value>Select the date range</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.vendorreviews.list.createdonfrom.hint">
+		<Value>Select the date range</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.configuration.settings.vendor.vendorreviewpossibleonlyafterpurchasing.hint">
+		<Value>Check if you want to allow reviews only after purchasing products from specified vendor</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.configuration.settings.vendor.notifyvendoraboutnewvendorreviews.hint">
+		<Value>Check if you want to notify vendors about new reviews</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.configuration.settings.vendor.allowanonymoususerstoreviewvendor.hint">
+		<Value>Check if you want to allow anonymous user reviews</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.configuration.settings.vendor.vendorreviewsmustbeapproved.hint">
+		<Value>Check if vendor reviews must be approved</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.configuration.settings.blog.maxtextsizehomepage.hint">
+		<Value>Specify the text size of blog details on homepage</Value>
+	</LocaleResource>
+	<LocaleResource Name="admin.configuration.settings.blog.homepageblogcount.hint">
+		<Value>Specify how many items should be shown on homepage</Value>
+	</LocaleResource>
+
+  <LocaleResource Name="admin.catalog.products.fields.calendar.parameter.hint">
+    <Value>Enter the parameter of reservation</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.fields.calendar.resource.hint">
+    <Value>Enter the resource of reservation</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.fields.calendar.quantity.hint">
+    <Value>Enter the amount of time. How many minutes or hours has one reservation </Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.fields.calendar.interval.hint">
+    <Value>Enter the interval between reservations</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.fields.calendar.incbothdate.hint">
+    <Value>Distinguish if you would like to count reservation from start date or not. Useful when you want to book a course from Friday to Sunday).</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.fields.calendar.enddateutc.hint">
+    <Value>Select the end date of reservations</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.fields.calendar.startdateutc.hint">
+    <Value>Select the start date of reservations</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.fields.startprice.hint">
+    <Value>Enter the start price of auction</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.vendors.fields.allowcustomerreviews.hint">
+    <Value>Check if you want to allow for vendor reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.vendorreviews.list.searchvendor.hint">
+    <Value>Search for vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.vendorreviews.list.searchtext.hint">
+    <Value>Enter the text which you want to search</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.vendorreviews.list.createdonto.hint">
+    <Value>Select the date range</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.vendorreviews.list.createdonfrom.hint">
+    <Value>Select the date range</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.settings.vendor.vendorreviewpossibleonlyafterpurchasing.hint">
+    <Value>Check if you want to allow reviews only after purchasing products from specified vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.settings.vendor.notifyvendoraboutnewvendorreviews.hint">
+    <Value>Check if you want to notify vendors about new reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.settings.vendor.allowanonymoususerstoreviewvendor.hint">
+    <Value>Check if you want to allow anonymous user reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.settings.vendor.vendorreviewsmustbeapproved.hint">
+    <Value>Check if vendor reviews must be approved</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.settings.blog.maxtextsizehomepage.hint">
+    <Value>Specify the text size of blog details on homepage</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.settings.blog.homepageblogcount.hint">
+    <Value>Specify how many items should be shown on homepage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.MachineName">
+    <Value>Machine name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.MachineName.Hint">
+    <Value>Machine name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Text">
+    <Value>Text</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Text.Hint">
+    <Value>Helpful text field</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ChangedWarning">
+    <Value>You can't edit the product because has been changed. Please refresh page and try to change again.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.AlreadyHighestBidder">
+    <Value>You are already the highest bidder</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Upload">
+    <Value>Upload</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Upload.Hint">
+    <Value>Select .zip archive with one plugin inside. Directory will be overwritten if already exists.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Uploaded">
+    <Value>Plugin uploaded</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Themes.Upload">
+    <Value>Upload theme</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Themes.Uploaded">
+    <Value>Theme uploaded</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.UploadNewTheme">
+    <Value>UploadedNewTheme</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.UploadNewPlugin">
+    <Value>UploadedNewPlugin</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Themes.Failed">
+    <Value>Failed to upload theme. Make sure you are not uploading already existing one. If so, try deleting it manualy before resubmitting.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Fields.Remove">
+    <Value>Remove</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Removed">
+    <Value>Plugin removed</Value>
+  </LocaleResource>
 </Language>

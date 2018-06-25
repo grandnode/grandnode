@@ -90,13 +90,13 @@ namespace Grand.Plugin.Feed.GoogleShopping.Controllers
             //file paths
             foreach (var store in _storeService.GetAllStores())
             {
-                var appPath = CommonHelper.MapPath("wwwroot/content/files/exportimport");
+                var appPath = CommonHelper.MapPath("wwwroot/Content/files/ExportImport");
                 var localFilePath = System.IO.Path.Combine(appPath, store.Id + "-" + _GoogleShoppingSettings.StaticFileName);           
                 if (System.IO.File.Exists(localFilePath))
                     model.GeneratedFiles.Add(new FeedGoogleShoppingModel.GeneratedFileModel
                     {
                         StoreName = store.Name,
-                        FileUrl = string.Format("{0}content/files/exportimport/{1}-{2}", _webHelper.GetStoreLocation(false), store.Id, _GoogleShoppingSettings.StaticFileName)
+                        FileUrl = string.Format("{0}Content/files/ExportImport/{1}-{2}", _webHelper.GetStoreLocation(false), store.Id, _GoogleShoppingSettings.StaticFileName)
                     });
             }
 

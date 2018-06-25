@@ -3,9 +3,8 @@
     //page title
     ViewBag.Title = T("Admin.Customers.Customers.EditCustomerDetails").Text;
 }
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "customer-form" }))
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Customer" asp-action="Edit" method="post" id = "customer-form">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -39,54 +38,52 @@
             </div>
         </div>
     </div>
-
-}
+</form>
 @Html.DeleteConfirmation("customer-delete")
 
 @*send email form*@
 <div id="sendemail-window" style="display:none;">
-    @using (Html.BeginForm("SendEmail", "Customer", new {id = Model.Id}))
-    {
-        @Html.AntiForgeryToken()
+    <form asp-controller="Customer" asp-action="SendEmail" method="post" asp-route-id="Id">
+        <antiforgery-token />
+        <input type="hidden" asp-for="Id" />
         <div class="form-horizontal">
             <div class="form-body">
                 <div class="form-group">
-                    @Html.GrandLabelFor(model => model.SendEmail.Subject)
+                    <admin-label asp-for="SendEmail.Subject" />
                     <div class="col-md-9 col-sm-9">
-                        @Html.GrandEditorFor(model => model.SendEmail.Subject)
-                        @Html.ValidationMessageFor(model => model.SendEmail.Subject)
+                        <admin-input asp-for="SendEmail.Subject" />
+                        <span asp-validation-for="SendEmail.Subject"></span>
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.GrandLabelFor(model => model.SendEmail.Body)
+                    <admin-label asp-for="SendEmail.Body" />
                     <div class="col-md-9 col-sm-9">
-                        @Html.GrandTextAreaFor(model => model.SendEmail.Body, new { style = "Height: 100px;" })
-                        @Html.ValidationMessageFor(model => model.SendEmail.Body)
+                        <admin-textarea asp-for="SendEmail.Body"></admin-textarea>
+                        <span asp-validation-for="SendEmail.Body"></span>
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.GrandLabelFor(model => model.SendEmail.SendImmediately)
+                    <admin-label asp-for="SendEmail.SendImmediately" />
                     <div class="col-md-9 col-sm-9">
-                        @Html.GrandEditorFor(model => model.SendEmail.SendImmediately)
-                        @Html.ValidationMessageFor(model => model.SendEmail.SendImmediately)
+                        <admin-input asp-for="SendEmail.SendImmediately" />
+                        <span asp-validation-for="SendEmail.SendImmediately"></span>
                     </div>
                 </div>
                 <div class="form-group" id="pnl-send-date">
-                    @Html.GrandLabelFor(model => model.SendEmail.DontSendBeforeDate)
+                    <admin-label asp-for="SendEmail.DontSendBeforeDate" />
                     <div class="col-md-9 col-sm-9">
-                        @Html.GrandEditorFor(model => model.SendEmail.DontSendBeforeDate)
-                        @Html.ValidationMessageFor(model => model.SendEmail.DontSendBeforeDate)
+                        <admin-input asp-for="SendEmail.DontSendBeforeDate" />
+                        <span asp-validation-for="SendEmail.DontSendBeforeDate"></span>
                     </div>
                 </div>
             </div>
             <div class="form-actions">
-                    <div class="col-md-offset-3 col-sm-offset-3 col-md-6 col-sm-6">
-                        <input type="submit" class="btn default" value="@T("Admin.Customers.Customers.SendEmail")" />
-                    </div>
+                <div class="col-md-offset-3 col-sm-offset-3 col-md-6 col-sm-6">
+                    <input type="submit" class="btn default" value="@T("Admin.Customers.Customers.SendEmail")" />
+                </div>
             </div>
-
         </div>
-    }
+    </form>
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
@@ -109,33 +106,33 @@
 
 @*send PM form*@
 <div id="sendprivatemessage-window" style="display:none;">
-    @using (Html.BeginForm("SendPm", "Customer", new { id = Model.Id }))
-    {
-    @Html.AntiForgeryToken()
-    <div class="form-horizontal">
-        <div class="form-body">
-            <div class="form-group">
-                @Html.GrandLabelFor(model => model.SendPm.Subject, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4" } }, false)
-                <div class="col-md-8 col-sm-8">
-                    @Html.GrandEditorFor(model => model.SendPm.Subject)
-                    @Html.ValidationMessageFor(model => model.SendPm.Subject)
+    <form asp-controller="Customer" asp-action="SendPm" method="post" asp-route-id="Id" >
+        <antiforgery-token />
+        <input type="hidden" asp-for="Id" />
+        <div class="form-horizontal">
+            <div class="form-body">
+                <div class="form-group">
+                    <admin-label asp-for="SendPm.Subject" class="control-label col-md-4 col-sm-4"/>
+                    <div class="col-md-8 col-sm-8">
+                        <admin-input asp-for="SendPm.Subject" />
+                        <span asp-validation-for="SendPm.Subject"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <admin-label asp-for="SendPm.Message" class="control-label col-md-4 col-sm-4" />
+                    <div class="col-md-8 col-sm-8">
+                        <admin-textarea asp-for="SendPm.Message"></admin-textarea>
+                        <span asp-validation-for="SendPm.Message"></span>
+                    </div>
                 </div>
             </div>
-            <div class="form-group">
-                @Html.GrandLabelFor(model => model.SendPm.Message, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4" } }, false)
-                <div class="col-md-8 col-sm-8">
-                    @Html.GrandTextAreaFor(model => model.SendPm.Message, new { style = "Height: 100px;" })
-                    @Html.ValidationMessageFor(model => model.SendPm.Message)
+            <div class="form-actions">
+                <div class="col-md-offset-3 col-sm-offset-3 col-md-6 col-sm-6">
+                    <input type="submit" class="btn default" value="@T("Admin.Customers.Customers.SendPM")" />
                 </div>
             </div>
         </div>
-        <div class="form-actions">
-            <div class="col-md-offset-3 col-sm-offset-3 col-md-6 col-sm-6">
-                <input type="submit" class="btn default" value="@T("Admin.Customers.Customers.SendPM")" />
-            </div>
-        </div>
-    </div>
-    }
+    </form>
 </div>
 <script type="text/javascript">
     $(document).ready(function () {

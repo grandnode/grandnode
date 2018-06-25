@@ -332,7 +332,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult PredefinedProductAttributeValueCreatePopup(string btnId, string formId, PredefinedProductAttributeValueModel model)
+        public IActionResult PredefinedProductAttributeValueCreatePopup(PredefinedProductAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -358,8 +358,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _productAttributeService.UpdateProductAttribute(productAttribute);
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
 
@@ -396,7 +394,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult PredefinedProductAttributeValueEditPopup(string btnId, string formId, PredefinedProductAttributeValueModel model)
+        public IActionResult PredefinedProductAttributeValueEditPopup(PredefinedProductAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -418,8 +416,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _productAttributeService.UpdateProductAttribute(productAttribute);
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
 

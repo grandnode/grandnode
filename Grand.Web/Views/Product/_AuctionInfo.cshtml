@@ -1,0 +1,32 @@
+﻿@model ProductDetailsModel
+@inject CatalogSettings catalogSettings
+@if (Model.ProductType == ProductType.Auction)
+{
+    <div class="col-lg-12 px-0">
+        <div class="form-group">
+            @if (Model.EndTime.HasValue)
+            {
+                <div>
+                    @if (Model.EndTime > DateTime.UtcNow)
+                    {
+                        <label class="d-inline-block">@T("AddToCart.Timeleft"): </label>
+                        <div class="d-inline-block" data-countdown="@Model.EndTime.Value.ToLocalTime().ToString("yyyy-MM-dd HH:mm")"></div>
+                    }
+                    else
+                    {
+                        <label>@T("ShoppingCart.Auctionends"): @Model.EndTime.Value.ToLocalTime()</label>
+                    }
+                </div>
+            }
+            @if (Model.EndTime > DateTime.UtcNow)
+            {
+                <div class="btn-group">
+                    <input asp-for="HighestBidValue" type="number" class="form-control" style="max-width: 100px;" value="@(Model.HighestBidValue > 0 ? (Model.HighestBidValue + 1).ToString(System.Globalization.CultureInfo.InvariantCulture) : (Model.StartPrice + 1).ToString(System.Globalization.CultureInfo.InvariantCulture))" />
+                    <button type="button" id="bid-button-@Model.Id" class="btn btn-primary add-to-cart-button" data-productid="@Model.Id" onclick="AjaxCart.addbid('@Url.RouteUrl("AddBid", new { productId = Model.Id, shoppingCartTypeId = (int)ShoppingCartType.Auctions })', '#product-details-form');return false;">
+                        <span class="fa fa-gavel"></span> <span>@T("ShoppingCart.Bid")</span>
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+}

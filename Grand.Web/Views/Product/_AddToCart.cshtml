@@ -1,11 +1,11 @@
 ﻿@model ProductDetailsModel.AddToCartModel
 @if (!String.IsNullOrEmpty(Model.UpdatedShoppingCartItemId))
 {
-    @Html.HiddenFor(x => x.UpdatedShoppingCartItemId)
+    <input asp-for="UpdatedShoppingCartItemId" type="hidden" />
 }
 @if (Model.CustomerEntersPrice)
 {
-    <div class="customer-entered-price mb-1">
+    <div class="customer-entered-price mb-3 d-flex w-100 flex-column">
         <div class="price-input">
             <label asp-for="CustomerEnteredPrice" class="enter-price-label">@("Products.EnterProductPrice"):</label>
             @*round price*@
@@ -27,58 +27,68 @@
     {
 
 
-    if (Model.AllowedQuantities.Count > 0)
-        {
-            <select asp-for="EnteredQuantity" asp-items="Model.AllowedQuantities" class="col-2 custom-select form-control qty-dropdown"></select>
-        }
-        else
-        {
-
-            var addId = "addtocart_" + @Model.ProductId + "_EnteredQuantity";
-            <label for="@addId" class="sr-only">@T("ShoppingCart.AddToCart")</label>
-            <input asp-for="EnteredQuantity" class="form-control qty-input" type="text" />
-            if (!String.IsNullOrEmpty(Model.MeasureUnit))
-            {
-                <span class="qty-unit mr-2">
-                    @Model.MeasureUnit
-                </span>
-            }
-
-    }
-{
-    var addToCartText = "";
-    if (!String.IsNullOrEmpty(Model.UpdatedShoppingCartItemId) && Model.UpdateShoppingCartItemType.HasValue && Model.UpdateShoppingCartItemType.Value == ShoppingCartType.ShoppingCart)
+    if (Model.AllowedQuantities.Any())
     {
-        addToCartText = T("ShoppingCart.AddToCart.Update").Text;
+        <select asp-for="EnteredQuantity" asp-items="Model.AllowedQuantities" class="col-2 custom-select form-control qty-dropdown"></select>
     }
     else
     {
-        addToCartText = T("ShoppingCart.AddToCart").Text;
-        if (Model.IsRental)
-        {
-            addToCartText = T("ShoppingCart.Rent").Text;
-        }
-        if (Model.AvailableForPreOrder)
-        {
-            addToCartText = T("ShoppingCart.PreOrder").Text;
-        }
-    }
 
-    //when a customer clicks 'Enter' button we submit the "add to cart" button (if visible)
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#@Html.IdFor(model => model.EnteredQuantity)").keydown(function (event) {
-                if (event.keyCode == 13) {
-                    $("#add-to-cart-button-@Model.ProductId").click();
-                    return false;
-                }
-            });
-        });
-    </script>
-    <button type="button" id="add-to-cart-button-@Model.ProductId" class="btn btn-success add-to-cart-button" data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;">
-        <span class="fa fa-shopping-cart"></span> <span>@addToCartText</span>
-    </button>
+        var addId = "addtocart_" + @Model.ProductId + "_EnteredQuantity";
+        <label for="@addId" class="sr-only">@T("ShoppingCart.AddToCart")</label>
+        <input asp-for="EnteredQuantity" class="form-control qty-input text-center" type="text" />
+        if (!String.IsNullOrEmpty(Model.MeasureUnit))
+        {
+            <span class="qty-unit mr-2">
+                @Model.MeasureUnit
+            </span>
+            }
+
         }
+        {
+            var addToCartText = "";
+            if (!String.IsNullOrEmpty(Model.UpdatedShoppingCartItemId) && Model.UpdateShoppingCartItemType.HasValue && Model.UpdateShoppingCartItemType.Value == ShoppingCartType.ShoppingCart)
+            {
+                addToCartText = T("ShoppingCart.AddToCart.Update").Text;
+            }
+            else
+            {
+                addToCartText = T("ShoppingCart.AddToCart").Text;
+                if (Model.IsReservation)
+                {
+                    addToCartText = T("ShoppingCart.Reservation").Text;
+                }
+                if (Model.AvailableForPreOrder)
+                {
+                    addToCartText = T("ShoppingCart.PreOrder").Text;
+                }
+                if (Model.IsAuction)
+                {
+                    addToCartText = T("ShoppingCart.BuyNow").Text;
+                }
+            }
+
+            //when a customer clicks 'Enter' button we submit the "add to cart" button (if visible)
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $("#@Html.IdFor(model => model.EnteredQuantity)").keydown(function (event) {
+                        if (event.keyCode == 13) {
+                            $("#add-to-cart-button-@Model.ProductId").click();
+                            return false;
+                        }
+                    });
+                    $("#@Html.IdFor(model => model.CustomerEnteredPrice)").keydown(function (event) {
+                        if (event.keyCode == 13) {
+                            $("#add-to-cart-button-@Model.ProductId").click();
+                            return false;
+                        }
+                    });
+                });
+            </script>
+            <button type="button" id="add-to-cart-button-@Model.ProductId" class="btn btn-info add-to-cart-button d-inline-flex" data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;">
+                <span class="fa fa-shopping-cart d-sm-block"></span><span class="d-lg-block d-none">@addToCartText</span>
+            </button>
+    }
 
     }
 

@@ -5,6 +5,8 @@ using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Core.Domain.Stores;
 using Grand.Services.Events;
+using MongoDB.Driver;
+using MongoDB.Bson;
 
 namespace Grand.Services.Stores
 {
@@ -93,11 +95,7 @@ namespace Grand.Services.Stores
             string key = STORES_ALL_KEY;
             return _cacheManager.Get(key, () =>
             {
-                var query = from s in _storeRepository.Table
-                            orderby s.DisplayOrder, s.Id
-                            select s;
-                var stores = query.ToList();
-                return stores;
+                return _storeRepository.Collection.Find(new BsonDocument()).SortBy(x => x.DisplayOrder).ToList();
             });
         }
 

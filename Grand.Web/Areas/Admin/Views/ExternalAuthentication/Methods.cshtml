@@ -2,7 +2,7 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.ExternalAuthenticationMethods").Text;
 }
-@Html.AntiForgeryToken()
+<antiforgery-token />
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light form-fit">
@@ -79,11 +79,13 @@
                 columns: [{
                     field: "FriendlyName",
                     title: "@T("Admin.Configuration.ExternalAuthenticationMethods.Fields.FriendlyName")",
-                    width: 250
+                    width: 250,
+                    template: '<a class="k-link" href="#=ConfigurationUrl#">#=FriendlyName#</a>',
                 }, {
                     field: "SystemName",
                     title: "@T("Admin.Configuration.ExternalAuthenticationMethods.Fields.SystemName")",
-                    width: 250
+                    width: 250,
+                        template: '<a class="k-link" href="#=ConfigurationUrl#">#=SystemName#</a>',
                 }, {
                     field: "DisplayOrder",
                     title: "@T("Admin.Configuration.ExternalAuthenticationMethods.Fields.DisplayOrder")",
@@ -97,11 +99,6 @@
                     headerAttributes: { style: "text-align:center" },
                     attributes: { style: "text-align:center" },
                     template: '# if(IsActive) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
-                }, {
-                    field: "SystemName",
-                    title: "@T("Admin.Configuration.ExternalAuthenticationMethods.Configure")",
-                    width: 150,
-                    template: '<a href="#=ConfigurationUrl#">@T("Admin.Configuration.ExternalAuthenticationMethods.Configure")</a>'
                 }, {
                     command: {
                         name: "edit",

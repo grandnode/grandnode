@@ -3,16 +3,15 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Manufacturers.EditManufacturerDetails").Text;
 }
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "manufacturer-form" }))
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Manufacturer" asp-action="Edit" method="post" id="manufacturer-form">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
                 <div class="portlet-title">
                     <div class="caption">
                         <i class="fa fa-building-o"></i>
-                        @T("Admin.Catalog.Manufacturers.EditManufacturerDetails") - @Model.Name 
+                        @T("Admin.Catalog.Manufacturers.EditManufacturerDetails") - @Model.Name
                         <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Catalog.Manufacturers.BackToList").Text, "List")</small>
                     </div>
                     <div class="actions">
@@ -33,7 +32,5 @@
             </div>
         </div>
     </div>
-
-
-}
+</form>
 @Html.DeleteConfirmation("manufacturer-delete")

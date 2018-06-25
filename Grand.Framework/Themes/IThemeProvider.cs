@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Grand.Core.Plugins;
+using System.Collections.Generic;
 
 namespace Grand.Framework.Themes
 {
@@ -9,5 +10,7 @@ namespace Grand.Framework.Themes
         IList<ThemeConfiguration> GetThemeConfigurations();
 
         bool ThemeConfigurationExists(string themeName);
+
+        ThemeDescriptor GetThemeDescriptorFromText(string text);
     }
 }

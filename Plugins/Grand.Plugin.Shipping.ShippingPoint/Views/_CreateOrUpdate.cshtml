@@ -1,8 +1,8 @@
 ﻿@model Grand.Plugin.Shipping.ShippingPoint.Models.ShippingPointModel
 @using Grand.Framework;
 
-@Html.ValidationSummary(true)
-@Html.HiddenFor(model => model.Id)
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
 
 @if (ViewBag.RefreshPage == true)
 {
@@ -16,66 +16,66 @@
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.ShippingPointName)
+            <admin-label asp-for="ShippingPointName" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.ShippingPointName)
-                @Html.ValidationMessageFor(model => model.ShippingPointName)
+                <admin-input asp-for="ShippingPointName" />
+                <span asp-validation-for="ShippingPointName"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.Description)
+            <admin-label asp-for="Description" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandTextAreaFor(model => model.Description)
-                @Html.ValidationMessageFor(model => model.Description)
+                <admin-textarea asp-for="Description"></admin-textarea>
+                <span asp-validation-for="Description"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.CountryId)
+            <admin-label asp-for="CountryId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.CountryId, Model.AvailableCountries)
-                @Html.ValidationMessageFor(model => model.CountryId)
+                <admin-select asp-for="CountryId" asp-items="Model.AvailableCountries" />
+                <span asp-validation-for="CountryId"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.City)
+            <admin-label asp-for="City" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.City)
-                @Html.ValidationMessageFor(model => model.City)
+                <admin-input asp-for="City" />
+                <span asp-validation-for="City"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.Address1)
+            <admin-label asp-for="Address1" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.Address1)
-                @Html.ValidationMessageFor(model => model.Address1)
+                <admin-input asp-for="Address1" />
+                <span asp-validation-for="Address1"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.ZipPostalCode)
+            <admin-label asp-for="ZipPostalCode" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.ZipPostalCode)
-                @Html.ValidationMessageFor(model => model.ZipPostalCode)
+                <admin-input asp-for="ZipPostalCode" />
+                <span asp-validation-for="ZipPostalCode"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.OpeningHours)
+            <admin-label asp-for="OpeningHours" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.OpeningHours)
-                @Html.ValidationMessageFor(model => model.OpeningHours)
+                <admin-input asp-for="OpeningHours" />
+                <span asp-validation-for="OpeningHours"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.PickupFee)
+            <admin-label asp-for="PickupFee" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.PickupFee)
-                @Html.ValidationMessageFor(model => model.PickupFee)
+                <admin-input asp-for="PickupFee" />
+                <span asp-validation-for="PickupFee"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.StoreId)
+            <admin-label asp-for="StoreId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.StoreId, Model.AvailableStores)
-                @Html.ValidationMessageFor(model => model.StoreId)
+                <admin-select asp-for="StoreId" asp-items="Model.AvailableStores" />
+                <span asp-validation-for="StoreId"></span>
             </div>
         </div>
     </div>

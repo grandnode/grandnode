@@ -226,58 +226,8 @@ namespace Grand.Services.Tests
             return new DatabaseNamespace(databaseName);
         }
 
-        public static IReadBinding GetReadBinding()
-        {
-            return GetReadBinding(ReadPreference.Primary);
-        }
-
-        public static IReadBinding GetReadBinding(ReadPreference readPreference)
-        {
-            return new ReadPreferenceBinding(__cluster.Value, readPreference);
-        }
-
-        public static IReadWriteBinding GetReadWriteBinding()
-        {
-            return new WritableServerBinding(__cluster.Value);
-        }
-
-        public static IEnumerable<string> GetModules()
-        {
-            using (var binding = GetReadBinding())
-            {
-                var command = new BsonDocument("buildinfo", 1);
-                var operation = new ReadCommandOperation<BsonDocument>(DatabaseNamespace.Admin, command, BsonDocumentSerializer.Instance, __messageEncoderSettings);
-                var response = operation.Execute(binding, CancellationToken.None);
-                BsonValue modules;
-                if (response.TryGetValue("modules", out modules))
-                {
-                    return modules.AsBsonArray.Select(x => x.ToString());
-                }
-                else
-                {
-                    return Enumerable.Empty<string>();
-                }
-            }
-        }
-
-        public static string GetStorageEngine()
-        {
-            using (var binding = GetReadWriteBinding())
-            {
-                var command = new BsonDocument("serverStatus", 1);
-                var operation = new ReadCommandOperation<BsonDocument>(DatabaseNamespace.Admin, command, BsonDocumentSerializer.Instance, __messageEncoderSettings);
-                var response = operation.Execute(binding, CancellationToken.None);
-                BsonValue storageEngine;
-                if (response.TryGetValue("storageEngine", out storageEngine) && storageEngine.AsBsonDocument.Contains("name"))
-                {
-                    return storageEngine["name"].AsString;
-                }
-                else
-                {
-                    return "mmapv1";
-                }
-            }
-        }
+        
+        
 
         private static Type GetTestFixtureTypeFromCallStack()
         {
@@ -349,16 +299,6 @@ namespace Grand.Services.Tests
         }
         #endregion
 
-        // methods
-        private static void DropDatabase()
-        {
-            var operation = new DropDatabaseOperation(__databaseNamespace, __messageEncoderSettings);
-
-            using (var binding = GetReadWriteBinding())
-            {
-                operation.Execute(binding, CancellationToken.None);
-            }
-        }
 
         public static void TearDown()
         {

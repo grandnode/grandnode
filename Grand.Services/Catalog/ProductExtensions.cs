@@ -38,38 +38,7 @@ namespace Grand.Services.Catalog
             var tierPrice = actualTierPrices.LastOrDefault(price => quantity >= price.Quantity);
 
             return tierPrice;
-        }
-        /// <summary>
-        /// Finds a related product item by specified identifiers
-        /// </summary>
-        /// <param name="source">Source</param>
-        /// <param name="productId1">The first product identifier</param>
-        /// <param name="productId2">The second product identifier</param>
-        /// <returns>Related product</returns>
-        public static RelatedProduct FindRelatedProduct(this IList<RelatedProduct> source,
-            string productId1, string productId2)
-        {
-            foreach (RelatedProduct relatedProduct in source)
-                if (relatedProduct.ProductId1 == productId1 && relatedProduct.ProductId2 == productId2)
-                    return relatedProduct;
-            return null;
-        }
-
-        /// <summary>
-        /// Finds a cross-sell product item by specified identifiers
-        /// </summary>
-        /// <param name="source">Source</param>
-        /// <param name="productId1">The first product identifier</param>
-        /// <param name="productId2">The second product identifier</param>
-        /// <returns>Cross-sell product</returns>
-        public static CrossSellProduct FindCrossSellProduct(this IList<CrossSellProduct> source,
-            string productId1, string productId2)
-        {
-            foreach (CrossSellProduct crossSellProduct in source)
-                if (crossSellProduct.ProductId1 == productId1 && crossSellProduct.ProductId2 == productId2)
-                    return crossSellProduct;
-            return null;
-        }
+        }        
 
         /// <summary>
         /// Formats the stock availability/quantity message
@@ -180,6 +149,7 @@ namespace Grand.Services.Catalog
                     }
                     break;
                 case ManageInventoryMethod.DontManageStock:
+                case ManageInventoryMethod.ManageStockByBundleProducts:
                 default:
                     return stockMessage;
             }
@@ -337,70 +307,7 @@ namespace Grand.Services.Catalog
 
         }
 
-        /// <summary>
-        /// Get number of rental periods (price ratio)
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="startDate">Start date</param>
-        /// <param name="endDate">End date</param>
-        /// <returns>Number of rental periods</returns>
-        public static int GetRentalPeriods(this Product product,
-            DateTime startDate, DateTime endDate)
-        {
-            if (product == null)
-                throw new ArgumentNullException("product");
-
-            if (!product.IsRental)
-                return 1;
-
-            if (startDate.CompareTo(endDate) >= 0)
-                return 1;
-
-            int totalPeriods;
-            switch (product.RentalPricePeriod)
-            {
-                case RentalPricePeriod.Days:
-                {
-                    var totalDaysToRent = Math.Max((endDate - startDate).TotalDays, 1);
-                    int configuredPeriodDays = product.RentalPriceLength;
-                    totalPeriods = Convert.ToInt32(Math.Ceiling(totalDaysToRent/configuredPeriodDays));
-                }
-                    break;
-                case RentalPricePeriod.Weeks:
-                    {
-                        var totalDaysToRent = Math.Max((endDate - startDate).TotalDays, 1);
-                        int configuredPeriodDays = 7 * product.RentalPriceLength;
-                        totalPeriods = Convert.ToInt32(Math.Ceiling(totalDaysToRent / configuredPeriodDays));
-                    }
-                    break;
-                case RentalPricePeriod.Months:
-                    {
-                        //Source: http://stackoverflow.com/questions/4638993/difference-in-months-between-two-dates
-                        var totalMonthsToRent = ((endDate.Year - startDate.Year) * 12) + endDate.Month - startDate.Month;
-                        if (startDate.AddMonths(totalMonthsToRent) < endDate)
-                        {
-                            //several days added (not full month)
-                            totalMonthsToRent++;
-                        }
-                        int configuredPeriodMonths = product.RentalPriceLength;
-                        totalPeriods = Convert.ToInt32(Math.Ceiling((double)totalMonthsToRent / configuredPeriodMonths));
-                    }
-                    break;
-                case RentalPricePeriod.Years:
-                    {
-                        var totalDaysToRent = Math.Max((endDate - startDate).TotalDays, 1);
-                        int configuredPeriodDays = 365 * product.RentalPriceLength;
-                        totalPeriods = Convert.ToInt32(Math.Ceiling(totalDaysToRent / configuredPeriodDays));
-                    }
-                    break;
-                default:
-                    throw new Exception("Not supported rental period");
-            }
-
-            return totalPeriods;
-        }
-
-
+        
 
         /// <summary>
         /// Gets SKU, Manufacturer part number and GTIN
@@ -512,23 +419,7 @@ namespace Grand.Services.Catalog
             return gtin;
         }
 
-        /// <summary>
-        /// Formats start/end date for rental product
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="date">Date</param>
-        /// <returns>Formatted date</returns>
-        public static string FormatRentalDate(this Product product, DateTime date)
-        {
-            if (product == null)
-                throw new ArgumentNullException("product");
-
-            if (!product.IsRental)
-                return null;
-
-            return date.ToString("d");
-        }
-
+        
         /// <summary>
         /// Format base price (PAngV)
         /// </summary>

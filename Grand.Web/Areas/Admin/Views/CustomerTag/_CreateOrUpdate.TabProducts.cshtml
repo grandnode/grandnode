@@ -1,7 +1,4 @@
 ﻿@model CustomerTagModel
-
-
-
 @{
     if (String.IsNullOrEmpty(Model.Id))
     {
@@ -15,15 +12,12 @@
             @T("Admin.Customers.CustomerTags.Products.Info")
         </div>
 
-        var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-        var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
         <div class="panel panel-default">
             <div class="panel-body">
                 <div id="products-grid"></div>
             </div>
             <div class="panel-footer">
-                <input type="submit" id="btnAddNewProduct" value="@T("Admin.Customers.CustomerTags.Products.Fields.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "CustomerTag", new { customerTagId = Model.Id, btnId = "btnRefreshProducts" }))    ', 800, 800, true); return false;" class="btn default" />
+                <input type="submit" id="btnAddNewProduct" value="@T("Admin.Customers.CustomerTags.Products.Fields.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "CustomerTag", new { customerTagId = Model.Id, btnId = "btnRefreshProducts", formId = "customertag-form" }))    ', 800, 800, true); return false;" class="btn default" />
                 <input type="submit" id="btnRefreshProducts" style="display: none" />
             </div>
         </div>
@@ -88,8 +82,7 @@
                                 field: "Name",
                                 title: "@T("Admin.Customers.CustomerTags.Products.Fields.Name")",
                                 width: 300,
-                                filterable: false,
-                                sortable: false
+                                template: '<a class="k-link" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#=Name#</a>',
                         }, {
                             field: "DisplayOrder",
                             title: "@T("Admin.Customers.CustomerTags.Products.Fields.DisplayOrder")",

@@ -26,6 +26,12 @@ using Grand.Core.Infrastructure;
 using Microsoft.AspNetCore.Diagnostics;
 using Grand.Framework.Mvc.Filters;
 using Microsoft.AspNetCore.Http;
+using Grand.Services.Stores;
+using System.Collections.Generic;
+using Grand.Core.Domain.Catalog;
+using Grand.Services.Media;
+using System.IO;
+using Grand.Core.Domain.Media;
 
 namespace Grand.Web.Controllers
 {
@@ -36,11 +42,17 @@ namespace Grand.Web.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
+        private readonly IStoreService _storeService;
+        private readonly ILanguageService _languageService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerActionEventService _customerActionEventService;
         private readonly IPopupService _popupService;
         private readonly IInteractiveFormService _interactiveFormService;
         private readonly ILogger _logger;
+        private readonly IContactAttributeService _contactAttributeService;
+        private readonly IContactAttributeParser _contactAttributeParser;
+        private readonly IContactAttributeFormatter _contactAttributeFormatter;
+
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly CommonSettings _commonSettings;
         private readonly ForumSettings _forumSettings;
@@ -57,11 +69,16 @@ namespace Grand.Web.Controllers
             ILocalizationService localizationService,
             IWorkContext workContext,
             IStoreContext storeContext,
+            IStoreService storeService,
             ICustomerActivityService customerActivityService,
             ICustomerActionEventService customerActionEventService,
             IPopupService popupService,
             IInteractiveFormService interactiveFormService,
             ILogger logger,
+            ILanguageService languageService,
+            IContactAttributeService contactAttributeService,
+            IContactAttributeParser contactAttributeParser,
+            IContactAttributeFormatter contactAttributeFormatter,
             StoreInformationSettings storeInformationSettings,
             CommonSettings commonSettings,
             ForumSettings forumSettings,
@@ -74,11 +91,16 @@ namespace Grand.Web.Controllers
             this._localizationService = localizationService;
             this._workContext = workContext;
             this._storeContext = storeContext;
+            this._storeService = storeService;
             this._customerActivityService = customerActivityService;
             this._customerActionEventService = customerActionEventService;
             this._popupService = popupService;
             this._interactiveFormService = interactiveFormService;
             this._logger = logger;
+            this._languageService = languageService;
+            this._contactAttributeService = contactAttributeService;
+            this._contactAttributeParser = contactAttributeParser;
+            this._contactAttributeFormatter = contactAttributeFormatter;
             this._storeInformationSettings = storeInformationSettings;
             this._commonSettings = commonSettings;
             this._forumSettings = forumSettings;
@@ -115,10 +137,12 @@ namespace Grand.Web.Controllers
         public virtual IActionResult SetLanguage(string langid, string returnUrl = "")
         {
 
-            _commonWebService.SetLanguage(langid);
+            var language = _languageService.GetLanguageById(langid);
+            if (!language?.Published ?? false)
+                language = _workContext.WorkingLanguage;
 
             //home page
-            if (String.IsNullOrEmpty(returnUrl))
+            if (string.IsNullOrEmpty(returnUrl))
                 returnUrl = Url.RouteUrl("HomePage");
 
             //prevent open redirection attack
@@ -129,19 +153,84 @@ namespace Grand.Web.Controllers
             if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
             {
                 //remove current language code if it's already localized URL
-                if (returnUrl.IsLocalizedUrl(this.Request.PathBase, true, out Language urlLanguage))
+                if (returnUrl.IsLocalizedUrl(this.Request.PathBase, true, out Language _))
                     returnUrl = returnUrl.RemoveLanguageSeoCodeFromUrl(this.Request.PathBase, true);
 
                 //and add code of passed language
-                returnUrl = returnUrl.AddLanguageSeoCodeToUrl(this.Request.PathBase, true, _workContext.WorkingLanguage);
+                returnUrl = returnUrl.AddLanguageSeoCodeToUrl(this.Request.PathBase, true, language);
             }
+
+            _workContext.WorkingLanguage = language;
+
             return Redirect(returnUrl);
         }
+
+        //helper method to redirect users.
+        public virtual IActionResult InternalRedirect(string url, bool permanentRedirect)
+        {
+            //ensure it's invoked from our GenericPathRoute class
+            if (HttpContext.Items["grand.RedirectFromGenericPathRoute"] == null ||
+                !Convert.ToBoolean(HttpContext.Items["grand.RedirectFromGenericPathRoute"]))
+            {
+                url = Url.RouteUrl("HomePage");
+                permanentRedirect = false;
+            }
+
+            //home page
+            if (string.IsNullOrEmpty(url))
+            {
+                url = Url.RouteUrl("HomePage");
+                permanentRedirect = false;
+            }
+
+            //prevent open redirection attack
+            if (!Url.IsLocalUrl(url))
+            {
+                url = Url.RouteUrl("HomePage");
+                permanentRedirect = false;
+            }
+
+            if (permanentRedirect)
+                return RedirectPermanent(url);
+
+            return Redirect(url);
+        }
+
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual IActionResult SetCurrency(string customerCurrency, string returnUrl = "")
         {
             _commonWebService.SetCurrency(customerCurrency);
+
+            //home page
+            if (String.IsNullOrEmpty(returnUrl))
+                returnUrl = Url.RouteUrl("HomePage");
+
+            //prevent open redirection attack
+            if (!Url.IsLocalUrl(returnUrl))
+                returnUrl = Url.RouteUrl("HomePage");
+
+            return Redirect(returnUrl);
+        }
+
+        //available even when navigation is not allowed
+        [CheckAccessPublicStore(true)]
+        public virtual IActionResult SetStore(string store, string returnUrl = "")
+        {
+            var currentstoreid = _storeContext.CurrentStore.Id;
+            if (currentstoreid != store)
+                _commonWebService.SetStore(store);
+
+            var prevStore = _storeService.GetStoreById(currentstoreid);
+            var currStore = _storeService.GetStoreById(store);
+
+            if (prevStore != null && currStore != null)
+            {
+                if (prevStore.Url != currStore.Url)
+                {
+                    return Redirect(currStore.SslEnabled ? currStore.SecureUrl : currStore.Url);
+                }
+            }
 
             //home page
             if (String.IsNullOrEmpty(returnUrl))
@@ -172,7 +261,6 @@ namespace Grand.Web.Controllers
         }
 
         //contact us page
-        [HttpsRequirement(SslRequirement.Yes)]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
         public virtual IActionResult ContactUs()
@@ -186,7 +274,7 @@ namespace Grand.Web.Controllers
         [ValidateCaptcha]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
-        public virtual IActionResult ContactUsSend(ContactUsModel model, bool captchaValid)
+        public virtual IActionResult ContactUsSend(ContactUsModel model, IFormCollection form, bool captchaValid)
         {
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage && !captchaValid)
@@ -194,18 +282,33 @@ namespace Grand.Web.Controllers
                 ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
             }
 
+            //parse contact attributes
+            var attributeXml = _commonWebService.ParseContactAttributes(form);
+            var contactAttributeWarnings = _commonWebService.GetContactAttributesWarnings(attributeXml);
+            if (contactAttributeWarnings.Any())
+            {
+                foreach (var item in contactAttributeWarnings)
+                {
+                    ModelState.AddModelError("", item);
+                }
+            }
+
             if (ModelState.IsValid)
             {
+                model.ContactAttributeXml = attributeXml;
+                model.ContactAttributeInfo = _contactAttributeFormatter.FormatAttributes(attributeXml, _workContext.CurrentCustomer);
                 model = _commonWebService.SendContactUs(model);
                 //activity log
                 _customerActivityService.InsertActivity("PublicStore.ContactUs", "", _localizationService.GetResource("ActivityLog.PublicStore.ContactUs"));
                 return View(model);
             }
+
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage;
+            model.ContactAttributes = _commonWebService.PrepareContactAttributeModel(attributeXml);
+
             return View(model);
         }
         //contact vendor page
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult ContactVendor(string vendorId)
         {
             if (!_vendorSettings.AllowCustomersToContactVendors)
@@ -250,7 +353,6 @@ namespace Grand.Web.Controllers
         }
 
         //sitemap page
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult Sitemap()
         {
             if (!_commonSettings.SitemapEnabled)
@@ -260,8 +362,6 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        //SEO sitemap page
-        [HttpsRequirement(SslRequirement.No)]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
         public virtual IActionResult SitemapXml(int? id)
@@ -288,7 +388,7 @@ namespace Grand.Web.Controllers
             return Redirect(returnUrl);
         }
 
-       
+
         [HttpPost]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
@@ -330,6 +430,114 @@ namespace Grand.Web.Controllers
             return View();
         }
 
+        [HttpPost]
+        public virtual IActionResult ContactAttributeChange(IFormCollection form)
+        {
+            var attributeXml = _commonWebService.ParseContactAttributes(form);
+
+            var enabledAttributeIds = new List<string>();
+            var disabledAttributeIds = new List<string>();
+            var attributes = _contactAttributeService.GetAllContactAttributes(_storeContext.CurrentStore.Id);
+            foreach (var attribute in attributes)
+            {
+                var conditionMet = _contactAttributeParser.IsConditionMet(attribute, attributeXml);
+                if (conditionMet.HasValue)
+                {
+                    if (conditionMet.Value)
+                        enabledAttributeIds.Add(attribute.Id);
+                    else
+                        disabledAttributeIds.Add(attribute.Id);
+                }
+            }
+
+            return Json(new
+            {
+                enabledattributeids = enabledAttributeIds.ToArray(),
+                disabledattributeids = disabledAttributeIds.ToArray()
+            });
+        }
+
+        [HttpPost]
+        public virtual IActionResult UploadFileContactAttribute(string attributeId)
+        {
+            var attribute = _contactAttributeService.GetContactAttributeById(attributeId);
+            if (attribute == null || attribute.AttributeControlType != AttributeControlType.FileUpload)
+            {
+                return Json(new
+                {
+                    success = false,
+                    downloadGuid = Guid.Empty,
+                });
+            }
+
+            var httpPostedFile = Request.Form.Files.FirstOrDefault();
+            if (httpPostedFile == null)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "No file uploaded",
+                    downloadGuid = Guid.Empty,
+                });
+            }
+
+            var fileBinary = httpPostedFile.GetDownloadBits();
+
+            var qqFileNameParameter = "qqfilename";
+            var fileName = httpPostedFile.FileName;
+            if (String.IsNullOrEmpty(fileName) && Request.Form.ContainsKey(qqFileNameParameter))
+                fileName = Request.Form[qqFileNameParameter].ToString();
+            //remove path (passed in IE)
+            fileName = Path.GetFileName(fileName);
+
+            var contentType = httpPostedFile.ContentType;
+
+            var fileExtension = Path.GetExtension(fileName);
+            if (!String.IsNullOrEmpty(fileExtension))
+                fileExtension = fileExtension.ToLowerInvariant();
+
+            if (attribute.ValidationFileMaximumSize.HasValue)
+            {
+                //compare in bytes
+                var maxFileSizeBytes = attribute.ValidationFileMaximumSize.Value * 1024;
+                if (fileBinary.Length > maxFileSizeBytes)
+                {
+                    //when returning JSON the mime-type must be set to text/plain
+                    //otherwise some browsers will pop-up a "Save As" dialog.
+                    return Json(new
+                    {
+                        success = false,
+                        message = string.Format(_localizationService.GetResource("ShoppingCart.MaximumUploadedFileSize"), attribute.ValidationFileMaximumSize.Value),
+                        downloadGuid = Guid.Empty,
+                    });
+                }
+            }
+
+            var download = new Download
+            {
+                DownloadGuid = Guid.NewGuid(),
+                UseDownloadUrl = false,
+                DownloadUrl = "",
+                DownloadBinary = fileBinary,
+                ContentType = contentType,
+                //we store filename without extension for downloads
+                Filename = Path.GetFileNameWithoutExtension(fileName),
+                Extension = fileExtension,
+                IsNew = true
+            };
+
+            EngineContext.Current.Resolve<IDownloadService>().InsertDownload(download);
+
+            //when returning JSON the mime-type must be set to text/plain
+            //otherwise some browsers will pop-up a "Save As" dialog.
+            return Json(new
+            {
+                success = true,
+                message = _localizationService.GetResource("ShoppingCart.FileUploaded"),
+                downloadUrl = Url.Action("GetFileUpload", "Download", new { downloadId = download.DownloadGuid }),
+                downloadGuid = download.DownloadGuid,
+            });
+        }
 
         //Get banner for customer
         [HttpGet]

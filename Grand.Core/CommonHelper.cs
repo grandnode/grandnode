@@ -8,9 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using System.Security.Cryptography;
 using System.Text.RegularExpressions;
-using System.Threading;
 
 namespace Grand.Core
 {
@@ -174,28 +172,6 @@ namespace Grand.Core
             return true;
         }
 
-        public static TypeConverter GetNopCustomTypeConverter(Type type)
-        {
-            //we can't use the following code in order to register our custom type descriptors
-            //TypeDescriptor.AddAttributes(typeof(List<int>), new TypeConverterAttribute(typeof(GenericListTypeConverter<int>)));
-            //so we do it manually here
-
-            if (type == typeof(List<int>))
-                return new GenericListTypeConverter<int>();
-            if (type == typeof(List<decimal>))
-                return new GenericListTypeConverter<decimal>();
-            if (type == typeof(List<string>))
-                return new GenericListTypeConverter<string>();
-            if (type == typeof(ShippingOption))
-                return new ShippingOptionTypeConverter();
-            if (type == typeof(List<ShippingOption>) || type == typeof(IList<ShippingOption>))
-                return new ShippingOptionListTypeConverter();
-            if (type == typeof(Dictionary<int, int>))
-                return new GenericDictionaryTypeConverter<int, int>();
-
-            return TypeDescriptor.GetConverter(type);
-        }
-
         /// <summary>
         /// Converts a value to a destination type.
         /// </summary>
@@ -220,14 +196,17 @@ namespace Grand.Core
             {
                 var sourceType = value.GetType();
 
-                TypeConverter destinationConverter = GetNopCustomTypeConverter(destinationType);
-                TypeConverter sourceConverter = GetNopCustomTypeConverter(sourceType);
+                var destinationConverter = TypeDescriptor.GetConverter(destinationType);
                 if (destinationConverter != null && destinationConverter.CanConvertFrom(value.GetType()))
                     return destinationConverter.ConvertFrom(null, culture, value);
+
+                var sourceConverter = TypeDescriptor.GetConverter(sourceType);
                 if (sourceConverter != null && sourceConverter.CanConvertTo(destinationType))
                     return sourceConverter.ConvertTo(null, culture, value, destinationType);
-                if (destinationType.GetTypeInfo().IsEnum && value is int)
+
+                if (destinationType.IsEnum && value is int)
                     return Enum.ToObject(destinationType, (int)value);
+
                 if (!destinationType.IsInstanceOfType(value))
                     return Convert.ChangeType(value, destinationType, culture);
             }
@@ -263,16 +242,7 @@ namespace Grand.Core
             return result.TrimStart();
         }
 
-        /// <summary>
-        /// Set Telerik (Kendo UI) culture
-        /// </summary>
-        public static void SetTelerikCulture()
-        {
-            var culture = new CultureInfo("en-US");
-            CultureInfo.CurrentCulture = culture;
-            CultureInfo.CurrentUICulture = culture;
-        }
-
+        
         /// <summary>
         /// Get difference in years
         /// </summary>
@@ -296,11 +266,7 @@ namespace Grand.Core
         /// <returns>The physical path. E.g. "c:\inetpub\wwwroot\bin"</returns>
         public static string MapPath(string path)
         {
-            if(OperatingSystem.IsWindows())
-                path = path.Replace("~/", "").TrimStart('/').Replace('/', '\\');
-            else
-                path = path.Replace("~/", "").TrimStart('/');
-
+            path = path.Replace("~/", "").TrimStart('/');
             return Path.Combine(BaseDirectory, path);
         }
 
@@ -308,5 +274,36 @@ namespace Grand.Core
         /// Gets or sets application base path
         /// </summary>
         internal static string BaseDirectory { get; set; }
+
+        /// <summary>
+        ///  Depth-first recursive delete, with handling for descendant directories open in Windows Explorer.
+        /// </summary>
+        /// <param name="path">Directory path</param>
+        public static void DeleteDirectory(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+                throw new ArgumentNullException(path);
+
+            //find more info about directory deletion
+            //and why we use this approach at https://stackoverflow.com/questions/329355/cannot-delete-directory-with-directory-deletepath-true
+
+            foreach (var directory in Directory.GetDirectories(path))
+            {
+                DeleteDirectory(directory);
+            }
+
+            try
+            {
+                Directory.Delete(path, true);
+            }
+            catch (IOException)
+            {
+                Directory.Delete(path, true);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Directory.Delete(path, true);
+            }
+        }
     }
 }

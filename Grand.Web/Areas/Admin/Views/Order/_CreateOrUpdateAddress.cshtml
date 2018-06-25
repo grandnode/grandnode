@@ -1,3 +1,3 @@
 ﻿@model OrderAddressModel
-@Html.ValidationSummary(true)
-@Html.EditorFor(model => model.Address, "Address")
+<div asp-validation-summary="All"></div>
+<admin-input asp-for="Address" asp-template="Address" />

@@ -11,6 +11,7 @@ namespace Grand.Web.Models.Catalog
         {
             Products = new List<ProductOverviewModel>();
             PagingFilteringContext = new CatalogPagingFilteringModel();
+            Address = new VendorAddressModel();
         }
 
         public string Name { get; set; }
@@ -20,6 +21,7 @@ namespace Grand.Web.Models.Catalog
         public string MetaTitle { get; set; }
         public string SeName { get; set; }
         public bool AllowCustomersToContactVendors { get; set; }
+        public VendorAddressModel Address { get; set; }
         public PictureModel PictureModel { get; set; }
         public CatalogPagingFilteringModel PagingFilteringContext { get; set; }
         public VendorReviewOverviewModel VendorReviewOverview { get; set; }

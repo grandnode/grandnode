@@ -104,5 +104,34 @@ namespace Grand.Core.Configuration
         /// </summary>
         public bool UseResponseCompression { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether we use url rewrite
+        /// </summary>
+        public bool UseUrlRewrite { get; set; }
+        public bool UrlRewriteHttpsOptions { get; set; }
+        public int UrlRewriteHttpsOptionsStatusCode { get; set; }
+        public int UrlRewriteHttpsOptionsPort { get; set; }
+        public bool UrlRedirectToHttpsPermanent { get; set; }
+
+        /// <summary>
+        /// HTTP Strict Transport Security Protocol
+        /// isn't recommended in development because the HSTS header is highly cacheable by browsers
+        /// </summary>
+        public bool UseHsts { get; set; }
+
+        /// <summary>
+        /// Enforce HTTPS in ASP.NET Core
+        /// </summary>
+        public bool UseHttpsRedirection { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether ignore InstallUrlMiddleware
+        /// </summary>
+        public bool IgnoreInstallUrlMiddleware { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether ignore IgnoreUsePoweredByMiddleware
+        /// </summary>
+        public bool IgnoreUsePoweredByMiddleware { get; set; }
     }
 }

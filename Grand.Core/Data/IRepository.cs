@@ -62,5 +62,11 @@ namespace Grand.Core.Data
         /// </summary>
         IMongoQueryable<T> Table { get; }
 
+        /// <summary>
+        /// Get collection by filter definitions
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        IList<T> FindByFilterDefinition(FilterDefinition<T> query);
     }
 }

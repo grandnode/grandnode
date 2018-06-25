@@ -305,14 +305,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             var language = _languageService.GetLanguageById(languageId);
 
             var resources = _localizationService
-                .GetAllResourceValues(languageId)
-                .OrderBy(x => x.Key)
+                .GetAllResources(languageId)
+                .OrderBy(x => x.ResourceName)
                 .Select(x => new LanguageResourceModel
                 {
                     LanguageId = languageId,
-                    Id = x.Value.Key,
-                    Name = x.Key,
-                    Value = x.Value.Value,
+                    Id = x.Id,
+                    Name = x.ResourceName,
+                    Value = x.ResourceValue,
                 });
 
             if (model != null)

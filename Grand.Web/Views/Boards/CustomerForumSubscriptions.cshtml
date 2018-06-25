@@ -12,7 +12,7 @@
 }
 <div class="page account-page forum-subscriptions-page">
         <h2 class="generalTitle">@T("Account.ForumSubscriptions")</h2>
-        @if (Model.ForumSubscriptions.Count > 0)
+        @if (Model.ForumSubscriptions.Any())
         {
             <div class="description">
                 @T("Account.ForumSubscriptions.Description")
@@ -44,7 +44,7 @@
                                 <th class="select-boxes">
                                     <label class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="selectall" />
-                                        <span class="custom-control-indicator"></span>
+                                        <span class="custom-control-label"></span>
                                         <span class="sr-only">@T("Account.ForumSubscriptions.InfoColumn")</span>
                                         <span class="custom-control-description">&nbsp;</span>
                                     </label>
@@ -62,7 +62,7 @@
                                     <td class="select-boxes">
                                         <label class="custom-control custom-checkbox">
                                             <input type="checkbox" name="fs@(item.Id)" class="custom-control-input rowcheckbox" />
-                                            <span class="custom-control-indicator"></span>
+                                            <span class="custom-control-label"></span>
                                             <span class="sr-only">fs@(item.Id)</span>
                                             <span class="custom-control-description">&nbsp;</span>
                                         </label>

@@ -13,6 +13,8 @@ using Grand.Services.Customers;
 using Grand.Services.Discounts;
 using Grand.Services.Vendors;
 using Grand.Services.Stores;
+using Grand.Core.Domain.Directory;
+using Grand.Services.Directory;
 
 namespace Grand.Services.Catalog
 {
@@ -34,9 +36,10 @@ namespace Grand.Services.Catalog
         private readonly ICacheManager _cacheManager;
         private readonly IVendorService _vendorService;
         private readonly IStoreService _storeService;
+        private readonly ICurrencyService _currencyService;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly CatalogSettings _catalogSettings;
-
+        private readonly CurrencySettings _currencySettings;
         #endregion
 
         #region Ctor
@@ -52,8 +55,10 @@ namespace Grand.Services.Catalog
             ICacheManager cacheManager,
             IVendorService vendorService,
             IStoreService storeService,
+            ICurrencyService currencyService,
             ShoppingCartSettings shoppingCartSettings,
-            CatalogSettings catalogSettings)
+            CatalogSettings catalogSettings,
+            CurrencySettings currencySettings)
         {
             this._workContext = workContext;
             this._storeContext = storeContext;
@@ -66,8 +71,10 @@ namespace Grand.Services.Catalog
             this._cacheManager = cacheManager;
             this._vendorService = vendorService;
             this._storeService = storeService;
+            this._currencyService = currencyService;
             this._shoppingCartSettings = shoppingCartSettings;
             this._catalogSettings = catalogSettings;
+            this._currencySettings = currencySettings;
         }
 
         #endregion
@@ -158,7 +165,7 @@ namespace Grand.Services.Catalog
             foreach (var productCategory in product.ProductCategories)
             {
                 var category = _categoryService.GetCategoryById(productCategory.CategoryId);
-                if (category.AppliedDiscounts.Any())
+                if (category!=null && category.AppliedDiscounts.Any())
                 {
                     foreach (var appliedDiscount in category.AppliedDiscounts)
                     {
@@ -194,7 +201,7 @@ namespace Grand.Services.Catalog
             foreach (var productManufacturer in product.ProductManufacturers)
             {
                 var manufacturer = _manufacturerService.GetManufacturerById(productManufacturer.ManufacturerId);
-                if (manufacturer.AppliedDiscounts.Any())
+                if (manufacturer !=null && manufacturer.AppliedDiscounts.Any())
                 {
                     foreach (var appliedDiscount in manufacturer.AppliedDiscounts)
                     {
@@ -282,7 +289,7 @@ namespace Grand.Services.Catalog
                     if (!(string.IsNullOrEmpty(storeID)))
                     {
                         var store = _storeService.GetStoreById(storeID);
-                        if (store.AppliedDiscounts.Any())
+                        if (store!=null && store.AppliedDiscounts.Any())
                         {
                             foreach (var appliedDiscount in store.AppliedDiscounts)
                             {
@@ -474,9 +481,9 @@ namespace Grand.Services.Catalog
                 string.Join(",", customer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
             var cacheTime = _catalogSettings.CacheProductPrices ? 60 : 0;
-            //we do not cache price for rental products
+            //we do not cache price for reservation products
             //otherwise, it can cause memory leaks (to store all possible date period combinations)
-            if (product.IsRental)
+            if (product.ProductType == ProductType.Reservation)
                 cacheTime = 0;
 
             ProductPriceForCaching PrepareModel() {
@@ -498,10 +505,21 @@ namespace Grand.Services.Catalog
                 //additional charge
                 price = price + additionalCharge;
 
-                //rental products
-                if (product.IsRental)
+                //reservations
+                if (product.ProductType == ProductType.Reservation)
                     if (rentalStartDate.HasValue && rentalEndDate.HasValue)
-                        price = price * product.GetRentalPeriods(rentalStartDate.Value, rentalEndDate.Value);
+                    {
+                        decimal d = 0;
+                        if (product.IncBothDate)
+                        {
+                            decimal.TryParse(((rentalEndDate - rentalStartDate).Value.TotalDays + 1).ToString(), out d);
+                        }
+                        else
+                        {
+                            decimal.TryParse((rentalEndDate - rentalStartDate).Value.TotalDays.ToString(), out d);
+                        }
+                        price = price * d;
+                    }
 
                 if (includeDiscounts)
                 {
@@ -520,7 +538,15 @@ namespace Grand.Services.Catalog
                 if (price < decimal.Zero)
                     price = decimal.Zero;
 
-                result.Price = price;
+                //rounding
+                if (_shoppingCartSettings.RoundPricesDuringCalculation)
+                {
+                    var primaryCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
+                    result.Price = RoundingHelper.RoundPrice(price, primaryCurrency);
+                }
+                else
+                    result.Price = price;
+
                 return result;
             }
 
@@ -622,14 +648,31 @@ namespace Grand.Services.Catalog
             discountAmount = decimal.Zero;
             appliedDiscounts = new List<AppliedDiscount>();
 
-            decimal finalPrice;
+            decimal? finalPrice = null;
 
-            var combination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
-            if (combination != null && combination.OverriddenPrice.HasValue)
+            if (shoppingCartType == ShoppingCartType.Auctions && product.ProductType == ProductType.Auction)
+                finalPrice = customerEnteredPrice;
+
+            if (!finalPrice.HasValue)
             {
-                finalPrice = combination.OverriddenPrice.Value;
+                var combination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
+                if (combination != null)
+                {
+                    if (combination.OverriddenPrice.HasValue)
+                        finalPrice = combination.OverriddenPrice.Value;
+                    if (combination.TierPrices.Any())
+                    {
+                        var storeId = _storeContext.CurrentStore.Id;
+                        var actualTierPrices = combination.TierPrices.Where(x => string.IsNullOrEmpty(x.StoreId) || x.StoreId == storeId)
+                            .Where(x => string.IsNullOrEmpty(x.CustomerRoleId) ||
+                            customer.CustomerRoles.Where(role => role.Active).Select(role => role.Id).Contains(x.CustomerRoleId)).ToList();
+                        var tierPrice = actualTierPrices.LastOrDefault(price => quantity >= price.Quantity);
+                        if (tierPrice != null)
+                            finalPrice = tierPrice.Price;
+                    }
+                }
             }
-            else
+            if(!finalPrice.HasValue)
             {
                 //summarize price of all attributes
                 decimal attributesTotalPrice = decimal.Zero;
@@ -672,17 +715,22 @@ namespace Grand.Services.Catalog
                         attributesTotalPrice,
                         includeDiscounts,
                         qty,
-                        product.IsRental ? rentalStartDate : null,
-                        product.IsRental ? rentalEndDate : null,
+                        product.ProductType == ProductType.Reservation ? rentalStartDate : null,
+                        product.ProductType == ProductType.Reservation ? rentalEndDate : null,
                         out discountAmount, out appliedDiscounts);
                 }
             }
 
+            if (!finalPrice.HasValue)
+                finalPrice = 0;
+
             //rounding
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                finalPrice = RoundingHelper.RoundPrice(finalPrice, _workContext.WorkingCurrency);
-
-            return finalPrice;
+            {
+                var primaryCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
+                finalPrice = RoundingHelper.RoundPrice(finalPrice.Value, primaryCurrency);
+            }
+            return finalPrice.Value;
         }
         /// <summary>
         /// Gets the shopping cart item sub total

@@ -5,18 +5,9 @@ using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Runtime.Loader;
-using Microsoft.Extensions.DependencyModel;
 
 namespace Grand.Core.Infrastructure
 {
-    public class AssemblyLoader : AssemblyLoadContext
-    {
-        // Not exactly sure about this
-        protected override Assembly Load(AssemblyName assemblyName)
-        {
-            return null;
-        }
-    }
     /// <summary>
     /// A class that finds types needed by Nop by looping assemblies in the 
     /// currently executing AppDomain. Only assemblies whose names matches
@@ -108,7 +99,7 @@ namespace Grand.Core.Infrastructure
                     {
                         foreach (var t in types)
                         {
-                            if (assignTypeFrom.IsAssignableFrom(t) || (assignTypeFrom.GetTypeInfo().IsGenericTypeDefinition && DoesTypeImplementOpenGeneric(t, assignTypeFrom)))
+                            if (assignTypeFrom.IsAssignableFrom(t) || (assignTypeFrom.GetTypeInfo().IsGenericTypeDefinition))
                             {
                                 if (!t.GetTypeInfo().IsInterface)
                                 {
@@ -144,11 +135,11 @@ namespace Grand.Core.Infrastructure
         }
 
         /// <summary>Gets the assemblies related to the current implementation.</summary>
-        /// <returns>A list of assemblies that should be loaded by the Nop factory.</returns>
+        /// <returns>A list of assemblies that should be loaded by the Grand factory.</returns>
         public virtual IList<Assembly> GetAssemblies()
         {
             var addedAssemblyNames = new List<string>();
-            var assemblies = new List<Assembly>();
+            var assemblies = new List<Assembly>() { Assembly.GetExecutingAssembly() };
 
             if (LoadAppDomainAssemblies)
                 AddAssembliesInAppDomain(addedAssemblyNames, assemblies);
@@ -254,40 +245,12 @@ namespace Grand.Core.Infrastructure
             {
                 try
                 {
-                    var assemblyLoader = new AssemblyLoader();
-                    var shadowCopiedAssembly = assemblyLoader.LoadFromAssemblyPath(dllPath);
+                    var shadowCopiedAssembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(dllPath);
                 }
                 catch (BadImageFormatException ex)
                 {
                     Trace.TraceError(ex.ToString());
                 }
-            }
-        }
-
-        /// <summary>
-        /// Does type implement generic?
-        /// </summary>
-        /// <param name="type"></param>
-        /// <param name="openGeneric"></param>
-        /// <returns></returns>
-        protected virtual bool DoesTypeImplementOpenGeneric(Type type, Type openGeneric)
-        {
-            try
-            {
-                var genericTypeDefinition = openGeneric.GetGenericTypeDefinition();
-                foreach (var implementedInterface in type.GetTypeInfo().FindInterfaces((objType, objCriteria) => true, null))
-                {
-                    if (!implementedInterface.GetTypeInfo().IsGenericType)
-                        continue;
-
-                    var isMatch = genericTypeDefinition.IsAssignableFrom(implementedInterface.GetGenericTypeDefinition());
-                    return isMatch;
-                }
-                return false;
-            }
-            catch
-            {
-                return false;
             }
         }
 

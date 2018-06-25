@@ -153,7 +153,7 @@ namespace Grand.Plugin.Feed.GoogleShopping
         }
         protected virtual string GetHttpProtocol()
         {
-            return _securitySettings.ForceSslForAllPages? "https" : "http";
+            return _webHelper.IsCurrentConnectionSecured() ? "https" : "http";
         }
 
     #endregion
@@ -314,7 +314,7 @@ namespace Grand.Plugin.Feed.GoogleShopping
                         //additional images [additional_image_link]
                         //up to 10 pictures
                         const int maximumPictures = 10;
-                        var storeLocation = _securitySettings.ForceSslForAllPages ? 
+                        var storeLocation = _webHelper.IsCurrentConnectionSecured() ? 
                             (!string.IsNullOrWhiteSpace(store.SecureUrl) ? store.SecureUrl : store.Url.Replace("http://", "https://")) : 
                             store.Url;
 
@@ -387,7 +387,7 @@ namespace Grand.Plugin.Feed.GoogleShopping
                             finalPriceBase = product.Price;
                         }
                         decimal price = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, currency);
-                        price = RoundingHelper.RoundPrice(price, _workContext.WorkingCurrency);
+                        price = RoundingHelper.RoundPrice(price, currency);
                         writer.WriteElementString("g", "price", googleBaseNamespace,
                                                   price.ToString(new CultureInfo("en-US", false).NumberFormat) + " " +
                                                   currency.CurrencyCode);
@@ -653,7 +653,7 @@ namespace Grand.Plugin.Feed.GoogleShopping
         /// <param name="store">Store</param>
         public virtual void GenerateStaticFile(Store store)
         {
-            var appPath = CommonHelper.MapPath("wwwroot/content/files/exportimport");
+            var appPath = CommonHelper.MapPath("wwwroot/Content/files/ExportImport");
             if (store == null)
                 throw new ArgumentNullException("store");
             string filePath = Path.Combine(appPath, store.Id + "-" + _googleShoppingSettings.StaticFileName);

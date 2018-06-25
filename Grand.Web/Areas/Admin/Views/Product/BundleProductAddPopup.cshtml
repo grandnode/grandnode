@@ -1,0 +1,189 @@
+﻿@model ProductModel.AddBundleProductModel
+@inject AdminAreaSettings adminAreaSettings
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
+
+    //page title
+    ViewBag.Title = T("Admin.Catalog.Products.BundleProducts.AddNew").Text;
+}
+<form asp-controller="Product" asp-action="BundleProductAddPopup"
+      asp-route-ProductId="@Context.Request.Query["ProductId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
+
+    <antiforgery-token />
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-cubes"></i>
+                        @T("Admin.Catalog.Products.BundleProducts.AddNew")
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                <admin-label asp-for="SearchProductName" class="col-sm-3 control-label" />
+                                <div class="col-md-9 col-sm-9">
+                                    <admin-input asp-for="SearchProductName" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <admin-label asp-for="SearchCategoryId" class="col-sm-3 control-label" />
+                                <div class="col-md-9 col-sm-9">
+                                    <admin-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <admin-label asp-for="SearchManufacturerId" class="col-sm-3 control-label" />
+                                <div class="col-md-9  col-sm-9">
+                                    <admin-select asp-for="SearchManufacturerId" asp-items="Model.AvailableManufacturers" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <admin-label asp-for="SearchStoreId" class="col-sm-3 control-label" />
+                                <div class="col-md-9 col-sm-9">
+                                    <admin-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <admin-label asp-for="SearchVendorId" class="col-sm-3 control-label" />
+                                <div class="col-md-9 col-sm-9">
+                                    <admin-select asp-for="SearchVendorId" asp-items="Model.AvailableVendors" />
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <div class="row">
+                                    <div class="col-md-offset-1 col-md-11 col-sm-11 btn-group btn-group-devided">
+                                        <button class="btn btn-success filter-submit" id="search-products">
+                                            <i class="fa fa-search"></i> @T("Admin.Common.Search")
+                                        </button>
+                                        <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="products-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (ViewBag.RefreshPage == true)
+    {
+        <script type="text/javascript">
+            try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
+            catch (e){}
+            window.close();
+        </script>
+    }
+    <script>
+        $(document).ready(function () {
+            $("#products-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("BundleProductAddPopupList", "Product"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: additionalData
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(adminAreaSettings.DefaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "Id",
+                    headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
+                    headerAttributes: { style: "text-align:center" },
+                    template: "<input type='checkbox' name='SelectedProductIds' value='#=Id#' class='checkboxGroups' />",
+                    attributes: { style: "text-align:center" },
+                    width: 50
+                }, {
+                    field: "Name",
+                    title: "@T("Admin.Catalog.Products.Fields.Name")"
+                }, {
+                    field: "Published",
+                    title: "@T("Admin.Catalog.Products.Fields.Published")",
+                    width: 100,
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
+                    template: '# if(Published) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+                }]
+            });
+        });
+    </script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#search-products').click(function () {
+                var grid = $('#products-grid').data('kendoGrid');
+                grid.dataSource.page(1); //new search. Set page size to 1
+                //grid.dataSource.read(); we already loaded the grid above using "page" function
+                //clear selected checkboxes
+                $('.checkboxGroups').prop('checked', false).change();
+                return false;
+            });
+
+            $("#@Html.FieldIdFor(model => model.SearchProductName)").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $("#search-products").click();
+                    return false;
+                }
+            });
+
+            //wire up checkboxes
+            $('#mastercheckbox').click(function() {
+                $('.checkboxGroups').prop('checked', $(this).is(':checked')).change();
+            });
+
+            $('#products-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function(e) {
+                updateMasterCheckbox();
+            });
+        });
+
+        function additionalData() {
+            var data = {
+                SearchProductName: $('#@Html.FieldIdFor(model => model.SearchProductName)').val(),
+                SearchCategoryId: $('#SearchCategoryId').val(),
+                SearchManufacturerId: $('#SearchManufacturerId').val(),
+                SearchStoreId: $('#SearchStoreId').val(),
+                SearchVendorId: $('#SearchVendorId').val()
+            };
+            addAntiForgeryToken(data);
+            return data;
+        }
+
+        function updateMasterCheckbox() {
+            var numChkBoxes = $('#products-grid input[type=checkbox][id!=mastercheckbox]').length;
+            var numChkBoxesChecked = $('#products-grid input[type=checkbox][id!=mastercheckbox]:checked').length;
+            $('#mastercheckbox').prop('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+        }
+    </script>
+</form>

@@ -1,6 +1,7 @@
 ﻿@model CustomerModel
-@Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
+@inject IEventPublisher eventPublisher
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
 @{
     //resources for product tags input
     Html.AppendCssFileParts("~/Content/tagEditor/jquery.tag-editor.css", excludeFromBundle: true);
@@ -24,9 +25,6 @@
             select: tabstrip_on_tab_select
         });
     });
-
-
-
     //tags
     $(document).ready(function () {
         $("#@Html.FieldIdFor(model => model.CustomerTags)").tagEditor({
@@ -129,7 +127,7 @@
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "customer-edit");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock

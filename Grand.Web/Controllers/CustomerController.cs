@@ -33,6 +33,7 @@ using Grand.Core.Infrastructure;
 using System.Net;
 using Grand.Framework.Mvc.Filters;
 using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 
 namespace Grand.Web.Controllers
 {
@@ -135,7 +136,6 @@ namespace Grand.Web.Controllers
 
         #region Login / logout
         
-        [HttpsRequirement(SslRequirement.Yes)]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed
@@ -152,6 +152,7 @@ namespace Grand.Web.Controllers
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         [ValidateCaptcha]
+        [PublicAntiForgery]
         public virtual IActionResult Login(LoginModel model, string returnUrl, bool captchaValid)
         {
             //validate CAPTCHA
@@ -184,6 +185,7 @@ namespace Grand.Web.Controllers
 
                             //activity log
                             _customerActivityService.InsertActivity("PublicStore.Login", "", _localizationService.GetResource("ActivityLog.PublicStore.Login"), customer);
+
 
                             if (String.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
                                 return RedirectToRoute("HomePage");
@@ -261,7 +263,6 @@ namespace Grand.Web.Controllers
 
         #region Password recovery
 
-        [HttpsRequirement(SslRequirement.Yes)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual IActionResult PasswordRecovery()
@@ -297,8 +298,6 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-
-        [HttpsRequirement(SslRequirement.Yes)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual IActionResult PasswordRecoveryConfirm(string token, string email)
@@ -307,7 +306,7 @@ namespace Grand.Web.Controllers
             if (customer == null)
                 return RedirectToRoute("HomePage");
 
-            var model = _customerWebService.PreparePasswordRecovery();
+            var model = _customerWebService.PreparePasswordRecoveryConfirmModel(customer, token);
 
             return View(model);
         }
@@ -365,7 +364,6 @@ namespace Grand.Web.Controllers
 
         #region Register
 
-        [HttpsRequirement(SslRequirement.Yes)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual IActionResult Register()
@@ -487,10 +485,26 @@ namespace Grand.Web.Controllers
                     //newsletter
                     if (_customerSettings.NewsletterEnabled)
                     {
+                        var categories = new List<string>();
+                        foreach (string formKey in form.Keys)
+                        {
+                            if (formKey.Contains("customernewsletterCategory_"))
+                            {
+                                try
+                                {
+                                    var category = formKey.Split('_')[1];
+                                    categories.Add(category);
+                                }
+                                catch { }
+                            }
+                        }
+
                         //save newsletter value
                         var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(model.Email, _storeContext.CurrentStore.Id);
                         if (newsletter != null)
                         {
+                            newsletter.Categories.Clear();
+                            categories.ForEach(x => newsletter.Categories.Add(x));
                             if (model.Newsletter)
                             {
                                 newsletter.Active = true;
@@ -501,7 +515,7 @@ namespace Grand.Web.Controllers
                         {
                             if (model.Newsletter)
                             {
-                                _newsLetterSubscriptionService.InsertNewsLetterSubscription(new NewsLetterSubscription
+                                var newsLetterSubscription = new NewsLetterSubscription
                                 {
                                     NewsLetterSubscriptionGuid = Guid.NewGuid(),
                                     Email = model.Email,
@@ -509,7 +523,9 @@ namespace Grand.Web.Controllers
                                     Active = true,
                                     StoreId = _storeContext.CurrentStore.Id,
                                     CreatedOnUtc = DateTime.UtcNow
-                                });
+                                };
+                                categories.ForEach(x => newsLetterSubscription.Categories.Add(x));
+                                _newsLetterSubscriptionService.InsertNewsLetterSubscription(newsLetterSubscription);
                             }
                         }
                     }
@@ -531,6 +547,7 @@ namespace Grand.Web.Controllers
                         LastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName),
                         Email = customer.Email,
                         Company = customer.GetAttribute<string>(SystemCustomerAttributeNames.Company),
+                        VatNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber),
                         CountryId = !String.IsNullOrEmpty(customer.GetAttribute<string>(SystemCustomerAttributeNames.CountryId)) ? 
                             customer.GetAttribute<string>(SystemCustomerAttributeNames.CountryId) : "",
                         StateProvinceId = !String.IsNullOrEmpty(customer.GetAttribute<string>(SystemCustomerAttributeNames.StateProvinceId))?
@@ -670,7 +687,6 @@ namespace Grand.Web.Controllers
             return Json(new { Available = usernameAvailable, Text = statusText });
         }
         
-        [HttpsRequirement(SslRequirement.Yes)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual IActionResult AccountActivation(string token, string email)
@@ -703,7 +719,6 @@ namespace Grand.Web.Controllers
 
         #region My account / Info
 
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult Info()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -824,13 +839,27 @@ namespace Grand.Web.Controllers
                     //newsletter
                     if (_customerSettings.NewsletterEnabled)
                     {
+                        var categories = new List<string>();
+                        foreach (string formKey in form.Keys)
+                        {
+                            if (formKey.Contains("customernewsletterCategory_"))
+                            {
+                                try
+                                {
+                                    var category = formKey.Split('_')[1];
+                                    categories.Add(category);
+                                }
+                                catch { }
+                            }
+                        }
                         //save newsletter value
                         var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, _storeContext.CurrentStore.Id);
-                        if (newsletter == null)
-                            newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByCustomerId(customer.Id);
-
+                        
                         if (newsletter != null)
                         {
+                            newsletter.Categories.Clear();
+                            categories.ForEach(x => newsletter.Categories.Add(x));
+
                             if (model.Newsletter)
                             {
                                 newsletter.Active = true;
@@ -846,7 +875,7 @@ namespace Grand.Web.Controllers
                         {
                             if (model.Newsletter)
                             {
-                                _newsLetterSubscriptionService.InsertNewsLetterSubscription(new NewsLetterSubscription
+                                var newsLetterSubscription = new NewsLetterSubscription
                                 {
                                     NewsLetterSubscriptionGuid = Guid.NewGuid(),
                                     Email = customer.Email,
@@ -854,7 +883,9 @@ namespace Grand.Web.Controllers
                                     Active = true,
                                     StoreId = _storeContext.CurrentStore.Id,
                                     CreatedOnUtc = DateTime.UtcNow
-                                });
+                                };
+                                categories.ForEach(x => newsLetterSubscription.Categories.Add(x));
+                                _newsLetterSubscriptionService.InsertNewsLetterSubscription(newsLetterSubscription);
                             }
                         }
                     }
@@ -880,7 +911,6 @@ namespace Grand.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult RemoveExternalAssociation(string id)
         {
 
@@ -908,11 +938,25 @@ namespace Grand.Web.Controllers
             });
         }
 
+
+        public virtual IActionResult Export()
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if(!_customerSettings.AllowUsersToExportData)
+                return Challenge();
+
+            var customer = _workContext.CurrentCustomer;
+            var exportManager = EngineContext.Current.Resolve<Grand.Services.ExportImport.IExportManager>();
+            byte[] bytes = exportManager.ExportCustomerToXlsx(customer, _storeContext.CurrentStore.Id);
+            return File(bytes, "text/xls", "PersonalInfo.xlsx");
+
+        }
         #endregion
 
         #region My account / Addresses
 
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult Addresses()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -924,7 +968,6 @@ namespace Grand.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult AddressDelete(string addressId)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -948,7 +991,6 @@ namespace Grand.Web.Controllers
 
         }
 
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult AddressAdd()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1002,7 +1044,6 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult AddressEdit(string addressId)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1053,6 +1094,11 @@ namespace Grand.Web.Controllers
                 address.CustomerId = customer.Id;
                 _customerService.UpdateAddress(address);
 
+                if (customer.BillingAddress?.Id == address.Id)
+                    _customerService.UpdateBillingAddress(address);
+                if (customer.ShippingAddress?.Id == address.Id)
+                    _customerService.UpdateShippingAddress(address);
+
                 return RedirectToRoute("CustomerAddresses");
             }
 
@@ -1068,7 +1114,6 @@ namespace Grand.Web.Controllers
 
         #region My account / Downloadable products
 
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult DownloadableProducts()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1094,7 +1139,6 @@ namespace Grand.Web.Controllers
 
         #region My account / Change password
 
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult ChangePassword()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1141,9 +1185,82 @@ namespace Grand.Web.Controllers
 
         #endregion
 
+
+        #region My account / Delete account
+
+        public virtual IActionResult DeleteAccount()
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if(!_customerSettings.AllowUsersToDeleteAccount)
+                return RedirectToRoute("CustomerInfo");
+
+            var model = new DeleteAccountModel();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [PublicAntiForgery]
+        public virtual IActionResult DeleteAccount(DeleteAccountModel model)
+        {
+            var customer = _workContext.CurrentCustomer;
+            if (!customer.IsRegistered())
+                return Challenge();
+
+            if (!_customerSettings.AllowUsersToDeleteAccount)
+                return RedirectToRoute("CustomerInfo");
+
+            if (ModelState.IsValid)
+            {
+                var loginResult = _customerRegistrationService.ValidateCustomer(_customerSettings.UsernamesEnabled ? customer.Username : customer.Email, model.Password);
+
+                switch (loginResult)
+                {
+                    case CustomerLoginResults.Successful:
+                        {
+                            //activity log
+                            _customerActivityService.InsertActivity("PublicStore.DeleteAccount", "", _localizationService.GetResource("ActivityLog.DeleteAccount"));
+
+                            //delete account 
+                            _customerWebService.DeleteAccount(customer);
+
+                            //standard logout 
+                            _authenticationService.SignOut();
+
+                            return RedirectToRoute("HomePage");
+                        }
+                    case CustomerLoginResults.CustomerNotExist:
+                        ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials.CustomerNotExist"));
+                        break;
+                    case CustomerLoginResults.Deleted:
+                        ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials.Deleted"));
+                        break;
+                    case CustomerLoginResults.NotActive:
+                        ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials.NotActive"));
+                        break;
+                    case CustomerLoginResults.NotRegistered:
+                        ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials.NotRegistered"));
+                        break;
+                    case CustomerLoginResults.LockedOut:
+                        ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials.LockedOut"));
+                        break;
+                    case CustomerLoginResults.WrongPassword:
+                    default:
+                        ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials"));
+                        break;
+                }
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        #endregion
+
         #region My account / Avatar
 
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult Avatar()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1238,6 +1355,23 @@ namespace Grand.Web.Controllers
             _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.AvatarPictureId, 0);
             
             return RedirectToRoute("CustomerAvatar");
+        }
+
+        #endregion
+
+        #region My account / Auctions
+
+        public virtual IActionResult Auctions()
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if (_customerSettings.HideAuctionsTab)
+                return RedirectToRoute("CustomerInfo");
+
+            var model = _customerWebService.PrepareAuctions(_workContext.CurrentCustomer);
+
+            return View(model);
         }
 
         #endregion

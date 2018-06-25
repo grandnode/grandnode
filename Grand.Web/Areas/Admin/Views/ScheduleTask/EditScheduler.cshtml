@@ -2,21 +2,17 @@
 @{
     ViewBag.Title = T("Admin.System.ScheduleTasks.Edit").Text;
 }
-
-@using (Html.BeginForm()) {
-    @Html.AntiForgeryToken()
-    @Html.HiddenFor(model => model.Id)
-
-
-
-    <script>
+<form asp-controller="ScheduleTask" asp-action="EditScheduler" method="post">
+    <antiforgery-token />
+    <input asp-for="Id" type="hidden" />
+    <script type="text/javascript">
     $(document).ready(function() {
         $("#@Html.FieldIdFor(model => model.TimeIntervalChoice)").change(toggleTimeIntervalChoice);
         toggleTimeIntervalChoice();
 
         function toggleTimeIntervalChoice() {
             var selectedTimeIntervalChoice = $("#@Html.FieldIdFor(model => model.TimeIntervalChoice)").val();
-            if (selectedTimeIntervalChoice == @(((int) Grand.Core.Domain.Tasks.TimeIntervalChoice.EVERY_MINUTES).ToString()))
+            if (selectedTimeIntervalChoice == @(((int) Grand.Core.Domain.Tasks.TimeIntervalChoice.EveryMinutes).ToString()))
             {
                 $('#trTimeInterval').show();
                 $('#trMinuteOfHour').hide();
@@ -24,28 +20,28 @@
                 $('#trDayOfWeek').hide();
                 $('#trMonthOptionChoice').hide();
                 $('#trDayOfMonth').hide();
-            } else if (selectedTimeIntervalChoice == @(((int) Grand.Core.Domain.Tasks.TimeIntervalChoice.EVERY_HOURS).ToString())) {
+            } else if (selectedTimeIntervalChoice == @(((int) Grand.Core.Domain.Tasks.TimeIntervalChoice.EveryHours).ToString())) {
                 $('#trTimeInterval').show();
                 $('#trMinuteOfHour').show();
                 $('#trHourOfDay').hide();
                 $('#trDayOfWeek').hide();
                 $('#trMonthOptionChoice').hide();
                 $('#trDayOfMonth').hide();
-            } else if (selectedTimeIntervalChoice == @(((int) Grand.Core.Domain.Tasks.TimeIntervalChoice.EVERY_DAYS).ToString())) {
+            } else if (selectedTimeIntervalChoice == @(((int) Grand.Core.Domain.Tasks.TimeIntervalChoice.EveryDays).ToString())) {
                 $('#trTimeInterval').show();
                 $('#trMinuteOfHour').show();
                 $('#trHourOfDay').show();
                 $('#trDayOfWeek').hide();
                 $('#trMonthOptionChoice').hide();
                 $('#trDayOfMonth').hide();
-            } else if (selectedTimeIntervalChoice == @(((int) Grand.Core.Domain.Tasks.TimeIntervalChoice.EVERY_WEEKS).ToString())) {
+            } else if (selectedTimeIntervalChoice == @(((int) Grand.Core.Domain.Tasks.TimeIntervalChoice.EveryWeeks).ToString())) {
                 $('#trTimeInterval').show();
                 $('#trMinuteOfHour').show();
                 $('#trHourOfDay').show();
                 $('#trDayOfWeek').show();
                 $('#trMonthOptionChoice').hide();
                 $('#trDayOfMonth').hide();
-            } else if (selectedTimeIntervalChoice == @(((int) Grand.Core.Domain.Tasks.TimeIntervalChoice.EVERY_MONTHS).ToString())) {
+            } else if (selectedTimeIntervalChoice == @(((int) Grand.Core.Domain.Tasks.TimeIntervalChoice.EveryMonths).ToString())) {
                 $('#trMonthOptionChoice').show();
                 $("#@Html.FieldIdFor(model => model.MonthOptionChoice)").change(toggleMonthOptionChoice);
                 toggleMonthOptionChoice();
@@ -54,14 +50,14 @@
 
         function toggleMonthOptionChoice() {
             var selectedMonthIntervalChoice = $("#@Html.FieldIdFor(model => model.MonthOptionChoice)").val();
-            if (selectedMonthIntervalChoice == @(((int) Grand.Core.Domain.Tasks.MonthOptionChoice.ON_SPECIFIC_DAY).ToString())) {
+            if (selectedMonthIntervalChoice == @(((int) Grand.Core.Domain.Tasks.MonthOptionChoice.OnSpecificDay).ToString())) {
                 $('#trTimeInterval').show();
                 $('#trMinuteOfHour').show();
                 $('#trHourOfDay').show();
                 $('#trDayOfWeek').hide();
 
                 $('#trDayOfMonth').show();
-            } else if (selectedMonthIntervalChoice == @(((int) Grand.Core.Domain.Tasks.MonthOptionChoice.ON_THE_FIRST_WEEK_OF_MONTH).ToString())) {
+            } else if (selectedMonthIntervalChoice == @(((int) Grand.Core.Domain.Tasks.MonthOptionChoice.OnTheFirstWeekOfMonth).ToString())) {
                 $('#trTimeInterval').show();
                 $('#trMinuteOfHour').show();
                 $('#trHourOfDay').show();
@@ -69,7 +65,7 @@
 
                 $('#trDayOfMonth').hide();
 
-            } else if (selectedMonthIntervalChoice == @(((int) Grand.Core.Domain.Tasks.MonthOptionChoice.ON_THE_SECOND_WEEK_OF_MONTH).ToString())) {
+            } else if (selectedMonthIntervalChoice == @(((int) Grand.Core.Domain.Tasks.MonthOptionChoice.OnTheSecondWeekOfMonth).ToString())) {
                 $('#trTimeInterval').show();
                 $('#trMinuteOfHour').show();
                 $('#trHourOfDay').show();
@@ -77,7 +73,7 @@
 
                 $('#trDayOfMonth').hide();
 
-            } else if (selectedMonthIntervalChoice == @(((int) Grand.Core.Domain.Tasks.MonthOptionChoice.ON_THE_THIRD_WEEK_OF_MONTH).ToString())) {
+            } else if (selectedMonthIntervalChoice == @(((int) Grand.Core.Domain.Tasks.MonthOptionChoice.OnTheThirdWeekOfMonth).ToString())) {
                 $('#trTimeInterval').show();
                 $('#trMinuteOfHour').show();
                 $('#trHourOfDay').show();
@@ -85,7 +81,7 @@
 
                 $('#trDayOfMonth').hide();
 
-            } else if (selectedMonthIntervalChoice == @(((int) Grand.Core.Domain.Tasks.MonthOptionChoice.ON_THE_FOURTH_WEEK_OF_MONTH).ToString())) {
+            } else if (selectedMonthIntervalChoice == @(((int) Grand.Core.Domain.Tasks.MonthOptionChoice.OnTheFourtWeekOfMonth).ToString())) {
                 $('#trTimeInterval').show();
                 $('#trMinuteOfHour').show();
                 $('#trHourOfDay').show();
@@ -93,7 +89,7 @@
 
                 $('#trDayOfMonth').hide();
 
-            } else if (selectedMonthIntervalChoice == @(((int) Grand.Core.Domain.Tasks.MonthOptionChoice.ON_THE_LAST_WEEK_OF_MONTH).ToString())) {
+            } else if (selectedMonthIntervalChoice == @(((int) Grand.Core.Domain.Tasks.MonthOptionChoice.OnTheLastWeekOfMonth).ToString())) {
                 $('#trTimeInterval').show();
                 $('#trMinuteOfHour').show();
                 $('#trHourOfDay').show();
@@ -101,7 +97,7 @@
 
                 $('#trDayOfMonth').hide();
 
-            } else if (selectedMonthIntervalChoice == @(((int) Grand.Core.Domain.Tasks.MonthOptionChoice.ON_THE_LAST_DAY_OF_MONTH).ToString())) {
+            } else if (selectedMonthIntervalChoice == @(((int) Grand.Core.Domain.Tasks.MonthOptionChoice.OnTheLastDayOfMonth).ToString())) {
                 $('#trTimeInterval').show();
                 $('#trMinuteOfHour').show();
                 $('#trHourOfDay').show();
@@ -113,8 +109,6 @@
     });
     </script>
 
-
-
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -122,7 +116,8 @@
                     <div class="caption">
                         <i class="fa fa-tasks"></i>
                         @T("Admin.System.ScheduleTasks")
-                        <small><i class="fa fa-arrow-circle-left"></i>
+                        <small>
+                            <i class="fa fa-arrow-circle-left"></i>
                             @Html.ActionLink(T("Admin.System.ScheduleTasks.BackToList").Text, "List")
                         </small>
                     </div>
@@ -136,91 +131,97 @@
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.ScheduleTaskName)
+                                <admin-label asp-for="ScheduleTaskName" />
                                 <div class="col-md-9 col-sm-9">
-                                   <label class="control-label"> @Html.DisplayFor(model => model.ScheduleTaskName) </label>
+                                    <label class="control-label"> @Html.DisplayFor(model => model.ScheduleTaskName) </label>
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.Type)
+                                <admin-label asp-for="LeasedByMachineName" />
+                                <div class="col-md-9 col-sm-9">
+                                    <admin-input asp-for="LeasedByMachineName" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <admin-label asp-for="Type" />
                                 <div class="col-md-9 col-sm-9">
                                     <label class="control-label"> @Html.DisplayFor(model => model.Type) </label>
                                 </div>
-                            </div>                            <div class="form-group">
-                                @Html.GrandLabelFor(model => model.Enabled)
+                            </div>
+                            <div class="form-group">
+                                <admin-label asp-for="Enabled" />
                                 <div class="col-md-9 col-sm-9">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.Enabled)
+                                        <admin-input asp-for="Enabled" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.Enabled)
+                                    <span asp-validation-for="Enabled"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.StopOnError)
+                                <admin-label asp-for="StopOnError" />
                                 <div class="col-md-9 col-sm-9">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.StopOnError)
+                                        <admin-input asp-for="StopOnError" />
                                         <span></span>
                                     </label>
-                                    @Html.ValidationMessageFor(model => model.StopOnError)
+                                    <span asp-validation-for="StopOnError"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.TimeIntervalChoice)
+                                <admin-label asp-for="TimeIntervalChoice" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandDropDownListFor(model => model.TimeIntervalChoice, ((Grand.Core.Domain.Tasks.TimeIntervalChoice)Model.TimeIntervalChoice).ToSelectList())
-                                    @Html.ValidationMessageFor(model => model.TimeIntervalChoice)
+                                    <admin-select asp-for="TimeIntervalChoice" asp-items="((Grand.Core.Domain.Tasks.TimeIntervalChoice)Model.TimeIntervalChoice).ToSelectList()" />
+                                    <span asp-validation-for="TimeIntervalChoice"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="trTimeInterval">
-                                @Html.GrandLabelFor(model => model.TimeInterval)
+                                <admin-label asp-for="TimeInterval" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.TimeInterval)
-                                    @Html.ValidationMessageFor(model => model.TimeInterval)
+                                    <admin-input asp-for="TimeInterval" />
+                                    <span asp-validation-for="TimeInterval"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="trMinuteOfHour">
-                                @Html.GrandLabelFor(model => model.MinuteOfHour)
+                                <admin-label asp-for="MinuteOfHour" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.MinuteOfHour)
-                                    @Html.ValidationMessageFor(model => model.MinuteOfHour)
+                                    <admin-input asp-for="MinuteOfHour" />
+                                    <span asp-validation-for="MinuteOfHour"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="trHourOfDay">
-                                @Html.GrandLabelFor(model => model.HourOfDay)
+                                <admin-label asp-for="HourOfDay" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.HourOfDay)
-                                    @Html.ValidationMessageFor(model => model.HourOfDay)
+                                    <admin-input asp-for="HourOfDay" />
+                                    <span asp-validation-for="HourOfDay"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="trMonthOptionChoice">
-                                @Html.GrandLabelFor(model => model.MonthOptionChoice)
+                                <admin-label asp-for="MonthOptionChoice" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandDropDownListFor(model => model.MonthOptionChoice, ((Grand.Core.Domain.Tasks.MonthOptionChoice)Model.MonthOptionChoice).ToSelectList())
-                                    @Html.ValidationMessageFor(model => model.MonthOptionChoice)
+                                    <admin-select asp-for="MonthOptionChoice" asp-items="((Grand.Core.Domain.Tasks.MonthOptionChoice)Model.MonthOptionChoice).ToSelectList()" />
+                                    <span asp-validation-for="MonthOptionChoice"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="trDayOfWeek">
-                                @Html.GrandLabelFor(model => model.DayOfWeek)
+                                <admin-label asp-for="DayOfWeek" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandDropDownListFor(model => model.DayOfWeek, ((System.DayOfWeek)Model.DayOfWeek).ToSelectList())
-                                    @Html.ValidationMessageFor(model => model.DayOfWeek)
+                                    <admin-select asp-for="DayOfWeek" asp-items="((System.DayOfWeek)Model.DayOfWeek).ToSelectList()" />
+                                    <span asp-validation-for="DayOfWeek"></span>
                                 </div>
                             </div>
                             <div class="form-group" id="trDayOfMonth">
-                                @Html.GrandLabelFor(model => model.DayOfMonth)
+                                <admin-label asp-for="DayOfMonth" />
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.DayOfMonth)
-                                    @Html.ValidationMessageFor(model => model.DayOfMonth)
+                                    <admin-input asp-for="DayOfMonth" />
+                                    <span asp-validation-for="DayOfMonth"></span>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
-
-}
+</form>

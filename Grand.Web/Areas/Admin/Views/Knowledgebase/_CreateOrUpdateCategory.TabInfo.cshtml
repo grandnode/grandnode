@@ -1,0 +1,70 @@
+﻿@model KnowledgebaseCategoryModel
+<input asp-for="Id" type="hidden" />
+@(Html.LocalizedEditor<KnowledgebaseCategoryModel, KnowledgebaseCategoryLocalizedModel>("knowledbasecategory-info-localized",
+    @<div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                <admin-label asp-for="@Model.Locales[item].Name" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="@Model.Locales[item].Name" />
+                    <span asp-validation-for="@Model.Locales[item].Name"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <admin-label asp-for="@Model.Locales[item].Description" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="@Model.Locales[item].Description" asp-template="RichEditor" />
+                    <span asp-validation-for="@Model.Locales[item].Description"></span>
+                </div>
+            </div>
+            <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+        </div>
+    </div>
+    ,
+    @<div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                <admin-label asp-for="Name" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="Name" />
+                    <span asp-validation-for="Name"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <admin-label asp-for="Description" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="Description" asp-template="RichEditor" />
+                    <span asp-validation-for="Description"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+        ))
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            <admin-label asp-for="ParentCategoryId" />
+            <div class="col-md-9 col-sm-9">
+                <admin-select asp-for="ParentCategoryId" asp-items="Model.Categories" />
+                <span asp-validation-for="ParentCategoryId"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="DisplayOrder" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="DisplayOrder" />
+                <span asp-validation-for="DisplayOrder"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="Published" />
+            <div class="col-md-9 col-sm-9">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    <admin-input asp-for="Published" />
+                    <span></span>
+                </label>
+                <span asp-validation-for="Published"></span>
+            </div>
+        </div>
+    </div>
+</div>

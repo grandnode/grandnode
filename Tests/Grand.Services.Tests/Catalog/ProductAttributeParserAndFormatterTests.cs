@@ -132,7 +132,7 @@ namespace Grand.Services.Catalog.Tests
                 _eventPublisher = tempEventPublisher.Object;
             }
 
-            var cacheManager = new NopNullCache();
+            var cacheManager = new GrandNullCache();
             _productAttributeRepo = new Mock<IRepository<ProductAttribute>>().Object;
 
             _productAttributeService = new ProductAttributeService(cacheManager,

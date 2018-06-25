@@ -1,56 +1,53 @@
 ﻿@model TopicModel
 
-
-
 <script type="text/javascript">
-        $(document).ready(function() {
-            $("#@Html.FieldIdFor(model => model.IsPasswordProtected)").click(togglePassword);
-            togglePassword();
-        });
+$(document).ready(function() {
+    $("#@Html.FieldIdFor(model => model.IsPasswordProtected)").click(togglePassword);
+    togglePassword();
+});
 
-        function togglePassword() {
-            if ($('#@Html.FieldIdFor(model => model.IsPasswordProtected)').is(':checked')) {
-                $('#pnlPasswordEnabled').show();
-            } else {
-                $('#pnlPasswordEnabled').hide();
-            }
-        }
+function togglePassword() {
+    if ($('#@Html.FieldIdFor(model => model.IsPasswordProtected)').is(':checked')) {
+        $('#pnlPasswordEnabled').show();
+    } else {
+        $('#pnlPasswordEnabled').hide();
+    }
+}
 </script>
 @(Html.LocalizedEditor<TopicModel, TopicLocalizedModel>("topic-info-localized",
     @<div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.Locales[item].Title)
+                <admin-label asp-for="@Model.Locales[item].Title" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.Locales[item].Title)
-                    @Html.ValidationMessageFor(model => model.Locales[item].Title)
+                    <admin-input asp-for="@Model.Locales[item].Title" />
+                    <span asp-validation-for="@Model.Locales[item].Title"></span>
                 </div>
             </div>
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.Locales[item].Body)
+                <admin-label asp-for="@Model.Locales[item].Body" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.EditorFor(model => model.Locales[item].Body, "RichEditor")
-                    @Html.ValidationMessageFor(model => model.Locales[item].Body)
+                    <admin-input asp-for="@Model.Locales[item].Body" asp-template="RichEditor" />
+                    <span asp-validation-for="@Model.Locales[item].Body"></span>
                 </div>
             </div>
-            @Html.HiddenFor(model => model.Locales[item].LanguageId)
+            <input asp-for="@Model.Locales[item].LanguageId" type="hidden" />
         </div>
     </div>
-        ,
-    @<div class="form-horizontal">
+    ,@<div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.Title)
+                <admin-label asp-for="Title" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.Title)
-                    @Html.ValidationMessageFor(model => model.Title)
+                    <admin-input asp-for="Title" />
+                    <span asp-validation-for="Title"></span>
                 </div>
             </div>
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.Body)
+                <admin-label asp-for="Body" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.EditorFor(x => x.Body, "RichEditor")
-                    @Html.ValidationMessageFor(model => model.Body)
+                    <admin-input asp-for="Body" asp-template="RichEditor" />
+                    <span asp-validation-for="Body"></span>
                 </div>
             </div>
         </div>
@@ -59,110 +56,110 @@
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.SystemName)
+            <admin-label asp-for="SystemName" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.SystemName)
-                @Html.ValidationMessageFor(model => model.SystemName)
+                <admin-input asp-for="SystemName" />
+                <span asp-validation-for="SystemName"></span>
             </div>
         </div>
-        @if (!String.IsNullOrEmpty(Model.Id))
-            {
+        @if (!string.IsNullOrEmpty(Model.Id))
+        {
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.Url)
+                <admin-label asp-for="Url" />
                 <div class="col-md-9 col-sm-9">
                     <label class="control-label"><a href="@Model.Url">@Model.Url</a></label>
                 </div>
             </div>
         }
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.IsPasswordProtected)
+            <admin-label asp-for="IsPasswordProtected" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.EditorFor(model => model.IsPasswordProtected)
+                    <admin-input asp-for="IsPasswordProtected" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.IsPasswordProtected)
+                <span asp-validation-for="IsPasswordProtected"></span>
             </div>
         </div>
         <div class="form-group" id="pnlPasswordEnabled">
-            @Html.GrandLabelFor(model => model.Password)
+            <admin-label asp-for="Password" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.Password)
-                @Html.ValidationMessageFor(model => model.Password)
+                <admin-input asp-for="Password" />
+                <span asp-validation-for="Password"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.IncludeInSitemap)
+            <admin-label asp-for="IncludeInSitemap" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.EditorFor(x => x.IncludeInSitemap)
+                    <admin-input asp-for="IncludeInSitemap" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.IncludeInSitemap)
+                <span asp-validation-for="IncludeInSitemap"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.IncludeInTopMenu)
+            <admin-label asp-for="IncludeInTopMenu" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.EditorFor(x => x.IncludeInTopMenu)
+                    <admin-input asp-for="IncludeInTopMenu" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.IncludeInTopMenu)
+                <span asp-validation-for="IncludeInTopMenu"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.IncludeInFooterColumn1)
+            <admin-label asp-for="IncludeInFooterColumn1" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.EditorFor(x => x.IncludeInFooterColumn1)
+                    <admin-input asp-for="IncludeInFooterColumn1" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.IncludeInFooterColumn1)
+                <span asp-validation-for="IncludeInFooterColumn1"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.IncludeInFooterColumn2)
+            <admin-label asp-for="IncludeInFooterColumn2" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.EditorFor(x => x.IncludeInFooterColumn2)
+                    <admin-input asp-for="IncludeInFooterColumn2" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.IncludeInFooterColumn2)
+                <span asp-validation-for="IncludeInFooterColumn2"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.IncludeInFooterColumn3)
+            <admin-label asp-for="IncludeInFooterColumn3" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.EditorFor(x => x.IncludeInFooterColumn3)
+                    <admin-input asp-for="IncludeInFooterColumn3" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.IncludeInFooterColumn3)
+                <span asp-validation-for="IncludeInFooterColumn3"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.DisplayOrder)
+            <admin-label asp-for="DisplayOrder" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(x => x.DisplayOrder)
-                @Html.ValidationMessageFor(model => model.DisplayOrder)
+                <admin-input asp-for="DisplayOrder" />
+                <span asp-validation-for="DisplayOrder"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.AccessibleWhenStoreClosed)
+            <admin-label asp-for="AccessibleWhenStoreClosed" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.EditorFor(x => x.AccessibleWhenStoreClosed)
+                    <admin-input asp-for="AccessibleWhenStoreClosed" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.AccessibleWhenStoreClosed)
+                <span asp-validation-for="AccessibleWhenStoreClosed"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.TopicTemplateId)
+            <admin-label asp-for="TopicTemplateId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.TopicTemplateId, Model.AvailableTopicTemplates)
-                @Html.ValidationMessageFor(model => model.TopicTemplateId)
+                <admin-select asp-for="TopicTemplateId" asp-items="Model.AvailableTopicTemplates" />
+                <span asp-validation-for="TopicTemplateId"></span>
             </div>
         </div>
     </div>

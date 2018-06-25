@@ -21,7 +21,7 @@ using System.Text;
 
 namespace Grand.Plugin.Payments.PayPalStandard.Controllers
 {
-    [Area("Admin")]
+    
     public class PaymentPayPalStandardController : BasePaymentController
     {
         private readonly IWorkContext _workContext;
@@ -65,6 +65,7 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
         }
 
         [AuthorizeAdmin]
+        [Area("Admin")]
         public IActionResult Configure()
         {
             //load settings for a chosen store scope
@@ -79,10 +80,6 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
             model.AdditionalFee = payPalStandardPaymentSettings.AdditionalFee;
             model.AdditionalFeePercentage = payPalStandardPaymentSettings.AdditionalFeePercentage;
             model.PassProductNamesAndTotals = payPalStandardPaymentSettings.PassProductNamesAndTotals;
-            model.EnableIpn = payPalStandardPaymentSettings.EnableIpn;
-            model.IpnUrl = payPalStandardPaymentSettings.IpnUrl;
-            model.AddressOverride = payPalStandardPaymentSettings.AddressOverride;
-            model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage = payPalStandardPaymentSettings.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage;
 
             model.ActiveStoreScopeConfiguration = storeScope;
             if (!String.IsNullOrEmpty(storeScope))
@@ -94,10 +91,6 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
                 model.AdditionalFee_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.AdditionalFee, storeScope);
                 model.AdditionalFeePercentage_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
                 model.PassProductNamesAndTotals_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, storeScope);
-                model.EnableIpn_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.EnableIpn, storeScope);
-                model.IpnUrl_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.IpnUrl, storeScope);
-                model.AddressOverride_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.AddressOverride, storeScope);
-                model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage, storeScope);
             }
 
             return View("~/Plugins/Payments.PayPalStandard/Views/PaymentPayPalStandard/Configure.cshtml", model);
@@ -105,6 +98,7 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
 
         [HttpPost]
         [AuthorizeAdmin]
+        [Area("Admin")]
         public IActionResult Configure(ConfigurationModel model)
         {
             if (!ModelState.IsValid)
@@ -122,10 +116,6 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
             payPalStandardPaymentSettings.AdditionalFee = model.AdditionalFee;
             payPalStandardPaymentSettings.AdditionalFeePercentage = model.AdditionalFeePercentage;
             payPalStandardPaymentSettings.PassProductNamesAndTotals = model.PassProductNamesAndTotals;
-            payPalStandardPaymentSettings.EnableIpn = model.EnableIpn;
-            payPalStandardPaymentSettings.IpnUrl = model.IpnUrl;
-            payPalStandardPaymentSettings.AddressOverride = model.AddressOverride;
-            payPalStandardPaymentSettings.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage = model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage;
 
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
@@ -164,26 +154,6 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
                 _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, storeScope);
-
-            if (model.EnableIpn_OverrideForStore || String.IsNullOrEmpty(storeScope))
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.EnableIpn, storeScope, false);
-            else if (!String.IsNullOrEmpty(storeScope))
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.EnableIpn, storeScope);
-
-            if (model.IpnUrl_OverrideForStore || String.IsNullOrEmpty(storeScope))
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.IpnUrl, storeScope, false);
-            else if (!String.IsNullOrEmpty(storeScope))
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.IpnUrl, storeScope);
-
-            if (model.AddressOverride_OverrideForStore || String.IsNullOrEmpty(storeScope))
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.AddressOverride, storeScope, false);
-            else if (!String.IsNullOrEmpty(storeScope))
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.AddressOverride, storeScope);
-
-            if (model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage_OverrideForStore || String.IsNullOrEmpty(storeScope))
-                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage, storeScope, false);
-            else if (!String.IsNullOrEmpty(storeScope))
-                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage, storeScope);
 
             //now clear settings cache
             _settingService.ClearCache();
@@ -607,18 +577,12 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
 
         public IActionResult CancelOrder(IFormCollection form)
         {
-            if (_payPalStandardPaymentSettings.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage)
-            {
-                var order = _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id,
-                    customerId: _workContext.CurrentCustomer.Id, pageSize: 1)
-                    .FirstOrDefault();
-                if (order != null)
-                {
-                    return RedirectToRoute("OrderDetails", new { orderId = order.Id });
-                }
-            }
+            var order = _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id,
+                customerId: _workContext.CurrentCustomer.Id, pageSize: 1).FirstOrDefault();
+            if (order != null)
+                return RedirectToRoute("OrderDetails", new { orderId = order.Id });
 
-            return RedirectToAction("Index", "Home", new { area = "" });
+            return RedirectToRoute("HomePage");
         }
     }
 }

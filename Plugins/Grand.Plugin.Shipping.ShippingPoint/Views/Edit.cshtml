@@ -3,10 +3,11 @@
 }
 @model Grand.Plugin.Shipping.ShippingPoint.Models.ShippingPointModel
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-
+<form asp-controller="ShippingPoint" asp-action="Edit" method="post"
+        asp-route-ShippingPointId="@Context.Request.Query["ShippingPointId"]"
+        asp-route-btnId="@Context.Request.Query["btnId"]"
+        asp-route-formId="@Context.Request.Query["formId"]">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -22,10 +23,10 @@
                 </div>
             </div>
         </div>
-    </div>    
+    </div>
     <div class="content">
         <div class="form-horizontal">
             @Html.Partial("~/Plugins/Shipping.ShippingPoint/Views/_CreateOrUpdate.cshtml", Model)
         </div>
     </div>
-}
+</form>

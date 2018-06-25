@@ -1,13 +1,11 @@
 ﻿@model AddressAttributeModel
-
 @{
     //page title
     ViewBag.Title = T("Admin.Address.AddressAttributes.EditAttributeDetails").Text;
 }
 
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "addressattribute-form" }))
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="AddressAttribute" asp-action="Edit" method="post" id="addressattribute-form">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -31,6 +29,6 @@
             </div>
         </div>
     </div>
+</form>
 
-}
 @Html.DeleteConfirmation("addressattribute-delete")

@@ -11,7 +11,6 @@ using Grand.Services.Orders;
 using Grand.Framework.Security;
 using Grand.Web.Models.Order;
 using Grand.Web.Services;
-using Grand.Framework.Mvc.Filters;
 using Microsoft.AspNetCore.Http;
 
 namespace Grand.Web.Controllers
@@ -64,23 +63,21 @@ namespace Grand.Web.Controllers
 
         #region Methods
 
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult CustomerReturnRequests()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             var model = _returnRequestWebService.PrepareCustomerReturnRequests();
 
             return View(model);
         }
 
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult ReturnRequest(string orderId)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
-                return new UnauthorizedResult();
+                return Challenge();
 
             if (!_orderProcessingService.IsReturnRequestAllowed(order))
                 return RedirectToRoute("HomePage");
@@ -96,7 +93,7 @@ namespace Grand.Web.Controllers
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
-                return new UnauthorizedResult();
+                return Challenge();
 
             if (!_orderProcessingService.IsReturnRequestAllowed(order))
                 return RedirectToRoute("HomePage");

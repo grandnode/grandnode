@@ -95,7 +95,7 @@
                     }
                 },
                 editable: {
-                    confirmation: false,
+                    confirmation: true,
                     mode: "inline"
                 },
                 scrollable: false,
@@ -103,17 +103,17 @@
                     {
                         field: "ProductAttributeId",
                         title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.Attribute")",
-                        width: 250,
+                        width: 140,
                         editor: productAttributeDropDownEditor,
                         template: "#:ProductAttribute#"
                     }, {
                         field: "TextPrompt",
                         title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.TextPrompt")",
-                        width: 150
+                        width: 120
                     }, {
                         field: "IsRequired",
                         title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.IsRequired")",
-                        width: 100,
+                        width: 50,
                         headerAttributes: { style: "text-align:center" },
                         attributes: { style: "text-align:center" },
                         template: '# if(IsRequired) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
@@ -121,32 +121,34 @@
                     {
                         field: "AttributeControlTypeId",
                         title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.AttributeControlType")",
-                        width: 200,
+                        width: 140,
                         editor: attributeControlTypeDropDownEditor,
                         template: "#:AttributeControlType#"
                     },
                     {
                         field: "DisplayOrder",
                         title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.DisplayOrder")",
-                        width: 100,
+                        width: 70,
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
                         //integer format
                         format: "{0:0}"
                     }, {
                         field: "ShouldHaveValues",
                         title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values")",
-                        width: 150,
+                        width: 60,
                         template: '# if(ShouldHaveValues) {# <a href="@Url.Content("~/Admin/Product/EditAttributeValues/")?productAttributeMappingId=#=Id#&productId=@(Model.Id)">@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.ViewLink")</a><br />@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.TotalValues") #=TotalValues# #}  #'
                     },
                     {
                         field: "ValidationRulesAllowed",
                         title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules")",
-                        width: 120,
+                        width: 80,
                         template: "# if(ValidationRulesAllowed) {# <a href='javascript:OpenWindow(\"@Url.Content("~/Admin/Product/ProductAttributeValidationRulesPopup/")#=Id#?&productId=@(Model.Id)&btnId=btnRefreshProductAttributes&formId=product-form\", 800, 300, true);'>@T("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.ViewLink")</a><br />#=ValidationRulesString# #}  #"},
                     {
                         field: "ConditionAllowed",
                         title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Condition")",
-                        width: 120,
-                        template: "# if(ConditionAllowed) {# <a href='javascript:OpenWindow(\"@Url.Content("~/Admin/Product/ProductAttributeConditionPopup/")?productId=@(Model.Id)&productAttributeMappingId=#=Id#&btnId=btnRefreshProductAttributes&formId=product-form\", 800, 400, true);'>@T("Admin.Catalog.Products.ProductAttributes.Attributes.Condition.ViewLink")</a><br />#=ConditionString# #}  #"
+                        width: 80,
+                        template: "# if(ConditionAllowed) {# <a href='javascript:OpenWindow(\"@Url.Content("~/Admin/Product/ProductAttributeConditionPopup/")?productId=@(Model.Id)&productAttributeMappingId=#=Id#&btnId=btnRefreshProductAttributes&formId=product-form\", 800, 400, true);'>@T("Admin.Catalog.Products.ProductAttributes.Attributes.Condition.ViewLink")</a><br /> #}  #"
                     },
                     {
                         command: [

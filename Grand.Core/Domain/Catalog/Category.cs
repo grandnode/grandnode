@@ -86,6 +86,16 @@ namespace Grand.Core.Domain.Catalog
         public bool ShowOnHomePage { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to show the category on search box
+        /// </summary>
+        public bool ShowOnSearchBox { get; set; }
+
+        /// <summary>
+        /// Gets or sets the display order on search box category
+        /// </summary>
+        public int SearchBoxDisplayOrder { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to include this category in the top menu
         /// </summary>
         public bool IncludeInTopMenu { get; set; }
@@ -116,6 +126,21 @@ namespace Grand.Core.Domain.Catalog
         /// Gets or sets the display order
         /// </summary>
         public int DisplayOrder { get; set; }
+
+        /// <summary>
+        /// Gets or sets the flag
+        /// </summary>
+        public string Flag { get; set; }
+
+        /// <summary>
+        /// Gets or sets the flag style
+        /// </summary>
+        public string FlagStyle { get; set; }
+
+        /// <summary>
+        /// Gets or sets the hide on catalog page (subcategories)
+        /// </summary>
+        public bool HideOnCatalog { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance creation

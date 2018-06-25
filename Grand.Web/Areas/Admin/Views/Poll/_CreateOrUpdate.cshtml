@@ -1,7 +1,7 @@
 ﻿@model PollModel
-@Html.ValidationSummary(true)
-@Html.HiddenFor(model => model.Id)
-
+@inject IEventPublisher eventPublisher
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
 <script>
     $(document).ready(function () {
         $("#poll-edit").show();
@@ -29,7 +29,6 @@
         <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
             @T("Admin.ContentManagement.Polls.Stores")
         </li>
-
     </ul>
     <div>
         @Html.Partial("_CreateOrUpdate.TabInfo", Model)
@@ -43,19 +42,16 @@
     <div>
         @Html.Partial("_CreateOrUpdate.TabStores", Model)
     </div>
-
 </div>
-
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "poll-edit");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock
     }
 }
-
 
 @*save selected tab index*@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">

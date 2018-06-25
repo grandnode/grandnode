@@ -63,6 +63,12 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.HideBackInStockSubscriptionsTab")]
             public bool HideBackInStockSubscriptionsTab { get; set; }
 
+            [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AllowUsersToDeleteAccount")]
+            public bool AllowUsersToDeleteAccount { get; set; }
+
+            [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AllowUsersToExportData")]
+            public bool AllowUsersToExportData { get; set; }
+
             [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.CustomerNameFormat")]
             public int CustomerNameFormat { get; set; }
 
@@ -172,6 +178,11 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             public bool CompanyEnabled { get; set; }
             [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AddressFormFields.CompanyRequired")]
             public bool CompanyRequired { get; set; }
+
+            [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AddressFormFields.VatNumberEnabled")]
+            public bool VatNumberEnabled { get; set; }
+            [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AddressFormFields.VatNumberRequired")]
+            public bool VatNumberRequired { get; set; }
 
             [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AddressFormFields.StreetAddressEnabled")]
             public bool StreetAddressEnabled { get; set; }

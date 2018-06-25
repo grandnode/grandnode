@@ -1,5 +1,5 @@
 ﻿@model EstimateShippingResultModel
-@if (Model.ShippingOptions.Count > 0)
+@if (Model.ShippingOptions.Any())
             {
     <ul class="shipping-results list-group">
         @foreach (var shippingOption in Model.ShippingOptions)
@@ -15,7 +15,7 @@
         }
     </ul>
 }
-else if (Model.Warnings.Count > 0)
+else if (Model.Warnings.Any())
 {
     <div class="message-error">
         <ul>

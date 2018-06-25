@@ -51,6 +51,8 @@ using Grand.Services.Payments;
 using Grand.Services.Shipping;
 using Grand.Services.Tax;
 using Grand.Web.Areas.Admin.Infrastructure.Mapper;
+using Grand.Core.Domain.Knowledgebase;
+using Grand.Web.Areas.Admin.Models.Knowledgebase;
 
 namespace Grand.Web.Areas.Admin.Extensions
 {
@@ -65,7 +67,7 @@ namespace Grand.Web.Areas.Admin.Extensions
         {
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
-        
+
         #region Category
 
         public static CategoryModel ToModel(this Category entity)
@@ -234,7 +236,25 @@ namespace Grand.Web.Areas.Admin.Extensions
         }
 
         #endregion
+        #region Contact attributes
 
+        //attributes
+        public static ContactAttributeModel ToModel(this ContactAttribute entity)
+        {
+            return entity.MapTo<ContactAttribute, ContactAttributeModel>();
+        }
+
+        public static ContactAttribute ToEntity(this ContactAttributeModel model)
+        {
+            return model.MapTo<ContactAttributeModel, ContactAttribute>();
+        }
+
+        public static ContactAttribute ToEntity(this ContactAttributeModel model, ContactAttribute destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
         #region Customer attributes
 
         //attributes
@@ -291,7 +311,7 @@ namespace Grand.Web.Areas.Admin.Extensions
         {
             return model.MapTo(destination);
         }
-        
+
         #endregion
 
         #region Email account
@@ -587,7 +607,7 @@ namespace Grand.Web.Areas.Admin.Extensions
         }
 
         #endregion
-        
+
         #region Shipping rate computation method
 
         public static ShippingRateComputationMethodModel ToModel(this IShippingRateComputationMethod entity)
@@ -634,7 +654,7 @@ namespace Grand.Web.Areas.Admin.Extensions
         }
 
         #endregion
-        
+
         #region Payment methods
 
         public static PaymentMethodModel ToModel(this IPaymentMethod entity)
@@ -652,7 +672,7 @@ namespace Grand.Web.Areas.Admin.Extensions
         }
 
         #endregion
-        
+
         #region Widgets
 
         public static WidgetModel ToModel(this IWidgetPlugin entity)
@@ -737,8 +757,8 @@ namespace Grand.Web.Areas.Admin.Extensions
                                 foreach (var attributeValue in selectedValues)
                                     if (attributeModel.Id == attributeValue.AddressAttributeId)
                                         foreach (var item in attributeModel.Values)
-                                        if (attributeValue.Id == item.Id)
-                                            item.IsPreSelected = true;
+                                            if (attributeValue.Id == item.Id)
+                                                item.IsPreSelected = true;
                             }
                         }
                         break;
@@ -863,6 +883,40 @@ namespace Grand.Web.Areas.Admin.Extensions
         {
             return model.MapTo(destination);
         }
+        #endregion
+
+        #region Knowledgebase
+
+        public static KnowledgebaseCategory ToEntity(this KnowledgebaseCategoryModel model)
+        {
+            return model.MapTo<KnowledgebaseCategoryModel, KnowledgebaseCategory>();
+        }
+
+        public static KnowledgebaseCategoryModel ToModel(this KnowledgebaseCategory entity)
+        {
+            return entity.MapTo<KnowledgebaseCategory, KnowledgebaseCategoryModel>();
+        }
+
+        public static KnowledgebaseCategory ToEntity(this KnowledgebaseCategoryModel model, KnowledgebaseCategory destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        public static KnowledgebaseArticle ToEntity(this KnowledgebaseArticleModel model)
+        {
+            return model.MapTo<KnowledgebaseArticleModel, KnowledgebaseArticle>();
+        }
+
+        public static KnowledgebaseArticleModel ToModel(this KnowledgebaseArticle entity)
+        {
+            return entity.MapTo<KnowledgebaseArticle, KnowledgebaseArticleModel>();
+        }
+
+        public static KnowledgebaseArticle ToEntity(this KnowledgebaseArticleModel model, KnowledgebaseArticle destination)
+        {
+            return model.MapTo(destination);
+        }
+
         #endregion
 
         #region Blog

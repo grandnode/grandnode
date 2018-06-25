@@ -92,7 +92,7 @@ namespace Grand.Framework
         #region Utilities
 
         /// <summary>
-        /// Get nop customer cookie
+        /// Get customer cookie
         /// </summary>
         /// <returns>String value of cookie</returns>
         protected virtual string GetCustomerCookie()
@@ -104,7 +104,7 @@ namespace Grand.Framework
         }
 
         /// <summary>
-        /// Set nop customer cookie
+        /// Set customer cookie
         /// </summary>
         /// <param name="customerGuid">Guid of the customer</param>
         protected virtual void SetCustomerCookie(Guid customerGuid)
@@ -204,13 +204,6 @@ namespace Grand.Framework
 
                 if (customer == null || customer.Deleted || !customer.Active)
                 {
-                    //check whether request is made by a search engine, in this case return built-in customer record for search engines
-                    if (_userAgentHelper.IsSearchEngine())
-                        customer = _customerService.GetCustomerBySystemName(SystemCustomerNames.SearchEngine);
-                }
-
-                if (customer == null || customer.Deleted || !customer.Active)
-                {
                     //try to get registered user
                     customer = _authenticationService.GetAuthenticatedCustomer();
                 }
@@ -245,6 +238,13 @@ namespace Grand.Framework
                                 customer = customerByCookie;
                         }
                     }
+                }
+
+                if (customer == null || customer.Deleted || !customer.Active)
+                {
+                    //check whether request is made by a search engine, in this case return built-in customer record for search engines
+                    if (_userAgentHelper.IsSearchEngine())
+                        customer = _customerService.GetCustomerBySystemName(SystemCustomerNames.SearchEngine);
                 }
 
                 if (customer == null || customer.Deleted || !customer.Active)
@@ -410,9 +410,10 @@ namespace Grand.Framework
                 //whether there is a cached value
                 if (_cachedCurrency != null)
                     return _cachedCurrency;
-                
-                //return primary store currency when we're in admin area/mode
-                if (this.IsAdmin)
+
+                //return primary store currency when we're you are in admin panel
+                var adminAreaUrl = _httpContextAccessor.HttpContext.Request.Path.StartsWithSegments(new PathString("/Admin"));
+                if(adminAreaUrl)
                 {
                     var primaryStoreCurrency =  _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
                     if (primaryStoreCurrency != null)
@@ -508,11 +509,6 @@ namespace Grand.Framework
                 _cachedTaxDisplayType = null;
             }
         }
-
-        /// <summary>
-        /// Gets or sets value indicating whether we're in admin area
-        /// </summary>
-        public virtual bool IsAdmin { get; set; }
 
         #endregion
     }

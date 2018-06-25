@@ -1,78 +1,75 @@
 ﻿@model VendorModel
 
-
-
-
 <div id="vendornotes-grid"></div>
 <script>
-                $(document).ready(function () {
-                    $("#vendornotes-grid").kendoGrid({
-                        dataSource: {
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("VendorNotesSelect", "Vendor", new { vendorId = Model.Id }))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
-                                },
-                                destroy: {
-                                    url: "@Html.Raw(Url.Action("VendorNoteDelete", "Vendor", new { vendorId = Model.Id }))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
-                                }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors",
-                                model: {
-                                    id: "Id",
-                                    fields: {
-                                        //do not implicitly specify all fields
-                                        //we do it only for fields which implicitly require it
-                                        //otherwise, they'll be formatted wrong way
-                                        CreatedOn: {type: "date" }
-                                    }
-                                }
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            numeric: false,
-                            previousNext: false,
-                            info: false
-                        },
-                        editable: {
-                            confirmation: false,
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [{
-                            field: "CreatedOn",
-                            title: "@T("Admin.Vendors.VendorNotes.Fields.CreatedOn")",
-                            width: 200,
-                            type: "date",
-                            format: "{0:G}"
-                        }, {
-                            field: "Note",
-                            title: "@T("Admin.Vendors.VendorNotes.Fields.Note")",
-                            encoded: false
-                        }, {
-                            command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
-                            title: "@T("Admin.Common.Delete")",
-                            width: 100
-                        }]
-                    });
-                });
+    $(document).ready(function () {
+        $("#vendornotes-grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("VendorNotesSelect", "Vendor", new { vendorId = Model.Id }))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    },
+                    destroy: {
+                        url: "@Html.Raw(Url.Action("VendorNoteDelete", "Vendor", new { vendorId = Model.Id }))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            //do not implicitly specify all fields
+                            //we do it only for fields which implicitly require it
+                            //otherwise, they'll be formatted wrong way
+                            CreatedOn: {type: "date" }
+                        }
+                    }
+                },
+                error: function(e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                numeric: false,
+                previousNext: false,
+                info: false
+            },
+            editable: {
+                confirmation: false,
+                mode: "inline"
+            },
+            scrollable: false,
+            columns: [{
+                field: "CreatedOn",
+                title: "@T("Admin.Vendors.VendorNotes.Fields.CreatedOn")",
+                width: 200,
+                type: "date",
+                format: "{0:G}"
+            }, {
+                field: "Note",
+                title: "@T("Admin.Vendors.VendorNotes.Fields.Note")",
+                encoded: false
+            }, {
+                command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                title: "@T("Admin.Common.Delete")",
+                width: 100
+            }]
+        });
+    });
 </script>
 <p>
     <strong>
@@ -82,10 +79,10 @@
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.AddVendorNoteMessage)
+            <admin-label asp-for="AddVendorNoteMessage" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandTextAreaFor(model => model.AddVendorNoteMessage, new { style = "Height: 100px;" })
-                @Html.ValidationMessageFor(model => model.AddVendorNoteMessage)
+                <admin-textarea asp-for="AddVendorNoteMessage" style="height: 100px;"></admin-textarea>
+                <span asp-validation-for="AddVendorNoteMessage"></span>
             </div>
         </div>
     </div>
@@ -96,32 +93,32 @@
     </div>
 </div>
 <script type="text/javascript">
-                    $(document).ready(function () {
-                        $('#addVendorNote').click(function () {
-                            var vendorNoteMessage = $("#@Html.FieldIdFor(model => model.AddVendorNoteMessage)").val();
-                            $('#addVendorNote').attr('disabled', true);
+    $(document).ready(function () {
+        $('#addVendorNote').click(function () {
+            var vendorNoteMessage = $("#@Html.FieldIdFor(model => model.AddVendorNoteMessage)").val();
+            $('#addVendorNote').attr('disabled', true);
 
-                            var postData = {
-                                message: vendorNoteMessage,
-                                vendorId: '@Model.Id'
-                            };
-                            addAntiForgeryToken(postData);
+            var postData = {
+                message: vendorNoteMessage,
+                vendorId: '@Model.Id'
+            };
+            addAntiForgeryToken(postData);
 
-                            $.ajax({
-                                cache: false,
-                                type: "POST",
-                                url: "@(Url.Action("VendorNoteAdd", "Vendor"))",
-                                data: postData,
-                                success: function (data) {
-                                    var grid = $("#vendornotes-grid").data('kendoGrid');
-                                    grid.dataSource.read();
-                                    $('#addVendorNote').attr('disabled', false);
-                                },
-                                error: function (xhr, ajaxOptions, thrownError) {
-                                    alert('Failed to add vendor note.');
-                                    $('#addVendorNote').attr('disabled', false);
-                                }
-                            });
-                        });
-                    });
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@(Url.Action("VendorNoteAdd", "Vendor"))",
+                data: postData,
+                success: function (data) {
+                    var grid = $("#vendornotes-grid").data('kendoGrid');
+                    grid.dataSource.read();
+                    $('#addVendorNote').attr('disabled', false);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert('Failed to add vendor note.');
+                    $('#addVendorNote').attr('disabled', false);
+                }
+            });
+        });
+    });
 </script>

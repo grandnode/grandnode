@@ -101,7 +101,7 @@ namespace Grand.Web.Services
                 model.Add(pollModel);
             }
 
-            return cachedModel;
+            return model;
 
         }
 

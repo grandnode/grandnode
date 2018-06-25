@@ -7,6 +7,7 @@ using Grand.Core.Domain.Orders;
 using Grand.Services.Localization;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;
+using Grand.Core.Infrastructure;
 
 namespace Grand.Services.Orders
 {
@@ -30,21 +31,6 @@ namespace Grand.Services.Orders
             return false;
         }
     
-        /// <summary>
-        /// Gets a number of product in the cart
-        /// </summary>
-        /// <param name="shoppingCart">Shopping cart</param>
-        /// <returns>Result</returns>
-        public static int GetTotalProducts(this IList<ShoppingCartItem> shoppingCart)
-        {
-            int result = 0;
-            foreach (ShoppingCartItem sci in shoppingCart)
-            {
-                result += sci.Quantity;
-            }
-            return result;
-        }
-
         /// <summary>
         /// Gets a value indicating whether shopping cart is recurring
         /// </summary>
@@ -121,23 +107,11 @@ namespace Grand.Services.Orders
             return "";
         }
 
-        /// <summary>
-        /// Get customer of shopping cart
-        /// </summary>
-        /// <param name="shoppingCart">Shopping cart</param>
-        /// <returns>Customer of shopping cart</returns>
-        public static Customer GetCustomer(this IList<ShoppingCartItem> shoppingCart)
-        {
-            if (!shoppingCart.Any())
-                return null;
-            var customer = Core.Infrastructure.EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(shoppingCart[0].CustomerId);
-            return customer;
-        }
-
         public static IEnumerable<ShoppingCartItem> LimitPerStore(this IEnumerable<ShoppingCartItem> cart, string storeId)
         {
-            //simply replace the following code with "return cart"
-            //if you want to share shopping carts between stores
+            var shoppingCartSettings = EngineContext.Current.Resolve<ShoppingCartSettings>();
+            if (shoppingCartSettings.CartsSharedBetweenStores)
+                return cart;
 
             return cart.Where(x => x.StoreId == storeId);
         }

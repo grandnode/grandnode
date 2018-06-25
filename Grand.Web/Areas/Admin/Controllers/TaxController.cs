@@ -75,22 +75,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        public IActionResult ConfigureProvider(string systemName)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
-                return AccessDeniedView();
-
-            var taxProvider = _taxService.LoadTaxProviderBySystemName(systemName);
-            if (taxProvider == null)
-                //No tax provider found with the specified id
-                return RedirectToAction("Providers");
-
-            var model = taxProvider.ToModel();
-            model.ConfigurationUrl = taxProvider.GetConfigurationPageUrl();
-
-            return View(model);
-        }
-
         public IActionResult MarkAsPrimaryProvider(string systemName)
         {
             if (String.IsNullOrEmpty(systemName))

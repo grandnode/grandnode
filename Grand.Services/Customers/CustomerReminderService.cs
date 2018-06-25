@@ -1054,7 +1054,7 @@ namespace Grand.Services.Customers
                 if (reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() != null)
                     day = reminder.Levels.OrderBy(x => x.Level).FirstOrDefault().Day;
 
-                string dateDDMM = DateTime.Now.AddDays(-day).ToString("-MM-dd");
+                string dateDDMM = DateTime.Now.AddDays(day).ToString("-MM-dd");
 
                 var customers = from cu in _customerRepository.Table
                                 where (!String.IsNullOrEmpty(cu.Email))

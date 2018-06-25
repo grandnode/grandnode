@@ -56,6 +56,17 @@
             </td>
         </tr>
     }
+    @if (Model.BillingAddress.VatNumberEnabled)
+    {
+        <tr>
+            <td>
+                @T("Admin.Orders.Address.VatNumber"):
+            </td>
+            <td>
+                @Model.BillingAddress.VatNumber
+            </td>
+        </tr>
+    }
     @if (Model.BillingAddress.StreetAddressEnabled)
     {
         <tr>

@@ -1,12 +1,12 @@
 ﻿@model IList<ProductOverviewModel>
-@if (Model.Count > 0)
+@if (Model.Any())
 {    
     <div class="home-page-product-grid generalMarginSupporter">
         <h2 class="generalTitle text-center">@T("HomePage.Products")</h2>
             <div class="row">
                 @foreach (var item in Model)
                 {
-                    <div class="col-12 col-md-6 col-lg-3">
+                    <div class="col-xl-3 col-lg-4 col-sm-6 col-6 product-container">
                         @await Html.PartialAsync("_ProductBox", item)
                     </div>
                 }

@@ -18,15 +18,6 @@ namespace Grand.Data
             DataSettingsHelper.InitConnectionString();
         }
 
-        /// <summary>
-        /// Set database initializer
-        /// </summary>
-        public virtual void SetDatabaseInitializer()
-        {
-            BsonSerializer.RegisterSerializer(typeof(DateTime),
-             new DateTimeSerializer(DateTimeKind.Utc));
-        }
-
         #endregion
     }
 }

@@ -1,0 +1,101 @@
+﻿@model KnowledgebaseCategoryModel
+@inject AdminAreaSettings adminAreaSettings
+@if (!String.IsNullOrEmpty(Model.Id))
+{
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="articles-grid"></div>
+        </div>
+        <div class="panel-footer">
+            <input type="button" id="btnAddNewArticle" value="@T("Admin.ContentManagement.Knowledgebase.CreateKnowledgebaseArticle")" onclick="window.location.href='@(Url.Action("CreateArticle", "Knowledgebase", new { parentCategoryId = Model.Id }))'" class="k-button" />
+            <input type="submit" id="btnRefreshArticles" style="display: none" />
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#articles-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("ArticleList", "Knowledgebase", new { parentCategoryId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors",
+                        model: {
+                            id: "Id",
+                            fields: {
+                                Name: {editable: false, type: "string" },
+                                Published: {editable: true, type: "boolean" },
+                                DisplayOrder: {editable: true, type: "number" },
+                                ArticleId: {editable: false, type: "string" }
+                            }
+                        }
+                    },
+                    requestEnd: function(e) {
+                        if(e.type=="update") {
+                            this.read();
+                        }
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(adminAreaSettings.DefaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "Name",
+                    title: "@T("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.Name")",
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Knowledgebase/EditArticle/")#=ArticleId#">#=Name#</a>'
+
+                }, {
+                    field: "Published",
+                    title: "@T("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.Published")",
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
+                    template: '# if(Published) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+                }, {
+                    field: "DisplayOrder",
+                    title: "@T("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.DisplayOrder")",
+                    format: "{0:0}",
+                }]
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btnRefreshArticles').click(function () {
+                //refresh grid
+                var grid = $("#articles-grid").data('kendoGrid');
+                grid.dataSource.read();
+
+                //return false to don't reload a page
+                return false;
+            });
+        });
+    </script>
+}
+else
+{
+    <div class="note note-info">
+        @T("Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.SaveBeforeEdit")
+    </div>
+}

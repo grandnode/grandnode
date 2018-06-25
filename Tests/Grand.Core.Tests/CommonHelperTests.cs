@@ -180,7 +180,7 @@ namespace Grand.Core.Tests
             int thousandInt = 1000;
             Assert.AreEqual(thousandInt, CommonHelper.To<int>(floatingPoint));
 
-            //copied from nopCommerce tests, it was really surprise that it can convert from string to int
+            //copied from tests, it was really surprise that it can convert from string to int
             string thousandString = "1000";
             Assert.AreEqual(thousandInt, CommonHelper.To<int>(thousandString));
         }
@@ -209,7 +209,7 @@ namespace Grand.Core.Tests
             //happypath
             Assert.AreEqual(1000, CommonHelper.GetDifferenceInYears(birth, now));
 
-            //nopepath
+            //path
             Assert.AreEqual(-1000, CommonHelper.GetDifferenceInYears(now, birth));
 
             //one day before birthday

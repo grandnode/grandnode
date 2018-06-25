@@ -3,10 +3,8 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Shipping.PickupPoints.EditDetails").Text;
 }
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-  
+<form asp-controller="Shipping" asp-action="EditPickupPoint" method="post">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -25,10 +23,10 @@
                     </div>
                 </div>
                 <div class="portlet-body form">
-                   @Html.Partial("_CreateOrUpdatePickupPoint", Model)
+                    @Html.Partial("_CreateOrUpdatePickupPoint", Model)
                 </div>
             </div>
         </div>
     </div>
-}
+</form>
 @Html.DeleteConfirmation("DeletePickupPoint", "pickuppoint-delete")

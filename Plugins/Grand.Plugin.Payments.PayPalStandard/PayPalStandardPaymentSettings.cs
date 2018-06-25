@@ -17,17 +17,6 @@ namespace Grand.Plugin.Payments.PayPalStandard
         public decimal AdditionalFee { get; set; }
         public bool PassProductNamesAndTotals { get; set; }
         public bool PdtValidateOrderTotal { get; set; }
-        public bool EnableIpn { get; set; }
-        public string IpnUrl { get; set; }
-        /// <summary>
-        /// Enable if a customer should be redirected to the order details page
-        /// when he clicks "return to store" link on PayPal site
-        /// WITHOUT completing a payment
-        /// </summary>
-        public bool ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage { get; set; }
-        /// <summary>
-        /// Enable PayPal address override
-        /// </summary>
-        public bool AddressOverride { get; set; }
+        
     }
 }

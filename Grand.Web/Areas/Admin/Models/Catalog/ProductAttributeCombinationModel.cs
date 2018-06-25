@@ -15,6 +15,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             ProductAttributes = new List<ProductAttributeModel>();
             Warnings = new List<string>();
             WarehouseInventoryModels = new List<WarehouseInventoryModel>();
+            ProductPictureModels = new List<ProductModel.ProductPictureModel>();
         }
         
         [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.StockQuantity")]
@@ -22,6 +23,9 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
 
         [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.AllowOutOfStockOrders")]
         public bool AllowOutOfStockOrders { get; set; }
+
+        [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Text")]
+        public string Text { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Sku")]
         public string Sku { get; set; }
@@ -38,6 +42,12 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
 
         [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.NotifyAdminForQuantityBelow")]
         public int NotifyAdminForQuantityBelow { get; set; }
+
+        [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Picture")]
+        public string PictureId { get; set; }
+        public string PictureThumbnailUrl { get; set; }
+
+        public IList<ProductModel.ProductPictureModel> ProductPictureModels { get; set; }
 
         public IList<ProductAttributeModel> ProductAttributes { get; set; }
 

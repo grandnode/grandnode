@@ -1,0 +1,30 @@
+﻿@model KnowledgebaseArticleModel
+@{
+    //page title
+    ViewBag.Title = T("Admin.ContentManagement.Knowledgebase.KnowgledgebaseArticle.CreateKnowgledgebaseArticle").Text;
+}
+<form asp-controller="Knowledgebase" asp-action="CreateArticle" method="post">
+    <antiforgery-token />
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-forumbee"></i>
+                        @T("Admin.ContentManagement.Knowledgebase.KnowgledgebaseArticle.CreateKnowgledgebaseArticle")
+                        <small><i class="fa fa-arrow-circle-left"></i> @Html.ActionLink(T("Admin.ContentManagement.Knowledgebase.KnowgledgebaseArticle.BackToList").Text, "List")</small>
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group btn-group-devided">
+                            <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                            <button class="btn btn-success" type="submit" name="save-continue"><i class="fa fa-check-circle"></i> @T("Admin.Common.SaveContinue") </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    @Html.Partial("_CreateOrUpdateArticle", Model)
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

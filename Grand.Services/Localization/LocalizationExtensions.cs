@@ -91,7 +91,7 @@ namespace Grand.Services.Localization
 
             if (!String.IsNullOrEmpty(languageId))
             {
-                if (entity.Locales.Count > 0)
+                if (entity.Locales.Any())
                 {
                     var en = entity.Locales.FirstOrDefault(x => x.LanguageId == languageId && x.LocaleKey == localeKey);
                     if (en != null)
@@ -106,8 +106,7 @@ namespace Grand.Services.Localization
             //set default value if required
             if (String.IsNullOrEmpty(resultStr) && returnDefaultValue)
             {
-                var localizer = keySelector.Compile();
-                result = localizer(entity);
+                result = (TPropType)(propInfo.GetValue(entity));
             }
             
             return result;

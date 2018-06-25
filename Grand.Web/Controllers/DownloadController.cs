@@ -7,6 +7,10 @@ using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Orders;
+using System.IO;
+using System.IO.Compression;
+using Grand.Core.Domain.Catalog;
+using System.Text.RegularExpressions;
 
 namespace Grand.Web.Controllers
 {
@@ -72,7 +76,7 @@ namespace Grand.Web.Controllers
             if (_customerSettings.DownloadableProductsValidateUser)
             {
                 if (_workContext.CurrentCustomer == null)
-                    return new UnauthorizedResult();
+                    return Challenge();
 
                 if (order.CustomerId != _workContext.CurrentCustomer.Id)
                     return Content("This is not your order");
@@ -111,10 +115,56 @@ namespace Grand.Web.Controllers
             order.OrderItems.FirstOrDefault(x => x.Id == orderItem.Id).DownloadCount++;
             _orderService.UpdateOrder(order);
 
-            //return result
-            string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : product.Id.ToString();
-            string contentType = !String.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
-            return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };  
+            if(product.ProductType != ProductType.BundledProduct)
+            {
+                //return result
+                string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : product.Id.ToString();
+                string contentType = !String.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
+                return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
+            }
+            else
+            {                
+                using (var memoryStream = new MemoryStream())
+                {
+                    using (var ziparchive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+                    {
+                        string fileName = (!String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : product.Id.ToString()) + download.Extension;
+                        if (Grand.Core.OperatingSystem.IsWindows())
+                        {
+                            System.IO.File.WriteAllBytes(@"App_Data\Download\" + fileName, download.DownloadBinary);
+                            ziparchive.CreateEntryFromFile(@"App_Data\Download\" + fileName, fileName);
+                        }
+                        else
+                        {
+                            System.IO.File.WriteAllBytes(@"App_Data/Download/" + fileName, download.DownloadBinary);
+                            ziparchive.CreateEntryFromFile(@"App_Data/Download/" + fileName, fileName);
+                        }
+                        foreach (var bundle in product.BundleProducts)
+                        {
+                            var p1 = _productService.GetProductById(bundle.ProductId);
+                            if(p1!=null && p1.IsDownload)
+                            {
+                                var d1 = _downloadService.GetDownloadById(p1.DownloadId);
+                                if(d1!=null && !d1.UseDownloadUrl)
+                                {
+                                    fileName = (!String.IsNullOrWhiteSpace(d1.Filename) ? d1.Filename : p1.Id.ToString()) + d1.Extension;
+                                    if (Grand.Core.OperatingSystem.IsWindows())
+                                    {
+                                        System.IO.File.WriteAllBytes(@"App_Data\Download\" + fileName, d1.DownloadBinary);
+                                        ziparchive.CreateEntryFromFile(@"App_Data\Download\" + fileName, fileName);
+                                    }
+                                    else
+                                    {
+                                        System.IO.File.WriteAllBytes(@"App_Data/Download/" + fileName, d1.DownloadBinary);
+                                        ziparchive.CreateEntryFromFile(@"App_Data/Download/" + fileName, fileName);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    return File(memoryStream.ToArray(), "application/zip", $"{Regex.Replace(product.Name, "[^A-Za-z0-9 _]", "")}.zip");
+                }
+            }
         }
 
         public virtual IActionResult GetLicense(Guid orderItemId)
@@ -131,7 +181,7 @@ namespace Grand.Web.Controllers
             if (_customerSettings.DownloadableProductsValidateUser)
             {
                 if (_workContext.CurrentCustomer == null || order.CustomerId != _workContext.CurrentCustomer.Id)
-                    return new UnauthorizedResult();
+                    return Challenge();
             }
 
             var download = _downloadService.GetDownloadById(!String.IsNullOrEmpty(orderItem.LicenseDownloadId) ? orderItem.LicenseDownloadId : "");
@@ -179,7 +229,7 @@ namespace Grand.Web.Controllers
                 return InvokeHttp404();
 
             if (_workContext.CurrentCustomer == null || order.CustomerId != _workContext.CurrentCustomer.Id)
-                return new UnauthorizedResult();
+                return Challenge();
 
             var download = _downloadService.GetDownloadById(orderNote.DownloadId);
             if (download == null)

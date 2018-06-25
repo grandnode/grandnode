@@ -1,4 +1,5 @@
 ﻿@model CustomerInfoModel
+@inject Grand.Core.Domain.Customers.CustomerSettings customerSettings
 @using Grand.Web.Models.Customer;
 @using Grand.Core;
 @{
@@ -8,7 +9,7 @@
     Html.AddTitleParts(T("PageTitle.Account").Text);
 }
 @section left
-{
+    {
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Info })
 }
 
@@ -42,14 +43,34 @@
         });
     </script>
 }
-<div class="page account-page customer-info-page">
-    <h2 class="generalTitle">@T("Account.CustomerInfo")</h2>
+<script type="text/javascript">
+    $(function () {
+        $("#@Html.IdFor(model => model.Newsletter)").click(toggleNewsletterCat);
+        toggleNewsletterCat();
 
+        function toggleNewsletterCat() {
+            if ($('#@Html.FieldIdFor(model => model.Newsletter)').is(':checked')) {
+                $('.register-category-newsletter').show();
+            }
+            else {
+                $('.register-category-newsletter').hide();
+            }
+        }
+    });
+</script>
+<div class="page account-page customer-info-page pl-lg-3">
+    @if (customerSettings.AllowUsersToExportData)
+    {
+        <button type="button" class="btn btn-info btn-sm float-sm-right" onclick="location.href='/customer/export'">
+            <i class="fa fa-file-excel-o" aria-hidden="true"></i> @T("Account.CustomerExportToXls")
+        </button>
+    }
+    <h2 class="generalTitle">@T("Account.CustomerInfo")</h2>
     <form asp-route="CustomerInfo" method="post">
         <div asp-validation-summary="ModelOnly" class="message-error"></div>
         <div class="card mb-3">
             <h3 class="card-header">@T("Account.YourPersonalDetails")</h3>
-            <div class="card-block">
+            <div class="card-body">
                 <fieldset class="form-fields">
                     <legend class="sr-only">@T("Account.Fields.Gender")</legend>
                     @if (Model.GenderEnabled)
@@ -61,14 +82,14 @@
                         </div>
                         <div class="gender">
                             <div class="flex-row">
-                                <label class="custom-control custom-radio male">
+                                <label class="custom-control custom-radio male d-inline-block">
                                     <input type="radio" asp-for="Gender" value="M" checked="@(Model.Gender == "M")" id="gender-male" class="custom-control-input" />
-                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-label"></span>
                                     <span class="custom-control-description forcheckbox" for="gender-male">@T("Account.Fields.Gender.Male")</span>
                                 </label>
-                                <label class="custom-control custom-radio female">
-                                    <input type="radio" asp-for="Gender" value="F" checked="@(Model.Gender == "F")" id="gender-female" class="custom-control-input"/>
-                                    <span class="custom-control-indicator"></span>
+                                <label class="custom-control custom-radio female d-inline-block">
+                                    <input type="radio" asp-for="Gender" value="F" checked="@(Model.Gender == "F")" id="gender-female" class="custom-control-input" />
+                                    <span class="custom-control-label"></span>
                                     <span class="custom-control-description forcheckbox" for="gender-female">@T("Account.Fields.Gender.Female")</span>
                                 </label>
                             </div>
@@ -79,7 +100,7 @@
                     <fieldset class="form-group col-sm-6 col-12">
                         <legend class="sr-only">@T("account.fields.firstname")</legend>
                         <label asp-for="FirstName" class="col-form-label">@T("Account.Fields.FirstName"):</label>
-                        <input asp-for="FirstName" class="form-control"/>
+                        <input asp-for="FirstName" class="form-control" />
                         <span asp-validation-for="FirstName"></span>
                     </fieldset>
                     <fieldset class="form-group col-sm-6 col-12">
@@ -98,17 +119,17 @@
                                 @T("Account.Fields.DateOfBirth"):
                             </div>
                         </div>
-                        <div class="d-flex justify-content-between flex-row">
-                            @Html.DatePickerDropDowns(Html.FieldNameFor(x => x.DateOfBirthDay),
-                                        Html.FieldNameFor(x => x.DateOfBirthMonth),
-                                        Html.FieldNameFor(x => x.DateOfBirthYear),
-                                        DateTime.Now.Year - 110,
-                                        DateTime.Now.Year,
-                                        Model.DateOfBirthDay,
-                                        Model.DateOfBirthMonth,
-                                        Model.DateOfBirthYear,
-                                        false,
-                                        new { @class = "col-3 custom-select dateHelper" })
+                        <div class="input-group">
+                            @Html.DatePickerDropDowns(Html.NameFor(x => x.DateOfBirthDay),
+                                                  Html.NameFor(x => x.DateOfBirthMonth),
+                                                  Html.NameFor(x => x.DateOfBirthYear),
+                                                  DateTime.Now.Year - 110,
+                                                  DateTime.Now.Year,
+                                                  Model.DateOfBirthDay,
+                                                  Model.DateOfBirthMonth,
+                                                  Model.DateOfBirthYear,
+                                                  false,
+                                                  new { @class = "col-4 custom-select dateHelper" })
                             <span asp-validation-for="DateOfBirthDay"></span>
                             <span asp-validation-for="DateOfBirthMonth"></span>
                             <span asp-validation-for="DateOfBirthYear"></span>
@@ -155,7 +176,7 @@
         {
             <div class="card mb-3">
                 <h3 class="card-header">@T("Account.CompanyDetails")</h3>
-                <div class="card-block">
+                <div class="card-body">
                     <div class="form-fields">
                         @if (Model.CompanyEnabled)
                         {
@@ -169,7 +190,7 @@
                         {
                             <div class="form-group">
                                 <label asp-for="VatNumber" class="col-form-label">@T("Account.Fields.VatNumber"):</label>
-                                <input asp-for="VatNumber" class="form-control"/>
+                                <input asp-for="VatNumber" class="form-control" />
                                 <span class="vat-status">@Model.VatNumberStatusNote</span>
                                 <span class="vat-note"><em>@T("Account.Fields.VatNumber.Note")</em></span>
                             </div>
@@ -179,16 +200,16 @@
             </div>
         }
         @if (Model.StreetAddressEnabled ||
-            Model.StreetAddress2Enabled ||
-            Model.ZipPostalCodeEnabled ||
-            Model.CityEnabled ||
-            Model.CountryEnabled)
+        Model.StreetAddress2Enabled ||
+        Model.ZipPostalCodeEnabled ||
+        Model.CityEnabled ||
+        Model.CountryEnabled)
         {
             <div class="card mb-3">
                 <h3 class="card-header">
                     @T("Account.YourAddress")
                 </h3>
-                <div class="card-block">
+                <div class="card-body">
                     <div class="form-fields">
                         <div class="row d-flex">
                             @if (Model.StreetAddressEnabled)
@@ -256,7 +277,7 @@
         {
             <div class="card mb-3">
                 <h3 class="card-header">@T("Account.YourContactInformation")</h3>
-                <div class="card-block d-flex flex-row row">
+                <div class="card-body d-flex flex-row row">
                     @if (Model.PhoneEnabled)
                     {
                         <fieldset class="form-group col-12 col-sm-6">
@@ -280,27 +301,28 @@
             </div>
         }
 
-        @if (Model.NewsletterEnabled || Model.CustomerAttributes.Count > 0)
+        @if (Model.NewsletterEnabled || Model.CustomerAttributes.Any())
         {
             <div class="card mb-3">
                 <h3 class="card-header">
                     @T("Account.Options")
                 </h3>
-                <div class="card-block">
+                <div class="card-body">
                     <fieldset class="form-fields">
                         <legend class="sr-only">@T("account.fields.newsletter")</legend>
                         @if (Model.NewsletterEnabled)
                         {
                             <div class="form-group">
-                                <span class="custom-control custom-checkbox">
+                                <label class="custom-control custom-checkbox">
                                     <input class="custom-control-input" asp-for="Newsletter" />
-                                    <span class="custom-control-indicator"></span>
-                                    <label asp-for="Newsletter" class="custom-control-description">@T("Account.Fields.Newsletter"):</label>
-                                </span>
+                                    <span class="custom-control-label"></span>
+                                    <label asp-for="Newsletter" class="custom-control-description">@T("Account.Fields.Newsletter")</label>
+                                </label>
                             </div>
+                            @await Html.PartialAsync("_NewsLetterCategories", Model.NewsletterCategories)
                         }
 
-                        @if (Model.CustomerAttributes.Count > 0)
+                        @if (Model.CustomerAttributes.Any())
                         {
                             @await Html.PartialAsync("_CustomerAttributes", Model.CustomerAttributes)
                         }
@@ -312,7 +334,7 @@
         {
             <div class="card mb-3">
                 <h3 class="card-header">@T("Account.Preferences")</h3>
-                <div class="card-block">
+                <div class="card-body">
                     <fieldset class="form-fields">
                         <legend class="sr-only">@T("account.fields.timezone")</legend>
                         @if (Model.AllowCustomersToSetTimeZone)
@@ -340,7 +362,7 @@
         {
             <div class="card mb-3">
                 <h3 class="card-header">@T("Account.AssociatedExternalAuth")</h3>
-                <div class="card-block">
+                <div class="card-body">
                     @if (Model.AssociatedExternalAuthRecords.Count > 0)
                     {
                         //existing associated external records
@@ -381,7 +403,7 @@
                                                 @CommonHelper.EnsureMaximumLength(item.ExternalIdentifier, 40, "...")
                                             </td>
                                             <td class="remove">
-                                                <a href="#" onclick="removeexternalassociation(@item.Id)">@T("Account.AssociatedExternalAuth.Remove")</a>
+                                                <a href="#" onclick="removeexternalassociation('@item.Id')">@T("Account.AssociatedExternalAuth.Remove")</a>
                                             </td>
                                         </tr>
                                     }

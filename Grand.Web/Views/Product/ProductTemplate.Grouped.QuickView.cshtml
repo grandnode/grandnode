@@ -1,0 +1,179 @@
+﻿@model ProductDetailsModel
+@using Microsoft.AspNetCore.Http.Extensions
+@inject SeoSettings seoSettings
+@{
+    Layout = "";
+}
+<div class="product-quickview">
+    <div class="modal-dialog container" role="document">
+        <div class="modal-content rounded-0">
+            <button type="button" class="close text-dark" data-dismiss="modal" aria-label="Close">
+                <span class="quick-close"></span>
+            </button>
+            <div class="page product-details-page">
+                    @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_top", additionalData = Model.Id })
+                    <form asp-route="Product" asp-route-sename="@Model.SeName" method="post" id="product-details-form">
+                        <div itemscope itemtype="http://schema.org/Product" data-productid="@Model.Id">
+                            <div class="col-12 product-essential px-0">
+                                <div class="col d-md-inline-flex d-md-flex px-0 item-container">
+                                    @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_before_pictures", additionalData = Model.Id })
+                                    <!--product pictures-->
+                                    @await Html.PartialAsync("_ProductDetailsPictures", Model)
+                                    @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_after_pictures", additionalData = Model.Id })
+                                    <div class="overview col-md-6 col-12">
+                                        @await Html.PartialAsync("_Discontinued", Model)
+                                        <div class="product-name">
+                                            <h2 class="generalTitle mb-3" itemprop="name">
+                                                @Model.Name
+                                            </h2>
+                                        </div>
+                                        @if (!String.IsNullOrEmpty(Model.ShortDescription))
+                                        {
+                                            <div class="short-description mb-3">
+                                                @Html.Raw(Model.ShortDescription)
+                                            </div>
+                                        }
+                                        @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_overview_top", additionalData = Model.Id })
+                                        <!--product reviews-->
+                                        @await Html.PartialAsync("_ProductReviewOverview", Model.ProductReviewOverview)
+                                        <!--product manufacturers-->
+                                        @await Html.PartialAsync("_ProductManufacturers", Model.ProductManufacturers)
+                                        <!--compare, email a friend-->
+                                        <div class="overview-buttons mt-3 mb-3">
+                                            @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_inside_overview_buttons_before", additionalData = Model.Id })
+                                            @await Html.PartialAsync("_CompareProductsButton", Model)
+                                            @await Html.PartialAsync("_ProductEmailAFriendButton", Model)
+                                            @await Html.PartialAsync("_ProductAskQuestionButton", Model)
+                                            @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_inside_overview_buttons_after", additionalData = Model.Id })
+                                        </div>
+                                        @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_overview_bottom", additionalData = Model.Id })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 mt-2 mb-2 px-0">
+                                <ul class="nav nav-tabs product-tabs" id="myTab" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="desc-tab" data-toggle="tab" href="#desc" role="tab" aria-controls="desc" aria-selected="true"><span class="d-none d-md-block">@T("Products.Description")</span><i class="fa fa-sticky-note d-md-none"></i></a>
+                                    </li>
+                                    @if (Model.ProductTags.Any())
+                                    {
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="tags-tab" data-toggle="tab" href="#tags" role="tab" aria-controls="tags" aria-selected="false"><span class="d-none d-md-block">@T("Products.Tags")</span><i class="fa fa-tags d-md-none"></i></a>
+                                        </li>
+                                    }
+                                    @if (Model.ProductSpecifications.Any())
+                                    {
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="spec-tab" data-toggle="tab" href="#spec" role="tab" aria-controls="spec" aria-selected="false"><span class="d-none d-md-block">@T("Products.Specs")</span><i class="fa fa-puzzle-piece d-md-none"></i></a>
+                                        </li>
+                                    }
+                                </ul>
+                                <div class="tab-content" id="product_tab_content">
+                                    <div class="tab-pane fade show active" id="desc" role="tabpanel" aria-labelledby="desc-tab">@Html.Raw(Model.FullDescription)</div>
+                                    @if (Model.ProductTags.Any())
+                                    {
+                                        <div class="tab-pane fade" id="tags" role="tabpanel" aria-labelledby="tags-tab">@await Html.PartialAsync("_ProductTags", Model.ProductTags)</div>
+                                    }
+                                    @if (Model.ProductSpecifications.Any())
+                                    {
+                                        <div class="tab-pane fade" id="spec" role="tabpanel" aria-labelledby="spec-tab">@await Html.PartialAsync("_ProductSpecifications", Model.ProductSpecifications)</div>
+                                    }
+                                </div>
+                            </div>
+                            @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_before_collateral", additionalData = Model.Id })
+                            <div class="product-collateral col-12 mb-1 mt-1">
+                                <div class="d-flex row">
+                                    <!--associated products-->
+                                    @foreach (var variant in Model.AssociatedProducts)
+                                    {
+                                                    <div class="col-12 associatedItem mb-3"  data-productid="@variant.Id">
+                                                        <div class="flex-sm-row row">
+                                                            @if (!String.IsNullOrWhiteSpace(variant.DefaultPictureModel.ImageUrl))
+                                                            {
+                                                                <div class="col-sm-3 col-12">
+                                                                    <img class="card-img-top img-fluid" alt="@variant.DefaultPictureModel.AlternateText" src="@variant.DefaultPictureModel.ImageUrl"
+                                                                         title="@variant.DefaultPictureModel.Title" id="main-product-img-@variant.Id" />
+                                                                </div>
+                                                            }
+                                                            <div class="col-sm-9 col-12 px-sm-2">
+                                                                @if (!String.IsNullOrWhiteSpace(variant.Name))
+                                                                {
+                                                                    <div class="variant-name">
+                                                                        @variant.Name
+                                                                    </div>
+                                                                }
+                                                                @if (!String.IsNullOrWhiteSpace(variant.ShortDescription))
+                                                                {
+                                                                    <div class="variant-description">
+                                                                        @Html.Raw(variant.ShortDescription)
+                                                                    </div>
+                                                                }
+                                                                <!--availability-->
+                                                                @await Html.PartialAsync("_Availability", variant)
+                                                                <!--SKU, MAN, GTIN, vendor-->
+                                                                @await Html.PartialAsync("_SKU_Man_GTIN_Ven", variant)
+                                                                <!--delivery-->
+                                                                @await Html.PartialAsync("_DeliveryInfo", variant)
+                                                                <!--sample download-->
+                                                                @await Html.PartialAsync("_DownloadSample", variant)
+                                                                <!--attributes-->
+                                                                @{
+                                                                    var dataDictAttributes = new ViewDataDictionary(ViewData);
+                                                                    dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", variant.Id);
+                                                                    @await Html.PartialAsync("_ProductAttributes", variant.ProductAttributes, dataDictAttributes)
+                                                                }
+                                                                <!--gift card-->
+                                                                @{
+                                                                    var dataDictGiftCard = new ViewDataDictionary(ViewData);
+                                                                    dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", variant.Id);
+                                                                    @await Html.PartialAsync("_GiftCardInfo", variant.GiftCard, dataDictGiftCard)
+                                                                }
+                                                                <!--reservation info-->
+                                                                @if (Model.ProductType == ProductType.Reservation)
+                                                                {
+                                                                    var dataDictReservation = new ViewDataDictionary(ViewData);
+                                                                    dataDictReservation.TemplateInfo.HtmlFieldPrefix = string.Format("reservation_{0}", Model.Id);
+                                                                    @await Html.PartialAsync("_ReservationInfo", Model, dataDictReservation)
+                                                                }
+                                                                <!--price breaks-->
+                                                                @await Html.PartialAsync("_ProductTierPrices", variant.TierPrices)
+                                                                @{
+                                                                    var dataDictAddToCart = new ViewDataDictionary(ViewData);
+                                                                    dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
+                                                                }
+                                                                <!--price & add to cart-->
+                                                                @{
+                                                                    var dataDictPrice = new ViewDataDictionary(ViewData);
+                                                                    dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", variant.Id);
+                                                                    @await Html.PartialAsync("_ProductPrice", variant.ProductPrice, dataDictPrice)
+                                                                }
+                                                                <div class="row mt-3 px-2">
+                                                                     @{
+                                                                        @await Html.PartialAsync("_AddToCartGroup", variant.AddToCart, dataDictAddToCart)
+                                                                        var dataDictAddToWishlist = new ViewDataDictionary(ViewData);
+                                                                        dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
+                                                                        @await Html.PartialAsync("_AddToWishlistGroup", variant.AddToCart, dataDictAddToWishlist)
+                                                                     }
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                </div>
+                                    }
+
+                                    @if (Model.AssociatedProducts.Count == 0)
+                                    {
+                                        <div class="no-associated-products">
+                                            @T("Products.NoAssociatedProducts")
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        @await Component.InvokeAsync("RelatedProducts", new { productId = Model.Id })
+                    </form>
+                    @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_bottom", additionalData = Model.Id })
+                </div>
+            </div>
+        </div>
+</div>

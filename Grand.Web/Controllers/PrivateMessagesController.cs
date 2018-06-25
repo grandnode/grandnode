@@ -11,12 +11,10 @@ using Grand.Services.Logging;
 using Grand.Framework.Controllers;
 using Grand.Framework.Security;
 using Grand.Web.Models.PrivateMessages;
-using Grand.Framework.Mvc.Filters;
 using Microsoft.AspNetCore.Http;
 
 namespace Grand.Web.Controllers
 {
-    [HttpsRequirement(SslRequirement.Yes)]
     public partial class PrivateMessagesController : BasePublicController
     {
         #region Fields
@@ -65,7 +63,7 @@ namespace Grand.Web.Controllers
 
             if (_workContext.CurrentCustomer.IsGuest())
             {
-                return new UnauthorizedResult();
+                return Challenge();
             }
 
             int inboxPage = 0;
@@ -187,7 +185,7 @@ namespace Grand.Web.Controllers
 
             if (_workContext.CurrentCustomer.IsGuest())
             {
-                return new UnauthorizedResult();
+                return Challenge();
             }
 
             var customerTo = _customerService.GetCustomerById(toCustomerId);
@@ -234,7 +232,7 @@ namespace Grand.Web.Controllers
 
             if (_workContext.CurrentCustomer.IsGuest())
             {
-                return new UnauthorizedResult();
+                return Challenge();
             }
 
             Customer toCustomer = null;
@@ -322,7 +320,7 @@ namespace Grand.Web.Controllers
 
             if (_workContext.CurrentCustomer.IsGuest())
             {
-                return new UnauthorizedResult();
+                return Challenge();
             }
 
             var pm = _forumService.GetPrivateMessageById(privateMessageId);
@@ -375,7 +373,7 @@ namespace Grand.Web.Controllers
 
             if (_workContext.CurrentCustomer.IsGuest())
             {
-                return new UnauthorizedResult();
+                return Challenge();
             }
 
             var pm = _forumService.GetPrivateMessageById(privateMessageId);

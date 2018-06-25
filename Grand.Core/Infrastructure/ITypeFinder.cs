@@ -6,7 +6,7 @@ namespace Grand.Core.Infrastructure
 {
     /// <summary>
     /// Classes implementing this interface provide information about types 
-    /// to various services in the Nop engine.
+    /// to various services in the Grand engine.
     /// </summary>
     public interface ITypeFinder
     {

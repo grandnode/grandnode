@@ -27,6 +27,11 @@ namespace Grand.Core.Domain.Common
         public string Company { get; set; }
 
         /// <summary>
+        /// Gets or sets the vat numer
+        /// </summary>
+        public string VatNumber { get; set; }
+
+        /// <summary>
         /// Gets or sets the country identifier
         /// </summary>
         public string CountryId { get; set; }
@@ -84,6 +89,7 @@ namespace Grand.Core.Domain.Common
                 LastName = this.LastName,
                 Email = this.Email,
                 Company = this.Company,
+                VatNumber = this.VatNumber,
                 CountryId = this.CountryId,
                 StateProvinceId = this.StateProvinceId,
                 City = this.City,

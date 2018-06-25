@@ -1,36 +1,35 @@
 ﻿@model CatalogSettingsModel
 
 <script type="text/javascript">
-        $(document).ready(function () {
+    $(document).ready(function () {
 
-            $("#@Html.FieldIdFor(model => model.SearchPageAllowCustomersToSelectPageSize)").click(toggleSearchPagePageSize);
-            $("#@Html.FieldIdFor(model => model.ProductSearchAutoCompleteEnabled)").click(toggleProductSearchAutoComplete);
+        $("#@Html.FieldIdFor(model => model.SearchPageAllowCustomersToSelectPageSize)").click(toggleSearchPagePageSize);
+        $("#@Html.FieldIdFor(model => model.ProductSearchAutoCompleteEnabled)").click(toggleProductSearchAutoComplete);
 
-            toggleSearchPagePageSize();
-            toggleProductSearchAutoComplete();
-        });
+        toggleSearchPagePageSize();
+        toggleProductSearchAutoComplete();
+    });
 
-        function toggleSearchPagePageSize() {
-            if ($('#@Html.FieldIdFor(model => model.SearchPageAllowCustomersToSelectPageSize)').is(':checked')) {
-                $('#pnlSearchPageProductsPerPage').hide();
-                $('#pnlSearchPagePageSizeOptions').show();
-            } else {
-                $('#pnlSearchPageProductsPerPage').show();
-                $('#pnlSearchPagePageSizeOptions').hide();
-            }
+    function toggleSearchPagePageSize() {
+        if ($('#@Html.FieldIdFor(model => model.SearchPageAllowCustomersToSelectPageSize)').is(':checked')) {
+            $('#pnlSearchPageProductsPerPage').hide();
+            $('#pnlSearchPagePageSizeOptions').show();
+        } else {
+            $('#pnlSearchPageProductsPerPage').show();
+            $('#pnlSearchPagePageSizeOptions').hide();
         }
+    }
 
-        function toggleProductSearchAutoComplete() {
-            if ($('#@Html.FieldIdFor(model => model.ProductSearchAutoCompleteEnabled)').is(':checked')) {
-                $('#pnlProductSearchAutoCompleteNumberOfProducts').show();
-                $('#pnlShowProductImagesInSearchAutoComplete').show();
-            }
-            else {
-                $('#pnlProductSearchAutoCompleteNumberOfProducts').hide();
-                $('#pnlShowProductImagesInSearchAutoComplete').hide();
-            }
+    function toggleProductSearchAutoComplete() {
+        if ($('#@Html.FieldIdFor(model => model.ProductSearchAutoCompleteEnabled)').is(':checked')) {
+            $('#pnlProductSearchAutoCompleteNumberOfProducts').show();
+            $('#pnlShowProductImagesInSearchAutoComplete').show();
         }
-
+        else {
+            $('#pnlProductSearchAutoCompleteNumberOfProducts').hide();
+            $('#pnlShowProductImagesInSearchAutoComplete').hide();
+        }
+    }
 </script>
 
 <div class="form-horizontal">
@@ -38,80 +37,80 @@
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.SearchPageAllowCustomersToSelectPageSize_OverrideForStore, model => model.SearchPageAllowCustomersToSelectPageSize, Model.ActiveStoreScopeConfiguration)
-                @Html.GrandLabelFor(model => model.SearchPageAllowCustomersToSelectPageSize, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="SearchPageAllowCustomersToSelectPageSize" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.SearchPageAllowCustomersToSelectPageSize)
+                    <admin-input asp-for="SearchPageAllowCustomersToSelectPageSize" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.SearchPageAllowCustomersToSelectPageSize)
+                <span asp-validation-for="SearchPageAllowCustomersToSelectPageSize"></span>
             </div>
         </div>
         <div class="form-group" id="pnlSearchPageProductsPerPage">
             <div class="col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.SearchPageProductsPerPage_OverrideForStore, model => model.SearchPageProductsPerPage, Model.ActiveStoreScopeConfiguration)
-                @Html.GrandLabelFor(model => model.SearchPageProductsPerPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="SearchPageProductsPerPage" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
-                @Html.GrandEditorFor(model => model.SearchPageProductsPerPage)
-                @Html.ValidationMessageFor(model => model.SearchPageProductsPerPage)
+                <admin-input asp-for="SearchPageProductsPerPage" />
+                <span asp-validation-for="SearchPageProductsPerPage"></span>
             </div>
         </div>
         <div class="form-group" id="pnlSearchPagePageSizeOptions">
             <div class="col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.ProductsByTagPageSizeOptions_OverrideForStore, model => model.SearchPagePageSizeOptions, Model.ActiveStoreScopeConfiguration)
-                @Html.GrandLabelFor(model => model.SearchPagePageSizeOptions, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="SearchPagePageSizeOptions" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
-                @Html.GrandEditorFor(model => model.SearchPagePageSizeOptions)
-                @Html.ValidationMessageFor(model => model.SearchPagePageSizeOptions)
+                <admin-input asp-for="SearchPagePageSizeOptions" />
+                <span asp-validation-for="SearchPagePageSizeOptions"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.ProductSearchAutoCompleteEnabled_OverrideForStore, model => model.ProductSearchAutoCompleteEnabled, Model.ActiveStoreScopeConfiguration)
-                @Html.GrandLabelFor(model => model.ProductSearchAutoCompleteEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="ProductSearchAutoCompleteEnabled" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.ProductSearchAutoCompleteEnabled)
+                    <admin-input asp-for="ProductSearchAutoCompleteEnabled" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.ProductSearchAutoCompleteEnabled)
+                <span asp-validation-for="ProductSearchAutoCompleteEnabled"></span>
             </div>
         </div>
         <div class="form-group" id="pnlProductSearchAutoCompleteNumberOfProducts">
             <div class="col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.ProductSearchAutoCompleteNumberOfProducts_OverrideForStore, model => model.ProductSearchAutoCompleteNumberOfProducts, Model.ActiveStoreScopeConfiguration)
-                @Html.GrandLabelFor(model => model.ProductSearchAutoCompleteNumberOfProducts, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="ProductSearchAutoCompleteNumberOfProducts" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
-                @Html.GrandEditorFor(model => model.ProductSearchAutoCompleteNumberOfProducts)
-                @Html.ValidationMessageFor(model => model.ProductSearchAutoCompleteNumberOfProducts)
+                <admin-input asp-for="ProductSearchAutoCompleteNumberOfProducts" />
+                <span asp-validation-for="ProductSearchAutoCompleteNumberOfProducts"></span>
             </div>
         </div>
         <div class="form-group" id="pnlShowProductImagesInSearchAutoComplete">
             <div class="col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.ShowProductImagesInSearchAutoComplete_OverrideForStore, model => model.ShowProductImagesInSearchAutoComplete, Model.ActiveStoreScopeConfiguration)
-                @Html.GrandLabelFor(model => model.ShowProductImagesInSearchAutoComplete, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="ShowProductImagesInSearchAutoComplete" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.ShowProductImagesInSearchAutoComplete)
+                    <admin-input asp-for="ShowProductImagesInSearchAutoComplete" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.ShowProductImagesInSearchAutoComplete)
+                <span asp-validation-for="ShowProductImagesInSearchAutoComplete"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.ProductSearchTermMinimumLength_OverrideForStore, model => model.ProductSearchTermMinimumLength, Model.ActiveStoreScopeConfiguration)
-                @Html.GrandLabelFor(model => model.ProductSearchTermMinimumLength, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="ProductSearchTermMinimumLength" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
-                @Html.GrandEditorFor(model => model.ProductSearchTermMinimumLength)
-                @Html.ValidationMessageFor(model => model.ProductSearchTermMinimumLength)
+                <admin-input asp-for="ProductSearchTermMinimumLength" />
+                <span asp-validation-for="ProductSearchTermMinimumLength"></span>
             </div>
         </div>
     </div>

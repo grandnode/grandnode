@@ -1,12 +1,9 @@
-﻿
+﻿@inject AdminAreaSettings adminAreaSettings
 @{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.RecurringPayments").Text;
 }
-@Html.AntiForgeryToken()
+<antiforgery-token />
 
 <div class="row">
     <div class="col-md-12">
@@ -30,9 +27,7 @@
     </div>
 </div>
 
-            
-
-<script>
+<script type="text/javascript">
     $(document).ready(function() {
         $("#recurringpayments-grid").kendoGrid({
             dataSource: {
@@ -54,14 +49,14 @@
                     // Cancel the changes
                     this.cancelChanges();
                 },
-                pageSize: @(defaultGridPageSize),
+                pageSize: @(adminAreaSettings.DefaultGridPageSize),
                 serverPaging: true,
                 serverFiltering: true,
                 serverSorting: true
             },
             pageable: {
                 refresh: true,
-                pageSizes: [@(gridPageSizes)]
+                pageSizes: [@(adminAreaSettings.GridPageSizes)]
             },
             editable: {
                 confirmation: false,
@@ -72,52 +67,48 @@
                 {
                     field: "Id",
                     title: "@T("Admin.RecurringPayments.Fields.ID")",
-                    width: 50
+                    width: 120,
+                    template: '<a class="k-link" href="Edit/#=Id#">#=Id#</a>',
                 }, {
                     field: "CustomerId",
                     title: "@T("Admin.RecurringPayments.Fields.Customer")",
-                    width: 200,
+                    width: 170,
                     template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerEmail#</a>'
                 }, {
                     field: "CycleLength",
                     title: "@T("Admin.RecurringPayments.Fields.CycleLength")",
-                    width: 50
+                    width: 80
                 }, {
                     field: "CyclePeriodStr",
                     title: "@T("Admin.RecurringPayments.Fields.CyclePeriod")",
-                    width: 100
+                    width: 80
                 }, {
                     field: "IsActive",
                     title: "@T("Admin.RecurringPayments.Fields.IsActive")",
-                    width: 100,
+                    width: 80,
                     headerAttributes: { style: "text-align:center" },
                     attributes: { style: "text-align:center" },
                     template: '# if(IsActive) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
                 }, {
                     field: "StartDate",
                     title: "@T("Admin.RecurringPayments.Fields.StartDate")",
-                    width: 200,
+                    width: 180,
                     type: "date",
                     format: "{0:G}"
                 }, {
                     field: "NextPaymentDate",
                     title: "@T("Admin.RecurringPayments.Fields.NextPaymentDate")",
-                    width: 200,
+                    width: 180,
                     type: "date",
                     format: "{0:G}"
                 }, {
                     field: "TotalCycles",
                     title: "@T("Admin.RecurringPayments.Fields.TotalCycles")",
-                    width: 100
+                    width: 80
                 }, {
                     field: "CyclesRemaining",
                     title: "@T("Admin.RecurringPayments.Fields.CyclesRemaining")",
                     width: 100
-                }, {
-                    field: "Id",
-                    title: "@T("Admin.Common.Edit")",
-                    width: 100,
-                    template: '<a class="btn btn-sm btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
                 }
             ]
         });

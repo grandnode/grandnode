@@ -3,10 +3,8 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Attributes.ProductAttributes.EditAttributeDetails").Text;
 }
-
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "productattribute-form" }))
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="ProductAttribute" asp-action="Edit" method="post"  id="productattribute-form">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -17,7 +15,7 @@
                         <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Catalog.Attributes.ProductAttributes.BackToList").Text, "List")</small>
                     </div>
                     <div class="actions">
-                        <div class="btn-group btn-group-devided">
+                        <div class="btn-group btn-group-devided util-btn-margin-bottom-5">
                             <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
                             <button class="btn btn-success" type="submit" name="save-continue"><i class="fa fa-check-circle"></i> @T("Admin.Common.SaveContinue") </button>
                             <span id="productattribute-delete" class="btn red"><i class="fa fa-trash-o"></i> @T("Admin.Common.Delete")</span>
@@ -30,5 +28,5 @@
             </div>
         </div>
     </div>
-}
+</form>
 @Html.DeleteConfirmation("productattribute-delete")

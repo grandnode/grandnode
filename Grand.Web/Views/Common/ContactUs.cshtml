@@ -19,7 +19,7 @@
         }
         else
         {
-            <form asp-route="ContactUs" method="post">
+            <form asp-route="ContactUs" method="post" id="contactus-form">
                 <div asp-validation-summary="ModelOnly" class="message-error"></div>
                     <div class="form-fields">
                         <div class="form-group">
@@ -52,8 +52,9 @@
                             </div>
                         }
                     </div>
+                    @await Html.PartialAsync("_ContactAttributes", Model.ContactAttributes)
                 <div class="buttons mt-1 mb-1">
-                    <input type="submit" name="send-email" class="btn btn-success contact-us-button" value="@T("ContactUs.Button")" />
+                    <input type="submit" name="send-email" class="btn btn-info contact-us-button" value="@T("ContactUs.Button")" />
                 </div>
             </form>
         }

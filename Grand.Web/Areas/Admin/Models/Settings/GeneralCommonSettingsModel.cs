@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using Grand.Framework;
 using Grand.Framework.Mvc;
 using Grand.Framework.Security.Captcha;
+using Grand.Web.Areas.Admin.Helpers;
 
 namespace Grand.Web.Areas.Admin.Models.Settings
 {
@@ -22,8 +23,9 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             FullTextSettings = new FullTextSettingsModel();
             GoogleAnalyticsSettings = new GoogleAnalyticsSettingsModel();
             DisplayMenuSettings = new DisplayMenuSettingsModel();
+            KnowledgebaseSettings = new KnowledgebaseSettingsModel();
         }
-
+        public string ActiveStoreScopeConfiguration { get; set; }
         public StoreInformationSettingsModel StoreInformationSettings { get; set; }
         public SeoSettingsModel SeoSettings { get; set; }
         public SecuritySettingsModel SecuritySettings { get; set; }
@@ -31,11 +33,13 @@ namespace Grand.Web.Areas.Admin.Models.Settings
         public LocalizationSettingsModel LocalizationSettings { get; set; }
         public FullTextSettingsModel FullTextSettings { get; set; }
         public GoogleAnalyticsSettingsModel GoogleAnalyticsSettings { get; set; }
-
         public DisplayMenuSettingsModel DisplayMenuSettings { get; set; }
+        public KnowledgebaseSettingsModel KnowledgebaseSettings { get; set; }
 
-        public string ActiveStoreScopeConfiguration { get; set; }
-
+        [GrandResourceDisplayName("Admin.Configuration.Settings.AdminLayout")]
+        public AdminLayout Layout { get; set; }
+        [GrandResourceDisplayName("Admin.Configuration.Settings.GridLayout")]
+        public KendoLayout GridLayout { get; set; }
 
         #region Nested classes
 
@@ -116,7 +120,6 @@ namespace Grand.Web.Areas.Admin.Models.Settings
         {
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PageTitleSeparator")]
             
-            [NoTrim]
             public string PageTitleSeparator { get; set; }
             public bool PageTitleSeparator_OverrideForStore { get; set; }
             
@@ -188,9 +191,6 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.AdminAreaAllowedIpAddresses")]
             
             public string AdminAreaAllowedIpAddresses { get; set; }
-
-            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.ForceSslForAllPages")]
-            public bool ForceSslForAllPages { get; set; }
 
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForAdminArea")]
             public bool EnableXsrfProtectionForAdminArea { get; set; }
@@ -347,6 +347,12 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayMenuSettings.DisplayContactUsMenu")]
             public bool DisplayContactUsMenu { get; set; }
             public bool DisplayContactUsMenu_OverrideForStore { get; set; }
+        }
+        public partial class KnowledgebaseSettingsModel : BaseGrandModel
+        {
+            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.KnowledgebaseSettings.Enabled")]
+            public bool Enabled { get; set; }
+            public bool Enabled_OverrideForStore { get; set; }
         }
 
         #endregion

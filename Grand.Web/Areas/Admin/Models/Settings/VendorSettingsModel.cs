@@ -1,15 +1,17 @@
 ﻿using Grand.Framework.Mvc.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework;
-using Grand.Framework.Mvc;
 
 namespace Grand.Web.Areas.Admin.Models.Settings
 {
     public partial class VendorSettingsModel : BaseGrandModel
     {
-        public string ActiveStoreScopeConfiguration { get; set; }
 
+        public VendorSettingsModel()
+        {
+            AddressSettings = new AddressSettingsModel();
+        }
+
+        public string ActiveStoreScopeConfiguration { get; set; }
 
         [GrandResourceDisplayName("Admin.Configuration.Settings.Vendor.VendorsBlockItemsToDisplay")]
         public int VendorsBlockItemsToDisplay { get; set; }
@@ -60,5 +62,58 @@ namespace Grand.Web.Areas.Admin.Models.Settings
         public bool NotifyVendorAboutNewVendorReviews { get; set; }
         public bool NotifyVendorAboutNewVendorReviews_OverrideForStore { get; set; }
 
+        public AddressSettingsModel AddressSettings { get; set; }
+
+        #region Nested classes
+
+        public partial class AddressSettingsModel : BaseGrandModel
+        {
+            [GrandResourceDisplayName("Admin.Configuration.Settings.Vendor.AddressFormFields.CompanyEnabled")]
+            public bool CompanyEnabled { get; set; }
+            [GrandResourceDisplayName("Admin.Configuration.Settings.Vendor.AddressFormFields.CompanyRequired")]
+            public bool CompanyRequired { get; set; }
+
+            [GrandResourceDisplayName("Admin.Configuration.Settings.Vendor.AddressFormFields.StreetAddressEnabled")]
+            public bool StreetAddressEnabled { get; set; }
+            [GrandResourceDisplayName("Admin.Configuration.Settings.Vendor.AddressFormFields.StreetAddressRequired")]
+            public bool StreetAddressRequired { get; set; }
+
+            [GrandResourceDisplayName("Admin.Configuration.Settings.Vendor.AddressFormFields.StreetAddress2Enabled")]
+            public bool StreetAddress2Enabled { get; set; }
+            [GrandResourceDisplayName("Admin.Configuration.Settings.Vendor.AddressFormFields.StreetAddress2Required")]
+            public bool StreetAddress2Required { get; set; }
+
+            [GrandResourceDisplayName("Admin.Configuration.Settings.Vendor.AddressFormFields.ZipPostalCodeEnabled")]
+            public bool ZipPostalCodeEnabled { get; set; }
+            [GrandResourceDisplayName("Admin.Configuration.Settings.Vendor.AddressFormFields.ZipPostalCodeRequired")]
+            public bool ZipPostalCodeRequired { get; set; }
+
+            [GrandResourceDisplayName("Admin.Configuration.Settings.Vendor.AddressFormFields.CityEnabled")]
+            public bool CityEnabled { get; set; }
+            [GrandResourceDisplayName("Admin.Configuration.Settings.Vendor.AddressFormFields.CityRequired")]
+            public bool CityRequired { get; set; }
+
+            [GrandResourceDisplayName("Admin.Configuration.Settings.Vendor.AddressFormFields.CountryEnabled")]
+            public bool CountryEnabled { get; set; }
+
+            [GrandResourceDisplayName("Admin.Configuration.Settings.Vendor.AddressFormFields.StateProvinceEnabled")]
+            public bool StateProvinceEnabled { get; set; }
+
+            [GrandResourceDisplayName("Admin.Configuration.Settings.Vendor.AddressFormFields.PhoneEnabled")]
+            public bool PhoneEnabled { get; set; }
+            [GrandResourceDisplayName("Admin.Configuration.Settings.Vendor.AddressFormFields.PhoneRequired")]
+            public bool PhoneRequired { get; set; }
+
+            [GrandResourceDisplayName("Admin.Configuration.Settings.Vendor.AddressFormFields.FaxEnabled")]
+            public bool FaxEnabled { get; set; }
+            [GrandResourceDisplayName("Admin.Configuration.Settings.Vendor.AddressFormFields.FaxRequired")]
+            public bool FaxRequired { get; set; }
+        }
+
+        #endregion
+
     }
+
+
+
 }

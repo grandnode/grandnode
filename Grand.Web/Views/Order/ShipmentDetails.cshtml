@@ -7,7 +7,7 @@
 <div class="page shipment-details-page">
     <h2 class="generalTitle text-center">@string.Format(T("Order.Shipments.Information").Text, Model.ShipmentNumber)</h2>
     <div class="shipment-details-area card">
-        <div class="card-block row">
+        <div class="card-body row">
             <ul class="shipping-details col-md-6 col-12">
                 <li class="title">
                     <h5 class="generalTitle">@T("Order.Shipments.Order#")@Model.Order.OrderNumber</h5>
@@ -122,7 +122,7 @@
             </ul>
         </div>
     </div>
-    @if (Model.Items.Count > 0)
+    @if (Model.Items.Any())
     {
         <div class="section products">
             <h5><strong>@T("Order.Shipments.Product(s)")</strong></h5>
@@ -138,10 +138,10 @@
                                                 @T("Order.Shipments.Product(s).SKU")
                                             </div>
                                         }
-                                        <div class="col name hidden-md-down">
+                                        <div class="col name d-none d-lg-block">
                                             @T("Order.Shipments.Product(s).Name")
                                         </div>
-                                        <div class="col-2 quantity hidden-md-down">
+                                        <div class="col-2 quantity d-none d-lg-block">
                                             @T("Order.Shipments.Product(s).Quantity")
                                         </div>
                                     </div>
@@ -159,12 +159,12 @@
                                             @if (Model.ShowSku)
                                             {
                                                 <div class="col-md-2 col-12 sku">
-                                                    <strong class="hidden-lg-up">@T("Order.Shipments.Product(s).SKU"): </strong>
+                                                    <strong class="d-lg-none">@T("Order.Shipments.Product(s).SKU"): </strong>
                                                     @item.Sku
                                                 </div>
                                             }
                                             <div class="col-12 col-md name">
-                                                <strong class="hidden-lg-up">@T("Order.Shipments.Product(s).Name"): </strong>
+                                                <strong class="d-lg-none">@T("Order.Shipments.Product(s).Name"): </strong>
                                                 <em><a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a></em>
                                                 @if (!String.IsNullOrEmpty(item.AttributeInfo))
                                                 {
@@ -180,7 +180,7 @@
                                                 }
                                             </div>
                                             <div class="col-md-2 col-12 quantity">
-                                                <strong class="hidden-lg-up">@T("Order.Shipments.Product(s).Quantity"): </strong>
+                                                <strong class="d-lg-none">@T("Order.Shipments.Product(s).Quantity"): </strong>
                                                 @item.QuantityShipped
                                             </div>
                                         </div>
@@ -192,7 +192,7 @@
                 </table>
         </div>
     }
-    @if (Model.ShipmentStatusEvents.Count > 0)
+    @if (Model.ShipmentStatusEvents.Any())
     {
         <div class="shipment-status-events">
             <h5><strong>@T("Order.ShipmentStatusEvents")</strong></h5>

@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
 using FluentValidation.Attributes;
-using Grand.Framework;
 using Grand.Framework.Mvc.Models;
 using Grand.Web.Validators.Customer;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Grand.Framework.Mvc.ModelBinding;
+using Grand.Web.Models.Newsletter;
 
 namespace Grand.Web.Models.Customer
 {
@@ -20,6 +19,7 @@ namespace Grand.Web.Models.Customer
             this.AvailableCountries = new List<SelectListItem>();
             this.AvailableStates = new List<SelectListItem>();
             this.CustomerAttributes = new List<CustomerAttributeModel>();
+            this.NewsletterCategories = new List<NewsletterSimpleCategory>();
         }
 
         [GrandResourceDisplayName("Account.Fields.Email")]
@@ -32,12 +32,10 @@ namespace Grand.Web.Models.Customer
         public bool CheckUsernameAvailabilityEnabled { get; set; }
 
         [DataType(DataType.Password)]
-        [NoTrim]
         [GrandResourceDisplayName("Account.Fields.Password")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [NoTrim]
         [GrandResourceDisplayName("Account.Fields.ConfirmPassword")]
         public string ConfirmPassword { get; set; }
 
@@ -143,5 +141,6 @@ namespace Grand.Web.Models.Customer
         public bool DisplayCaptcha { get; set; }
 
         public IList<CustomerAttributeModel> CustomerAttributes { get; set; }
+        public IList<NewsletterSimpleCategory> NewsletterCategories { get; set; }
     }
 }

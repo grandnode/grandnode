@@ -1,50 +1,49 @@
 ﻿@model CurrencyModel
-@using Grand.Core.Domain.Directory
 
 @(Html.LocalizedEditor<CurrencyModel, CurrencyLocalizedModel>("currency-info-localized",
-    @<div class="form-horizontal">
-        <div class="form-body">
-            <div class="form-group">
-                @Html.GrandLabelFor(model => model.Locales[item].Name)
-                <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.Locales[item].Name)
-                    @Html.ValidationMessageFor(model => model.Locales[item].Name)
-                </div>
-            </div>
-            @Html.HiddenFor(model => model.Locales[item].LanguageId)
-        </div>
-    </div>
-                ,
-    @<div class="form-horizontal">
-        <div class="form-body">
-            <div class="form-group">
-                @Html.GrandLabelFor(model => model.Name)
-                <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.Name)
-                    @Html.ValidationMessageFor(model => model.Name)
-                </div>
+@<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            <admin-label asp-for="@Model.Locales[item].Name" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="@Model.Locales[item].Name" />
+                <span asp-validation-for="@Model.Locales[item].Name"></span>
             </div>
         </div>
+        <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
     </div>
-            ))
+</div>
+,
+@<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            <admin-label asp-for="Name" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="Name" />
+                <span asp-validation-for="Name"></span>
+            </div>
+        </div>
+    </div>
+</div>
+))
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.CurrencyCode)
+            <admin-label asp-for="CurrencyCode" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.CurrencyCode)
-                @Html.ValidationMessageFor(model => model.CurrencyCode)
+                <admin-input asp-for="CurrencyCode" />
+                <span asp-validation-for="CurrencyCode"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.Rate)
+            <admin-label asp-for="Rate" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.Rate)
-                @Html.ValidationMessageFor(model => model.Rate)
+                <admin-input asp-for="Rate" />
+                <span asp-validation-for="Rate"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.DisplayLocale)
+            <admin-label asp-for="DisplayLocale" />
             <div class="col-md-9 col-sm-9">
                 @{
                     var cultures = System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.SpecificCultures)
@@ -61,55 +60,55 @@
                         Text = @T("Admin.Configuration.Currencies.Fields.DisplayLocale.Select").Text
                     });
                 }
-                @Html.GrandDropDownListFor(model => model.DisplayLocale, cultures)
-                @Html.ValidationMessageFor(model => model.DisplayLocale)
+                <admin-select asp-for="DisplayLocale" asp-items="cultures" />
+                <span asp-validation-for="DisplayLocale"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.CustomFormatting)
+            <admin-label asp-for="CustomFormatting" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.CustomFormatting)
-                @Html.ValidationMessageFor(model => model.CustomFormatting)
+                <admin-input asp-for="CustomFormatting" />
+                <span asp-validation-for="CustomFormatting"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.Published)
+            <admin-label asp-for="Published" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.Published)
+                    <admin-input asp-for="Published" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.Published)
+                <span asp-validation-for="Published"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.DisplayOrder)
+            <admin-label asp-for="DisplayOrder" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.DisplayOrder)
-                @Html.ValidationMessageFor(model => model.DisplayOrder)
+                <admin-input asp-for="DisplayOrder" />
+                <span asp-validation-for="DisplayOrder"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.RoundingTypeId)
+            <admin-label asp-for="RoundingTypeId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.RoundingTypeId, ((RoundingType)Model.RoundingTypeId).ToSelectList())
-                @Html.ValidationMessageFor(model => model.RoundingTypeId)
+                <admin-select asp-for="RoundingTypeId" asp-items="((RoundingType)Model.RoundingTypeId).ToSelectList()" />
+                <span asp-validation-for="RoundingTypeId"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.MidpointRoundId)
+            <admin-label asp-for="MidpointRoundId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.MidpointRoundId, ((MidpointRounding)Model.MidpointRoundId).ToSelectList())
-                @Html.ValidationMessageFor(model => model.MidpointRoundId)
+                <admin-select asp-for="MidpointRoundId" asp-items="((MidpointRounding)Model.MidpointRoundId).ToSelectList()" />
+                <span asp-validation-for="MidpointRoundId"></span>
             </div>
         </div>
 
         @if (!String.IsNullOrEmpty(Model.Id))
-            {
+        {
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.CreatedOn)
+                <admin-label asp-for="CreatedOn" />
                 <div class="col-md-9 col-sm-9">
-                    <label class="control-label">@Html.DisplayFor(model => model.CreatedOn)</label> 
+                    <label class="control-label">@Model.CreatedOn</label>
                 </div>
             </div>
         }

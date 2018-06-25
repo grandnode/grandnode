@@ -9,6 +9,7 @@ namespace Grand.Core.Domain.Catalog
     public partial class ProductAttributeCombination : SubBaseEntity
     {
         private ICollection<ProductCombinationWarehouseInventory> _warehouseInventory;
+        private ICollection<ProductCombinationTierPrices> _tierPrices;
 
         /// <summary>
         /// Gets or sets the product identifier
@@ -29,7 +30,12 @@ namespace Grand.Core.Domain.Catalog
         /// Gets or sets a value indicating whether to allow orders when out of stock
         /// </summary>
         public bool AllowOutOfStockOrders { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets the text
+        /// </summary>
+        public string Text { get; set; }
+
         /// <summary>
         /// Gets or sets the SKU
         /// </summary>
@@ -56,6 +62,11 @@ namespace Grand.Core.Domain.Catalog
         public int NotifyAdminForQuantityBelow { get; set; }
 
         /// <summary>
+        /// Gets or sets the identifier of picture associated with this combination
+        /// </summary>
+        public string PictureId { get; set; }
+
+        /// <summary>
         /// Gets or sets the collection of "ProductCombinationWarehouseInventory" records. We use it only when "UseMultipleWarehouses" is set to "true"
         /// </summary>
         public virtual ICollection<ProductCombinationWarehouseInventory> WarehouseInventory
@@ -63,5 +74,15 @@ namespace Grand.Core.Domain.Catalog
             get { return _warehouseInventory ?? (_warehouseInventory = new List<ProductCombinationWarehouseInventory>()); }
             protected set { _warehouseInventory = value; }
         }
+
+        /// <summary>
+        /// Gets or sets the collection of "ProductCombinationTierPrices" records. 
+        /// </summary>
+        public virtual ICollection<ProductCombinationTierPrices> TierPrices
+        {
+            get { return _tierPrices ?? (_tierPrices = new List<ProductCombinationTierPrices>()); }
+            protected set { _tierPrices = value; }
+        }
+
     }
 }

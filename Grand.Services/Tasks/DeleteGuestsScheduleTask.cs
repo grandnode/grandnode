@@ -12,6 +12,7 @@ namespace Grand.Services.Tasks
     {
         private readonly ICustomerService _customerService;
         private readonly CommonSettings _commonSettings;
+        private readonly object _lock = new object();
 
         public DeleteGuestsScheduleTask(ICustomerService customerService, CommonSettings commonSettings)
         {
@@ -24,10 +25,13 @@ namespace Grand.Services.Tasks
         /// </summary>
         public void Execute()
         {
-            var olderThanMinutes = _commonSettings.DeleteGuestTaskOlderThanMinutes;
-            // Default value in case 0 is returned.  0 would effectively disable this service and harm performance.
-            olderThanMinutes = olderThanMinutes == 0 ? 1440 : olderThanMinutes;
-            _customerService.DeleteGuestCustomers(null, DateTime.UtcNow.AddMinutes(-olderThanMinutes), true);
+            lock (_lock)
+            {
+                var olderThanMinutes = _commonSettings.DeleteGuestTaskOlderThanMinutes;
+                // Default value in case 0 is returned.  0 would effectively disable this service and harm performance.
+                olderThanMinutes = olderThanMinutes == 0 ? 1440 : olderThanMinutes;
+                _customerService.DeleteGuestCustomers(null, DateTime.UtcNow.AddMinutes(-olderThanMinutes), true);
+            }
         }
     }
 }

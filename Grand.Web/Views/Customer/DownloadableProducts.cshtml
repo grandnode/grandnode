@@ -10,9 +10,9 @@
 {
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.DownloadableProducts })
 }
-<section class="page account-page downloadable-products-page">
+<section class="page account-page downloadable-products-page pl-lg-3">
         <h1 class="h2 generalTitle">@T("Account.DownloadableProducts")</h1>
-        @if (Model.Items.Count > 0)
+        @if (Model.Items.Any())
         {
             <div class="table-responsive">
                 <table class="table table-hover data-table">

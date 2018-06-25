@@ -380,7 +380,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Comments
 
-        public IActionResult Comments(int? filterByBlogPostId)
+        public IActionResult Comments(string filterByBlogPostId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();

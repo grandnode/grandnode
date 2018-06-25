@@ -1,12 +1,9 @@
 ﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
 using Grand.Core.Domain.Catalog;
-using Grand.Framework.Mvc;
 using Grand.Web.Models.Common;
 using Grand.Web.Models.Media;
 using Grand.Framework.Mvc.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Routing;
 
 namespace Grand.Web.Models.ShoppingCart
 {
@@ -36,6 +33,8 @@ namespace Grand.Web.Models.ShoppingCart
 
         public IList<string> Warnings { get; set; }
         public string MinOrderSubtotalWarning { get; set; }
+        public bool ShowCheckoutAsGuestButton { get; set; }
+        public bool IsGuest { get; set; }
         public bool DisplayTaxShippingInfo { get; set; }
         public bool TermsOfServiceOnShoppingCartPage { get; set; }
         public bool TermsOfServiceOnOrderConfirmPage { get; set; }
@@ -56,33 +55,22 @@ namespace Grand.Web.Models.ShoppingCart
                 Warnings = new List<string>();
             }
             public string Sku { get; set; }
-
             public PictureModel Picture {get;set;}
-
             public string ProductId { get; set; }
-
             public string ProductName { get; set; }
-
             public string ProductSeName { get; set; }
-
             public string UnitPrice { get; set; }
-
             public string SubTotal { get; set; }
-
             public string Discount { get; set; }
-
             public int Quantity { get; set; }
             public List<SelectListItem> AllowedQuantities { get; set; }
-            
             public string AttributeInfo { get; set; }
-
             public string RecurringInfo { get; set; }
-
-            public string RentalInfo { get; set; }
-
             public bool AllowItemEditing { get; set; }
             public bool DisableRemoval { get; set; }
-
+            public string ReservationInfo { get; set; }
+            public string AuctionInfo { get; set; }
+            public string Parameter { get; set; }
             public IList<string> Warnings { get; set; }
 
         }

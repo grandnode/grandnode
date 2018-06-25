@@ -1,7 +1,5 @@
 ﻿@model CheckoutAttributeModel
 
-@using Grand.Core.Domain.Catalog;
-
 @{
     if (!String.IsNullOrEmpty(Model.Id))
     {
@@ -23,13 +21,13 @@
         <div class="form-horizontal">
             <div class="form-body">
                 <div class="form-group">
-                    @Html.GrandLabelFor(model => model.ConditionModel.EnableCondition)
+                    <admin-label asp-for="ConditionModel.EnableCondition" />
                     <div class="col-md-9 col-sm-9">
                         <label class="mt-checkbox mt-checkbox-outline">
-                            @Html.EditorFor(model => model.ConditionModel.EnableCondition)
+                            <admin-input asp-for="ConditionModel.EnableCondition" />
                             <span></span>
                         </label>
-                        @Html.ValidationMessageFor(model => model.ConditionModel.EnableCondition)
+                        <span asp-validation-for="ConditionModel.EnableCondition"></span>
                     </div>
                 </div>
             </div>
@@ -40,17 +38,14 @@
                 <div class="form-horizontal">
                     <div class="form-body">
                         <div class="form-group">
-                            @Html.GrandLabelFor(model => model.ConditionModel.SelectedAttributeId)
+                            <admin-label asp-for="ConditionModel.SelectedAttributeId" />
                             <div class="col-md-9 col-sm-9">
-                                @Html.GrandDropDownListFor(model => model.ConditionModel.SelectedAttributeId,
-                                Model.ConditionModel.ConditionAttributes.Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }))
+                                <admin-select asp-for="ConditionModel.SelectedAttributeId" asp-items="Model.ConditionModel.ConditionAttributes.Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() })" />
                                 <script type="text/javascript">
                                     $(document).ready(function() {
                                         $("#@Html.FieldIdFor(model => model.ConditionModel.SelectedAttributeId)").change(toggleConditionAttributes);
-
                                         toggleConditionAttributes();
                                     });
-
                                     function toggleConditionAttributes() {
                                         var selectedCheckoutAttributeId = $("#@Html.FieldIdFor(model => model.ConditionModel.SelectedAttributeId)").val();
                                         $('[id^="pnl_attribute_values_"]').hide();
@@ -64,34 +59,31 @@
                             <div class="col-md-9 col-sm-9">
                                 @for (int i = 0; i < Model.ConditionModel.ConditionAttributes.Count; i++)
                                 {
-                                    @Html.HiddenFor(model => Model.ConditionModel.ConditionAttributes[i].Id)
+                                    <input type="hidden" asp-for="@Model.ConditionModel.ConditionAttributes[i].Id" />
                                     <div id="@string.Format("pnl_attribute_values_{0}", Model.ConditionModel.ConditionAttributes[i].Id)">
                                         @switch (Model.ConditionModel.ConditionAttributes[i].AttributeControlType)
                                         {
                                             case AttributeControlType.DropdownList:
-                                                @Html.GrandDropDownListFor(model => Model.ConditionModel.ConditionAttributes[i].SelectedValueId,
-                                                Model.ConditionModel.ConditionAttributes[i].Values)
+                                                <admin-select asp-for="@Model.ConditionModel.ConditionAttributes[i].SelectedValueId" asp-items="Model.ConditionModel.ConditionAttributes[i].Values" />
                                                 break;
                                             case AttributeControlType.RadioList:
                                             case AttributeControlType.ColorSquares:
                                             case AttributeControlType.ImageSquares:
                                                 foreach (var value in Model.ConditionModel.ConditionAttributes[i].Values)
                                                 {
-                                                    <div>
-                                                        @Html.RadioButtonFor(model => Model.ConditionModel.ConditionAttributes[i].SelectedValueId, value.Value,
-                                                        value.Selected ? new { @checked = true } : null)
-                                                        @Html.GrandLabelFor(model => Model.ConditionModel.ConditionAttributes[i].SelectedValueId@*, value.Text*@)
-                                                    </div>
+                                        <div>
+                                            <input type="radio" asp-for="@Model.ConditionModel.ConditionAttributes[i].SelectedValueId" value="@value.Value" checked="@value.Selected" />
+                                            <label class="control-label">@value.Text</label>
+                                        </div>
                                                 }
                                                 break;
                                             case AttributeControlType.Checkboxes:
                                                 for (var j = 0; j < Model.ConditionModel.ConditionAttributes[i].Values.Count; j++)
                                                 {
                                                     <div>
-                                                        @Html.HiddenFor(model => Model.ConditionModel.ConditionAttributes[i].Values[j].Value)
-                                                        @Html.CheckBoxFor(model => Model.ConditionModel.ConditionAttributes[i].Values[j].Selected)
-                                                        @Html.GrandLabelFor(model => Model.ConditionModel.ConditionAttributes[i].Values[j].Selected
-                                                        /*,Model.ConditionModel.ConditionAttributes[i].Values[j].Text*/)
+                                                        <input type="hidden" asp-for="@Model.ConditionModel.ConditionAttributes[i].Values[j].Value" />
+                                                        <admin-input asp-for="@Model.ConditionModel.ConditionAttributes[i].Values[j].Selected" />
+                                                        <admin-label asp-for="@Model.ConditionModel.ConditionAttributes[i].Values[j].Selected" />
                                                     </div>
                                                 }
                                                 break;

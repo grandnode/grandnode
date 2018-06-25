@@ -3,9 +3,11 @@
 }
 @model ShippingByWeightModel
 @using Grand.Plugin.Shipping.ByWeight.Models;
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="ShippingByWeight" asp-action="EditPopup" method="post"
+      asp-route-ShippingByWeightId="@Context.Request.Query["ShippingByWeightId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -26,4 +28,4 @@
             </div>
         </div>
     </div>
-}
+</form>

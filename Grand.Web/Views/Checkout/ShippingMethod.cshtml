@@ -9,7 +9,7 @@
 }
 <script type="text/javascript">
     function loadPartialView(arg_value) {
-        var url = '@(storeLocation)/checkout/GetShippingFormPartialView?shippingOption=' + arg_value;
+        var url = '@(storeLocation)checkout/GetShippingFormPartialView?shippingOption=' + arg_value;
         $.ajax({
             url: url,
             success: function (data) {
@@ -44,7 +44,7 @@
                             <li>
                                 <label class="custom-control custom-checkbox">
                                     <input id="shippingoption_@(i)" type="radio" onclick="loadPartialView(value)" name="shippingoption" value="@(shippingMethod.Name)___@(shippingMethod.ShippingRateComputationMethodSystemName)" checked="@shippingMethod.Selected" class="custom-control-input">
-                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-label"></span>
                                     <span for="shippingoption_@(i)" class="custom-control-description">
                                         @T("Checkout.SelectShippingMethod.MethodAndFee", shippingMethod.Name, shippingMethod.Fee)
 
@@ -66,7 +66,7 @@
                     }
                     <div id="shipping_form"></div>
                     <div class="buttons">
-                        <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="btn btn-success mt-1 mb-1 shipping-method-next-step-button" />
+                        <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="btn btn-info mt-1 mb-1 shipping-method-next-step-button" />
                     </div>
                 }
                 else

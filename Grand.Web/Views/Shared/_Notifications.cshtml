@@ -46,9 +46,10 @@
     </script>
 }
 <div class="ajax-loading-block-window" style="display: none">
+    <div id="loading"><div class="loader"></div></div>
 </div>
 
-<div id="bar-notification" class="generalNote card card-inverse text-xs-center" style="display:none;">
+<div id="bar-notification" class="generalNote card text-white text-xs-center" style="display:none;">
     <span class="close" title="@T("Common.Close")"><span class="fa fa-times" aria-hidden="true"></span></span>
 </div>
 
@@ -58,7 +59,7 @@
 </div>
 <a class="popup-action-form" data-mfp-src="#action_modal_form" style="display:none"></a>
 <div id="action_modal_form" class="zoom-anim-dialog mfp-hide">
-    <form asp-route="PopupInteractiveForm" method="post" id = "interactive-form">
+    <form asp-route="PopupInteractiveForm" method="post" id="interactive-form">
         <div class="message-error">
             <div class="validation-summary-errors">
                 <div id="errorMessages"></div>
@@ -70,7 +71,10 @@
         </div>
     </form>
 </div>
-
+<div class="modal fade" id="ModalAddToCart" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
+</div>
+<div class="modal fade" id="ModalQuickView" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
+</div>
 <script>
     $(document).ready(function () {
         CustomerAction.init('@Url.Action("CustomerActionEventUrl", "Common")', '@Url.Action("GetActivePopup", "Common")', '@Url.Action("RemovePopup", "Common")');

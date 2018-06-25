@@ -110,22 +110,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
 
-        public IActionResult ConfigureMethod(string systemName)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
-                return AccessDeniedView();
-
-            var eam = _openAuthenticationService.LoadExternalAuthenticationMethodBySystemName(systemName);
-            if (eam == null)
-                //No authentication method found with the specified id
-                return RedirectToAction("Methods");
-
-            var model = eam.ToModel();
-            model.ConfigurationUrl = eam.GetConfigurationPageUrl();
-
-            return View(model);
-        }
-
         #endregion
     }
 }

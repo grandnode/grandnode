@@ -39,9 +39,14 @@
                     </div>
                 }
             </div>
+            @{
+                var dataDictAddress = new ViewDataDictionary(ViewData);
+                dataDictAddress.TemplateInfo.HtmlFieldPrefix = "Address";
+                @await Html.PartialAsync("_CreateOrUpdateVendorAddress", Model.Address, dataDictAddress)
+            }
         </div>
         <div class="col-12 buttons pt-1 pb-1">
-            <input type="submit" name="save-info-button" class="btn btn-success apply-vendor-button" value="@T("Common.Save")" />
+            <input type="submit" name="save-info-button" class="btn btn-info apply-vendor-button" value="@T("Common.Save")" />
         </div>
     </form>
 </div>

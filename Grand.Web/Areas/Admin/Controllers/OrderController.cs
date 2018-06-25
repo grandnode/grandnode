@@ -40,7 +40,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -504,6 +503,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.BillingAddress.EmailRequired = true;
             model.BillingAddress.CompanyEnabled = _addressSettings.CompanyEnabled;
             model.BillingAddress.CompanyRequired = _addressSettings.CompanyRequired;
+            model.BillingAddress.VatNumberEnabled = _addressSettings.VatNumberEnabled;
+            model.BillingAddress.VatNumberRequired = _addressSettings.VatNumberRequired;
             model.BillingAddress.CountryEnabled = _addressSettings.CountryEnabled;
             model.BillingAddress.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
             model.BillingAddress.CityEnabled = _addressSettings.CityEnabled;
@@ -539,6 +540,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                         model.ShippingAddress.EmailRequired = true;
                         model.ShippingAddress.CompanyEnabled = _addressSettings.CompanyEnabled;
                         model.ShippingAddress.CompanyRequired = _addressSettings.CompanyRequired;
+                        model.ShippingAddress.VatNumberEnabled = _addressSettings.VatNumberEnabled;
+                        model.ShippingAddress.VatNumberRequired = _addressSettings.VatNumberRequired;
                         model.ShippingAddress.CountryEnabled = _addressSettings.CountryEnabled;
                         model.ShippingAddress.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
                         model.ShippingAddress.CityEnabled = _addressSettings.CityEnabled;
@@ -663,15 +666,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     orderItemModel.AttributeInfo = orderItem.AttributeDescription;
                     if (product.IsRecurring)
                         orderItemModel.RecurringInfo = string.Format(_localizationService.GetResource("Admin.Orders.Products.RecurringPeriod"), product.RecurringCycleLength, product.RecurringCyclePeriod.GetLocalizedEnum(_localizationService, _workContext));
-                    //rental info
-                    if (product.IsRental)
-                    {
-                        var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
-                        var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
-                        orderItemModel.RentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
-                            rentalStartDate, rentalEndDate);
-                    }
-
+                    
                     //return requests
                     orderItemModel.ReturnRequestIds = _returnRequestService.SearchReturnRequests(orderItemId: orderItem.Id)
                         .Select(rr => rr.Id).ToList();
@@ -709,6 +704,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 ProductId = productId,
                 OrderId = orderId,
+                OrderNumber = order.OrderNumber,
                 Name = product.Name,
                 ProductType = product.ProductType,
                 UnitPriceExclTax = presetPriceExclTax,
@@ -757,8 +753,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 model.GiftCard.GiftCardType = product.GiftCardType;
             }
-            //rental
-            model.IsRental = product.IsRental;
             return model;
         }
 
@@ -824,14 +818,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                             QuantityInAllShipments = qtyInAllShipments,
                             QuantityToAdd = maxQtyToAdd,
                         };
-                        //rental info
-                        if (product.IsRental)
-                        {
-                            var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
-                            var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
-                            shipmentItemModel.RentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
-                                rentalStartDate, rentalEndDate);
-                        }
 
                         model.Items.Add(shipmentItemModel);
                     }
@@ -874,6 +860,70 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return model;
         }
+
+
+        [NonAction]
+        protected virtual int GetStockQty(Product product, string warehouseId)
+        {
+            List<int> _qty = new List<int>();
+            foreach (var item in product.BundleProducts)
+            {
+                var p1 = _productService.GetProductById(item.ProductId);
+                if(p1.UseMultipleWarehouses)
+                {
+                    var stock = p1.ProductWarehouseInventory.FirstOrDefault(x => x.WarehouseId == warehouseId);
+                    if(stock!=null)
+                    {
+                        _qty.Add(stock.StockQuantity / item.Quantity);
+                    }
+                }
+                else
+                {
+                    _qty.Add(p1.StockQuantity / item.Quantity);
+                }
+            }
+
+            return _qty.Count > 0 ?_qty.Min(): 0;
+        }
+
+        [NonAction]
+        protected virtual int GetPlannedQty(Product product, string warehouseId)
+        {
+            List<int> _qty = new List<int>();
+            foreach (var item in product.BundleProducts)
+            {
+                var p1 = _productService.GetProductById(item.ProductId);
+                if (p1.UseMultipleWarehouses)
+                {
+                    var stock = p1.ProductWarehouseInventory.FirstOrDefault(x => x.WarehouseId == warehouseId);
+                    if (stock != null)
+                    {
+                        _qty.Add((stock.StockQuantity-stock.ReservedQuantity) / item.Quantity);
+                    }
+                }
+            }
+            return _qty.Count > 0 ? _qty.Min() : 0;
+        }
+
+        [NonAction]
+        protected virtual int GetReservedQty(Product product, string warehouseId)
+        {
+            List<int> _qty = new List<int>();
+            foreach (var item in product.BundleProducts)
+            {
+                var p1 = _productService.GetProductById(item.ProductId);
+                if (p1.UseMultipleWarehouses)
+                {
+                    var stock = p1.ProductWarehouseInventory.FirstOrDefault(x => x.WarehouseId == warehouseId);
+                    if (stock != null)
+                    {
+                        _qty.Add(stock.ReservedQuantity / item.Quantity);
+                    }
+                }
+            }
+            return _qty.Count > 0 ? _qty.Min() : 0;
+        }
+
 
         #endregion
 
@@ -1018,6 +1068,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         PaymentStatus = x.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
                         ShippingStatus = x.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
                         CustomerEmail = x.BillingAddress?.Email,
+                        CustomerId = x.CustomerId,
                         CustomerFullName = string.Format("{0} {1}", x.BillingAddress?.FirstName, x.BillingAddress?.LastName),
                         CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
                     };
@@ -1074,8 +1125,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             var order = _orderService.GetOrderByNumber(model.GoDirectlyToNumber);
             if (order == null)
-                return List();
-            
+                return RedirectToAction("List", "Order");
+
             return RedirectToAction("Edit", "Order", new { id = order.Id });
         }
 
@@ -1543,7 +1594,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("partialrefundorder")]
-        public IActionResult PartiallyRefundOrderPopup(string btnId, string formId, string id, bool online, OrderModel model)
+        public IActionResult PartiallyRefundOrderPopup(string id, bool online, OrderModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1577,9 +1628,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (errors.Count == 0)
                 {
                     //success
-                    ViewBag.RefreshPage = true;
-                    ViewBag.btnId = btnId;
-                    ViewBag.formId = formId;
+                    ViewBag.RefreshPage = true;                    
 
                     PrepareOrderDetailsModel(model, order);
                     return View(model);
@@ -2209,7 +2258,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("uploadlicense")]
-        public IActionResult UploadLicenseFilePopup(string btnId, string formId, OrderModel.UploadLicenseModel model)
+        public IActionResult UploadLicenseFilePopup(OrderModel.UploadLicenseModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2237,15 +2286,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             LogEditOrder(order.Id);
             //success
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
 
             return View(model);
         }
 
         [HttpPost, ActionName("UploadLicenseFilePopup")]
         [FormValueRequired("deletelicense")]
-        public IActionResult DeleteLicenseFilePopup(string btnId, string formId, OrderModel.UploadLicenseModel model)
+        public IActionResult DeleteLicenseFilePopup(OrderModel.UploadLicenseModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2270,8 +2317,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //success
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
 
             return View(model);
         }
@@ -2285,8 +2330,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = orderId });
 
+            var order = _orderService.GetOrderById(orderId);
+            if (order == null)
+                //No order found with the specified id
+                return RedirectToAction("List");
+
             var model = new OrderModel.AddOrderProductModel();
             model.OrderId = orderId;
+            model.OrderNumber = order.OrderNumber;
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             var categories = _categoryService.GetAllCategories(showHidden: true);
@@ -2389,10 +2440,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             #region Product attributes
 
-            var attributes = product.ProductAttributeMappings; //_productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+            var attributes = product.ProductAttributeMappings; 
             foreach (var attribute in attributes)
             {
-                //string controlId = string.Format("product_attribute_{0}_{1}", attribute.ProductAttributeId, attribute.Id);
                 string controlId = string.Format("product_attribute_{0}", attribute.Id);
                 switch (attribute.AttributeControlType)
                 {
@@ -2538,32 +2588,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             #endregion
 
-            #region Rental product
-
-            DateTime? rentalStartDate = null;
-            DateTime? rentalEndDate = null;
-            if (product.IsRental)
-            {
-                var ctrlStartDate = form["rental_start_date"];
-                var ctrlEndDate = form["rental_end_date"];
-                try
-                {
-                    //currenly we support only this format (as in the \Views\Order\_ProductAddRentalInfo.cshtml file)
-                    const string datePickerFormat = "MM/dd/yyyy";
-                    rentalStartDate = DateTime.ParseExact(ctrlStartDate, datePickerFormat, CultureInfo.InvariantCulture);
-                    rentalEndDate = DateTime.ParseExact(ctrlEndDate, datePickerFormat, CultureInfo.InvariantCulture);
-                }
-                catch
-                {
-                }
-            }
-
-            #endregion
-
             //warnings
             warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(customer, ShoppingCartType.ShoppingCart, product, quantity, attributesXml));
             warnings.AddRange(_shoppingCartService.GetShoppingCartItemGiftCardWarnings(ShoppingCartType.ShoppingCart, product, attributesXml));
-            warnings.AddRange(_shoppingCartService.GetRentalProductWarnings(product, rentalStartDate, rentalEndDate));
             if (warnings.Count == 0)
             {
                 //no errors
@@ -2590,8 +2617,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                     DownloadCount = 0,
                     IsDownloadActivated = false,
                     LicenseDownloadId = "",
-                    RentalStartDateUtc = rentalStartDate,
-                    RentalEndDateUtc = rentalEndDate,
                     CreatedOnUtc = DateTime.UtcNow,
 
                 };
@@ -2687,6 +2712,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.Address.EmailRequired = true;
             model.Address.CompanyEnabled = _addressSettings.CompanyEnabled;
             model.Address.CompanyRequired = _addressSettings.CompanyRequired;
+            model.Address.VatNumberEnabled = _addressSettings.VatNumberEnabled;
+            model.Address.VatNumberRequired = _addressSettings.VatNumberRequired;
             model.Address.CountryEnabled = _addressSettings.CountryEnabled;
             model.Address.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
             model.Address.CityEnabled = _addressSettings.CityEnabled;
@@ -2786,6 +2813,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.Address.EmailRequired = true;
             model.Address.CompanyEnabled = _addressSettings.CompanyEnabled;
             model.Address.CompanyRequired = _addressSettings.CompanyRequired;
+            model.Address.VatNumberEnabled = _addressSettings.VatNumberEnabled;
+            model.Address.VatNumberRequired = _addressSettings.VatNumberRequired;
             model.Address.CountryEnabled = _addressSettings.CountryEnabled;
             model.Address.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
             model.Address.CityEnabled = _addressSettings.CityEnabled;
@@ -3014,15 +3043,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     QuantityInAllShipments = qtyInAllShipments,
                     QuantityToAdd = maxQtyToAdd,
                 };
-                //rental info
-                if (product.IsRental)
-                {
-                    var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
-                    var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
-                    shipmentItemModel.RentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
-                        rentalStartDate, rentalEndDate);
-                }
-
+                
                 if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
                 {
                     if (product.UseMultipleWarehouses)
@@ -3062,6 +3083,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         }
                     }
                 }
+
                 if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
                 {
                     if (product.UseMultipleWarehouses)
@@ -3101,7 +3123,42 @@ namespace Grand.Web.Areas.Admin.Controllers
                         }
                     }
                 }
-               
+
+                if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByBundleProducts)
+                {
+                    if(!string.IsNullOrEmpty(orderItem.WarehouseId))
+                    {
+                        var warehouse = _shippingService.GetWarehouseById(product.WarehouseId);
+                        if (warehouse != null)
+                        {
+                            shipmentItemModel.AvailableWarehouses.Add(new ShipmentModel.ShipmentItemModel.WarehouseInfo
+                            {
+                                WarehouseId = warehouse.Id,
+                                WarehouseName = warehouse.Name,
+                                StockQuantity = GetStockQty(product, orderItem.WarehouseId),
+                                ReservedQuantity = GetReservedQty(product, orderItem.WarehouseId),
+                                PlannedQuantity = GetPlannedQty(product, orderItem.WarehouseId)
+                            });
+                        }
+                    }
+                    else
+                    {
+                        shipmentItemModel.AllowToChooseWarehouse = true;
+                        var warehouses = _shippingService.GetAllWarehouses();
+                        foreach (var warehouse in warehouses)
+                        {
+                            shipmentItemModel.AvailableWarehouses.Add(new ShipmentModel.ShipmentItemModel.WarehouseInfo
+                            {
+                                WarehouseId = warehouse.Id,
+                                WarehouseName = warehouse.Name,
+                                StockQuantity = GetStockQty(product, warehouse.Id),
+                                ReservedQuantity = GetReservedQty(product, warehouse.Id),
+                                PlannedQuantity = GetPlannedQty(product, warehouse.Id)
+
+                            });
+                        }
+                    }
+                }
                     
                 model.Items.Add(shipmentItemModel);
             }
@@ -3155,8 +3212,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                     }
 
                 string warehouseId = "";
-                if ((product.ManageInventoryMethod == ManageInventoryMethod.ManageStock || product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes) &&
-                    product.UseMultipleWarehouses)
+                if (((product.ManageInventoryMethod == ManageInventoryMethod.ManageStock || product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes) &&
+                    product.UseMultipleWarehouses) || (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByBundleProducts))
                 {
                     //multiple warehouses supported
                     //warehouse is chosen by a store owner
@@ -3944,7 +4001,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ReportOrderTimeChar(DataSourceRequest command, DateTime? startDate, DateTime? endDate)
+        public IActionResult ReportOrderTimeChart(DataSourceRequest command, DateTime? startDate, DateTime? endDate)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");

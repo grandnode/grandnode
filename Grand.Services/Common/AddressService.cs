@@ -180,6 +180,12 @@ namespace Grand.Services.Common
                 String.IsNullOrWhiteSpace(address.Company))
                 return false;
 
+            if (_addressSettings.VatNumberEnabled &&
+                _addressSettings.VatNumberRequired &&
+                String.IsNullOrWhiteSpace(address.VatNumber))
+                return false;
+
+
             if (_addressSettings.StreetAddressEnabled &&
                 _addressSettings.StreetAddressRequired &&
                 String.IsNullOrWhiteSpace(address.Address1))

@@ -30,6 +30,7 @@ namespace Grand.Services.Security
         public static readonly PermissionRecord ManageReturnRequests = new PermissionRecord { Name = "Admin area. Manage Return Requests", SystemName = "ManageReturnRequests", Category = "Orders" };
         public static readonly PermissionRecord OrderCountryReport = new PermissionRecord { Name = "Admin area. Access order country report", SystemName = "OrderCountryReport", Category = "Orders" };
         public static readonly PermissionRecord ManageAffiliates = new PermissionRecord { Name = "Admin area. Manage Affiliates", SystemName = "ManageAffiliates", Category = "Promo" };
+        public static readonly PermissionRecord ManagePushNotifications = new PermissionRecord { Name = "Admin area. Manage Push Notifications", SystemName = "ManagePushNotifications", Category = "Promo" };
         public static readonly PermissionRecord ManageCampaigns = new PermissionRecord { Name = "Admin area. Manage Campaigns", SystemName = "ManageCampaigns", Category = "Promo" };
         public static readonly PermissionRecord ManageBanners = new PermissionRecord { Name = "Admin area. Manage Banners", SystemName = "ManageBanners", Category = "Promo" };
         public static readonly PermissionRecord ManageInteractiveForm = new PermissionRecord { Name = "Admin area. Manage Interactive Forms", SystemName = "ManageInteractiveForms", Category = "Promo" };
@@ -41,6 +42,7 @@ namespace Grand.Services.Security
         public static readonly PermissionRecord ManageWidgets = new PermissionRecord { Name = "Admin area. Manage Widgets", SystemName = "ManageWidgets", Category = "Content Management" };
         public static readonly PermissionRecord ManageTopics = new PermissionRecord { Name = "Admin area. Manage Topics", SystemName = "ManageTopics", Category = "Content Management" };
         public static readonly PermissionRecord ManageForums = new PermissionRecord { Name = "Admin area. Manage Forums", SystemName = "ManageForums", Category = "Content Management" };
+        public static readonly PermissionRecord ManageKnowledgebase = new PermissionRecord { Name = "Admin area. Manage Knowledgebase", SystemName = "ManageKnowledgebase", Category = "Content Management" };
         public static readonly PermissionRecord ManageMessageTemplates = new PermissionRecord { Name = "Admin area. Manage Message Templates", SystemName = "ManageMessageTemplates", Category = "Content Management" };
         public static readonly PermissionRecord ManageCountries = new PermissionRecord { Name = "Admin area. Manage Countries", SystemName = "ManageCountries", Category = "Configuration" };
         public static readonly PermissionRecord ManageLanguages = new PermissionRecord { Name = "Admin area. Manage Languages", SystemName = "ManageLanguages", Category = "Configuration" };
@@ -96,6 +98,7 @@ namespace Grand.Services.Security
                 ManageReturnRequests,
                 OrderCountryReport,
                 ManageAffiliates,
+                ManagePushNotifications,
                 ManageCampaigns,
                 ManageDiscounts,
                 ManageNewsletterSubscribers,
@@ -105,6 +108,7 @@ namespace Grand.Services.Security
                 ManageWidgets,
                 ManageTopics,
                 ManageForums,
+                ManageKnowledgebase,
                 ManageMessageTemplates,
                 ManageCountries,
                 ManageLanguages,
@@ -161,6 +165,7 @@ namespace Grand.Services.Security
                         ManageReturnRequests,
                         OrderCountryReport,
                         ManageAffiliates,
+                        ManagePushNotifications,
                         ManageCampaigns,
                         ManageDiscounts,
                         ManageNewsletterSubscribers,
@@ -170,6 +175,7 @@ namespace Grand.Services.Security
                         ManageWidgets,
                         ManageTopics,
                         ManageForums,
+                        ManageKnowledgebase,
                         ManageMessageTemplates,
                         ManageCountries,
                         ManageLanguages,

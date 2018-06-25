@@ -10,6 +10,9 @@ using Grand.Services.Configuration;
 using Grand.Core.Domain.Customers;
 using Grand.Services.Common;
 using Grand.Core.Domain.Shipping;
+using Grand.Core.Infrastructure;
+using Grand.Services.Directory;
+using Grand.Core.Domain.Directory;
 
 namespace Grand.Services.Payments
 {
@@ -324,7 +327,8 @@ namespace Grand.Services.Payments
                 result = decimal.Zero;
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
             {
-                result = RoundingHelper.RoundPrice(result, Grand.Core.Infrastructure.EngineContext.Current.Resolve<IWorkContext>().WorkingCurrency);
+                var currency = EngineContext.Current.Resolve<ICurrencyService>().GetCurrencyById(EngineContext.Current.Resolve<CurrencySettings>().PrimaryExchangeRateCurrencyId);
+                result = RoundingHelper.RoundPrice(result, currency);
             }
             return result;
         }

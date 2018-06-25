@@ -55,7 +55,7 @@
         @if (!String.IsNullOrWhiteSpace(Model.Description))
         {
                 <div class="card category-description">
-                    <div class="card-block">
+                    <div class="card-body">
                         <h2 class="card-title m-0">
                             @Html.Raw(Model.Description)
                         </h2>
@@ -64,33 +64,33 @@
         }
         @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_before_subcategories", additionalData = Model.Id })
         @*subcategories*@
-        @if (Model.SubCategories.Count > 0)
+        @if (Model.SubCategories.Any())
         {
-            <div class="categotyItems">
+            <div class="categoryItems">
                 <div class="row">
-                    @foreach (var item in Model.SubCategories)
+                @foreach (var item in Model.SubCategories)
                 {
-                <div class="col-md-4 col-sm-6 col-12 mb-2">
-                    <div class="card">
-                        <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                    <div class="col-md-4 col-sm-6 col-12 mb-2">
+                        <div class="card">
+                            <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })" title="@item.PictureModel.Title">
 
-                            <img class="card-img-top img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title">
+                                <img class="card-img-top img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title">
 
-                            <h2 class="h6 m-3 card-title">
-                                @item.Name
-                            </h2>
+                                <h2 class="h6 p-sm-3 p-2 mb-0 card-title">
+                                    @item.Name
+                                </h2>
 
-                        </a>
+                            </a>
+                        </div>
                     </div>
-                </div>
-                    }
+                }
                 </div>
             </div>
         }
         @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_before_featured_products", additionalData = Model.Id })
 
         @*featured products*@
-        @if (Model.FeaturedProducts.Count > 0)
+        @if (Model.FeaturedProducts.Any())
         {
             <div class="col-12 product-grid featured-product-grid px-0">
                 <h2 class="h5">
@@ -99,7 +99,7 @@
                 <div class="row glex-grid">
                     @foreach (var item in Model.FeaturedProducts)
                     {
-                        <div class="col-lg-4 col-sm-6 col-12">
+                        <div class="col-lg-4 col-sm-6 col-6 product-container">
                             @await Html.PartialAsync("_ProductBox", item)
                         </div>
                     }
@@ -108,14 +108,14 @@
         }
         @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_after_featured_products", additionalData = Model.Id })
 
-        @if (Model.Products.Count > 0)
+        @if (Model.Products.Any())
         {
             @await Html.PartialAsync("_CatalogSelectors", Model.PagingFilteringContext)
         }
         @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_before_filters", additionalData = Model.Id })
         @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_before_product_list", additionalData = Model.Id })
 
-        @if (Model.Products.Count > 0)
+        @if (Model.Products.Any())
         {
             if (Model.PagingFilteringContext.ViewMode == "grid")
             {
@@ -123,7 +123,7 @@
                     <div class="row glex-grid">
                         @foreach (var product in Model.Products)
                         {
-                            <div class="col-lg-4 col-sm-6 col-12">
+                            <div class="col-lg-4 col-sm-6 col-6 product-container">
                                 @await Html.PartialAsync("_ProductBox", product)
                             </div>
                         }

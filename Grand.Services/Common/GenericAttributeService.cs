@@ -63,9 +63,9 @@ namespace Grand.Services.Common
             string keyGroup = entity.GetType().Name;
 
             var collection = _baseRepository.Database.GetCollection<GenericAttributeBaseEntity>(keyGroup);
-            var query = _baseRepository.Database.GetCollection<GenericAttributeBaseEntity>(keyGroup).AsQueryable();
+            var query = _baseRepository.Database.GetCollection<GenericAttributeBaseEntity>(keyGroup).Find(new BsonDocument("_id", entity.Id)).FirstOrDefault();
 
-            var props = query.Where(x => x.Id == entity.Id).SelectMany(x => x.GenericAttributes).ToList();
+            var props = query.GenericAttributes.Where(x => string.IsNullOrEmpty(storeId) || x.StoreId == storeId);
 
             var prop = props.FirstOrDefault(ga =>
                 ga.Key.Equals(key, StringComparison.OrdinalIgnoreCase)); //should be culture invariant
@@ -87,7 +87,7 @@ namespace Grand.Services.Common
                     prop.Value = valueStr;
                     var builder = Builders<GenericAttributeBaseEntity>.Filter;
                     var filter = builder.Eq(x => x.Id, entity.Id);
-                    filter = filter & builder.Where(x => x.GenericAttributes.Any(y => y.Key == prop.Key));
+                    filter = filter & builder.Where(x => x.GenericAttributes.Any(y => y.Key == prop.Key && y.StoreId == storeId));
                     var update = Builders<GenericAttributeBaseEntity>.Update
                         .Set(x => x.GenericAttributes.ElementAt(-1).Value, prop.Value);
 
@@ -116,9 +116,9 @@ namespace Grand.Services.Common
             if (entity == null)
                 throw new ArgumentNullException("entity");
 
-            var collection = _genericattributeBaseEntitRepository.Database.GetCollection<GenericAttributeBaseEntity>(entity.GetType().Name).AsQueryable();
+            var collection = _genericattributeBaseEntitRepository.Database.GetCollection<GenericAttributeBaseEntity>(entity.GetType().Name).Find(new BsonDocument("_id", entity.Id)).FirstOrDefault();
 
-            var props = collection.Where(x => x.Id == entity.Id).SelectMany(x => x.GenericAttributes).ToList();
+            var props = collection.GenericAttributes;
             if (props == null)
                 return default(TPropType);
             props = props.Where(x => x.StoreId == storeId).ToList();

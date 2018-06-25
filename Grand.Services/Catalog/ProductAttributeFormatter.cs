@@ -84,7 +84,7 @@ namespace Grand.Services.Catalog
         public virtual string FormatAttributes(Product product, string attributesXml,
             Customer customer, string serapator = "<br />", bool htmlEncode = true, bool renderPrices = true,
             bool renderProductAttributes = true, bool renderGiftCardAttributes = true,
-            bool allowHyperlinks = true)
+            bool allowHyperlinks = true, bool showInAdmin = false)
         {
             var result = new StringBuilder();
 
@@ -160,44 +160,49 @@ namespace Grand.Services.Catalog
                         else
                         {
                             //attributes with values
-                                if (product.ProductAttributeMappings.Where(x => x.Id == attributes[i].Id).FirstOrDefault() != null)
+                            if (product.ProductAttributeMappings.Where(x => x.Id == attributes[i].Id).FirstOrDefault() != null)
+                            {
+
+                                var attributeValue = product.ProductAttributeMappings.Where(x => x.Id == attributes[i].Id).FirstOrDefault().ProductAttributeValues.Where(x => x.Id == valueStr).FirstOrDefault(); 
+                                if (attributeValue != null)
                                 {
-
-                                    var attributeValue = product.ProductAttributeMappings.Where(x => x.Id == attributes[i].Id).FirstOrDefault().ProductAttributeValues.Where(x => x.Id == valueStr).FirstOrDefault(); 
-                                    if (attributeValue != null)
-                                    {
-                                        formattedAttribute = string.Format("{0}: {1}", productAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), attributeValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
+                                    formattedAttribute = string.Format("{0}: {1}", productAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), attributeValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
                                     
-                                        if (renderPrices)
+                                    if (renderPrices)
+                                    {
+                                        decimal taxRate;
+                                        decimal attributeValuePriceAdjustment = _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue);
+                                        decimal priceAdjustmentBase = _taxService.GetProductPrice(product, attributeValuePriceAdjustment, customer, out taxRate);
+                                        decimal priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
+                                        if (priceAdjustmentBase > 0)
                                         {
-                                            decimal taxRate;
-                                            decimal attributeValuePriceAdjustment = _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue);
-                                            decimal priceAdjustmentBase = _taxService.GetProductPrice(product, attributeValuePriceAdjustment, customer, out taxRate);
-                                            decimal priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
-                                            if (priceAdjustmentBase > 0)
-                                            {
-                                                string priceAdjustmentStr = _priceFormatter.FormatPrice(priceAdjustment, false, false);
-                                                formattedAttribute += string.Format(" [+{0}]", priceAdjustmentStr);
-                                            }
-                                            else if (priceAdjustmentBase < decimal.Zero)
-                                            {
-                                                string priceAdjustmentStr = _priceFormatter.FormatPrice(-priceAdjustment, false, false);
-                                                formattedAttribute += string.Format(" [-{0}]", priceAdjustmentStr);
-                                            }
+                                            string priceAdjustmentStr = _priceFormatter.FormatPrice(priceAdjustment, false, false);
+                                            formattedAttribute += string.Format(" [+{0}]", priceAdjustmentStr);
                                         }
-
-                                        //display quantity
-                                        if (_shoppingCartSettings.RenderAssociatedAttributeValueQuantity &&
-                                            attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
+                                        else if (priceAdjustmentBase < decimal.Zero)
                                         {
-                                            //render only when more than 1
-                                            if (attributeValue.Quantity > 1)
-                                            {
-                                                //TODO localize resource
-                                                formattedAttribute += string.Format(" - qty {0}", attributeValue.Quantity);
-                                            }
+                                            string priceAdjustmentStr = _priceFormatter.FormatPrice(-priceAdjustment, false, false);
+                                            formattedAttribute += string.Format(" [-{0}]", priceAdjustmentStr);
                                         }
                                     }
+
+                                    //display quantity
+                                    if (_shoppingCartSettings.RenderAssociatedAttributeValueQuantity &&
+                                        attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
+                                    {
+                                        //render only when more than 1
+                                        if (attributeValue.Quantity > 1)
+                                        {
+                                            //TODO localize resource
+                                            formattedAttribute += string.Format(" - qty {0}", attributeValue.Quantity);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    if(showInAdmin)
+                                        formattedAttribute += string.Format("{0}: {1}", productAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), "");
+                                }
 
                                 //encode (if required)
                                 if (htmlEncode)

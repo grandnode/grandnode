@@ -1,13 +1,13 @@
 ﻿@model NewsletterCategoryModel
+@inject IEventPublisher eventPublisher
 
-@Html.ValidationSummary(true)
-@Html.HiddenFor(model => model.Id)
-
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('#newslettercategory-edit').show();
         $("#newslettercategory-edit").kendoTabStrip({
-            animation:  {
+            animation: {
                 open: {
                     effects: "fadeIn"
                 }
@@ -16,7 +16,6 @@
         });
     });
 </script>
-
 <div id="newslettercategory-edit" style="display:none">
     <ul>
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
@@ -33,17 +32,15 @@
         @Html.Partial("_CreateOrUpdate.TabStores", Model)
     </div>
 </div>
-
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "newslettercategory-edit");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock
     }
 }
-
 
 @*save selected tab index*@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">

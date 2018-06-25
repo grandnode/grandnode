@@ -1,15 +1,11 @@
 ﻿@model OrderListModel
+@inject AdminAreaSettings adminAreaSettings
 @{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.Orders").Text;
 }
-
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Order" asp-action="List" method="post">    
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -58,44 +54,43 @@
                     <div class="form-horizontal">
                         <div class="form-body col-md-6">
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.StartDate, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="StartDate" class="col-sm-4 col-md4 control-label"/>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandEditorFor(model => model.StartDate)
+                                    <admin-input asp-for="StartDate" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.EndDate, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="EndDate" class="col-sm-4 col-md4 control-label"/>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandEditorFor(model => model.EndDate)
+                                    <admin-input asp-for="EndDate" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.BillingEmail, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="BillingEmail" class="col-sm-4 col-md4 control-label"/>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandEditorFor(model => model.BillingEmail)
+                                    <admin-input asp-for="BillingEmail" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.BillingLastName, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="BillingLastName" class="col-sm-4 col-md4 control-label"/>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandEditorFor(model => model.BillingLastName)
+                                    <admin-input asp-for="BillingLastName" />
                                 </div>
                             </div>
-                            
-                            
+
+
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.BillingCountryId, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="BillingCountryId" class="col-sm-4 col-md4 control-label"/>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandDropDownListFor(model => model.BillingCountryId, Model.AvailableCountries)
+                                    <admin-select asp-for="BillingCountryId" asp-items="Model.AvailableCountries" />
                                 </div>
-                            </div>                            
+                            </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.ProductId, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="ProductId" class="col-sm-4 col-md4 control-label"/>
                                 <div class="col-md-8 col-sm-8">
                                     <input class="form-control" type="text" id="search-product-name" autocomplete="off" />
                                     <span id="search-product-friendly-name"></span>
                                     <input type="button" id="search-product-clear" class="k-button" style="display:none;" value="@T("Admin.Common.Clear")" />
-                                    
                                     @Html.TextBoxFor(model => model.ProductId, new { autocomplete = "off", style = "display:none;" })
                                     <script type="text/javascript">
                                             $(document).ready(function() {
@@ -124,60 +119,60 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.OrderGuid, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="OrderGuid" class="col-sm-4 col-md4 control-label"/>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandEditorFor(model => model.OrderGuid)
+                                    <admin-input asp-for="OrderGuid" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.GoDirectlyToNumber, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="GoDirectlyToNumber" class="col-sm-4 col-md4 control-label"/>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandEditorFor(model => model.GoDirectlyToNumber)
+                                    <admin-input asp-for="GoDirectlyToNumber" />
                                     <input type="submit" name="go-to-order-by-number" id="gotoorderbynumber" class="k-button" value="@T("Admin.Common.Go")" />
                                 </div>
                             </div>
                         </div>
                         <div class="form-body col-md-6">
                             <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-                                @Html.GrandLabelFor(model => model.OrderStatusId, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="OrderStatusId" class="col-sm-4 col-md4 control-label"/>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandDropDownListFor(model => model.OrderStatusId, Model.AvailableOrderStatuses)
+                                    <admin-select asp-for="OrderStatusId" asp-items="Model.AvailableOrderStatuses" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.PaymentStatusId, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="PaymentStatusId" class="col-sm-4 col-md4 control-label"/>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandDropDownListFor(model => model.PaymentStatusId, Model.AvailablePaymentStatuses)
+                                    <admin-select asp-for="PaymentStatusId" asp-items="Model.AvailablePaymentStatuses" />
                                 </div>
                             </div>
                             <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-                                @Html.GrandLabelFor(model => model.ShippingStatusId, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="ShippingStatusId" class="col-sm-4 col-md4 control-label"/>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandDropDownListFor(model => model.ShippingStatusId, Model.AvailableShippingStatuses)
+                                    <admin-select asp-for="ShippingStatusId" asp-items="Model.AvailableShippingStatuses" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.StoreId, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="StoreId" class="col-sm-4 col-md4 control-label"/>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandDropDownListFor(model => model.StoreId, Model.AvailableStores)
+                                    <admin-select asp-for="StoreId" asp-items="Model.AvailableStores" />
                                 </div>
                             </div>
                             <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-                                @Html.GrandLabelFor(model => model.VendorId, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="VendorId" class="col-sm-4 col-md4 control-label"/>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandDropDownListFor(model => model.VendorId, Model.AvailableVendors)
+                                    <admin-select asp-for="VendorId" asp-items="Model.AvailableVendors" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.WarehouseId, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="WarehouseId" class="col-sm-4 col-md4 control-label"/>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandDropDownListFor(model => model.WarehouseId, Model.AvailableWarehouses)
+                                    <admin-select asp-for="WarehouseId" asp-items="Model.AvailableWarehouses" />
                                 </div>
                             </div>
                             <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-                                @Html.GrandLabelFor(model => model.PaymentMethodSystemName, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="PaymentMethodSystemName" class="col-sm-4 col-md4 control-label"/>
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandDropDownListFor(model => model.PaymentMethodSystemName, Model.AvailablePaymentMethods)
+                                    <admin-select asp-for="PaymentMethodSystemName" asp-items="Model.AvailablePaymentMethods" />
                                 </div>
                             </div>
                         </div>
@@ -231,14 +226,14 @@
                         // Cancel the changes
                         this.cancelChanges();
                     },
-                    pageSize: @(defaultGridPageSize),
+                    pageSize: @(adminAreaSettings.DefaultGridPageSize),
                     serverPaging: true,
                     serverFiltering: true,
                     serverSorting: true
                 },
                 pageable: {
                     refresh: true,
-                    pageSizes: [@(gridPageSizes)]
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
                 },
                 editable: {
                     confirmation: false,
@@ -253,52 +248,58 @@
                         headerAttributes: { style: "text-align:center" },
                         attributes: { style: "text-align:center" },
                         template: "<label class='mt-checkbox mt-checkbox-outline'><input type='checkbox' value='#=Id#' class='checkboxGroups'/><span></span></label>",
-                        width: 50
+                        width: 40
                     },
                     {
                         field: "OrderNumber",
                         title: "@T("Admin.Orders.Fields.Id")",
-                        width: 50
+                        width: 50,
+                        template: '<a class="k-link" href="Edit/#=Id#">#=OrderNumber#</a>'
                     },
                     @if (!Model.IsLoggedInAsVendor)
                     {
                         //a vendor does not have access to this functionality
                         <text>{
-                        field: "OrderStatus",
-                    title: "@T("Admin.Orders.Fields.OrderStatus")",
-                width: 200
-            },</text>
-                    }
-                    {
-                        field: "PaymentStatus",
-                        title: "@T("Admin.Orders.Fields.PaymentStatus")",
-                        width: 200
+                            field: "OrderStatus",
+                            title: "@T("Admin.Orders.Fields.OrderStatus")",
+                            width: 120,
+                            template: '<a class="k-link" href="Edit/#=Id#">#=OrderStatus#</a>'
+                        },</text>
+                                }
+                        {
+                            field: "PaymentStatus",
+                            title: "@T("Admin.Orders.Fields.PaymentStatus")",
+                            width: 120,
+                            template: '<a class="k-link" href="Edit/#=Id#">#=PaymentStatus#</a>'
                     },
                     @if (!Model.IsLoggedInAsVendor)
                     {
                         //a vendor does not have access to this functionality
                         <text>{
-                        field: "ShippingStatus",
+                            field: "ShippingStatus",
                             title: "@T("Admin.Orders.Fields.ShippingStatus")",
-                width: 200
-            },</text>
-                    }
+                            width: 120,
+                            template: '<a class="k-link" href="Edit/#=Id#">#=ShippingStatus#</a>'
+                        },</text>
+                                }
                     {
                         field: "CustomerEmail",
                         title: "@T("Admin.Orders.Fields.Customer")",
-                        width: 300,
-                        template: '#=CustomerFullName# (#=CustomerEmail#)'
+                        width: 220,
+                        template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#=CustomerFullName# (#=CustomerEmail#)</a>'
                     },
                     {
                         field: "StoreName",
                         title: "@T("Admin.Orders.Fields.Store")",
-                        width: 200
+                        width: 150,
+                        minScreenWidth: 770,
                     }, {
                         field: "CreatedOn",
                         title: "@T("Admin.Orders.Fields.CreatedOn")",
-                        width: 200,
+                        width: 180,
                         type: "date",
-                        format: "{0:G}"
+                        format: "{0:G}",
+                        
                     },
                     @if (!Model.IsLoggedInAsVendor)
                     {
@@ -306,19 +307,15 @@
                         <text>{
                         field: "OrderTotal",
                         title: "@T("Admin.Orders.Fields.OrderTotal")",
-                        width: 200,
+                        width: 150,
+                        headerAttributes: { style: "text-align:right" },
+                        attributes: { style: "text-align:right" },
                         footerTemplate: '<div><strong>@T("Admin.Orders.Report.Summary"):</strong></div>' +
-                                                '<div>@T("Admin.Orders.Report.Profit"): <span id=\"aggregator-profit-block\"></span></div>' +
-                                                '<div>@T("Admin.Orders.Report.Shipping"): <span id=\"aggregator-shipping-block\"></span></div>' +
-                                                '<div>@T("Admin.Orders.Report.Tax"): <span id=\"aggregator-tax-block\"></span></div>' +
-                                                '<div>@T("Admin.Orders.Report.Total"): <span id=\"aggregator-total-block\"></span></div>'
+                                                '<div>@T("Admin.Orders.Report.Profit"): <span class=\"pull-right\" id=\"aggregator-profit-block\"></span></div>' +
+                                                '<div>@T("Admin.Orders.Report.Shipping"): <span class=\"pull-right\" id=\"aggregator-shipping-block\"></span></div>' +
+                                                '<div>@T("Admin.Orders.Report.Tax"): <span class=\"pull-right\" id=\"aggregator-tax-block\"></span></div>' +
+                                                '<div>@T("Admin.Orders.Report.Total"): <span class=\"pull-right\" id=\"aggregator-total-block\"></span></div>'
                     },</text>
-                    }
-                    {
-                        field: "Id",
-                        title: "@T("Admin.Common.View")",
-                        width: 100,
-                        template: '<a class="btn btn-sm btn-default" href="Edit/#=Id#"><i class="fa fa-search"></i> @T("Admin.Common.View")</a>'
                     }
                 ]
             } );
@@ -467,15 +464,15 @@
             $('#mastercheckbox').prop('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
         }
     </script>
-}
+</form>
 
 
 @*export selected (XML). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
-@using (Html.BeginForm("ExportXmlSelected", "Order", FormMethod.Post, new { id = "export-xml-selected-form" }))
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Order" asp-action="ExportXmlSelected" method="post" id="export-xml-selected-form">
+    <antiforgery-token />
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
-}
+</form>
+
 <script type="text/javascript">
 
     $(document).ready(function () {
@@ -491,11 +488,10 @@
 </script>
 
 @*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
-@using (Html.BeginForm("ExportExcelSelected", "Order", FormMethod.Post, new { id = "export-excel-selected-form" }))
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Order" asp-action="ExportExcelSelected" method="post" id="export-excel-selected-form">
+    <antiforgery-token />
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
-}
+</form>
 <script type="text/javascript">
 
     $(document).ready(function () {
@@ -511,11 +507,11 @@
 </script>
 
 @*Print packaging slips selected (XML). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
-@using (Html.BeginForm("PdfInvoiceSelected", "Order", FormMethod.Post, new { id = "pdf-invoice-selected-form" }))
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Order" asp-action="PdfInvoiceSelected" method="post" id="pdf-invoice-selected-form">    
+    <antiforgery-token />
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
-}
+</form>
+
 <script type="text/javascript">
 
     $(document).ready(function () {

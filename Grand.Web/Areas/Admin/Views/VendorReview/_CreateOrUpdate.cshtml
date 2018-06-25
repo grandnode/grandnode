@@ -2,28 +2,28 @@
 @using Grand.Core
 @inject IWorkContext workContext
 @Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
+<input asp-for="Id" type="hidden" />
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.VendorName)
+            <admin-label asp-for="VendorName" />
             <div class="col-md-9 col-sm-9">
                 <label class="control-label">@Html.ActionLink(Model.VendorName, "Edit", "Vendor", new { id = Model.VendorId }, new { })</label>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.CustomerInfo)
+            <admin-label asp-for="CustomerInfo" />
             <div class="col-md-9 col-sm-9">
                 <label class="control-label">@Html.ActionLink(Model.CustomerInfo, "Edit", "Customer", new { id = Model.CustomerId }, new { })</label>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.Title)
+            <admin-label asp-for="Title" />
             <div class="col-md-9 col-sm-9">
                 @if (workContext.CurrentVendor == null)
                 {
-                    @Html.GrandEditorFor(model => model.Title)
-                    @Html.ValidationMessageFor(model => model.Title)
+                    <admin-input asp-for="Title" />
+                    <span asp-validation-for="Title"></span>
                 }
                 else
                 {
@@ -32,12 +32,12 @@
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.ReviewText)
+            <admin-label asp-for="ReviewText" />
             <div class="col-md-9 col-sm-9">
                 @if (workContext.CurrentVendor == null)
                 {
-                    @Html.GrandTextAreaFor(model => model.ReviewText, new { style = "Height: 100px;" })
-                    @Html.ValidationMessageFor(model => model.ReviewText)
+                    <admin-textarea asp-for="ReviewText" style="height: 100px;"></admin-textarea>
+                    <span asp-validation-for="ReviewText"></span>
                 }
                 else
                 {
@@ -46,28 +46,28 @@
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.Rating)
+            <admin-label asp-for="Rating" />
             <div class="col-md-9 col-sm-9">
-                <label class="control-label">@Html.DisplayFor(model => model.Rating)</label>
+                <label class="control-label">@Model.Rating</label>
             </div>
         </div>
         @if (workContext.CurrentVendor == null)
         {
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.IsApproved)
+                <admin-label asp-for="IsApproved" />
                 <div class="col-md-9 col-sm-9">
                     <label class="mt-checkbox mt-checkbox-outline">
-                        @Html.EditorFor(model => model.IsApproved)
+                        <admin-input asp-for="IsApproved" />
                         <span></span>
                     </label>
-                    @Html.ValidationMessageFor(model => model.IsApproved)
+                    <span asp-validation-for="IsApproved"></span>
                 </div>
             </div>
         }
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.CreatedOn)
+            <admin-label asp-for="CreatedOn" />
             <div class="col-md-9 col-sm-9">
-                <label class="control-label">@Html.DisplayFor(model => model.CreatedOn)</label>
+                <label class="control-label">@Model.CreatedOn)</label>
             </div>
         </div>
     </div>

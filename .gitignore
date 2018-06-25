@@ -162,3 +162,9 @@ Grand.Web/wwwroot/bundles/*.*
 Grand.Web/App_Data/InstalledPlugins.txt
 Grand.Web/App_Data/Settings.txt
 Grand.Web/Plugins/*
+Grand.Web/App_Data/DataProtectionKeys/*
+!Grand.Web/App_Data/DataProtectionKeys/Index.htm
+Grand.Web/App_Data/Download/*
+!Grand.Web/App_Data/Download/Index.htm
+Grand.Web/App_Data/TempUploads/*
+!Grand.Web/App_Data/TempUploads/Index.htm

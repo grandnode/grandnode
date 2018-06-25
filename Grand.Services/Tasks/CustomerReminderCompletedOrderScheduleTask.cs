@@ -6,6 +6,7 @@ namespace Grand.Services.Tasks
     public partial class CustomerReminderCompletedOrderScheduleTask : ScheduleTask, IScheduleTask
     {
         private readonly ICustomerReminderService _customerReminderService;
+        private readonly object _lock = new object();
 
         public CustomerReminderCompletedOrderScheduleTask(ICustomerReminderService customerReminderService)
         {
@@ -14,7 +15,10 @@ namespace Grand.Services.Tasks
 
         public void Execute()
         {
-            _customerReminderService.Task_CompletedOrder();
+            lock (_lock)
+            {
+                _customerReminderService.Task_CompletedOrder();
+            }
         }
     }
 }

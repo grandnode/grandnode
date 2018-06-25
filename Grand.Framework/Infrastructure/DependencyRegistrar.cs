@@ -5,7 +5,6 @@ using System.Reflection;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Configuration;
@@ -51,7 +50,10 @@ using Grand.Framework.Mvc.Routing;
 using Grand.Framework.Themes;
 using Grand.Framework.UI;
 using MongoDB.Driver;
-using Grand.Service.Authentication;
+using Grand.Core.Http;
+using Grand.Services.Knowledgebase;
+using Grand.Services.PushNotifications;
+using Grand.Services;
 
 namespace Grand.Framework.Infrastructure
 {
@@ -73,7 +75,9 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<WebHelper>().As<IWebHelper>().InstancePerLifetimeScope();
             //user agent helper
             builder.RegisterType<UserAgentHelper>().As<IUserAgentHelper>().InstancePerLifetimeScope();
-            
+            //powered by
+            builder.RegisterType<PoweredByMiddlewareOptions>().As<IPoweredByMiddlewareOptions>().SingleInstance();
+
             //data layer
             var dataSettingsManager = new DataSettingsManager();
             var dataProviderSettings = dataSettingsManager.LoadSettings();
@@ -83,13 +87,8 @@ namespace Grand.Framework.Infrastructure
 
             if (dataProviderSettings != null && dataProviderSettings.IsValid())
             {
-                var mongoDBDataProviderManager = new MongoDBDataProviderManager(dataSettingsManager.LoadSettings());
-                var dataProvider = mongoDBDataProviderManager.LoadDataProvider();
-                var databaseName = new MongoUrl(dataProviderSettings.DataConnectionString).DatabaseName;
                 builder.Register<IMongoClient>(c => new MongoClient(dataProviderSettings.DataConnectionString)).SingleInstance();
-                builder.Register(c => new MongoClient(dataProviderSettings.DataConnectionString).GetDatabase(databaseName)).InstancePerLifetimeScope();
                 builder.Register<IMongoDBContext>(c => new MongoDBContext(dataProviderSettings.DataConnectionString)).InstancePerLifetimeScope();
-
             }
             else
             {
@@ -143,6 +142,8 @@ namespace Grand.Framework.Infrastructure
 
             builder.RegisterType<ProductService>().As<IProductService>().InstancePerLifetimeScope();
             builder.RegisterType<CopyProductService>().As<ICopyProductService>().InstancePerLifetimeScope();
+            builder.RegisterType<ProductReservationService>().As<IProductReservationService>().InstancePerLifetimeScope();
+            builder.RegisterType<AuctionService>().As<IAuctionService>().InstancePerLifetimeScope();
 
             builder.RegisterType<SpecificationAttributeService>().As<ISpecificationAttributeService>().InstancePerLifetimeScope();
 
@@ -238,10 +239,13 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<InteractiveFormService>().As<IInteractiveFormService>().InstancePerLifetimeScope();
             builder.RegisterType<EmailAccountService>().As<IEmailAccountService>().InstancePerLifetimeScope();
             builder.RegisterType<WorkflowMessageService>().As<IWorkflowMessageService>().InstancePerLifetimeScope();
+            builder.RegisterType<ContactAttributeFormatter>().As<IContactAttributeFormatter>().InstancePerLifetimeScope();
+            builder.RegisterType<ContactAttributeParser>().As<IContactAttributeParser>().InstancePerLifetimeScope();
+            builder.RegisterType<ContactAttributeService>().As<IContactAttributeService>().InstancePerLifetimeScope();
             builder.RegisterType<MessageTokenProvider>().As<IMessageTokenProvider>().InstancePerLifetimeScope();
             builder.RegisterType<Tokenizer>().As<ITokenizer>().InstancePerLifetimeScope();
             builder.RegisterType<EmailSender>().As<IEmailSender>().InstancePerLifetimeScope();
-
+            builder.RegisterType<HistoryService>().As<IHistoryService>().InstancePerLifetimeScope();
             builder.RegisterType<CheckoutAttributeFormatter>().As<ICheckoutAttributeFormatter>().InstancePerLifetimeScope();
             builder.RegisterType<CheckoutAttributeParser>().As<ICheckoutAttributeParser>().InstancePerLifetimeScope();
             builder.RegisterType<CheckoutAttributeService>().As<ICheckoutAttributeService>().InstancePerLifetimeScope();
@@ -279,6 +283,8 @@ namespace Grand.Framework.Infrastructure
             }
 
             builder.RegisterType<ForumService>().As<IForumService>().InstancePerLifetimeScope();
+            builder.RegisterType<KnowledgebaseService>().As<IKnowledgebaseService>().InstancePerLifetimeScope();
+            builder.RegisterType<PushNotificationsService>().As<IPushNotificationsService>().InstancePerLifetimeScope();
             builder.RegisterType<PollService>().As<IPollService>().InstancePerLifetimeScope();
             builder.RegisterType<BlogService>().As<IBlogService>().InstancePerLifetimeScope();
             builder.RegisterType<WidgetService>().As<IWidgetService>().InstancePerLifetimeScope();
@@ -298,8 +304,6 @@ namespace Grand.Framework.Infrastructure
 
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().SingleInstance();
 
-            builder.RegisterType<ActionContextAccessor>().As<IActionContextAccessor>().InstancePerLifetimeScope();
-
             //Register event consumers
             var consumers = typeFinder.FindClassesOfType(typeof(IConsumer<>)).ToList();
             foreach (var consumer in consumers)
@@ -316,7 +320,6 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<EventPublisher>().As<IEventPublisher>().SingleInstance();
             builder.RegisterType<SubscriptionService>().As<ISubscriptionService>().SingleInstance();
 
-
             //TASKS
             builder.RegisterType<QueuedMessagesSendScheduleTask>().InstancePerLifetimeScope();
             builder.RegisterType<ClearCacheScheduleTask>().InstancePerLifetimeScope();
@@ -330,8 +333,7 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<CustomerReminderUnpaidOrderScheduleTask>().InstancePerLifetimeScope();
             builder.RegisterType<DeleteGuestsScheduleTask>().InstancePerLifetimeScope();
             builder.RegisterType<UpdateExchangeRateScheduleTask>().InstancePerLifetimeScope();
-            builder.RegisterType<KeepAliveScheduleTask>().InstancePerLifetimeScope();
-            
+            builder.RegisterType<EndAuctionsTask>().InstancePerLifetimeScope();
         }
 
         /// <summary>

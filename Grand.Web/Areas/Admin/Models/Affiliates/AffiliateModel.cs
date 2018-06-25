@@ -1,12 +1,8 @@
 ﻿using System;
-
 using Grand.Web.Areas.Admin.Models.Common;
-using Grand.Framework;
-using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Models;
-
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Grand.Framework.Mvc.ModelBinding;
+
 namespace Grand.Web.Areas.Admin.Models.Affiliates
 {
     public partial class AffiliateModel : BaseGrandEntityModel
@@ -42,6 +38,7 @@ namespace Grand.Web.Areas.Admin.Models.Affiliates
         {
             [GrandResourceDisplayName("Admin.Affiliates.Orders.Order")]
             public override string Id { get; set; }
+            public int OrderNumber { get; set; }
 
             [GrandResourceDisplayName("Admin.Affiliates.Orders.OrderStatus")]
             public string OrderStatus { get; set; }

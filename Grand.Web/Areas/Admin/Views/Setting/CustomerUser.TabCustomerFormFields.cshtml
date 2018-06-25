@@ -1,124 +1,122 @@
 ﻿@model CustomerUserSettingsModel
 @using Grand.Core.Domain.Customers;
 <script type="text/javascript">
-        $(document).ready(function () {
+    $(document).ready(function () {
+        $("#@Html.FieldIdFor(model => model.CustomerSettings.DateOfBirthEnabled)").click(toggleCustomerRequiredFormField);
+        $("#@Html.FieldIdFor(model => model.CustomerSettings.DateOfBirthRequired)").click(toggleCustomerRequiredFormField);
+        $("#@Html.FieldIdFor(model => model.CustomerSettings.CountryEnabled)").click(toggleCustomerCountryFormField);
+        $("#@Html.FieldIdFor(model => model.CustomerSettings.StateProvinceEnabled)").click(toggleCustomerStateProvinceFormField);
+        $("#@Html.FieldIdFor(model => model.CustomerSettings.CompanyEnabled)").click(toggleCustomerRequiredFormField);
+        $("#@Html.FieldIdFor(model => model.CustomerSettings.StreetAddressEnabled)").click(toggleCustomerRequiredFormField);
+        $("#@Html.FieldIdFor(model => model.CustomerSettings.StreetAddress2Enabled)").click(toggleCustomerRequiredFormField);
+        $("#@Html.FieldIdFor(model => model.CustomerSettings.ZipPostalCodeEnabled)").click(toggleCustomerRequiredFormField);
+        $("#@Html.FieldIdFor(model => model.CustomerSettings.CityEnabled)").click(toggleCustomerRequiredFormField);
+        $("#@Html.FieldIdFor(model => model.CustomerSettings.PhoneEnabled)").click(toggleCustomerRequiredFormField);
+        $("#@Html.FieldIdFor(model => model.CustomerSettings.FaxEnabled)").click(toggleCustomerRequiredFormField);
+        $("#@Html.FieldIdFor(model => model.CustomerSettings.NewsletterEnabled)").click(toggleNewsletterEnabledField);
+        $("#@Html.FieldIdFor(model => model.CustomerSettings.HideNewsletterBlock)").click(toggleHideNewsletterBlock);
 
-            $("#@Html.FieldIdFor(model => model.CustomerSettings.DateOfBirthEnabled)").click(toggleCustomerRequiredFormField);
-            $("#@Html.FieldIdFor(model => model.CustomerSettings.DateOfBirthRequired)").click(toggleCustomerRequiredFormField);
-            $("#@Html.FieldIdFor(model => model.CustomerSettings.CountryEnabled)").click(toggleCustomerCountryFormField);
-            $("#@Html.FieldIdFor(model => model.CustomerSettings.StateProvinceEnabled)").click(toggleCustomerStateProvinceFormField);
-            $("#@Html.FieldIdFor(model => model.CustomerSettings.CompanyEnabled)").click(toggleCustomerRequiredFormField);
-            $("#@Html.FieldIdFor(model => model.CustomerSettings.StreetAddressEnabled)").click(toggleCustomerRequiredFormField);
-            $("#@Html.FieldIdFor(model => model.CustomerSettings.StreetAddress2Enabled)").click(toggleCustomerRequiredFormField);
-            $("#@Html.FieldIdFor(model => model.CustomerSettings.ZipPostalCodeEnabled)").click(toggleCustomerRequiredFormField);
-            $("#@Html.FieldIdFor(model => model.CustomerSettings.CityEnabled)").click(toggleCustomerRequiredFormField);
-            $("#@Html.FieldIdFor(model => model.CustomerSettings.PhoneEnabled)").click(toggleCustomerRequiredFormField);
-            $("#@Html.FieldIdFor(model => model.CustomerSettings.FaxEnabled)").click(toggleCustomerRequiredFormField);
-            $("#@Html.FieldIdFor(model => model.CustomerSettings.NewsletterEnabled)").click(toggleNewsletterEnabledField);
-            $("#@Html.FieldIdFor(model => model.CustomerSettings.HideNewsletterBlock)").click(toggleHideNewsletterBlock);
+        toggleCustomerCountryFormField();
+        toggleCustomerStateProvinceFormField();
+        toggleCustomerRequiredFormField();
+        toggleNewsletterEnabledField();
+        toggleHideNewsletterBlock();
+    });
 
-
-            toggleCustomerCountryFormField();
+    function toggleCustomerCountryFormField() {
+        if ($('#@Html.FieldIdFor(model => model.CustomerSettings.CountryEnabled)').is(':checked')) {
+            $('#pnlCustomerCountryRequired').show();
+            $('#pnlCustomerStateProvinceEnabled').show();
             toggleCustomerStateProvinceFormField();
-            toggleCustomerRequiredFormField();
-            toggleNewsletterEnabledField();
-            toggleHideNewsletterBlock();
-        });
+        } else {
+            $('#pnlCustomerCountryRequired').hide();
+            $('#pnlCustomerStateProvinceEnabled').hide();
+            toggleCustomerStateProvinceFormField();
+        }
+    }
 
-        function toggleCustomerCountryFormField() {
-            if ($('#@Html.FieldIdFor(model => model.CustomerSettings.CountryEnabled)').is(':checked')) {
-                $('#pnlCustomerCountryRequired').show();
-                $('#pnlCustomerStateProvinceEnabled').show();
-                toggleCustomerStateProvinceFormField();
-            } else {
-                $('#pnlCustomerCountryRequired').hide();
-                $('#pnlCustomerStateProvinceEnabled').hide();
-                toggleCustomerStateProvinceFormField();
-            }
+    function toggleCustomerStateProvinceFormField() {
+        if ($('#@Html.FieldIdFor(model => model.CustomerSettings.CountryEnabled)').is(':checked') &&
+            $('#@Html.FieldIdFor(model => model.CustomerSettings.StateProvinceEnabled)').is(':checked')) {
+            $('#pnlCustomerStateProvinceRequired').show();
+        } else {
+            $('#pnlCustomerStateProvinceRequired').hide();
+        }
+    }
+
+    function toggleCustomerRequiredFormField() {
+        if ($('#@Html.FieldIdFor(model => model.CustomerSettings.DateOfBirthEnabled)').is(':checked')) {
+            $('#pnlCustomerDateOfBirthRequired').show();
+        } else {
+            $('#pnlCustomerDateOfBirthRequired').hide();
         }
 
-        function toggleCustomerStateProvinceFormField() {
-            if ($('#@Html.FieldIdFor(model => model.CustomerSettings.CountryEnabled)').is(':checked') &&
-                $('#@Html.FieldIdFor(model => model.CustomerSettings.StateProvinceEnabled)').is(':checked')) {
-                $('#pnlCustomerStateProvinceRequired').show();
-            } else {
-                $('#pnlCustomerStateProvinceRequired').hide();
-            }
+        if ($('#@Html.FieldIdFor(model => model.CustomerSettings.DateOfBirthEnabled)').is(':checked') &&
+            $('#@Html.FieldIdFor(model => model.CustomerSettings.DateOfBirthRequired)').is(':checked')) {
+            $('#pnlDateOfBirthMinimumAge').show();
+        } else {
+            $('#pnlDateOfBirthMinimumAge').hide();
         }
 
-        function toggleCustomerRequiredFormField() {
-            if ($('#@Html.FieldIdFor(model => model.CustomerSettings.DateOfBirthEnabled)').is(':checked')) {
-                $('#pnlCustomerDateOfBirthRequired').show();
-            } else {
-                $('#pnlCustomerDateOfBirthRequired').hide();
-            }
-
-            if ($('#@Html.FieldIdFor(model => model.CustomerSettings.DateOfBirthEnabled)').is(':checked') &&
-                $('#@Html.FieldIdFor(model => model.CustomerSettings.DateOfBirthRequired)').is(':checked')) {
-                $('#pnlDateOfBirthMinimumAge').show();
-            } else {
-                $('#pnlDateOfBirthMinimumAge').hide();
-            }
-
-            if ($('#@Html.FieldIdFor(model => model.CustomerSettings.CompanyEnabled)').is(':checked')) {
-                $('#pnlCustomerCompanyRequired').show();
-            } else {
-                $('#pnlCustomerCompanyRequired').hide();
-            }
-
-            if ($('#@Html.FieldIdFor(model => model.CustomerSettings.StreetAddressEnabled)').is(':checked')) {
-                $('#pnlCustomerStreetAddressRequired').show();
-            } else {
-                $('#pnlCustomerStreetAddressRequired').hide();
-            }
-
-            if ($('#@Html.FieldIdFor(model => model.CustomerSettings.StreetAddress2Enabled)').is(':checked')) {
-                $('#pnlCustomerStreetAddress2Required').show();
-            } else {
-                $('#pnlCustomerStreetAddress2Required').hide();
-            }
-
-            if ($('#@Html.FieldIdFor(model => model.CustomerSettings.ZipPostalCodeEnabled)').is(':checked')) {
-                $('#pnlCustomerZipPostalCodeRequired').show();
-            } else {
-                $('#pnlCustomerZipPostalCodeRequired').hide();
-            }
-
-            if ($('#@Html.FieldIdFor(model => model.CustomerSettings.CityEnabled)').is(':checked')) {
-                $('#pnlCustomerCityRequired').show();
-            } else {
-                $('#pnlCustomerCityRequired').hide();
-            }
-
-            if ($('#@Html.FieldIdFor(model => model.CustomerSettings.PhoneEnabled)').is(':checked')) {
-                $('#pnlCustomerPhoneRequired').show();
-            } else {
-                $('#pnlCustomerPhoneRequired').hide();
-            }
-
-            if ($('#@Html.FieldIdFor(model => model.CustomerSettings.FaxEnabled)').is(':checked')) {
-                $('#pnlCustomerFaxRequired').show();
-            } else {
-                $('#pnlCustomerFaxRequired').hide();
-            }
+        if ($('#@Html.FieldIdFor(model => model.CustomerSettings.CompanyEnabled)').is(':checked')) {
+            $('#pnlCustomerCompanyRequired').show();
+        } else {
+            $('#pnlCustomerCompanyRequired').hide();
         }
 
-        function toggleNewsletterEnabledField() {
-            if ($('#@Html.FieldIdFor(model => model.CustomerSettings.NewsletterEnabled)').is(':checked')) {
-                $('#pnlCustomerNewsletterTickedByDefault').show();
-            } else {
-                $('#pnlCustomerNewsletterTickedByDefault').hide();
-            }
+        if ($('#@Html.FieldIdFor(model => model.CustomerSettings.StreetAddressEnabled)').is(':checked')) {
+            $('#pnlCustomerStreetAddressRequired').show();
+        } else {
+            $('#pnlCustomerStreetAddressRequired').hide();
         }
 
-        function toggleHideNewsletterBlock() {
-            if ($('#@Html.FieldIdFor(model => model.CustomerSettings.HideNewsletterBlock)').is(':checked')) {
-                $('#pnlNewsletterBlockAllowToUnsubscribe').hide();
-            }
-            else {
-                $('#pnlNewsletterBlockAllowToUnsubscribe').show();
-            }
+        if ($('#@Html.FieldIdFor(model => model.CustomerSettings.StreetAddress2Enabled)').is(':checked')) {
+            $('#pnlCustomerStreetAddress2Required').show();
+        } else {
+            $('#pnlCustomerStreetAddress2Required').hide();
         }
+
+        if ($('#@Html.FieldIdFor(model => model.CustomerSettings.ZipPostalCodeEnabled)').is(':checked')) {
+            $('#pnlCustomerZipPostalCodeRequired').show();
+        } else {
+            $('#pnlCustomerZipPostalCodeRequired').hide();
+        }
+
+        if ($('#@Html.FieldIdFor(model => model.CustomerSettings.CityEnabled)').is(':checked')) {
+            $('#pnlCustomerCityRequired').show();
+        } else {
+            $('#pnlCustomerCityRequired').hide();
+        }
+
+        if ($('#@Html.FieldIdFor(model => model.CustomerSettings.PhoneEnabled)').is(':checked')) {
+            $('#pnlCustomerPhoneRequired').show();
+        } else {
+            $('#pnlCustomerPhoneRequired').hide();
+        }
+
+        if ($('#@Html.FieldIdFor(model => model.CustomerSettings.FaxEnabled)').is(':checked')) {
+            $('#pnlCustomerFaxRequired').show();
+        } else {
+            $('#pnlCustomerFaxRequired').hide();
+        }
+    }
+
+    function toggleNewsletterEnabledField() {
+        if ($('#@Html.FieldIdFor(model => model.CustomerSettings.NewsletterEnabled)').is(':checked')) {
+            $('#pnlCustomerNewsletterTickedByDefault').show();
+        } else {
+            $('#pnlCustomerNewsletterTickedByDefault').hide();
+        }
+    }
+
+    function toggleHideNewsletterBlock() {
+        if ($('#@Html.FieldIdFor(model => model.CustomerSettings.HideNewsletterBlock)').is(':checked')) {
+            $('#pnlNewsletterBlockAllowToUnsubscribe').hide();
+        }
+        else {
+            $('#pnlNewsletterBlockAllowToUnsubscribe').show();
+        }
+    }
 
 </script>
 <div class="form-horizontal">
@@ -130,299 +128,299 @@
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.CustomerSettings.GenderEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="CustomerSettings.GenderEnabled" class="control-label"/>
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.CustomerSettings.GenderEnabled)
+                    <admin-input asp-for="CustomerSettings.GenderEnabled" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.CustomerSettings.GenderEnabled)
+                <span asp-validation-for="CustomerSettings.GenderEnabled"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.CustomerSettings.DateOfBirthEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="CustomerSettings.DateOfBirthEnabled" class="control-label"/>
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.CustomerSettings.DateOfBirthEnabled)
+                    <admin-input asp-for="CustomerSettings.DateOfBirthEnabled" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.CustomerSettings.DateOfBirthEnabled)
+                <span asp-validation-for="CustomerSettings.DateOfBirthEnabled"></span>
             </div>
         </div>
         <div class="form-group" id="pnlCustomerDateOfBirthRequired">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.CustomerSettings.DateOfBirthRequired, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="CustomerSettings.DateOfBirthRequired" class="control-label"/>
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.CustomerSettings.DateOfBirthRequired)
+                    <admin-input asp-for="CustomerSettings.DateOfBirthRequired" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.CustomerSettings.DateOfBirthRequired)
+                <span asp-validation-for="CustomerSettings.DateOfBirthRequired"></span>
             </div>
         </div>
         <div class="form-group" id="pnlDateOfBirthMinimumAge">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.CustomerSettings.DateOfBirthMinimumAge, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="CustomerSettings.DateOfBirthMinimumAge" class="control-label"/>
             </div>
             <div class="col-md-8 col-sm-8">
-                @Html.GrandEditorFor(model => model.CustomerSettings.DateOfBirthMinimumAge)
-                @Html.ValidationMessageFor(model => model.CustomerSettings.DateOfBirthMinimumAge)
+                <admin-input asp-for="CustomerSettings.DateOfBirthMinimumAge" />
+                <span asp-validation-for="CustomerSettings.DateOfBirthMinimumAge"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.CustomerSettings.CompanyEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="CustomerSettings.CompanyEnabled" class="control-label"/>
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.CustomerSettings.CompanyEnabled)
+                    <admin-input asp-for="CustomerSettings.CompanyEnabled" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.CustomerSettings.CompanyEnabled)
+                <span asp-validation-for="CustomerSettings.CompanyEnabled"></span>
             </div>
         </div>
         <div class="form-group" id="pnlCustomerCompanyRequired">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.CustomerSettings.CompanyRequired, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="CustomerSettings.CompanyRequired" class="control-label"/>
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.CustomerSettings.CompanyRequired)
+                    <admin-input asp-for="CustomerSettings.CompanyRequired" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.CustomerSettings.CompanyRequired)
+                <span asp-validation-for="CustomerSettings.CompanyRequired"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.CustomerSettings.StreetAddressEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="CustomerSettings.StreetAddressEnabled" class="control-label"/>
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.CustomerSettings.StreetAddressEnabled)
+                    <admin-input asp-for="CustomerSettings.StreetAddressEnabled" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.CustomerSettings.StreetAddressEnabled)
+                <span asp-validation-for="CustomerSettings.StreetAddressEnabled"></span>
             </div>
         </div>
         <div class="form-group" id="pnlCustomerStreetAddressRequired">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.CustomerSettings.StreetAddressRequired, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="CustomerSettings.StreetAddressRequired" class="control-label"/>
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.CustomerSettings.StreetAddressRequired)
+                    <admin-input asp-for="CustomerSettings.StreetAddressRequired" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.CustomerSettings.StreetAddressRequired)
+                <span asp-validation-for="CustomerSettings.StreetAddressRequired"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.CustomerSettings.StreetAddress2Enabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="CustomerSettings.StreetAddress2Enabled" class="control-label"/>
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.CustomerSettings.StreetAddress2Enabled)
+                    <admin-input asp-for="CustomerSettings.StreetAddress2Enabled" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.CustomerSettings.StreetAddress2Enabled)
+                <span asp-validation-for="CustomerSettings.StreetAddress2Enabled"></span>
             </div>
         </div>
         <div class="form-group" id="pnlCustomerStreetAddress2Required">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.CustomerSettings.StreetAddress2Required, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="CustomerSettings.StreetAddress2Required" class="control-label"/>
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.CustomerSettings.StreetAddress2Required)
+                    <admin-input asp-for="CustomerSettings.StreetAddress2Required" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.CustomerSettings.StreetAddress2Required)
+                <span asp-validation-for="CustomerSettings.StreetAddress2Required"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.CustomerSettings.ZipPostalCodeEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="CustomerSettings.ZipPostalCodeEnabled" class="control-label"/>
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.CustomerSettings.ZipPostalCodeEnabled)
+                    <admin-input asp-for="CustomerSettings.ZipPostalCodeEnabled" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.CustomerSettings.ZipPostalCodeEnabled)
+                <span asp-validation-for="CustomerSettings.ZipPostalCodeEnabled"></span>
             </div>
         </div>
         <div class="form-group" id="pnlCustomerZipPostalCodeRequired">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.CustomerSettings.ZipPostalCodeRequired, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="CustomerSettings.ZipPostalCodeRequired" class="control-label"/>
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.CustomerSettings.ZipPostalCodeRequired)
+                    <admin-input asp-for="CustomerSettings.ZipPostalCodeRequired" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.CustomerSettings.ZipPostalCodeRequired)
+                <span asp-validation-for="CustomerSettings.ZipPostalCodeRequired"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.CustomerSettings.CityEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="CustomerSettings.CityEnabled" class="control-label"/>
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.CustomerSettings.CityEnabled)
+                    <admin-input asp-for="CustomerSettings.CityEnabled" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.CustomerSettings.CityEnabled)
+                <span asp-validation-for="CustomerSettings.CityEnabled"></span>
             </div>
         </div>
         <div class="form-group" id="pnlCustomerCityRequired">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.CustomerSettings.CityRequired, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="CustomerSettings.CityRequired" class="control-label"/>
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.CustomerSettings.CityRequired)
+                    <admin-input asp-for="CustomerSettings.CityRequired" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.CustomerSettings.CityRequired)
+                <span asp-validation-for="CustomerSettings.CityRequired"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.CustomerSettings.CountryEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="CustomerSettings.CountryEnabled" class="control-label"/>
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.CustomerSettings.CountryEnabled)
+                    <admin-input asp-for="CustomerSettings.CountryEnabled" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.CustomerSettings.CountryEnabled)
+                <span asp-validation-for="CustomerSettings.CountryEnabled"></span>
             </div>
         </div>
         <div class="form-group" id="pnlCustomerCountryRequired">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.CustomerSettings.CountryRequired, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="CustomerSettings.CountryRequired" class="control-label"/>
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.CustomerSettings.CountryRequired)
+                    <admin-input asp-for="CustomerSettings.CountryRequired" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.CustomerSettings.CountryRequired)
+                <span asp-validation-for="CustomerSettings.CountryRequired"></span>
             </div>
         </div>
         <div class="form-group" id="pnlCustomerStateProvinceEnabled">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.CustomerSettings.StateProvinceEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="CustomerSettings.StateProvinceEnabled" class="control-label"/>
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.CustomerSettings.StateProvinceEnabled)
+                    <admin-input asp-for="CustomerSettings.StateProvinceEnabled" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.CustomerSettings.StateProvinceEnabled)
+                <span asp-validation-for="CustomerSettings.StateProvinceEnabled"></span>
             </div>
         </div>
         <div class="form-group" id="pnlCustomerStateProvinceRequired">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.CustomerSettings.StateProvinceRequired, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="CustomerSettings.StateProvinceRequired" class="control-label"/>
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.CustomerSettings.StateProvinceRequired)
+                    <admin-input asp-for="CustomerSettings.StateProvinceRequired" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.CustomerSettings.StateProvinceRequired)
+                <span asp-validation-for="CustomerSettings.StateProvinceRequired"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.CustomerSettings.PhoneEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="CustomerSettings.PhoneEnabled" class="control-label"/>
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.CustomerSettings.PhoneEnabled)
+                    <admin-input asp-for="CustomerSettings.PhoneEnabled" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.CustomerSettings.PhoneEnabled)
+                <span asp-validation-for="CustomerSettings.PhoneEnabled"></span>
             </div>
         </div>
         <div class="form-group" id="pnlCustomerPhoneRequired">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.CustomerSettings.PhoneRequired, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="CustomerSettings.PhoneRequired" class="control-label"/>
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.CustomerSettings.PhoneRequired)
+                    <admin-input asp-for="CustomerSettings.PhoneRequired" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.CustomerSettings.PhoneRequired)
+                <span asp-validation-for="CustomerSettings.PhoneRequired"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.CustomerSettings.FaxEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="CustomerSettings.FaxEnabled" class="control-label"/>
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.CustomerSettings.FaxEnabled)
+                    <admin-input asp-for="CustomerSettings.FaxEnabled" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.CustomerSettings.FaxEnabled)
+                <span asp-validation-for="CustomerSettings.FaxEnabled"></span>
             </div>
         </div>
         <div class="form-group" id="pnlCustomerFaxRequired">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.CustomerSettings.FaxRequired, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="CustomerSettings.FaxRequired" class="control-label"/>
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.CustomerSettings.FaxRequired)
+                    <admin-input asp-for="CustomerSettings.FaxRequired" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.CustomerSettings.FaxRequired)
+                <span asp-validation-for="CustomerSettings.FaxRequired"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.CustomerSettings.AcceptPrivacyPolicyEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="CustomerSettings.AcceptPrivacyPolicyEnabled" class="control-label"/>
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.CustomerSettings.AcceptPrivacyPolicyEnabled)
+                    <admin-input asp-for="CustomerSettings.AcceptPrivacyPolicyEnabled" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.CustomerSettings.AcceptPrivacyPolicyEnabled)
+                <span asp-validation-for="CustomerSettings.AcceptPrivacyPolicyEnabled"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.CustomerSettings.NewsletterEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="CustomerSettings.NewsletterEnabled" class="control-label"/>
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.CustomerSettings.NewsletterEnabled)
+                    <admin-input asp-for="CustomerSettings.NewsletterEnabled" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.CustomerSettings.NewsletterEnabled)
+                <span asp-validation-for="CustomerSettings.NewsletterEnabled"></span>
             </div>
         </div>
         <div class="form-group" id="pnlCustomerNewsletterTickedByDefault">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.GrandLabelFor(model => model.CustomerSettings.NewsletterTickedByDefault, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                <admin-label asp-for="CustomerSettings.NewsletterTickedByDefault" class="control-label"/>
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.CustomerSettings.NewsletterTickedByDefault)
+                    <admin-input asp-for="CustomerSettings.NewsletterTickedByDefault" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.CustomerSettings.NewsletterTickedByDefault)
+                <span asp-validation-for="CustomerSettings.NewsletterTickedByDefault"></span>
             </div>
         </div>
     </div>

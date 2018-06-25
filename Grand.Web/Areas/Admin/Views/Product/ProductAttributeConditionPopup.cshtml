@@ -2,22 +2,20 @@
 @model ProductAttributeConditionModel
 @{
     Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
-}
-@{
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Condition").Text;
 }
+
 @*we add enctype = "multipart/form-data" because "File upload" attribute control type requires it*@
-@using (Html.BeginForm("ProductAttributeConditionPopup", "Product",
-        new { productAttributeMappingId = Model.ProductAttributeMappingId, btnId = ViewBag.btnId, formId = ViewBag.formId },
-        FormMethod.Post,
-        false,
-        new Dictionary<string, Object> { { "enctype", "multipart/form-data" } })
-    )
-{
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary(false)
-    @Html.HiddenFor(model => model.ProductId)    
+<form asp-controller="Product" asp-action="ProductAttributeConditionPopup" enctype="multipart/form-data" method="post"
+      asp-route-ProductId="@Context.Request.Query["ProductId"]"
+      asp-route-productAttributeMappingId="@Context.Request.Query["ProductAttributeMappingId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
+
+    <antiforgery-token />
+    <div asp-validation-summary="All"></div>
+    <input asp-for="ProductId" type="hidden" />    
 
     <div class="row">
         <div class="col-md-12">
@@ -35,10 +33,13 @@
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group">
-                                  @Html.GrandLabelFor(model => model.EnableCondition, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                  <admin-label asp-for="EnableCondition" class="col-sm-3 control-label"/>
                                   <div class="col-md-9 col-sm-9">
-                                            @Html.EditorFor(model => model.EnableCondition)
-                                            @Html.ValidationMessageFor(model => model.EnableCondition)
+                                      <label class="mt-checkbox mt-checkbox-outline">
+                                          <admin-input asp-for="EnableCondition" />
+                                          <span></span>
+                                      </label>
+                                      <span asp-validation-for="EnableCondition"></span>
                                   </div>
                             </div>
                             <div class="form-group" id="pnlAttributes">
@@ -52,10 +53,9 @@
                                     <div class="form-horizontal">
                                         <div class="form-body">
                                             <div class="form-group" id="pnlBasepriceUnit">
-                                                @Html.GrandLabelFor(model => model.SelectedProductAttributeId, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                                <admin-label asp-for="SelectedProductAttributeId" class="col-sm-3 control-label"/>
                                                 <div class="col-md-9 col-sm-9">
-                                                    @Html.GrandDropDownListFor(model => model.SelectedProductAttributeId, attributesList)
-
+                                                    <admin-select asp-for="SelectedProductAttributeId" asp-items="@(attributesList)" />
                                                     <script type="text/javascript">
                                                         $(document).ready(function() {
                                                             $("#@Html.FieldIdFor(model => model.SelectedProductAttributeId)").change(toggleProductAttributes);
@@ -161,7 +161,7 @@
         </div>
 
 
-    if (ViewBag.RefreshPage == true)
+    @if (ViewBag.RefreshPage == true)
     {
         <script type="text/javascript">
             try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
@@ -188,4 +188,4 @@
             }
         </script>
 
-}
+</form>

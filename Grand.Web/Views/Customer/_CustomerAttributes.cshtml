@@ -35,7 +35,7 @@
                                         <legend class="sr-only">@(controlId)</legend>
                                         <label class="custom-control custom-radio">
                                             <input class="custom-control-input" id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" />
-                                            <span class="custom-control-indicator"></span>
+                                            <span class="custom-control-label"></span>
                                             <span class="custom-control-description">@attributeValue.Name</span>
                                         </label>
                                     </fieldset>
@@ -56,7 +56,7 @@
 
                                     <label for="@(controlId)_@(attributeValue.Id)" class="custom-control custom-checkbox">
                                         <input class="custom-control-input" id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
-                                        <span class="custom-control-indicator"></span>
+                                        <span class="custom-control-label"></span>
                                         <span class="custom-control-description">@attributeValue.Name</span>
                                     </label>
 

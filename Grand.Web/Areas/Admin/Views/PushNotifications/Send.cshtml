@@ -1,0 +1,59 @@
+﻿@model Grand.Web.Areas.Admin.Models.PushNotifications.PushModel
+@{
+    Layout = "_AdminLayout";
+}
+<form asp-controller="PushNotifications" asp-action="Send" method="post">
+    <antiforgery-token />
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-cubes"></i>
+                        @T("PushNotifications.PushNotications")
+                    </div>
+                </div>
+
+                <div class="portlet-body form">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="portlet-body">
+                                <div class="form-group">
+                                    <admin-label asp-for="Title" />
+                                    <div class="col-md-9 col-sm-9">
+                                        <admin-input asp-for="Title" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <admin-label asp-for="MessageText" />
+                                    <div class="col-md-9 col-sm-9">
+                                        @Html.TextAreaFor(model => model.MessageText, new { style = "Height: 100px; Width:100%;" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <admin-label asp-for="ClickUrl" />
+                                    <div class="col-md-9 col-sm-9">
+                                        <admin-input asp-for="ClickUrl" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <admin-label asp-for="PictureId" />
+                                    <div class="col-md-9 col-sm-9">
+                                        <admin-input asp-for="PictureId" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <div class="row">
+                                    <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
+                                        <input type="submit" name="generatekey" class="btn green" value="@T("PushNotifications.SendPush")" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

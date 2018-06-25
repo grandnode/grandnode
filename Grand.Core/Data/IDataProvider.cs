@@ -11,10 +11,5 @@ namespace Grand.Core.Data
         /// </summary>
         void InitDatabase();
 
-        /// <summary>
-        /// Set database initializer
-        /// </summary>
-        void SetDatabaseInitializer();
-
     }
 }

@@ -1,0 +1,15 @@
+﻿@model Grand.Web.Models.Knowledgebase.KnowledgebaseHomePageModel
+
+@if (Model.Articles.Any())
+{
+<div class="viewBox listbox page">
+    <ul class="list pl-0">
+        @foreach (var article in Model.Articles)
+        {
+            <a class="list-group-item" href="@Url.RouteUrl("KnowledgebaseArticle", new { SeName = article.SeName })">
+                @article.Name
+            </a>
+        }
+    </ul>
+</div>
+}

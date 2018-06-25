@@ -65,6 +65,7 @@ namespace Grand.Web.Services
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IAuctionService _auctionService;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         private readonly MediaSettings _mediaSettings;
@@ -105,6 +106,7 @@ namespace Grand.Web.Services
             IOrderTotalCalculationService orderTotalCalculationService,
             IPriceCalculationService priceCalculationService,
             IGenericAttributeService genericAttributeService,
+            IAuctionService auctionService,
             IHttpContextAccessor httpContextAccessor,
             MediaSettings mediaSettings,
             OrderSettings orderSettings,
@@ -143,6 +145,7 @@ namespace Grand.Web.Services
             this._orderTotalCalculationService = orderTotalCalculationService;
             this._priceCalculationService = priceCalculationService;
             this._genericAttributeService = genericAttributeService;
+            this._auctionService = auctionService;
             this._httpContextAccessor = httpContextAccessor;
 
             this._mediaSettings = mediaSettings;
@@ -198,6 +201,8 @@ namespace Grand.Web.Services
             model.TermsOfServicePopup = _commonSettings.PopupForTermsOfServiceLinks;
             model.ShowProductImages = _shoppingCartSettings.ShowProductImagesOnShoppingCart;
             model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
+            model.IsGuest = customer.IsGuest();
+            model.ShowCheckoutAsGuestButton = model.IsGuest && _orderSettings.AnonymousCheckoutAllowed;
             var checkoutAttributesXml = customer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);
             model.CheckoutAttributeInfo = _checkoutAttributeFormatter.FormatAttributes(checkoutAttributesXml, customer);
             bool minOrderSubtotalAmountOk = _orderProcessingService.ValidateMinOrderSubtotalAmount(cart);
@@ -420,13 +425,35 @@ namespace Grand.Web.Services
                 if (product.IsRecurring)
                     cartItemModel.RecurringInfo = string.Format(_localizationService.GetResource("ShoppingCart.RecurringPeriod"), product.RecurringCycleLength, product.RecurringCyclePeriod.GetLocalizedEnum(_localizationService, _workContext));
 
-                //rental info
-                if (product.IsRental)
+                //reservation info
+                if (product.ProductType == ProductType.Reservation)
                 {
-                    var rentalStartDate = sci.RentalStartDateUtc.HasValue ? product.FormatRentalDate(sci.RentalStartDateUtc.Value) : "";
-                    var rentalEndDate = sci.RentalEndDateUtc.HasValue ? product.FormatRentalDate(sci.RentalEndDateUtc.Value) : "";
-                    cartItemModel.RentalInfo = string.Format(_localizationService.GetResource("ShoppingCart.Rental.FormattedDate"),
-                        rentalStartDate, rentalEndDate);
+                    if (sci.RentalEndDateUtc == default(DateTime) || sci.RentalEndDateUtc == null)
+                    {
+                        cartItemModel.ReservationInfo = string.Format(_localizationService.GetResource("ShoppingCart.Reservation.StartDate"), sci.RentalStartDateUtc?.ToString(_shoppingCartSettings.ReservationDateFormat));
+                    }
+                    else
+                    {
+                        cartItemModel.ReservationInfo = string.Format(_localizationService.GetResource("ShoppingCart.Reservation.Date"), sci.RentalStartDateUtc?.ToString(_shoppingCartSettings.ReservationDateFormat), sci.RentalEndDateUtc?.ToString(_shoppingCartSettings.ReservationDateFormat));
+                    }
+
+                    if (!string.IsNullOrEmpty(sci.Parameter))
+                    {
+                        cartItemModel.ReservationInfo += "<br>" + string.Format(_localizationService.GetResource("ShoppingCart.Reservation.Option"), sci.Parameter);
+                    }
+                    if (!string.IsNullOrEmpty(sci.Parameter))
+                    {
+                        cartItemModel.Parameter = sci.Parameter;
+                    }
+                    if (!string.IsNullOrEmpty(sci.Duration))
+                    {
+                        cartItemModel.ReservationInfo += "<br>" + string.Format(_localizationService.GetResource("ShoppingCart.Reservation.Duration"), sci.Duration);
+                    }
+                }
+                if (sci.ShoppingCartType == ShoppingCartType.Auctions)
+                {
+                    cartItemModel.DisableRemoval = true;
+                    cartItemModel.AuctionInfo = _localizationService.GetResource("ShoppingCart.auctionwonon") + " " + product.AvailableEndDateTimeUtc;
                 }
 
                 //unit prices
@@ -473,17 +500,7 @@ namespace Grand.Web.Services
                 }
 
                 //item warnings
-                var itemWarnings = _shoppingCartService.GetShoppingCartItemWarnings(
-                    customer,
-                    sci.ShoppingCartType,
-                    product,
-                    sci.StoreId,
-                    sci.AttributesXml,
-                    sci.CustomerEnteredPrice,
-                    sci.RentalStartDateUtc,
-                    sci.RentalEndDateUtc,
-                    sci.Quantity,
-                    false);
+                var itemWarnings = _shoppingCartService.GetShoppingCartItemWarnings(customer, sci, product, false);
                 foreach (var warning in itemWarnings)
                     cartItemModel.Warnings.Add(warning);
 
@@ -599,7 +616,7 @@ namespace Grand.Web.Services
 
             #region Simple properties
 
-            var customer = cart.GetCustomer();
+            var customer = _workContext.CurrentCustomer;
             model.CustomerGuid = customer.CustomerGuid;
             model.CustomerFullname = customer.GetFullName();
             model.ShowProductImages = _shoppingCartSettings.ShowProductImagesOnWishList;
@@ -652,15 +669,6 @@ namespace Grand.Web.Services
                 if (product.IsRecurring)
                     cartItemModel.RecurringInfo = string.Format(_localizationService.GetResource("ShoppingCart.RecurringPeriod"), product.RecurringCycleLength, product.RecurringCyclePeriod.GetLocalizedEnum(_localizationService, _workContext));
 
-                //rental info
-                if (product.IsRental)
-                {
-                    var rentalStartDate = sci.RentalStartDateUtc.HasValue ? product.FormatRentalDate(sci.RentalStartDateUtc.Value) : "";
-                    var rentalEndDate = sci.RentalEndDateUtc.HasValue ? product.FormatRentalDate(sci.RentalEndDateUtc.Value) : "";
-                    cartItemModel.RentalInfo = string.Format(_localizationService.GetResource("ShoppingCart.Rental.FormattedDate"),
-                        rentalStartDate, rentalEndDate);
-                }
-
                 //unit prices
                 if (product.CallForPrice)
                 {
@@ -708,17 +716,7 @@ namespace Grand.Web.Services
                 }
 
                 //item warnings
-                var itemWarnings = _shoppingCartService.GetShoppingCartItemWarnings(
-                    customer,
-                    sci.ShoppingCartType,
-                    product,
-                    sci.StoreId,
-                    sci.AttributesXml,
-                    sci.CustomerEnteredPrice,
-                    sci.RentalStartDateUtc,
-                    sci.RentalEndDateUtc,
-                    sci.Quantity,
-                    false);
+                var itemWarnings = _shoppingCartService.GetShoppingCartItemWarnings(customer, sci, product, false);
                 foreach (var warning in itemWarnings)
                     cartItemModel.Warnings.Add(warning);
 
@@ -784,10 +782,10 @@ namespace Grand.Web.Services
             if (customer.HasShoppingCartItems)
             {
                 var cart = customer.ShoppingCartItems
-                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
                     .LimitPerStore(storeId)
                     .ToList();
-                model.TotalProducts = cart.GetTotalProducts();
+                model.TotalProducts = cart.Sum(x=>x.Quantity);
                 if (cart.Any())
                 {
                     //subtotal
@@ -833,7 +831,31 @@ namespace Grand.Web.Services
                             Quantity = sci.Quantity,
                             AttributeInfo = _productAttributeFormatter.FormatAttributes(product, sci.AttributesXml)
                         };
+                        if(product.ProductType == ProductType.Reservation)
+                        {
+                            var reservation = "";
+                            if (sci.RentalEndDateUtc == default(DateTime) || sci.RentalEndDateUtc == null)
+                            {
+                                reservation = string.Format(_localizationService.GetResource("ShoppingCart.Reservation.StartDate"), sci.RentalStartDateUtc?.ToString(_shoppingCartSettings.ReservationDateFormat));
+                            }
+                            else
+                            {
+                                reservation = string.Format(_localizationService.GetResource("ShoppingCart.Reservation.Date"), sci.RentalStartDateUtc?.ToString(_shoppingCartSettings.ReservationDateFormat), sci.RentalEndDateUtc?.ToString(_shoppingCartSettings.ReservationDateFormat));
+                            }
 
+                            if (!string.IsNullOrEmpty(sci.Parameter))
+                            {
+                                reservation += "<br>" + string.Format(_localizationService.GetResource("ShoppingCart.Reservation.Option"), sci.Parameter);
+                            }
+                            if (!string.IsNullOrEmpty(sci.Duration))
+                            {
+                                reservation += "<br>" + string.Format(_localizationService.GetResource("ShoppingCart.Reservation.Duration"), sci.Duration);
+                            }
+                            if (string.IsNullOrEmpty(cartItemModel.AttributeInfo))
+                                cartItemModel.AttributeInfo = reservation;
+                            else
+                                cartItemModel.AttributeInfo += "<br>" + reservation;
+                        }
                         //unit prices
                         if (product.CallForPrice)
                         {
@@ -1015,6 +1037,117 @@ namespace Grand.Web.Services
             }
 
             return model;
+        }
+
+        public virtual AddToCartModel PrepareAddToCartModel(Product product, Customer customer, int quantity, decimal customerEnteredPrice, string attributesXml, ShoppingCartType cartType, DateTime? startDate, DateTime? endDate, string reservationId, string parameter, string duration)
+        {
+            var model = new AddToCartModel();
+            model.AttributeDescription = _productAttributeFormatter.FormatAttributes(product, attributesXml);
+            model.ProductSeName = product.GetSeName();
+            model.CartType = cartType;
+            model.ProductId = product.Id;
+            model.ProductName = product.GetLocalized(x => x.Name);
+            model.Quantity = quantity;
+
+            //reservation info
+            if (product.ProductType == ProductType.Reservation)
+            {
+                if (endDate == default(DateTime) || endDate == null)
+                {
+                    model.ReservationInfo = string.Format(_localizationService.GetResource("ShoppingCart.Reservation.StartDate"), startDate?.ToString(_shoppingCartSettings.ReservationDateFormat));
+                }
+                else
+                {
+                    model.ReservationInfo = string.Format(_localizationService.GetResource("ShoppingCart.Reservation.Date"), startDate?.ToString(_shoppingCartSettings.ReservationDateFormat), endDate?.ToString(_shoppingCartSettings.ReservationDateFormat));
+                }
+
+                if (!string.IsNullOrEmpty(parameter))
+                {
+                    model.ReservationInfo += "<br>" + string.Format(_localizationService.GetResource("ShoppingCart.Reservation.Option"), parameter);
+                }
+                if (!string.IsNullOrEmpty(duration))
+                {
+                    model.ReservationInfo += "<br>" + string.Format(_localizationService.GetResource("ShoppingCart.Reservation.Duration"), duration);
+                }
+            }
+            
+            if (cartType != ShoppingCartType.Auctions)
+            {
+                var sci = customer.ShoppingCartItems.FirstOrDefault(x => x.ProductId == product.Id && (string.IsNullOrEmpty(x.AttributesXml) ? "" : x.AttributesXml) == attributesXml);
+                model.ItemQuantity = sci.Quantity;
+
+                //unit prices
+                if (product.CallForPrice)
+                {
+                    model.Price = _localizationService.GetResource("Products.CallForPrice");
+                }
+                else
+                {
+                    decimal taxRate;
+                    decimal shoppingCartUnitPriceWithDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetUnitPrice(sci), out taxRate);
+                    decimal shoppingCartUnitPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartUnitPriceWithDiscountBase, _workContext.WorkingCurrency);
+                    model.Price = customerEnteredPrice == 0 ? _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount) : _priceFormatter.FormatPrice(customerEnteredPrice);
+                    model.DecimalPrice = customerEnteredPrice == 0 ? shoppingCartUnitPriceWithDiscount: customerEnteredPrice;
+                    model.TotalPrice = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount * sci.Quantity);
+                }
+
+                //picture
+                model.Picture = PrepareCartItemPicture(product, sci.AttributesXml, _mediaSettings.AddToCartThumbPictureSize, true, model.ProductName);
+            }
+            else
+            {
+                model.Picture = PrepareCartItemPicture(product, null, _mediaSettings.AddToCartThumbPictureSize, true, model.ProductName);
+            }
+
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                .Where(x => x.ShoppingCartType == cartType)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
+                .ToList();
+
+            if (cartType != ShoppingCartType.Auctions)
+            {
+                model.TotalItems = cart.Sum(x => x.Quantity);
+            }
+            else
+            {
+                model.TotalItems = 0;
+                var grouped = _auctionService.GetBidsByCustomerId(_workContext.CurrentCustomer.Id).GroupBy(x => x.ProductId);
+                foreach (var item in grouped)
+                {
+                    var p = _productService.GetProductById(item.Key);
+                    if (p != null && p.AvailableEndDateTimeUtc > DateTime.UtcNow)
+                    {
+                        model.TotalItems++;
+                    }
+                }
+            }
+
+            if (cartType == ShoppingCartType.ShoppingCart)
+            {
+                var subTotalIncludingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal;
+                _orderTotalCalculationService.GetShoppingCartSubTotal(cart, subTotalIncludingTax,
+                    out decimal orderSubTotalDiscountAmountBase, out List<AppliedDiscount> orderSubTotalAppliedDiscounts,
+                    out decimal subTotalWithoutDiscountBase, out decimal subTotalWithDiscountBase);
+                decimal subtotalBase = subTotalWithoutDiscountBase;
+                decimal subtotal = _currencyService.ConvertFromPrimaryStoreCurrency(subtotalBase, _workContext.WorkingCurrency);
+                model.SubTotal = _priceFormatter.FormatPrice(subtotal, true, _workContext.WorkingCurrency, _workContext.WorkingLanguage, subTotalIncludingTax);
+                model.DecimalSubTotal = subtotal;
+                if (orderSubTotalDiscountAmountBase > decimal.Zero)
+                {
+                    decimal orderSubTotalDiscountAmount = _currencyService.ConvertFromPrimaryStoreCurrency(orderSubTotalDiscountAmountBase, _workContext.WorkingCurrency);
+                    model.SubTotalDiscount = _priceFormatter.FormatPrice(-orderSubTotalDiscountAmount, true, _workContext.WorkingCurrency, _workContext.WorkingLanguage, subTotalIncludingTax);
+                }
+            }
+            else if (cartType == ShoppingCartType.Auctions)
+            {
+                model.IsAuction = true;
+                model.HighestBidValue = product.HighestBid;
+                model.HighestBid = _priceFormatter.FormatPrice(product.HighestBid);
+                model.EndTime = product.AvailableEndDateTimeUtc;
+            }
+
+            return model;
+
         }
 
         public virtual void ParseAndSaveCheckoutAttributes(List<ShoppingCartItem> cart, IFormCollection form)
@@ -1287,14 +1420,14 @@ namespace Grand.Web.Services
             return attributesXml;
         }
 
-        public virtual void ParseRentalDates(Product product, IFormCollection form,
+        public virtual void ParseReservationDates(Product product, IFormCollection form,
             out DateTime? startDate, out DateTime? endDate)
         {
             startDate = null;
             endDate = null;
 
-            string startControlId = string.Format("rental_start_date_{0}", product.Id);
-            string endControlId = string.Format("rental_end_date_{0}", product.Id);
+            string startControlId = string.Format("reservationDatepickerFrom_{0}", product.Id);
+            string endControlId = string.Format("reservationDatepickerTo_{0}", product.Id);
             var ctrlStartDate = form[startControlId];
             var ctrlEndDate = form[endControlId];
             try
@@ -1308,6 +1441,7 @@ namespace Grand.Web.Services
             {
             }
         }
+
         public virtual EstimateShippingResultModel PrepareEstimateShippingResult(List<ShoppingCartItem> cart, string countryId, string stateProvinceId, string zipPostalCode)
         {
             var model = new EstimateShippingResultModel();
@@ -1321,7 +1455,7 @@ namespace Grand.Web.Services
                     ZipPostalCode = zipPostalCode,
                 };
                 GetShippingOptionResponse getShippingOptionResponse = _shippingService
-                    .GetShippingOptions(cart, address, "", _storeContext.CurrentStore.Id);
+                    .GetShippingOptions(_workContext.CurrentCustomer, cart, address, "", _storeContext.CurrentStore.Id);
                 if (!getShippingOptionResponse.Success)
                 {
                     foreach (var error in getShippingOptionResponse.Errors)

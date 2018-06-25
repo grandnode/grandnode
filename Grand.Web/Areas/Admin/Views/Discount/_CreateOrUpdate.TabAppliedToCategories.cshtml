@@ -1,10 +1,4 @@
 ﻿@model DiscountModel
-@using Grand.Core.Domain.Discounts;
-@using Grand.Framework.UI;
-
-
-
-
 @{
     if (!String.IsNullOrEmpty(Model.Id))
     {
@@ -18,8 +12,6 @@
                 <input type="submit" id="btnRefreshCategories" style="display: none" />
             </div>
         </div>
-
-
         <script>
             $(document).ready(function () {
                 $("#categories-grid").kendoGrid({
@@ -72,12 +64,8 @@
                     scrollable: false,
                     columns: [{
                         field: "CategoryName",
-                        title: "@T("Admin.Promotions.Discounts.AppliedToCategories.Category")"
-                    },  {
-                        field: "CategoryId",
-                        title: "@T("Admin.Common.View")",
-                        width: 150,
-                        template: '<a class="btn btn-sm btn-default" href="@Url.Content("~/Admin/Category/Edit/")#=CategoryId#"><i class="fa fa-search"></i> @T("Admin.Common.View")</a>'
+                        title: "@T("Admin.Promotions.Discounts.AppliedToCategories.Category")",
+                        template: '<a class="k-link" href="@Url.Content("~/Admin/Category/Edit/")#=CategoryId#">#=CategoryName#</a>',
                     }, {
                         command: [{
                             name: "destroy",

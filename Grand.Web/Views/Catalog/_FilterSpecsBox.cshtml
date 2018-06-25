@@ -6,18 +6,18 @@
 @if (Model.Enabled)
 {
     <div id="block-product-spec-filter" class="block product-filter product-spec-filter">
-            <h2 class="h5 bg-faded p-3 hidden-lg-up"><strong>@T("Filtering.SpecificationFilter")</strong><i id="specificationFilter-navigator" class="fa fa-angle-down fa-1x float-right" aria-hidden="true"></i></h2>
-            <h2 class="h5 generalTitle hidden-md-down">
+            <h2 class="h5 bg-light p-3 d-lg-none"><strong>@T("Filtering.SpecificationFilter")</strong><i id="specificationFilter-navigator" class="fa fa-angle-down fa-1x float-right" aria-hidden="true"></i></h2>
+            <h2 class="h5 generalTitle d-none d-lg-block">
                 <strong>@T("Filtering.SpecificationFilter")</strong>
             </h2>
 
             <div class="filter-content viewBox">
-                    @if (Model.NotFilteredItems.Count > 0)
+                @if (Model.NotFilteredItems.Any())
                 {
                         <div class="available-items">
                                 @foreach (var group in notFilteredItemsGroups)
-                    {
-                        var groupList = group.ToList();
+                                {
+                                    var groupList = group.ToList();
                                     <div class="col-12 px-0">
                                         <ul class="group product-spec-group">
                                             <li class="title">
@@ -46,11 +46,11 @@
                                             </li>
                                         </ul>
                                     </div>
-                                }
+                                     }
                             </div>
                     }
             </div>
-            @if (Model.AlreadyFilteredItems.Count > 0)
+            @if (Model.AlreadyFilteredItems.Any())
             {
                 <div class="filtered-items">
                         <ul class="pl-0">

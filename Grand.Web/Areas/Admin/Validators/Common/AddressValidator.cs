@@ -29,6 +29,10 @@ namespace Grand.Web.Areas.Admin.Validators.Common
                 .NotEmpty()
                 .WithMessage(localizationService.GetResource("Admin.Address.Fields.Company.Required"))
                 .When(x => x.CompanyEnabled && x.CompanyRequired);
+            RuleFor(x => x.VatNumber)
+                .NotEmpty()
+                .WithMessage(localizationService.GetResource("Admin.Address.Fields.VatNumber.Required"))
+                .When(x => x.VatNumberEnabled && x.VatNumberRequired);
             RuleFor(x => x.CountryId)
                 .NotNull()
                 .WithMessage(localizationService.GetResource("Admin.Address.Fields.Country.Required"))

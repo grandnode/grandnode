@@ -37,6 +37,7 @@ namespace Grand.Web.Controllers
 
         private readonly IProductService _productService;
         private readonly IProductWebService _productWebService;
+        private readonly IProductReservationService _productReservationService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly ILocalizationService _localizationService;
@@ -56,6 +57,7 @@ namespace Grand.Web.Controllers
         private readonly CaptchaSettings _captchaSettings;
         private readonly ICacheManager _cacheManager;
         private readonly IOrderService _orderService;
+
         #endregion
 
         #region Constructors
@@ -63,6 +65,7 @@ namespace Grand.Web.Controllers
         public ProductController(
             IProductService productService,
             IProductWebService productWebService,
+            IProductReservationService productReservationService,
             IWorkContext workContext,
             IStoreContext storeContext,
             ILocalizationService localizationService,
@@ -86,6 +89,7 @@ namespace Grand.Web.Controllers
         {
             this._productService = productService;
             this._productWebService = productWebService;
+            this._productReservationService = productReservationService;
             this._workContext = workContext;
             this._storeContext = storeContext;
             this._localizationService = localizationService;
@@ -111,23 +115,25 @@ namespace Grand.Web.Controllers
 
         #region Product details page
 
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult ProductDetails(string productId, string updatecartitemid = "")
         {
             var product = _productService.GetProductById(productId);
             if (product == null)
                 return InvokeHttp404();
+
+            var customer = _workContext.CurrentCustomer;
+
             //published?
             if (!_catalogSettings.AllowViewUnpublishedProductPage)
             {
                 //Check whether the current user has a "Manage catalog" permission
                 //It allows him to preview a product before publishing
-                if (!product.Published && !_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                if (!product.Published && !_permissionService.Authorize(StandardPermissionProvider.ManageProducts, customer))
                     return InvokeHttp404();
             }
 
             //ACL (access control list)
-            if (!_aclService.Authorize(product))
+            if (!_aclService.Authorize(product, customer))
                 return InvokeHttp404();
 
             //Store mapping
@@ -135,7 +141,7 @@ namespace Grand.Web.Controllers
                 return InvokeHttp404();
 
             //availability dates
-            if (!product.IsAvailable())
+            if (!product.IsAvailable() && !(product.ProductType == ProductType.Auction))
                 return InvokeHttp404();
             
             //visible individually?
@@ -148,7 +154,6 @@ namespace Grand.Web.Controllers
 
                 return RedirectToRoute("Product", new { SeName = parentGroupedProduct.GetSeName() });
             }
-            var customer = _workContext.CurrentCustomer;
             //update existing shopping cart item?
             ShoppingCartItem updatecartitem = null;
             if (_shoppingCartSettings.AllowCartItemEditing && !String.IsNullOrEmpty(updatecartitemid))
@@ -179,8 +184,8 @@ namespace Grand.Web.Controllers
             _recentlyViewedProductsService.AddProductToRecentlyViewedList(customer.Id, product.Id);
 
             //display "edit" (manage) link
-            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) &&
-                _permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel, customer) &&
+                _permissionService.Authorize(StandardPermissionProvider.ManageProducts, customer))
             {
                 //a vendor should have access only to his products
                 if (_workContext.CurrentVendor == null || _workContext.CurrentVendor.Id == product.VendorId)
@@ -197,11 +202,102 @@ namespace Grand.Web.Controllers
             return View(productTemplateViewPath, model);
         }
 
+        #region Quick view product
+
+        public virtual IActionResult QuickView(string productId)
+        {
+            var product = _productService.GetProductById(productId);
+            if (product == null)
+                return Json(new
+                {
+                    success = false,
+                    message = "No product found with the specified ID"
+                });
+
+            var customer = _workContext.CurrentCustomer;
+
+            //published?
+            if (!_catalogSettings.AllowViewUnpublishedProductPage)
+            {
+                //Check whether the current user has a "Manage catalog" permission
+                //It allows him to preview a product before publishing
+                if (!product.Published && !_permissionService.Authorize(StandardPermissionProvider.ManageProducts, customer))
+                    return Json(new
+                    {
+                        success = false,
+                        message = "No product found with the specified ID"
+                    });
+            }
+
+            //ACL (access control list)
+            if (!_aclService.Authorize(product, customer))
+                return Json(new
+                {
+                    success = false,
+                    message = "No product found with the specified ID"
+                });
+
+            //Store mapping
+            if (!_storeMappingService.Authorize(product))
+                return Json(new
+                {
+                    success = false,
+                    message = "No product found with the specified ID"
+                });
+
+            //availability dates
+            if (!product.IsAvailable() && !(product.ProductType == ProductType.Auction))
+                return Json(new
+                {
+                    success = false,
+                    message = "No product found with the specified ID"
+                });
+
+            //visible individually?
+            if (!product.VisibleIndividually)
+            {
+                //is this one an associated products?
+                var parentGroupedProduct = _productService.GetProductById(product.ParentGroupedProductId);
+                if (parentGroupedProduct == null)
+                {
+                    return Json(new
+                    {
+                        redirect = Url.RouteUrl("HomePage"),
+                    });
+                }
+                return Json(new
+                {
+                    redirect = Url.RouteUrl("Product", new { SeName = product.GetSeName() }),
+                });
+            }
+
+            //prepare the model
+            var model = _productWebService.PrepareProductDetailsPage(product, null, false);
+
+            //product template
+            var productTemplateViewPath = _productWebService.PrepareProductTemplateViewPath(product.ProductTemplateId);
+
+            //save as recently viewed
+            _recentlyViewedProductsService.AddProductToRecentlyViewedList(customer.Id, product.Id);
+
+            //activity log
+            _customerActivityService.InsertActivity("PublicStore.ViewProduct", product.Id, _localizationService.GetResource("ActivityLog.PublicStore.ViewProduct"), product.Name);
+            _customerActionEventService.Viewed(customer, this.HttpContext.Request.Path.ToString(), this.Request.Headers[HeaderNames.Referer].ToString() != null ? Request.Headers[HeaderNames.Referer].ToString() : "");
+            _productService.UpdateMostView(productId, 1);
+            var qhtml = this.RenderPartialViewToString(productTemplateViewPath + ".QuickView", model);
+            return Json(new
+            {
+                success = true,
+                product = true,
+                html = qhtml,
+            });
+        }
+        #endregion
+
         #endregion
 
         #region Recently viewed products
 
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult RecentlyViewedProducts()
         {
             if (!_catalogSettings.RecentlyViewedProductsEnabled)
@@ -218,8 +314,6 @@ namespace Grand.Web.Controllers
         #endregion
 
         #region Recently added products
-
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult NewProducts()
         {
             if (!_catalogSettings.NewProductsEnabled)
@@ -272,8 +366,6 @@ namespace Grand.Web.Controllers
         #endregion
 
         #region Product reviews
-
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult ProductReviews(string productId)
         {
             var product = _productService.GetProductById(productId);
@@ -415,7 +507,6 @@ namespace Grand.Web.Controllers
 
         #region Email a friend
         
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult ProductEmailAFriend(string productId)
         {
             var product = _productService.GetProductById(productId);
@@ -480,7 +571,6 @@ namespace Grand.Web.Controllers
 
         #region Ask question
 
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult AskQuestion(string productId)
         {
             var product = _productService.GetProductById(productId);
@@ -554,14 +644,21 @@ namespace Grand.Web.Controllers
                 return Json(new
                 {
                     success = false,
-                    message = "No product found with the specified ID"
+                    comparemessage = "No product found with the specified ID"
+                });
+
+            if(product.ProductType == ProductType.Auction || product.ProductType == ProductType.Reservation)
+                return Json(new
+                {
+                    success = false,
+                    comparemessage = _localizationService.GetResource("Products.ProductCantAddToCompareList")
                 });
 
             if (!_catalogSettings.CompareProductsEnabled)
                 return Json(new
                 {
                     success = false,
-                    message = "Product comparison is disabled"
+                    comparemessage = "Product comparison is disabled"
                 });
 
             _compareProductsService.AddProductToCompareList(productId);
@@ -572,7 +669,7 @@ namespace Grand.Web.Controllers
             return Json(new
             {
                 success = true,
-                message = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToCompareList.Link"), Url.RouteUrl("CompareProducts"))
+                comparemessage = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToCompareList.Link"), Url.RouteUrl("CompareProducts"))
                 //use the code below (commented) if you want a customer to be automatically redirected to the compare products page
                 //redirect = Url.RouteUrl("CompareProducts"),
             });
@@ -592,7 +689,6 @@ namespace Grand.Web.Controllers
             return RedirectToRoute("CompareProducts");
         }
 
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult CompareProducts()
         {
             if (!_catalogSettings.CompareProductsEnabled)
@@ -628,6 +724,30 @@ namespace Grand.Web.Controllers
             return RedirectToRoute("CompareProducts");
         }
 
+        public IActionResult GetDatesForMonth(string productId, int month, string parameter, int year)
+        {
+            var allReservations = _productReservationService.GetProductReservationsByProductId(productId, true, null);
+            var query = allReservations.Where(x => x.Date.Month == month && x.Date.Year == year && x.Date >= DateTime.UtcNow);
+            if (!string.IsNullOrEmpty(parameter))
+            {
+                query = query.Where(x => x.Parameter == parameter);
+            }
+
+            var reservations = query.ToList();
+            var inCart = _workContext.CurrentCustomer.ShoppingCartItems.Where(x => !string.IsNullOrEmpty(x.ReservationId)).ToList();
+            foreach (var cartItem in inCart)
+            {
+                var matching = reservations.Where(x => x.Id == cartItem.ReservationId);
+                if (matching.Any())
+                {
+                    reservations.Remove(matching.First());
+                }
+            }
+
+            var toReturn = reservations.GroupBy(x => x.Date).Select(x => x.First()).ToList();
+
+            return Json(toReturn);
+        }
         #endregion
     }
 }

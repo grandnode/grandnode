@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Grand.Framework.Controllers;
 using Grand.Framework.Mvc.Filters;
-using Grand.Framework.Security;
 
 namespace Grand.Web.Controllers
 {
-    [HttpsRequirement(SslRequirement.NoMatter)]
     [WwwRequirement]
     [CheckAccessPublicStore]
     [CheckAccessClosedStore]

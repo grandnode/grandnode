@@ -15,13 +15,13 @@
         @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_completed_top", additionalData = Model.OrderId })
         <div class="card order-completed text-center">
             <h5 class="card-header text-success text-center"><strong>@T("Checkout.YourOrderHasBeenSuccessfullyProcessed")</strong></h5>
-            <div class="card-block text-center">
+            <div class="card-body text-center">
                 <div class="order-number generalMarginSupporter text-center">
                     <strong>@T("Checkout.OrderNumber"): @Model.OrderNumber</strong>
                 </div>
                 <div class="buttons text-center">
                     <a class="btn btn-secondary mb-1" href="@Url.RouteUrl("OrderDetails", new { orderID = Model.OrderId })">@T("Checkout.PlacedOrderDetails")</a>
-                    <button type="button" class="btn btn-success order-completed-continue-button mb-1" onclick="setLocation('@Url.RouteUrl("HomePage")')" >
+                    <button type="button" class="btn btn-info order-completed-continue-button mb-1" onclick="setLocation('@Url.RouteUrl("HomePage")')" >
                         @T("Checkout.ThankYou.Continue")
                     </button>
                 </div>

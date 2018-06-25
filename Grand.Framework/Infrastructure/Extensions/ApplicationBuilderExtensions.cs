@@ -11,13 +11,15 @@ using Grand.Core.Http;
 using Grand.Core.Infrastructure;
 using Grand.Services.Authentication;
 using Grand.Services.Security;
-using Grand.Framework.Globalization;
 using Grand.Framework.Mvc.Routing;
 using StackExchange.Profiling;
 using StackExchange.Profiling.Storage;
 using Microsoft.Extensions.Caching.Memory;
 using Grand.Services.Logging;
 using System.Threading.Tasks;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
+using System.Collections.Generic;
 
 namespace Grand.Framework.Infrastructure.Extensions
 {
@@ -154,15 +156,6 @@ namespace Grand.Framework.Infrastructure.Extensions
         }
 
         /// <summary>
-        /// Configure middleware checking whether requested page is keep alive page
-        /// </summary>
-        /// <param name="application">Builder for configuring an application's request pipeline</param>
-        public static void UseKeepAlive(this IApplicationBuilder application)
-        {
-            application.UseMiddleware<KeepAliveMiddleware>();
-        }
-
-        /// <summary>
         /// Configure middleware checking whether database is installed
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
@@ -177,11 +170,22 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseCulture(this IApplicationBuilder application)
         {
-            //check whether database is installed
-            if (!DataSettingsHelper.DatabaseIsInstalled())
-                return;
+            var lang = EngineContext.Current.Resolve<Grand.Services.Localization.ILanguageService>().GetAllLanguages();
+            var supportedCultures = new List<CultureInfo>();
+            foreach (var item in lang)
+            {
+                supportedCultures.Add(new CultureInfo(item.LanguageCulture));
+            }
+            
+            application.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("en-US"),
+                // Formatting numbers, dates, etc.
+                SupportedCultures = supportedCultures,
+                // UI strings that we have localized.
+                SupportedUICultures = supportedCultures
+            });
 
-            application.UseMiddleware<CultureMiddleware>();
         }
 
         /// <summary>
@@ -190,12 +194,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseGrandAuthentication(this IApplicationBuilder application)
         {                    
-            //check whether database is installed
-            if (!DataSettingsHelper.DatabaseIsInstalled())
-                return;
-
             application.UseMiddleware<AuthenticationMiddleware>();
-
         }
 
         /// <summary>
@@ -215,7 +214,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// Create and configure MiniProfiler service
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
-        public static void UseMiniProfiler(this IApplicationBuilder application)
+        public static void UseProfiler(this IApplicationBuilder application)
         {
             //whether database is already installed
             if (!DataSettingsHelper.DatabaseIsInstalled())
@@ -224,18 +223,18 @@ namespace Grand.Framework.Infrastructure.Extensions
             //whether MiniProfiler should be displayed
             if (EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore)
             {
-                var memoryCache = EngineContext.Current.Resolve<IMemoryCache>();
-                application.UseMiniProfiler(new MiniProfilerOptions
-                {
-                    //use memory cache provider for storing each result
-                    Storage = new MemoryCacheStorage(memoryCache, TimeSpan.FromMinutes(60)),
-                    
-                    //determine who can access the MiniProfiler results
-                    ResultsAuthorize = request =>
-                        !EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore ||
-                        EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.AccessAdminPanel)
-                });
+                application.UseMiniProfiler();
             }
         }
+
+        /// <summary>
+        /// Configures wethere use or not the Header X-Powered-By and its value.
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void UsePoweredBy(this IApplicationBuilder application)
+        {
+            application.UseMiddleware<PoweredByMiddleware>();
+        }
+
     }
 }

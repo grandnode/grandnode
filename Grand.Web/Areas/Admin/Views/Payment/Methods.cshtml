@@ -2,7 +2,7 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Payment.Methods").Text;
 }
-@Html.AntiForgeryToken()
+<antiforgery-token />
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light form-fit">
@@ -18,7 +18,6 @@
         </div>
     </div>
 </div>
-
 <script>
     $(document).ready(function () {
         $("#paymentmethods-grid").kendoGrid({
@@ -144,7 +143,7 @@
                 field: "SystemName",
                 title: "@T("Admin.Configuration.Payment.Methods.Configure")",
                 width: 100,
-                template: '<a href="#=ConfigurationUrl#">@T("Admin.Configuration.Payment.Methods.Configure")</a>'
+                template: '<a class="k-link" href="#=ConfigurationUrl#">@T("Admin.Configuration.Payment.Methods.Configure")</a>'
             }, {
                 command: {
                     name: "edit",

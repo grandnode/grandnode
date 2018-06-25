@@ -2,7 +2,7 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Countries").Text;
 }
-@Html.AntiForgeryToken()
+<antiforgery-token />
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light form-fit">
@@ -77,7 +77,8 @@
             }, {
                 field: "Name",
                 title: "@T("Admin.Configuration.Countries.Fields.Name")",
-                width: 300
+                width: 300,
+                template: '<a class="k-link" href="Edit/#=Id#">#=Name#</a>',
             }, {
                 field: "AllowsBilling",
                 title: "@T("Admin.Configuration.Countries.Fields.AllowsBilling")",
@@ -122,11 +123,6 @@
                 headerAttributes: { style: "text-align:center" },
                 attributes: { style: "text-align:center" },
                 template: '# if(Published) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
-            }, {
-                field: "Id",
-                title: "@T("Admin.Common.Edit")",
-                width: 50,
-                template: '<a class="btn btn-sm btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
             }]
         });
     });
@@ -239,9 +235,8 @@
 
 @*import states form*@
 <div id="importcsv-window" style="display:none;">
-    @using (Html.BeginForm("ImportCsv", "Country", FormMethod.Post, new { enctype = "multipart/form-data" }))
-    {
-        @Html.AntiForgeryToken()
+    <form asp-controller="Country" asp-action="ImportCsv" method="post" enctype="multipart/form-data">
+        <antiforgery-token />
         <table style="text-align:left;">
             <tr>
                 <td>
@@ -257,7 +252,7 @@
                 </td>
             </tr>
         </table>
-    }
+    </form>
 </div>
 <script type="text/javascript">
     $(document).ready(function () {

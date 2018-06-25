@@ -4,6 +4,8 @@
 @inject CommonSettings commonSettings
 @inject CustomerSettings customerSettings
 @inject LocalizationSettings localizationSettings
+@inject AdminAreaSettings adminAreaSettings
+
 @using System.Globalization
 @using System.Text.Encodings.Web
 @using Microsoft.AspNetCore.Http
@@ -22,15 +24,18 @@
     var currentCustomer = this.WorkContext.CurrentCustomer;
     var usernamesEnabled = customerSettings.UsernamesEnabled;
     var currentVersion = GrandVersion.CurrentVersion;
-    var kendoVersion = "2016.2.504";
+    var kendoVersion = "2018.1.503";
     var supportRtl = workContext.WorkingLanguage.Rtl &&
         !localizationSettings.IgnoreRtlPropertyForAdminArea;
 
     Html.AppendCssFileParts("~/Administration/styles.css", excludeFromBundle: true);
 
     //CSS
-    Html.AppendCssFileParts(string.Format("~/Content/kendo/{0}/kendo.rtl.min.css", kendoVersion), excludeFromBundle: true);
-    Html.AppendCssFileParts(string.Format("~/Content/kendo/{0}/kendo.custom.css", kendoVersion), excludeFromBundle: true);
+    if (supportRtl)
+    {
+        Html.AppendCssFileParts(string.Format("~/Content/kendo/{0}/kendo.rtl.min.css", kendoVersion), excludeFromBundle: true);
+    }
+    Html.AppendCssFileParts($"~/Content/kendo/{kendoVersion}/kendo.{adminAreaSettings.KendoLayout}.min.css", excludeFromBundle: true);
     Html.AppendCssFileParts(string.Format("~/Content/kendo/{0}/kendo.common.min.css", kendoVersion), excludeFromBundle: true);
     Html.AppendCssFileParts("~/Content/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css", excludeFromBundle: true);
     Html.AddScriptParts("~/Content/tinymce/tinymce.min.js", excludeFromBundle: true);
@@ -46,7 +51,7 @@
     else
     {
         Html.AppendCssFileParts("~/Administration/global/css/plugins.min.css", excludeFromBundle: true);
-        Html.AppendCssFileParts("~/Administration/layout/themes/darkblue.min.css", excludeFromBundle: true);
+        Html.AppendCssFileParts($"~/Administration/layout/themes/{adminAreaSettings.AdminLayout.ToLowerInvariant()}.min.css", excludeFromBundle: true);
         Html.AppendCssFileParts("~/Administration/layout/custom.min.css", excludeFromBundle: true);
         Html.AppendCssFileParts("~/Administration/layout/layout.min.css", excludeFromBundle: true);
         Html.AppendCssFileParts("~/Administration/global/css/components.min.css", excludeFromBundle: true);
@@ -58,7 +63,10 @@
     Html.AppendCssFileParts("~/Administration/font-awesome/css/font-awesome.min.css", excludeFromBundle: true);
 
     //js
-    Html.AppendScriptParts(string.Format("~/Scripts/kendo/{0}/kendo.all.min.js", kendoVersion), excludeFromBundle: true);
+    Html.AppendScriptParts(string.Format("~/Scripts/kendo/{0}/cultures/kendo.culture.{1}.min.js", kendoVersion, "en-US"), excludeFromBundle: true);
+    Html.AppendScriptParts(string.Format("~/Scripts/kendo/{0}/cultures/kendo.culture.{1}.min.js", kendoVersion, @CultureInfo.CurrentCulture.Name), excludeFromBundle: true);
+    Html.AppendScriptParts(string.Format("~/Scripts/kendo/{0}/kendo.grid.js", kendoVersion), excludeFromBundle: true);
+    Html.AppendScriptParts(string.Format("~/Scripts/kendo/{0}/kendo.ui.core.js", kendoVersion), excludeFromBundle: true);
     Html.AppendScriptParts("~/Scripts/admin.common.js", excludeFromBundle: true);
     Html.AppendScriptParts("~/Scripts/jquery-ui-1.10.3.custom.min.js", excludeFromBundle: true);
     Html.AppendScriptParts("~/Scripts/jquery.validate.unobtrusive.min.js", excludeFromBundle: true);
@@ -92,14 +100,19 @@
 
 }
 <!DOCTYPE html>
-<html @if (supportRtl) { <text> dir="rtl" </text>  }>
+<html @if (supportRtl) { <text> dir="rtl" </text> }>
 <head>
     <title>@adminPageTitle</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     @Html.GrandHeadCustom()
-    @Html.GrandCssFiles(this.Url, ResourceLocation.Head)
-    @Html.GrandScripts(this.Url, ResourceLocation.Head)
+    @Html.GrandCssFiles(this.Url, ResourceLocation.Head, false)
+    @Html.GrandScripts(this.Url, ResourceLocation.Head, false)
+    <script type="text/javascript">
+        $(document).ready(function () {
+            kendo.culture("@System.Globalization.CultureInfo.CurrentCulture.Name");
+        });
+    </script>
 </head>
 <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white">
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_header_before" })
@@ -161,7 +174,7 @@
                             <ul class="dropdown-menu dropdown-menu-default">
                                 <li>
                                     <a href="@Url.Action("Edit", "Customer", new { id = currentCustomer.Id, area = "Admin" })">
-                                        <i class="icon-user"></i> My Profile
+                                        <i class="icon-user"></i> @T("Admin.Header.Profile")
                                     </a>
                                 </li>
                                 <li>
@@ -242,11 +255,11 @@
             </div>
         </div>
     </div>
-    @Html.GrandCssFiles(this.Url, ResourceLocation.Foot)
-    @Html.GrandScripts(this.Url, ResourceLocation.Foot)
+    @Html.GrandCssFiles(this.Url, ResourceLocation.Footer)
+    @Html.GrandScripts(this.Url, ResourceLocation.Footer)
     <div class="page-footer">
         <div class="page-footer-inner">
-            <a href="https://grandnode.com/" target="_blank">2017 © Powered by GrandNode.</a>
+            <a href="https://grandnode.com/" target="_blank">2018 © Powered by GrandNode.</a>
         </div>
         <div class="scroll-to-top">
             <i class="icon-arrow-up"></i>

@@ -1,9 +1,5 @@
 ﻿@model CampaignModel
-
-
-
 @{
-
     if (!String.IsNullOrEmpty(Model.Id))
     {
         <div class="form-horizontal">
@@ -15,10 +11,10 @@
                     <br />
                 </div>
                 <div class="form-group">
-                    @Html.GrandLabelFor(model => model.TestEmail)
+                    <admin-label asp-for="TestEmail" />
                     <div class="col-md-9 col-sm-9">
-                        @Html.GrandEditorFor(model => model.TestEmail)
-                        @Html.ValidationMessageFor(model => model.TestEmail)
+                        <admin-input asp-for="TestEmail" />
+                        <span asp-validation-for="TestEmail"></span>
                     </div>
                 </div>
             </div>

@@ -10,7 +10,7 @@
     <h1 class="h4 text-xs-center generalTitle">@T("Products.EmailAFriend.Title")</h1>
     <div class="card">
         <h4 class="card-header"><a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })" class="product">@Model.ProductName</a></h4>
-        <div class="card-block">
+        <div class="card-body">
             @if (Model.SuccessfullySent)
             {
                 <section class="result">
@@ -45,7 +45,7 @@
                         }
                     </div>
                     <div class="btn-group">
-                        <input type="submit" name="send-email" class="btn btn-success send-email-a-friend-button" value="@T("Products.EmailAFriend.Button")" />
+                        <input type="submit" name="send-email" class="btn btn-info send-email-a-friend-button" value="@T("Products.EmailAFriend.Button")" />
                     </div>
                 </form>
             }

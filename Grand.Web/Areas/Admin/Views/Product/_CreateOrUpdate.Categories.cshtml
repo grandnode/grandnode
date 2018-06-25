@@ -92,7 +92,7 @@
                         }
                     },
                     editable: {
-                        confirmation: false,
+                        confirmation: true,
                         mode: "inline"
                     },
                     scrollable: false,
@@ -101,7 +101,7 @@
                             title: "@T("Admin.Catalog.Products.Categories.Fields.Category")",
                             width: 200,
                             editor: categoryDropDownEditor,
-                            template: "#:Category#"
+                            template: '<a class="k-link" href="@Url.Content("~/Admin/Category/Edit/")#=CategoryId#">#:Category#</a>'
                         },
                         @if (!Model.IsLoggedInAsVendor)
                         {
@@ -109,7 +109,7 @@
                             <text>{
                             field: "IsFeaturedProduct",
                             title: "@T("Admin.Catalog.Products.Categories.Fields.IsFeaturedProduct")",
-                            width: 200,
+                            width: 100,
                             headerAttributes: { style: "text-align:center" },
                             attributes: { style: "text-align:center" },
                             template: '# if(IsFeaturedProduct) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
@@ -119,7 +119,10 @@
                     {
                         field: "DisplayOrder",
                         title: "@T("Admin.Catalog.Products.Categories.Fields.DisplayOrder")",
-                        width: 200,
+                        width: 100,
+                        minScreenWidth: 500,
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
                         //integer format
                         format: "{0:0}"
                     }, {

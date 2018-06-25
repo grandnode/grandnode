@@ -231,7 +231,7 @@ namespace Grand.Web.Controllers
                         DataConnectionString = null
                     });
 
-                    ModelState.AddModelError("", string.Format(_locService.GetResource("SetupFailed"), exception.Message));
+                    ModelState.AddModelError("", string.Format(_locService.GetResource("SetupFailed"), exception.Message + " " + exception.InnerException?.Message));
                 }
             }
 

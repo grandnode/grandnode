@@ -31,7 +31,7 @@ namespace Grand.Services.Catalog.Tests
         [TestInitialize()]
         public void TestInitialize()
         {
-            var cacheManager = new NopNullCache();
+            var cacheManager = new GrandNullCache();
             tempWorkContext = new Mock<IWorkContext>();
             {
                 _workContext = tempWorkContext.Object;

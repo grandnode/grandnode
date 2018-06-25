@@ -3,10 +3,8 @@
     //page title
     ViewBag.Title = T("Admin.Vendors.AddNew").Text;
 }
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-   
+<form asp-controller="Vendor" asp-action="Create" method="post">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -29,4 +27,4 @@
             </div>
         </div>
     </div>
-}
+</form>

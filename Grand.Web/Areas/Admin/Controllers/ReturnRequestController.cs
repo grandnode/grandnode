@@ -88,6 +88,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.ProductId = orderItem.ProductId;
             model.ProductName = product.Name;
             model.OrderId = order.Id;
+            model.OrderNumber = order.OrderNumber;
             model.ReturnNumber = returnRequest.ReturnNumber;
             model.CustomerId = returnRequest.CustomerId;
             var customer = _customerService.GetCustomerById(returnRequest.CustomerId);

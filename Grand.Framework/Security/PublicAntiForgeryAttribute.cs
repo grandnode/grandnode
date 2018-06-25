@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Microsoft.Extensions.Logging;
 using Grand.Core.Domain.Security;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 
 namespace Grand.Framework.Security
 {
@@ -66,7 +67,8 @@ namespace Grand.Framework.Security
                 var request = context.HttpContext.Request;
                 if (request == null)
                     return false;
-                if (request.Method.ToLower() == "get")
+
+                if (HttpMethods.IsGet(request.Method))
                     return false;
 
                 //check whether this filter has been overridden for the Action

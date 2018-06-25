@@ -1,12 +1,12 @@
 ﻿@model CheckoutAttributeModel
+@inject IEventPublisher eventPublisher
 
-@using Grand.Core.Domain.Catalog;
-
-@Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
 
 <script>
     $(document).ready(function () {
+        $("#checkoutattribute-edit").show();
         $("#checkoutattribute-edit").kendoTabStrip({
             animation: {
                 open: {
@@ -18,12 +18,12 @@
     });
 </script>
 
-<div id="checkoutattribute-edit">
+<div id="checkoutattribute-edit" style="display:none">
     <ul>
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
             @T("Admin.Catalog.Attributes.CheckoutAttributes.Info")
         </li>
-        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex()) id="tab-checkoutAttributesValues">
             @T("Admin.Catalog.Attributes.CheckoutAttributes.Values")
         </li>
         <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
@@ -61,7 +61,7 @@
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "checkoutattribute-edit");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock

@@ -58,6 +58,10 @@ namespace Grand.Web.Validators.Common
             {
                 RuleFor(x => x.Company).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Company.Required"));
             }
+            if (addressSettings.VatNumberRequired && addressSettings.VatNumberEnabled)
+            {
+                RuleFor(x => x.VatNumber).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.VatNumber.Required"));
+            }
             if (addressSettings.StreetAddressRequired && addressSettings.StreetAddressEnabled)
             {
                 RuleFor(x => x.Address1).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.StreetAddress.Required"));

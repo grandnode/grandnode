@@ -15,6 +15,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Bson.Serialization.Serializers;
+using System;
 
 namespace Grand.Core.Infrastructure.MongoDB
 {
@@ -27,8 +28,9 @@ namespace Grand.Core.Infrastructure.MongoDB
         /// <param name="config">Config</param>
         public static void RegisterMongoDBMappings(GrandConfig config)
         {
-            BsonSerializer.RegisterSerializer(typeof(decimal), new DecimalSerializer(BsonType.Double));
-            BsonSerializer.RegisterSerializer(typeof(decimal?), new NullableSerializer<decimal>(new DecimalSerializer(BsonType.Double)));
+            BsonSerializer.RegisterSerializer(typeof(decimal), new DecimalSerializer(BsonType.Decimal128));
+            BsonSerializer.RegisterSerializer(typeof(decimal?), new NullableSerializer<decimal>(new DecimalSerializer(BsonType.Decimal128)));
+            BsonSerializer.RegisterSerializer(typeof(DateTime), new BsonUtcDateTimeSerializer());
 
             //global set an equivalent of [BsonIgnoreExtraElements] for every Domain Model
             var cp = new ConventionPack();
@@ -41,13 +43,13 @@ namespace Grand.Core.Infrastructure.MongoDB
 
                 //ignore these Fields, an equivalent of [BsonIgnore]
                 cm.UnmapMember(c => c.ProductType);
+                cm.UnmapMember(c => c.IntervalUnitType);
                 cm.UnmapMember(c => c.BackorderMode);
                 cm.UnmapMember(c => c.DownloadActivationType);
                 cm.UnmapMember(c => c.GiftCardType);
                 cm.UnmapMember(c => c.LowStockActivity);
                 cm.UnmapMember(c => c.ManageInventoryMethod);
                 cm.UnmapMember(c => c.RecurringCyclePeriod);
-                cm.UnmapMember(c => c.RentalPricePeriod);
             });
 
             BsonClassMap.RegisterClassMap<ProductAttributeCombination>(cm =>
@@ -114,6 +116,12 @@ namespace Grand.Core.Infrastructure.MongoDB
                 cm.UnmapMember(c => c.ProductId1);
             });
 
+            BsonClassMap.RegisterClassMap<BundleProduct>(cm =>
+            {
+                cm.AutoMap();
+                cm.UnmapMember(c => c.ProductBundleId);
+            });
+
             BsonClassMap.RegisterClassMap<TierPrice>(cm =>
             {
                 cm.AutoMap();
@@ -131,7 +139,11 @@ namespace Grand.Core.Infrastructure.MongoDB
                 cm.AutoMap();
                 cm.UnmapMember(c => c.PasswordFormat);
             });
-
+            BsonClassMap.RegisterClassMap<ShoppingCartItem>(cm =>
+            {
+                cm.AutoMap();
+                cm.UnmapMember(c => c.ShoppingCartType);
+            });
             BsonClassMap.RegisterClassMap<CustomerAction>(cm =>
             {
                 cm.AutoMap();

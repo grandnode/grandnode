@@ -6,7 +6,7 @@ using Grand.Core.Infrastructure;
 
 namespace Grand.Core.Plugins
 {
-    public class PluginDescriptor : IComparable<PluginDescriptor>
+    public class PluginDescriptor : IDescriptor, IComparable<PluginDescriptor>
     {
         public PluginDescriptor()
         {

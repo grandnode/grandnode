@@ -1,0 +1,92 @@
+﻿@model ProductModel
+@inject AdminAreaSettings adminAreaSettings
+@if (!String.IsNullOrEmpty(Model.Id))
+{
+    <input asp-for="AuctionEnded" type="hidden" />
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="bids-grid"></div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+                $("#bids-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("ListBids", "Product", new { productId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken,
+                        }, destroy: {
+                            url: "@Html.Raw(Url.Action("BidDelete", "Product"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors",
+                    model: {
+                        id: "Id",
+                    }
+                },
+                error: function (e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                pageSize: @(adminAreaSettings.DefaultGridPageSize),
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: [@(adminAreaSettings.GridPageSizes)]
+            },
+            editable: {
+                confirmation: false,
+                mode: "inline"
+            },
+            scrollable: false,
+            columns: [{
+                field: "Date",
+                title: "@T("Admin.Catalog.Products.Bids.Date")",
+                width: 200,
+                type: "date",
+                format: "{0:G}"
+            }, {
+                field: "CustomerId",
+                title: "@T("Admin.Catalog.Products.Bids.CustomerId")",
+                width: 200,
+                template: '# if(Email) {# <a  href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#=Email#</a>  #} #'
+            }, {
+                field: "Amount",
+                title: "@T("Admin.Catalog.Products.Bids.Amount")",
+                width: 200
+            }, {
+                field: "OrderId",
+                title: "@T("Admin.Catalog.Products.Bids.OrderId")",
+                width: 200,
+                template: '# if(OrderId) {# <a class="btn btn-sm btn-default" href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#"><i class="fa fa-search"></i> @T("Admin.Common.View")</a>  #} #'
+            }, {
+                command: [{
+                    name: "destroy",
+                    text: "@T("Admin.Common.Delete")"
+                }],
+                width: 100
+            }]
+            });
+        });
+    </script>
+}
+else
+{
+    <div class="note note-info">
+        @T("Admin.Catalog.Products.Bids.SaveBeforeEdit")
+    </div>
+}

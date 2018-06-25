@@ -29,6 +29,10 @@ using MongoDB.Driver.Core.Bindings;
 using System.Threading;
 using Grand.Services.Topics;
 using Grand.Core.Domain.Discounts;
+using Grand.Core.Domain.Security;
+using Grand.Core.Domain.Knowledgebase;
+using Grand.Core.Domain;
+using Grand.Core.Domain.PushNotifications;
 
 namespace Grand.Services.Installation
 {
@@ -44,6 +48,8 @@ namespace Grand.Services.Installation
         private const string version_380 = "3.80";
         private const string version_390 = "3.90";
         private const string version_400 = "4.00";
+        private const string version_410 = "4.10";
+        private const string version_420 = "4.20";
 
         #endregion
 
@@ -83,6 +89,16 @@ namespace Grand.Services.Installation
                 fromversion = version_400;
             }
 
+            if (fromversion == version_400)
+            {
+                From400To410();
+                fromversion = version_410;
+            }
+            if (fromversion == version_410)
+            {
+                From410To420();
+                fromversion = version_420;
+            }
             if (fromversion == toversion)
             {
                 var databaseversion = _versionRepository.Table.FirstOrDefault();
@@ -276,7 +292,7 @@ namespace Grand.Services.Installation
             string upgrade_script = File.ReadAllText(filePath);
             var bscript = new BsonJavaScript(upgrade_script);
             var operation = new EvalOperation(_versionRepository.Database.DatabaseNamespace, bscript, null);
-            var writeBinding = new WritableServerBinding(_versionRepository.Database.Client.Cluster);
+            var writeBinding = new WritableServerBinding(_versionRepository.Database.Client.Cluster, NoCoreSession.NewHandle());
             operation.Execute(writeBinding, CancellationToken.None);
 
             #endregion
@@ -304,12 +320,12 @@ namespace Grand.Services.Installation
                 LastStartUtc = DateTime.MinValue,
                 LastNonSuccessEndUtc = DateTime.MinValue,
                 LastSuccessUtc = DateTime.MinValue,
-                TimeIntervalChoice = TimeIntervalChoice.EVERY_DAYS,
+                TimeIntervalChoice = TimeIntervalChoice.EveryDays,
                 TimeInterval = 1,
                 MinuteOfHour = 1,
                 HourOfDay = 1,
                 DayOfWeek = DayOfWeek.Thursday,
-                MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
                 DayOfMonth = 1
             };
             EngineContext.Current.Resolve<IRepository<ScheduleTask>>().Insert(shtask1);
@@ -323,12 +339,12 @@ namespace Grand.Services.Installation
                 LastStartUtc = DateTime.MinValue,
                 LastNonSuccessEndUtc = DateTime.MinValue,
                 LastSuccessUtc = DateTime.MinValue,
-                TimeIntervalChoice = TimeIntervalChoice.EVERY_DAYS,
+                TimeIntervalChoice = TimeIntervalChoice.EveryDays,
                 TimeInterval = 1,
                 MinuteOfHour = 1,
                 HourOfDay = 1,
                 DayOfWeek = DayOfWeek.Thursday,
-                MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
                 DayOfMonth = 1
             };
             EngineContext.Current.Resolve<IRepository<ScheduleTask>>().Insert(shtask2);
@@ -691,6 +707,309 @@ namespace Grand.Services.Installation
             #endregion
         }
 
+        private void From400To410()
+        {
+            #region Install String resources
+            InstallStringResources("EN_400_410.nopres.xml");
+            #endregion
+
+            #region Install product reservation
+            EngineContext.Current.Resolve<IRepository<ProductReservation>>().Collection.Indexes.CreateOneAsync(Builders<ProductReservation>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            EngineContext.Current.Resolve<IRepository<ProductReservation>>().Collection.Indexes.CreateOneAsync(Builders<ProductReservation>.IndexKeys.Ascending(x => x.ProductId).Ascending(x => x.Date), new CreateIndexOptions() { Name = "ProductReservation", Unique = false });
+            #endregion
+
+            #region Security settings
+            var settingService = EngineContext.Current.Resolve<ISettingService>();
+            var securitySettings = EngineContext.Current.Resolve<SecuritySettings>();
+            securitySettings.AllowNonAsciiCharInHeaders = true;
+            settingService.SaveSetting(securitySettings, x => x.AllowNonAsciiCharInHeaders, "", false);
+            #endregion
+
+            #region MessageTemplates
+
+            var eaGeneral = EngineContext.Current.Resolve<IRepository<EmailAccount>>().Table.FirstOrDefault();
+            if (eaGeneral == null)
+                throw new Exception("Default email account cannot be loaded");
+            var messageTemplates = new List<MessageTemplate>
+            {
+                new MessageTemplate
+                        {
+                            Name = "AuctionEnded.CustomerNotificationWin",
+                            Subject = "%Store.Name%. Auction ended.",
+                            Body = "<p>Hello, %Customer.FullName%!</p><p></p><p>At %Auctions.EndTime% you have won <a href=\"%Store.URL%%Auctions.ProductSeName%\">%Auctions.ProductName%</a> for %Auctions.Price%. Visit <a href=\"%Store.URL%/cart\">cart</a> to finish checkout process. </p>",
+                            IsActive = true,
+                            EmailAccountId = eaGeneral.Id,
+                        },
+                new MessageTemplate
+                        {
+                            Name = "AuctionEnded.CustomerNotificationLost",
+                            Subject = "%Store.Name%. Auction ended.",
+                            Body = "<p>Hello, %Customer.FullName%!</p><p></p><p>Unfortunately you did not win the bid %Auctions.ProductName%</p> <p>End price:  %Auctions.Price% </p> <p>End date auction %Auctions.EndTime% </p>",
+                            IsActive = true,
+                            EmailAccountId = eaGeneral.Id,
+                        },
+                new MessageTemplate
+                        {
+                            Name = "AuctionEnded.CustomerNotificationBin",
+                            Subject = "%Store.Name%. Auction ended.",
+                            Body = "<p>Hello, %Customer.FullName%!</p><p></p><p>Unfortunately you did not win the bid %Product.Name%</p> <p>Product was bought by option Buy it now for price: %Product.Price% </p>",
+                            IsActive = true,
+                            EmailAccountId = eaGeneral.Id,
+                        },
+                new MessageTemplate
+                        {
+                            Name = "AuctionEnded.StoreOwnerNotification",
+                            Subject = "%Store.Name%. Auction ended.",
+                            Body = "<p>At %Auctions.EndTime% %Customer.FullName% have won <a href=\"%Store.URL%%Auctions.ProductSeName%\">%Auctions.ProductName%</a> for %Auctions.Price%.</p>",
+                            IsActive = true,
+                            EmailAccountId = eaGeneral.Id,
+                        },
+                new MessageTemplate
+                        {
+                            Name = "BidUp.CustomerNotification",
+                            Subject = "%Store.Name%. Your offer has been outbid.",
+                            Body = "<p>Hi %Customer.FullName%!</p><p>Your offer for product <a href=\"%Auctions.ProductSeName%\">%Auctions.ProductName%</a> has been outbid. New price is %Auctions.Price%.<br />Raise a price by raising one's offer. Auction will be ended on %Auctions.EndTime%</p>",
+                            IsActive = true,
+                            EmailAccountId = eaGeneral.Id,
+                        },
+            };
+            EngineContext.Current.Resolve<IRepository<MessageTemplate>>().Insert(messageTemplates);
+            #endregion
+
+            #region Tasks
+
+            var keepliveTask = EngineContext.Current.Resolve<IRepository<ScheduleTask>>();
+
+            var endtask = new ScheduleTask
+            {
+                ScheduleTaskName = "End of the auctions",
+                Type = "Grand.Services.Tasks.EndAuctionsTask, Grand.Services",
+                Enabled = false,
+                StopOnError = false,
+                TimeIntervalChoice = TimeIntervalChoice.EveryMinutes,
+                TimeInterval = 10,
+                MinuteOfHour = 1,
+                HourOfDay = 1,
+                DayOfWeek = DayOfWeek.Monday,
+                MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
+                DayOfMonth = 1
+            };
+            keepliveTask.Insert(endtask);
+
+            var _keepAliveScheduleTask = keepliveTask.Table.Where(x => x.Type == "Grand.Services.Tasks.KeepAliveScheduleTask").FirstOrDefault();
+            if(_keepAliveScheduleTask !=null)
+                keepliveTask.Delete(_keepAliveScheduleTask);
+
+            #endregion
+
+            #region Insert activities
+
+            var _activityLogTypeRepository = EngineContext.Current.Resolve<IRepository<ActivityLogType>>();
+            _activityLogTypeRepository.Insert(new ActivityLogType()
+            {
+                SystemKeyword = "PublicStore.AddNewBid",
+                Enabled = false,
+                Name = "Public store. Add new bid"
+            });
+            _activityLogTypeRepository.Insert(new ActivityLogType()
+            {
+                SystemKeyword = "DeleteBid",
+                Enabled = false,
+                Name = "Delete bid"
+            });
+
+
+            #endregion
+
+            #region Index bid
+
+            EngineContext.Current.Resolve<IRepository<Bid>>().Collection.Indexes.CreateOneAsync(Builders<Bid>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            EngineContext.Current.Resolve<IRepository<Bid>>().Collection.Indexes.CreateOneAsync(Builders<Bid>.IndexKeys.Ascending(x => x.ProductId).Ascending(x => x.CustomerId).Descending(x => x.Date), new CreateIndexOptions() { Name = "ProductCustomer", Unique = false });
+            EngineContext.Current.Resolve<IRepository<Bid>>().Collection.Indexes.CreateOneAsync(Builders<Bid>.IndexKeys.Ascending(x => x.ProductId).Descending(x => x.Date), new CreateIndexOptions() { Name = "ProductDate", Unique = false });
+
+            #endregion
+
+        }
+
+        private void From410To420()
+        {
+            var _settingService = EngineContext.Current.Resolve<ISettingService>();
+            
+            #region Install String resources
+            InstallStringResources("410_420.nopres.xml");
+            #endregion
+            
+            #region Update string resources
+
+            var _localeStringResource = EngineContext.Current.Resolve<IRepository<LocaleStringResource>>();
+
+            var filter = new BsonDocument();
+            var result = _localeStringResource.Collection.Find(filter).ForEachAsync((e) => {
+                e.ResourceName = e.ResourceName.ToLowerInvariant();
+                _localeStringResource.Update(e);
+            });
+
+            #endregion
+            
+            #region Admin area settings
+
+            var adminareasettings = EngineContext.Current.Resolve<AdminAreaSettings>();
+            adminareasettings.AdminLayout = "Default";
+            adminareasettings.KendoLayout = "custom";
+            _settingService.SaveSetting(adminareasettings);
+
+            #endregion
+            
+            #region ActivityLog
+
+            var _activityLogTypeRepository = EngineContext.Current.Resolve<IRepository<ActivityLogType>>();
+            _activityLogTypeRepository.Insert(new ActivityLogType()
+            {
+                SystemKeyword = "PublicStore.DeleteAccount",
+                Enabled = false,
+                Name = "Public store. Delete account"
+            });
+            _activityLogTypeRepository.Insert(new ActivityLogType
+            {
+                SystemKeyword = "UpdateKnowledgebaseCategory",
+                Enabled = true,
+                Name = "Update knowledgebase category"
+            });
+            _activityLogTypeRepository.Insert(new ActivityLogType
+            {
+                SystemKeyword = "CreateKnowledgebaseCategory",
+                Enabled = true,
+                Name = "Create knowledgebase category"
+            });
+            _activityLogTypeRepository.Insert(new ActivityLogType
+            {
+                SystemKeyword = "DeleteKnowledgebaseCategory",
+                Enabled = true,
+                Name = "Delete knowledgebase category"
+            });
+            _activityLogTypeRepository.Insert(new ActivityLogType
+            {
+                SystemKeyword = "CreateKnowledgebaseArticle",
+                Enabled = true,
+                Name = "Create knowledgebase article"
+            });
+            _activityLogTypeRepository.Insert(new ActivityLogType
+            {
+                SystemKeyword = "UpdateKnowledgebaseArticle",
+                Enabled = true,
+                Name = "Update knowledgebase article"
+            });
+            _activityLogTypeRepository.Insert(new ActivityLogType
+            {
+                SystemKeyword = "DeleteKnowledgebaseArticle",
+                Enabled = true,
+                Name = "Delete knowledgebase category"
+            });
+            _activityLogTypeRepository.Insert(new ActivityLogType
+            {
+                SystemKeyword = "AddNewContactAttribute",
+                Enabled = true,
+                Name = "Add a new contact attribute"
+            });
+            _activityLogTypeRepository.Insert(new ActivityLogType
+            {
+                SystemKeyword = "EditContactAttribute",
+                Enabled = true,
+                Name = "Edit a contact attribute"
+            });
+            _activityLogTypeRepository.Insert(new ActivityLogType
+            {
+                SystemKeyword = "DeleteContactAttribute",
+                Enabled = true,
+                Name = "Delete a contact attribute"
+            });
+
+            #endregion
+            
+            #region MessageTemplates
+
+            var emailAccount = EngineContext.Current.Resolve<IRepository<EmailAccount>>().Table.FirstOrDefault();
+            if (emailAccount == null)
+                throw new Exception("Default email account cannot be loaded");
+            var messageTemplates = new List<MessageTemplate>
+            {
+                new MessageTemplate
+                {
+                    Name = "CustomerDelete.StoreOwnerNotification",
+                    Subject = "%Store.Name%. Customer has been deleted.",
+                    Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> ,<br />%Customer.FullName% (%Customer.Email%) has just deleted from your database. </p>",
+                    IsActive = true,
+                    EmailAccountId = emailAccount.Id,
+                },
+            };
+            EngineContext.Current.Resolve<IRepository<MessageTemplate>>().Insert(messageTemplates);
+            #endregion
+            
+            #region Install new Topics
+            var defaultTopicTemplate = EngineContext.Current.Resolve<IRepository<TopicTemplate>>().Table.FirstOrDefault(tt => tt.Name == "Default template");
+            if (defaultTopicTemplate == null)
+                defaultTopicTemplate = EngineContext.Current.Resolve<IRepository<TopicTemplate>>().Table.FirstOrDefault();
+
+            var knowledgebaseHomepageTopic = new Topic
+            {
+                SystemName = "KnowledgebaseHomePage",
+                IncludeInSitemap = false,
+                IsPasswordProtected = false,
+                DisplayOrder = 1,
+                Title = "",
+                Body = "<p>Knowledgebase homepage. You can edit this in the admin site.</p>",
+                TopicTemplateId = defaultTopicTemplate.Id
+            };
+
+            var topicService = EngineContext.Current.Resolve<ITopicService>();
+            topicService.InsertTopic(knowledgebaseHomepageTopic);
+            #endregion
+
+            #region Permisions
+
+            IPermissionProvider provider = new StandardPermissionProvider();
+            EngineContext.Current.Resolve<IPermissionService>().InstallPermissions(provider);
+
+            #endregion
+
+            #region Knowledge settings
+
+            var knowledgesettings = EngineContext.Current.Resolve<KnowledgebaseSettings>();
+            knowledgesettings.Enabled = false;
+            _settingService.SaveSetting(knowledgesettings);
+
+            #endregion
+
+            #region Push notifications settings
+
+            var pushNotificationSettings = EngineContext.Current.Resolve<PushNotificationsSettings>();
+            pushNotificationSettings.Enabled = false;
+            pushNotificationSettings.AllowGuestNotifications = true;
+            _settingService.SaveSetting(pushNotificationSettings);
+
+            #endregion
+
+            #region Knowledge table
+
+            EngineContext.Current.Resolve<IRepository<KnowledgebaseArticle>>().Collection.Indexes.CreateOneAsync(Builders<KnowledgebaseArticle>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            EngineContext.Current.Resolve<IRepository<KnowledgebaseArticle>>().Collection.Indexes.CreateOneAsync(Builders<KnowledgebaseArticle>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder", Unique = false });
+            EngineContext.Current.Resolve<IRepository<KnowledgebaseCategory>>().Collection.Indexes.CreateOneAsync(Builders<KnowledgebaseCategory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            EngineContext.Current.Resolve<IRepository<KnowledgebaseCategory>>().Collection.Indexes.CreateOneAsync(Builders<KnowledgebaseCategory>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder", Unique = false });
+
+            #endregion
+
+            #region Update gift card
+
+            IRepository<GiftCard> _giftCardRepository = EngineContext.Current.Resolve<IRepository<GiftCard>>();
+            foreach (var gift in _giftCardRepository.Table)
+            {
+                gift.GiftCardCouponCode = gift.GiftCardCouponCode.ToLowerInvariant();
+                _giftCardRepository.Update(gift);
+            }
+
+            #endregion
+
+        }
         private void InstallStringResources(string filenames)
         {
             //'English' language            

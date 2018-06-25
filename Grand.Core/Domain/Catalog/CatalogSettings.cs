@@ -70,6 +70,11 @@ namespace Grand.Core.Domain.Catalog
         public bool ShowProductsFromSubcategories { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether a search box  should include products from subcategories
+        /// </summary>
+        public bool ShowProductsFromSubcategoriesInSearchBox { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether number of products should be displayed beside each category
         /// </summary>
         public bool ShowCategoryProductNumber { get; set; }
@@ -192,6 +197,10 @@ namespace Grand.Core.Domain.Catalog
         /// </summary>
         public bool SearchBySku { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether search by description is enabled
+        /// </summary>
+        public bool SearchByDescription { get; set; }
 
         /// <summary>
         /// Gets or sets a number of products to return when using "autocomplete" feature
@@ -375,7 +384,10 @@ namespace Grand.Core.Domain.Catalog
         /// Gets or sets the default value to use for Manufacturer page size (for new manufacturers)
         /// </summary>
         public int DefaultManufacturerPageSize { get; set; }
-
+        /// <summary>
+        /// Gets or sets the default value to use show extra field quantity on catalog pages
+        /// </summary>
+        public bool DisplayQuantityOnCatalogPages { get; set; }
         /// <summary>
         /// Limit of featured products
         /// </summary>

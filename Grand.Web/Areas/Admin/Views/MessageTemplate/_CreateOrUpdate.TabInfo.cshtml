@@ -1,195 +1,148 @@
 ﻿@model MessageTemplateModel
-@using Grand.Core.Domain.Messages;
 
 <div class="form-horizontal">
     <div class="form-body">
-      
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.Name)
+            <admin-label asp-for="Name" />
             <div class="col-md-9 col-sm-9">
                 @if (!String.IsNullOrEmpty(Model.Id))
                 {
                     <label class="control-label">@Model.Name</label>
-                        @Html.HiddenFor(model => model.Name)
+                        <input asp-for="Name" type="hidden" />
                 }
                 else
                 {
-                    @Html.GrandEditorFor(model => model.Name)
+                    <admin-input asp-for="Name" />
                 }
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.IsActive)
+            <admin-label asp-for="IsActive" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.EditorFor(model => model.IsActive)
+                    <admin-input asp-for="IsActive" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.IsActive)
+                <span asp-validation-for="IsActive"></span>
             </div>
         </div>
     </div>
 </div>
 @(Html.LocalizedEditor<MessageTemplateModel, MessageTemplateLocalizedModel>("messagetemplate-localized",
     @<div class="form-horizontal">
-         <div class="form-body">
-             <div class="form-group">
-                 @Html.GrandLabelFor(model => model.Locales[item].BccEmailAddresses)
-                 <div class="col-md-9 col-sm-9">
-                     @Html.GrandEditorFor(model => model.Locales[item].BccEmailAddresses)
-                     @Html.ValidationMessageFor(model => model.Locales[item].BccEmailAddresses)
-                 </div>
-             </div>
-             <div class="form-group">
-                 @Html.GrandLabelFor(model => model.Locales[item].Subject)
-                 <div class="col-md-9 col-sm-9">
-                     @Html.GrandEditorFor(model => model.Locales[item].Subject)
-                     @Html.ValidationMessageFor(model => model.Locales[item].Subject)
-                 </div>
-             </div>
-             <div class="form-group">
-                 <div class="col-md-3 col-lg-3">
-                     <label asp-for="@Model.Locales[item].Body" />
-                     <div>
-                         <label>@T("Admin.ContentManagement.MessageTemplates.Fields.AllowedTokens")</label>
-                         <input type="search" name="SearchTokens" class="form-control SearchTokens" placeholder="@T("Search")" />
-                     </div>
-                     <div class="AllowedTokens">
-                         @foreach (var token in Model.AllowedTokens)
-                                     {
-                             <button type="button" onclick="AddTokenToEditor(this)" class="btn btn-info">@token</button>
-                                     }
-                       
-
-                     </div>
-                 </div>
-
-                 <div class="col-md-9 col-sm-9">
-                     <admin-input asp-for="@Model.Locales[item].Body" asp-template="RichEditor" />
-                     <span asp-validation-for="@Model.Locales[item].Body"></span>
-                     <script>
-
-                                    setTimeout(function () {
-                                        tinyMCE.get('@Html.IdFor(x=>x.Locales[item].Body)').on('click', function (e) {
-                                                       onInputFocus = undefined;
-                                                    });
-                                    }, 3000)
-                     </script>
-                 </div>
-             </div>
-             @if (!String.IsNullOrEmpty(Model.Id))
-                         {
-                 <div class="form-group">
-                     <label class="col-md-3 col-sm-3 control-label">@T("Admin.ContentManagement.MessageTemplates.Test")</label>
-                     <div class="col-md-9 col-sm-9">
-                         <input type="button" class="btn green" value="@T("Admin.ContentManagement.MessageTemplates.Test")" onclick="setLocation('@(Url.Action("TestTemplate", new { id = Model.Id, languageId = Model.Locales[item].LanguageId }))')" />
-                     </div>
-                 </div>
-                         }
-             <div class="form-group">
-                 @Html.GrandLabelFor(model => model.Locales[item].EmailAccountId)
-                 <div class="col-md-9 col-sm-9">
-                     @Html.GrandDropDownListFor(model => model.Locales[item].EmailAccountId, new SelectList(Model.AvailableEmailAccounts, "Id", "DisplayName", Model.Locales[item].EmailAccountId))
-                     @Html.ValidationMessageFor(model => model.Locales[item].EmailAccountId)
-                 </div>
-             </div>
-             @Html.HiddenFor(model => model.Locales[item].LanguageId)
-         </div>
+        <div class="form-body">
+            <div class="form-group">
+                <admin-label asp-for="@Model.Locales[item].BccEmailAddresses" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="@Model.Locales[item].BccEmailAddresses" />
+                    <span asp-validation-for="@Model.Locales[item].BccEmailAddresses"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <admin-label asp-for="@Model.Locales[item].Subject" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="@Model.Locales[item].Subject" />
+                    <span asp-validation-for="@Model.Locales[item].Subject"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <admin-label asp-for="@Model.Locales[item].Body" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="@Model.Locales[item].Body" asp-template="RichEditor" />
+                    <span asp-validation-for="@Model.Locales[item].Body"></span>
+                </div>
+            </div>
+            @if (!String.IsNullOrEmpty(Model.Id))
+            {
+                <div class="form-group">
+                    <label class="col-md-3 col-sm-3 control-label">@T("Admin.ContentManagement.MessageTemplates.Test")</label>
+                    <div class="col-md-9 col-sm-9">
+                        <input type="button" class="btn green" value="@T("Admin.ContentManagement.MessageTemplates.Test")" onclick="setLocation('@(Url.Action("TestTemplate", new { id = Model.Id, languageId = Model.Locales[item].LanguageId }))')" />
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                <admin-label asp-for="@Model.Locales[item].EmailAccountId" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-select asp-for="@Model.Locales[item].EmailAccountId" asp-items="@{new SelectList(Model.AvailableEmailAccounts, "Id", "DisplayName", Model.Locales[item].EmailAccountId)}" />
+                    <span asp-validation-for="Locales[item].EmailAccountId"></span>
+                </div>
+            </div>
+            <input asp-for="@Model.Locales[item].LanguageId" type="hidden" />
+        </div>
     </div>
     ,
     @<div class="form-horizontal">
-         <div class="form-body">
-             <div class="form-group">
-                 @Html.GrandLabelFor(model => model.BccEmailAddresses)
-                 <div class="col-md-9 col-sm-9">
-                     @Html.GrandEditorFor(model => model.BccEmailAddresses)
-                     @Html.ValidationMessageFor(model => model.BccEmailAddresses)
-                 </div>
-             </div>
-             <div class="form-group">
-                 @Html.GrandLabelFor(model => model.Subject)
-                 <div class="col-md-9 col-sm-9">
-                     @Html.GrandEditorFor(model => model.Subject)
-                     @Html.ValidationMessageFor(model => model.Subject)
-                 </div>
-             </div>
-             <div class="form-group">
-                 <div class="col-md-3 col-lg-3">
-                     <label asp-for="@Model.Body" />
-                     <div>
-                         <label>@T("Admin.ContentManagement.MessageTemplates.Fields.AllowedTokens")</label>
-                         <input type="search" name="SearchTokens" class="form-control SearchTokens" placeholder="@T("Search")" />
-                     </div>
-                     <div class="AllowedTokens">
-                         @foreach (var token in Model.AllowedTokens)
-                                     {
-                             <button type="button" onclick="AddTokenToEditor(this)" class="btn btn-info">@token</button>
-                                     }
-                      
-                     </div>
-                 </div>
-
-                 <div class="col-md-9 col-sm-9">
-                     @Html.EditorFor(model => model.Body, "RichEditor")
-                     @Html.ValidationMessageFor(model => model.Body)
-                     <script>
-
-                                    setTimeout(function () {
-                                        tinyMCE.get('@Html.IdFor(x=>x.Body)').on('click', function (e) {
-                                                       onInputFocus = undefined;
-                                                    });
-                                    }, 3000)
-                     </script>
-                 </div>
-             </div>
-             @if (!String.IsNullOrEmpty(Model.Id))
-                         {
-                 <div class="form-group">
-                     <label class="col-md-3 col-sm-3 control-label">
-                         @T("Admin.ContentManagement.MessageTemplates.Test")
-                     </label>
-                     <div class="col-md-9 col-sm-9">
-                         <input type="button" class="btn green" value="@T("Admin.ContentManagement.MessageTemplates.Test")" onclick="setLocation('@(Url.Action("TestTemplate", new { id = Model.Id }))')" />
-                     </div>
-                 </div>
-                         }
-             <div class="form-group">
-                 @Html.GrandLabelFor(model => model.EmailAccountId)
-                 <div class="col-md-9 col-sm-9">
-                     @Html.GrandDropDownListFor(model => model.EmailAccountId, new SelectList(Model.AvailableEmailAccounts, "Id", "DisplayName"))
-                     @Html.ValidationMessageFor(model => model.EmailAccountId)
-                 </div>
-             </div>
-         </div>
+        <div class="form-body">
+            <div class="form-group">
+                <admin-label asp-for="BccEmailAddresses" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="BccEmailAddresses" />
+                    <span asp-validation-for="BccEmailAddresses"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <admin-label asp-for="Subject" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="Subject" />
+                    <span asp-validation-for="Subject"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <admin-label asp-for="Body" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="Body" asp-template="RichEditor" />
+                    <span asp-validation-for="Body"></span>
+                </div>
+            </div>
+            @if (!String.IsNullOrEmpty(Model.Id))
+            {
+                <div class="form-group">
+                    <label class="col-md-3 col-sm-3 control-label">
+                        @T("Admin.ContentManagement.MessageTemplates.Test")
+                    </label>
+                    <div class="col-md-9 col-sm-9">
+                        <input type="button" class="btn green" value="@T("Admin.ContentManagement.MessageTemplates.Test")" onclick="setLocation('@(Url.Action("TestTemplate", new { id = Model.Id }))')" />
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                <admin-label asp-for="EmailAccountId" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-select asp-for="EmailAccountId" asp-items="@{new SelectList(Model.AvailableEmailAccounts, "Id", "DisplayName")}" />
+                    <span asp-validation-for="EmailAccountId"></span>
+                </div>
+            </div>
+        </div>
     </div>
     ))
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.SendImmediately)
+            <admin-label asp-for="SendImmediately" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.EditorFor(model => model.SendImmediately)
+                    <admin-input asp-for="SendImmediately" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.SendImmediately)
+                <span asp-validation-for="SendImmediately"></span>
             </div>
         </div>
         <div class="form-group" id="pnl-send-after">
-            @Html.GrandLabelFor(model => model.DelayBeforeSend)
+            <admin-label asp-for="DelayBeforeSend" />
             <div class="col-md-9 col-sm-9">
                 <div class="col-md-3 col-sm-3">
-                    @Html.GrandEditorFor(model => model.DelayBeforeSend)
-                    @Html.ValidationMessageFor(model => model.DelayBeforeSend)
+                    <admin-input asp-for="DelayBeforeSend" />
+                    <span asp-validation-for="DelayBeforeSend"></span>
                 </div>
                 <div class="col-md-3 col-sm-3">
-                    @Html.GrandDropDownListFor(model => model.DelayPeriodId, ((MessageDelayPeriod)Model.DelayPeriodId).ToSelectList())
-                    @Html.ValidationMessageFor(model => model.DelayPeriodId)
+                    <admin-select asp-for="DelayPeriodId" asp-items="((Grand.Core.Domain.Messages.MessageDelayPeriod)Model.DelayPeriodId).ToSelectList()" />
+                    <span asp-validation-for="DelayPeriodId"></span>
                 </div>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.AttachedDownloadId)
+            <admin-label asp-for="AttachedDownloadId" />
             <div class="col-md-9 col-sm-9">
                 @{
                     //Static file attachments do not support URLs yet
@@ -198,12 +151,12 @@
                     ViewData["Grand.DownloadEditor.DisableUrl"] = true;
                 }
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.EditorFor(model => model.HasAttachedDownload) @T("Admin.ContentManagement.MessageTemplates.Fields.AttachedDownload.Exists")
+                    <admin-input asp-for="HasAttachedDownload" />@T("Admin.ContentManagement.MessageTemplates.Fields.AttachedDownload.Exists")
                     <span></span>
                 </label>
                 <div id="pnlAttachedDownload">
-                    @Html.EditorFor(model => model.AttachedDownloadId)
-                    @Html.ValidationMessageFor(model => model.AttachedDownloadId)
+                    <admin-input asp-for="AttachedDownloadId" />
+                    <span asp-validation-for="AttachedDownloadId"></span>
                 </div>
             </div>
         </div>

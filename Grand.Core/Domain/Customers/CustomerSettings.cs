@@ -96,6 +96,11 @@ namespace Grand.Core.Domain.Customers
         public bool HideBackInStockSubscriptionsTab { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to hide 'My auctions' tab on 'My account' page
+        /// </summary>
+        public bool HideAuctionsTab { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to validate user when downloading products
         /// </summary>
         public bool DownloadableProductsValidateUser { get; set; }
@@ -154,6 +159,16 @@ namespace Grand.Core.Domain.Customers
         /// Gets or sets a value indicating whether deleted customer records should be prefixed suffixed with "-DELETED"
         /// </summary>
         public bool SuffixDeletedCustomers { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether users are allowed to delete account
+        /// </summary>
+        public bool AllowUsersToDeleteAccount { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether users are allowed to export account
+        /// </summary>
+        public bool AllowUsersToExportData { get; set; }
 
         /// <summary>
         /// Gets or sets maximum login failures to lockout account. Set 0 to disable this feature

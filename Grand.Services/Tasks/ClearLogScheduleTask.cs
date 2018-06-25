@@ -12,7 +12,7 @@ namespace Grand.Services.Tasks
     public partial class ClearLogScheduleTask : ScheduleTask, IScheduleTask
     {
         private readonly ILogger _logger;
-
+        private readonly object _lock = new object();
         public ClearLogScheduleTask(ILogger logger)
         {
             this._logger = logger;
@@ -23,7 +23,10 @@ namespace Grand.Services.Tasks
         /// </summary>
         public void Execute()
         {
-            _logger.ClearLog();
+            lock (_lock)
+            {
+                _logger.ClearLog();
+            }
         }
     }
 }

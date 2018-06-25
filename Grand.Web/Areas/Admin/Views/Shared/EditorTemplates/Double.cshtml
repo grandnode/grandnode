@@ -1,10 +1,10 @@
 @model Double
 @Html.TextBoxFor(model => model)
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $("#@Html.IdForModel()").kendoNumericTextBox({
-            format: "#.00",
-            decimals: 2 //always display 2 digits
+            decimals: 2, //always display 2 digits
         });
+        $("#@Html.IdForModel()").rules("remove", "number");
     });
 </script>

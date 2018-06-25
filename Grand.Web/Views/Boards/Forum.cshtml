@@ -74,7 +74,7 @@
     </div>
 
     <div class="forums-table-section topic-group">
-        @if (Model.ForumTopics.Count > 0)
+        @if (Model.ForumTopics.Any())
         {
                 <table class="table table-hover forum-table">
                     <colgroup>
@@ -84,7 +84,7 @@
                         <col width="1" />
                         <col width="1" />
                     </colgroup>
-                    <thead class="table-inverse">
+                    <thead class="table-dark">
                         <tr>
                             <th>
                                 <div class="col-sm-12">
@@ -94,25 +94,25 @@
                                                 @T("Forum.TopicTitle")
                                             </div>
                                         </div>
-                                        <div class="replies col-sm-12 col-md-2 col-lg-1 hidden-sm-down">
+                                        <div class="replies col-sm-12 col-md-2 col-lg-1 d-none d-md-block">
                                             <div class="row">
                                                 @T("Forum.Replies")
                                             </div>
                                         </div>
-                                        <div class="views col-sm-12 col-md-1 hidden-sm-down">
+                                        <div class="views col-sm-12 col-md-1 d-none d-md-block">
                                             <div class="row">
                                                 @T("Forum.Views")
                                             </div>
                                         </div>
                                         @if (Model.AllowPostVoting)
                                         {
-                                            <div class="votes col-sm-12 col-md-1 hidden-sm-down">
+                                            <div class="votes col-sm-12 col-md-1 d-none d-md-block">
                                                 <div class="row">
                                                     @T("Forum.Votes")
                                                 </div>
                                             </div>
                                         }
-                                        <div class="latest-post col-12 col-md-3 justify-content-center text-center text-md-right hidden-md-down">
+                                        <div class="latest-post col-12 col-md-3 justify-content-center text-center text-md-right d-none d-lg-block">
                                                 @T("Forum.LatestPost")
                                         </div>
                                     </div>
@@ -180,19 +180,19 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="replies col-sm-12 col-md-2 col-lg-1 hidden-sm-down">
+                                            <div class="replies col-sm-12 col-md-2 col-lg-1 d-none d-md-block">
                                                 <div class="row">
                                                     @topic.NumReplies
                                                 </div>
                                             </div>
-                                            <div class="views col-sm-12 col-md-1 hidden-sm-down">
+                                            <div class="views col-sm-12 col-md-1 d-none d-md-block">
                                                 <div class="row">
                                                     @topic.Views
                                                 </div>
                                             </div>
                                             @if (Model.AllowPostVoting)
                                             {
-                                                <div class="votes col-sm-12 col-md-1 hidden-sm-down">
+                                                <div class="votes col-sm-12 col-md-1 d-none d-md-block">
                                                     <div class="row">
                                                         @topic.Votes
                                                     </div>

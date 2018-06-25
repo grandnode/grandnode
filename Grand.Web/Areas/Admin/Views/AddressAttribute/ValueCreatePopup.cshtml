@@ -1,16 +1,13 @@
-﻿@{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
-}
-
-@model AddressAttributeValueModel
-
+﻿@model AddressAttributeValueModel
 @{
-    //page title
+    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
     ViewBag.Title = T("Admin.Address.AddressAttributes.Values.AddNew").Text;
 }
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="AddressAttribute" asp-action="ValueCreatePopup"
+      asp-route-addressAttributeId="@Context.Request.Query["addressAttributeId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -19,7 +16,7 @@
                         <i class="fa fa-list-alt"></i>
                         @T("Admin.Address.AddressAttributes.Values.AddNew")
                     </div>
-                    <div class="actions">                        
+                    <div class="actions">
                         <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
                     </div>
                 </div>
@@ -29,5 +26,4 @@
             </div>
         </div>
     </div>
-
-}
+</form>

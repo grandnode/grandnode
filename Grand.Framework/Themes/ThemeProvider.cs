@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using Grand.Core;
+using Grand.Core.Plugins;
 
 namespace Grand.Framework.Themes
 {
@@ -73,6 +74,24 @@ namespace Grand.Framework.Themes
         public bool ThemeConfigurationExists(string themeName)
         {
             return GetThemeConfigurations().Any(configuration => configuration.ThemeName.Equals(themeName, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public ThemeDescriptor GetThemeDescriptorFromText(string text)
+        {
+            ThemeDescriptor themeDescriptor = new ThemeDescriptor();
+
+            try
+            {
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(text);
+
+                XmlNodeList Tags = doc.GetElementsByTagName("Theme");
+                var name = Tags[0].Attributes["title"].Value;
+                themeDescriptor.FriendlyName = name;
+            }
+            catch { }
+
+            return themeDescriptor;
         }
 
         #endregion

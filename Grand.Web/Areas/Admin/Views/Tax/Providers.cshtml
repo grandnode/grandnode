@@ -2,7 +2,7 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Tax.Providers").Text;
 }
-@Html.AntiForgeryToken()
+<antiforgery-token />
 
 <div class="row">
     <div class="col-md-12">
@@ -65,11 +65,13 @@ $(document).ready(function () {
         columns: [{
             field: "FriendlyName",
             title: "@T("Admin.Configuration.Tax.Providers.Fields.FriendlyName")",
-            width: 250
+            width: 250,
+            template: '<a class="k-link" href="#=ConfigurationUrl#">#=FriendlyName#</a>',
         }, {
             field: "SystemName",
             title: "@T("Admin.Configuration.Tax.Providers.Fields.SystemName")",
-            width: 250
+            width: 250,
+            template: '<a class="k-link" href="#=ConfigurationUrl#">#=SystemName#</a>',
         }, {
             field: "IsPrimaryTaxProvider",
             title: "@T("Admin.Configuration.Tax.Providers.Fields.IsPrimaryTaxProvider")",
@@ -82,11 +84,6 @@ $(document).ready(function () {
             title: "@T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider")",
             width: 200,
             template: '<a href="@Url.Content("~/Admin/Tax/MarkAsPrimaryProvider/")?systemName=#=SystemName#" class="k-button">@T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider")</a>'
-        }, {
-            field: "SystemName",
-            title: "@T("Admin.Configuration.Tax.Providers.Configure")",
-            width: 150,
-            template: '<a href="#=ConfigurationUrl#">@T("Admin.Configuration.Tax.Providers.Configure")</a>'
         }]
     });
 });

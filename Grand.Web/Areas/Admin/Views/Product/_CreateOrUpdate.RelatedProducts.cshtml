@@ -77,18 +77,16 @@
                 scrollable: false,
                 columns: [{
                     field: "Product2Name",
-                    title: "@T("Admin.Catalog.Products.RelatedProducts.Fields.Product")"
+                    title: "@T("Admin.Catalog.Products.RelatedProducts.Fields.Product")",
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId2#">#=Product2Name#</a>',
                 }, {
                     field: "DisplayOrder",
                     title: "@T("Admin.Catalog.Products.RelatedProducts.Fields.DisplayOrder")",
                     //integer format
                     format: "{0:0}",
-                    width: 150
-                }, {
-                    field: "ProductId2",
-                    title: "@T("Admin.Common.View")",
-                    width: 100,
-                    template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId2#">@T("Admin.Common.View")</a>'
+                    width: 80,
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
                 }, {
                     command: [{
                         name: "edit",
@@ -100,8 +98,7 @@
                     }, {
                         name: "destroy",
                         text: "@T("Admin.Common.Delete")"
-                    }],
-                    width: 200
+                    }]
                 }]
             });
         });

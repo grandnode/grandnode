@@ -1,18 +1,16 @@
-﻿@{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
+﻿@inject AdminAreaSettings adminAreaSettings
+@{
     //page title
     ViewBag.Title = T("Admin.Customers.OnlineCustomers").Text;
 }
-@Html.AntiForgeryToken()
+<antiforgery-token />
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light form-fit">
             <div class="portlet-title">
                 <div class="caption">
                     <i class="fa fa-users"></i>
-                   @T("Admin.Customers.OnlineCustomers")
+                    @T("Admin.Customers.OnlineCustomers")
                 </div>
             </div>
             <div class="portlet-body form">
@@ -21,7 +19,6 @@
         </div>
     </div>
 </div>
-
 <script>
     $(document).ready(function () {
         $("#onlinecustomers-grid").kendoGrid({
@@ -44,30 +41,33 @@
                     // Cancel the changes
                     this.cancelChanges();
                 },
-                pageSize: @(defaultGridPageSize),
+                pageSize: @(adminAreaSettings.DefaultGridPageSize),
                 serverPaging: true,
                 serverFiltering: true,
                 serverSorting: true
             },
             pageable: {
                 refresh: true,
-                pageSizes: [@(gridPageSizes)]
+                pageSizes: [@(adminAreaSettings.GridPageSizes)]
             },
             editable: {
                 confirmation: false,
                 mode: "inline"
             },
-            scrollable: false,
+            scrollable: true,
             columns: [{
                 field: "Id",
                 title: "@T("Admin.Customers.OnlineCustomers.Fields.CustomerInfo")",
-                template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=Id#">#:CustomerInfo#</a>'
+                template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/Edit/")#=Id#">#:CustomerInfo#</a>',
+                width: 220,
             }, {
                 field: "LastIpAddress",
-                title: "@T("Admin.Customers.OnlineCustomers.Fields.IPAddress")"
+                title: "@T("Admin.Customers.OnlineCustomers.Fields.IPAddress")",
+                width: 100,
             }, {
                 field: "Location",
-                title: "@T("Admin.Customers.OnlineCustomers.Fields.Location")"
+                title: "@T("Admin.Customers.OnlineCustomers.Fields.Location")",
+                width: 150,
             }, {
                 field: "LastActivityDate",
                 title: "@T("Admin.Customers.OnlineCustomers.Fields.LastActivityDate")",
@@ -76,9 +76,9 @@
                 format: "{0:G}"
             }, {
                 field: "LastVisitedPage",
-                title: "@T("Admin.Customers.OnlineCustomers.Fields.LastVisitedPage")"
+                title: "@T("Admin.Customers.OnlineCustomers.Fields.LastVisitedPage")",
+                width: 400,
             }]
         });
     });
 </script>
-        

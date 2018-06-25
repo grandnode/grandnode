@@ -18,6 +18,8 @@ namespace Grand.Web.ViewComponents
         public IViewComponentResult Invoke()
         {
             var model = _commonWebService.PrepareAdminHeaderLinks(_workContext.CurrentCustomer);
+            if (!model.DisplayAdminLink)
+                return Content("");
             return View(model);
         }
     }

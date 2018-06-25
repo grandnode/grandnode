@@ -1,0 +1,78 @@
+﻿@model Grand.Web.Models.Knowledgebase.KnowledgebaseHomePageModel
+@{
+    Layout = "_ColumnsTwo";
+
+    Html.AppendScriptParts("~/Scripts/bootstrap-treeview.js");   
+}
+
+@section left {
+    @await Component.InvokeAsync("KnowledgebaseCategories", @Model)
+}
+
+<h1 class="h2 generalTitle">
+    @T("Knowledgebase")
+    <a class=" fa fa-home float-right text-info" title="@T("Knowledgebase.Backtohomepage")" data-toggle="tooltip" data-placement="right" href="@Url.RouteUrl("Knowledgebase")"></a>
+</h1>
+
+@if (string.IsNullOrEmpty(Model.CurrentCategoryId))
+{
+    Html.AddTitleParts(T("PageTitle.Knowledgebase").Text);
+    <form method="get" id="small-search-box-form" asp-action="ArticlesByKeyword" asp-controller="knowledgebase" novalidate="novalidate">
+        <div class="input-group">
+            <span role="status" aria-live="polite" class="ui-helper-hidden-accessible"></span>
+            <input type="text" class="form-control search-box-text ui-autocomplete-input" id="small-searchterms" autocomplete="off" name="keyword" placeholder="@T("Knowledgebase.SearchPlaceholder")">
+
+            <span class="input-group-append">
+                <button type="submit" class="btn btn-primary search-box-button d-flex float-sm-right">
+                    <span class="sr-only">Search store</span>
+                    <span class="fa fa-search align-self-center"></span>
+                    <span class="pl-2 d-none d-lg-block">@T("Knowledgebase.Search")</span>
+                </button>
+            </span>
+        </div>
+    </form>
+
+    @await Component.InvokeAsync("TopicBlock", new { systemName = "KnowledgebaseHomePage" })
+    @await Component.InvokeAsync("KnowledgebaseHomepageArticles", @Model)
+}
+else
+{
+    @inject SeoSettings seoSettings
+    {
+        Layout = "_ColumnsTwo";
+        Html.AddTitleParts(!String.IsNullOrEmpty(Model.CurrentCategoryMetaTitle) ? Model.CurrentCategoryMetaTitle : Model.CurrentCategoryName);
+        Html.AddMetaDescriptionParts(Model.CurrentCategoryMetaDescription);
+        Html.AddMetaKeywordParts(Model.CurrentCategoryMetaKeywords);
+
+        var canonicalUrlsEnabled = seoSettings.CanonicalUrlsEnabled;
+        if (canonicalUrlsEnabled)
+        {
+            var categoryUrl = Url.RouteUrl("ArticlesByCategory", new { SeName = Model.CurrentCategorySeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
+            Html.AddCanonicalUrlParts(categoryUrl);
+        }
+    }
+
+    @Html.Raw(@Model.CurrentCategoryDescription)
+
+    @if (Model.Articles.Any())
+    {
+        <div class="list-group">
+            @foreach (var article in Model.Articles)
+            {
+                <a class="list-group-item" href="@Url.RouteUrl("KnowledgebaseArticle", new { SeName = article.SeName })">
+                    @article.Name
+                </a>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="error-label red">@T("Knowledgebase.Notfound")</div>
+    }
+}
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>

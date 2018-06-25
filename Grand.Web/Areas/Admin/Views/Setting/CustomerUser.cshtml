@@ -1,13 +1,11 @@
 ﻿@model CustomerUserSettingsModel
-@using Grand.Core.Domain.Customers;
+@inject IEventPublisher eventPublisher
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.CustomerUser").Text;
 }
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-
+<form asp-controller="Setting" asp-action="CustomerUser" method="post">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -53,7 +51,7 @@
                         <div>
                             @Html.Partial("CustomerUser.TabDateTimeSettings", Model)
                         </div>
-                        <div>                            
+                        <div>
                             @Html.Partial("CustomerUser.TabExternalAuthenticationSettings", Model)
                         </div>
                     </div>
@@ -62,10 +60,9 @@
         </div>
     </div>
 
+    <div asp-validation-summary="All"></div>
 
-    @Html.ValidationSummary(false)
-
-    <script>
+    <script type="text/javascript">
         $(document).ready(function () {
             $("#customersettings-edit").show();
             $("#customersettings-edit").kendoTabStrip({
@@ -79,11 +76,10 @@
         });
     </script>
 
-
-    {
+    @{
         //custom tabs
         var eventMessage = new AdminTabStripCreated(this.Html, "customersettings-edit");
-        EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+        eventPublisher.Publish(eventMessage);
         foreach (var eventBlock in eventMessage.BlocksToRender)
         {
             @eventBlock
@@ -92,5 +88,4 @@
 
     @*save selected tab index*@
     <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
-
-}
+</form>

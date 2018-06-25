@@ -1,0 +1,78 @@
+﻿@{
+    //page title
+    ViewBag.Title = T("Admin.ContentManagement.Knowledgebase.Manage").Text;
+    Html.AppendScriptParts("~/Scripts/bootstrap-treeview.js");
+}
+<antiforgery-token />
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light form-fit">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-forumbee"></i>
+                    @T("Admin.ContentManagement.Knowledgebase.Manage")
+                </div>
+                <div class="actions btn-group btn-group-devided">
+                    <a href="@Url.Action("CreateCategory")" class="btn blue">@T("Admin.ContentManagement.Knowledgebase.CreateKnowledgebaseCategory")</a>
+                    <a href="@Url.Action("CreateArticle")" class="btn yellow">@T("Admin.ContentManagement.Knowledgebase.CreateKnowledgebaseArticle")</a>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal">
+                    <div class="form-body">
+                        <div class="portlet-body">
+                            <div id="tree"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            cache: false,
+            url: "@(Url.Action("NodeList", "Knowledgebase"))",
+            dataType: 'json',
+            success: function (data) {
+                $('#tree').treeview({
+                    data: createTree(data),
+                    collapseIcon: "fa fa-folder-open",
+                    expandIcon: "fa fa-folder",
+                    emptyIcon: "fa fa-folder-open",
+                    backColor: "#e9ecef",
+                    showTags: true,
+                    levels: 0,
+                    enableLinks: true
+                });
+            },
+            error: function () {
+                alert('Error');
+            }
+        });
+    });
+
+    function createTree(data) {
+        markAsArticle(data);
+        return data;
+    }
+
+    function markAsArticle(nodes) {
+        for (var i = 0; i < nodes.length; i++){
+            if (!nodes[i].isCategory) {
+                nodes[i].backColor = "#ffffff";
+                nodes[i].tags = ['@Url.Action("EditArticle")' + '/' + nodes[i].id];
+            } else {
+                nodes[i].tags = ['@Url.Action("EditCategory")' + '/' + nodes[i].id];
+            }
+
+            nodes[i].selectable = false;
+
+            if (nodes[i].nodes.length > 0) {
+                markAsArticle(nodes[i].nodes);
+            }
+        }
+    }
+</script>

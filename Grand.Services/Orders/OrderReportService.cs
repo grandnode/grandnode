@@ -11,7 +11,6 @@ using Grand.Core.Domain.Shipping;
 using Grand.Services.Helpers;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using MongoDB.Bson.Serialization.Attributes;
 
 namespace Grand.Services.Orders
 {
@@ -140,16 +139,16 @@ namespace Grand.Services.Orders
             filter = filter & builder.Where(o => o.CreatedOnUtc >= startTimeUtc.Value && o.CreatedOnUtc <= endTime);
 
             var daydiff = (endTimeUtc.Value - startTimeUtc.Value).TotalDays;
-            if(daydiff > 32)
+            if(daydiff > 31)
             {
                 var query = _orderRepository.Collection.Aggregate().Match(filter).Group(x =>
                     new { Year = x.CreatedOnUtc.Year, Month = x.CreatedOnUtc.Month },
-                    g => new { Okres = g.Key, Amount = g.Sum(x => x.OrderTotal), Count = g.Count() }).SortBy(x=>x.Okres).ToList();
+                    g => new { Period = g.Key, Amount = g.Sum(x => x.OrderTotal), Count = g.Count() }).SortBy(x=>x.Period).ToList();
                 foreach (var item in query)
                 {
                     report.Add(new OrderByTimeReportLine()
                     {
-                        Time = item.Okres.Year.ToString() + "-" + item.Okres.Month.ToString(),
+                        Time = item.Period.Year.ToString() + "-" + item.Period.Month.ToString(),
                         SumOrders = item.Amount,
                         TotalOrders = item.Count,
                     });
@@ -159,12 +158,12 @@ namespace Grand.Services.Orders
             {
                 var query = _orderRepository.Collection.Aggregate().Match(filter).Group(x=>
                     new { Year = x.CreatedOnUtc.Year, Month = x.CreatedOnUtc.Month, Day = x.CreatedOnUtc.Day },
-                    g => new { Okres = g.Key, Amount = g.Sum(x => x.OrderTotal), Count = g.Count() }).SortBy(x => x.Okres).ToList();
+                    g => new { Period = g.Key, Amount = g.Sum(x => x.OrderTotal), Count = g.Count() }).SortBy(x => x.Period).ToList();
                 foreach (var item in query)
                 {
                     report.Add(new OrderByTimeReportLine()
                     {
-                        Time = item.Okres.Year.ToString() + "-" + item.Okres.Month.ToString()+"-" + item.Okres.Day.ToString(),
+                        Time = item.Period.Year.ToString() + "-" + item.Period.Month.ToString()+"-" + item.Period.Day.ToString(),
                         SumOrders = item.Amount,
                         TotalOrders = item.Count,
                     });

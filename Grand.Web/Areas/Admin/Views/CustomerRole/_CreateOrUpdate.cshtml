@@ -1,8 +1,7 @@
 ﻿@model CustomerRoleModel
-
-@Html.ValidationSummary(true)
-@Html.HiddenFor(model => model.Id)
-
+@inject IEventPublisher eventPublisher
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
 <script type="text/javascript">
     $(document).ready(function () {
         toggleRemoveButton();
@@ -16,7 +15,6 @@
             select: tabstrip_on_tab_select
         });
     });
-
     function toggleRemoveButton() {
         if ($('#@Html.FieldIdFor(model => model.PurchasedWithProductId)').val() > 0) {
             $('#purchased-with-product-name-remove').show();
@@ -26,7 +24,6 @@
         }
     }
 </script>
-
 
 <div id="customerrole-edit">
     <ul>
@@ -44,16 +41,14 @@
         @Html.Partial("_CreateOrUpdate.TabProducts", Model)
     </div>
 </div>
-
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "customerrole-edit");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock
     }
 }
-
 @*save selected tab index*@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">

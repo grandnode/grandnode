@@ -1,9 +1,7 @@
 ﻿@model VendorReviewListModel
-@using Grand.Core
-@inject IWorkContext workContext
 
 <div class="form-group">
-    @Html.GrandLabelFor(model => model.SearchVendorId)
+    <admin-label asp-for="SearchVendorId" />
     <div class="col-md-4 col-sm-6">
         <input type="text" class="form-control text-box single-line" id="search-vendor-name" autocomplete="on" />
         <span id="search-vendor-friendly-name"></span>
@@ -25,7 +23,7 @@
 
                 //remove button
                 $('#search-vendor-clear').click(function() {
-                    $('#@Html.FieldIdFor(model => model.SearchVendorId)').val('0');
+                    $('#@Html.FieldIdFor(model => model.SearchVendorId)').val('');
                     $('#search-vendor-friendly-name').text('');
                     $('#search-vendor-clear').hide();
                     return false;

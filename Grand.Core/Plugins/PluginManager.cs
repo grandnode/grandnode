@@ -7,12 +7,8 @@ using System.Reflection;
 using System.Threading;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Grand.Core.ComponentModel;
-using Grand.Core.Infrastructure;
 using Grand.Core.Configuration;
 using System.Runtime.Loader;
-
-//Contributor: Umbraco (http://www.umbraco.com). Thanks a lot! 
-//SEE THIS POST for full details of what this does - http://shazwazza.com/post/Developing-a-plugin-framework-in-ASPNET-with-medium-trust.aspx
 
 namespace Grand.Core.Plugins
 {
@@ -23,9 +19,9 @@ namespace Grand.Core.Plugins
     {
         #region Const
 
-        private const string InstalledPluginsFilePath = "~/App_Data/InstalledPlugins.txt";
-        private const string PluginsPath = "~/Plugins";
-        private const string ShadowCopyPath = "~/Plugins/bin";
+        public const string InstalledPluginsFilePath = "~/App_Data/InstalledPlugins.txt";
+        public const string PluginsPath = "~/Plugins";
+        public const string ShadowCopyPath = "~/Plugins/bin";
 
         #endregion
 
@@ -306,7 +302,6 @@ namespace Grand.Core.Plugins
             }
 
             //sort list by display order. NOTE: Lowest DisplayOrder will be first i.e 0 , 1, 1, 1, 5, 10
-            //it's required: http://www.nopcommerce.com/boards/t/17455/load-plugins-based-on-their-displayorder-on-startup.aspx
             result.Sort((firstPair, nextPair) => firstPair.Value.DisplayOrder.CompareTo(nextPair.Value.DisplayOrder));
             return result;
         }
@@ -392,7 +387,6 @@ namespace Grand.Core.Plugins
                 {
                     //delete an existing file
 
-                    //More info: http://www.nopcommerce.com/boards/t/11511/access-error-nopplugindiscountrulesbillingcountrydll.aspx?p=4#60838
                     Debug.WriteLine("New plugin found; Deleting the old file: '{0}'", shadowCopiedPlug.Name);
                     File.Delete(shadowCopiedPlug.FullName);
                 }

@@ -111,5 +111,10 @@ namespace Grand.Core.Domain.Orders
         /// Gets or sets a value indicating whether order status can be marked as cancelled by user (if order isn't paid and shipped yet)
         /// </summary>
         public bool UserCanCancelUnpaidOrder { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether unpublish auction product after made order.
+        /// </summary>
+        public bool UnpublishAuctionProduct { get; set; }
     }
 }

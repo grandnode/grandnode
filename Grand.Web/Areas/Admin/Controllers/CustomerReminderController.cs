@@ -584,7 +584,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult CategoryAddPopup(string btnId, CustomerReminderModel.ConditionModel.AddCategoryConditionModel model)
+        public IActionResult CategoryAddPopup(CustomerReminderModel.ConditionModel.AddCategoryConditionModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
                 return AccessDeniedView();
@@ -608,9 +608,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     }
                 }
             }
-
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
             return View(model);
         }
 
@@ -663,7 +661,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult ManufacturerAddPopup(string btnId, CustomerReminderModel.ConditionModel.AddManufacturerConditionModel model)
+        public IActionResult ManufacturerAddPopup(CustomerReminderModel.ConditionModel.AddManufacturerConditionModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
                 return AccessDeniedView();
@@ -690,7 +688,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
             return View(model);
         }
 
@@ -782,7 +779,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult ProductAddPopup(string btnId, CustomerReminderModel.ConditionModel.AddProductToConditionModel model)
+        public IActionResult ProductAddPopup(CustomerReminderModel.ConditionModel.AddProductToConditionModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
                 return AccessDeniedView();
@@ -807,7 +804,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }
             }
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
             return View(model);
         }
 

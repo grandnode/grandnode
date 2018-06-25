@@ -88,7 +88,7 @@ namespace Grand.Services.Security
             return _cacheManager.Get(key, () =>
             {
                 var permissionRecord = _permissionRecordRepository.Table.Where(x => x.CustomerRoles.Contains(customerRole.Id) && x.SystemName== permissionRecordSystemName).ToList();
-                if (permissionRecord.Count() > 0)
+                if (permissionRecord.Any())
                     return true;
 
                 return false;
@@ -310,8 +310,6 @@ namespace Grand.Services.Security
         {
             if (String.IsNullOrEmpty(permissionRecordSystemName))
                 return false;
-
-            //return true;
 
             var customerRoles = customer.CustomerRoles.Where(cr => cr.Active);            
             foreach (var role in customerRoles)

@@ -2,8 +2,7 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Shipping.DeliveryDates").Text;
 }
-@Html.AntiForgeryToken()
-
+<antiforgery-token />
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light form-fit">
@@ -30,7 +29,7 @@
     </div>
 </div>
 
-<script>
+<script  type="text/javascript">
     $(document).ready(function () {
         $("#deliverydate-grid").kendoGrid({
             dataSource: {
@@ -70,16 +69,12 @@
             columns: [{
                 field: "Name",
                 title: "@T("Admin.Configuration.Shipping.DeliveryDates.Fields.Name")",
-                width: 300
+                width: 300,
+                template: '<a class="k-link" href="EditDeliveryDate/#=Id#">#=Name#</a>',
             }, {
                 field: "DisplayOrder",
                 title: "@T("Admin.Configuration.Shipping.DeliveryDates.Fields.DisplayOrder")",
                 width: 100
-            }, {
-                field: "Id",
-                title: "@T("Admin.Common.Edit")",
-                width: 100,
-                template: '<a class="btn btn-sm btn-default" href="EditDeliveryDate/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
             }]
         });
     });

@@ -8,7 +8,6 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Net.Http.Headers;
 using Grand.Core.Configuration;
 using Grand.Core.Infrastructure;
-using Grand.Framework.Compression;
 using Grand.Framework.Infrastructure.Extensions;
 
 namespace Grand.Framework.Infrastructure
@@ -31,8 +30,6 @@ namespace Grand.Framework.Infrastructure
             //add options feature
             services.AddOptions();
             
-            var grandConfig = services.BuildServiceProvider().GetService<GrandConfig>();
-
             //add memory cache
             services.AddMemoryCache();
 
@@ -61,13 +58,22 @@ namespace Grand.Framework.Infrastructure
         {
             var grandConfig = EngineContext.Current.Resolve<GrandConfig>();
 
+            //use hsts
+            if(grandConfig.UseHsts)
+            {
+                application.UseHsts();
+            }
+            //enforce HTTPS in ASP.NET Core
+            if (grandConfig.UseHttpsRedirection)
+            {
+                application.UseHttpsRedirection();
+            }
+
             //compression
             if (grandConfig.UseResponseCompression)
             {
                 //gzip by default
                 application.UseResponseCompression();
-                //workaround with "vary" header
-                application.UseMiddleware<ResponseCompressionVaryWorkaroundMiddleware>();
             }
 
             //static files
@@ -103,17 +109,19 @@ namespace Grand.Framework.Infrastructure
                 }
             });
             
-            //check whether requested page is keep alive page
-            application.UseKeepAlive();
-
             //check whether database is installed
-            application.UseInstallUrl();
+            if(!grandConfig.IgnoreInstallUrlMiddleware)
+                application.UseInstallUrl();
 
             //use HTTP session
             application.UseSession();
 
             //use request localization
             application.UseRequestLocalization();
+
+            //use powered by
+            if (!grandConfig.IgnoreUsePoweredByMiddleware)
+                application.UsePoweredBy();
         }
 
         /// <summary>

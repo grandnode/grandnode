@@ -3,17 +3,15 @@
     //page title
     ViewBag.Title = T("Admin.Customers.CustomerTags.AddNew").Text;
 }
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    
+<form asp-controller="CustomerTag" asp-action="Create" method="post" id="customertag-form">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
                 <div class="portlet-title">
                     <div class="caption">
                         <i class="fa fa-tag"></i>
-                       @T("Admin.Customers.CustomerTags.AddNew") 
+                        @T("Admin.Customers.CustomerTags.AddNew")
                         <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Customers.CustomerRoles.BackToList").Text, "List")</small>
                     </div>
                     <div class="actions">
@@ -27,5 +25,4 @@
             </div>
         </div>
     </div>
-    
-}
+</form>

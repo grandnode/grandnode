@@ -40,13 +40,13 @@
                             <label for="adv" class="custom-control custom-checkbox">
                                 <span class="sr-only">adv</span>
                                 <input asp-for="adv" class="custom-control-input" />
-                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-label"></span>
                                 <span class="custom-control-description">@T("search.advancedsearch")</span>
                             </label>
                         </div>
                     </div>
                     <div class="advanced-search" id="advanced-search-block">
-                        @if (Model.AvailableCategories.Count > 0)
+                        @if (Model.AvailableCategories.Any())
                         {
                             <div class="inputs">
                                 <label asp-for="cid">@T("Search.Category"):</label>
@@ -56,20 +56,20 @@
                                 <label for="isc" class="custom-control custom-checkbox">
                                     <span class="sr-only">isc</span>
                                     <input asp-for="isc" class="custom-control-input"/>
-                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-label"></span>
                                     <span class="custom-control-description">@T("admin.catalog.products.list.searchincludesubcategories.hint")</span>
                                 </label>
 
                             </div>
                         }
-                        @if (Model.AvailableManufacturers.Count > 0)
+                        @if (Model.AvailableManufacturers.Any())
                         {
                             <div class="inputs">
                                 <label asp-for="mid">@T("Search.Manufacturer"):</label>
                                 <select asp-for="mid" class="form-control mb-3" asp-items="Model.AvailableManufacturers"></select>
                             </div>
                         }
-                        @if (Model.asv && Model.AvailableVendors.Count > 0)
+                        @if (Model.asv && Model.AvailableVendors.Any())
                         {
                             <div class="inputs">
                                 <label asp-for="vid">@T("Search.Vendor"):</label>
@@ -94,7 +94,7 @@
                         <div class="inputs reversed">
                             <label for="sid" class="custom-control custom-checkbox">
                                 <input asp-for="sid" class="custom-control-input"/>
-                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-label"></span>
                                 <span class="custom-control-description">@T("search.searchindescriptions")</span>
                             </label>
                         </div>
@@ -103,7 +103,7 @@
                 </div>
             </div>
             <div class="buttons mt-1 mb-1">
-                <input type="submit" class="btn btn-success search-button" value="@T("Search.Button")" />
+                <input type="submit" class="btn btn-info search-button" value="@T("Search.Button")" />
             </div>
         </form>
     </div>
@@ -111,8 +111,8 @@
 @await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_before_results" })
 <div class="search-results">
 
-    @if (Model.Products.Count > 0)
-            {
+    @if (Model.Products.Any())
+    {
         <div class="col">
             @await Html.PartialAsync("_CatalogSelectors", Model.PagingFilteringContext)
         </div>
@@ -131,7 +131,7 @@
         </div>
     }
 
-    @if (Model.Products.Count > 0)
+    @if (Model.Products.Any())
     {
         if (Model.PagingFilteringContext.ViewMode == "grid")
         {
@@ -139,7 +139,7 @@
                 <div class="row flex-grid">
                     @foreach (var product in Model.Products)
                     {
-                        <div class="col-12 col-md-6 col-lg-4">
+                        <div class="col-lg-4 col-sm-6 col-6 product-container">
                             @await Html.PartialAsync("_ProductBox", product)
                         </div>
                     }

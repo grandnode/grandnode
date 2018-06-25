@@ -4,9 +4,11 @@
     ViewBag.Title = T("Admin.Customers.CustomerAction.EditCustomerActionCondition").Text;
 }
 
-@using(Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="CustomerAction" asp-action="EditCondition" 
+      asp-route-customerActionId="@Context.Request.Query["CustomerActionId"]"
+      asp-route-cid="@Context.Request.Query["cid"]"
+      method="post" id="customer-action-condition-form">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -29,4 +31,4 @@
             </div>
         </div>
     </div>
-}
+</form>

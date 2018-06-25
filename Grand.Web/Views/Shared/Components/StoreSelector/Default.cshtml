@@ -1,0 +1,47 @@
+﻿@model StoreSelectorModel
+@using System.Net;
+@using Microsoft.AspNetCore.Http;
+@inject IWebHelper webHelper
+@inject IHttpContextAccessor httpContextAccessor
+@if (Model != null && Model.AvailableStores.Count > 1)
+{
+    var stores = Model.AvailableStores.Select(x => new
+    {
+        Name = x.Name,
+        Selected = x.Id.Equals(Model.CurrentStoreId),
+        Value = webHelper.ModifyQueryString(Url.RouteUrl("ChangeStore", new { store = x.Id }), "returnurl=" + WebUtility.UrlEncode(webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request)), null),
+    });
+    <div class="store-selector btn-group btn-group-sm float-xs-right mr-2 d-none d-lg-flex">
+        <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
+            @stores.FirstOrDefault(x => x.Selected).Name
+            <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right">
+            <ul class="pl-0 mb-0">
+                @foreach (var item in stores)
+                {
+                    <li>
+                        <a href="@item.Value">@item.Name</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+
+    <div class="col px-0 store-list-mobile option-list-mobile text-center">
+        <h6 class="store-button mobile-option-button mb-0">Stores</h6>
+        <ul class="">
+            @foreach (var item in stores)
+            {
+                var className = item.Selected ? "active" : "";
+                <li class="@className">
+                    <a class="nav-link d-flex d-lg-none p-0" href="@item.Value">
+                        @item.Name
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+
+
+}

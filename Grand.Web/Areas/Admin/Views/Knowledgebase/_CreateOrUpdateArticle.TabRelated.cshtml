@@ -1,0 +1,119 @@
+﻿@model KnowledgebaseArticleModel
+
+@if (!String.IsNullOrEmpty(Model.Id))
+{
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="relatedarticles-grid"></div>
+        </div>
+        <div class="panel-footer">
+            <input type="submit" id="btnAddNewRelatedArticle" value="@T("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Related.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ArticlesPopup", "Knowledgebase", new { articleId = Model.Id, btnId = "btnRefreshRelatedArticles", formId = "article-form",  }))', 800, 800, true); return false;" class="k-button" />
+            <input type="submit" id="btnRefreshRelatedArticles" style="display: none" />
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $("#relatedarticles-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("RelatedArticlesList", "Knowledgebase", new { articleId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }, destroy: {
+                            url: "@Html.Raw(Url.Action("RelatedArticleDelete", "Knowledgebase", new { articleId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors",
+                        model: {
+                            id: "Id",
+                            fields: {
+                                Article2Name: { editable: false, type: "string" },
+                                DisplayOrder: { editable: false, type: "number" },
+                                Article2Id: { editable: false, type: "string" }
+                            }
+                        }
+                    },
+                    requestEnd: function (e) {
+                        if (e.type == "update") {
+                            this.read();
+                        }
+                    },
+                    error: function (e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    numeric: false,
+                    previousNext: false,
+                    info: false
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "Article2Name",
+                    title: "@T("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.Name")"
+                }, {
+                    field: "DisplayOrder",
+                    title: "@T("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.DisplayOrder")",
+                    //integer format
+                    format: "{0:0}",
+                    width: 150
+                }, {
+                    field: "Published",
+                    title: "@T("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.Published")",
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
+                    template: '# if(Published) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+                }, {
+                    field: "Article2Id",
+                    title: "@T("Admin.Common.View")",
+                    width: 100,
+                    template: '<a href="@Url.Content("~/Admin/Knowledgebase/EditArticle/")#=Article2Id#">@T("Admin.Common.View")</a>'
+                }, {
+                    command: [{
+                        name: "destroy",
+                        text: "@T("Admin.Common.Delete")"
+                    }],
+                    width: 100
+                }]
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btnRefreshRelatedArticles').click(function () {
+                //refresh grid
+                var grid = $("#relatedarticles-grid").data('kendoGrid');
+                grid.dataSource.read();
+
+                //return false to don't reload a page
+                return false;
+            });
+        });
+    </script>
+}
+else
+{
+    <div class="note note-info">
+        @T("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Related.SaveBeforeEdit")
+    </div>
+}

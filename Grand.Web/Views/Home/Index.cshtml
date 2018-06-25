@@ -3,6 +3,7 @@
 }
 <div class="page home-page">
     <div class="page home-page">
+        @await Component.InvokeAsync("PushNotificationsRegistration")
         @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_top" })
         @await Component.InvokeAsync("TopicBlock", new { systemName = "HomePageText" })
         @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_before_categories" })
@@ -12,11 +13,13 @@
         @await Component.InvokeAsync("SuggestedProducts")
         @await Component.InvokeAsync("HomePageProducts")
         @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_before_best_sellers" })
-        @await Component.InvokeAsync("HomepageBestSellers")
+        @await Component.InvokeAsync("HomePageBestSellers")
         @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_before_manufacturers" })
-        @await Component.InvokeAsync("HomepageManufacturers")
+        @await Component.InvokeAsync("HomePageManufacturers")
         @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_before_news" })
         @await Component.InvokeAsync("HomePageNews")
+        @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_before_blog" })
+        @await Component.InvokeAsync("HomePageBlog")
         @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_before_poll" })
         @await Component.InvokeAsync("HomePagePolls")
         @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_bottom" })

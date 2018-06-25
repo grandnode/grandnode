@@ -16,7 +16,7 @@
 
                     <label class="custom-control custom-checkbox">
                         @Html.CheckBoxFor(x => x.PickUpInStore, new { @class = "custom-control-input" } )
-                        <span class="custom-control-indicator"></span>
+                        <span class="custom-control-label"></span>
                         <span for="@Html.IdFor(model => model.PickUpInStore)" class="custom-control-description">@T("Checkout.PickupPoints").Text</span>
                     </label>
 
@@ -51,8 +51,8 @@
                     {
                         if (Model.PickUpInStoreOnly)
                         {
-                        @Html.HiddenFor(x => x.PickUpInStore)
-                    }
+                            <input asp-for="PickUpInStore" type="hidden" />
+                        }
                     <div class="select-pickup-point">
                         @if (Model.PickupPoints.Count == 1)
                         {
@@ -114,7 +114,7 @@
         {
             <div class="shipping-addresses" id="shipping-addresses-form">
                 @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_address_top" })
-                @if (Model.ExistingAddresses.Count > 0)
+                @if (Model.ExistingAddresses.Any())
                 {
                     <div class="select-shipping-address">
                         <h5><strong>@T("Checkout.SelectShippingAddress")</strong></h5>
@@ -127,7 +127,7 @@
                                             <h5 class="card-header">
                                                 @item.FirstName @item.LastName
                                             </h5>
-                                            <div class="card-block mb-3">
+                                            <div class="card-body mb-3">
                                                 <ul class="address-box pl-0">
                                                     <li class="email">
                                                         <label>@T("Address.Fields.Email"):</label>
@@ -212,7 +212,7 @@
                 }
                 @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_address_middle" })
                 <div class="new-shipping-address">
-                    @if (Model.ExistingAddresses.Count > 0)
+                    @if (Model.ExistingAddresses.Any())
                     {
                         <h2 class="generalTitle">
                             <strong>@T("Checkout.OrEnterNewAddress")</strong>
@@ -237,7 +237,7 @@
             </div>
         }
         <div class="buttons col-12 mb-2 mt-2">
-           <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="btn btn-success new-address-next-step-button" />
+           <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="btn btn-info new-address-next-step-button" />
         </div>
     </form>
 

@@ -1,16 +1,16 @@
 ﻿@model DiscountModel
-@using Grand.Core.Domain.Discounts;
+@inject IEventPublisher eventPublisher
 @using Grand.Framework.UI;
 @{
     Html.AddScriptParts("~/Scripts/jquery.tmpl.min.js", excludeFromBundle: true);
 }
-@Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $("#discount-edit").show();
         $("#discount-edit").kendoTabStrip({
-            animation:  {
+            animation: {
                 open: {
                     effects: "fadeIn"
                 }
@@ -86,14 +86,12 @@
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "discount-edit");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock
     }
 }
-
-
 
 @*save selected tab index*@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">

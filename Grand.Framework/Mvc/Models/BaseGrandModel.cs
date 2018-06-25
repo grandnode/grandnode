@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 namespace Grand.Framework.Mvc.Models
 {
     /// <summary>
-    /// Represents base nopCommerce model
+    /// Represents base model
     /// </summary>
     public partial class BaseGrandModel
     {

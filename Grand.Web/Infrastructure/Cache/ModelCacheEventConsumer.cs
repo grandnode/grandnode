@@ -8,6 +8,7 @@ using Grand.Core.Domain.Media;
 using Grand.Core.Domain.News;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Polls;
+using Grand.Core.Domain.Stores;
 using Grand.Core.Domain.Topics;
 using Grand.Core.Domain.Vendors;
 using Grand.Core.Events;
@@ -28,6 +29,10 @@ namespace Grand.Web.Infrastructure.Cache
         IConsumer<EntityInserted<Currency>>,
         IConsumer<EntityUpdated<Currency>>,
         IConsumer<EntityDeleted<Currency>>,
+        //store
+        IConsumer<EntityInserted<Store>>,
+        IConsumer<EntityUpdated<Store>>,
+        IConsumer<EntityDeleted<Store>>,
         //settings
         IConsumer<EntityUpdated<Setting>>,
         //manufacturers
@@ -58,6 +63,10 @@ namespace Grand.Web.Infrastructure.Cache
         IConsumer<EntityInserted<RelatedProduct>>,
         IConsumer<EntityUpdated<RelatedProduct>>,
         IConsumer<EntityDeleted<RelatedProduct>>,
+        //bundle product
+        IConsumer<EntityInserted<BundleProduct>>,
+        IConsumer<EntityUpdated<BundleProduct>>,
+        IConsumer<EntityDeleted<BundleProduct>>,
         //product tags
         IConsumer<EntityInserted<ProductTag>>,
         IConsumer<EntityUpdated<ProductTag>>,
@@ -208,7 +217,17 @@ namespace Grand.Web.Infrastructure.Cache
         /// {2} : current store ID
         /// </remarks>
         public const string CATEGORY_ALL_MODEL_KEY = "Grand.pres.category.all-{0}-{1}-{2}";
-        public const string CATEGORY_ALL_PATTERN_KEY = "Grand.pres.category.all";
+
+        /// <summary>
+        /// Key for CategorySearchBoxModel caching
+        /// </summary>
+        /// <remarks>
+        /// {1} : comma separated list of customer roles
+        /// {2} : current store ID
+        /// </remarks>
+        public const string CATEGORY_ALL_SEARCHBOX = "Grand.pres.category.all.searchbox-{0}-{1}";
+
+        public const string CATEGORY_ALL_PATTERN_KEY = "Grand.pres.category.";
 
         /// <summary>
         /// Key for caching
@@ -614,6 +633,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : current store ID
         /// </remarks>
         public const string BLOG_MONTHS_MODEL_KEY = "Grand.pres.blog.months-{0}-{1}";
+        public const string BLOG_HOMEPAGE_MODEL_KEY = "Grand.pres.blog.homepage-{0}-{1}";
         public const string BLOG_PATTERN_KEY = "Grand.pres.blog";
 
         /// <summary>
@@ -699,6 +719,11 @@ namespace Grand.Web.Infrastructure.Cache
         /// </remarks>
         public const string AVAILABLE_LANGUAGES_MODEL_KEY = "Grand.pres.languages.all-{0}";
         public const string AVAILABLE_LANGUAGES_PATTERN_KEY = "Grand.pres.languages";
+
+        /// <summary>
+        /// Key for available stores
+        /// </summary>
+        public const string AVAILABLE_STORES_MODEL_KEY = "Grand.pres.stores.all";
 
         /// <summary>
         /// Key for available currencies
@@ -821,6 +846,22 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(AVAILABLE_CURRENCIES_PATTERN_KEY);
         }
 
+        //stores
+        public void HandleEvent(EntityInserted<Store> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(AVAILABLE_STORES_MODEL_KEY);
+        }
+        public void HandleEvent(EntityUpdated<Store> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(AVAILABLE_STORES_MODEL_KEY);
+        }
+        public void HandleEvent(EntityDeleted<Store> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(AVAILABLE_STORES_MODEL_KEY);
+        }
+
+
+        //settings
         public void HandleEvent(EntityUpdated<Setting> eventMessage)
         {
             //clear models which depend on settings
@@ -1000,7 +1041,22 @@ namespace Grand.Web.Infrastructure.Cache
         {
             _cacheManager.RemoveByPattern(PRODUCTS_RELATED_IDS_PATTERN_KEY);
         }
-        
+
+        //bundle products
+
+        public void HandleEvent(EntityInserted<BundleProduct> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCTS_RELATED_IDS_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<BundleProduct> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCTS_RELATED_IDS_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<BundleProduct> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCTS_RELATED_IDS_PATTERN_KEY);
+        }
+
         //specification attributes
         public void HandleEvent(EntityUpdated<SpecificationAttribute> eventMessage)
         {

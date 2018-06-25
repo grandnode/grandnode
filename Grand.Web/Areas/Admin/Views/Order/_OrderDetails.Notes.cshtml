@@ -1,12 +1,9 @@
 ﻿@model OrderModel
-
 <div class="panel panel-default">
     <div class="panel-body">
         <div id="ordernotes-grid"></div>
     </div>
-</div>
-            
-
+</div>            
     <script>
         $(document).ready(function () {
             $("#ordernotes-grid").kendoGrid({
@@ -62,16 +59,18 @@
                 columns: [{
                     field: "CreatedOn",
                     title: "@T("Admin.Orders.OrderNotes.Fields.CreatedOn")",
-                    width: 200,
+                    width: 180,
                     type: "date",
                     format: "{0:G}"
                 }, {
                     field: "Note",
                     title: "@T("Admin.Orders.OrderNotes.Fields.Note")",
+                    width: 350,
                     encoded: false
                 },{
                     field: "DownloadId",
                     title: "@T("Admin.Orders.OrderNotes.Fields.Download")",
+                    width: 100,
                     template: '# if(DownloadId != "") {# <a href="@Url.Content("~/Admin/Download/DownloadFile")?downloadGuid=#=DownloadGuid#">@T("Admin.Orders.OrderNotes.Fields.Download.Link")</a> #} else {# @T("Admin.Orders.OrderNotes.Fields.Download.Link.No") #} #'
                 },{
                     field: "DisplayToCustomer",
@@ -88,7 +87,6 @@
             });
         });
     </script>
-
 <p>
     <strong>
         @T("Admin.Orders.OrderNotes.AddTitle")
@@ -96,12 +94,9 @@
 </p>
 <script type="text/javascript">
     $(document).ready(function () {
-
         $("#@Html.FieldIdFor(model => model.AddOrderNoteHasDownload)").change(toggleAddOrderNoteHasDownload);
-
         toggleAddOrderNoteHasDownload();
     });
-
     function toggleAddOrderNoteHasDownload() {
         if ($('#@Html.FieldIdFor(model => model.AddOrderNoteHasDownload)').is(':checked')) {
             $('#pnlAddOrderNoteDownloadId').show();
@@ -116,27 +111,33 @@
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.AddOrderNoteMessage)
+            <admin-label asp-for="AddOrderNoteMessage" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandTextAreaFor(model => model.AddOrderNoteMessage, new { style = "Height: 100px;" })
-                @Html.ValidationMessageFor(model => model.AddOrderNoteMessage)
+                <admin-textarea asp-for="AddOrderNoteMessage"></admin-textarea>
+                <span asp-validation-for="AddOrderNoteMessage"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.AddOrderNoteDownloadId)
+            <admin-label asp-for="AddOrderNoteDownloadId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.AddOrderNoteHasDownload) @T("Admin.Orders.OrderNotes.Fields.Download.HasDownload")
+                <label class="mt-checkbox mt-checkbox-outline">
+                    <admin-input asp-for="AddOrderNoteHasDownload" />  @T("Admin.Orders.OrderNotes.Fields.Download.HasDownload")
+                    <span></span>
+                </label>
                 <div id="pnlAddOrderNoteDownloadId">
-                    @Html.EditorFor(model => model.AddOrderNoteDownloadId)
-                    @Html.ValidationMessageFor(model => model.AddOrderNoteDownloadId)
+                    <admin-input asp-for="AddOrderNoteDownloadId" />
+                    <span asp-validation-for="AddOrderNoteDownloadId"></span>
                 </div>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.AddOrderNoteDisplayToCustomer)
+            <admin-label asp-for="AddOrderNoteDisplayToCustomer" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.AddOrderNoteDisplayToCustomer)
-                @Html.ValidationMessageFor(model => model.AddOrderNoteDisplayToCustomer)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    <admin-input asp-for="AddOrderNoteDisplayToCustomer" />
+                    <span></span>
+                </label>
+                <span asp-validation-for="AddOrderNoteDisplayToCustomer"></span>
             </div>
         </div>
         <div class="form-actions">
@@ -151,13 +152,16 @@
     $(document).ready(function () {
         $('#addOrderNote').click(function () {
             var orderNoteMessage = $("#@Html.FieldIdFor(model => model.AddOrderNoteMessage)").val();
+            if (orderNoteMessage.length == 0) {
+                alert('Message text is required');
+                return;
+            }
             var orderNoteDownloadId = '';
             if ($('#@Html.FieldIdFor(model => model.AddOrderNoteHasDownload)').is(':checked')) {
                 orderNoteDownloadId = $("#@Html.FieldIdFor(model => model.AddOrderNoteDownloadId)").val();
             }
             var orderNoteDisplayToCustomer = $("#@Html.FieldIdFor(model => model.AddOrderNoteDisplayToCustomer)").is(':checked');
             $('#addOrderNote').attr('disabled', true);
-            
             var postData = {
                 DisplayToCustomer: orderNoteDisplayToCustomer,
                 message: orderNoteMessage, 

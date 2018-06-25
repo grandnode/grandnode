@@ -1,0 +1,34 @@
+﻿@model DeleteAccountModel
+@using Grand.Web.Models.Customer;
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Account").Text);
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.DeleteAccount })
+}
+<form asp-route="CustomerDeleteAccount" method="post">
+    <section class="page account-page change-password-page pl-lg-3">
+        <h1 class="h2 generalTitle">@T("Account.DeleteAccount")</h1>
+
+        <div asp-validation-summary="ModelOnly" class="message-error"></div>
+        <div class="alert alert-danger" role="alert">
+            @T("Account.DeleteAccount.DangerAlert")
+        </div>
+        <fieldset>
+            <div class="form-fields">
+                <fieldset class="form-group">
+                    <label asp-for="Password" class="col-form-label">@T("Account.DeleteAccount.Fields.Password"):</label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password"></span>
+                </fieldset>
+            </div>
+        </fieldset>
+        <div class="text-xs-center">
+            <input type="submit" class="btn btn-danger change-password-button" value="@T("Account.DeleteAccount.Button")" onclick="return confirm('@T("Admin.Common.AreYouSure")'); " />
+        </div>
+    </section>
+</form>

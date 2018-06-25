@@ -7,7 +7,6 @@ namespace Grand.Framework.Security.Captcha
 {
     public class GReCaptchaValidator
     {
-        private const string RECAPTCHA_VERIFY_URL_VERSION1 = "https://www.google.com/recaptcha/api/verify?privatekey={0}&response={1}&remoteip={2}&challenge={3}";
         private const string RECAPTCHA_VERIFY_URL_VERSION2 = "https://www.google.com/recaptcha/api/siteverify?secret={0}&response={1}&remoteip={2}";
 
         public string SecretKey { get; set; }
@@ -17,7 +16,7 @@ namespace Grand.Framework.Security.Captcha
 
         private readonly ReCaptchaVersion _version;
 
-        public GReCaptchaValidator(ReCaptchaVersion version = ReCaptchaVersion.Version1)
+        public GReCaptchaValidator(ReCaptchaVersion version = ReCaptchaVersion.Version2)
         {
             _version = version;
         }
@@ -34,7 +33,7 @@ namespace Grand.Framework.Security.Captcha
                     requestUri = string.Format(RECAPTCHA_VERIFY_URL_VERSION2, SecretKey, Response, RemoteIp);
                     break;
                 default:
-                    requestUri = string.Format(RECAPTCHA_VERIFY_URL_VERSION1, SecretKey, Response, RemoteIp, Challenge);
+                    requestUri = string.Format(RECAPTCHA_VERIFY_URL_VERSION2, SecretKey, Response, RemoteIp);
                     break;
             }
 
@@ -65,14 +64,7 @@ namespace Grand.Framework.Security.Captcha
         {
             var result = new GReCaptchaResponse();
 
-            if (_version == ReCaptchaVersion.Version1)
-            {
-                var resultObject = responseString.Split('\n');
-                result.IsValid = resultObject.Contains("true");
-                if(!result.IsValid)
-                    result.ErrorCodes.AddRange(resultObject.Where(r => !r.Equals("false", StringComparison.OrdinalIgnoreCase)));
-            }
-            else if (_version == ReCaptchaVersion.Version2)
+            if (_version == ReCaptchaVersion.Version2)
             {
                 var resultObject = JObject.Parse(responseString);
                 result.IsValid = resultObject.Value<bool>("success");

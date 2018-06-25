@@ -4,6 +4,7 @@ using Grand.Core;
 using Grand.Core.Data;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Messages;
+using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Events;
 using MongoDB.Driver.Linq;
@@ -90,6 +91,9 @@ namespace Grand.Services.Messages
                 PublishSubscriptionEvent(newsLetterSubscription.Email, true, publishSubscriptionEvents);
             }
 
+            //save history
+            newsLetterSubscription.SaveHistory<NewsLetterSubscription>();
+
             //Publish event
             _eventPublisher.EntityInserted(newsLetterSubscription);
         }
@@ -111,6 +115,10 @@ namespace Grand.Services.Messages
 
             //Persist
             _subscriptionRepository.Update(newsLetterSubscription);
+
+            //save history
+            newsLetterSubscription.SaveHistory<NewsLetterSubscription>();
+
             //Publish event
             _eventPublisher.EntityUpdated(newsLetterSubscription);
         }

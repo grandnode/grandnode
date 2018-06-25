@@ -1,16 +1,12 @@
 ﻿@using Grand.Core.Domain.Catalog
 @model ProductListModel
+@inject AdminAreaSettings adminAreaSettings
 @{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.Manage").Text;
 }
-@using (Html.BeginForm(@*"List","Product", FormMethod.Post*@))
-{
-    @Html.AntiForgeryToken()
-
+<form asp-controller="Product" asp-action="List" method="post">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -63,36 +59,55 @@
                 </div>
                 <div class="portlet-body form">
                     <div class="form-horizontal">
-                        <div class="form-body col-md-6">
+                        <div class="form-body col-md-6 advanced-filter">
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchProductName, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="SearchProductName" class="control-label col-md-4 col-sm-4" />
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandEditorFor(model => model.SearchProductName)
+                                    <admin-input asp-for="SearchProductName" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-body col-md-6 advanced-filter">
+                            <div class="form-group">
+                                <div class="col-md-8 col-sm-8">
+                                    <div id="ExtendFilter">
+                                        <button class="btn btn-success filter-submit" id="search-products">
+                                            <i class="fa fa-search"></i> @T("Admin.Common.Search")
+                                        </button>
+                                        <button type="button" class="btn btn-default filter-extend-button">
+                                            <i class="fa fa-filter"></i> <span class="filter-text-close">@T("Admin.Common.Search.Filter.Open")</span>
+                                            <span class="filter-text-open">@T("Admin.Common.Search.Filter.Close")</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-body col-sm-6 extend-collapse">
+                            <div class="form-group">
+                                <admin-label asp-for="SearchProductTypeId" class="control-label col-md-4 col-sm-4" />
+                                <div class="col-md-8 col-sm-8">
+                                    <admin-select asp-for="SearchProductTypeId" asp-items="Model.AvailableProductTypes" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchProductTypeId, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="SearchPublishedId" class="control-label col-md-4 col-sm-4" />
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandDropDownListFor(model => model.SearchProductTypeId, Model.AvailableProductTypes)
+                                    <admin-select asp-for="SearchPublishedId" asp-items="Model.AvailablePublishedOptions" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchPublishedId, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="SearchWarehouseId" class="control-label col-md-4 col-sm-4" />
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandDropDownListFor(model => model.SearchPublishedId, Model.AvailablePublishedOptions)
+                                    <admin-select asp-for="SearchWarehouseId" asp-items="Model.AvailableWarehouses" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchWarehouseId, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
-                                <div class="col-md-8 col-sm-8">
-                                    @Html.GrandDropDownListFor(model => model.SearchWarehouseId, Model.AvailableWarehouses)
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                @Html.GrandLabelFor(model => model.GoDirectlyToSku, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="GoDirectlyToSku" class="control-label col-md-4 col-sm-4" />
                                 <div class="col-md-8 col-sm-8">
                                     <div class="input-group" style="text-align:left">
-                                        @Html.GrandEditorFor(model => model.GoDirectlyToSku)
+                                        <admin-input asp-for="GoDirectlyToSku" />
                                         <span class="input-group-btn">
                                             <input type="submit" id="go-to-product-by-sku" name="go-to-product-by-sku" class="btn default" value="@T("Admin.Common.Go")" />
                                         </span>
@@ -100,50 +115,42 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-body col-md-6">
+                        <div class="form-body col-sm-6 extend-collapse">
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchCategoryId, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="SearchCategoryId" class="control-label col-md-4 col-sm-4" />
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandDropDownListFor(model => model.SearchCategoryId, Model.AvailableCategories)
+                                    <admin-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchIncludeSubCategories, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="SearchIncludeSubCategories" class="control-label col-md-4 col-sm-4" />
                                 <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
-                                        @Html.GrandEditorFor(model => model.SearchIncludeSubCategories)
+                                        <admin-input asp-for="SearchIncludeSubCategories" />
                                         <span></span>
                                     </label>
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchManufacturerId, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="SearchManufacturerId" class="control-label col-md-4 col-sm-4" />
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandDropDownListFor(model => model.SearchManufacturerId, Model.AvailableManufacturers)
+                                    <admin-select asp-for="SearchManufacturerId" asp-items="Model.AvailableManufacturers" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchStoreId, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="SearchStoreId" class="control-label col-md-4 col-sm-4" />
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandDropDownListFor(model => model.SearchStoreId, Model.AvailableStores)
+                                    <admin-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
                                 </div>
                             </div>
                             <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-                                @Html.GrandLabelFor(model => model.SearchVendorId, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <admin-label asp-for="SearchVendorId" class="control-label col-md-4 col-sm-4" />
                                 <div class="col-md-8 col-sm-8">
-                                    @Html.GrandDropDownListFor(model => model.SearchVendorId, Model.AvailableVendors)
+                                    <admin-select asp-for="SearchVendorId" asp-items="Model.AvailableVendors" />
                                 </div>
                             </div>
                         </div>
-                        <div class="form-actions">
-                            <div class="row">
-                                <div class="col-md-offset-5 col-sm-offset-5 col-md-7 col-sm-7">
-                                    <button class="btn btn-success filter-submit" id="search-products">
-                                        <i class="fa fa-search"></i> @T("Admin.Common.Search")
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                        <div class="clearfix"></div>
                         <div class="portlet-body">
                             <div id="products-grid"></div>
                         </div>
@@ -153,8 +160,16 @@
         </div>
     </div>
 
-    <script>
-        $(document).ready(function() {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.extend-collapse').hide();
+            $('.filter-text-open').hide();
+            $('.filter-extend-button').click(function () {
+                $('.extend-collapse').toggle("slow");
+                $('.filter-text-open').toggle();
+                $('.filter-text-close').toggle();
+            });
+            
             $("#products-grid").kendoGrid({
                 dataSource: {
                     transport: {
@@ -175,14 +190,21 @@
                         // Cancel the changes
                         this.cancelChanges();
                     },
-                    pageSize: @(defaultGridPageSize),
+                    pageSize: @(adminAreaSettings.DefaultGridPageSize),
                     serverPaging: true,
                     serverFiltering: true,
-                    serverSorting: true
+                    serverSorting: true,
+                    requestStart: function () {
+                        kendo.ui.progress($('#products-grid'), true);
+                    },
+                    requestEnd: function () {
+                        kendo.ui.progress($('#products-grid'), false);
+
+                    },
                 },
                 pageable: {
                     refresh: true,
-                    pageSizes: [@(gridPageSizes)]
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
                 },
                 editable: {
                     confirmation: false,
@@ -194,54 +216,59 @@
                     {
                         field: "Id",
                         headerTemplate: "<label class='mt-checkbox mt-checkbox-outline'><input id='mastercheckbox' type='checkbox'/><span></span></label>",
-                        headerAttributes: { style: "text-align:center" },
-                        attributes: { style: "text-align:center" },
                         template: "<label class='mt-checkbox mt-checkbox-outline'><input type='checkbox' value='#=Id#' class='checkboxGroups'/><span></span></label>",
                         width: 50
                     },
                     {
                         field: "PictureThumbnailUrl",
                         title: "@T("Admin.Catalog.Products.Fields.PictureThumbnailUrl")",
-                        template: '<img src="#=PictureThumbnailUrl#" />',
-                        width: 100
+                        template: '<a class="k-link" href="Edit/#=Id#"><img src="#=PictureThumbnailUrl#" /></a>',
+                        width: 92
                     },
                     {
                         field: "Name",
                         title: "@T("Admin.Catalog.Products.Fields.Name")",
-                        width: 300
+						template: '<a class="k-link" href="Edit/#=Id#">#=Name#</a>',
+                        width: 270
                     }, {
                         field: "Sku",
                         title: "@T("Admin.Catalog.Products.Fields.Sku")",
-                        width: 100
+						headerAttributes: { style: "text-align:center" },
+						attributes: { style: "text-align:center" },
+                        width: 80
                     }, {
                         field: "Price",
                         title: "@T("Admin.Catalog.Products.Fields.Price")",
-                        width: 150,
+						headerAttributes: { style: "text-align:center" },
+						attributes: { style: "text-align:center" },
+                        width: 100,
                         //if not a grouped product, then display
                         template: "# if(ProductTypeId != @((int)ProductType.GroupedProduct)) {# #:Price# #}  #"
                     }, {
                         field: "StockQuantityStr",
                         title: "@T("Admin.Catalog.Products.Fields.StockQuantity")",
-                        width: 100
+						headerAttributes: { style: "text-align:center" },
+						attributes: { style: "text-align:center" },
+						minScreenWidth: 750,
+                        width: 80
                     }, {
                         field: "ProductTypeName",
                         title: "@T("Admin.Catalog.Products.Fields.ProductType")",
-                        width: 100
+						headerAttributes: { style: "text-align:center" },
+						attributes: { style: "text-align:center" },
+                        width: 100,
+						minScreenWidth: 1050
                     }, {
                         field: "Published",
                         title: "@T("Admin.Catalog.Products.Fields.Published")",
-                        width: 100,
+                        width: 85,
                         headerAttributes: { style: "text-align:center" },
                         attributes: { style: "text-align:center" },
                         template: '# if(Published) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
-                    }, {
-                        field: "Id",
-                        title: "@T("Admin.Common.Edit")",
-                        width: 80,
-                        template: '<a class="btn btn-sm btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
                     }
                 ]
-            } );
+            });
+
         });
     </script>
 
@@ -364,13 +391,12 @@
             $('#mastercheckbox').prop('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
         }
     </script>
-}
+</form>
+
 @*import products form*@
 <div class="modal-dialog" id="importexcel-window" style="display:none; padding: 0 10px;">
-    @using (Html.BeginForm("ImportExcel", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
-    {
-        @Html.AntiForgeryToken()
-
+    <form asp-controller="Product" asp-action="ImportExcel" method="post" enctype="multipart/form-data">
+        <antiforgery-token />
         <em>@T("Admin.Catalog.Products.List.ImportFromExcelTip")</em>
         <div class="form-group">
             &nbsp;
@@ -396,7 +422,7 @@
                 <input type="submit" class="k-button" value="@T("Admin.Common.ImportFromExcel")" />
             </div>
         </div>
-    }
+    </form>
 </div>
 <script type="text/javascript">
         $(document).ready(function () {
@@ -415,40 +441,37 @@
         });
 </script>
 @*export selected (XML). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
-@using (Html.BeginForm("ExportXmlSelected", "Product", FormMethod.Post, new { id = "export-xml-selected-form" }))
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Product" asp-action="ExportXmlSelected" method="post" id="export-xml-selected-form">
+    <antiforgery-token />
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
-}
+</form>
+
 <script type="text/javascript">
 
-        $(document).ready(function () {
-            $('#exportxml-selected').click(function (e) {
-                e.preventDefault();
-                var ids = selectedIds.join(",");
-                $('#export-xml-selected-form #selectedIds').val(ids);
-                $('#export-xml-selected-form').submit();
-                return false;
-            });
+    $(document).ready(function () {
+        $('#exportxml-selected').click(function (e) {
+            e.preventDefault();
+            var ids = selectedIds.join(",");
+            $('#export-xml-selected-form #selectedIds').val(ids);
+            $('#export-xml-selected-form').submit();
+            return false;
         });
+    });
 
 </script>
 @*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
-@using (Html.BeginForm("ExportExcelSelected", "Product", FormMethod.Post, new { id = "export-excel-selected-form" }))
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Product" asp-action="ExportExcelSelected" method="post" id="export-excel-selected-form">
+    <antiforgery-token />
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
-}
+</form>
 <script type="text/javascript">
-
-        $(document).ready(function () {
-            $('#exportexcel-selected').click(function (e) {
-                e.preventDefault();
-                var ids = selectedIds.join(",");
-                $('#export-excel-selected-form #selectedIds').val(ids);
-                $('#export-excel-selected-form').submit();
-                return false;
-            });
+    $(document).ready(function () {
+        $('#exportexcel-selected').click(function (e) {
+            e.preventDefault();
+            var ids = selectedIds.join(",");
+            $('#export-excel-selected-form #selectedIds').val(ids);
+            $('#export-excel-selected-form').submit();
+            return false;
         });
-
+    });
 </script>

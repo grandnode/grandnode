@@ -512,7 +512,6 @@ namespace Grand.Services.Catalog
             if (combination == null)
                 throw new ArgumentNullException("combination");
 
-            //_productAttributeCombinationRepository.Update(combination);
             var builder = Builders<Product>.Filter;
             var filter = builder.Eq(x => x.Id, combination.ProductId);
             filter = filter & builder.ElemMatch(x => x.ProductAttributeCombinations, y => y.Id == combination.Id);
@@ -520,12 +519,14 @@ namespace Grand.Services.Catalog
                 .Set("ProductAttributeCombinations.$.StockQuantity", combination.StockQuantity)
                 .Set("ProductAttributeCombinations.$.AllowOutOfStockOrders", combination.AllowOutOfStockOrders)
                 .Set("ProductAttributeCombinations.$.Sku", combination.Sku)
+                .Set("ProductAttributeCombinations.$.Text", combination.Text)
                 .Set("ProductAttributeCombinations.$.ManufacturerPartNumber", combination.ManufacturerPartNumber)
                 .Set("ProductAttributeCombinations.$.Gtin", combination.Gtin)
                 .Set("ProductAttributeCombinations.$.OverriddenPrice", combination.OverriddenPrice)
                 .Set("ProductAttributeCombinations.$.NotifyAdminForQuantityBelow", combination.NotifyAdminForQuantityBelow)
                 .Set("ProductAttributeCombinations.$.WarehouseInventory", combination.WarehouseInventory)
-                ;
+                .Set("ProductAttributeCombinations.$.PictureId", combination.PictureId)
+                .Set("ProductAttributeCombinations.$.TierPrices", combination.TierPrices);
 
             var result = _productRepository.Collection.UpdateManyAsync(filter, update).Result;
 

@@ -196,7 +196,7 @@ namespace Grand.Services.Catalog
             if (!String.IsNullOrWhiteSpace(categoryName))
                 query = query.Where(m => m.Name != null && m.Name.ToLower().Contains(categoryName.ToLower()));
 
-            if ((!_catalogSettings.IgnoreAcl || (!String.IsNullOrEmpty(storeId) &&  !_catalogSettings.IgnoreStoreLimitations)))
+            if ((!_catalogSettings.IgnoreAcl || (!String.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations)))
             {
                 if (!_catalogSettings.IgnoreAcl)
                 {
@@ -234,42 +234,34 @@ namespace Grand.Services.Catalog
         public virtual IList<Category> GetAllCategoriesByParentCategoryId(string parentCategoryId = "",
             bool showHidden = false, bool includeAllLevels = false)
         {
-            string key = string.Format(CATEGORIES_BY_PARENT_CATEGORY_ID_KEY, parentCategoryId, showHidden, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id, includeAllLevels);
+            var storeId = _storeContext.CurrentStore.Id;
+            var customer = _workContext.CurrentCustomer;
+            string key = string.Format(CATEGORIES_BY_PARENT_CATEGORY_ID_KEY, parentCategoryId, showHidden, customer.Id, storeId, includeAllLevels);
             return _cacheManager.Get(key, () =>
             {
-                var query = from c in _categoryRepository.Table
-                            select c;
-
+                var builder = Builders<Category>.Filter;
+                var filter = builder.Where(c => c.ParentCategoryId == parentCategoryId);
                 if (!showHidden)
-                    query = query.Where(c => c.Published);
-                query = query.Where(c => c.ParentCategoryId == parentCategoryId);                
-                query = query.OrderBy(c => c.DisplayOrder);
+                    filter = filter & builder.Where(c => c.Published);
 
                 if (!showHidden && (!_catalogSettings.IgnoreAcl || !_catalogSettings.IgnoreStoreLimitations))
                 {
                     if (!_catalogSettings.IgnoreAcl)
                     {
                         //ACL (access control list)
-                        var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
-                        query = from p in query
-                                where !p.SubjectToAcl || allowedCustomerRolesIds.Any(x => p.CustomerRoles.Contains(x))
-                                select p;
+                        var allowedCustomerRolesIds = customer.GetCustomerRoleIds();
+                        filter = filter & (builder.AnyIn(x => x.CustomerRoles, allowedCustomerRolesIds) | builder.Where(x => !x.SubjectToAcl));
 
                     }
                     if (!_catalogSettings.IgnoreStoreLimitations)
                     {
                         //Store mapping
-                        var currentStoreId = _storeContext.CurrentStore.Id;
-                        query = from p in query
-                                where !p.LimitedToStores || p.Stores.Contains(currentStoreId)
-                                select p;
+                        var currentStoreId = new List<string> { storeId };
+                        filter = filter & (builder.AnyIn(x => x.Stores, currentStoreId) | builder.Where(x => !x.LimitedToStores));
                     }
-                   
-                    query = query.OrderBy(c => c.DisplayOrder);
                     
                 }
-
-                var categories = query.ToList();
+                var categories = _categoryRepository.Collection.Find(filter).SortBy(x => x.DisplayOrder).ToList();
                 if (includeAllLevels)
                 {
                     var childCategories = new List<Category>();
@@ -280,10 +272,8 @@ namespace Grand.Services.Catalog
                     }
                     categories.AddRange(childCategories);
                 }
-
                 return categories;
             });
-
         }
         
         /// <summary>
@@ -307,6 +297,21 @@ namespace Grand.Services.Catalog
             }
 
             return categories;
+        }
+
+        /// <summary>
+        /// Gets all categories displayed on the home page
+        /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Categories</returns>
+        public virtual IList<Category> GetAllCategoriesSearchBox()
+        {
+            var builder = Builders<Category>.Filter;
+            var filter = builder.Eq(x => x.Published, true);
+            filter = filter & builder.Eq(x => x.ShowOnSearchBox, true);
+            var query = _categoryRepository.Collection.Find(filter).SortBy(x => x.SearchBoxDisplayOrder);
+
+            return query.ToList();
         }
 
         /// <summary>

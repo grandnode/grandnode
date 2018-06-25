@@ -71,7 +71,7 @@ namespace Grand.Framework.UI
         /// <param name="html">HTML helper</param>
         /// <param name="part">Meta description part</param>
         /// <returns>Generated string</returns>
-        public static IHtmlContent NopMetaDescription(this IHtmlHelper html, string part = "")
+        public static IHtmlContent GrandMetaDescription(this IHtmlHelper html, string part = "")
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             html.AppendMetaDescriptionParts(part);
@@ -105,7 +105,7 @@ namespace Grand.Framework.UI
         /// <param name="html">HTML helper</param>
         /// <param name="part">Meta keyword part</param>
         /// <returns>Generated string</returns>
-        public static IHtmlContent NopMetaKeywords(this IHtmlHelper html, string part = "")
+        public static IHtmlContent GrandMetaKeywords(this IHtmlHelper html, string part = "")
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             html.AppendMetaKeywordParts(part);
@@ -340,7 +340,7 @@ namespace Grand.Framework.UI
         /// <param name="part">CSS class</param>
         /// <param name="includeClassElement">A value indicating whether to include "class" attributes</param>
         /// <returns>Generated string</returns>
-        public static IHtmlContent NopPageCssClasses(this IHtmlHelper html, string part = "", bool includeClassElement = true)
+        public static IHtmlContent GrandPageCssClasses(this IHtmlHelper html, string part = "", bool includeClassElement = true)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             html.AppendPageCssClassParts(part);

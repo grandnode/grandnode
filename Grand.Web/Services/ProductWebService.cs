@@ -31,7 +31,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -66,6 +65,7 @@ namespace Grand.Web.Services
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IDownloadService _downloadService;
         private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly IProductReservationService _productReservationService;
 
         private readonly MediaSettings _mediaSettings;
         private readonly CatalogSettings _catalogSettings;
@@ -82,7 +82,7 @@ namespace Grand.Web.Services
             IProductTemplateService productTemplateService, IProductAttributeParser productAttributeParser, IShippingService shippingService,
             IVendorService vendorService, ICategoryService categoryService, IAclService aclService, IStoreMappingService storeMappingService,
             IProductTagService productTagService, IProductAttributeService productAttributeService, IManufacturerService manufacturerService,
-            IDateTimeHelper dateTimeHelper, IDownloadService downloadService, IWorkflowMessageService workflowMessageService,
+            IDateTimeHelper dateTimeHelper, IDownloadService downloadService, IWorkflowMessageService workflowMessageService, IProductReservationService productReservationService,
             MediaSettings mediaSettings, CatalogSettings catalogSettings, SeoSettings seoSettings, VendorSettings vendorSettings, CustomerSettings customerSettings,
             CaptchaSettings captchaSettings, LocalizationSettings localizationSettings)
         {
@@ -113,6 +113,7 @@ namespace Grand.Web.Services
             this._dateTimeHelper = dateTimeHelper;
             this._downloadService = downloadService;
             this._workflowMessageService = workflowMessageService;
+            this._productReservationService = productReservationService;
 
             this._mediaSettings = mediaSettings;
             this._catalogSettings = catalogSettings;
@@ -132,22 +133,25 @@ namespace Grand.Web.Services
             if (products == null)
                 throw new ArgumentNullException("products");
 
-            var displayPrices = _permissionService.Authorize(StandardPermissionProvider.DisplayPrices);
-            var enableShoppingCart = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart);
-            var enableWishlist = _permissionService.Authorize(StandardPermissionProvider.EnableWishlist);
             var currentCustomer = _workContext.CurrentCustomer;
+            var displayPrices = _permissionService.Authorize(StandardPermissionProvider.DisplayPrices, currentCustomer);
+            var enableShoppingCart = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart, currentCustomer);
+            var enableWishlist = _permissionService.Authorize(StandardPermissionProvider.EnableWishlist, currentCustomer);
             var currentCurrency = _workContext.WorkingCurrency;
             var currentStoreId = _storeContext.CurrentStore.Id;
             var currentLanguageId = _workContext.WorkingLanguage;
             int pictureSize = productThumbPictureSize.HasValue ? productThumbPictureSize.Value : _mediaSettings.ProductThumbPictureSize;
             var connectionSecured = _webHelper.IsCurrentConnectionSecured();
+            var showSku = _catalogSettings.ShowSkuOnCatalogPages;
+            var taxDisplay = _workContext.TaxDisplayType;
+            var showQty = _catalogSettings.DisplayQuantityOnCatalogPages;
 
             var res = new Dictionary<string, string>
             {
-                { "Products.CallForPrice", _localizationService.GetResource("Products.CallForPrice") },
-                { "Products.PriceRangeFrom", _localizationService.GetResource("Products.PriceRangeFrom")},
-                { "Media.Product.ImageLinkTitleFormat", _localizationService.GetResource("Media.Product.ImageLinkTitleFormat") },
-                { "Media.Product.ImageAlternateTextFormat", _localizationService.GetResource("Media.Product.ImageAlternateTextFormat") }
+                { "Products.CallForPrice", _localizationService.GetResource("Products.CallForPrice", currentLanguageId.Id) },
+                { "Products.PriceRangeFrom", _localizationService.GetResource("Products.PriceRangeFrom", currentLanguageId.Id)},
+                { "Media.Product.ImageLinkTitleFormat", _localizationService.GetResource("Media.Product.ImageLinkTitleFormat", currentLanguageId.Id) },
+                { "Media.Product.ImageAlternateTextFormat", _localizationService.GetResource("Media.Product.ImageAlternateTextFormat", currentLanguageId.Id) }
             };
 
             var models = new List<ProductOverviewModel>();
@@ -159,12 +163,17 @@ namespace Grand.Web.Services
                     Name = product.GetLocalized(x => x.Name, currentLanguageId.Id),
                     ShortDescription = product.GetLocalized(x => x.ShortDescription, currentLanguageId.Id),
                     FullDescription = product.GetLocalized(x => x.FullDescription, currentLanguageId.Id),
-                    SeName = product.GetSeName(),
+                    SeName = product.GetSeName(currentLanguageId.Id),
                     ProductType = product.ProductType,
                     Sku = product.Sku,
                     Gtin = product.Gtin,
+                    Flag = product.Flag,
                     ManufacturerPartNumber = product.ManufacturerPartNumber,
                     IsFreeShipping = product.IsFreeShipping,
+                    ShowSku = showSku,
+                    TaxDisplayType = taxDisplay,
+                    EndTime = product.AvailableEndDateTimeUtc,
+                    ShowQty = showQty,
                     MarkAsNew = product.MarkAsNew &&
                         (!product.MarkAsNewStartDateTimeUtc.HasValue || product.MarkAsNewStartDateTimeUtc.Value < DateTime.UtcNow) &&
                         (!product.MarkAsNewEndDateTimeUtc.HasValue || product.MarkAsNewEndDateTimeUtc.Value > DateTime.UtcNow)
@@ -200,7 +209,7 @@ namespace Grand.Web.Services
                                 if (product.CatalogPrice > 0)
                                 {
                                     decimal catalogPrice = _currencyService.ConvertFromPrimaryStoreCurrency(product.CatalogPrice, currentCurrency);
-                                    priceModel.CatalogPrice = _priceFormatter.FormatPrice(catalogPrice);
+                                    priceModel.CatalogPrice = _priceFormatter.FormatPrice(catalogPrice, true, currentCurrency);
                                 }
 
                                 switch (associatedProducts.Count)
@@ -246,7 +255,7 @@ namespace Grand.Web.Services
                                                         decimal finalPrice = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, currentCurrency);
 
                                                         priceModel.OldPrice = null;
-                                                        priceModel.Price = String.Format(res["Products.PriceRangeFrom"], _priceFormatter.FormatPrice(finalPrice));
+                                                        priceModel.Price = String.Format(res["Products.PriceRangeFrom"], _priceFormatter.FormatPrice(finalPrice, true, currentCurrency));
                                                         priceModel.PriceValue = finalPrice;
 
                                                         //PAngV baseprice (used in Germany)
@@ -275,6 +284,7 @@ namespace Grand.Web.Services
                             }
                             break;
                         case ProductType.SimpleProduct:
+                        case ProductType.Reservation:
                         default:
                             {
                                 #region Simple product
@@ -286,9 +296,6 @@ namespace Grand.Web.Services
                                 priceModel.DisableWishlistButton = product.DisableWishlistButton || !enableWishlist || !displayPrices;
                                 //compare products
                                 priceModel.DisableAddToCompareListButton = !_catalogSettings.CompareProductsEnabled;
-
-                                //rental
-                                priceModel.IsRental = product.IsRental;
 
                                 //pre-order
                                 if (product.AvailableForPreOrder)
@@ -302,7 +309,23 @@ namespace Grand.Web.Services
                                 if (product.CatalogPrice > 0)
                                 {
                                     decimal catalogPrice = _currencyService.ConvertFromPrimaryStoreCurrency(product.CatalogPrice, currentCurrency);
-                                    priceModel.CatalogPrice = _priceFormatter.FormatPrice(catalogPrice);
+                                    priceModel.CatalogPrice = _priceFormatter.FormatPrice(catalogPrice, true, currentCurrency);
+                                }
+
+                                //start price for product auction
+                                if (product.StartPrice > 0)
+                                {
+                                    decimal startPrice = _currencyService.ConvertFromPrimaryStoreCurrency(product.StartPrice, currentCurrency);
+                                    priceModel.StartPrice = _priceFormatter.FormatPrice(startPrice, true, currentCurrency);
+                                    priceModel.StartPriceValue = startPrice;
+                                }
+
+                                //highest bid for product auction
+                                if (product.HighestBid > 0)
+                                {
+                                    decimal highestBid = _currencyService.ConvertFromPrimaryStoreCurrency(product.HighestBid, currentCurrency);
+                                    priceModel.HighestBid = _priceFormatter.FormatPrice(highestBid, true, currentCurrency);
+                                    priceModel.HighestBidValue = highestBid;
                                 }
 
                                 //prices
@@ -347,29 +370,29 @@ namespace Grand.Web.Services
                                             if (displayFromMessage)
                                             {
                                                 priceModel.OldPrice = null;
-                                                priceModel.Price = String.Format(res["Products.PriceRangeFrom"], _priceFormatter.FormatPrice(finalPrice));
+                                                priceModel.Price = String.Format(res["Products.PriceRangeFrom"], _priceFormatter.FormatPrice(finalPrice, true, currentCurrency));
                                                 priceModel.PriceValue = finalPrice;
                                             }
                                             else
                                             {
                                                 if (finalPriceBase != oldPriceBase && oldPriceBase != decimal.Zero)
                                                 {
-                                                    priceModel.OldPrice = _priceFormatter.FormatPrice(oldPrice);
-                                                    priceModel.Price = _priceFormatter.FormatPrice(finalPrice);
+                                                    priceModel.OldPrice = _priceFormatter.FormatPrice(oldPrice, true, currentCurrency);
+                                                    priceModel.Price = _priceFormatter.FormatPrice(finalPrice, true, currentCurrency);
                                                     priceModel.PriceValue = finalPrice;
                                                 }
                                                 else
                                                 {
                                                     priceModel.OldPrice = null;
-                                                    priceModel.Price = _priceFormatter.FormatPrice(finalPrice);
+                                                    priceModel.Price = _priceFormatter.FormatPrice(finalPrice, true, currentCurrency);
                                                     priceModel.PriceValue = finalPrice;
                                                 }
                                             }
-                                            if (product.IsRental)
+                                            if (product.ProductType == ProductType.Reservation)
                                             {
                                                 //rental product
-                                                priceModel.OldPrice = _priceFormatter.FormatRentalProductPeriod(product, priceModel.OldPrice);
-                                                priceModel.Price = _priceFormatter.FormatRentalProductPeriod(product, priceModel.Price);
+                                                priceModel.OldPrice = _priceFormatter.FormatReservationProductPeriod(product, priceModel.OldPrice);
+                                                priceModel.Price = _priceFormatter.FormatReservationProductPeriod(product, priceModel.Price);
                                             }
 
 
@@ -557,6 +580,7 @@ namespace Grand.Web.Services
                 Name = product.GetLocalized(x => x.Name),
                 ShortDescription = product.GetLocalized(x => x.ShortDescription),
                 FullDescription = product.GetLocalized(x => x.FullDescription),
+                Flag = product.Flag,
                 MetaKeywords = product.GetLocalized(x => x.MetaKeywords),
                 MetaDescription = product.GetLocalized(x => x.MetaDescription),
                 MetaTitle = product.GetLocalized(x => x.MetaTitle),
@@ -570,7 +594,11 @@ namespace Grand.Web.Services
                 Gtin = product.Gtin,
                 StockAvailability = product.FormatStockMessage("", _localizationService, _productAttributeParser, _storeContext),
                 HasSampleDownload = product.IsDownload && product.HasSampleDownload,
-                DisplayDiscontinuedMessage = !product.Published && _catalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts
+                DisplayDiscontinuedMessage = 
+                    (!product.Published && _catalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts) ||
+                    (product.ProductType == ProductType.Auction && product.AuctionEnded) || 
+                    (product.AvailableEndDateTimeUtc.HasValue && product.AvailableEndDateTimeUtc.Value < DateTime.UtcNow)
+
             };
 
             //automatically generate product description?
@@ -602,7 +630,8 @@ namespace Grand.Web.Services
             model.CompareProductsEnabled = _catalogSettings.CompareProductsEnabled;
             //store name
             model.CurrentStoreName = _storeContext.CurrentStore.GetLocalized(x => x.Name);
-
+            //product type
+            model.ProductType = product.ProductType;
             #endregion
 
             #region Vendor details
@@ -844,12 +873,22 @@ namespace Grand.Web.Services
                         //currency code
                         model.ProductPrice.CurrencyCode = _workContext.WorkingCurrency.CurrencyCode;
 
-                        //rental
-                        if (product.IsRental)
+                        //reservation
+                        if (product.ProductType == ProductType.Reservation)
                         {
-                            model.ProductPrice.IsRental = true;
+                            model.ProductPrice.IsReservation = true;
                             var priceStr = _priceFormatter.FormatPrice(finalPriceWithDiscount);
-                            model.ProductPrice.RentalPrice = _priceFormatter.FormatRentalProductPeriod(product, priceStr);
+                            model.ProductPrice.ReservationPrice = _priceFormatter.FormatReservationProductPeriod(product, priceStr);
+                        }
+                        //auction
+                        if (product.ProductType == ProductType.Auction)
+                        {
+                            model.ProductPrice.IsAuction = true;
+                            model.ProductPrice.HighestBid = _priceFormatter.FormatPrice(product.HighestBid);
+                            model.ProductPrice.HighestBidValue = product.HighestBid;
+                            model.ProductPrice.DisableBuyButton = product.DisableBuyButton;
+                            model.ProductPrice.StartPriceValue = product.StartPrice;
+                            model.ProductPrice.StartPrice = _priceFormatter.FormatPrice(product.StartPrice);
                         }
                     }
                 }
@@ -907,8 +946,6 @@ namespace Grand.Web.Services
                     product.PreOrderAvailabilityStartDateTimeUtc.Value >= DateTime.UtcNow;
                 model.AddToCart.PreOrderAvailabilityStartDateTimeUtc = product.PreOrderAvailabilityStartDateTimeUtc;
             }
-            //rental
-            model.AddToCart.IsRental = product.IsRental;
 
             //customer entered price
             model.AddToCart.CustomerEntersPrice = product.CustomerEntersPrice;
@@ -987,7 +1024,7 @@ namespace Grand.Web.Services
                 if (attribute.ShouldHaveValues())
                 {
                     //values
-                    var attributeValues = attribute.ProductAttributeValues; //_productAttributeService.GetProductAttributeValues(attribute.Id);
+                    var attributeValues = attribute.ProductAttributeValues; 
                     foreach (var attributeValue in attributeValues)
                     {
                         var valueModel = new ProductDetailsModel.ProductAttributeValueModel
@@ -1196,21 +1233,6 @@ namespace Grand.Web.Services
 
             #endregion
 
-            #region Rental products
-
-            if (product.IsRental)
-            {
-                model.IsRental = true;
-                //set already entered dates attributes (if we're going to update the existing shopping cart item)
-                if (updatecartitem != null)
-                {
-                    model.RentalStartDate = updatecartitem.RentalStartDateUtc;
-                    model.RentalEndDate = updatecartitem.RentalEndDateUtc;
-                }
-            }
-
-            #endregion
-
             #region Associated products
 
             if (product.ProductType == ProductType.GroupedProduct)
@@ -1223,6 +1245,131 @@ namespace Grand.Web.Services
                         model.AssociatedProducts.Add(PrepareProductDetailsPage(associatedProduct, null, true));
                 }
             }
+
+            #endregion
+
+            #region Product reservations
+            if (product.ProductType == ProductType.Reservation)
+            {
+                model.AddToCart.IsReservation = true;
+                var reservations = _productReservationService.GetProductReservationsByProductId(product.Id, true, null).ToList();
+                var inCart = _workContext.CurrentCustomer.ShoppingCartItems.Where(x => !string.IsNullOrEmpty(x.ReservationId)).ToList();
+                foreach (var cartItem in inCart)
+                {
+                    var matching = reservations.Where(x => x.Id == cartItem.ReservationId);
+                    if (matching.Any())
+                    {
+                        reservations.Remove(matching.First());
+                    }
+                }
+
+                if (reservations.Any())
+                {
+                    var first = reservations.Where(x => x.Date >= DateTime.UtcNow).OrderBy(x => x.Date).FirstOrDefault();
+                    if (first != null)
+                    {
+                        model.StartDate = first.Date;
+                    }
+                    else
+                    {
+                        model.StartDate = DateTime.UtcNow;
+                    }
+                }
+
+                model.IntervalUnit = product.IntervalUnitType;
+                model.Interval = product.Interval;
+                model.IncBothDate = product.IncBothDate;
+
+                var list = reservations.GroupBy(x => x.Parameter).ToList().Select(x => x.Key);
+                foreach (var item in list)
+                {
+                    if (!string.IsNullOrEmpty(item))
+                    {
+                        model.Parameters.Add(new SelectListItem { Text = item, Value = item });
+                    }
+                }
+
+                if (model.Parameters.Any())
+                {
+                    model.Parameters.Insert(0, new SelectListItem { Text = "", Value = "" });
+                }
+            }
+
+            #endregion Product reservations
+
+            #region Product Bundle
+
+            if(product.ProductType == ProductType.BundledProduct)
+            {
+                foreach (var bundle in product.BundleProducts.OrderBy(x=>x.DisplayOrder))
+                {
+                    var p1 = _productService.GetProductById(bundle.ProductId);
+                    if(p1!=null && p1.Published && _aclService.Authorize(p1) && _storeMappingService.Authorize(p1) && p1.IsAvailable())
+                    {
+
+                        var bundleProduct = new ProductDetailsModel.ProductBundleModel()
+                        {
+                            ProductId = p1.Id,
+                            Name = p1.GetLocalized(x => x.Name),
+                            ShortDescription = p1.GetLocalized(x => x.ShortDescription),
+                            SeName = p1.GetSeName(),
+                            Sku = p1.Sku,
+                            Mpn = p1.ManufacturerPartNumber,
+                            Gtin = p1.Gtin,
+                            Quantity = bundle.Quantity
+                        };
+                        if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
+                        {
+                            decimal taxRateBundle;
+                            decimal finalPriceWithDiscountBase = _taxService.GetProductPrice(p1, _priceCalculationService.GetFinalPrice(p1, _workContext.CurrentCustomer, includeDiscounts: true), out taxRateBundle);
+                            decimal finalPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithDiscountBase, _workContext.WorkingCurrency);
+                            bundleProduct.Price = _priceFormatter.FormatPrice(finalPriceWithDiscount);
+                            bundleProduct.PriceValue = finalPriceWithDiscount;
+                        }
+
+                        //prepare picture model
+                        var productbundlePicturesCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DETAILS_PICTURES_MODEL_KEY, 
+                            p1.Id, _mediaSettings.ProductBundlePictureSize, false, _workContext.WorkingLanguage.Id, 
+                            _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
+
+                        bundleProduct.DefaultPictureModel = _cacheManager.Get(productbundlePicturesCacheKey, () =>
+                        {
+                            var picture = p1.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault();
+                            if (picture == null)
+                                picture = new ProductPicture();
+
+                            var pictureModel = new PictureModel
+                            {
+                                ImageUrl = _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductBundlePictureSize),
+                                FullSizeImageUrl = _pictureService.GetPictureUrl(picture.PictureId)
+                            };
+                            //"title" attribute
+                            pictureModel.Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute)) ?
+                                picture.TitleAttribute :
+                                string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), p1.Name);
+                            //"alt" attribute
+                            pictureModel.AlternateText = (picture != null && !string.IsNullOrEmpty(picture.AltAttribute)) ?
+                                picture.AltAttribute :
+                                string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), p1.Name);
+
+                            return pictureModel;
+                        });
+
+                        model.ProductBundleModels.Add(bundleProduct);
+                    }
+
+                }
+
+            }
+            #endregion
+
+            #region Auctions
+
+            model.StartPrice = product.StartPrice;
+            model.HighestBidValue = product.HighestBid;
+            model.AddToCart.IsAuction = true;
+            model.EndTime = product.AvailableEndDateTimeUtc;
+            model.AuctionEnded = product.AuctionEnded;
 
             #endregion
 
@@ -1253,6 +1400,8 @@ namespace Grand.Web.Services
                     AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !customer.IsGuest(),
                     Title = pr.Title,
                     ReviewText = pr.ReviewText,
+                    ReplyText = pr.ReplyText,
+                    Signature = pr.Signature,
                     Rating = pr.Rating,
                     Helpfulness = new ProductReviewHelpfulnessModel
                     {

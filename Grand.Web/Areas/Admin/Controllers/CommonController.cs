@@ -31,6 +31,7 @@ using Grand.Core.Domain.Logging;
 using Grand.Core.Data;
 using MongoDB.Driver;
 using System.Runtime.InteropServices;
+using Grand.Services.Infrastructure;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -134,7 +135,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.AspNetInfo = RuntimeEnvironment.GetSystemVersion();
             }
             catch (Exception) { }
-            
+
+            var machineNameProvider = EngineContext.Current.Resolve<IMachineNameProvider>();
+            model.MachineName = machineNameProvider.GetMachineName();
+
             model.ServerTimeZone = TimeZoneInfo.Local.StandardName;
             model.ServerLocalTime = DateTime.Now;
             model.UtcTime = DateTime.UtcNow;
@@ -377,42 +381,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                     filePermissionsOk = false;
                 }
             if (filePermissionsOk)
+            {
                 model.Add(new SystemWarningModel
                 {
                     Level = SystemWarningLevel.Pass,
                     Text = _localizationService.GetResource("Admin.System.Warnings.FilePermission.OK")
                 });
-
-            //machine key
-            try
-            {
-                //var machineKeySection = ConfigurationManager.GetSection("system.web/machineKey") as MachineKeySection;
-                //var machineKeySpecified = machineKeySection != null &&
-                //    !String.IsNullOrEmpty(machineKeySection.DecryptionKey) &&
-                //    !machineKeySection.DecryptionKey.StartsWith("AutoGenerate",StringComparison.OrdinalIgnoreCase);
-
-                //if (!machineKeySpecified)
-                //{
-                //    model.Add(new SystemWarningModel
-                //    {
-                //        Level = SystemWarningLevel.Warning,
-                //        Text = _localizationService.GetResource("Admin.System.Warnings.MachineKey.NotSpecified")
-                //    });
-                //}
-                //else
-                //{
-                //    model.Add(new SystemWarningModel
-                //    {
-                //        Level = SystemWarningLevel.Pass,
-                //        Text = _localizationService.GetResource("Admin.System.Warnings.MachineKey.Specified")
-                //    });
-                //}
             }
-            catch (Exception exc)
-            {
-                LogException(exc);
-            }
-            
             return View(model);
         }
 
@@ -471,29 +446,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteExportedFiles.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
  
             model.DeleteExportedFiles.NumberOfDeletedFiles = 0;
-            //string path = Path.Combine(this.Request.PhysicalApplicationPath, "content\\files\\exportimport");
-            //foreach (var fullPath in Directory.GetFiles(path))
-            //{
-            //    try
-            //    {
-            //        var fileName = Path.GetFileName(fullPath);
-            //        if (fileName.Equals("index.htm", StringComparison.OrdinalIgnoreCase))
-            //            continue;
-
-            //        var info = new FileInfo(fullPath);
-            //        if ((!startDateValue.HasValue || startDateValue.Value < info.CreationTimeUtc)&&
-            //            (!endDateValue.HasValue || info.CreationTimeUtc < endDateValue.Value))
-            //        {
-            //            System.IO.File.Delete(fullPath);
-            //            model.DeleteExportedFiles.NumberOfDeletedFiles++;
-            //        }
-            //    }
-            //    catch (Exception exc)
-            //    {
-            //        ErrorNotification(exc, false);
-            //    }
-            //}
-
             return View(model);
         }
 
@@ -621,6 +573,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                             break;
                         case "vendor":
                             detailsUrl = Url.Action("Edit", "Vendor", new { id = x.EntityId });
+                            break;
+                        case "knowledgebasecategory":
+                            detailsUrl = Url.Action("EditCategory", "Knowledgebase", new { id = x.EntityId });
+                            break;
+                        case "knowledgebasearticle":
+                            detailsUrl = Url.Action("EditArticle", "Knowledgebase", new { id = x.EntityId });
                             break;
                         default:
                             break;

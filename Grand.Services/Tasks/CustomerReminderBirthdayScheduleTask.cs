@@ -9,6 +9,7 @@ namespace Grand.Services.Tasks
     public partial class CustomerReminderBirthdayScheduleTask : ScheduleTask, IScheduleTask
     {
         private readonly ICustomerReminderService _customerReminderService;
+        private readonly object _lock = new object();
 
         public CustomerReminderBirthdayScheduleTask(ICustomerReminderService customerReminderService)
         {
@@ -17,7 +18,10 @@ namespace Grand.Services.Tasks
 
         public void Execute()
         {
-            _customerReminderService.Task_Birthday();
+            lock (_lock)
+            {
+                _customerReminderService.Task_Birthday();
+            }
         }
     }
 }

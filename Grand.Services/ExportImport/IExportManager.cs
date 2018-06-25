@@ -69,6 +69,12 @@ namespace Grand.Services.ExportImport
         byte[] ExportCustomersToXlsx(IList<Customer> customers);
 
         /// <summary>
+        /// Export customer - personal info to XLSX
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        byte[] ExportCustomerToXlsx(Customer customer, string stroreId);
+
+        /// <summary>
         /// Export customer list to xml
         /// </summary>
         /// <param name="customers">Customers</param>

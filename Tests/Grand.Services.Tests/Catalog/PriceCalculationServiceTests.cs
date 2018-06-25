@@ -2,10 +2,12 @@
 using Grand.Core.Caching;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
+using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Discounts;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Stores;
 using Grand.Services.Customers;
+using Grand.Services.Directory;
 using Grand.Services.Discounts;
 using Grand.Services.Stores;
 using Grand.Services.Vendors;
@@ -31,11 +33,13 @@ namespace Grand.Services.Catalog.Tests
         private IProductService _productService;
         private ShoppingCartSettings _shoppingCartSettings;
         private CatalogSettings _catalogSettings;
+        private CurrencySettings _currencySettings;
         private ICacheManager _cacheManager;
         private IPriceCalculationService _priceCalcService;
         private IVendorService _vendorService;
         private IStoreService _storeService;
         private ICustomerService _customerService;
+        private ICurrencyService _currencyService;
         [TestInitialize()]
         public void TestInitialize()
         {
@@ -59,6 +63,7 @@ namespace Grand.Services.Catalog.Tests
             _vendorService = new Mock<IVendorService>().Object;
             _storeService = new Mock<IStoreService>().Object;
             _customerService = new Mock<ICustomerService>().Object;
+            _currencyService = new Mock<ICurrencyService>().Object;
             tempProductService = new Mock<IProductService>();
             {
                 _productService = tempProductService.Object;
@@ -66,7 +71,8 @@ namespace Grand.Services.Catalog.Tests
             _productAttributeParser = new Mock<IProductAttributeParser>().Object;
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
-            _cacheManager = new NopNullCache();
+            _currencySettings = new CurrencySettings();
+            _cacheManager = new GrandNullCache();
             _priceCalcService = new PriceCalculationService(
                 _workContext,
                 _storeContext,
@@ -79,8 +85,10 @@ namespace Grand.Services.Catalog.Tests
                 _cacheManager,
                 _vendorService,
                 _storeService,
+                _currencyService,
                 _shoppingCartSettings,
-                _catalogSettings);
+                _catalogSettings,
+                _currencySettings);
         }
 
         [TestMethod()]
@@ -291,7 +299,6 @@ namespace Grand.Services.Catalog.Tests
 
             var shoppingCartItem = new ShoppingCartItem
             {
-                CustomerId = "98767",//customer001.Id, //98767
                 ProductId = "242422",// product001.Id, //222
                 Quantity = 2
             };
@@ -324,7 +331,6 @@ namespace Grand.Services.Catalog.Tests
 
             var shoppingCartItem = new ShoppingCartItem
             {
-                CustomerId = customer001.Id, //98767
                 ProductId = product001.Id, //222
                 Quantity = 2
             };

@@ -133,8 +133,12 @@ namespace Grand.Core
             if (result != null && result.Equals("::1", StringComparison.OrdinalIgnoreCase))
                 result = "127.0.0.1";
 
-            //remove port
-            if (!string.IsNullOrEmpty(result))
+            //"TryParse" doesn't support IPv4 with port number
+            if (IPAddress.TryParse(result ?? string.Empty, out IPAddress ip))
+                //IP address is valid 
+                result = ip.ToString();
+            else if (!string.IsNullOrEmpty(result))
+                //remove port
                 result = result.Split(':').FirstOrDefault();
 
             return result;
@@ -197,97 +201,62 @@ namespace Grand.Core
         /// <summary>
         /// Gets store host location
         /// </summary>
-        /// <param name="useSsl">Use SSL</param>
+        /// <param name="useSsl">Whether to get SSL secured URL</param>
         /// <returns>Store host location</returns>
         public virtual string GetStoreHost(bool useSsl)
         {
-            var result = string.Empty;
+            if (!IsRequestAvailable())
+                return string.Empty;
 
             //try to get host from the request HOST header
-            //TODO test (it's better to yuse server variables)
-            if (_httpContextAccessor.HttpContext != null)
-            {
-                var hostHeader = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.Host];
-                if (!StringValues.IsNullOrEmpty(hostHeader))
-                    result = "http://" + hostHeader.FirstOrDefault();
-            }
-            //whether database is installed
-            if (DataSettingsHelper.DatabaseIsInstalled())
-            {
-                //get current store (do not inject IWorkContext via constructor because it'll cause circular references)
-                var currentStore = EngineContext.Current.Resolve<IStoreContext>().CurrentStore;
-                if (currentStore == null)
-                    throw new Exception("Current store cannot be loaded");
+            var hostHeader = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.Host];
+            if (StringValues.IsNullOrEmpty(hostHeader))
+                return string.Empty;
 
-                if (string.IsNullOrEmpty(result))
-                {
-                    //HOST header is not available, it is possible only when HttpContext is not available (for example, running in a schedule task)
-                    //in this case use URL of a store entity configured in admin area
-                    result = currentStore.Url;
-                }
+            //add scheme to the URL
+            var storeHost = $"{(useSsl ? Uri.UriSchemeHttps : Uri.UriSchemeHttp)}://{hostHeader.FirstOrDefault()}";
 
-                if (useSsl)
-                {
-                    //if secure URL specified let's use this URL, otherwise a store owner wants it to be detected automatically
-                    result = !string.IsNullOrWhiteSpace(currentStore.SecureUrl) ? currentStore.SecureUrl : result.Replace("http://", "https://");
-                }
-                else
-                {
-                    if (currentStore.SslEnabled && !string.IsNullOrWhiteSpace(currentStore.SecureUrl))
-                    {
-                        //SSL is enabled in this store and secure URL is specified, so a store owner don't want it to be detected automatically.
-                        //in this case let's use the specified non-secure URL
-                        result = currentStore.Url;
-                    }
-                }
-            }
-            else
-            {
-                if (!string.IsNullOrEmpty(result) && useSsl)
-                {
-                    //use secure connection
-                    result = result.Replace("http://", "https://");
-                }
-            }
+            //ensure that host is ended with slash
+            storeHost = $"{storeHost.TrimEnd('/')}/";
 
-            if (!result.EndsWith("/"))
-                result += "/";
-
-            return result.ToLowerInvariant();
+            return storeHost;
         }
 
         /// <summary>
         /// Gets store location
         /// </summary>
+        /// <param name="useSsl">Whether to get SSL secured URL; pass null to determine automatically</param>
         /// <returns>Store location</returns>
-        public virtual string GetStoreLocation()
+        public virtual string GetStoreLocation(bool? useSsl = null)
         {
-            //whether connection is secured
-            var useSsl = IsCurrentConnectionSecured();
+            var storeLocation = string.Empty;
 
-            return GetStoreLocation(useSsl);
-        }
-
-        /// <summary>
-        /// Gets store location
-        /// </summary>
-        /// <param name="useSsl">Use SSL</param>
-        /// <returns>Store location</returns>
-        public virtual string GetStoreLocation(bool useSsl)
-        {
             //get store host
-            var host = GetStoreHost(useSsl).TrimEnd('/');
+            var storeHost = GetStoreHost(useSsl ?? IsCurrentConnectionSecured());
+            if (!string.IsNullOrEmpty(storeHost))
+            {
+                //add application path base if exists
+                storeLocation = IsRequestAvailable() ? $"{storeHost.TrimEnd('/')}{_httpContextAccessor.HttpContext.Request.PathBase}" : storeHost;
+            }
 
-            //add application path base if exists
-            if (IsRequestAvailable())
-                host += _httpContextAccessor.HttpContext.Request.PathBase;
+            //if host is empty (it is possible only when HttpContext is not available), use URL of a store entity configured in admin area
+            if (string.IsNullOrEmpty(storeHost) && DataSettingsHelper.DatabaseIsInstalled())
+            {
+                //do not inject IWorkContext via constructor because it'll cause circular references
+                storeLocation = EngineContext.Current.Resolve<IStoreContext>().CurrentStore?.Url
+                    ?? throw new Exception("Current store cannot be loaded");
+            }
 
-            if (!host.EndsWith("/"))
-                host += "/";
+            //ensure that URL is ended with slash
+            storeLocation = $"{storeLocation.TrimEnd('/')}/";
 
-            return host.ToLowerInvariant();
+            return storeLocation;
         }
 
+        /// <summary>
+        /// Returns true if the requested resource is one of the typical resources that needn't be processed by the cms engine.
+        /// </summary>
+        /// <returns>True if the request targets a static resource file.</returns>
         public virtual bool IsStaticResource()
         {
             if (!IsRequestAvailable())
@@ -299,7 +268,7 @@ namespace Grand.Core
             //source: https://github.com/aspnet/StaticFiles/blob/dev/src/Microsoft.AspNetCore.StaticFiles/FileExtensionContentTypeProvider.cs
             //if it can return content type, then it's a static file
             var contentTypeProvider = new FileExtensionContentTypeProvider();
-            return contentTypeProvider.TryGetContentType(path, out string contentType);
+            return contentTypeProvider.TryGetContentType(path, out string _);
         }
 
         /// <summary>

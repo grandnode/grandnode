@@ -112,7 +112,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (model == null)
                 throw new ArgumentNullException("model");
             model.AvailableCustomerTags = _customerTagService.GetAllCustomerTags().Select(ct => new SelectListItem() { Text = ct.Name, Value = ct.Id, Selected = model.CustomerTags.Contains(ct.Id) }).ToList();
-            model.CustomerTags = new List<string>();
+            model.CustomerTags = model.CustomerTags == null ? new List<string>() : model.CustomerTags;
         }
         [NonAction]
         protected virtual void PrepareCustomerRolesModel(CampaignModel model)
@@ -120,7 +120,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (model == null)
                 throw new ArgumentNullException("model");
             model.AvailableCustomerRoles = _customerService.GetAllCustomerRoles().Select(ct => new SelectListItem() { Text = ct.Name, Value = ct.Id, Selected = model.CustomerRoles.Contains(ct.Id) }).ToList();
-            model.CustomerRoles = new List<string>();
+            model.CustomerRoles = model.CustomerRoles == null ? new List<string>() : model.CustomerRoles;
         }
         [NonAction]
         protected virtual void PrepareNewsletterCategoriesModel(CampaignModel model)
@@ -128,7 +128,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (model == null)
                 throw new ArgumentNullException("model");
             model.AvailableNewsletterCategories = _newsletterCategoryService.GetAllNewsletterCategory().Select(ct => new SelectListItem() { Text = ct.Name, Value = ct.Id, Selected = model.NewsletterCategories.Contains(ct.Id) }).ToList();
-            model.NewsletterCategories = new List<string>();
+            model.NewsletterCategories = model.NewsletterCategories == null ? new List<string>(): model.NewsletterCategories;
         }
         [NonAction]
         protected virtual void PrepareEmailAccounts(CampaignModel model)

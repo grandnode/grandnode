@@ -3,16 +3,15 @@
     //page title
     ViewBag.Title = T("Admin.GiftCards.AddNew").Text;
 }
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="GiftCard" asp-action="Create" method="post">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
                 <div class="portlet-title">
                     <div class="caption">
                         <i class="fa fa-gift"></i>
-                        @T("Admin.GiftCards.AddNew") 
+                        @T("Admin.GiftCards.AddNew")
                         <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.GiftCards.BackToList").Text, "List")</small>
                     </div>
                     <div class="actions btn-group btn-group-devided">
@@ -26,5 +25,4 @@
             </div>
         </div>
     </div>
-
-}
+</form>

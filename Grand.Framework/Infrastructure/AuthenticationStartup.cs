@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Grand.Core.Infrastructure;
 using Grand.Framework.Infrastructure.Extensions;
+using Grand.Core.Data;
 
 namespace Grand.Framework.Infrastructure
 {
@@ -18,6 +19,9 @@ namespace Grand.Framework.Infrastructure
         /// <param name="configuration">Configuration root of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
+            //add data protection
+            services.AddGrandDataProtection();
+            //add authentication
             services.AddGrandAuthentication();
         }
 
@@ -27,11 +31,14 @@ namespace Grand.Framework.Infrastructure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
-            //configure authentication
-            application.UseGrandAuthentication();
+            //check whether database is installed
+            if (!DataSettingsHelper.DatabaseIsInstalled())
+                return;
 
             //set request culture
             application.UseCulture();
+            //configure authentication
+            application.UseGrandAuthentication();
         }
 
         /// <summary>

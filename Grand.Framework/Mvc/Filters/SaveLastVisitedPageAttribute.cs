@@ -9,6 +9,7 @@ using Grand.Services.Common;
 using Grand.Core.Infrastructure;
 using Grand.Services.Logging;
 using Microsoft.Net.Http.Headers;
+using Microsoft.AspNetCore.Http;
 
 namespace Grand.Framework.Mvc.Filters
 {
@@ -70,7 +71,7 @@ namespace Grand.Framework.Mvc.Filters
                     return;
 
                 //only in GET requests
-                if (context.HttpContext.Request.Method.ToLower() != "get")
+                if (!HttpMethods.IsGet(context.HttpContext.Request.Method))
                     return;
 
                 //ajax request should not save

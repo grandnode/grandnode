@@ -30,7 +30,7 @@
                         </div>
                         <div class="inputs pb-1">
                             <label asp-for="PersonalMessage">@T("Wishlist.EmailAFriend.PersonalMessage"):</label>
-                            <input asp-for="PersonalMessage" class="form-control personal-message" placeholder="@T("Wishlist.EmailAFriend.PersonalMessage.Hint")" />
+                            <textarea asp-for="PersonalMessage" class="form-control personal-message" placeholder="@T("Wishlist.EmailAFriend.PersonalMessage.Hint")"></textarea>
                             <span asp-validation-for="PersonalMessage"></span>
                         </div>
                         @if (Model.DisplayCaptcha)
@@ -41,7 +41,7 @@
                         }
                     </div>
                 <div class="btn-group pb-1">
-                    <input type="submit" name="send-email" class="btn btn-success send-email-a-friend-button" value="@T("Wishlist.EmailAFriend.Button")" >
+                    <input type="submit" name="send-email" class="btn btn-info send-email-a-friend-button" value="@T("Wishlist.EmailAFriend.Button")" >
                 </div>
             </form>
         }

@@ -1,0 +1,160 @@
+﻿@model ContactAttributeModel
+
+<script type="text/javascript">
+            $(document).ready(function () {
+                $("#@Html.FieldIdFor(model => model.AttributeControlTypeId)").change(toggleAttributeControlType);
+                toggleAttributeControlType();
+            });
+
+            function toggleAttributeControlType() {
+                var selectedAttributeControlTypeId = $("#@Html.FieldIdFor(model => model.AttributeControlTypeId)").val();
+                if (selectedAttributeControlTypeId == @(((int) AttributeControlType.TextBox).ToString())) {
+                    $('#pnlValidationMinLength').show();
+                    $('#pnlValidationMaxLength').show();
+                    $('#pnlValidationFileMaximumSize').hide();
+                    $('#pnlValidationFileAllowedExtensions').hide();
+                    $('#pnlDefaultValue').show();
+                    $('#tab-contactAttributesValues').hide();
+                } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.MultilineTextbox).ToString())) {
+                    $('#pnlValidationMinLength').show();
+                    $('#pnlValidationMaxLength').show();
+                    $('#pnlValidationFileMaximumSize').hide();
+                    $('#pnlValidationFileAllowedExtensions').hide();
+                    $('#pnlDefaultValue').show();
+                    $('#tab-contactAttributesValues').hide();
+                } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.FileUpload).ToString())) {
+                    $('#pnlValidationMinLength').hide();
+                    $('#pnlValidationMaxLength').hide();
+                    $('#pnlValidationFileMaximumSize').show();
+                    $('#pnlValidationFileAllowedExtensions').show();
+                    $('#pnlDefaultValue').hide();
+                    $('#tab-contactAttributesValues').hide();
+                } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.Checkboxes).ToString()) ||
+                    selectedAttributeControlTypeId == @(((int) AttributeControlType.ReadonlyCheckboxes).ToString()) ||
+                    selectedAttributeControlTypeId == @(((int) AttributeControlType.RadioList).ToString()) ||
+                    selectedAttributeControlTypeId == @(((int) AttributeControlType.ColorSquares).ToString()) ||
+                    selectedAttributeControlTypeId == @(((int) AttributeControlType.DropdownList).ToString())){
+                    $('#pnlValidationMinLength').hide();
+                    $('#pnlValidationMaxLength').hide();
+                    $('#pnlValidationFileMaximumSize').hide();
+                    $('#pnlValidationFileAllowedExtensions').hide();
+                    $('#pnlDefaultValue').hide();
+                    $('#tab-contactAttributesValues').show();
+                }else {
+                    $('#pnlValidationMinLength').hide();
+                    $('#pnlValidationMaxLength').hide();
+                    $('#pnlValidationFileMaximumSize').hide();
+                    $('#pnlValidationFileAllowedExtensions').hide();
+                    $('#pnlDefaultValue').hide();
+                    $('#tab-contactAttributesValues').hide();
+                }
+            }
+</script>
+
+@(Html.LocalizedEditor<ContactAttributeModel, ContactAttributeLocalizedModel>("contactattribute-localized",
+    @<div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                <admin-label asp-for="@Model.Locales[item].Name" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="@Model.Locales[item].Name" />
+                    <span asp-validation-for="@Model.Locales[item].Name"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <admin-label asp-for="@Model.Locales[item].TextPrompt" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="@Model.Locales[item].TextPrompt" />
+                    <span asp-validation-for="@Model.Locales[item].TextPrompt"></span>
+                </div>
+            </div>
+            <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+        </div>
+    </div>
+    ,
+    @<div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                <admin-label asp-for="Name" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="Name" />
+                    <span asp-validation-for="Name"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <admin-label asp-for="TextPrompt" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="TextPrompt" />
+                    <span asp-validation-for="TextPrompt"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    ))
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            <admin-label asp-for="IsRequired" />
+            <div class="col-md-9 col-sm-9">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    <admin-input asp-for="IsRequired" />
+                    <span></span>
+                </label>
+                <span asp-validation-for="IsRequired"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="AttributeControlTypeId" />
+            <div class="col-md-9 col-sm-9">
+                @{
+                var attributeControlTypes = ((AttributeControlType)Model.AttributeControlTypeId).ToSelectList(valuesToExclude:
+                    new[] { (int)AttributeControlType.ImageSquares });
+                }
+                <admin-select asp-for="AttributeControlTypeId" asp-items="attributeControlTypes" />
+                <span asp-validation-for="AttributeControlTypeId"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="DisplayOrder" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="DisplayOrder" />
+                <span asp-validation-for="DisplayOrder"></span>
+            </div>
+        </div>
+        <div class="form-group" id="pnlValidationMinLength">
+            <admin-label asp-for="ValidationMinLength" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="ValidationMinLength" />
+                <span asp-validation-for="ValidationMinLength"></span>
+            </div>
+        </div>
+        <div class="form-group" id="pnlValidationMaxLength">
+            <admin-label asp-for="ValidationMaxLength" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="ValidationMaxLength" />
+                <span asp-validation-for="ValidationMaxLength"></span>
+            </div>
+        </div>
+        <div class="form-group" id="pnlValidationFileAllowedExtensions">
+            <admin-label asp-for="ValidationFileAllowedExtensions" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="ValidationFileAllowedExtensions" />
+                <span asp-validation-for="ValidationFileAllowedExtensions"></span>
+            </div>
+        </div>
+        <div id="pnlValidationFileMaximumSize">
+             <admin-label asp-for="ValidationFileMaximumSize" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="ValidationFileMaximumSize" />
+                <span asp-validation-for="ValidationFileMaximumSize"></span>
+            </div>
+        </div>
+        <div class="form-group" id="pnlDefaultValue">
+            <admin-label asp-for="DefaultValue" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="DefaultValue" />
+                <span asp-validation-for="DefaultValue"></span>
+            </div>
+        </div>
+    </div>
+</div>

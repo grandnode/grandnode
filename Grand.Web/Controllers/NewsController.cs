@@ -21,7 +21,6 @@ using Grand.Framework.Mvc;
 
 namespace Grand.Web.Controllers
 {
-    [HttpsRequirement(SslRequirement.No)]
     public partial class NewsController : BasePublicController
     {
         #region Fields

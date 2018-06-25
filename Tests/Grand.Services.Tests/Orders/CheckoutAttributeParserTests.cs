@@ -116,7 +116,7 @@ namespace Grand.Services.Orders.Tests
                 _checkoutAttributeRepo = tempCheckoutAttributeRepo.Object;
             }
 
-            var cacheManager = new NopNullCache();
+            var cacheManager = new GrandNullCache();
 
             _storeMappingService = new Mock<IStoreMappingService>().Object;
 

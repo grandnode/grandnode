@@ -9,10 +9,12 @@ using Grand.Core.Domain.Blogs;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Forums;
+using Grand.Core.Domain.Knowledgebase;
 using Grand.Core.Domain.News;
 using Grand.Core.Domain.Security;
 using Grand.Services.Catalog;
 using Grand.Services.Topics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Grand.Services.Seo
@@ -43,6 +45,7 @@ namespace Grand.Services.Seo
         private readonly IWebHelper _webHelper;
         private readonly CommonSettings _commonSettings;
         private readonly BlogSettings _blogSettings;
+        private readonly KnowledgebaseSettings _knowledgebaseSettings;
         private readonly NewsSettings _newsSettings;
         private readonly ForumSettings _forumSettings;
         private readonly SecuritySettings _securitySettings;
@@ -59,6 +62,7 @@ namespace Grand.Services.Seo
             IWebHelper webHelper,
             CommonSettings commonSettings,
             BlogSettings blogSettings,
+            KnowledgebaseSettings knowledgebaseSettings,
             NewsSettings newsSettings,
             ForumSettings forumSettings,
             SecuritySettings securitySettings)
@@ -71,6 +75,7 @@ namespace Grand.Services.Seo
             this._webHelper = webHelper;
             this._commonSettings = commonSettings;
             this._blogSettings = blogSettings;
+            this._knowledgebaseSettings = knowledgebaseSettings;
             this._newsSettings = newsSettings;
             this._forumSettings = forumSettings;
             this._securitySettings = securitySettings;
@@ -118,7 +123,7 @@ namespace Grand.Services.Seo
         /// <returns>Protocol name as string</returns>
         protected virtual string GetHttpProtocol()
         {
-            return _securitySettings.ForceSslForAllPages ? "https" : "http";
+            return _webHelper.IsCurrentConnectionSecured() ? "https" : "http";
         }
 
         /// <summary>
@@ -156,7 +161,14 @@ namespace Grand.Services.Seo
                 sitemapUrls.Add(new SitemapUrl(url, UpdateFrequency.Weekly, DateTime.UtcNow));
             }
 
-            //blog
+            //knowledgebase
+            if (_knowledgebaseSettings.Enabled)
+            {
+                var url = urlHelper.RouteUrl("Knowledgebase", null, GetHttpProtocol());
+                sitemapUrls.Add(new SitemapUrl(url, UpdateFrequency.Weekly, DateTime.UtcNow));
+            }
+
+            //forums
             if (_forumSettings.ForumsEnabled)
             {
                 var url = urlHelper.RouteUrl("Boards", null, GetHttpProtocol());

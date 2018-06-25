@@ -1,34 +1,53 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Grand.Services.Authentication
 {
+    /// <summary>
+    /// Represents middleware that enables authentication
+    /// </summary>
     public class AuthenticationMiddleware
     {
+        #region Fields
+
         private readonly RequestDelegate _next;
 
+        #endregion
+
+        #region Ctor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="next">Next</param>
+        /// <param name="schemes">Schemes</param>
         public AuthenticationMiddleware(RequestDelegate next, IAuthenticationSchemeProvider schemes)
         {
-            if (next == null)
-            {
-                throw new ArgumentNullException(nameof(next));
-            }
-            if (schemes == null)
-            {
-                throw new ArgumentNullException(nameof(schemes));
-            }
-
-            _next = next;
-            Schemes = schemes;
+            _next = next ?? throw new ArgumentNullException(nameof(next));
+            Schemes = schemes ?? throw new ArgumentNullException(nameof(schemes));
         }
 
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// 
+        /// </summary>
         public IAuthenticationSchemeProvider Schemes { get; set; }
 
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Invoke middleware actions
+        /// </summary>
+        /// <param name="context">HTTP context</param>
+        /// <returns>Task</returns>
         public async Task Invoke(HttpContext context)
         {
             context.Features.Set<IAuthenticationFeature>(new AuthenticationFeature
@@ -41,11 +60,12 @@ namespace Grand.Services.Authentication
             var handlers = context.RequestServices.GetRequiredService<IAuthenticationHandlerProvider>();
             foreach (var scheme in await Schemes.GetRequestHandlerSchemesAsync())
             {
-                var handler = await handlers.GetHandlerAsync(context, scheme.Name) as IAuthenticationRequestHandler;
-                if (handler != null && await handler.HandleRequestAsync())
+                try
                 {
-                    return;
+                    if (await handlers.GetHandlerAsync(context, scheme.Name) is IAuthenticationRequestHandler handler && await handler.HandleRequestAsync())
+                        return;
                 }
+                catch { continue; }
             }
 
             var defaultAuthenticate = await Schemes.GetDefaultAuthenticateSchemeAsync();
@@ -60,5 +80,7 @@ namespace Grand.Services.Authentication
 
             await _next(context);
         }
+
+        #endregion
     }
 }

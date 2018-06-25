@@ -17,7 +17,7 @@ namespace Grand.Services.Orders
         /// <param name="shoppingCartItem">Shopping cart item</param>
         /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
         /// <param name="ensureOnlyActiveCheckoutAttributes">A value indicating whether to ensure that only active checkout attributes are attached to the current customer</param>
-        void DeleteShoppingCartItem(ShoppingCartItem shoppingCartItem, bool resetCheckoutData = true,
+        void DeleteShoppingCartItem(string customerId, ShoppingCartItem shoppingCartItem, bool resetCheckoutData = true,
             bool ensureOnlyActiveCheckoutAttributes = false);
 
 
@@ -83,20 +83,19 @@ namespace Grand.Services.Orders
             Product product, string attributesXml);
 
         /// <summary>
-        /// Validates shopping cart item for rental products
+        /// Validate bid
         /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="rentalStartDate">Rental start date</param>
-        /// <param name="rentalEndDate">Rental end date</param>
-        /// <returns>Warnings</returns>
-        IList<string> GetRentalProductWarnings(Product product,
-            DateTime? rentalStartDate = null, DateTime? rentalEndDate = null);
+        /// <param name="bid"></param>
+        /// <param name="product"></param>
+        /// <param name="customer"></param>
+        /// <returns></returns>
+        IList<string> GetAuctionProductWarning(decimal bid, Product product, Customer customer);
 
         /// <summary>
         /// Validates shopping cart item
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <param name="shoppingCartType">Shopping cart type</param>
+        /// <param name="shoppingCart">Shopping cart type</param>
         /// <param name="product">Product</param>
         /// <param name="storeId">Store identifier</param>
         /// <param name="attributesXml">Attributes in XML format</param>
@@ -111,14 +110,11 @@ namespace Grand.Services.Orders
         /// <param name="getRequiredProductWarnings">A value indicating whether we should validate required products (products which require other products to be added to the cart)</param>
         /// <param name="getRentalWarnings">A value indicating whether we should validate rental properties</param>
         /// <returns>Warnings</returns>
-        IList<string> GetShoppingCartItemWarnings(Customer customer, ShoppingCartType shoppingCartType,
-            Product product, string storeId,
-            string attributesXml, decimal customerEnteredPrice,
-            DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
-            int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true,
+        IList<string> GetShoppingCartItemWarnings(Customer customer, ShoppingCartItem shoppingCartItem, 
+            Product product, bool automaticallyAddRequiredProductsIfEnabled = true,
             bool getStandardWarnings = true, bool getAttributesWarnings = true,
             bool getGiftCardWarnings = true, bool getRequiredProductWarnings = true,
-            bool getRentalWarnings = true);
+            bool getRentalWarnings = true, bool getReservationWarnings = true);
 
         /// <summary>
         /// Validates whether this shopping cart is valid
@@ -129,6 +125,17 @@ namespace Grand.Services.Orders
         /// <returns>Warnings</returns>
         IList<string> GetShoppingCartWarnings(IList<ShoppingCartItem> shoppingCart,
             string checkoutAttributesXml, bool validateCheckoutAttributes);
+
+
+        /// <summary>
+        /// Validates shopping cart item for reservation products
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="Product">product</param>
+        /// <param name="shoppingCartItem">ShoppingCartItem</param>
+        /// <returns>Warnings</returns>
+        IList<string> GetReservationProductWarnings(Customer customer, Product product, ShoppingCartItem shoppingCartItem);
+
 
         /// <summary>
         /// Finds a shopping cart item in the cart
@@ -168,7 +175,7 @@ namespace Grand.Services.Orders
             ShoppingCartType shoppingCartType, string storeId, string attributesXml = null,
             decimal customerEnteredPrice = decimal.Zero, 
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
-            int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true);
+            int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true, string reservationId = "", string parameter = "", string duration = "");
         
         /// <summary>
         /// Updates the shopping cart item
@@ -186,7 +193,7 @@ namespace Grand.Services.Orders
             string shoppingCartItemId, string attributesXml,
             decimal customerEnteredPrice,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
-            int quantity = 1, bool resetCheckoutData = true);
+            int quantity = 1, bool resetCheckoutData = true, string reservationId = "", string sciId = "");
         
         /// <summary>
         /// Migrate shopping cart

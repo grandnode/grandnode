@@ -8,7 +8,6 @@ using Newtonsoft.Json;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
-    [HttpsRequirement(SslRequirement.Yes)]
     [ValidateIpAddress]
     [AuthorizeAdmin]
     [AdminAntiForgery]

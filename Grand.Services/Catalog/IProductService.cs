@@ -99,6 +99,12 @@ namespace Grand.Services.Catalog
         void UpdateSold(string productId, int qty);
 
         /// <summary>
+        /// Set product as unpublished
+        /// </summary>
+        /// <param name="productId"></param>
+        void UnpublishProduct(string productId);
+
+        /// <summary>
         /// Get (visible) product number in certain category
         /// </summary>
         /// <param name="categoryIds">Category identifiers</param>
@@ -287,6 +293,16 @@ namespace Grand.Services.Catalog
         /// <param name="product">Product</param>
         void UpdateHasTierPricesProperty(string productId);
 
+        /// <summary>
+        /// Update Interval properties
+        /// </summary>
+        /// <param name="productId">Product Id</param>
+        /// <param name="Interval">Interval</param>
+        /// <param name="IntervalUnit">Interval unit</param>
+        /// <param name="includeBothDates">Include both dates</param>
+        void UpdateIntervalProperties(string productId, int interval, IntervalUnit intervalUnit, bool  includeBothDates);
+
+
         #endregion
 
         #region Inventory management methods
@@ -377,7 +393,29 @@ namespace Grand.Services.Catalog
         IList<Product> GetCrosssellProductsByShoppingCart(IList<ShoppingCartItem> cart, int numberOfProducts);
 
         #endregion
-        
+
+        #region Bundle products
+
+        /// <summary>
+        /// Deletes a bundle product
+        /// </summary>
+        /// <param name="bundleProduct">Bundle product</param>
+        void DeleteBundleProduct(BundleProduct bundleProduct);
+
+        /// <summary>
+        /// Inserts a bundle product
+        /// </summary>
+        /// <param name="bundleProduct">Bundle product</param>
+        void InsertBundleProduct(BundleProduct bundleProduct);
+
+        /// <summary>
+        /// Updates a bundle product
+        /// </summary>
+        /// <param name="bundleProduct">Bundle product</param>
+        void UpdateBundleProduct(BundleProduct bundleProduct);
+
+        #endregion
+
         #region Tier prices
 
         /// <summary>

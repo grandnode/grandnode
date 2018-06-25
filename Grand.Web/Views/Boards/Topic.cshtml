@@ -20,8 +20,8 @@
             @if (Model.IsCustomerAllowedToDeleteTopic)
             {
                 <a href="#" class="btn btn-secondary delete-topic-button" onclick="deletetopic('@(Model.Id)')">
-                    <span class="hidden-sm-down">@T("Forum.DeleteTopic").Text</span>
-                    <i class="fa fa-trash hidden-md-up" aria-hidden="true"></i>
+                    <span class="d-none d-md-block">@T("Forum.DeleteTopic").Text</span>
+                    <i class="fa fa-trash d-md-none" aria-hidden="true"></i>
                 </a>
             }
             @if (Model.IsCustomerAllowedToMoveTopic)
@@ -32,8 +32,8 @@
             @if (Model.IsCustomerAllowedToSubscribe)
             {
                 <a class="btn btn-secondary watch-topic-button" href="#" id="watch-topic-top">
-                    <span class="hidden-sm-down">@Model.WatchTopicText</span>
-                    <i class="fa fa-ban hidden-md-up" aria-hidden="true"></i>
+                    <span class="d-none d-md-block">@Model.WatchTopicText</span>
+                    <i class="fa fa-ban d-md-none" aria-hidden="true"></i>
                 </a>
             }
         </div>

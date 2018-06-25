@@ -1,0 +1,52 @@
+﻿@model ProductDetailsModel
+@using System.Globalization
+@inject CatalogSettings catalogSettings
+@{
+    Html.AppendScriptParts("~/Scripts/public.reservation.js");
+    Html.AddCssFileParts("~/Content/jquery-ui-themes/smoothness/jquery-ui.calendar.min.css");
+}
+    <div style="margin-top:10px">
+        @if (Model.Parameters.Any())
+        {
+            <div class="container" style="margin-left:-15px">
+                <label for="parameterDropdown" class="col-form-label">@T("Products.AdditionalParameter"):</label>
+                <select class="custom-select form-control" name="parameterDropdown" id="parameterDropdown">
+                    @foreach (var parameter in Model.Parameters)
+                    {
+                        <option value="@parameter.Value">@parameter.Text</option>
+                    }
+                </select>
+            </div>
+        }
+
+        @if (Model.IntervalUnit == IntervalUnit.Day)
+        {
+            <div>
+                <h5>@T("Products.Reservation.DateFrom"):</h5>
+                <input name="reservationDatepickerFrom_@Model.Id" id="reservationDatepickerFrom" class="form-control datepicker" />
+            </div>
+            <div>
+                <h5>@T("Products.Reservation.DateTo"):</h5>
+                <input name="reservationDatepickerTo_@Model.Id" id="reservationDatepickerTo" class="form-control datepicker" />
+            </div>
+        }
+        else
+        {
+            <div>
+                <h5>@T("Products.Reservation.Date"):</h5>
+                <div id="reservationDatepicker"></div>
+            </div>
+            <div>
+                <h5 style="margin-top:10px">@T("Products.Reservation.Hour"):</h5>
+                <div id="hoursDiv" class="btn-group d-flex flex-wrap" data-toggle="buttons"></div>
+            </div>
+        }
+    </div>
+
+<script>
+    $(document).ready(function () {
+        Reservation.init("@Model.StartDate.ToString(CultureInfo.CreateSpecificCulture("en-US"))", "@Model.StartDate.Year", "@Model.StartDate.Month", "@T("Products.Noavailablereservations")",
+            "@(Url.Action("GetDatesForMonth", "Product"))", "@Model.Id",
+            "@Html.Raw(Url.Action("productdetails_attributechange", "shoppingcart", new { productId = Model.Id, validateAttributeConditions = false }))");
+    });
+</script>

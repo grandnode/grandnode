@@ -134,18 +134,6 @@ namespace Grand.Services.Discounts
 
         #endregion
 
-        #region Nested classes
-
-        [Serializable]
-        public class DiscountRequirementForCaching
-        {
-            public string Id { get; set; }
-            public string SystemName { get; set; }
-            public string DiscountId { get; set; }
-        }
-
-        #endregion
-
         #region Methods
 
         /// <summary>
@@ -681,23 +669,14 @@ namespace Grand.Services.Discounts
 
                 //discount requirements
                 string keyReq = string.Format(DiscountRequirementEventConsumer.DISCOUNT_REQUIREMENT_MODEL_KEY, discount.Id);
-                //var requirements = discount.DiscountRequirements;
                 var requirements = _cacheManager.Get(keyReq, () =>
                 {
-                    var cachedRequirements = new List<DiscountRequirementForCaching>();
-                    foreach (var dr in discount.DiscountRequirements)
-                        cachedRequirements.Add(new DiscountRequirementForCaching
-                        {
-                            Id = dr.Id,
-                            DiscountId = discount.Id,
-                            SystemName = dr.DiscountRequirementRuleSystemName
-                        });
-                    return cachedRequirements;
+                    return discount.DiscountRequirements.ToList();
                 });
                 foreach (var req in requirements)
                 {
                     //load a plugin
-                    var discountRequirementPlugin = LoadDiscountPluginBySystemName(req.SystemName);
+                    var discountRequirementPlugin = LoadDiscountPluginBySystemName(req.DiscountRequirementRuleSystemName);
 
                     if (discountRequirementPlugin == null)
                         continue;
@@ -713,7 +692,7 @@ namespace Grand.Services.Discounts
                         Store = _storeContext.CurrentStore
                     };
 
-                    var singleRequirementRule = discountRequirementPlugin.GetRequirementRules().Single(x => x.SystemName == req.SystemName);
+                    var singleRequirementRule = discountRequirementPlugin.GetRequirementRules().Single(x => x.SystemName == req.DiscountRequirementRuleSystemName);
                     var ruleResult = singleRequirementRule.CheckRequirement(ruleRequest);
                     if (!ruleResult.IsValid)
                     {
@@ -725,7 +704,7 @@ namespace Grand.Services.Discounts
                 result.IsValid = true;
                 return result;
             });
-
+            
             return validationResult;
         }
         /// <summary>

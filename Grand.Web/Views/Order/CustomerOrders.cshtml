@@ -9,9 +9,9 @@
 {
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Orders})
 }
-<div class="page account-page order-list-page">
+<div class="page account-page order-list-page pl-lg-3">
         <h2 class="generalTitle">@T("Account.CustomerOrders")</h2>
-        @if (Model.RecurringOrders.Count > 0)
+        @if (Model.RecurringOrders.Any())
         {
             <div class="recurring-payments">
                 <h5>
@@ -91,7 +91,7 @@
                     </div>
                 </form>
             </div>
-            if (Model.CancelRecurringPaymentErrors.Count > 0)
+            if (Model.CancelRecurringPaymentErrors.Any())
             {
                 <div class="message-error">
                     <ul>
@@ -104,7 +104,7 @@
             }
         }
 
-        @if (Model.Orders.Count > 0)
+        @if (Model.Orders.Any())
         {
             <div class="account-order">
                     <div class="row flex-grid">
@@ -122,7 +122,7 @@
                                             </span>
                                         </strong>
                                     </h6>
-                                    <div class="card-block small">
+                                    <div class="card-body small">
                                         <ul class="info">
                                             <li><span>@T("Account.CustomerOrders.OrderStatus"):</span> <span class="order-status @order.OrderStatusEnum.ToString().ToLowerInvariant()">@order.OrderStatus</span></li>
                                             <li><span class="order-date"><span>@T("Account.CustomerOrders.OrderDate"):</span> <span>@order.CreatedOn.ToString()</span></span></li>
@@ -131,11 +131,11 @@
                                     </div>
                                     <div class="card-footer">
                                         <div class="buttons">
-                                            <input type="button" value="@T("Account.CustomerOrders.OrderDetails")" class="btn btn-sm btn-success order-details-button" onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = order.Id })')" />
+                                            <input type="button" value="@T("Account.CustomerOrders.OrderDetails")" class="btn btn-sm btn-info order-details-button" onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = order.Id })')" />
 
                                             @if (order.IsReturnRequestAllowed)
                                             {
-                                                <input type="button" value="@T("Account.CustomerOrders.ReturnItems")" class="btn btn-sm btn-outline-warning return-items-button" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = order.Id })')" />
+                                                <input type="button" value="@T("Account.CustomerOrders.ReturnItems")" class="btn btn-sm btn-warning text-white return-items-button" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = order.Id })')" />
                                             }
                                         </div>
                                     </div>

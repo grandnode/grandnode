@@ -3,10 +3,8 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Countries.EditCountryDetails").Text;
 }
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "country-form" }))
-{
-    @Html.AntiForgeryToken()
-
+<form asp-controller="Country" asp-action="Edit" method="post" id="country-form">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -30,8 +28,5 @@
             </div>
         </div>
     </div>
-
-
-
-}
+</form>
 @Html.DeleteConfirmation("country-delete")

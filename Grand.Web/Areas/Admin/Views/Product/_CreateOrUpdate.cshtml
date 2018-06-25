@@ -1,7 +1,8 @@
 ﻿@model ProductModel
-@Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
-
+@inject IEventPublisher eventPublisher
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+<input asp-for="Ticks" type="hidden" />
 <script>
     $('body').addClass('page-sidebar-closed');
     $('.page-sidebar-menu').addClass('page-sidebar-menu-closed');
@@ -15,7 +16,7 @@
                 open: {
                     effects: "fadeIn"
                 }
-            },            
+            },
             tabPosition: tabPos,
             select: tabstrip_on_tab_select
         });
@@ -50,31 +51,40 @@
         <li @Html.RenderSelectedTabIndex(8, GetSelectedTabIndex()) id="tab-attributes-product">
             @T("Admin.Catalog.Products.ProductAttributes")
         </li>
-        <li @Html.RenderSelectedTabIndex(9, GetSelectedTabIndex())>
+        <li @Html.RenderSelectedTabIndex(9, GetSelectedTabIndex()) id="tab-bundle-products">
+            @T("Admin.Catalog.Products.BundleProducts")
+        </li>
+        <li @Html.RenderSelectedTabIndex(10, GetSelectedTabIndex()) id="tab-calendar">
+            @T("Admin.Catalog.Products.Calendar")
+        </li>
+        <li @Html.RenderSelectedTabIndex(11, GetSelectedTabIndex()) id="tab-bids">
+            @T("Admin.Catalog.Products.Bids")
+        </li>
+        <li @Html.RenderSelectedTabIndex(12, GetSelectedTabIndex())>
             @T("Admin.Catalog.Products.AclStores")
         </li>
-        <li @Html.RenderSelectedTabIndex(10, GetSelectedTabIndex())>
+        <li @Html.RenderSelectedTabIndex(13, GetSelectedTabIndex())>
             @T("Admin.Catalog.Products.RelatedProducts")
         </li>
-        <li @Html.RenderSelectedTabIndex(11, GetSelectedTabIndex())>
+        <li @Html.RenderSelectedTabIndex(14, GetSelectedTabIndex())>
             @T("Admin.Catalog.Products.CrossSells")
         </li>
-        <li @Html.RenderSelectedTabIndex(12, GetSelectedTabIndex()) id="tab-associated-products">
+        <li @Html.RenderSelectedTabIndex(15, GetSelectedTabIndex()) id="tab-associated-products">
             @T("Admin.Catalog.Products.AssociatedProducts")
         </li>
-        <li @Html.RenderSelectedTabIndex(13, GetSelectedTabIndex())>
-            @T("Admin.Catalog.Products.ActivityLog")
-        </li>
-
         @if (!String.IsNullOrEmpty(Model.Id))
         {
-            <li @Html.RenderSelectedTabIndex(14, GetSelectedTabIndex()) id="tab-purchased-product">
+            <li @Html.RenderSelectedTabIndex(16, GetSelectedTabIndex())>
+                @T("Admin.Catalog.Products.ActivityLog")
+            </li>
+            <li @Html.RenderSelectedTabIndex(17, GetSelectedTabIndex()) id="tab-purchased-product">
                 @T("Admin.Catalog.Products.PurchasedWithOrders")
             </li>
-            <li @Html.RenderSelectedTabIndex(15, GetSelectedTabIndex())>
+            <li @Html.RenderSelectedTabIndex(18, GetSelectedTabIndex())>
                 @T("Admin.Catalog.Products.Reviews")
             </li>
         }
+
     </ul>
     <div>
         @Html.Partial("_CreateOrUpdate.Info", Model)
@@ -105,6 +115,15 @@
         @Html.Partial("_CreateOrUpdate.ProductAttributes", Model)
     </div>
     <div>
+        @Html.Partial("_CreateOrUpdate.BundleProducts", Model)
+    </div>
+    <div>
+        @Html.Partial("_CreateOrUpdate.Calendar", Model)
+    </div>
+    <div>
+        @Html.Partial("_CreateOrUpdate.Bids", Model)
+    </div>
+    <div>
         @Html.Partial("_CreateOrUpdate.Acl", Model)
         @Html.Partial("_CreateOrUpdate.Stores", Model)
     </div>
@@ -130,16 +149,14 @@
         </div>
     }
 </div>
-
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "product-edit");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock
     }
 }
-
 @*save selected tab index*@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">

@@ -4,6 +4,7 @@ using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
+using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Stores;
@@ -64,9 +65,11 @@ namespace Grand.Services.Orders.Tests
         private ICountryService _countryService;
         private CustomerSettings _customerSettings;
         private AddressSettings _addressSettings;
+        private CurrencySettings _currencySettings;
         private IVendorService _vendorService;
         private IStoreService _storeService;
         private ICustomerService _customerService;
+        private ICurrencyService _currencyService;
 
         [TestInitialize()]
         public void TestInitialize()
@@ -86,7 +89,7 @@ namespace Grand.Services.Orders.Tests
             _productService = new Mock<IProductService>().Object;
 
             var pluginFinder = new PluginFinder();
-            var cacheManager = new NopNullCache();
+            var cacheManager = new GrandNullCache();
 
             _discountService = new Mock<IDiscountService>().Object;
             _categoryService = new Mock<ICategoryService>().Object;
@@ -94,16 +97,18 @@ namespace Grand.Services.Orders.Tests
             _productAttributeParser = new Mock<IProductAttributeParser>().Object;
             _vendorService = new Mock<IVendorService>().Object;
             _storeService = new Mock<IStoreService>().Object;
+            _currencyService = new Mock<ICurrencyService>().Object;
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
+            _currencySettings = new CurrencySettings();
             _customerService = new Mock<ICustomerService>().Object;
 
             _priceCalcService = new PriceCalculationService(_workContext, _storeContext,
                 _discountService, _categoryService,
                 _manufacturerService, _productAttributeParser, _productService, _customerService,
-                cacheManager, _vendorService, _storeService,
-                _shoppingCartSettings, _catalogSettings);
+                cacheManager, _vendorService, _storeService, _currencyService,
+                _shoppingCartSettings, _catalogSettings, _currencySettings);
 
             var tempEventPublisher = new Mock<IEventPublisher>();
             {
@@ -174,8 +179,8 @@ namespace Grand.Services.Orders.Tests
             _orderTotalCalcService = new OrderTotalCalculationService(_workContext, _storeContext,
                 _priceCalcService, _taxService, _shippingService, _paymentService,
                 _checkoutAttributeParser, _discountService, _giftCardService, _genericAttributeService,
-                null, _productService, _taxSettings, _rewardPointsSettings,
-                _shippingSettings, _shoppingCartSettings, _catalogSettings);
+                null, _productService, _currencyService, _taxSettings, _rewardPointsSettings,
+                _shippingSettings, _shoppingCartSettings, _catalogSettings, _currencySettings);
         }
 
 

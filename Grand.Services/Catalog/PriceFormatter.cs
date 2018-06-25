@@ -228,45 +228,7 @@ namespace Grand.Services.Catalog
             return currencyString;
         }
 
-        /// <summary>
-        /// Formats the price of rental product (with rental period)
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="price">Price</param>
-        /// <returns>Rental product price with period</returns>
-        public virtual string FormatRentalProductPeriod(Product product, string price)
-        {
-            if (product == null)
-                throw new ArgumentNullException("product");
-
-            if (!product.IsRental)
-                return price;
-
-            if (String.IsNullOrWhiteSpace(price))
-                return price;
-
-            string result;
-            switch (product.RentalPricePeriod)
-            {
-                case RentalPricePeriod.Days:
-                    result = string.Format(_localizationService.GetResource("Products.Price.Rental.Days"), price, product.RentalPriceLength);
-                    break;
-                case RentalPricePeriod.Weeks:
-                    result = string.Format(_localizationService.GetResource("Products.Price.Rental.Weeks"), price, product.RentalPriceLength);
-                    break;
-                case RentalPricePeriod.Months:
-                    result = string.Format(_localizationService.GetResource("Products.Price.Rental.Months"), price, product.RentalPriceLength);
-                    break;
-                case RentalPricePeriod.Years:
-                    result = string.Format(_localizationService.GetResource("Products.Price.Rental.Years"), price, product.RentalPriceLength);
-                    break;
-                default:
-                    throw new GrandException("Not supported rental period");
-            }
-
-            return result;
-        }
-
+       
 
         /// <summary>
         /// Formats the shipping price
@@ -332,6 +294,41 @@ namespace Grand.Services.Catalog
             return FormatShippingPrice(price, showCurrency, currency, language, priceIncludesTax);
         }
 
+        /// <summary>
+        /// Formats the price of rental product (with rental period)
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="price">Price</param>
+        /// <returns>Rental product price with period</returns>
+        public virtual string FormatReservationProductPeriod(Product product, string price)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            if (product.ProductType != ProductType.Reservation)
+                return price;
+
+            if (String.IsNullOrWhiteSpace(price))
+                return price;
+
+            string result;
+            switch (product.IntervalUnitType)
+            {
+                case IntervalUnit.Day:
+                    result = string.Format(_localizationService.GetResource("Products.Price.Reservation.Days"), price, product.Interval);
+                    break;
+                case IntervalUnit.Hour:
+                    result = string.Format(_localizationService.GetResource("Products.Price.Reservation.Hour"), price, product.Interval);
+                    break;
+                case IntervalUnit.Minute:
+                    result = string.Format(_localizationService.GetResource("Products.Price.Reservation.Minute"), price, product.Interval);
+                    break;
+                default:
+                    throw new GrandException("Not supported reservation period");
+            }
+
+            return result;
+        }
 
 
         /// <summary>

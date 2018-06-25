@@ -1,7 +1,5 @@
 ﻿@model List<SelectListItem>
-@using Grand.Framework;
-
-<script>
+<script type="text/javascript">
     function renderShippingOptionInfo(param) {
         if (param != "") {
             var _url = '/SelectedShippingPoint/Get?shippingOptionId=' + param;
@@ -12,7 +10,7 @@
                 }
             });
         }
-        else{
+        else {
             $("#shippingOptionInfo").html("");
         }
     }

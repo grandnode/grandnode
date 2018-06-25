@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using Grand.Core;
 using Grand.Core.Infrastructure;
 using Grand.Services.Localization;
 using Grand.Services.Stores;
@@ -18,9 +16,6 @@ using System.IO;
 using System.Text.Encodings.Web;
 using Grand.Framework.Mvc.Models;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
-using Grand.Framework.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Routing;
 
 namespace Grand.Framework
 {
@@ -64,7 +59,7 @@ namespace Grand.Framework
 
                     tabStrip.AppendLine("<li>");
                     var urlHelper = new UrlHelper(helper.ViewContext);
-                    var iconUrl = urlHelper.Content("~/Content/images/flags/" + language.FlagImageFileName);
+                    var iconUrl = urlHelper.Content("~/Content/Images/flags/" + language.FlagImageFileName);
                     tabStrip.AppendLine(string.Format("<img class='k-image' alt='' src='{0}'>", iconUrl));
                     tabStrip.AppendLine(WebUtility.HtmlEncode(language.Name));
                     tabStrip.AppendLine("</li>");
@@ -153,130 +148,7 @@ namespace Grand.Framework
             return new HtmlString(window.ToString());
         }
 
-        public static IHtmlContent GrandLabelFor<TModel, TValue>(
-            this IHtmlHelper<TModel> helper,
-            Expression<Func<TModel, TValue>> expression,
-            IDictionary<string, object> htmlAttributes = null,
-            bool withColumns = true)
-        {
-            var metadata = ExpressionMetadataProvider.FromLambdaExpression(expression, helper.ViewData, helper.MetadataProvider);
-            string htmlFieldName = ExpressionHelper.GetExpressionText(expression);
-            string labelText = metadata.Metadata.DisplayName ?? metadata.Metadata.PropertyName ?? htmlFieldName.Split('.').Last();
-            if (String.IsNullOrEmpty(labelText))
-            {
-                return HtmlString.Empty;
-            }
-
-            TagBuilder tag = new TagBuilder("label");
-            tag.MergeAttributes(htmlAttributes);
-            tag.Attributes.Add("for", helper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(htmlFieldName));
-            if (withColumns)
-                tag.AddCssClass("control-label col-md-3 col-sm-3");
-            tag.InnerHtml.SetHtmlContent(labelText);
-
-            object value;
-            var hintResource = string.Empty;
-            if (metadata.Metadata.AdditionalValues.TryGetValue("GrandResourceDisplayName", out value))
-            {
-                var resourceDisplayName = value as GrandResourceDisplayNameAttribute;
-                if (resourceDisplayName != null)
-                {
-                    var langId = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Id;
-                    hintResource = EngineContext.Current.Resolve<ILocalizationService>()
-                        .GetResource(resourceDisplayName.ResourceKey + ".Hint", langId);
-                    if (!String.IsNullOrEmpty(hintResource))
-                    {
-                        TagBuilder i = new TagBuilder("i");
-                        i.AddCssClass("help icon-question");
-                        i.Attributes.Add("title", hintResource);
-                        i.Attributes.Add("data-toggle", "tooltip");
-                        i.Attributes.Add("data-placement", "bottom");
-                        tag.InnerHtml.SetHtmlContent(string.Format("{0} {1}", labelText, i.ToHtmlString()));
-                    }
-                }
-            }
-            return new HtmlString(tag.ToHtmlString());
-        }
-
-        public static IHtmlContent GrandEditorFor<TModel, TValue>(this IHtmlHelper<TModel> helper,
-            Expression<Func<TModel, TValue>> expression, string postfix = "",
-            bool? renderFormControlClass = null, bool required = false)
-        {
-            object htmlAttributes = null;
-            var metadata = ExpressionMetadataProvider.FromLambdaExpression(expression, helper.ViewData, helper.MetadataProvider);
-            if ((!renderFormControlClass.HasValue && metadata.ModelType.Name.Equals("String")) ||
-                (renderFormControlClass.HasValue && renderFormControlClass.Value))
-                htmlAttributes = new { @class = "form-control" };
-
-            string result = "";
-            var editorHtml = helper.EditorFor(expression, new { htmlAttributes, postfix }).ToHtmlString();
-            if (required)
-                result = string.Format("<div class=\"input-group input-group-required\">{0}<div class=\"input-group-btn\"><span class=\"required\">*</span></div></div>", editorHtml);
-            else
-                result = editorHtml;
-
-            return new HtmlString(result);
-        }
-
-        public static IHtmlContent GrandDropDownListFor<TModel, TValue>(this IHtmlHelper<TModel> helper,
-            Expression<Func<TModel, TValue>> expression, IEnumerable<SelectListItem> itemList,
-            object htmlAttributes = null)
-        {
-            var attrs = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-            attrs = AddFormControlClassToHtmlAttributes(attrs);
-            return helper.DropDownListFor(expression, itemList, attrs);
-        }
-
-        public static IHtmlContent GrandDropDownList<TModel>(this IHtmlHelper<TModel> helper, string name,
-            IEnumerable<SelectListItem> itemList, object htmlAttributes = null,
-            bool renderFormControlClass = true, bool required = false)
-        {
-            var result = new StringBuilder();
-
-            var attrs = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-            if (renderFormControlClass)
-                attrs = AddFormControlClassToHtmlAttributes(attrs);
-
-            if (required)
-                result.AppendFormat("<div class=\"input-group input-group-required\">{0}<div class=\"input-group-btn\"><span class=\"required\">*</span></div></div>",
-                    helper.DropDownList(name, itemList, attrs).ToHtmlString());
-            else
-                result.Append(helper.DropDownList(name, itemList, attrs).ToHtmlString());
-
-            return new HtmlString(result.ToString());
-        }
-
-        public static IHtmlContent GrandTextAreaFor<TModel, TValue>(this IHtmlHelper<TModel> helper,
-            Expression<Func<TModel, TValue>> expression, object htmlAttributes = null,
-            bool renderFormControlClass = true, int rows = 4, int columns = 20, bool required = false)
-        {
-            var result = new StringBuilder();
-
-            var attrs = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-            if (renderFormControlClass)
-                attrs = AddFormControlClassToHtmlAttributes(attrs);
-
-            if (required)
-                result.AppendFormat("<div class=\"input-group input-group-required\">{0}<div class=\"input-group-btn\"><span class=\"required\">*</span></div></div>",
-                    helper.TextAreaFor(expression, rows, columns, attrs).ToHtmlString());
-            else
-                result.Append(helper.TextAreaFor(expression, rows, columns, attrs).ToHtmlString());
-
-            return new HtmlString(result.ToString());
-        }
-
-
-        public static RouteValueDictionary AddFormControlClassToHtmlAttributes(IDictionary<string, object> htmlAttributes)
-        {
-            if (!htmlAttributes.ContainsKey("class") || htmlAttributes["class"] == null || string.IsNullOrEmpty(htmlAttributes["class"].ToString()))
-                htmlAttributes["class"] = "form-control";
-            else
-                if (!htmlAttributes["class"].ToString().Contains("form-control"))
-                htmlAttributes["class"] += " form-control";
-
-            return new RouteValueDictionary(htmlAttributes);
-        }
-
+        
         public static IHtmlContent OverrideStoreCheckboxFor<TModel, TValue>(this IHtmlHelper<TModel> helper,
             Expression<Func<TModel, bool>> expression,
             Expression<Func<TModel, TValue>> forInputExpression,
@@ -355,30 +227,12 @@ namespace Grand.Framework
             return new HtmlString(result.ToString());
         }
 
-        public static string FieldNameFor<T, TResult>(this IHtmlHelper<T> html, Expression<Func<T, TResult>> expression)
-        {
-            //TO DO remove this method and use in cshtml files
-            return html.NameFor(expression);
-        }
         public static string FieldIdFor<T, TResult>(this IHtmlHelper<T> html, Expression<Func<T, TResult>> expression)
         {
             //TO DO remove this method and use in cshtml files
             return html.IdFor(expression);
         }
 
-        public static IHtmlContent Hint(this IHtmlHelper helper, string value)
-        {
-            //create tag builder
-            var builder = new TagBuilder("i");
-            builder.MergeAttribute("title", value);
-            builder.MergeAttribute("class", "ico-question");
-            var icon = new StringBuilder();
-            icon.Append("<i class='fa fa-question-circle'></i>");
-            builder.InnerHtml.AppendHtml(icon.ToString());
-            //render tag
-            return new HtmlString(builder.ToHtmlString());
-
-        }
         public static string RenderHtmlContent(this IHtmlContent htmlContent)
         {
             using (var writer = new StringWriter())
@@ -417,19 +271,6 @@ namespace Grand.Framework
 
         #region Common extensions
 
-        public static IHtmlContent RequiredHint(this IHtmlHelper helper, string additionalText = null)
-        {
-            // Create tag builder
-            var tagBuilder = new TagBuilder("span");
-            tagBuilder.AddCssClass("required");
-            var innerText = "*";
-            //add additional text if specified
-            if (!String.IsNullOrEmpty(additionalText))
-                innerText += " " + additionalText;
-            tagBuilder.InnerHtml.AppendHtml(innerText);
-            return new HtmlString(tagBuilder.RenderHtmlContent());
-        }
-
         public static string ToHtmlString(this IHtmlContent tag)
         {
             using (var writer = new StringWriter())
@@ -438,14 +279,6 @@ namespace Grand.Framework
                 return writer.ToString();
             }
         }
-
-        public static string FieldNameFor<T, TResult>(this HtmlHelper<T> html, Expression<Func<T, TResult>> expression)
-        {
-            return html.ViewData.TemplateInfo.GetFullHtmlFieldName(ExpressionHelper.GetExpressionText(expression));
-        }
-
-        public static IHtmlContent HelloWorldHTMLString(this IHtmlHelper htmlHelper)
-            => new HtmlString("<strong>Hello World</strong>");
 
         /// <summary>
         /// Creates a days, months, years drop down list using an HTML select control. 
@@ -554,44 +387,7 @@ namespace Grand.Framework
                 return new HtmlString(string.Concat(daysList.RenderHtmlContent(), monthsList.RenderHtmlContent(), yearsList.RenderHtmlContent()));
             }
 
-        }
-
-        /// <summary>
-        /// Renders the standard label with a specified suffix added to label text
-        /// </summary>
-        /// <typeparam name="TModel">Model</typeparam>
-        /// <typeparam name="TValue">Value</typeparam>
-        /// <param name="html">HTML helper</param>
-        /// <param name="expression">Expression</param>
-        /// <param name="htmlAttributes">HTML attributes</param>
-        /// <param name="suffix">Suffix</param>
-        /// <returns>Label</returns>
-        public static IHtmlContent LabelFor<TModel, TValue>(this IHtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, object htmlAttributes, string suffix)
-        {
-            //TODO refactor the way it's implemented in \Microsoft.AspNetCore.Mvc.ViewFeatures\ViewFeatures\HtmlHelperOfT.cs - "IHtmlContent LabelFor<TResult>"
-            string htmlFieldName = ExpressionHelper.GetExpressionText(expression);
-
-            var metadata = ExpressionMetadataProvider.FromLambdaExpression(expression, html.ViewData, html.MetadataProvider);
-            string resolvedLabelText = metadata.Metadata.DisplayName ?? (metadata.Metadata.PropertyName ?? htmlFieldName.Split(new[] { '.' }).Last());
-            if (string.IsNullOrEmpty(resolvedLabelText))
-            {
-                return new HtmlString("");
-            }
-            var tag = new TagBuilder("label");
-            tag.Attributes.Add("for", TagBuilder.CreateSanitizedId(html.IdFor(expression), ""));
-            if (!String.IsNullOrEmpty(suffix))
-            {
-                resolvedLabelText = String.Concat(resolvedLabelText, suffix);
-            }
-            tag.InnerHtml.AppendHtml(resolvedLabelText);
-
-            var dictionary = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-            tag.MergeAttributes(dictionary, true);
-
-            return new HtmlString(tag.ToHtmlString());
-
-        }
-
+        }       
         #endregion
     }
 }

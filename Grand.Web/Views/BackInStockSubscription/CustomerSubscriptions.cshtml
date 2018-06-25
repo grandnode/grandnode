@@ -10,7 +10,7 @@
 {
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.BackInStockSubscriptions })
 }
-<div class="page account-page back-in-stock-subscription-list-page">
+<div class="page account-page back-in-stock-subscription-list-page pl-lg-3">
     <h1 class="h2 generalTitle">@T("Account.BackInStockSubscriptions")</h1>
     @if (Model.Subscriptions.Count > 0)
     {
@@ -45,7 +45,7 @@
                                 <th class="select-boxes">
                                     <label class="custom-control custom-checkbox">
                                         <input id="selectall" type="checkbox" class="custom-control-input">
-                                        <span class="custom-control-indicator"></span>
+                                        <span class="custom-control-label"></span>
                                         <span class="custom-control-description">&nbsp;</span>
                                     </label>
                                 </th>
@@ -62,7 +62,7 @@
                                 <td class="select-boxes">
                                     <label class="custom-control custom-checkbox">
                                         <input id="selectall" type="checkbox" name="biss@(item.Id)" class="rowcheckbox custom-control-input">
-                                        <span class="custom-control-indicator"></span>
+                                        <span class="custom-control-label"></span>
                                         <span class="custom-control-description">&nbsp;</span>
                                     </label>
                                 </td>

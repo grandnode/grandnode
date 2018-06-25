@@ -1,13 +1,8 @@
 ﻿@model CustomerModel
-@using Grand.Core.Domain.Orders;
-@using Grand.Services.Customers;
-@using System.Text;
-
-
 
 @if (Model.CountryEnabled && Model.StateProvinceEnabled)
 {
-<script type="text/javascript">
+    <script type="text/javascript">
         $(document).ready(function() {
             $("#@Html.FieldIdFor(model => model.CountryId)").change(function() {
                 var selectedItem = $(this).val();
@@ -35,47 +30,47 @@
                 });
             });
         });
-</script>
+    </script>
 }
 <div class="form-horizontal">
     <div class="form-body">
         @if (Model.UsernamesEnabled)
+        {
+            if (String.IsNullOrEmpty(Model.Id) || Model.AllowUsersToChangeUsernames)
             {
-                if (String.IsNullOrEmpty(Model.Id) || Model.AllowUsersToChangeUsernames)
-                {
                 <div class="form-group">
-                    @Html.GrandLabelFor(model => model.Username)
+                    <admin-label asp-for="Username" />
                     <div class="col-md-9 col-sm-9">
-                        @Html.GrandEditorFor(model => model.Username)
-                        @Html.ValidationMessageFor(model => model.Username)
+                        <admin-input asp-for="Username" />
+                        <span asp-validation-for="Username"></span>
                     </div>
                 </div>
             }
             else
             {
                 <div class="form-group">
-                    @Html.GrandLabelFor(model => model.Username)
+                    <admin-label asp-for="Username" />
                     <div class="col-md-9 col-sm-9">
                         <label class="control-label"> @Model.Username</label>
-                        @Html.HiddenFor(model => model.Username)
+                        <input asp-for="Username" type="hidden" />
                     </div>
                 </div>
             }
         }
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.Email)
+            <admin-label asp-for="Email" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.Email)
-                @Html.ValidationMessageFor(model => model.Email)
+                <admin-input asp-for="Email" />
+                <span asp-validation-for="Email"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.Password)
+            <admin-label asp-for="Password" />
             <div class="col-md-9 col-sm-9">
                 <div class="input-group">
                     <div class="input-icon">
                         <i class="fa fa-lock fa-fw"></i>
-                        @Html.GrandEditorFor(model => model.Password)
+                        <admin-input asp-for="Password" />
                     </div>
                     <span class="input-group-btn">
                         <input type="submit" name="changepassword" class="btn btn-success" value="@T("Admin.Customers.Customers.Fields.Password.Change")" />
@@ -84,32 +79,32 @@
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.CustomerTags)
+            <admin-label asp-for="CustomerTags" />
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.CustomerTags)
-                @Html.ValidationMessageFor(model => model.CustomerTags)
+                <admin-input asp-for="CustomerTags" />
+                <span asp-validation-for="CustomerTags"></span>
             </div>
         </div>
         @if (!String.IsNullOrEmpty(Model.Id) && Model.AssociatedExternalAuthRecords.Count > 0)
-            {
+        {
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.AssociatedExternalAuthRecords)
+                <admin-label asp-for="AssociatedExternalAuthRecords" />
                 <div class="col-md-9 col-sm-9">
                     <div id="externalauthrecords-grid"></div>
                     <script>
 
                             //local datasource
                             var externalauthrecords = [
-                                @for (int i = 0; i < Model.AssociatedExternalAuthRecords.Count; i++)
+                            @for (int i = 0; i < Model.AssociatedExternalAuthRecords.Count; i++)
                             {
                                 var aear = Model.AssociatedExternalAuthRecords[i];
                                 <text>
-        {
-            AuthMethodName: "@(Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(aear.AuthMethodName)))",
-            Email: "@(Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(aear.Email)))",
-            ExternalIdentifier: "@(Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(aear.ExternalIdentifier)))"
-        }
-    </text>
+                                {
+                                    AuthMethodName: "@aear.AuthMethodName",
+                                    Email: "@aear.Email",
+                                    ExternalIdentifier: "@aear.ExternalIdentifier"
+                                }
+                                 </text>
                                 if (i != Model.AssociatedExternalAuthRecords.Count - 1)
                                 {
                                     <text>,</text>
@@ -166,17 +161,17 @@
             </div>
         }
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.VendorId)
+            <admin-label asp-for="VendorId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.VendorId, Model.AvailableVendors)
-                @Html.ValidationMessageFor(model => model.VendorId)
+                <admin-select asp-for="VendorId" asp-items="Model.AvailableVendors" />
+                <span asp-validation-for="VendorId"></span>
                 <em>@T("Admin.Customers.Customers.VendorShouldBeInVendorsRole")</em>
             </div>
         </div>
         @if (Model.GenderEnabled)
-            {
+        {
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.Gender)
+                <admin-label asp-for="Gender" />
                 <div class="col-md-9 col-sm-9">
                     <div class="gender">
                         @Html.RadioButton("Gender", "M", (Model.Gender == "M"), new { id = "Gender_Male" })
@@ -190,166 +185,166 @@
             </div>
         }
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.FirstName)
+            <admin-label asp-for="FirstName" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.FirstName)
-                @Html.ValidationMessageFor(model => model.FirstName)
+                <admin-input asp-for="FirstName" />
+                <span asp-validation-for="FirstName"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.LastName)
+            <admin-label asp-for="LastName" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.LastName)
-                @Html.ValidationMessageFor(model => model.LastName)
+                <admin-input asp-for="LastName" />
+                <span asp-validation-for="LastName"></span>
             </div>
         </div>
         @if (Model.DateOfBirthEnabled)
-            {
+        {
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.DateOfBirth)
+                <admin-label asp-for="DateOfBirth" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.DateOfBirth)
-                    @Html.ValidationMessageFor(model => model.DateOfBirth)
+                    <admin-input asp-for="DateOfBirth" />
+                    <span asp-validation-for="DateOfBirth"></span>
                 </div>
             </div>
         }
         @if (Model.CompanyEnabled)
-            {
+        {
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.Company)
+                <admin-label asp-for="Company" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.Company)
-                    @Html.ValidationMessageFor(model => model.Company)
+                    <admin-input asp-for="Company" />
+                    <span asp-validation-for="Company"></span>
                 </div>
             </div>
         }
         @if (Model.StreetAddressEnabled)
-            {
+        {
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.StreetAddress)
+                <admin-label asp-for="StreetAddress" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.StreetAddress)
-                    @Html.ValidationMessageFor(model => model.StreetAddress)
+                    <admin-input asp-for="StreetAddress" />
+                    <span asp-validation-for="StreetAddress"></span>
                 </div>
             </div>
         }
         @if (Model.StreetAddress2Enabled)
-            {
+        {
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.StreetAddress2)
+                <admin-label asp-for="StreetAddress2" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.StreetAddress2)
-                    @Html.ValidationMessageFor(model => model.StreetAddress2)
+                    <admin-input asp-for="StreetAddress2" />
+                    <span asp-validation-for="StreetAddress2"></span>
                 </div>
             </div>
         }
         @if (Model.ZipPostalCodeEnabled)
-            {
+        {
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.ZipPostalCode)
+                <admin-label asp-for="ZipPostalCode" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.ZipPostalCode)
-                    @Html.ValidationMessageFor(model => model.ZipPostalCode)
+                    <admin-input asp-for="ZipPostalCode" />
+                    <span asp-validation-for="ZipPostalCode"></span>
                 </div>
             </div>
         }
         @if (Model.CityEnabled)
-            {
+        {
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.City)
+                <admin-label asp-for="City" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.City)
-                    @Html.ValidationMessageFor(model => model.City)
+                    <admin-input asp-for="City" />
+                    <span asp-validation-for="City"></span>
                 </div>
             </div>
         }
         @if (Model.CountryEnabled)
-            {
+        {
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.CountryId)
+                <admin-label asp-for="CountryId" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandDropDownListFor(model => model.CountryId, Model.AvailableCountries)
-                    @Html.ValidationMessageFor(model => model.CountryId)
+                    <admin-select asp-for="CountryId" asp-items="Model.AvailableCountries" />
+                    <span asp-validation-for="CountryId"></span>
                 </div>
             </div>
         }
         @if (Model.CountryEnabled && Model.StateProvinceEnabled)
-            {
+        {
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.StateProvinceId)
+                <admin-label asp-for="StateProvinceId" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandDropDownListFor(model => model.StateProvinceId, Model.AvailableStates)
-                    @Html.ValidationMessageFor(model => model.StateProvinceId)
+                    <admin-select asp-for="StateProvinceId" asp-items="Model.AvailableStates" />
+                    <span asp-validation-for="StateProvinceId"></span>
                 </div>
             </div>
         }
         @if (Model.PhoneEnabled)
-            {
+        {
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.Phone)
+                <admin-label asp-for="Phone" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.Phone)
-                    @Html.ValidationMessageFor(model => model.Phone)
+                    <admin-input asp-for="Phone" />
+                    <span asp-validation-for="Phone"></span>
                 </div>
             </div>
         }
         @if (Model.FaxEnabled)
-            {
+        {
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.Fax)
+                <admin-label asp-for="Fax" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.Fax)
-                    @Html.ValidationMessageFor(model => model.Fax)
+                    <admin-input asp-for="Fax" />
+                    <span asp-validation-for="Fax"></span>
                 </div>
             </div>
         }
         @if (Model.CustomerAttributes.Count > 0)
-            {
+        {
             <div class="form-group">
                 @Html.Partial("_CustomerAttributes", Model.CustomerAttributes)
             </div>
         }
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.AdminComment)
+            <admin-label asp-for="AdminComment" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandTextAreaFor(model => model.AdminComment, new { style = "Height: 100px;" })
-                @Html.ValidationMessageFor(model => model.AdminComment)
+                <admin-textarea asp-for="AdminComment"></admin-textarea>
+                <span asp-validation-for="AdminComment"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.IsTaxExempt)
+            <admin-label asp-for="IsTaxExempt" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.IsTaxExempt)
+                    <admin-input asp-for="IsTaxExempt" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.IsTaxExempt)
+                <span asp-validation-for="IsTaxExempt"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.FreeShipping)
+            <admin-label asp-for="FreeShipping" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.FreeShipping)
+                    <admin-input asp-for="FreeShipping" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.FreeShipping)
+                <span asp-validation-for="FreeShipping"></span>
             </div>
         </div>
         @if (Model.AllowCustomersToSetTimeZone)
-            {
+        {
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.TimeZoneId)
+                <admin-label asp-for="TimeZoneId" />
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandDropDownListFor(model => model.TimeZoneId, Model.AvailableTimeZones)
-                    @Html.ValidationMessageFor(model => model.TimeZoneId)
+                    <admin-select asp-for="TimeZoneId" asp-items="Model.AvailableTimeZones" />
+                    <span asp-validation-for="TimeZoneId"></span>
                 </div>
             </div>
         }
         @if (!String.IsNullOrEmpty(Model.AffiliateId))
-            {
+        {
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.AffiliateId)
+                <admin-label asp-for="AffiliateId" />
                 <div class="col-md-9 col-sm-9">
                     <a class="btn default" href="@Url.Action("Edit", "Affiliate", new { id = Model.AffiliateId })">@Model.AffiliateName - @T("Admin.Common.View")</a>
                     <input type="submit" name="remove-affiliate" class="btn red" value="@T("Admin.Customers.Customers.Fields.Affiliate.Remove")" />
@@ -357,26 +352,26 @@
             </div>
         }
         @if (Model.DisplayVatNumber)
-            {
+        {
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.VatNumber)
+                <admin-label asp-for="VatNumber" />
                 <div class="col-md-9 col-sm-9">
                     <div class="input-group-control">
-                        @Html.GrandEditorFor(model => model.VatNumber)
+                        <admin-input asp-for="VatNumber" />
                         <label class="control-label">
                             (@string.Format(T("Admin.Customers.Customers.Fields.VatNumberStatus").Text, Model.VatNumberStatusNote))
                         </label>
                         <input type="submit" name="markVatNumberAsValid" class="btn green" value="@T("Admin.Customers.Customers.Fields.VatNumber.MarkAsValid")" />
                         <input type="submit" name="markVatNumberAsInvalid" class="btn red" value="@T("Admin.Customers.Customers.Fields.VatNumber.MarkAsInvalid")" />
                     </div>
-                    @Html.ValidationMessageFor(model => model.VatNumber)
+                    <span asp-validation-for="VatNumber"></span>
                 </div>
             </div>
         }
         @if (Model.AvailableNewsletterSubscriptionStores != null && Model.AvailableNewsletterSubscriptionStores.Count > 0)
-            {
+        {
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.SelectedNewsletterSubscriptionStoreIds)
+                <admin-label asp-for="SelectedNewsletterSubscriptionStoreIds" />
                 <div class="col-md-9 col-sm-9">
                     @foreach (var store in Model.AvailableNewsletterSubscriptionStores)
                     {
@@ -385,7 +380,7 @@
                                 <input type="checkbox" name="SelectedNewsletterSubscriptionStoreIds" value="@store.Id" checked="@(Model.SelectedNewsletterSubscriptionStoreIds != null && Model.SelectedNewsletterSubscriptionStoreIds.Contains(store.Id))" />(@(store.Name))
                                 <span></span>
                             </label>
-                            
+
                         </div>
 
                     }
@@ -399,66 +394,66 @@
             </div>
         }
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.Active)
+            <admin-label asp-for="Active" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.Active)
+                    <admin-input asp-for="Active" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.Active)
+                <span asp-validation-for="Active"></span>
             </div>
         </div>
         @if (!String.IsNullOrEmpty(Model.Id))
-            {
+        {
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.LastIpAddress)
+                <admin-label asp-for="LastIpAddress" />
                 <div class="col-md-9 col-sm-9">
-                    <label class="control-label"> @Html.DisplayFor(model => model.LastIpAddress)</label>
+                    <label class="control-label">@Model.LastIpAddress</label>
                 </div>
             </div>
         }
         @if (!String.IsNullOrEmpty(Model.Id))
-            {
+        {
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.CreatedOn)
+                <admin-label asp-for="CreatedOn" />
                 <div class="col-md-9 col-sm-9">
-                    <label class="control-label"> @Html.DisplayFor(model => model.CreatedOn)</label>
+                    <label class="control-label">@Model.CreatedOn</label>
                 </div>
             </div>
         }
         @if (!String.IsNullOrEmpty(Model.Id))
-            {
+        {
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.LastActivityDate)
+                <admin-label asp-for="LastActivityDate" />
                 <div class="col-md-9 col-sm-9">
-                    <label class="control-label"> @Html.DisplayFor(model => model.LastActivityDate)</label>
+                    <label class="control-label">@Model.LastActivityDate</label>
                 </div>
             </div>
         }
         @if (!String.IsNullOrEmpty(Model.Id) && !String.IsNullOrEmpty(Model.LastVisitedPage))
-            {
+        {
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.LastVisitedPage)
+                <admin-label asp-for="LastVisitedPage" />
                 <div class="col-md-9 col-sm-9">
-                    <label class="control-label"> @Html.DisplayFor(model => model.LastVisitedPage)</label>
+                    <label class="control-label">@Model.LastVisitedPage</label>
                 </div>
             </div>
         }
         @if (!String.IsNullOrEmpty(Model.Id) && !String.IsNullOrEmpty(Model.LastUrlReferrer))
-            {
+        {
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.LastUrlReferrer)
+                <admin-label asp-for="LastUrlReferrer" />
                 <div class="col-md-9 col-sm-9">
-                    <label class="control-label"> @Html.DisplayFor(model => model.LastUrlReferrer)</label>
+                    <label class="control-label">@Model.LastUrlReferrer</label>
                 </div>
             </div>
         }
         @if (!String.IsNullOrEmpty(Model.Id) && Model.LastPurchaseDate.HasValue)
-            {
+        {
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.LastPurchaseDate)
+                <admin-label asp-for="LastPurchaseDate" />
                 <div class="col-md-9 col-sm-9">
-                    <label class="control-label"> @Html.DisplayFor(model => model.LastPurchaseDate)</label>
+                    <label class="control-label">@Model.LastPurchaseDate</label>
                 </div>
             </div>
         }

@@ -2,16 +2,14 @@
     Layout = "_ConfigurePlugin";
 
 }
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "shipping-instore-form" }))
-{
-    @Html.AntiForgeryToken()
 
+<form asp-controller="ShippingPoint" asp-action="Configure" method="post" id="shipping-instore-form">
+    <antiforgery-token />
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
                 <div id="shipping-points-grid"></div>
-
-                <script>
+                <script type="text/javascript">
                     $(document).ready(function() {
                         $("#shipping-points-grid").kendoGrid({
                             dataSource: {
@@ -82,7 +80,7 @@
                                 field: "Id",
                                 title: "@T("Admin.Common.Edit")",
                                 width: 100,
-                                template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Action("Edit", "ShippingPoint")?id=#=Id#&btnId=btnRefresh&formId=shipping-instore-form', 800, 800, true); return false;\" class='btn btn-default' />"
+                                template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Action("Edit", "ShippingPoint")?id=#=Id#&btnId=btnRefresh&formId=shipping-instore-form', 800, 800, true); return false;\" class='k-button k-button-icontext' />"
                             }, {
                                 command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                                 title: "@T("Admin.Common.Delete")",
@@ -109,4 +107,4 @@
 
         </div>
     </div>
-}
+</form>

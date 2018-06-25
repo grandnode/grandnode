@@ -1,11 +1,11 @@
 ﻿@model PaymentMethodRestrictionModel
-@{               
+@inject IEventPublisher eventPublisher
+@{
     //page title
     ViewBag.Title = T("Admin.Configuration.Payment.MethodRestrictions").Text;
 }
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Payment" asp-action="MethodRestrictions" method="post">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -19,7 +19,6 @@
                     </div>
                 </div>
                 <div class="portlet-body form">
-
                     <script type="text/javascript">
                         $(document).ready(function () {
                             $('#paymentrestriction-edit').show();
@@ -32,8 +31,8 @@
                                 select: tabstrip_on_tab_select
                             });
                         });
-                    </script>                    
-                    
+                    </script>
+
                     <div id="paymentrestriction-edit" style="display:none">
                         <ul>
                             <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
@@ -56,24 +55,20 @@
                             @Html.Partial("MethodRestrictions.TabShipping", Model)
                         </div>
                     </div>
-
                     @{
                         //custom tabs
                         var eventMessage = new AdminTabStripCreated(this.Html, "paymentrestriction-edit");
-                        EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+                        eventPublisher.Publish(eventMessage);
                         foreach (var eventBlock in eventMessage.BlocksToRender)
                         {
                             @eventBlock
                         }
                     }
 
-
                     @*save selected tab index*@
                     <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
-
                 </div>
             </div>
         </div>
     </div>
-
-}
+</form>

@@ -3,18 +3,15 @@
     //page title
     ViewBag.Title = T("Admin.Promotions.InteractiveForms.AddAttribute").Text;
 }
-
-@using(Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-
+<form asp-controller="InteractiveForm" asp-action="AddAttribute" method="post">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
                 <div class="portlet-title">
                     <div class="caption">
                         <i class="fa fa-sitemap"></i>
-                        @T("Admin.Promotions.InteractiveForms.AddAttribute") - @Model.Name 
+                        @T("Admin.Promotions.InteractiveForms.AddAttribute") - @Model.Name
                         <small>@Html.ActionLink("(" + T("Admin.Promotions.InteractiveForms.BackToForm") + ")", "Edit", new { Id = Model.FormId })</small>
                     </div>
                     <div class="actions">
@@ -30,6 +27,4 @@
             </div>
         </div>
     </div>
-
-
-}
+</form>

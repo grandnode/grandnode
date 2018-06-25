@@ -442,7 +442,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     Name = x.Name,
                     IsPreSelected = x.IsPreSelected,
                     DisplayOrder = x.DisplayOrder,
-                }),
+                }).OrderBy(x=>x.DisplayOrder),
                 Total = values.Count()
             };
             return Json(gridModel);

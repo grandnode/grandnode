@@ -14,14 +14,14 @@
                 {
                     <div class="col-12 col-md-6 col-lg-4">
                         <div class="vendor-item">
-                            <h2 class="title">
+                            <h2 class="title text-center">
                                 <a href="@Url.RouteUrl("Vendor", new { SeName = item.SeName })" title="@item.PictureModel.Title">
                                     @item.Name
                                 </a>
                             </h2>
                             <div class="picture">
                                 <a href="@Url.RouteUrl("Vendor", new { SeName = item.SeName })" title="@item.PictureModel.Title">
-                                    <img alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
+                                    <img class="card-img-top img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
                                 </a>
                             </div>
                         </div>

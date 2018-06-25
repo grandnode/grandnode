@@ -1,53 +1,49 @@
 ﻿@model AffiliateModel
 
-
-
-
-
 <div class="form-horizontal">
     <div class="form-body">
         @if (!String.IsNullOrEmpty(Model.Id))
-            {
+        {
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.Id)
+                <admin-label asp-for="Id" />
                 <div class="col-md-9 col-sm-9">
                     <label class="control-label">@Model.Id</label>
                 </div>
             </div>
-                <div class="form-group">
-                    @Html.GrandLabelFor(model => model.Url)
-                    <div class="col-md-9 col-sm-9">
-                        <label class="control-label">@Model.Url</label>
-                    </div>
+            <div class="form-group">
+                <admin-label asp-for="Url" />
+                <div class="col-md-9 col-sm-9">
+                    <label class="control-label">@Model.Url</label>
                 </div>
+            </div>
         }
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.Active)
+            <admin-label asp-for="Active" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.Active)
+                    <admin-input asp-for="Active" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.Active)
+                <span asp-validation-for="Active"></span>
             </div>
         </div>
     </div>
 </div>
-@Html.EditorFor(model => model.Address, "Address")
+<admin-input asp-for="Address" asp-template="Address" />
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.AdminComment)
+            <admin-label asp-for="AdminComment" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandTextAreaFor(model => model.AdminComment, new { style = "Height: 100px;" })
-                @Html.ValidationMessageFor(model => model.AdminComment)
+                <admin-textarea asp-for="AdminComment"></admin-textarea>
+                <span asp-validation-for="AdminComment"></span>
             </div>
         </div>
         <div class="form-body">
-            @Html.GrandLabelFor(model => model.FriendlyUrlName)
+            <admin-label asp-for="FriendlyUrlName" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.FriendlyUrlName)
-                @Html.ValidationMessageFor(model => model.FriendlyUrlName)
+                <admin-input asp-for="FriendlyUrlName" />
+                <span asp-validation-for="FriendlyUrlName"></span>
             </div>
         </div>
     </div>

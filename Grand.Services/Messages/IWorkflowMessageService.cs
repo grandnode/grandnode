@@ -392,6 +392,14 @@ namespace Grand.Services.Messages
         int SendNewVatSubmittedStoreOwnerNotification(Customer customer, string vatName, string vatAddress, string languageId);
 
         /// <summary>
+        /// Sends a "customer delete" notification to a store owner
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        int SendCustomerDeleteStoreOwnerNotification(Customer customer, string languageId);
+
+        /// <summary>
         /// Sends a blog comment notification message to a store owner
         /// </summary>
         /// <param name="blogComment">Blog comment</param>
@@ -425,7 +433,7 @@ namespace Grand.Services.Messages
         /// <param name="subject">Email subject. Pass null if you want a message template subject to be used.</param>
         /// <param name="body">Email body</param>
         /// <returns>Queued email identifier</returns>
-        int SendContactUsMessage(Customer customer, string languageId, string senderEmail, string senderName, string subject, string body);
+        int SendContactUsMessage(Customer customer, string languageId, string senderEmail, string senderName, string subject, string body, string attrInfo, string attrXml);
 
         /// <summary>
         /// Sends "contact vendor" message
@@ -468,6 +476,52 @@ namespace Grand.Services.Messages
         /// <param name="customerId">Customer identifier</param>
         /// <returns>Queued email identifier</returns>
         int SendCustomerActionEvent_Notification(CustomerAction action, string languageId, Customer customer);
+
+        /// <summary>
+        /// Sends auction ended notification to a customer (winner)
+        /// </summary>
+        /// <param name="product">Auction</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <param name="Bid">Bid</param>
+        /// <returns>Queued email identifier</returns>
+        int SendAuctionEndedCustomerNotificationWin(Product product, string languageId, Bid bid);
+
+        /// <summary>
+        /// Sends auction ended notification to a customer (loser)
+        /// </summary>
+        /// <param name="product">Auction</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <param name="Bid">Bid</param>
+        /// <returns>Queued email identifier</returns>
+        int SendAuctionEndedCustomerNotificationLost(Product product, string languageId, Bid bid);
+
+        /// <summary>
+        /// Sends auction ended notification to a customer (loser - bin)
+        /// </summary>
+        /// <param name="product">Auction</param>
+        /// <param name="customerId">Customer identifier</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <returns>Queued email identifier</returns>
+        int SendAuctionEndedCustomerNotificationBin(Product product, string customerId, string languageId, string storeId);
+
+        /// <summary>
+        /// Sends auction ended notification to a store owner
+        /// </summary>
+        /// <param name="languageId">Message language identifier</param>
+        /// <param name="product">Auction</param>
+        /// <param name="Bid">Bid</param>
+        /// <returns>Queued email identifier</returns>
+        int SendAuctionEndedStoreOwnerNotification(Product product, string languageId, Bid bid);
+
+        /// <summary>
+        /// Send outbid notification to a customer
+        /// </summary>
+        /// <param name="languageId">Message language identifier</param>
+        /// <param name="product">Product</param>
+        /// <param name="Bid">Bid</param>
+        /// <returns>Queued email identifier</returns>
+        int SendOutBidCustomerNotification(Product product, string languageId, Bid bid);
 
         /// <summary>
         /// Send notification

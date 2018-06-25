@@ -6,7 +6,7 @@
             @if (Model.ShippingAddress != null)
             {
                 <div class="form-group">
-                    @Html.GrandLabelFor(model => model.ShippingAddress)
+                    <admin-label asp-for="ShippingAddress" />
                     <div class="col-md-9 col-sm-9">
                         <table class="table table-bordered table-striped table-hover">
                             @if (Model.ShippingAddress.FirstNameEnabled || Model.ShippingAddress.LastNameEnabled)
@@ -157,7 +157,7 @@
             @if (Model.PickupAddress != null)
             {
                 <div class="form-group">
-                    @Html.GrandLabelFor(model => model.PickupAddress)
+                    <admin-label asp-for="PickupAddress" />
                     <div class="col-md-9 col-sm-9">
                         <table class="table table-bordered table-striped table-hover">
                             @if (!String.IsNullOrEmpty(Model.PickupAddress.Address1))
@@ -210,7 +210,7 @@
             }
 
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.ShippingMethod)
+                <admin-label asp-for="ShippingMethod" />
                 <div class="col-md-9 col-sm-9">
                     <label class="control-label" id="lblShippingMethod">@Model.ShippingMethod</label>
                     @if (!Model.IsLoggedInAsVendor)
@@ -238,7 +238,7 @@
                             }
 
                         </script>
-                        <div id="divShippingMethod" style="display: inline-block;">@Html.GrandEditorFor(model => model.ShippingMethod)</div>
+                        <div id="divShippingMethod" style="display: inline-block;"><admin-input asp-for="ShippingMethod" /></div>
                         <input type="submit" value="@T("Admin.Common.Edit")" onclick=" toggleEditShippingMethod(true);return false; " id="btnEditShippingMethod" class="btn green" />
                         <input type="submit" value="@T("Admin.Common.Save")" id="btnSaveShippingMethod" name="save-shipping-method" class="btn green" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
                         <input type="submit" value="@T("Admin.Common.Cancel")" onclick=" toggleEditShippingMethod(false);return false; " id="btnCancelShippingMethod" class="btn default" />
@@ -253,7 +253,7 @@
             @if (!Model.IsLoggedInAsVendor)
             {
                 <div class="form-group">
-                    @Html.GrandLabelFor(model => model.ShippingStatus)
+                    <admin-label asp-for="ShippingStatus" />
                     <div class="col-md-9 col-sm-9">
                         <label class="control-label">@Model.ShippingStatus</label> 
                     </div>
@@ -316,15 +316,13 @@
                 columns: [{
                     field: "ShipmentNumber",
                     title: "@T("Admin.Orders.Shipments.ID")",
-                    width: 50
-                }, {
-                    field: "OrderNumber",
-                    title: "@T("Admin.Orders.Shipments.OrderID")",
-                    width: 100
+                    width: 50,
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Order/ShipmentDetails/")#=Id#">#=ShipmentNumber#</a>'
                 }, {
                     field: "TrackingNumber",
                     title: "@T("Admin.Orders.Shipments.TrackingNumber")",
-                    width: 100
+                    width: 100,
+                        template: '<a class="k-link" href="@Url.Content("~/Admin/Order/ShipmentDetails/")#=Id#">#=ShipmentNumber#</a>'
                 }, {
                     field: "TotalWeight",
                     title: "@T("Admin.Orders.Shipments.TotalWeight")",
@@ -341,11 +339,6 @@
                     width: 200,
                     type: "date",
                     format: "{0:G}"
-                }, {
-                    field: "Id",
-                    title: "@T("Admin.Common.View")",
-                    width: 50,
-                    template: '<a href="@Url.Content("~/Admin/Order/ShipmentDetails/")#=Id#">@T("Admin.Common.View")</a>'
                 }]
             });
         });

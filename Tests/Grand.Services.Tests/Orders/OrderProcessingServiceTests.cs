@@ -94,6 +94,8 @@ namespace Grand.Services.Orders.Tests
         private CustomerSettings _customerSettings;
         private AddressSettings _addressSettings;
         private Store _store;
+        private IProductReservationService _productReservationService;
+        private IAuctionService _auctionService;
 
         [TestInitialize()]
         public void TestInitialize()
@@ -111,8 +113,9 @@ namespace Grand.Services.Orders.Tests
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
+            _currencySettings = new CurrencySettings();
 
-            var cacheManager = new NopNullCache();
+            var cacheManager = new GrandNullCache();
 
             _productService = new Mock<IProductService>().Object;
 
@@ -122,12 +125,15 @@ namespace Grand.Services.Orders.Tests
             _manufacturerService = new Mock<IManufacturerService>().Object;
             _storeService = new Mock<IStoreService>().Object;
             _customerService = new Mock<ICustomerService>().Object;
+            _productReservationService = new Mock<IProductReservationService>().Object;
+            _currencyService = new Mock<ICurrencyService>().Object;
+            _auctionService = new Mock<IAuctionService>().Object;
 
             _productAttributeParser = new Mock<IProductAttributeParser>().Object;
             _priceCalcService = new PriceCalculationService(_workContext, _storeContext,
                 _discountService, _categoryService, _manufacturerService,
                 _productAttributeParser, _productService, _customerService,
-                cacheManager, _vendorService, _storeService, _shoppingCartSettings, _catalogSettings);
+                cacheManager, _vendorService, _storeService, _currencyService, _shoppingCartSettings, _catalogSettings, _currencySettings);
 
             var tempEventPublisher = new Mock<IEventPublisher>();
             {
@@ -204,8 +210,8 @@ namespace Grand.Services.Orders.Tests
             _orderTotalCalcService = new OrderTotalCalculationService(_workContext, _storeContext,
                 _priceCalcService, _taxService, _shippingService, _paymentService,
                 _checkoutAttributeParser, _discountService, _giftCardService,
-                _genericAttributeService, null, _productService,
-                _taxSettings, _rewardPointsSettings, _shippingSettings, _shoppingCartSettings, _catalogSettings);
+                _genericAttributeService, null, _productService, _currencyService,
+                _taxSettings, _rewardPointsSettings, _shippingSettings, _shoppingCartSettings, _catalogSettings, _currencySettings);
 
             _orderService = new Mock<IOrderService>().Object;
             _webHelper = new Mock<IWebHelper>().Object;
@@ -246,7 +252,7 @@ namespace Grand.Services.Orders.Tests
                 _workflowMessageService, _vendorService,
                 _customerActivityService, tempICustomerActionEventService,
                 _currencyService, _affiliateService,
-                _eventPublisher, _pdfService, null, null, _storeContext,
+                _eventPublisher, _pdfService, null, null, _storeContext, _productReservationService, _auctionService,
                 _shippingSettings, _paymentSettings, _rewardPointsSettings,
                 _orderSettings, _taxSettings, _localizationSettings,
                 _currencySettings);

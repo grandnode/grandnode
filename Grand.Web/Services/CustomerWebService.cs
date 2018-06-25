@@ -28,6 +28,8 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Grand.Core.Domain.Vendors;
+using Grand.Web.Models.Newsletter;
+using Grand.Core.Domain.Localization;
 
 namespace Grand.Web.Services
 {
@@ -52,6 +54,9 @@ namespace Grand.Web.Services
         private readonly IOrderService _orderService;
         private readonly IDownloadService _downloadService;
         private readonly IPictureService _pictureService;
+        private readonly IProductService _productService;
+        private readonly IAuctionService _auctionService;
+        private readonly INewsletterCategoryService _newsletterCategoryService;
 
         private readonly CustomerSettings _customerSettings;
         private readonly DateTimeSettings _dateTimeSettings;
@@ -84,7 +89,9 @@ namespace Grand.Web.Services
                     IOrderService orderService,
                     IDownloadService downloadService,
                     IPictureService pictureService,
-
+                    IProductService productService,
+                    IAuctionService auctionService,
+                    INewsletterCategoryService newsletterCategoryService,
                     CustomerSettings customerSettings,
                     DateTimeSettings dateTimeSettings,
                     TaxSettings taxSettings,
@@ -116,7 +123,9 @@ namespace Grand.Web.Services
             this._orderService = orderService;
             this._downloadService = downloadService;
             this._pictureService = pictureService;
-
+            this._productService = productService;
+            this._auctionService = auctionService;
+            this._newsletterCategoryService = newsletterCategoryService;
             this._customerSettings = customerSettings;
             this._dateTimeSettings = dateTimeSettings;
             this._taxSettings = taxSettings;
@@ -138,6 +147,22 @@ namespace Grand.Web.Services
                 _externalAuthenticationService.AssociateExternalAccountWithUser(customer, parameters);
         }
 
+        public virtual void DeleteAccount(Customer customer)
+        {
+            //send notification to customer
+            _workflowMessageService.SendCustomerDeleteStoreOwnerNotification(customer, EngineContext.Current.Resolve<LocalizationSettings>().DefaultAdminLanguageId);
+
+            //delete emails
+            EngineContext.Current.Resolve<IQueuedEmailService>().DeleteCustomerEmail(customer.Email);
+
+            //delete newsletter subscription
+            var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, _storeContext.CurrentStore.Id);
+            if (newsletter != null)
+                _newsLetterSubscriptionService.DeleteNewsLetterSubscription(newsletter);
+
+            //delete account
+            EngineContext.Current.Resolve<ICustomerService>().DeleteCustomer(customer);
+        }
 
         public virtual IList<CustomerAttributeModel> PrepareCustomAttributes(Customer customer,
             string overrideAttributesXml = "")
@@ -276,6 +301,14 @@ namespace Grand.Web.Services
                     newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByCustomerId(customer.Id);
 
                 model.Newsletter = newsletter != null && newsletter.Active;
+
+                var categories = _newsletterCategoryService.GetAllNewsletterCategory().ToList();
+                categories.ForEach(x => model.NewsletterCategories.Add(new NewsletterSimpleCategory() {
+                    Id = x.Id,
+                    Description = x.GetLocalized(y=>y.Description),
+                    Name = x.GetLocalized(y=>y.Name),
+                    Selected = newsletter == null ? false: newsletter.Categories.Contains(x.Id),
+                }));
 
                 model.Signature = customer.GetAttribute<string>(SystemCustomerAttributeNames.Signature);
 
@@ -474,6 +507,18 @@ namespace Grand.Web.Services
                 model.CustomerAttributes.Add(item);
             }
 
+            //newsletter categories
+            var newsletterCategories = _newsletterCategoryService.GetNewsletterCategoriesByStore(_storeContext.CurrentStore.Id);
+            foreach (var item in newsletterCategories)
+            {
+                model.NewsletterCategories.Add(new NewsletterSimpleCategory()
+                {
+                    Id = item.Id,
+                    Name = item.GetLocalized(x => x.Name),
+                    Description = item.GetLocalized(x => x.Description),
+                    Selected = item.Selected
+                });
+            }
             return model;
         }
 
@@ -606,11 +651,13 @@ namespace Grand.Web.Services
             var model = new CustomerNavigationModel();
             model.HideAvatar = !_customerSettings.AllowCustomersToUploadAvatars;
             model.HideRewardPoints = !_rewardPointsSettings.Enabled;
+            model.HideDeleteAccount = !_customerSettings.AllowUsersToDeleteAccount;
             model.HideForumSubscriptions = !_forumSettings.ForumsEnabled || !_forumSettings.AllowCustomersToManageSubscriptions;
             model.HideReturnRequests = !_orderSettings.ReturnRequestsEnabled ||
                 _returnRequestService.SearchReturnRequests(_storeContext.CurrentStore.Id, _workContext.CurrentCustomer.Id, "", null, 0, 1).Count == 0;
             model.HideDownloadableProducts = _customerSettings.HideDownloadableProductsTab;
             model.HideBackInStockSubscriptions = _customerSettings.HideBackInStockSubscriptionsTab;
+            model.HideAuctions = _customerSettings.HideAuctionsTab;
             if (_vendorSettings.AllowVendorsToEditInfo && _workContext.CurrentVendor != null)
             {
                 model.ShowVendorInfo = true;
@@ -640,7 +687,6 @@ namespace Grand.Web.Services
 
             return model;
         }
-
         public virtual CustomerDownloadableProductsModel PrepareDownloadableProducts(string customerId)
         {
             var model = new CustomerDownloadableProductsModel();
@@ -698,7 +744,38 @@ namespace Grand.Web.Services
                 false);
 
             return model;
+        }
 
+        public virtual CustomerAuctionsModel PrepareAuctions(Customer customer)
+        {
+            var model = new CustomerAuctionsModel();
+            var priceFormatter = EngineContext.Current.Resolve<IPriceFormatter>();
+
+            var customerBids = _auctionService.GetBidsByCustomerId(customer.Id).GroupBy(x => x.ProductId);
+            foreach (var item in customerBids)
+            {
+                var product = _productService.GetProductById(item.Key);
+                if (product != null)
+                {
+                    var bid = new ProductBidTuple();
+                    bid.Ended = product.AuctionEnded;
+                    bid.OrderId = item.Where(x => x.Win && x.CustomerId == customer.Id).FirstOrDefault()?.OrderId;
+                    var amount = product.HighestBid;
+                    bid.CurrentBidAmount = priceFormatter.FormatPrice(amount);
+                    bid.CurrentBidAmountValue = amount;
+                    bid.HighestBidder = product.HighestBidder == customer.Id;
+                    bid.EndBidDate = product.AvailableEndDateTimeUtc.HasValue ? product.AvailableEndDateTimeUtc.Value : DateTime.MaxValue;
+                    bid.ProductName = product.GetLocalized(x => x.Name);
+                    bid.ProductSeName = product.GetSeName();
+                    bid.BidAmountValue = item.Max(x => x.Amount);
+                    bid.BidAmount = priceFormatter.FormatPrice(bid.BidAmountValue);
+                    model.ProductBidList.Add(bid);
+                }
+            }
+
+            model.CustomerId = customer.Id;
+
+            return model;
         }
 
     }

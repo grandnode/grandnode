@@ -1,0 +1,85 @@
+﻿<div>
+    <canvas id="canvasReportCustomerTimeChart"></canvas>
+</div>
+
+<script src="~/Scripts/Chart.min.js" type="text/javascript"></script>
+<script>
+    $(document).ready(function () {
+        initReportCustomerTimeChart(true);
+    });
+
+    function initReportCustomerTimeChart(first) {
+        function additionalData() {
+            var data = {
+                startDate: $('#dashboard-report-range').data('daterangepicker').startDate.format('YYYY-MM-DD'),
+                endDate: $('#dashboard-report-range').data('daterangepicker').endDate.format('YYYY-MM-DD'),
+            };
+
+            addAntiForgeryToken(data);
+            return data;
+        }
+
+        var add = additionalData();
+
+        $.ajax({
+            type: "POST",
+            url: "@Html.Raw(Url.Action("ReportCustomerTimeChart", "Customer"))",
+            dataType: "json",
+            data: add,
+            success: function (data) {
+                var chartData = {
+                    labels: [],
+                    datasets: [{
+                        type: 'bar',
+                        label: 'Registered users',
+                        yAxisID: 'L',
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                        borderColor: 'rgb(75, 192, 192)',
+                        data: [],
+                        borderWidth: 2
+                    }]
+                };
+
+                for (var i = 0; i < data.Data.length; i++) {
+                    chartData.labels[i] = data.Data[i].Time;
+                    chartData.datasets[0].data[i] = data.Data[i].Registered;
+                }
+
+                var ctx = document.getElementById('canvasReportCustomerTimeChart').getContext('2d');
+                if (first) {
+                    window.myReportCustomerTimeChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: chartData,
+                        options: {
+                            responsive: true,
+                            title: {
+                                display: true,
+                                text: 'Number of registered customers in time'
+                            },
+                            tooltips: {
+                                mode: 'index',
+                                intersect: true
+                            }, scales: {
+                                yAxes: [{
+                                    id: 'L',
+                                    type: 'linear',
+                                    position: 'left',
+                                    ticks: {
+                                        min: 0,
+                                        stepSize: 1
+                                    },
+                                }]
+                            }
+                        }
+                    });
+                } else {
+                    window.myReportCustomerTimeChart.data = chartData;
+                    window.myReportCustomerTimeChart.update();
+                }
+            },
+            error: function () {
+                alert('error');
+            }
+        });
+    }
+</script>

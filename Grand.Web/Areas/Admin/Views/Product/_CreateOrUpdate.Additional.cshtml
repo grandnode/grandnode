@@ -1,31 +1,26 @@
-﻿@using Grand.Services.Customers
-@using Grand.Services.Stores
-@using Grand.Core.Domain.Catalog;
-
+﻿@using Grand.Core.Domain.Catalog;
 @model ProductModel
-
-
-<div class="form-horizontal portlet light bg-inverse form-fit" id="group-order">
+<div class="form-horizontal" id="group-order">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.DisplayOrderCategory)
+            <admin-label asp-for="DisplayOrderCategory" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.DisplayOrderCategory)
-                @Html.ValidationMessageFor(model => model.DisplayOrderCategory)
+                <admin-input asp-for="DisplayOrderCategory" />
+                <span asp-validation-for="DisplayOrderCategory"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.DisplayOrderManufacturer)
+            <admin-label asp-for="DisplayOrderManufacturer" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.DisplayOrderManufacturer)
-                @Html.ValidationMessageFor(model => model.DisplayOrderManufacturer)
+                <admin-input asp-for="DisplayOrderManufacturer" />
+                <span asp-validation-for="DisplayOrderManufacturer"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.OnSale)
+            <admin-label asp-for="OnSale" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.OnSale)
-                @Html.ValidationMessageFor(model => model.OnSale)
+                <admin-input asp-for="OnSale" />
+                <span asp-validation-for="OnSale"></span>
             </div>
         </div>
     </div>
@@ -34,179 +29,149 @@
 <div class="form-horizontal" id="group-giftcard">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.IsGiftCard)
+            <admin-label asp-for="IsGiftCard" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.EditorFor(model => model.IsGiftCard)
+                    <admin-input asp-for="IsGiftCard" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.IsGiftCard)
+                <span asp-validation-for="IsGiftCard"></span>
             </div>
         </div>
         <div class="form-group" id="pnlGiftCardType">
-            @Html.GrandLabelFor(model => model.GiftCardTypeId)
+            <admin-label asp-for="GiftCardTypeId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.GiftCardTypeId, ((GiftCardType)Model.GiftCardTypeId).ToSelectList())
-                @Html.ValidationMessageFor(model => model.GiftCardTypeId)
+                <admin-select asp-for="GiftCardTypeId" asp-items="((GiftCardType)Model.GiftCardTypeId).ToSelectList()" />
+                <span asp-validation-for="GiftCardTypeId"></span>
             </div>
         </div>
         <div class="form-group" id="pnlOverriddenGiftCardAmount">
-            @Html.GrandLabelFor(model => model.OverriddenGiftCardAmount)
+            <admin-label asp-for="OverriddenGiftCardAmount" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.OverriddenGiftCardAmount)
-                @Html.ValidationMessageFor(model => model.OverriddenGiftCardAmount)
+                <admin-input asp-for="OverriddenGiftCardAmount" />
+                <span asp-validation-for="OverriddenGiftCardAmount"></span>
             </div>
         </div>
     </div>
 </div>
 
-<div class="form-horizontal portlet light bg-inverse form-fit" id="group-downloads">
+<div class="form-horizontal" id="group-downloads">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.IsDownload)
+            <admin-label asp-for="IsDownload" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.EditorFor(model => model.IsDownload)
+                    <admin-input asp-for="IsDownload" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.IsDownload)
+                <span asp-validation-for="IsDownload"></span>
             </div>
         </div>
         <div class="form-group" id="pnlDownloadFile">
-            @Html.GrandLabelFor(model => model.DownloadId)
+            <admin-label asp-for="DownloadId" />
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.DownloadId)
-                @Html.ValidationMessageFor(model => model.DownloadId)
+                <admin-input asp-for="DownloadId" />
+                <span asp-validation-for="DownloadId"></span>
             </div>
         </div>
         <div class="form-group" id="pnlUnlimitedDownloads">
-            @Html.GrandLabelFor(model => model.UnlimitedDownloads)
+            <admin-label asp-for="UnlimitedDownloads" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.EditorFor(model => model.UnlimitedDownloads)
+                    <admin-input asp-for="UnlimitedDownloads" />
                    <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.UnlimitedDownloads)
+                <span asp-validation-for="UnlimitedDownloads"></span>
             </div>
         </div>
         <div class="form-group" id="pnlMaxNumberOfDownloads">
-            @Html.GrandLabelFor(model => model.MaxNumberOfDownloads)
+            <admin-label asp-for="MaxNumberOfDownloads" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.MaxNumberOfDownloads)
-                @Html.ValidationMessageFor(model => model.MaxNumberOfDownloads)
+                <admin-input asp-for="MaxNumberOfDownloads" />
+                <span asp-validation-for="MaxNumberOfDownloads"></span>
             </div>
         </div>
         <div class="form-group" id="pnlDownloadExpirationDays">
-            @Html.GrandLabelFor(model => model.DownloadExpirationDays)
+            <admin-label asp-for="DownloadExpirationDays" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.DownloadExpirationDays)
-                @Html.ValidationMessageFor(model => model.DownloadExpirationDays)
+                <admin-input asp-for="DownloadExpirationDays" />
+                <span asp-validation-for="DownloadExpirationDays"></span>
             </div>
         </div>
         <div class="form-group" id="pnlDownloadActivationType">
-            @Html.GrandLabelFor(model => model.DownloadActivationTypeId)
+            <admin-label asp-for="DownloadActivationTypeId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.DownloadActivationTypeId, ((DownloadActivationType)Model.DownloadActivationTypeId).ToSelectList())
-                @Html.ValidationMessageFor(model => model.DownloadActivationTypeId)
+                <admin-select asp-for="DownloadActivationTypeId" asp-items="((DownloadActivationType)Model.DownloadActivationTypeId).ToSelectList()" />
+                <span asp-validation-for="DownloadActivationTypeId"></span>
             </div>
         </div>
         <div class="form-group" id="pnlHasUserAgreement">
-            @Html.GrandLabelFor(model => model.HasUserAgreement)
+            <admin-label asp-for="HasUserAgreement" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.EditorFor(model => model.HasUserAgreement)
+                    <admin-input asp-for="HasUserAgreement" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.HasUserAgreement)
+                <span asp-validation-for="HasUserAgreement"></span>
             </div>
         </div>
         <div class="form-group" id="pnlUserAgreementText">
-            @Html.GrandLabelFor(model => model.UserAgreementText)
+            <admin-label asp-for="UserAgreementText" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandTextAreaFor(model => model.UserAgreementText)
-                @Html.ValidationMessageFor(model => model.UserAgreementText)
+                <admin-textarea asp-for="UserAgreementText"></admin-textarea>
+                <span asp-validation-for="UserAgreementText"></span>
             </div>
         </div>
         <div class="form-group" id="pnlHasSampleDownload">
-            @Html.GrandLabelFor(model => model.HasSampleDownload)
+            <admin-label asp-for="HasSampleDownload" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.EditorFor(model => model.HasSampleDownload)
+                    <admin-input asp-for="HasSampleDownload" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.HasSampleDownload)
+                <span asp-validation-for="HasSampleDownload"></span>
             </div>
         </div>
         <div class="form-group" id="pnlSampleDownloadFile">
-            @Html.GrandLabelFor(model => model.SampleDownloadId)
+            <admin-label asp-for="SampleDownloadId" />
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.SampleDownloadId)
-                @Html.ValidationMessageFor(model => model.SampleDownloadId)
+                <admin-input asp-for="SampleDownloadId" />
+                <span asp-validation-for="SampleDownloadId"></span>
             </div>
         </div>
     </div>
 </div>
-
-<div class="form-horizontal" id="group-rental">
+<div class="form-horizontal" id="group-recurring">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.IsRental)
+            <admin-label asp-for="IsRecurring" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.EditorFor(model => model.IsRental)
+                    <admin-input asp-for="IsRecurring" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.IsRental)
-            </div>
-        </div>
-        <div class="form-group" id="pnlRentalPriceLength">
-            @Html.GrandLabelFor(model => model.RentalPriceLength)
-            <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.RentalPriceLength)
-                @Html.ValidationMessageFor(model => model.RentalPriceLength)
-            </div>
-        </div>
-        <div class="form-group" id="pnlRentalPricePeriod">
-            @Html.GrandLabelFor(model => model.RentalPricePeriodId)
-            <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.RentalPricePeriodId, ((RentalPricePeriod)Model.RentalPricePeriodId).ToSelectList())
-                @Html.ValidationMessageFor(model => model.RentalPricePeriodId)
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="form-horizontal portlet light bg-inverse form-fit" id="group-recurring">
-    <div class="form-body">
-        <div class="form-group">
-            @Html.GrandLabelFor(model => model.IsRecurring)
-            <div class="col-md-9 col-sm-9">
-                <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.EditorFor(model => model.IsRecurring)
-                    <span></span>
-                </label>
-                @Html.ValidationMessageFor(model => model.IsRecurring)
+                <span asp-validation-for="IsRecurring"></span>
             </div>
         </div>
         <div class="form-group" id="pnlCycleLength">
-            @Html.GrandLabelFor(model => model.RecurringCycleLength)
+            <admin-label asp-for="RecurringCycleLength" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.RecurringCycleLength)
-                @Html.ValidationMessageFor(model => model.RecurringCycleLength)
+                <admin-input asp-for="RecurringCycleLength" />
+                <span asp-validation-for="RecurringCycleLength"></span>
             </div>
         </div>
         <div class="form-group" id="pnlCyclePeriod">
-            @Html.GrandLabelFor(model => model.RecurringCyclePeriodId)
+            <admin-label asp-for="RecurringCyclePeriodId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.RecurringCyclePeriodId, ((RecurringProductCyclePeriod)Model.RecurringCyclePeriodId).ToSelectList())
-                @Html.ValidationMessageFor(model => model.RecurringCyclePeriodId)
+                <admin-select asp-for="RecurringCyclePeriodId" asp-items="((RecurringProductCyclePeriod)Model.RecurringCyclePeriodId).ToSelectList()" />
+                <span asp-validation-for="RecurringCyclePeriodId"></span>
             </div>
         </div>
         <div class="form-group" id="pnlTotalCycles">
-            @Html.GrandLabelFor(model => model.RecurringTotalCycles)
+            <admin-label asp-for="RecurringTotalCycles" />
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.RecurringTotalCycles)
-                @Html.ValidationMessageFor(model => model.RecurringTotalCycles)
+                <admin-input asp-for="RecurringTotalCycles" />
+                <span asp-validation-for="RecurringTotalCycles"></span>
             </div>
         </div>
     </div>
@@ -215,20 +180,20 @@
 <div class="form-horizontal" id="group-required-other-products">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.RequireOtherProducts)
+            <admin-label asp-for="RequireOtherProducts" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.EditorFor(model => model.RequireOtherProducts)
+                    <admin-input asp-for="RequireOtherProducts" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.RequireOtherProducts)
+                <span asp-validation-for="RequireOtherProducts"></span>
             </div>
         </div>
         <div class="form-group" id="pnlRequiredProductIds">
-            @Html.GrandLabelFor(model => model.RequiredProductIds)
+            <admin-label asp-for="RequiredProductIds" />
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.RequiredProductIds)
-                @Html.ValidationMessageFor(model => model.RequiredProductIds)
+                <admin-input asp-for="RequiredProductIds" />
+                <span asp-validation-for="RequiredProductIds"></span>
                 <span id="required-products-check-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
                 <input type="submit" id="btnAddNewRequiredProduct" value="@T("Admin.Catalog.Products.Fields.RequiredProductIds.AddNew")"
                        onclick="javascript:OpenWindow('@(Url.Action("RequiredProductAddPopup", "Product",
@@ -246,13 +211,13 @@
             </div>
         </div>
         <div class="form-group" id="pnlAutomaticallyAddRequiredProducts">
-            @Html.GrandLabelFor(model => model.AutomaticallyAddRequiredProducts)
+            <admin-label asp-for="AutomaticallyAddRequiredProducts" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.EditorFor(model => model.AutomaticallyAddRequiredProducts)
+                    <admin-input asp-for="AutomaticallyAddRequiredProducts" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.AutomaticallyAddRequiredProducts)
+                <span asp-validation-for="AutomaticallyAddRequiredProducts"></span>
             </div>
         </div>
     </div>

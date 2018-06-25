@@ -272,7 +272,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult OptionCreatePopup(string btnId, string formId, SpecificationAttributeOptionModel model)
+        public IActionResult OptionCreatePopup(SpecificationAttributeOptionModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -294,8 +294,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _specificationAttributeService.UpdateSpecificationAttribute(specificationAttribute);                
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
 
@@ -326,7 +324,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult OptionEditPopup(string btnId, string formId, SpecificationAttributeOptionModel model)
+        public IActionResult OptionEditPopup(SpecificationAttributeOptionModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -348,8 +346,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _specificationAttributeService.UpdateSpecificationAttribute(specificationAttribute);
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
 

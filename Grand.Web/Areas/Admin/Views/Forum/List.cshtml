@@ -2,7 +2,7 @@
     //page title
     ViewBag.Title = T("Admin.ContentManagement.Forums.Manage").Text;
 }
-@Html.AntiForgeryToken()
+<antiforgery-token />
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light form-fit">
@@ -70,7 +70,8 @@
                 {
                     field: "Name",
                     title: "@T("Admin.ContentManagement.Forums.ForumGroup.Fields.Name")",
-                    width: 300
+                    width: 300,
+                    template: '<a class="k-link" href="EditForumGroup/#=Id#">#=Name#</a>',
                 }, {
                     field: "DisplayOrder",
                     title: "@T("Admin.ContentManagement.Forums.ForumGroup.Fields.DisplayOrder")",
@@ -81,11 +82,6 @@
                     width: 200,
                     type: "date",
                     format: "{0:G}"
-                }, {
-                    field: "Id",
-                    title: "@T("Admin.Common.Edit")",
-                    width: 100,
-                    template: '<a class="btn btn-sm btn-default" href="EditForumGroup/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
                 }
             ]
         });
@@ -129,7 +125,8 @@
                 {
                     field: "Name",
                     title: "@T("Admin.ContentManagement.Forums.Forum.Fields.Name")",
-                    width: 300
+                    width: 300,
+                    template: '<a class="k-link" href="EditForum/#=Id#">#=Name#</a>',
                 },{
                     field: "DisplayOrder",
                     title: "@T("Admin.ContentManagement.Forums.Forum.Fields.DisplayOrder")",
@@ -140,11 +137,6 @@
                     width: 150,
                     type: "date",
                     format: "{0:G}"
-                }, {
-                    field: "Id",
-                    title: "@T("Admin.Common.Edit")",
-                    width: 100,
-                    template: '<a class="btn btn-sm btn-default" href="EditForum/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
                 }
             ]
         });

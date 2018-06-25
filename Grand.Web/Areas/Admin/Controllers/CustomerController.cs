@@ -811,6 +811,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.Address.EmailRequired = true;
             model.Address.CompanyEnabled = _addressSettings.CompanyEnabled;
             model.Address.CompanyRequired = _addressSettings.CompanyRequired;
+            model.Address.VatNumberEnabled = _addressSettings.VatNumberEnabled;
+            model.Address.VatNumberRequired = _addressSettings.VatNumberRequired;
             model.Address.CountryEnabled = _addressSettings.CountryEnabled;
             model.Address.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
             model.Address.CityEnabled = _addressSettings.CityEnabled;
@@ -2029,7 +2031,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ReportCustomerTimeChar(DataSourceRequest command, DateTime? startDate, DateTime? endDate)
+        public IActionResult ReportCustomerTimeChart(DataSourceRequest command, DateTime? startDate, DateTime? endDate)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return Content("");
@@ -2081,6 +2083,30 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return Json(gridModel);
         }
+
+        [HttpPost]
+        public IActionResult DeleteCart(string id, string customerId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            var customer = _customerService.GetCustomerById(customerId);
+            if (customer == null)
+                throw new ArgumentException("No customer found with the specified id", "customerId");
+
+            var cart = customer.ShoppingCartItems.FirstOrDefault(a => a.Id == id);
+            if (cart == null)
+                //No customer found with the specified id
+                return Content("No customer found with the specified cart id");
+
+            EngineContext.Current.Resolve<IShoppingCartService>()
+                .DeleteShoppingCartItem(_workContext.CurrentCustomer.Id, cart, ensureOnlyActiveCheckoutAttributes: true);
+
+            _customerService.UpdateCustomerinAdminPanel(customer);
+
+            return new NullJsonResult();
+        }
+
 
         #endregion
 
@@ -2175,7 +2201,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult ProductAddPopup(string customerId, string btnId, string formId, CustomerModel.AddProductModel model)
+        public IActionResult ProductAddPopup(string customerId, CustomerModel.AddProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -2196,8 +2222,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             ViewBag.RefreshPage = true;
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
             return View(model);
         }
         public IActionResult UpdateProductPrice(CustomerModel.ProductPriceModel model)

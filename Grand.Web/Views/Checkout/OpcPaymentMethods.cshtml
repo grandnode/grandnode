@@ -1,13 +1,13 @@
 ﻿@model CheckoutPaymentMethodModel
 @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_payment_method_top" })
 <div class="payment-method">
-    @if (Model.DisplayRewardPoints && Model.PaymentMethods.Count > 0)
+    @if (Model.DisplayRewardPoints && Model.PaymentMethods.Any())
     {
         <div class="use-reward-points">
 
             <label class="custom-control custom-checkbox">
                 @Html.CheckBoxFor(model => model.UseRewardPoints, new { @class = "custom-control-input" })
-                <span class="custom-control-indicator"></span>
+                <span class="custom-control-label"></span>
                 <span class="custom-control-description">@string.Format(T("Checkout.UseRewardPoints").Text, Model.RewardPointsBalance, Model.RewardPointsAmount)</span>
             </label>
 
@@ -21,7 +21,7 @@
             }
         </div>
     }
-    @if (Model.PaymentMethods.Count > 0)
+    @if (Model.PaymentMethods.Any())
     {
         <div class="list-inline col-12 mt-2 mb-2 px-0" id="payment-method-block">
             @for (int i = 0; i < Model.PaymentMethods.Count; i++)
@@ -36,7 +36,7 @@
                     <div class="col-12 method-name px-0">
                         <label class="custom-control custom-radio flex-row">
                             <input id="paymentmethod_@(i)" type="radio" name="paymentmethod" value="@(paymentMethod.PaymentMethodSystemName)" checked="@paymentMethod.Selected" class="custom-control-input">
-                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-label"></span>
 
                             @if (!String.IsNullOrEmpty(paymentMethod.LogoUrl))
                             {

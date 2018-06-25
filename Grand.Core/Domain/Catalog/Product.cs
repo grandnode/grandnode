@@ -23,6 +23,7 @@ namespace Grand.Core.Domain.Catalog
         private ICollection<ProductWarehouseInventory> _productWarehouseInventory;
         private ICollection<string> _crossSellProduct;
         private ICollection<RelatedProduct> _relatedProduct;
+        private ICollection<BundleProduct> _bundleProduct;
         private ICollection<string> _productTags;
         public Product()
         {
@@ -226,20 +227,33 @@ namespace Grand.Core.Domain.Catalog
         /// Gets or sets the total cycles
         /// </summary>
         public int RecurringTotalCycles { get; set; }
+        /// <summary>
+        /// Gets or sets include both dates
+        /// </summary>
+        public bool IncBothDate { get; set; }
+        /// <summary>
+        /// Gets or sets Interval
+        /// </summary>
+        public int Interval { get; set; }
+        /// <summary>
+        /// Gets or sets IntervalUnitId
+        /// </summary>
+        public int IntervalUnitId { get; set; }
+        /// <summary>
+        /// Gets or sets Interval Unit
+        /// </summary>
+        public IntervalUnit IntervalUnitType 
+        {
+            get
+            {
+                return (IntervalUnit)this.IntervalUnitId;
+            }
+            set
+            {
+                this.IntervalUnitId = (int)value;
+            }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the product is rental
-        /// </summary>
-        public bool IsRental { get; set; }
-        /// <summary>
-        /// Gets or sets the rental length for some period (price for this period)
-        /// </summary>
-        public int RentalPriceLength { get; set; }
-        /// <summary>
-        /// Gets or sets the rental period (price for this period)
-        /// </summary>
-        public int RentalPricePeriodId { get; set; }
-
+        }
         /// <summary>
         /// Gets or sets a value indicating whether the entity is ship enabled
         /// </summary>
@@ -473,6 +487,26 @@ namespace Grand.Core.Domain.Catalog
         public DateTime? AvailableEndDateTimeUtc { get; set; }
 
         /// <summary>
+        /// Gets or sets auction start price
+        /// </summary>
+        public decimal StartPrice { get; set; }
+
+        /// <summary>
+        /// Gets or sets current highest bid
+        /// </summary>
+        public decimal HighestBid { get; set; }
+
+        /// <summary>
+        /// Gets or sets current highest bidder customer id
+        /// </summary>
+        public string HighestBidder { get; set; }
+
+        /// <summary>
+        /// Gets or sets auction ended
+        /// </summary>
+        public bool AuctionEnded { get; set; }
+
+        /// <summary>
         /// Gets or sets a display order.
         /// This value is used when sorting associated products (used with "grouped" products)
         /// This value is used when sorting home page products
@@ -519,6 +553,11 @@ namespace Grand.Core.Domain.Catalog
         /// Gets or sets the onsale
         /// </summary>
         public int OnSale { get; set; }
+
+        /// <summary>
+        /// Gets or sets the flag
+        /// </summary>
+        public string Flag { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of locales
@@ -631,21 +670,6 @@ namespace Grand.Core.Domain.Catalog
         }
 
         /// <summary>
-        /// Gets or sets the period for rental products
-        /// </summary>
-        public RentalPricePeriod RentalPricePeriod
-        {
-            get
-            {
-                return (RentalPricePeriod)this.RentalPricePeriodId;
-            }
-            set
-            {
-                this.RentalPricePeriodId = (int)value;
-            }
-        }
-
-        /// <summary>
         /// Gets or sets the collection of ProductCategory
         /// </summary>
         public virtual ICollection<ProductCategory> ProductCategories
@@ -746,5 +770,12 @@ namespace Grand.Core.Domain.Catalog
             get { return _relatedProduct ?? (_relatedProduct = new List<RelatedProduct>()); }
             protected set { _relatedProduct = value; }
         }
+
+        public virtual ICollection<BundleProduct> BundleProducts
+        {
+            get { return _bundleProduct ?? (_bundleProduct = new List<BundleProduct>()); }
+            protected set { _bundleProduct = value; }
+        }
+
     }
 }

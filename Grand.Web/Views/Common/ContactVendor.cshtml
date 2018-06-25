@@ -40,7 +40,7 @@
                         }
                     <div class="form-group col-12">
                         <label asp-for="Enquiry" class="col-form-label">@T("ContactVendor.Enquiry"):</label>
-                        <input asp-for="Enquiry" placeholder="@T("ContactVendor.Enquiry.Hint")" class="form-control enquiry" />
+                        <textarea asp-for="Enquiry" placeholder="@T("ContactVendor.Enquiry.Hint")" class="form-control enquiry"></textarea>
                         <span asp-validation-for="Enquiry"></span>
                     </div>
                     @if (Model.DisplayCaptcha)
@@ -51,7 +51,7 @@
                         }
                 </div>
                 <div class="btn-group text-sm-center pt-3 pb-3">
-                    <input type="submit" name="send-email" class="btn btn-success contact-us-button" value="@T("ContactVendor.Button")" />
+                    <input type="submit" name="send-email" class="btn btn-info contact-us-button" value="@T("ContactVendor.Button")" />
                 </div>
             </form>
         }

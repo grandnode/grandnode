@@ -1,8 +1,5 @@
 ﻿using Grand.Framework.Mvc.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework;
-using Grand.Framework.Mvc;
 
 namespace Grand.Web.Areas.Admin.Models.Settings
 {
@@ -79,5 +76,9 @@ namespace Grand.Web.Areas.Admin.Models.Settings
         [GrandResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.AllowCartItemEditing")]
         public bool AllowCartItemEditing { get; set; }
         public bool AllowCartItemEditing_OverrideForStore { get; set; }
+
+        [GrandResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.CartsSharedBetweenStores")]
+        public bool CartsSharedBetweenStores { get; set; }
+        public bool CartsSharedBetweenStores_OverrideForStore { get; set; }
     }
 }

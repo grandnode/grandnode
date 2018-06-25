@@ -1,12 +1,11 @@
 ﻿@model CatalogSettingsModel
+@inject IEventPublisher eventPublisher
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Catalog").Text;
 }
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-
+<form asp-controller="Setting" asp-action="Catalog" method="post">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -24,7 +23,7 @@
                 <div class="portlet-body">
                     <div class="form-horizontal">
                         <div class="form-body">
-                            @await Component.InvokeAsync("StoreScopeConfiguration") 
+                            @await Component.InvokeAsync("StoreScopeConfiguration")
                         </div>
                     </div>
                 </div>
@@ -79,10 +78,8 @@
             </div>
         </div>
     </div>
-
-    @Html.ValidationSummary(false)
-
-    <script>
+    <div asp-validation-summary="All"></div>
+    <script type="text/javascript">
         $(document).ready(function () {
             $("#catalogsettings-edit").show();
             $("#catalogsettings-edit").kendoTabStrip({
@@ -95,17 +92,16 @@
             });
         });
     </script>
-
-    {
+    @{
         //custom tabs
         var eventMessage = new AdminTabStripCreated(this.Html, "catalogsettings-edit");
-        EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+        eventPublisher.Publish(eventMessage);
         foreach (var eventBlock in eventMessage.BlocksToRender)
         {
-            @eventBlock
+        @eventBlock
         }
     }
 
-    @*save selected tab index*@
-    <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
-}
+        @*save selected tab index*@
+        <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+</form>

@@ -1,13 +1,15 @@
-
 body {
 	font: normal 9pt Arial, Helvetica, sans-serif;
 	color: #000;
 }
 table {
 	width: 100%;
-	border: 0;
+	border: 1px solid;
 	border-collapse: collapse;
 	border-spacing: 0;
+}
+table thead tr {
+    background-color: #cfcfcf;
 }
 li {
 	list-style: none;
@@ -15,7 +17,9 @@ li {
 a {
 	color: inherit;
 }
-
+.text-center{
+    text-align:center;
+}
 .order-details-page .order-overview {
 	margin: 0 0 25px;
 }
@@ -42,6 +46,7 @@ a {
 .order-details-page .order-details-area li.title {
 	margin: 10px 0 5px;
 	font-weight: bold;
+    background-color: #cfcfcf;
 }
 .order-details-page .order-details-area li:first-child {
 	margin-top: 0;
@@ -100,4 +105,8 @@ a {
 .order-details-page td.cart-total-left {
 	width: 100%;
 	font-weight: bold;
+}
+.totals table {
+    width: 20%;
+    float: right;
 }

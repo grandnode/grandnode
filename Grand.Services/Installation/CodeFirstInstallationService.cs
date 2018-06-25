@@ -48,6 +48,8 @@ using Grand.Services.Security;
 using Grand.Core.Caching;
 using Grand.Services.Events;
 using Microsoft.AspNetCore.Hosting;
+using Grand.Core.Domain.Knowledgebase;
+using Grand.Core.Domain.PushNotifications;
 
 namespace Grand.Services.Installation
 {
@@ -56,6 +58,7 @@ namespace Grand.Services.Installation
         #region Fields
 
         private readonly IRepository<GrandNodeVersion> _versionRepository;
+        private readonly IRepository<Bid> _bidRepository;
         private readonly IRepository<Address> _addressRepository;
         private readonly IRepository<Affiliate> _affiliateRepository;
         private readonly IRepository<BlogComment> _blogcommentRepository;
@@ -89,6 +92,7 @@ namespace Grand.Services.Installation
         private readonly IRepository<Vendor> _vendorRepository;
         private readonly IRepository<Manufacturer> _manufacturerRepository;
         private readonly IRepository<Product> _productRepository;
+        private readonly IRepository<ProductReservation> _productReservationRepository;
         private readonly IRepository<ProductAlsoPurchased> _productalsopurchasedRepository;
         private readonly IRepository<Picture> _pictureRepository;
         private readonly IRepository<UrlRecord> _urlRecordRepository;
@@ -142,7 +146,8 @@ namespace Grand.Services.Installation
         private readonly IRepository<CustomerReminder> _customerReminder;
         private readonly IRepository<CustomerReminderHistory> _customerReminderHistoryRepository;
         private readonly IRepository<RecentlyViewedProduct> _recentlyViewedProductRepository;
-
+        private readonly IRepository<KnowledgebaseArticle> _knowledgebaseArticleRepository;
+        private readonly IRepository<KnowledgebaseCategory> _knowledgebaseCategoryRepository;
         private readonly ICustomerActionService _customerActionService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWebHelper _webHelper;
@@ -155,6 +160,7 @@ namespace Grand.Services.Installation
 
         public CodeFirstInstallationService(
             IRepository<GrandNodeVersion> versionRepository,
+            IRepository<Bid> bidRepository,
             IRepository<Address> addressRepository,
             IRepository<Affiliate> affiliateRepository,
             IRepository<BlogComment> blogcommentRepository,
@@ -186,6 +192,7 @@ namespace Grand.Services.Installation
             IRepository<Category> categoryRepository,
             IRepository<Manufacturer> manufacturerRepository,
             IRepository<Product> productRepository,
+            IRepository<ProductReservation> productReservationRepository,
             IRepository<ProductAlsoPurchased> productalsopurchasedRepository,
             IRepository<Picture> pictureRepository,
             IRepository<UrlRecord> urlRecordRepository,
@@ -241,12 +248,15 @@ namespace Grand.Services.Installation
             IRepository<CustomerReminder> customerReminder,
             IRepository<CustomerReminderHistory> customerReminderHistoryRepository,
             IRepository<RecentlyViewedProduct> recentlyViewedProductRepository,
+            IRepository<KnowledgebaseArticle> knowledgebaseArticleRepository,
+            IRepository<KnowledgebaseCategory> knowledgebaseCategoryRepository,
             IGenericAttributeService genericAttributeService,
             ICustomerActionService customerActionService,
             IWebHelper webHelper,
             IHostingEnvironment hostingEnvironment)
         {
             this._versionRepository = versionRepository;
+            this._bidRepository = bidRepository;
             this._addressRepository = addressRepository;
             this._affiliateRepository = affiliateRepository;
             this._blogcommentRepository = blogcommentRepository;
@@ -278,6 +288,7 @@ namespace Grand.Services.Installation
             this._categoryRepository = categoryRepository;
             this._manufacturerRepository = manufacturerRepository;
             this._productRepository = productRepository;
+            this._productReservationRepository = productReservationRepository;
             this._pictureRepository = pictureRepository;
             this._productalsopurchasedRepository = productalsopurchasedRepository;
             this._urlRecordRepository = urlRecordRepository;
@@ -330,7 +341,9 @@ namespace Grand.Services.Installation
             this._customerActionType = customerActionType;
             this._customerActionHistory = customerActionHistory;
             this._customerReminder = customerReminder;
-            this._customerReminderHistoryRepository = customerReminderHistoryRepository; ;
+            this._customerReminderHistoryRepository = customerReminderHistoryRepository;
+            this._knowledgebaseArticleRepository = knowledgebaseArticleRepository;
+            this._knowledgebaseCategoryRepository = knowledgebaseCategoryRepository;
             this._banner = banner;
             this._popupArchive = popupArchive;
             this._genericAttributeService = genericAttributeService;
@@ -345,7 +358,7 @@ namespace Grand.Services.Installation
 
         protected virtual string GetSamplesPath()
         {
-            return Path.Combine(_hostingEnvironment.WebRootPath, "content/samples/");
+            return Path.Combine(_hostingEnvironment.WebRootPath, "Content/samples/");
         }
 
 
@@ -4263,23 +4276,6 @@ namespace Grand.Services.Installation
             backgroundTaskUser.CustomerRoles.Add(crGuests);
             _customerRepository.Insert(backgroundTaskUser);
 
-
-            //webapi user
-            var webApiUser = new Customer
-            {
-                Email = "webapi@webapi.com",
-                CustomerGuid = Guid.NewGuid(),
-                PasswordFormat = PasswordFormat.Clear,
-                AdminComment = "WebApi system guest record used for requests from webapi.",
-                Active = true,
-                IsSystemAccount = true,
-                SystemName = SystemCustomerNames.WebApi,
-                CreatedOnUtc = DateTime.UtcNow,
-                LastActivityDateUtc = DateTime.UtcNow,
-            };
-            webApiUser.CustomerRoles.Add(crGuests);
-            _customerRepository.Insert(webApiUser);
-
         }
 
         protected virtual void HashDefaultCustomerPassword(string defaultUserEmail, string defaultUserPassword)
@@ -4359,7 +4355,47 @@ namespace Grand.Services.Installation
                 throw new Exception("Default email account cannot be loaded");
             var messageTemplates = new List<MessageTemplate>
                                {
-                                   new MessageTemplate
+                                    new MessageTemplate
+                                       {
+                                           Name = "AuctionEnded.CustomerNotificationWin",
+                                           Subject = "%Store.Name%. Auction ended.",
+                                           Body = "<p>Hello, %Customer.FullName%!</p><p></p><p>At %Auctions.EndTime% you have won <a href=\"%Store.URL%%Auctions.ProductSeName%\">%Auctions.ProductName%</a> for %Auctions.Price%. Visit  <a href=\"%Store.URL%/cart\">cart</a> to finish checkout process. </p>",
+                                           IsActive = true,
+                                           EmailAccountId = eaGeneral.Id,
+                                       },
+                                    new MessageTemplate
+                                            {
+                                                Name = "AuctionEnded.CustomerNotificationLost",
+                                                Subject = "%Store.Name%. Auction ended.",
+                                                Body = "<p>Hello, %Customer.FullName%!</p><p></p><p>Unfortunately you did not win the bid %Auctions.ProductName%</p> <p>End price:  %Auctions.Price% </p> <p>End date auction %Auctions.EndTime% </p>",
+                                                IsActive = true,
+                                                EmailAccountId = eaGeneral.Id,
+                                            },
+                                    new MessageTemplate
+                                            {
+                                                Name = "AuctionEnded.CustomerNotificationBin",
+                                                Subject = "%Store.Name%. Auction ended.",
+                                                Body = "<p>Hello, %Customer.FullName%!</p><p></p><p>Unfortunately you did not win the bid %Product.Name%</p> <p>Product was bought by option Buy it now for price: %Product.Price% </p>",
+                                                IsActive = true,
+                                                EmailAccountId = eaGeneral.Id,
+                                            },
+                                    new MessageTemplate
+                                       {
+                                           Name = "AuctionEnded.StoreOwnerNotification",
+                                           Subject = "%Store.Name%. Auction ended.",
+                                           Body = "<p>At %Auctions.EndTime% %Customer.FullName% have won <a href=\"%Store.URL%%Auctions.ProductSeName%\">%Auctions.ProductName%</a> for %Auctions.Price%.</p>",
+                                           IsActive = true,
+                                           EmailAccountId = eaGeneral.Id,
+                                       },
+                                    new MessageTemplate
+                                       {
+                                           Name = "BidUp.CustomerNotification",
+                                           Subject = "%Store.Name%. Your offer has been outbid.",
+                                           Body = "<p>Hi %Customer.FullName%!</p><p>Your offer for product <a href=\"%Auctions.ProductSeName%\">%Auctions.ProductName%</a> has been outbid. New price is %Auctions.Price%.<br />Raise a price by raising one's offer. Auction will be ended on %Auctions.EndTime%</p>",
+                                           IsActive = true,
+                                           EmailAccountId = eaGeneral.Id,
+                                       },
+                                    new MessageTemplate
                                        {
                                            Name = "Blog.BlogComment",
                                            Subject = "%Store.Name%. New blog comment.",
@@ -4372,6 +4408,14 @@ namespace Grand.Services.Installation
                                            Name = "Customer.BackInStock",
                                            Subject = "%Store.Name%. Back in stock notification",
                                            Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />Hello %Customer.FullName%, <br />Product <a target=\"_blank\" href=\"%BackInStockSubscription.ProductUrl%\">%BackInStockSubscription.ProductName%</a> is in stock.</p>",
+                                           IsActive = true,
+                                           EmailAccountId = eaGeneral.Id,
+                                       },
+                                   new MessageTemplate
+                                       {
+                                           Name = "CustomerDelete.StoreOwnerNotification",
+                                           Subject = "%Store.Name%. Customer has been deleted.",
+                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> ,<br />%Customer.FullName% (%Customer.Email%) has just deleted from your database. </p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4702,8 +4746,6 @@ namespace Grand.Services.Installation
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
-
-
                                };
             _messageTemplateRepository.Insert(messageTemplates);
         }
@@ -4841,6 +4883,16 @@ namespace Grand.Services.Installation
                                            Body = "<p>Put your terms of service information here. You can edit this in the admin site.</p>",
                                            TopicTemplateId = defaultTopicTemplate.Id
                                        },
+                                                                      new Topic
+                                       {
+                                           SystemName = "KnowledgebaseHomePage",
+                                           IncludeInSitemap = false,
+                                           IsPasswordProtected = false,
+                                           DisplayOrder = 1,
+                                           Title = "",
+                                           Body = "<p>Knowledgebase homepage. You can edit this in the admin site.</p>",
+                                           TopicTemplateId = defaultTopicTemplate.Id
+                                       },
                                };
             _topicRepository.Insert(topics);
 
@@ -4906,17 +4958,18 @@ namespace Grand.Services.Installation
                 RenderXuaCompatible = false,
                 XuaCompatibleValue = "IE=edge",
                 DeleteGuestTaskOlderThanMinutes = 1440,
-                PopupForTermsOfServiceLinks = true
+                PopupForTermsOfServiceLinks = true,
+                AllowToSelectStore = false,
             });
             _settingService.SaveSetting(new SecuritySettings
             {
-                ForceSslForAllPages = false,
                 EncryptionKey = CommonHelper.GenerateRandomDigitCode(16),
                 AdminAreaAllowedIpAddresses = null,
                 EnableXsrfProtectionForAdminArea = true,
                 EnableXsrfProtectionForPublicStore = true,
                 HoneypotEnabled = false,
-                HoneypotInputName = "hpinput"
+                HoneypotInputName = "hpinput",
+                AllowNonAsciiCharInHeaders = true,
             });
             _settingService.SaveSetting(new MediaSettings
             {
@@ -4930,11 +4983,12 @@ namespace Grand.Services.Installation
                 ManufacturerThumbPictureSize = 420,
                 VendorThumbPictureSize = 450,
                 CartThumbPictureSize = 80,
-                MiniCartThumbPictureSize = 70,
+                MiniCartThumbPictureSize = 100,
+                AddToCartThumbPictureSize = 200,
                 AutoCompleteSearchThumbPictureSize = 20,
                 ImageSquarePictureSize = 32,
                 MaximumImageSize = 1980,
-                DefaultPictureZoomEnabled = false,
+                DefaultPictureZoomEnabled = true,
                 DefaultImageQuality = 80,
                 MultipleThumbDirectories = false
             });
@@ -4977,6 +5031,7 @@ namespace Grand.Services.Installation
                         "passwordrecovery",
                         "subscribenewsletter",
                         "blog",
+                        "knowledgebase",
                         "boards",
                         "inboxupdate",
                         "sentupdate",
@@ -5019,6 +5074,8 @@ namespace Grand.Services.Installation
                 RichEditorAdditionalSettings = null,
                 RichEditorAllowJavaScript = false,
                 UseIsoDateTimeConverterInJson = true,
+                AdminLayout = "Default",
+                KendoLayout = "custom",
             });
 
             _settingService.SaveSetting(new CatalogSettings
@@ -5131,6 +5188,7 @@ namespace Grand.Services.Installation
                 NotifyNewCustomerRegistration = false,
                 HideDownloadableProductsTab = false,
                 HideBackInStockSubscriptionsTab = false,
+                HideAuctionsTab = true,
                 DownloadableProductsValidateUser = false,
                 CustomerNameFormat = CustomerNameFormat.ShowFirstName,
                 GenderEnabled = true,
@@ -5158,7 +5216,9 @@ namespace Grand.Services.Installation
                 OnlineShoppingCartMinutes = 60,
                 StoreLastVisitedPage = false,
                 SaveVisitedPage = false,
-                SuffixDeletedCustomers = false,
+                SuffixDeletedCustomers = true,
+                AllowUsersToDeleteAccount = false,
+                AllowUsersToExportData = false
             });
 
             _settingService.SaveSetting(new AddressSettings
@@ -5280,7 +5340,7 @@ namespace Grand.Services.Installation
                 MinimumOrderPlacementInterval = 30,
                 DeactivateGiftCardsAfterDeletingOrder = false,
                 CompleteOrderWhenDelivered = true,
-                UserCanCancelUnpaidOrder = false,   
+                UserCanCancelUnpaidOrder = false,
             });
 
             _settingService.SaveSetting(new ShippingSettings
@@ -5357,7 +5417,22 @@ namespace Grand.Services.Installation
                 NotifyAboutNewBlogComments = false,
                 NumberOfTags = 15,
                 ShowHeaderRssUrl = false,
+                ShowBlogOnHomePage = false,
+                HomePageBlogCount = 3,
+                MaxTextSizeHomePage = 200
             });
+
+            _settingService.SaveSetting(new KnowledgebaseSettings
+            {
+                Enabled = false
+            });
+
+            _settingService.SaveSetting(new PushNotificationsSettings
+            {
+                Enabled = false,
+                AllowGuestNotifications = true
+            });
+
             _settingService.SaveSetting(new NewsSettings
             {
                 Enabled = true,
@@ -5636,7 +5711,7 @@ namespace Grand.Services.Installation
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
 
             //sample pictures
-            var sampleImagesPath = GetSamplesPath(); 
+            var sampleImagesPath = GetSamplesPath();
 
             var categoryTemplateInGridAndLines = _categoryTemplateRepository
                 .Table.FirstOrDefault(pt => pt.Name == "Products in Grid or Lines");
@@ -5657,6 +5732,8 @@ namespace Grand.Services.Installation
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_computers.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Computers")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
+                Flag = "New",
+                FlagStyle = "badge-danger",
                 DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
@@ -5890,6 +5967,8 @@ namespace Grand.Services.Installation
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 5,
+                Flag = "Promo!",
+                FlagStyle = "bg-success",
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
@@ -5952,7 +6031,7 @@ namespace Grand.Services.Installation
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
             var downloadService = EngineContext.Current.Resolve<IDownloadService>();
 
-            var sampleImagesPath = GetSamplesPath(); 
+            var sampleImagesPath = GetSamplesPath();
 
             var manufacturerTemplateInGridAndLines =
                 _manufacturerTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Products in Grid or Lines");
@@ -6050,7 +6129,7 @@ namespace Grand.Services.Installation
 
             //pictures
             var sampleImagesPath = GetSamplesPath();
-            
+
             //downloads
             var sampleDownloadsPath = GetSamplesPath();
 
@@ -6360,9 +6439,9 @@ namespace Grand.Services.Installation
                 ShortDescription = "A groundbreaking Retina display. A new force-sensing trackpad. All-flash architecture. Powerful dual-core and quad-core Intel processors. Together, these features take the notebook to a new level of performance. And they will do the same for you in everything you create.",
                 FullDescription = "<p>With fifth-generation Intel Core processors, the latest graphics, and faster flash storage, the incredibly advanced MacBook Pro with Retina display moves even further ahead in performance and battery life.* *Compared with the previous generation.</p><p>Retina display with 2560-by-1600 resolution</p><p>Fifth-generation dual-core Intel Core i5 processor</p><p>Intel Iris Graphics</p><p>Up to 9 hours of battery life1</p><p>Faster flash storage2</p><p>802.11ac Wi-Fi</p><p>Two Thunderbolt 2 ports for connecting high-performance devices and transferring data at lightning speed</p><p>Two USB 3 ports (compatible with USB 2 devices) and HDMI</p><p>FaceTime HD camera</p><p>Pages, Numbers, Keynote, iPhoto, iMovie, GarageBand included</p><p>OS X, the world's most advanced desktop operating system</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "asus-eee-pc-1000ha-10-inch-netbook",
                 AllowCustomerReviews = true,
                 Price = 1800M,
+                OldPrice = 2000M,
                 IsShipEnabled = true,
                 IsFreeShipping = true,
                 Weight = 3,
@@ -7229,6 +7308,7 @@ namespace Grand.Services.Installation
                 ShortDescription = "HTC - One (M8) 4G LTE Cell Phone with 32GB Memory - Gunmetal (Sprint)",
                 FullDescription = "<p><b>HTC One (M8) Cell Phone for Sprint:</b> With its brushed-metal design and wrap-around unibody frame, the HTC One (M8) is designed to fit beautifully in your hand. It's fun to use with amped up sound and a large Full HD touch screen, and intuitive gesture controls make it seem like your phone almost knows what you need before you do. <br><br>Sprint Easy Pay option available in store.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
+                Flag = "New",
                 AllowCustomerReviews = true,
                 Price = 245M,
                 IsShipEnabled = true,
@@ -9692,6 +9772,7 @@ namespace Grand.Services.Installation
                                             UsePercentage = false,
                                             DiscountAmount = 10,
                                             RequiresCouponCode = true,
+                                            IsEnabled = true,
                                         },
                                     new Discount
                                         {
@@ -9703,13 +9784,19 @@ namespace Grand.Services.Installation
                                             StartDateUtc = new DateTime(2010,1,1),
                                             EndDateUtc = new DateTime(2020,1,1),
                                             RequiresCouponCode = true,
+                                            IsEnabled = true
                                         },
                                 };
             _discountRepository.Insert(discounts);
-            var coupon = new DiscountCoupon();
-            coupon.CouponCode = "123";
-            coupon.DiscountId = _discountRepository.Table.Where(x => x.Name == "Sample discount with coupon code").FirstOrDefault().Id;
-            _discountCouponRepository.Insert(coupon);
+            var coupon1 = new DiscountCoupon();
+            coupon1.CouponCode = "123";
+            coupon1.DiscountId = _discountRepository.Table.Where(x => x.Name == "Sample discount with coupon code").FirstOrDefault().Id;
+            _discountCouponRepository.Insert(coupon1);
+
+            var coupon2 = new DiscountCoupon();
+            coupon2.CouponCode = "456";
+            coupon2.DiscountId = _discountRepository.Table.Where(x => x.Name == "'20% order total' discount").FirstOrDefault().Id;
+            _discountCouponRepository.Insert(coupon2);
 
         }
 
@@ -9905,6 +9992,12 @@ namespace Grand.Services.Installation
                                               },
                                           new ActivityLogType
                                               {
+                                                  SystemKeyword = "AddNewContactAttribute",
+                                                  Enabled = true,
+                                                  Name = "Add a new contact attribute"
+                                              },
+                                          new ActivityLogType
+                                              {
                                                   SystemKeyword = "AddNewCustomer",
                                                   Enabled = true,
                                                   Name = "Add a new customer"
@@ -9971,6 +10064,12 @@ namespace Grand.Services.Installation
                                               },
                                           new ActivityLogType
                                               {
+                                                  SystemKeyword = "DeleteBid",
+                                                  Enabled = true,
+                                                  Name = "Delete bid"
+                                              },
+                                          new ActivityLogType
+                                              {
                                                   SystemKeyword = "DeleteCategory",
                                                   Enabled = true,
                                                   Name = "Delete category"
@@ -9980,6 +10079,12 @@ namespace Grand.Services.Installation
                                                   SystemKeyword = "DeleteCheckoutAttribute",
                                                   Enabled = true,
                                                   Name = "Delete a checkout attribute"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "DeleteContactAttribute",
+                                                  Enabled = true,
+                                                  Name = "Delete a contact attribute"
                                               },
                                           new ActivityLogType
                                               {
@@ -10070,6 +10175,12 @@ namespace Grand.Services.Installation
                                                   SystemKeyword = "EditCheckoutAttribute",
                                                   Enabled = true,
                                                   Name = "Edit a checkout attribute"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "EditContactAttribute",
+                                                  Enabled = true,
+                                                  Name = "Edit a contact attribute"
                                               },
                                           new ActivityLogType
                                               {
@@ -10230,6 +10341,12 @@ namespace Grand.Services.Installation
                                               },
                                           new ActivityLogType
                                               {
+                                                  SystemKeyword = "PublicStore.AddNewBid",
+                                                  Enabled = false,
+                                                  Name = "Public store. Add new bid"
+                                              },
+                                          new ActivityLogType
+                                              {
                                                   SystemKeyword = "PublicStore.AddToCompareList",
                                                   Enabled = false,
                                                   Name = "Public store. Add to compare list"
@@ -10314,6 +10431,12 @@ namespace Grand.Services.Installation
                                               },
                                           new ActivityLogType
                                               {
+                                                  SystemKeyword = "PublicStore.DeleteAccount",
+                                                  Enabled = false,
+                                                  Name = "Public store. Delete account"
+                                              },
+                                          new ActivityLogType
+                                              {
                                                   SystemKeyword = "CustomerReminder.AbandonedCart",
                                                   Enabled = true,
                                                   Name = "Send email Customer reminder - AbandonedCart"
@@ -10359,6 +10482,42 @@ namespace Grand.Services.Installation
                                                   SystemKeyword = "CustomerAdmin.SendPM",
                                                   Enabled = true,
                                                   Name = "Send PM"
+                                              },
+                                            new ActivityLogType
+                                              {
+                                                  SystemKeyword = "UpdateKnowledgebaseCategory",
+                                                  Enabled = true,
+                                                  Name = "Update knowledgebase category"
+                                              },
+                                            new ActivityLogType
+                                              {
+                                                  SystemKeyword = "CreateKnowledgebaseCategory",
+                                                  Enabled = true,
+                                                  Name = "Create knowledgebase category"
+                                              },
+                                            new ActivityLogType
+                                              {
+                                                  SystemKeyword = "DeleteKnowledgebaseCategory",
+                                                  Enabled = true,
+                                                  Name = "Delete knowledgebase category"
+                                              },
+                                            new ActivityLogType
+                                              {
+                                                  SystemKeyword = "CreateKnowledgebaseArticle",
+                                                  Enabled = true,
+                                                  Name = "Create knowledgebase article"
+                                              },
+                                            new ActivityLogType
+                                              {
+                                                  SystemKeyword = "UpdateKnowledgebaseArticle",
+                                                  Enabled = true,
+                                                  Name = "Update knowledgebase article"
+                                              },
+                                            new ActivityLogType
+                                              {
+                                                  SystemKeyword = "DeleteKnowledgebaseArticle",
+                                                  Enabled = true,
+                                                  Name = "Delete knowledgebase category"
                                               },
                                       };
             _activityLogTypeRepository.Insert(activityLogTypes);
@@ -10439,34 +10598,12 @@ namespace Grand.Services.Installation
                     Type = "Grand.Services.Tasks.QueuedMessagesSendScheduleTask, Grand.Services",
                     Enabled = true,
                     StopOnError = false,
-                    LastStartUtc = DateTime.MinValue,
-                    LastNonSuccessEndUtc = DateTime.MinValue,
-                    LastSuccessUtc = DateTime.MinValue,
-
-                    TimeIntervalChoice = TimeIntervalChoice.EVERY_MINUTES,
+                    TimeIntervalChoice = TimeIntervalChoice.EveryMinutes,
                     TimeInterval = 1,
                     MinuteOfHour = 1,
                     HourOfDay = 1,
                     DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
-                    DayOfMonth = 1
-                },
-                new ScheduleTask
-                {
-                    ScheduleTaskName = "Keep alive",
-                    Type = "Grand.Services.Tasks.KeepAliveScheduleTask",
-                    Enabled = true,
-                    StopOnError = false,
-                    LastStartUtc = DateTime.MinValue,
-                    LastNonSuccessEndUtc = DateTime.MinValue,
-                    LastSuccessUtc = DateTime.MinValue,
-
-                    TimeIntervalChoice = TimeIntervalChoice.EVERY_MINUTES,
-                    TimeInterval = 5,
-                    MinuteOfHour = 1,
-                    HourOfDay = 1,
-                    DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
                     DayOfMonth = 1
                 },
                 new ScheduleTask
@@ -10475,16 +10612,12 @@ namespace Grand.Services.Installation
                     Type = "Grand.Services.Tasks.DeleteGuestsScheduleTask, Grand.Services",
                     Enabled = true,
                     StopOnError = false,
-                    LastStartUtc = DateTime.MinValue,
-                    LastNonSuccessEndUtc = DateTime.MinValue,
-                    LastSuccessUtc = DateTime.MinValue,
-
-                    TimeIntervalChoice = TimeIntervalChoice.EVERY_MINUTES,
+                    TimeIntervalChoice = TimeIntervalChoice.EveryMinutes,
                     TimeInterval = 10,
                     MinuteOfHour = 1,
                     HourOfDay = 1,
                     DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
                     DayOfMonth = 1
                 },
                 new ScheduleTask
@@ -10493,16 +10626,12 @@ namespace Grand.Services.Installation
                     Type = "Grand.Services.Tasks.ClearCacheScheduleTask, Grand.Services",
                     Enabled = false,
                     StopOnError = false,
-                    LastStartUtc = DateTime.MinValue,
-                    LastNonSuccessEndUtc = DateTime.MinValue,
-                    LastSuccessUtc = DateTime.MinValue,
-
-                    TimeIntervalChoice = TimeIntervalChoice.EVERY_MINUTES,
+                    TimeIntervalChoice = TimeIntervalChoice.EveryMinutes,
                     TimeInterval = 10,
                     MinuteOfHour = 1,
                     HourOfDay = 1,
                     DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
                     DayOfMonth = 1
                 },
                 new ScheduleTask
@@ -10511,16 +10640,12 @@ namespace Grand.Services.Installation
                     Type = "Grand.Services.Tasks.ClearLogScheduleTask",
                     Enabled = false,
                     StopOnError = false,
-                    LastStartUtc = DateTime.MinValue,
-                    LastNonSuccessEndUtc = DateTime.MinValue,
-                    LastSuccessUtc = DateTime.MinValue,
-
-                    TimeIntervalChoice = TimeIntervalChoice.EVERY_HOURS,
+                    TimeIntervalChoice = TimeIntervalChoice.EveryHours,
                     TimeInterval = 1,
                     MinuteOfHour = 1,
                     HourOfDay = 1,
                     DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
                     DayOfMonth = 1
                 },
                 new ScheduleTask
@@ -10529,16 +10654,12 @@ namespace Grand.Services.Installation
                     Type = "Grand.Services.Tasks.UpdateExchangeRateScheduleTask, Grand.Services",
                     Enabled = true,
                     StopOnError = false,
-                    LastStartUtc = DateTime.MinValue,
-                    LastNonSuccessEndUtc = DateTime.MinValue,
-                    LastSuccessUtc = DateTime.MinValue,
-
-                    TimeIntervalChoice = TimeIntervalChoice.EVERY_HOURS,
+                    TimeIntervalChoice = TimeIntervalChoice.EveryHours,
                     TimeInterval = 1,
                     MinuteOfHour = 1,
                     HourOfDay = 1,
                     DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
                     DayOfMonth = 1
                 },
                 new ScheduleTask
@@ -10547,16 +10668,12 @@ namespace Grand.Services.Installation
                     Type = "Grand.Services.Tasks.CustomerReminderAbandonedCartScheduleTask, Grand.Services",
                     Enabled = true,
                     StopOnError = false,
-                    LastStartUtc = DateTime.MinValue,
-                    LastNonSuccessEndUtc = DateTime.MinValue,
-                    LastSuccessUtc = DateTime.MinValue,
-
-                    TimeIntervalChoice = TimeIntervalChoice.EVERY_HOURS,
+                    TimeIntervalChoice = TimeIntervalChoice.EveryHours,
                     TimeInterval = 1,
                     MinuteOfHour = 1,
                     HourOfDay = 1,
                     DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
                     DayOfMonth = 1
                 },
                 new ScheduleTask
@@ -10565,16 +10682,12 @@ namespace Grand.Services.Installation
                     Type = "Grand.Services.Tasks.CustomerReminderRegisteredCustomerScheduleTask, Grand.Services",
                     Enabled = true,
                     StopOnError = false,
-                    LastStartUtc = DateTime.MinValue,
-                    LastNonSuccessEndUtc = DateTime.MinValue,
-                    LastSuccessUtc = DateTime.MinValue,
-
-                    TimeIntervalChoice = TimeIntervalChoice.EVERY_DAYS,
+                    TimeIntervalChoice = TimeIntervalChoice.EveryDays,
                     TimeInterval = 1,
                     MinuteOfHour = 1,
                     HourOfDay = 1,
                     DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
                     DayOfMonth = 1
                 },
                 new ScheduleTask
@@ -10583,16 +10696,12 @@ namespace Grand.Services.Installation
                     Type = "Grand.Services.Tasks.CustomerReminderLastActivityScheduleTask, Grand.Services",
                     Enabled = true,
                     StopOnError = false,
-                    LastStartUtc = DateTime.MinValue,
-                    LastNonSuccessEndUtc = DateTime.MinValue,
-                    LastSuccessUtc = DateTime.MinValue,
-
-                    TimeIntervalChoice = TimeIntervalChoice.EVERY_DAYS,
+                    TimeIntervalChoice = TimeIntervalChoice.EveryDays,
                     TimeInterval = 1,
                     MinuteOfHour = 1,
                     HourOfDay = 1,
                     DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
                     DayOfMonth = 1
                 },
                 new ScheduleTask
@@ -10601,16 +10710,12 @@ namespace Grand.Services.Installation
                     Type = "Grand.Services.Tasks.CustomerReminderLastPurchaseScheduleTask, Grand.Services",
                     Enabled = true,
                     StopOnError = false,
-                    LastStartUtc = DateTime.MinValue,
-                    LastNonSuccessEndUtc = DateTime.MinValue,
-                    LastSuccessUtc = DateTime.MinValue,
-
-                    TimeIntervalChoice = TimeIntervalChoice.EVERY_DAYS,
+                    TimeIntervalChoice = TimeIntervalChoice.EveryDays,
                     TimeInterval = 1,
                     MinuteOfHour = 1,
                     HourOfDay = 1,
                     DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
                     DayOfMonth = 1
                 },
                 new ScheduleTask
@@ -10619,16 +10724,12 @@ namespace Grand.Services.Installation
                     Type = "Grand.Services.Tasks.CustomerReminderBirthdayScheduleTask, Grand.Services",
                     Enabled = true,
                     StopOnError = false,
-                    LastStartUtc = DateTime.MinValue,
-                    LastNonSuccessEndUtc = DateTime.MinValue,
-                    LastSuccessUtc = DateTime.MinValue,
-
-                    TimeIntervalChoice = TimeIntervalChoice.EVERY_DAYS,
+                    TimeIntervalChoice = TimeIntervalChoice.EveryDays,
                     TimeInterval = 1,
                     MinuteOfHour = 1,
                     HourOfDay = 1,
                     DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
                     DayOfMonth = 1
                 },
                 new ScheduleTask
@@ -10637,15 +10738,12 @@ namespace Grand.Services.Installation
                     Type = "Grand.Services.Tasks.CustomerReminderCompletedOrderScheduleTask, Grand.Services",
                     Enabled = true,
                     StopOnError = false,
-                    LastStartUtc = DateTime.MinValue,
-                    LastNonSuccessEndUtc = DateTime.MinValue,
-                    LastSuccessUtc = DateTime.MinValue,
-                    TimeIntervalChoice = TimeIntervalChoice.EVERY_DAYS,
+                    TimeIntervalChoice = TimeIntervalChoice.EveryDays,
                     TimeInterval = 1,
                     MinuteOfHour = 1,
                     HourOfDay = 1,
                     DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
                     DayOfMonth = 1
                 },
                 new ScheduleTask
@@ -10654,15 +10752,26 @@ namespace Grand.Services.Installation
                     Type = "Grand.Services.Tasks.CustomerReminderUnpaidOrderScheduleTask, Grand.Services",
                     Enabled = true,
                     StopOnError = false,
-                    LastStartUtc = DateTime.MinValue,
-                    LastNonSuccessEndUtc = DateTime.MinValue,
-                    LastSuccessUtc = DateTime.MinValue,
-                    TimeIntervalChoice = TimeIntervalChoice.EVERY_DAYS,
+                    TimeIntervalChoice = TimeIntervalChoice.EveryDays,
                     TimeInterval = 1,
                     MinuteOfHour = 1,
                     HourOfDay = 1,
                     DayOfWeek  = DayOfWeek.Thursday,
-                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
+                    DayOfMonth = 1
+                },
+                new ScheduleTask
+                {
+                    ScheduleTaskName = "End of the auctions",
+                    Type = "Grand.Services.Tasks.EndAuctionsTask, Grand.Services",
+                    Enabled = false,
+                    StopOnError = false,
+                    TimeIntervalChoice = TimeIntervalChoice.EveryHours,
+                    TimeInterval = 10,
+                    MinuteOfHour = 1,
+                    HourOfDay = 1,
+                    DayOfWeek  = DayOfWeek.Thursday,
+                    MonthOptionChoice = MonthOptionChoice.OnSpecificDay,
                     DayOfMonth = 1
                 },
             };
@@ -10888,7 +10997,7 @@ namespace Grand.Services.Installation
             //Language
             _languageRepository.Collection.Indexes.CreateOneAsync(Builders<Language>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _lsrRepository.Collection.Indexes.CreateOneAsync(Builders<LocaleStringResource>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _lsrRepository.Collection.Indexes.CreateOneAsync(Builders<LocaleStringResource>.IndexKeys.Ascending(x => x.LanguageId).Ascending(x=>x.ResourceName), new CreateIndexOptions() { Name = "Language" });
+            _lsrRepository.Collection.Indexes.CreateOneAsync(Builders<LocaleStringResource>.IndexKeys.Ascending(x => x.LanguageId).Ascending(x => x.ResourceName), new CreateIndexOptions() { Name = "Language" });
             _lsrRepository.Collection.Indexes.CreateOneAsync(Builders<LocaleStringResource>.IndexKeys.Ascending(x => x.ResourceName), new CreateIndexOptions() { Name = "ResourceName" });
 
             //Currency
@@ -10908,7 +11017,7 @@ namespace Grand.Services.Installation
 
             //customer product price
             _customerProductPriceRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerProductPrice>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _customerProductPriceRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerProductPrice>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x=>x.ProductId), new CreateIndexOptions() { Name = "CustomerProduct", Unique = true });
+            _customerProductPriceRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerProductPrice>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x => x.ProductId), new CreateIndexOptions() { Name = "CustomerProduct", Unique = true });
 
             //customer tag history
             _customerTagProductRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerTagProduct>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
@@ -10916,7 +11025,7 @@ namespace Grand.Services.Installation
 
             //customer history password
             _customerHistoryPasswordRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerHistoryPassword>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _customerHistoryPasswordRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerHistoryPassword>.IndexKeys.Ascending(x => x.CustomerId).Descending(x=>x.CreatedOnUtc), new CreateIndexOptions() { Name = "CustomerId", Unique = false });
+            _customerHistoryPasswordRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerHistoryPassword>.IndexKeys.Ascending(x => x.CustomerId).Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CustomerId", Unique = false });
 
             //address
             _addressRepository.Collection.Indexes.CreateOneAsync(Builders<Address>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
@@ -10934,7 +11043,7 @@ namespace Grand.Services.Installation
 
             //category
             _categoryRepository.Collection.Indexes.CreateOneAsync(Builders<Category>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _categoryRepository.Collection.Indexes.CreateOneAsync(Builders<Category>.IndexKeys.Ascending(x => x.DisplayOrder).Ascending(x=>x.ShowOnHomePage), new CreateIndexOptions() { Name = "DisplayOrder_1", Unique = false });
+            _categoryRepository.Collection.Indexes.CreateOneAsync(Builders<Category>.IndexKeys.Ascending(x => x.DisplayOrder).Ascending(x => x.ShowOnHomePage), new CreateIndexOptions() { Name = "DisplayOrder_1", Unique = false });
             _categoryRepository.Collection.Indexes.CreateOneAsync(Builders<Category>.IndexKeys.Ascending(x => x.ParentCategoryId).Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "ParentCategoryId_1_DisplayOrder_1", Unique = false });
 
             //manufacturer
@@ -10966,6 +11075,14 @@ namespace Grand.Services.Installation
 
             _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending("ProductSpecificationAttributes.SpecificationAttributeOptionId").Ascending("ProductSpecificationAttributes.AllowFiltering"), new CreateIndexOptions() { Name = "ProductSpecificationAttributes", Unique = false });
 
+            //productreseration
+            _productReservationRepository.Collection.Indexes.CreateOneAsync(Builders<ProductReservation>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _productReservationRepository.Collection.Indexes.CreateOneAsync(Builders<ProductReservation>.IndexKeys.Ascending(x => x.ProductId).Ascending(x => x.Date), new CreateIndexOptions() { Name = "ProductReservation", Unique = false });
+
+            //bid
+            _bidRepository.Collection.Indexes.CreateOneAsync(Builders<Bid>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _bidRepository.Collection.Indexes.CreateOneAsync(Builders<Bid>.IndexKeys.Ascending(x => x.ProductId).Ascending(x => x.CustomerId).Descending(x => x.Date), new CreateIndexOptions() { Name = "ProductCustomer", Unique = false });
+            _bidRepository.Collection.Indexes.CreateOneAsync(Builders<Bid>.IndexKeys.Ascending(x => x.ProductId).Descending(x => x.Date), new CreateIndexOptions() { Name = "ProductDate", Unique = false });
 
             //ProductReview
             _productReviewRepository.Collection.Indexes.CreateOneAsync(Builders<ProductReview>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
@@ -11026,11 +11143,16 @@ namespace Grand.Services.Installation
             _discountusageRepository.Collection.Indexes.CreateOneAsync(Builders<DiscountUsageHistory>.IndexKeys.Ascending(x => x.DiscountId), new CreateIndexOptions() { Name = "DiscountId" });
             _discountusageRepository.Collection.Indexes.CreateOneAsync(Builders<DiscountUsageHistory>.IndexKeys.Ascending(x => x.OrderId), new CreateIndexOptions() { Name = "OrderId" });
 
-
             //blog
             _blogPostRepository.Collection.Indexes.CreateOneAsync(Builders<BlogPost>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _blogcommentRepository.Collection.Indexes.CreateOneAsync(Builders<BlogComment>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _blogpostRepository.Collection.Indexes.CreateOneAsync(Builders<BlogPost>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+
+            //knowledgebase
+            _knowledgebaseArticleRepository.Collection.Indexes.CreateOneAsync(Builders<KnowledgebaseArticle>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _knowledgebaseArticleRepository.Collection.Indexes.CreateOneAsync(Builders<KnowledgebaseArticle>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder", Unique = false });
+            _knowledgebaseCategoryRepository.Collection.Indexes.CreateOneAsync(Builders<KnowledgebaseCategory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _knowledgebaseCategoryRepository.Collection.Indexes.CreateOneAsync(Builders<KnowledgebaseCategory>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder", Unique = false });
 
             //topic
             _topicRepository.Collection.Indexes.CreateOneAsync(Builders<Topic>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
@@ -11155,7 +11277,6 @@ namespace Grand.Services.Installation
             _customerActionHistory.Collection.Indexes.CreateOneAsync(Builders<CustomerActionHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _customerActionHistory.Collection.Indexes.CreateOneAsync(Builders<CustomerActionHistory>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x => x.CustomerActionId), new CreateIndexOptions() { Name = "Customer_Action", Unique = false });
 
-
             //banner
             _banner.Collection.Indexes.CreateOneAsync(Builders<Banner>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _popupArchive.Collection.Indexes.CreateOneAsync(Builders<PopupArchive>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
@@ -11165,7 +11286,6 @@ namespace Grand.Services.Installation
             _customerReminder.Collection.Indexes.CreateOneAsync(Builders<CustomerReminder>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _customerReminderHistoryRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerReminderHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _customerReminderHistoryRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerReminderHistory>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x => x.CustomerReminderId), new CreateIndexOptions() { Name = "CustomerId", Unique = false });
-
         }
 
         #endregion

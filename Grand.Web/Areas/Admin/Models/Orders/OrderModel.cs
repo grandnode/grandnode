@@ -348,7 +348,7 @@ namespace Grand.Web.Areas.Admin.Models.Orders
             public IList<SelectListItem> AvailableProductTypes { get; set; }
 
             public string OrderId { get; set; }
-
+            public int OrderNumber { get; set; }
             #region Nested classes
             
             public partial class ProductModel : BaseGrandEntityModel
@@ -374,6 +374,7 @@ namespace Grand.Web.Areas.Admin.Models.Orders
                 public string ProductId { get; set; }
 
                 public string OrderId { get; set; }
+                public int OrderNumber { get; set; }
 
                 public ProductType ProductType { get; set; }
 
@@ -396,8 +397,6 @@ namespace Grand.Web.Areas.Admin.Models.Orders
                 public IList<ProductAttributeModel> ProductAttributes { get; set; }
                 //gift card info
                 public GiftCardModel GiftCard { get; set; }
-                //rental
-                public bool IsRental { get; set; }
 
                 public List<string> Warnings { get; set; }
 

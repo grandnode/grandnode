@@ -1,17 +1,12 @@
 ﻿@model CustomerActionModel
 
-
-
-
-
-
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.ReactionTypeId)
+            <admin-label asp-for="ReactionTypeId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.ReactionTypeId, ((Grand.Core.Domain.Customers.CustomerReactionTypeEnum)Model.ReactionTypeId).ToSelectList())
-                @Html.ValidationMessageFor(model => model.ReactionTypeId)
+                <admin-select asp-for="ReactionTypeId" asp-items="((Grand.Core.Domain.Customers.CustomerReactionTypeEnum)Model.ReactionTypeId).ToSelectList()" />
+                <span asp-validation-for="ReactionTypeId"></span>
                 <div class="note note-info margin-top-10">
                     <p>@T("admin.customers.actiontype.helpText.Banner")</p>
                     <p>@T("admin.customers.actiontype.helpText.InteractiveForm")</p>
@@ -22,38 +17,38 @@
             </div>
         </div>
         <div class="form-group" id="plnBanner">
-            @Html.GrandLabelFor(model => model.BannerId)
+            <admin-label asp-for="BannerId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.BannerId, Model.Banners)
-                @Html.ValidationMessageFor(model => model.BannerId)
+                <admin-select asp-for="BannerId" asp-items="Model.Banners" />
+                <span asp-validation-for="BannerId"></span>
             </div>
         </div>
         <div class="form-group" id="plnInteractiveForm">
-            @Html.GrandLabelFor(model => model.InteractiveFormId)
+            <admin-label asp-for="InteractiveFormId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.InteractiveFormId, Model.InteractiveForms)
-                @Html.ValidationMessageFor(model => model.InteractiveFormId)
+                <admin-select asp-for="InteractiveFormId" asp-items="Model.InteractiveForms" />
+                <span asp-validation-for="InteractiveFormId"></span>
             </div>
         </div>
         <div class="form-group" id="plnMessage">
-            @Html.GrandLabelFor(model => model.MessageTemplateId)
+            <admin-label asp-for="MessageTemplateId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.MessageTemplateId, Model.MessageTemplates)
-                @Html.ValidationMessageFor(model => model.MessageTemplateId)
+                <admin-select asp-for="MessageTemplateId" asp-items="Model.MessageTemplates" />
+                <span asp-validation-for="MessageTemplateId"></span>
             </div>
         </div>
         <div class="form-group" id="plnRole">
-            @Html.GrandLabelFor(model => model.CustomerRoleId)
+            <admin-label asp-for="CustomerRoleId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.CustomerRoleId, Model.CustomerRoles)
-                @Html.ValidationMessageFor(model => model.CustomerRoleId)
+                <admin-select asp-for="CustomerRoleId" asp-items="Model.CustomerRoles" />
+                <span asp-validation-for="CustomerRoleId"></span>
             </div>
         </div>
         <div class="form-group" id="plnTag">
-            @Html.GrandLabelFor(model => model.CustomerTagId)
+            <admin-label asp-for="CustomerTagId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.CustomerTagId, Model.CustomerTags)
-                @Html.ValidationMessageFor(model => model.CustomerTagId)
+                <admin-select asp-for="CustomerTagId" asp-items="Model.CustomerTags" />
+                <span asp-validation-for="CustomerTagId"></span>
             </div>
         </div>
     </div>

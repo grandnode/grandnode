@@ -40,18 +40,14 @@
             scrollable: false,
             columns: [{
                 field: "ProductName",
-                title: "@T("Admin.SalesReport.Bestsellers.Fields.Name")"
+                title: "@T("Admin.SalesReport.Bestsellers.Fields.Name")",
+                template: '<a class="k-link" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#=ProductName#</a>',
             }, {
                 field: "TotalQuantity",
                 title: "@T("Admin.SalesReport.Bestsellers.Fields.TotalQuantity")"
             }, {
                 field: "TotalAmount",
                 title: "@T("Admin.SalesReport.Bestsellers.Fields.TotalAmount")"
-            }, {
-                field: "ProductId",
-                title: "@T("Admin.Common.View")",
-                width: 100,
-                template: '<a class="btn btn-sm btn-default" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#"><i class="fa fa-search"></i> @T("Admin.Common.View")</a>'
             }]
         });
     });

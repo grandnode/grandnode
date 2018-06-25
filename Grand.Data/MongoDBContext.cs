@@ -62,7 +62,7 @@ namespace Grand.Data
         {
             var script = new BsonJavaScript(command);
             var operation = new EvalOperation(_database.DatabaseNamespace, script, null);
-            var writeBinding = new WritableServerBinding(_client.Cluster);
+            var writeBinding = new WritableServerBinding(_client.Cluster, NoCoreSession.NewHandle());
             return operation.Execute(writeBinding, CancellationToken.None);
         }
 
@@ -70,7 +70,7 @@ namespace Grand.Data
         {
             var script = new BsonJavaScript(command);
             var operation = new EvalOperation(_database.DatabaseNamespace, script, null);
-            var writeBinding = new WritableServerBinding(_client.Cluster);
+            var writeBinding = new WritableServerBinding(_client.Cluster, NoCoreSession.NewHandle());
             return operation.ExecuteAsync(writeBinding, CancellationToken.None);
 
         }

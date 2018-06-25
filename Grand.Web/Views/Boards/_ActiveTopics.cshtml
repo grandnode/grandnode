@@ -29,14 +29,14 @@
     </div>
    }
     <div class="forums-table-section-body">
-        @if (Model.ForumTopics.Count > 0)
+        @if (Model.ForumTopics.Any())
         {
             <div class="">
                 <table class="table table-hover">
                     <colgroup>
                         <col />
                     </colgroup>
-                    <thead class="table-inverse">
+                    <thead class="table-dark">
                         <tr>
                             <th>
                                 <div class="col--12">
@@ -44,19 +44,19 @@
                                         <div class="topic-details col-md-7 col--12">
                                             @T("Forum.TopicTitle")
                                         </div>
-                                        <div class="replies col-md-1 col--12 hidden-md-down">
+                                        <div class="replies col-md-1 col--12 d-none d-lg-block">
                                             @T("Forum.Replies")
                                         </div>
-                                        <div class="views col-md-1 col--12 hidden-md-down">
+                                        <div class="views col-md-1 col--12 d-none d-lg-block">
                                             @T("Forum.Views")
                                         </div>
                                         @if (Model.AllowPostVoting)
                                         {
-                                            <div class="votes col-md-1 col--12 hidden-md-down">
+                                            <div class="votes col-md-1 col--12 d-none d-lg-block">
                                                 @T("Forum.Votes")
                                             </div>
                                         }
-                                        <div class="latest-post col-md-2 col--12 hidden-md-down">
+                                        <div class="latest-post col-md-2 col--12 d-none d-lg-block">
                                             @T("Forum.LatestPost")
                                         </div>
                                     </div>
@@ -96,15 +96,15 @@
                                                     }
                                                 </div>
                                             </div>
-                                            <div class="replies col-md-1 col--12 hidden-md-down">
+                                            <div class="replies col-md-1 col--12 d-none d-lg-block">
                                                 @topic.NumReplies
                                             </div>
-                                            <div class="views col-md-1 col--12 hidden-md-down">
+                                            <div class="views col-md-1 col--12 d-none d-lg-block">
                                                 @topic.Views
                                             </div>
                                             @if (Model.AllowPostVoting)
                                             {
-                                                <div class="votes col-md-1 col--12 hidden-md-down">
+                                                <div class="votes col-md-1 col--12 d-none d-lg-block">
                                                     @topic.Votes
                                                 </div>
                                             }

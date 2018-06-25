@@ -42,12 +42,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 Id = task.Id,
                 ScheduleTaskName = task.ScheduleTaskName,
+                LeasedByMachineName = task.LeasedByMachineName,
                 Type = task.Type,
                 Enabled = task.Enabled,
                 StopOnError = task.StopOnError,
-                LastStartUtc = task.LastStartUtc.ToString(),
-                LastEndUtc = task.LastNonSuccessEndUtc.ToString(),
-                LastSuccessUtc = task.LastSuccessUtc.ToString(),
+                LastStartUtc = task.LastStartUtc,
+                LastEndUtc = task.LastNonSuccessEndUtc,
+                LastSuccessUtc = task.LastSuccessUtc,
                 TimeIntervalChoice = (int)task.TimeIntervalChoice,
                 TimeInterval = task.TimeInterval,
                 MinuteOfHour = task.MinuteOfHour,
@@ -99,12 +100,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 model.Id = task.Id;
                 model.ScheduleTaskName = task.ScheduleTaskName;
+                model.LeasedByMachineName = task.LeasedByMachineName;
                 model.Type = task.Type;
                 model.Enabled = task.Enabled;
                 model.StopOnError = task.StopOnError;
-                model.LastStartUtc = task.LastStartUtc.ToString();
-                model.LastEndUtc = task.LastNonSuccessEndUtc.ToString();
-                model.LastSuccessUtc = task.LastSuccessUtc.ToString();
+                model.LastStartUtc = task.LastStartUtc;
+                model.LastEndUtc = task.LastNonSuccessEndUtc;
+                model.LastSuccessUtc = task.LastSuccessUtc;
                 model.TimeIntervalChoice = (int)task.TimeIntervalChoice;
                 model.TimeInterval = task.TimeInterval;
                 model.MinuteOfHour = task.MinuteOfHour;
@@ -123,6 +125,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 var scheduleTask = _scheduleTaskService.GetTaskById(model.Id);
                 scheduleTask.Enabled = model.Enabled;
+                scheduleTask.LeasedByMachineName = model.LeasedByMachineName;
                 scheduleTask.StopOnError = model.StopOnError;
                 scheduleTask.TimeIntervalChoice = (TimeIntervalChoice)model.TimeIntervalChoice;
                 scheduleTask.TimeInterval = model.TimeInterval;

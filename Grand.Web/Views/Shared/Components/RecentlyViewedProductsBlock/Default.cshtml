@@ -1,9 +1,9 @@
 ﻿@model IList<ProductOverviewModel>
-@if (Model.Count > 0)
+@if (Model.Any())
 {
     <div id="block-recently-viewed-products" class="block block-recently-viewed-products">
-            <h2 class="h5 hidden-md-down generalTitle"><strong>@T("Products.RecentlyViewedProducts")</strong></h2>
-            <h2 class="h5 bg-faded p-3 hidden-lg-up"><strong>@T("Products.RecentlyViewedProducts")</strong><i id="computers" class="fa fa-angle-down fa-1x float-xs-right" aria-hidden="true"></i></h2>
+            <h2 class="h5 d-none d-lg-block generalTitle"><strong>@T("Products.RecentlyViewedProducts")</strong></h2>
+            <h2 class="h5 bg-light p-3 d-lg-none"><strong>@T("Products.RecentlyViewedProducts")</strong><i id="computers" class="fa fa-angle-down fa-1x float-xs-right" aria-hidden="true"></i></h2>
             <ul class="list viewBox pl-0">
                 @for (int i = 0; i < Model.Count; i++)
                 {
@@ -12,7 +12,7 @@
                         <div class="d-flex flex-row">
                                 @if (!String.IsNullOrEmpty(product.DefaultPictureModel.ImageUrl))
                                 {
-                                    <div class="hidden-md-down">
+                                    <div class="d-none d-lg-block">
                                             <a class="product-picture" href="@Url.RouteUrl("Product", new { SeName = product.SeName })" title="@product.DefaultPictureModel.Title">
                                                 <img alt="@product.DefaultPictureModel.AlternateText" src="@product.DefaultPictureModel.ImageUrl" title="@product.DefaultPictureModel.Title" />
                                             </a>

@@ -104,5 +104,15 @@ namespace Grand.Core.Domain.Orders
         /// Gets or sets a value indicating whether a customer will see quantity of attribute values associated to products (when qty > 1)
         /// </summary>
         public bool RenderAssociatedAttributeValueQuantity { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether shopping carts (and wishlist) are shared between stores (in multi-store environment)
+        /// </summary>
+        public bool CartsSharedBetweenStores { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value reservation format date 
+        /// </summary>
+        public string ReservationDateFormat { get; set; }
     }
 }

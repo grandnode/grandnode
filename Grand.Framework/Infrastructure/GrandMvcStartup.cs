@@ -3,6 +3,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Grand.Core.Infrastructure;
 using Grand.Framework.Infrastructure.Extensions;
+using Microsoft.Extensions.Caching.Memory;
+using System;
+using Grand.Core.Domain;
+using Grand.Services.Security;
 
 namespace Grand.Framework.Infrastructure
 {
@@ -19,10 +23,21 @@ namespace Grand.Framework.Infrastructure
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             //add MiniProfiler services
-            services.AddMiniProfiler();
+            services.AddMiniProfiler(options => {
+                var memoryCache = EngineContext.Current.Resolve<IMemoryCache>();
+                options.Storage = new StackExchange.Profiling.Storage.MemoryCacheStorage(memoryCache, TimeSpan.FromMinutes(60));
+                //determine who can access the MiniProfiler results
+                options.ResultsAuthorize = request =>
+                    !EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore ||
+                    EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.AccessAdminPanel);
+
+            });
 
             //add and configure MVC feature
             services.AddGrandMvc();
+
+            //add custom redirect result executor
+            services.AddGrandRedirectResultExecutor();
         }
 
         /// <summary>
@@ -32,7 +47,7 @@ namespace Grand.Framework.Infrastructure
         public void Configure(IApplicationBuilder application)
         {
             //add MiniProfiler
-            application.UseMiniProfiler();
+            application.UseProfiler();
 
             //MVC routing
             application.UseGrandMvc();

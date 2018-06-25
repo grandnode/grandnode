@@ -18,6 +18,9 @@ using Grand.Services.Media;
 using Grand.Core.Domain.Common;
 using Grand.Framework.Controllers;
 using Grand.Core.Domain.Media;
+using Grand.Web.Services;
+using Grand.Services.Directory;
+using Grand.Web.Extensions;
 
 namespace Grand.Web.Controllers
 {
@@ -32,6 +35,8 @@ namespace Grand.Web.Controllers
         private readonly IVendorService _vendorService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IPictureService _pictureService;
+        private readonly IAddressWebService _addressWebService;
+        private readonly ICountryService _countryService;
 
         private readonly LocalizationSettings _localizationSettings;
         private readonly VendorSettings _vendorSettings;
@@ -49,6 +54,8 @@ namespace Grand.Web.Controllers
             IVendorService vendorService,
             IUrlRecordService urlRecordService,
             IPictureService pictureService,
+            IAddressWebService addressWebService,
+            ICountryService countryService,
             LocalizationSettings localizationSettings,
             VendorSettings vendorSettings,
             CaptchaSettings captchaSettings,
@@ -62,7 +69,8 @@ namespace Grand.Web.Controllers
             this._vendorService = vendorService;
             this._urlRecordService = urlRecordService;
             this._pictureService = pictureService;
-
+            this._addressWebService = addressWebService;
+            this._countryService = countryService;
             this._localizationSettings = localizationSettings;
             this._vendorSettings = vendorSettings;
             this._captchaSettings = captchaSettings;
@@ -85,14 +93,13 @@ namespace Grand.Web.Controllers
 
         #region Methods
 
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult ApplyVendor()
         {
             if (!_vendorSettings.AllowCustomersToApplyForVendorAccount)
                 return RedirectToRoute("HomePage");
 
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             var model = new ApplyVendorModel();
             if (!String.IsNullOrEmpty(_workContext.CurrentCustomer.VendorId))
@@ -107,6 +114,15 @@ namespace Grand.Web.Controllers
             model.Email = _workContext.CurrentCustomer.Email;
             model.TermsOfServiceEnabled = _vendorSettings.TermsOfServiceEnabled;
             model.TermsOfServicePopup = _commonSettings.PopupForTermsOfServiceLinks;
+
+            _addressWebService.PrepareVendorAddressModel(model: model.Address,
+                address: null,
+                excludeProperties: false,
+                prePopulateWithCustomerFields: true,
+                customer: _workContext.CurrentCustomer,
+                loadCountries: () => _countryService.GetAllCountries(_workContext.WorkingLanguage.Id),
+                vendorSettings: _vendorSettings);
+
             return View(model);
         }
 
@@ -119,7 +135,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("HomePage");
 
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnApplyVendorPage && !captchaValid)
@@ -149,6 +165,7 @@ namespace Grand.Web.Controllers
             if (ModelState.IsValid)
             {
                 var description = Core.Html.HtmlHelper.FormatText(model.Description, false, false, true, false, false, false);
+                var address = new Address();
                 //disabled by default
                 var vendor = new Vendor
                 {
@@ -159,8 +176,9 @@ namespace Grand.Web.Controllers
                     PictureId = pictureId,
                     AllowCustomersToSelectPageSize = true,
                     PageSizeOptions = _vendorSettings.DefaultVendorPageSizeOptions,
-                    AllowCustomerReviews = _vendorSettings.DefaultAllowCustomerReview
+                    AllowCustomerReviews = _vendorSettings.DefaultAllowCustomerReview,
                 };
+                model.Address.ToEntity(vendor.Address, true);
                 _vendorService.InsertVendor(vendor);
                 //search engine name (the same as vendor name)
                 var seName = vendor.ValidateSeName(vendor.Name, vendor.Name, true);
@@ -183,10 +201,18 @@ namespace Grand.Web.Controllers
 
             //If we got this far, something failed, redisplay form
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnApplyVendorPage;
+
+            _addressWebService.PrepareVendorAddressModel(model: model.Address,
+                address: null,
+                excludeProperties: false,
+                prePopulateWithCustomerFields: true,
+                customer: _workContext.CurrentCustomer,
+                loadCountries: () => _countryService.GetAllCountries(_workContext.WorkingLanguage.Id),
+                vendorSettings: _vendorSettings);
+
             return View(model);
         }
 
-        [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult Info()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -204,6 +230,12 @@ namespace Grand.Web.Controllers
             var picture = _pictureService.GetPictureById(vendor.PictureId);
             var pictureSize = _mediaSettings.AvatarPictureSize;
             model.PictureUrl = picture != null ? _pictureService.GetPictureUrl(picture, pictureSize) : string.Empty;
+
+            _addressWebService.PrepareVendorAddressModel(model: model.Address,
+                address: vendor.Address,
+                excludeProperties: false,
+                loadCountries: () => _countryService.GetAllCountries(_workContext.WorkingLanguage.Id),
+                vendorSettings: _vendorSettings);
 
             return View(model);
         }
@@ -238,7 +270,7 @@ namespace Grand.Web.Controllers
             var vendor = _workContext.CurrentVendor;
             var prevPicture = _pictureService.GetPictureById(vendor.PictureId);
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && ModelState.ErrorCount == 0)
             {
                 var description = Core.Html.HtmlHelper.FormatText(model.Description, false, false, true, false, false, false);
 
@@ -256,6 +288,7 @@ namespace Grand.Web.Controllers
 
                 //update picture seo file name
                 UpdatePictureSeoNames(vendor);
+                model.Address.ToEntity(vendor.Address, true);
 
                 _vendorService.UpdateVendor(vendor);
 
@@ -265,6 +298,12 @@ namespace Grand.Web.Controllers
 
                 return RedirectToAction("Info");
             }
+
+            _addressWebService.PrepareVendorAddressModel(model: model.Address,
+                address: vendor.Address,
+                excludeProperties: false,
+                loadCountries: () => _countryService.GetAllCountries(_workContext.WorkingLanguage.Id),
+                vendorSettings: _vendorSettings);
 
             return View(model);
         }

@@ -1,13 +1,12 @@
 ﻿@model GeneralCommonSettingsModel
+@inject IEventPublisher eventPublisher
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.GeneralCommon").Text;
 }
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary(false)
-
+<form asp-controller="Setting" asp-action="GeneralCommon" method="post">
+    <antiforgery-token />
+    <div asp-validation-summary="All"></div>
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -25,7 +24,7 @@
                 <div class="portlet-body">
                     <div class="form-horizontal">
                         <div class="form-body">
-                            @await Component.InvokeAsync("StoreScopeConfiguration") 
+                            @await Component.InvokeAsync("StoreScopeConfiguration")
                         </div>
                     </div>
                 </div>
@@ -82,18 +81,16 @@
                             @Html.Partial("GeneralCommon.TabTopMenuSettings", Model)
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
 
-
-    <script>
+    <script type="text/javascript">
         $(document).ready(function () {
             $("#generalsettings-edit").show();
             $("#generalsettings-edit").kendoTabStrip({
-                animation:  {
+                animation: {
                     open: {
                         effects: "fadeIn"
                     }
@@ -103,22 +100,69 @@
         });
     </script>
 
-  
-
-    {
+    @{
         //custom tabs
         var eventMessage = new AdminTabStripCreated(this.Html, "generalsettings-edit");
-        EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+        eventPublisher.Publish(eventMessage);
         foreach (var eventBlock in eventMessage.BlocksToRender)
         {
             @eventBlock
         }
     }
 
-
-    
-    
     @*save selected tab index*@
     <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
-    
-}
+
+</form>
+
+<div class="modal-dialog" id="importfile-window" style="display:none; padding: 0 10px;">
+    <form asp-controller="Plugin" asp-action="UploadTheme" method="post" enctype="multipart/form-data">
+        <antiforgery-token />
+        <ul class="common-list">
+            <li>
+                <strong>NOTE: It can take up to several minutes.</strong>
+            </li>
+            <li>
+                <strong>NOTE: DO NOT click twice.</strong>
+            </li>
+        </ul>
+        <div class="form-group">
+            <div class="col-md-2" style="margin-top: 7px; height: 34px; padding-left: 25px;">
+                <label class="control-label">
+                    Zip file
+                </label>
+            </div>
+            <div class="col-md-10">
+                <input id="importfiledialog" name="zippedFile" class="form-control" type="file">
+            </div>
+        </div>
+        <div class="form-group">
+            &nbsp;
+        </div>
+        <div class="form-group">
+            <div class="col-md-2">
+                &nbsp;
+            </div>
+            <div class="col-md-10 text-right mt-10">
+                <input id="importfilesubmit" class="btn blue" value="@T("Admin.Configuration.Themes.Upload")" type="submit">
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#importfile").click(function (e) {
+            e.preventDefault();
+            var window = $("#importfile-window");
+            if (!window.data("kendoWindow")) {
+                window.kendoWindow({
+                    modal: true,
+                    title: "@T("Admin.Configuration.Themes.Upload")",
+                    actions: ["Close"]
+                });
+            }
+            window.data('kendoWindow').center().open();
+        });
+    });
+</script>

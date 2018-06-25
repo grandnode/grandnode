@@ -58,7 +58,7 @@
                     </td>
                 </tr>
             }
-            @if (Model.DisplayTaxRates && Model.TaxRates.Count > 0)
+            @if (Model.DisplayTaxRates && Model.TaxRates.Any())
             {
                 foreach (var taxRate in Model.TaxRates)
                 {
@@ -94,7 +94,7 @@
                     </td>
                 </tr>
             }
-            @if (Model.GiftCards.Count > 0)
+            @if (Model.GiftCards.Any())
             {
                 foreach (var gc in Model.GiftCards)
                 {

@@ -2,6 +2,8 @@
 <input id="@Html.IdForModel()" name="@Html.NameForModel()" value="@(Model > DateTime.MinValue || Model.HasValue ? Model : null)" />
 <script>
     $(document).ready(function () {
-        $("#@Html.IdForModel()").kendoDatePicker();
+        $("#@Html.IdForModel()").kendoDatePicker({
+                culture: "en-US"
+        });
     });
 </script>

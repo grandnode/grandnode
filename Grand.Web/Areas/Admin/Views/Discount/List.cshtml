@@ -1,13 +1,10 @@
 ﻿@model DiscountListModel
+@inject AdminAreaSettings adminAreaSettings
 @{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
     //page title
     ViewBag.Title = T("Admin.Promotions.Discounts").Text;
 }
-@Html.AntiForgeryToken()
-
+<antiforgery-token />
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light form-fit">
@@ -24,21 +21,21 @@
                 <div class="form-horizontal">
                     <div class="form-body">
                         <div class="form-group">
-                            @Html.GrandLabelFor(model => model.SearchDiscountName)
+                            <admin-label asp-for="SearchDiscountName" />
                             <div class="col-md-4 col-sm-6">
-                                @Html.GrandEditorFor(model => model.SearchDiscountName)
+                                <admin-input asp-for="SearchDiscountName" />
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.GrandLabelFor(model => model.SearchDiscountCouponCode)
+                            <admin-label asp-for="SearchDiscountCouponCode" />
                             <div class="col-md-4 col-sm-6">
-                                @Html.GrandEditorFor(model => model.SearchDiscountCouponCode)
+                                <admin-input asp-for="SearchDiscountCouponCode" />
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.GrandLabelFor(model => model.SearchDiscountTypeId)
+                            <admin-label asp-for="SearchDiscountTypeId" />
                             <div class="col-md-4 col-sm-6">
-                                @Html.GrandDropDownListFor(model => model.SearchDiscountTypeId, Model.AvailableDiscountTypes)
+                                <admin-select asp-for="SearchDiscountTypeId" asp-items="Model.AvailableDiscountTypes" />
                             </div>
                         </div>
                     </div>
@@ -60,8 +57,7 @@
     </div>
 </div>
 
-
-    <script>
+<script>
         $(document).ready(function () {
             $("#discounts-grid").kendoGrid({
                 dataSource: {
@@ -83,14 +79,14 @@
                         // Cancel the changes
                         this.cancelChanges();
                     },
-                    pageSize: @(defaultGridPageSize),
+                    pageSize: @(adminAreaSettings.DefaultGridPageSize),
                     serverPaging: true,
                     serverFiltering: true,
                     serverSorting: true
                 },
                 pageable: {
                     refresh: true,
-                    pageSizes: [@(gridPageSizes)]
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
                 },
                 editable: {
                     confirmation: false,
@@ -100,7 +96,8 @@
                 columns: [{
                     field: "Name",
                     title: "@T("Admin.Promotions.Discounts.Fields.Name")",
-                    width: 350
+                    width: 350,
+                    template: '<a class="k-link" href="Edit/#=Id#">#=Name#</a>',
                 }, {
                     field: "DiscountTypeName",
                     title: "@T("Admin.Promotions.Discounts.Fields.DiscountType")",
@@ -133,17 +130,11 @@
                     headerAttributes: { style: "text-align:center" },
                     attributes: { style: "text-align:center" },
                     template: '# if(IsEnabled) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
-                },{
-                    field: "Id",
-                    title: "@T("Admin.Common.Edit")",
-                    width: 80,
-                    template: '<a class="btn btn-sm btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
                 }]
             });
         });
-    </script>
-
-    <script type="text/javascript">
+</script>
+<script type="text/javascript">
 
         $(document).ready(function () {
 
@@ -179,4 +170,4 @@
             return data;
         }
 
-    </script>
+</script>

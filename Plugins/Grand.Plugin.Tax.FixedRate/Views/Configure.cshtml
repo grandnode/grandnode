@@ -1,11 +1,9 @@
 ﻿@{
     Layout = "_ConfigurePlugin";
 }
-@Html.AntiForgeryToken()
-
+<antiforgery-token />
 <div id="tax-categories-grid"></div>
-
-<script>
+<script type="text/javascript">
     $(document).ready(function () {
         $("#tax-categories-grid").kendoGrid({
             dataSource: {
@@ -21,6 +19,14 @@
                         type: "POST",
                         dataType: "json",
                         data: addAntiForgeryToken
+                    },
+                    parameterMap: function (data, operation) {
+                        if (operation != "read") {
+                            data.Rate = kendo.toString(data.Rate, "n8");
+                            return data;
+                        } else {
+                            return data;
+                        }
                     }
                 },
                 schema: {
@@ -84,6 +90,4 @@
             }]
         });
     });
-
-                
 </script>

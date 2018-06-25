@@ -46,6 +46,10 @@ namespace Grand.Web.Areas.Admin.Controllers
         [AdminAntiForgery(true)] 
         public IActionResult SaveDownloadUrl(string downloadUrl)
         {
+            if(string.IsNullOrEmpty(downloadUrl))
+            {
+                return Json(new { success = false, error = "URL can't be empty" });
+            }
             //insert
             var download = new Download
             {
@@ -56,7 +60,7 @@ namespace Grand.Web.Areas.Admin.Controllers
               };
             _downloadService.InsertDownload(download);
 
-            return Json(new { downloadId = download.Id });
+            return Json(new { downloadId = download.Id, success = true });
         }
 
         [HttpPost]

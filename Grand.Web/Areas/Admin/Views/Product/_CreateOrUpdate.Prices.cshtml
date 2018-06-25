@@ -1,169 +1,176 @@
 ﻿@model ProductModel
 
-<div class="form-horizontal portlet light bg-inverse form-fit" id="group-prices">
+<div class="form-horizontal portlet bg-inverse form-fit" id="group-prices">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.Price)
+            <admin-label asp-for="Price" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.Price) [@Model.PrimaryStoreCurrencyCode]
-                @Html.ValidationMessageFor(model => model.Price)
+                <admin-input asp-for="Price" /> [@Model.PrimaryStoreCurrencyCode]
+                <span asp-validation-for="Price"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.OldPrice)
+            <admin-label asp-for="OldPrice" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.OldPrice) [@Model.PrimaryStoreCurrencyCode]
-                @Html.ValidationMessageFor(model => model.OldPrice)
+                <admin-input asp-for="OldPrice" /> [@Model.PrimaryStoreCurrencyCode]
+                <span asp-validation-for="OldPrice"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.CatalogPrice)
+            <admin-label asp-for="CatalogPrice" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.CatalogPrice) [@Model.PrimaryStoreCurrencyCode]
-                @Html.ValidationMessageFor(model => model.CatalogPrice)
+                <admin-input asp-for="CatalogPrice" /> [@Model.PrimaryStoreCurrencyCode]
+                <span asp-validation-for="CatalogPrice"></span>
+            </div>
+        </div>
+        <div class="form-group" id="pnlStartPrice">
+            <admin-label asp-for="StartPrice" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="StartPrice" /> [@Model.PrimaryStoreCurrencyCode]
+                <span asp-validation-for="StartPrice"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.ProductCost)
+            <admin-label asp-for="ProductCost" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.ProductCost) [@Model.PrimaryStoreCurrencyCode]
-                @Html.ValidationMessageFor(model => model.ProductCost)
+                <admin-input asp-for="ProductCost" /> [@Model.PrimaryStoreCurrencyCode]
+                <span asp-validation-for="ProductCost"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.DisableBuyButton)
+            <admin-label asp-for="DisableBuyButton" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.EditorFor(model => model.DisableBuyButton)
+                    <admin-input asp-for="DisableBuyButton" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.DisableBuyButton)
+                <span asp-validation-for="DisableBuyButton"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.DisableWishlistButton)
+            <admin-label asp-for="DisableWishlistButton" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.EditorFor(model => model.DisableWishlistButton)
+                    <admin-input asp-for="DisableWishlistButton" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.DisableWishlistButton)
+                <span asp-validation-for="DisableWishlistButton"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.AvailableForPreOrder)
+            <admin-label asp-for="AvailableForPreOrder" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.EditorFor(model => model.AvailableForPreOrder)
+                    <admin-input asp-for="AvailableForPreOrder" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.AvailableForPreOrder)
+                <span asp-validation-for="AvailableForPreOrder"></span>
             </div>
         </div>
         <div class="form-group" id="pnlPreOrderAvailabilityStartDateTimeUtc">
-            @Html.GrandLabelFor(model => model.PreOrderAvailabilityStartDateTimeUtc)
+            <admin-label asp-for="PreOrderAvailabilityStartDateTimeUtc" />
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.PreOrderAvailabilityStartDateTimeUtc)
-                @Html.ValidationMessageFor(model => model.PreOrderAvailabilityStartDateTimeUtc)
+                <admin-input asp-for="PreOrderAvailabilityStartDateTimeUtc" />
+                <span asp-validation-for="PreOrderAvailabilityStartDateTimeUtc"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.CallForPrice)
+            <admin-label asp-for="CallForPrice" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.EditorFor(model => model.CallForPrice)
+                    <admin-input asp-for="CallForPrice" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.CallForPrice)
+                <span asp-validation-for="CallForPrice"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.CustomerEntersPrice)
+            <admin-label asp-for="CustomerEntersPrice" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.CustomerEntersPrice)
+                    <admin-input asp-for="CustomerEntersPrice" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.CustomerEntersPrice)
+                <span asp-validation-for="CustomerEntersPrice"></span>
             </div>
         </div>
         <div class="form-group" id="pnlMinimumCustomerEnteredPrice">
-            @Html.GrandLabelFor(model => model.MinimumCustomerEnteredPrice)
+            <admin-label asp-for="MinimumCustomerEnteredPrice" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.MinimumCustomerEnteredPrice) [@Model.PrimaryStoreCurrencyCode]
-                @Html.ValidationMessageFor(model => model.MinimumCustomerEnteredPrice)
+                <admin-input asp-for="MinimumCustomerEnteredPrice" /> [@Model.PrimaryStoreCurrencyCode]
+                <span asp-validation-for="MinimumCustomerEnteredPrice"></span>
             </div>
         </div>
         <div class="form-group" id="pnlMaximumCustomerEnteredPrice">
-            @Html.GrandLabelFor(model => model.MaximumCustomerEnteredPrice)
+            <admin-label asp-for="MaximumCustomerEnteredPrice" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.MaximumCustomerEnteredPrice) [@Model.PrimaryStoreCurrencyCode]
-                @Html.ValidationMessageFor(model => model.MaximumCustomerEnteredPrice)
+                <admin-input asp-for="MaximumCustomerEnteredPrice" /> [@Model.PrimaryStoreCurrencyCode]
+                <span asp-validation-for="MaximumCustomerEnteredPrice"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.BasepriceEnabled)
+            <admin-label asp-for="BasepriceEnabled" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.GrandEditorFor(model => model.BasepriceEnabled)
+                    <admin-input asp-for="BasepriceEnabled" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.BasepriceEnabled)
+                <span asp-validation-for="BasepriceEnabled"></span>
             </div>
         </div>
         <div class="form-group" id="pnlBasepriceAmount">
-            @Html.GrandLabelFor(model => model.BasepriceAmount)
+            <admin-label asp-for="BasepriceAmount" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.BasepriceAmount)
-                @Html.ValidationMessageFor(model => model.BasepriceAmount)
+                <admin-input asp-for="BasepriceAmount" />
+                <span asp-validation-for="BasepriceAmount"></span>
             </div>
         </div>
         <div class="form-group" id="pnlBasepriceUnit">
-            @Html.GrandLabelFor(model => model.BasepriceUnitId)
+            <admin-label asp-for="BasepriceUnitId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.BasepriceUnitId, Model.AvailableBasepriceUnits)
-                @Html.ValidationMessageFor(model => model.BasepriceUnitId)
+                <admin-select asp-for="BasepriceUnitId" asp-items="Model.AvailableBasepriceUnits" />
+                <span asp-validation-for="BasepriceUnitId"></span>
             </div>
         </div>
         <div class="form-group" id="pnlBasepriceBaseAmount">
-            @Html.GrandLabelFor(model => model.BasepriceBaseAmount)
+            <admin-label asp-for="BasepriceBaseAmount" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.BasepriceBaseAmount)
-                @Html.ValidationMessageFor(model => model.BasepriceBaseAmount)
+                <admin-input asp-for="BasepriceBaseAmount" />
+                <span asp-validation-for="BasepriceBaseAmount"></span>
             </div>
         </div>
         <div class="form-group" id="pnlBasepriceBaseUnit">
-            @Html.GrandLabelFor(model => model.BasepriceBaseUnitId)
+            <admin-label asp-for="BasepriceBaseUnitId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.BasepriceBaseUnitId, Model.AvailableBasepriceBaseUnits)
-                @Html.ValidationMessageFor(model => model.BasepriceBaseUnitId)
+                <admin-select asp-for="BasepriceBaseUnitId" asp-items="Model.AvailableBasepriceBaseUnits" />
+                <span asp-validation-for="BasepriceBaseUnitId"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.IsTaxExempt)
+            <admin-label asp-for="IsTaxExempt" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.EditorFor(model => model.IsTaxExempt)
+                    <admin-input asp-for="IsTaxExempt" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.IsTaxExempt)
+                <span asp-validation-for="IsTaxExempt"></span>
             </div>
         </div>
         <div class="form-group" id="pnlTaxCategory">
-            @Html.GrandLabelFor(model => model.TaxCategoryId)
+            <admin-label asp-for="TaxCategoryId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.TaxCategoryId, Model.AvailableTaxCategories)
-                @Html.ValidationMessageFor(model => model.TaxCategoryId)
+                <admin-select asp-for="TaxCategoryId" asp-items="Model.AvailableTaxCategories" />
+                <span asp-validation-for="TaxCategoryId"></span>
             </div>
         </div>
         <div class="form-group" id="pnlIsTelecommunicationsOrBroadcastingOrElectronicServices">
-            @Html.GrandLabelFor(model => model.IsTelecommunicationsOrBroadcastingOrElectronicServices)
+            <admin-label asp-for="IsTelecommunicationsOrBroadcastingOrElectronicServices" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline white-bg">
-                    @Html.EditorFor(model => model.IsTelecommunicationsOrBroadcastingOrElectronicServices)
+                    <admin-input asp-for="IsTelecommunicationsOrBroadcastingOrElectronicServices" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.IsTelecommunicationsOrBroadcastingOrElectronicServices)
+                <span asp-validation-for="IsTelecommunicationsOrBroadcastingOrElectronicServices"></span>
             </div>
         </div>
 

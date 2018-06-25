@@ -1,12 +1,7 @@
 ﻿@model GiftCardModel
-@using Grand.Core.Domain.Catalog;
-
-
 <script type="text/javascript">
     $(document).ready(function () {
-
         $("#@Html.FieldIdFor(model => model.GiftCardTypeId)").change(toggleGiftCardType);
-
         toggleGiftCardType();
     });
 
@@ -27,59 +22,59 @@
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.GiftCardTypeId)
+            <admin-label asp-for="GiftCardTypeId" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.GiftCardTypeId, ((GiftCardType)Model.GiftCardTypeId).ToSelectList())
-                @Html.ValidationMessageFor(model => model.GiftCardTypeId)
+                <admin-select asp-for="GiftCardTypeId" asp-items="((GiftCardType)Model.GiftCardTypeId).ToSelectList()" />
+                <span asp-validation-for="GiftCardTypeId"></span>
             </div>
         </div>
         @if (!String.IsNullOrEmpty(Model.PurchasedWithOrderId))
             {
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.PurchasedWithOrderId)
+                <admin-label asp-for="PurchasedWithOrderId" />
                 <div class="col-md-9 col-sm-9">
                     <label class="control-label"><a href="@Url.Action("Edit", "Order", new { Id = Model.PurchasedWithOrderId })">@Model.PurchasedWithOrderNumber - @T("Admin.Common.View")</a></label>
                 </div>
             </div>
         }
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.Amount)
+            <admin-label asp-for="Amount" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.Amount) [@Model.PrimaryStoreCurrencyCode]
-                @Html.ValidationMessageFor(model => model.Amount)
+                <admin-input asp-for="Amount" /> [@Model.PrimaryStoreCurrencyCode]
+                <span asp-validation-for="Amount"></span>
             </div>
         </div>
         @if (!String.IsNullOrEmpty(Model.Id))
-            {
+        {
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.RemainingAmountStr)
+                <admin-label asp-for="RemainingAmountStr" />
                 <div class="col-md-9 col-sm-9">
                     <label class="control-label">@Model.RemainingAmountStr</label>
                 </div>
             </div>
         }
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.IsGiftCardActivated)
+            <admin-label asp-for="IsGiftCardActivated" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    @Html.EditorFor(model => model.IsGiftCardActivated)
+                    <admin-input asp-for="IsGiftCardActivated" />
                     <span></span>
                 </label>
-                @Html.ValidationMessageFor(model => model.IsGiftCardActivated)
+                <span asp-validation-for="IsGiftCardActivated"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.GiftCardCouponCode)
+            <admin-label asp-for="GiftCardCouponCode" />
             <div class="col-md-4 col-sm-6">
                 <div class="input-group">
                     <div class="input-group-control">
-                        @Html.GrandEditorFor(model => model.GiftCardCouponCode)
+                        <admin-input asp-for="GiftCardCouponCode" />
                     </div>
                     <div class="input-group-btn">
                         <input type="button" id="generateCouponCode" class="btn default" value="@T("Admin.GiftCards.Fields.GiftCardCouponCode.Generate")" />
                     </div>
                 </div>
-                @Html.ValidationMessageFor(model => model.GiftCardCouponCode)
+                <span asp-validation-for="GiftCardCouponCode"></span>
                 <script type="text/javascript">
                         $(document).ready(function () {
                             $('#generateCouponCode').click(function () {
@@ -106,44 +101,44 @@
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.RecipientName)
+            <admin-label asp-for="RecipientName" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.RecipientName)
-                @Html.ValidationMessageFor(model => model.RecipientName)
+                <admin-input asp-for="RecipientName" />
+                <span asp-validation-for="RecipientName"></span>
             </div>
         </div>
         <div class="form-group" id="pnlRecipientEmail">
-            @Html.GrandLabelFor(model => model.RecipientEmail)
+            <admin-label asp-for="RecipientEmail" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.RecipientEmail)
-                @Html.ValidationMessageFor(model => model.RecipientEmail)
+                <admin-input asp-for="RecipientEmail" />
+                <span asp-validation-for="RecipientEmail"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.SenderName)
+            <admin-label asp-for="SenderName" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.SenderName)
-                @Html.ValidationMessageFor(model => model.SenderName)
+                <admin-input asp-for="SenderName" />
+                <span asp-validation-for="SenderName"></span>
             </div>
         </div>
         <div class="form-group" id="pnlSenderEmail">
-            @Html.GrandLabelFor(model => model.SenderEmail)
+            <admin-label asp-for="SenderEmail" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.SenderEmail)
-                @Html.ValidationMessageFor(model => model.SenderEmail)
+                <admin-input asp-for="SenderEmail" />
+                <span asp-validation-for="SenderEmail"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.Message)
+            <admin-label asp-for="Message" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandTextAreaFor(model => model.Message)
-                @Html.ValidationMessageFor(model => model.Message)
+                <admin-textarea asp-for="Message"></admin-textarea>
+                <span asp-validation-for="Message"></span>
             </div>
         </div>
         @if (!String.IsNullOrEmpty(Model.Id))
-            {
+        {
             <div class="form-group" id="pnlNotifyRecipient">
-                @Html.GrandLabelFor(model => model.IsRecipientNotified)
+                <admin-label asp-for="IsRecipientNotified" />
                 <div class="col-md-9 col-sm-9">
                     <label class="control-label">@Model.IsRecipientNotified.ToString()</label>
                     <input type="submit" name="notifyRecipient" class="k-button" value="@T("Admin.GiftCards.Fields.IsRecipientNotified.Notify")" />
@@ -151,11 +146,11 @@
             </div>
         }
         @if (!String.IsNullOrEmpty(Model.Id))
-            {
+        {
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.CreatedOn)
+                <admin-label asp-for="CreatedOn" />
                 <div class="col-md-9 col-sm-9">
-                    <label class="control-label"> @Html.DisplayFor(model => model.CreatedOn)</label>
+                    <label class="control-label"> @Model.CreatedOn</label>
                 </div>
             </div>
         }

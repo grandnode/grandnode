@@ -1,16 +1,15 @@
 ﻿using Grand.Framework.Mvc.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Grand.Framework.Mvc.ModelBinding;
 using System.Collections.Generic;
-
 using FluentValidation.Attributes;
 using Grand.Web.Areas.Admin.Validators.Vendors;
-using Grand.Framework;
+using Grand.Web.Areas.Admin.Models.Discounts;
 using Grand.Framework.Localization;
-using Grand.Framework.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System;
-using Grand.Web.Areas.Admin.Models.Discounts;
+using Grand.Web.Areas.Admin.Models.Common;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Grand.Web.Areas.Admin.Models.Stores;
 
 namespace Grand.Web.Areas.Admin.Models.Vendors
 {
@@ -25,6 +24,8 @@ namespace Grand.Web.Areas.Admin.Models.Vendors
             }
             Locales = new List<VendorLocalizedModel>();
             AssociatedCustomers = new List<AssociatedCustomerInfo>();
+            Address = new AddressModel();
+            AvailableStores = new List<SelectListItem>();
         }
 
         [GrandResourceDisplayName("Admin.Vendors.Fields.Name")]
@@ -42,6 +43,10 @@ namespace Grand.Web.Areas.Admin.Models.Vendors
         [UIHint("Picture")]
         [GrandResourceDisplayName("Admin.Vendors.Fields.Picture")]
         public string PictureId { get; set; }
+
+        [GrandResourceDisplayName("Admin.Vendors.Fields.Store")]
+        public string StoreId { get; set; }
+        public List<SelectListItem> AvailableStores { get; set; }
 
         [GrandResourceDisplayName("Admin.Vendors.Fields.AdminComment")]
         
@@ -86,7 +91,7 @@ namespace Grand.Web.Areas.Admin.Models.Vendors
         [GrandResourceDisplayName("Admin.Vendors.Fields.AssociatedCustomerEmails")]
         public IList<AssociatedCustomerInfo> AssociatedCustomers { get; set; }
 
-
+        public AddressModel Address { get; set; }
 
         //vendor notes
         [GrandResourceDisplayName("Admin.Vendors.VendorNotes.Fields.Note")]

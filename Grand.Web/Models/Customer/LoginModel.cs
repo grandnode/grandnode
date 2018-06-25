@@ -21,7 +21,6 @@ namespace Grand.Web.Models.Customer
         public string Username { get; set; }
 
         [DataType(DataType.Password)]
-        [NoTrim]
         [GrandResourceDisplayName("Account.Login.Fields.Password")]
         public string Password { get; set; }
 

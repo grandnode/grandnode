@@ -2,9 +2,7 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Measures.Weights").Text;
 }
-@Html.AntiForgeryToken()
-
-
+<antiforgery-token />
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light form-fit">
@@ -29,9 +27,6 @@
         </div>
     </div>
 </div>
-
-
-
 <script>
     $(document).ready(function() {
         $("#measureweight-grid").kendoGrid({
@@ -60,6 +55,14 @@
                         type: "POST",
                         dataType: "json",
                         data: addAntiForgeryToken
+                    },
+                    parameterMap: function (data, operation) {
+                        if (operation != "read") {
+                            data.Ratio = kendo.toString(data.Ratio, "n8");
+                            return data;
+                        } else {
+                            return data;
+                        }
                     }
                 },
                 schema: {
@@ -78,7 +81,7 @@
                         }
                     }
                 },
-                requestEnd: function(e) {
+                requestEnd: function (e) {
                     if (e.type == "create" || e.type == "update") {
                         this.read();
                     }
@@ -117,7 +120,7 @@
                 field: "Ratio",
                 title: "@T("Admin.Configuration.Measures.Weights.Fields.Ratio")",
                 width: 200,
-                editor: function(container, options) {
+                editor: function (container, options) {
                     $('<input name="' + options.field + '"/>')
                         .appendTo(container)
                         .kendoNumericTextBox({

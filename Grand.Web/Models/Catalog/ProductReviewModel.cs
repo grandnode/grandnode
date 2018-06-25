@@ -40,19 +40,14 @@ namespace Grand.Web.Models.Catalog
     public partial class ProductReviewModel : BaseGrandEntityModel
     {
         public string CustomerId { get; set; }
-
         public string CustomerName { get; set; }
-
         public bool AllowViewingProfiles { get; set; }
-        
         public string Title { get; set; }
-
         public string ReviewText { get; set; }
-
+        public string ReplyText { get; set; }
+        public string Signature { get; set; }
         public int Rating { get; set; }
-
         public ProductReviewHelpfulnessModel Helpfulness { get; set; }
-
         public string WrittenOnStr { get; set; }
     }
 

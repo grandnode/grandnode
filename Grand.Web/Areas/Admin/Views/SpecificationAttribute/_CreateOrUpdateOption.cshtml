@@ -1,13 +1,13 @@
 ﻿@model SpecificationAttributeOptionModel
 @{
-    Html.AddScriptParts("~/Scripts/farbtastic.js");
-    Html.AddCssFileParts("~/Content/farbtastic/farbtastic.css");
+    Html.AddScriptParts("~/Scripts/farbtastic.js", excludeFromBundle: true);
+    Html.AddCssFileParts("~/Content/farbtastic/farbtastic.css", excludeFromBundle: true);
 }
-@Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
-@Html.HiddenFor(model => model.SpecificationAttributeId)
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+<input asp-for="SpecificationAttributeId" type="hidden" />
 @{
-    if (String.IsNullOrEmpty(Model.ColorSquaresRgb))
+    if (string.IsNullOrEmpty(Model.ColorSquaresRgb))
     {
         Model.ColorSquaresRgb = "#FFFFFF";
     }
@@ -23,73 +23,76 @@
 }
 
 <script type="text/javascript">
-    $(document).ready(function() {
-        $("#@Html.FieldIdFor(model => model.EnableColorSquaresRgb)").click(toggleEnableColorSquaresRgb);
-        toggleEnableColorSquaresRgb();
-    });
+$(document).ready(function() {
+    $("#@Html.FieldIdFor(model => model.EnableColorSquaresRgb)").click(toggleEnableColorSquaresRgb);
+    toggleEnableColorSquaresRgb();
+});
 
-    function toggleEnableColorSquaresRgb() {
-        if ($('#@Html.FieldIdFor(model => model.EnableColorSquaresRgb)').is(':checked')) {
-            $('#pnlColorSquaresRgb').show();
-        } else {
-            $('#pnlColorSquaresRgb').hide();
-        }
+function toggleEnableColorSquaresRgb() {
+    if ($('#@Html.FieldIdFor(model => model.EnableColorSquaresRgb)').is(':checked')) {
+        $('#pnlColorSquaresRgb').show();
+    } else {
+        $('#pnlColorSquaresRgb').hide();
     }
+}
 </script>
 
 @(Html.LocalizedEditor<SpecificationAttributeOptionModel, SpecificationAttributeOptionLocalizedModel>("specificationattribute-localized",
-@<div class="form-horizontal">
-    <div class="form-body">
-        <div class="form-group">
-            @Html.GrandLabelFor(model => model.Locales[item].Name, new Dictionary<string, object> { { "class", "col-sm-3" } })
-            <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.Locales[item].Name)
-                @Html.ValidationMessageFor(model => model.Locales[item].Name)
+    @<div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                <admin-label asp-for="@Model.Locales[item].Name" class="col-sm-3" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="@Model.Locales[item].Name" />
+                    <span asp-validation-for="@Model.Locales[item].Name"></span>
+                </div>
+            </div>
+            <input asp-for="@Model.Locales[item].LanguageId" type="hidden" />
+        </div>
+    </div>
+,
+    @<div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                <admin-label asp-for="Name" class="col-sm-3" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="Name" />
+                    <span asp-validation-for="Name"></span>
+                </div>
             </div>
         </div>
-        @Html.HiddenFor(model => model.Locales[item].LanguageId)        
     </div>
-</div>
-,
-@<div class="form-horizontal">
-     <div class="form-body">
-         <div class="form-group">
-             @Html.GrandLabelFor(model => model.Name, new Dictionary<string, object> { { "class", "col-sm-3" } })
-             <div class="col-md-9 col-sm-9">
-                 @Html.GrandEditorFor(model => model.Name)
-                 @Html.ValidationMessageFor(model => model.Name)
-             </div>
-         </div>
-     </div>
-</div>
 ))
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.EnableColorSquaresRgb, new Dictionary<string, object> { { "class", "col-sm-3" } })
+            <admin-label asp-for="EnableColorSquaresRgb" class="col-sm-3" />
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.EnableColorSquaresRgb)
-                @Html.ValidationMessageFor(model => model.EnableColorSquaresRgb)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    <admin-input asp-for="EnableColorSquaresRgb" />
+                    <span></span>
+                </label>
+                <span asp-validation-for="EnableColorSquaresRgb"></span>
             </div>
         </div>
         <div class="form-group" id="pnlColorSquaresRgb">
-            @Html.GrandLabelFor(model => model.ColorSquaresRgb, new Dictionary<string, object> { { "class", "col-sm-3" } })
+            <admin-label asp-for="ColorSquaresRgb" class="col-sm-3" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.ColorSquaresRgb)
+                <admin-input asp-for="ColorSquaresRgb" />
                 <div id="color-picker"></div>
                 <script type="text/javascript">
                     $(document).ready(function(){
                         $('#color-picker').farbtastic('#@Html.FieldIdFor(model => model.ColorSquaresRgb)');
                     });
                 </script>
-                @Html.ValidationMessageFor(model => model.ColorSquaresRgb)
+                <span asp-validation-for="ColorSquaresRgb"></span>
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.DisplayOrder, new Dictionary<string, object> { { "class", "col-sm-3" } })
+            <admin-label asp-for="DisplayOrder" class="col-sm-3" />
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.DisplayOrder)
-                @Html.ValidationMessageFor(model => model.DisplayOrder)
+                <admin-input asp-for="DisplayOrder" />
+                <span asp-validation-for="DisplayOrder"></span>
             </div>
         </div>
     </div>

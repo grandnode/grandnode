@@ -1,11 +1,12 @@
 ﻿@model ProductAttributeModel
-@Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
-<script>
-    $(document).ready(function() {
+@inject IEventPublisher eventPublisher
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+<script type="text/javascript">
+    $(document).ready(function () {
         $('#product-attribute-edit').show();
         $("#product-attribute-edit").kendoTabStrip({
-            animation:  {
+            animation: {
                 open: {
                     effects: "fadeIn"
                 }
@@ -15,13 +16,12 @@
     });
 </script>
 
-
 <div id="product-attribute-edit" style="display:none">
     <ul>
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
             @T("Admin.Catalog.Attributes.ProductAttributes.Info")
         </li>
-        @if (!String.IsNullOrEmpty(Model.Id))
+        @if (!string.IsNullOrEmpty(Model.Id))
         {
         <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
             @T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts")
@@ -34,7 +34,7 @@
     <div>
         @Html.Partial("_CreateOrUpdate.TabInfo", Model)
     </div>
-    @if (!String.IsNullOrEmpty(Model.Id))
+    @if (!string.IsNullOrEmpty(Model.Id))
     {
         <div>
             @Html.Partial("_CreateOrUpdate.TabUsedByProducts", Model)
@@ -47,7 +47,7 @@
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "product-attribute-edit");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    eventPublisher.Publish(eventMessage);
     foreach (var eventBlock in eventMessage.BlocksToRender)
     {
         @eventBlock

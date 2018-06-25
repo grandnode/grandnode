@@ -20,137 +20,136 @@
 </div>
 
 <script>
-            $(document).ready(function() {
-                $("#attributecombinations-grid").kendoGrid({
-                    dataSource: {
-                        transport: {
-                            read: {
-                                url: "@Html.Raw(Url.Action("ProductAttributeCombinationList", "Product", new { productId = Model.Id }))",
-                                type: "POST",
-                                dataType: "json",
-                                data: addAntiForgeryToken
-                            },
-                            update: {
-                                url: "@Html.Raw(Url.Action("ProductAttributeCombinationUpdate", "Product"))",
-                                type: "POST",
-                                dataType: "json",
-                                data: addAntiForgeryToken
-                            },
-                            destroy: {
-                                url: "@Html.Raw(Url.Action("ProductAttributeCombinationDelete", "Product"))",
-                                type: "POST",
-                                dataType: "json",
-                                data: addAntiForgeryToken
-                            }
-                        },
-                        schema: {
-                            data: "Data",
-                            total: "Total",
-                            errors: "Errors",
-                            model: {
-                                id: "Id",
-                                fields: {
-                                    AttributesXml: { editable: false, type: "string" },
-                                    Warnings: { editable: false, type: "string" },
-                                    StockQuantity: { editable: true, type: "number" },
-                                    AllowOutOfStockOrders: { editable: true, type: "boolean" },
-                                    Sku: { editable: true, type: "string" },
-                                    ManufacturerPartNumber: { editable: true, type: "string" },
-                                    Gtin: { editable: true, type: "string" },
-                                    OverriddenPrice: { editable: true, type: "number" },
-                                    NotifyAdminForQuantityBelow: { editable: true, type: "number" },
-                                    Id: { editable: false, type: "string" }
-                                }
-                            }
-                        },
-                        requestEnd: function(e) {
-                            if (e.type == "update") {
-                                this.read();
-                            }
-                        },
-                        error: function(e) {
-                            display_kendoui_grid_error(e);
-                            // Cancel the changes
-                            this.cancelChanges();
-                        },
-                        serverPaging: true,
-                        serverFiltering: true,
-                        serverSorting: true
+    $(document).ready(function() {
+        $("#attributecombinations-grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("ProductAttributeCombinationList", "Product", new { productId = Model.Id }))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
                     },
-                    pageable: {
-                        refresh: true,
-                        numeric: false,
-                        previousNext: false,
-                        info: false
+                    update: {
+                        url: "@Html.Raw(Url.Action("ProductAttributeCombinationUpdate", "Product"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
                     },
-                    editable: {
-                        confirmation: false,
-                        mode: "inline"
-                    },
-                    scrollable: false,
-                    columns: [
-                        {
-                            field: "AttributesXml",
-                            title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Attributes")",
-                            width: 200,
-                            template: "#=AttributesXml#<br /> # if(Warnings !== null) {# <span style=\"color: red\">#=Warnings#</span> #}  #",
-                            encoded: false
-                        }, {
-                            field: "StockQuantity",
-                            title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.StockQuantity")",
-                            width: 100,
-                            //integer format
-                            format: "{0:0}"
-                        }, {
-                            field: "AllowOutOfStockOrders",
-                            title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.AllowOutOfStockOrders")",
-                            width: 100,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '# if(AllowOutOfStockOrders) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
-                        }, {
-                            field: "Sku",
-                            title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Sku")",
-                            width: 100
-                        }, {
-                            field: "ManufacturerPartNumber",
-                            title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.ManufacturerPartNumber")",
-                            width: 100
-                        }, {
-                            field: "Gtin",
-                            title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Gtin")",
-                            width: 100
-                        }, {
-                            field: "OverriddenPrice",
-                            title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.OverriddenPrice")",
-                            width: 100,
-                            editor: function (container, options) {
-                                $('<input name="' + options.field + '"/>')
-                                        .appendTo(container)
-                                        .kendoNumericTextBox({
-                                            format: "{0:n4}",
-                                            decimals: 4
-                                        });
-                            }
-                        },
-                        {
-                            field: "Id",
-                            title: "@T("Admin.Common.Edit")",
-                            width: 120,
-                            template: "<a href='javascript:OpenWindow(\"@Url.Content("~/Admin/Product/AttributeCombinationPopup/")?productId=@(Model.Id)&Id=#=Id#&btnId=btnRefreshCombinations&formId=product-form\", 800, 600, true);'>@T("Admin.Common.Edit")</a>"
-                        },
-                        {
-                            command: [
-                                {
-                                    name: "destroy",
-                                    text: "@T("Admin.Common.Delete")"
-                                }
-                            ],
-                            width: 200
+                    destroy: {
+                        url: "@Html.Raw(Url.Action("ProductAttributeCombinationDelete", "Product"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            AttributesXml: { editable: false, type: "string" },
+                            Warnings: { editable: false, type: "string" },
+                            StockQuantity: { editable: true, type: "number" },
+                            AllowOutOfStockOrders: { editable: true, type: "boolean" },
+                            Sku: { editable: true, type: "string" },
+                            ManufacturerPartNumber: { editable: true, type: "string" },
+                            Gtin: { editable: true, type: "string" },
+                            OverriddenPrice: { editable: true, type: "number" },
+                            NotifyAdminForQuantityBelow: { editable: true, type: "number" },
+                            Id: { editable: false, type: "string" }
                         }
-                    ]
-                });
-            });
+                    }
+                },
+                requestEnd: function(e) {
+                    if (e.type == "update") {
+                        this.read();
+                    }
+                },
+                error: function(e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                numeric: false,
+                previousNext: false,
+                info: false
+            },
+            editable: {
+                confirmation: true,
+                mode: "inline"
+            },
+            scrollable: false,
+            columns: [
+                {
+                    field: "AttributesXml",
+                    title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Attributes")",
+                    width: 200,
+                    //template: "#=AttributesXml#<br /> # if(Warnings !== null) {# <span style=\"color: red\">#=Warnings#</span> #}  #",
+                    encoded: false,
+                    template: "<a class='k-link' href='javascript:OpenWindow(\"@Url.Content("~/Admin/Product/AttributeCombinationPopup/")?productId=@(Model.Id)&Id=#=Id#&btnId=btnRefreshCombinations&formId=product-form\", 800, 600, true);'>#=AttributesXml#<br /> # if(Warnings !== null) {# <span style=\"color: red\">#=Warnings#</span> #}  #</a>"
+                }, {
+                    field: "StockQuantity",
+                    title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.StockQuantity")",
+                    width: 80,
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
+                    //integer format
+                    format: "{0:0}"
+                }, {
+                    field: "AllowOutOfStockOrders",
+                    title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.AllowOutOfStockOrders")",
+                    width: 80,
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
+                    template: '# if(AllowOutOfStockOrders) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+                }, {
+                    field: "Sku",
+                    title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Sku")",
+                    width: 100
+                }, {
+                    field: "ManufacturerPartNumber",
+                    title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.ManufacturerPartNumber")",
+                    width: 100
+                }, {
+                    field: "Gtin",
+                    title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Gtin")",
+                    width: 100
+                }, {
+                    field: "OverriddenPrice",
+                    title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.OverriddenPrice")",
+                    width: 80,
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
+                    editor: function (container, options) {
+                        $('<input name="' + options.field + '"/>')
+                                .appendTo(container)
+                                .kendoNumericTextBox({
+                                    format: "{0:n4}",
+                                    decimals: 4
+                                });
+                    }
+                },
+                {
+                    command: [
+                        {
+                            name: "destroy",
+                            text: "@T("Admin.Common.Delete")"
+                        }
+                    ],
+                    width: 200
+                }
+            ]
+        });
+    });
 </script>
 
 <script type="text/javascript">

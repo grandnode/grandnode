@@ -47,6 +47,10 @@ using Grand.Framework.Themes;
 using Grand.Core.Data;
 using MongoDB.Driver;
 using Grand.Core.Caching;
+using Grand.Web.Areas.Admin.Helpers;
+using Grand.Core.Domain.Knowledgebase;
+using Grand.Core.Domain.PushNotifications;
+using Grand.Web.Areas.Admin.Models.PushNotifications;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -209,6 +213,9 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.NotifyAboutNewBlogComments_OverrideForStore = _settingService.SettingExists(blogSettings, x => x.NotifyAboutNewBlogComments, storeScope);
                 model.NumberOfTags_OverrideForStore = _settingService.SettingExists(blogSettings, x => x.NumberOfTags, storeScope);
                 model.ShowHeaderRssUrl_OverrideForStore = _settingService.SettingExists(blogSettings, x => x.ShowHeaderRssUrl, storeScope);
+                model.ShowBlogOnHomePage_OverrideForStore = _settingService.SettingExists(blogSettings, x => x.ShowBlogOnHomePage, storeScope);
+                model.HomePageBlogCount_OverrideForStore = _settingService.SettingExists(blogSettings, x => x.HomePageBlogCount, storeScope);
+                model.MaxTextSizeHomePage_OverrideForStore = _settingService.SettingExists(blogSettings, x => x.MaxTextSizeHomePage, storeScope);
             }
 
             return View(model);
@@ -257,6 +264,21 @@ namespace Grand.Web.Areas.Admin.Controllers
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(blogSettings, x => x.ShowHeaderRssUrl, storeScope);
 
+            if (model.ShowBlogOnHomePage_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(blogSettings, x => x.ShowBlogOnHomePage, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(blogSettings, x => x.ShowBlogOnHomePage, storeScope);
+
+            if (model.HomePageBlogCount_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(blogSettings, x => x.HomePageBlogCount, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(blogSettings, x => x.HomePageBlogCount, storeScope);
+
+            if (model.MaxTextSizeHomePage_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(blogSettings, x => x.MaxTextSizeHomePage, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(blogSettings, x => x.MaxTextSizeHomePage, storeScope);
+
             //now clear cache
             _cacheManager.Clear();
 
@@ -279,6 +301,23 @@ namespace Grand.Web.Areas.Admin.Controllers
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var vendorSettings = _settingService.LoadSetting<VendorSettings>(storeScope);
             var model = vendorSettings.ToModel();
+            model.AddressSettings.CityEnabled = vendorSettings.CityEnabled;
+            model.AddressSettings.CityRequired = vendorSettings.CityRequired;
+            model.AddressSettings.CompanyEnabled = vendorSettings.CompanyEnabled;
+            model.AddressSettings.CompanyRequired = vendorSettings.CompanyRequired;
+            model.AddressSettings.CountryEnabled = vendorSettings.CountryEnabled;
+            model.AddressSettings.FaxEnabled = vendorSettings.FaxEnabled;
+            model.AddressSettings.FaxRequired = vendorSettings.FaxRequired;
+            model.AddressSettings.PhoneEnabled = vendorSettings.PhoneEnabled;
+            model.AddressSettings.PhoneRequired = vendorSettings.PhoneRequired;
+            model.AddressSettings.StateProvinceEnabled = vendorSettings.StateProvinceEnabled;
+            model.AddressSettings.StreetAddress2Enabled = vendorSettings.StreetAddress2Enabled;
+            model.AddressSettings.StreetAddress2Required = vendorSettings.StreetAddress2Required;
+            model.AddressSettings.StreetAddressEnabled = vendorSettings.StreetAddressEnabled;
+            model.AddressSettings.StreetAddressRequired = vendorSettings.StreetAddressRequired;
+            model.AddressSettings.ZipPostalCodeEnabled = vendorSettings.ZipPostalCodeEnabled;
+            model.AddressSettings.ZipPostalCodeRequired = vendorSettings.ZipPostalCodeRequired;
+
             model.ActiveStoreScopeConfiguration = storeScope;
             if (!String.IsNullOrEmpty(storeScope))
             {
@@ -312,11 +351,27 @@ namespace Grand.Web.Areas.Admin.Controllers
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var vendorSettings = _settingService.LoadSetting<VendorSettings>(storeScope);
             vendorSettings = model.ToEntity(vendorSettings);
+            vendorSettings.CityEnabled = model.AddressSettings.CityEnabled;
+            vendorSettings.CityRequired = model.AddressSettings.CityRequired;
+            vendorSettings.CompanyEnabled = model.AddressSettings.CompanyEnabled;
+            vendorSettings.CompanyRequired = model.AddressSettings.CompanyRequired;
+            vendorSettings.CountryEnabled = model.AddressSettings.CountryEnabled;
+            vendorSettings.FaxEnabled = model.AddressSettings.FaxEnabled;
+            vendorSettings.FaxRequired = model.AddressSettings.FaxRequired;
+            vendorSettings.PhoneEnabled = model.AddressSettings.PhoneEnabled;
+            vendorSettings.PhoneRequired = model.AddressSettings.PhoneRequired;
+            vendorSettings.StateProvinceEnabled = model.AddressSettings.StateProvinceEnabled;
+            vendorSettings.StreetAddress2Enabled = model.AddressSettings.StreetAddress2Enabled;
+            vendorSettings.StreetAddress2Required = model.AddressSettings.StreetAddress2Required;
+            vendorSettings.StreetAddressEnabled = model.AddressSettings.StreetAddressEnabled;
+            vendorSettings.StreetAddressRequired = model.AddressSettings.StreetAddressRequired;
+            vendorSettings.ZipPostalCodeEnabled = model.AddressSettings.ZipPostalCodeEnabled;
+            vendorSettings.ZipPostalCodeRequired = model.AddressSettings.ZipPostalCodeRequired;
 
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
-            
+
             if (model.VendorsBlockItemsToDisplay_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(vendorSettings, x => x.VendorsBlockItemsToDisplay, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
@@ -378,7 +433,9 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(vendorSettings, x => x.NotifyVendorAboutNewVendorReviews, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(vendorSettings, x => x.NotifyVendorAboutNewVendorReviews, storeScope);
-            
+
+            _settingService.SaveSetting(vendorSettings);
+
             //now clear cache
             _cacheManager.Clear();
 
@@ -1891,6 +1948,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.ShowProductImagesInMiniShoppingCart_OverrideForStore = _settingService.SettingExists(shoppingCartSettings, x => x.ShowProductImagesInMiniShoppingCart, storeScope);
                 model.MiniShoppingCartProductNumber_OverrideForStore = _settingService.SettingExists(shoppingCartSettings, x => x.MiniShoppingCartProductNumber, storeScope);
                 model.AllowCartItemEditing_OverrideForStore = _settingService.SettingExists(shoppingCartSettings, x => x.AllowCartItemEditing, storeScope);
+                model.CartsSharedBetweenStores_OverrideForStore = _settingService.SettingExists(shoppingCartSettings, x => x.CartsSharedBetweenStores, storeScope);
             }
             return View(model);
         }
@@ -1992,6 +2050,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(shoppingCartSettings, x => x.AllowCartItemEditing, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(shoppingCartSettings, x => x.AllowCartItemEditing, storeScope);
+
+            if (model.CartsSharedBetweenStores_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(shoppingCartSettings, x => x.CartsSharedBetweenStores, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(shoppingCartSettings, x => x.CartsSharedBetweenStores, storeScope);
 
             //now clear cache
             _cacheManager.Clear();
@@ -2487,8 +2550,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             var storeInformationSettings = _settingService.LoadSetting<StoreInformationSettings>(storeScope);
             var commonSettings = _settingService.LoadSetting<CommonSettings>(storeScope);
             var googleAnalyticsSettings = _settingService.LoadSetting<GoogleAnalyticsSettings>(storeScope);
+            var adminareasettings = _settingService.LoadSetting<AdminAreaSettings>(storeScope);
 
             model.StoreInformationSettings.StoreClosed = storeInformationSettings.StoreClosed;
+            model.Layout = string.IsNullOrEmpty(adminareasettings.AdminLayout) ? (AdminLayout)Enum.Parse(typeof(AdminLayout), "Default") : (AdminLayout)Enum.Parse(typeof(AdminLayout), adminareasettings.AdminLayout);
+            model.GridLayout = string.IsNullOrEmpty(adminareasettings.KendoLayout) ? (KendoLayout)Enum.Parse(typeof(KendoLayout), "custom") : (KendoLayout)Enum.Parse(typeof(KendoLayout), adminareasettings.KendoLayout);
+
             //themes
             model.StoreInformationSettings.DefaultStoreTheme = storeInformationSettings.DefaultStoreTheme;
             model.StoreInformationSettings.AvailableStoreThemes = _themeProvider
@@ -2580,7 +2647,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                     if (i != securitySettings.AdminAreaAllowedIpAddresses.Count - 1)
                         model.SecuritySettings.AdminAreaAllowedIpAddresses += ",";
                 }
-            model.SecuritySettings.ForceSslForAllPages = securitySettings.ForceSslForAllPages;
             model.SecuritySettings.EnableXsrfProtectionForAdminArea = securitySettings.EnableXsrfProtectionForAdminArea;
             model.SecuritySettings.EnableXsrfProtectionForPublicStore = securitySettings.EnableXsrfProtectionForPublicStore;
             model.SecuritySettings.HoneypotEnabled = securitySettings.HoneypotEnabled;
@@ -2596,7 +2662,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.SecuritySettings.CaptchaShowOnProductReviewPage = captchaSettings.ShowOnProductReviewPage;
             model.SecuritySettings.CaptchaShowOnApplyVendorPage = captchaSettings.ShowOnApplyVendorPage;
             model.SecuritySettings.ReCaptchaVersion = captchaSettings.ReCaptchaVersion;
-            model.SecuritySettings.AvailableReCaptchaVersions = ReCaptchaVersion.Version1.ToSelectList(false).ToList();
+            model.SecuritySettings.AvailableReCaptchaVersions = ReCaptchaVersion.Version2.ToSelectList(false).ToList();
             model.SecuritySettings.ReCaptchaPublicKey = captchaSettings.ReCaptchaPublicKey;
             model.SecuritySettings.ReCaptchaPrivateKey = captchaSettings.ReCaptchaPrivateKey;
 
@@ -2664,6 +2730,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.DisplayMenuSettings.DisplayForumsMenu_OverrideForStore = _settingService.SettingExists(displayMenuItemSettings, x => x.DisplayForumsMenu, storeScope);
                 model.DisplayMenuSettings.DisplayContactUsMenu_OverrideForStore = _settingService.SettingExists(displayMenuItemSettings, x => x.DisplayContactUsMenu, storeScope);
             }
+
+            //knowledgebase
+            var knowledgebaseSettings = _settingService.LoadSetting<KnowledgebaseSettings>(storeScope);
+            model.KnowledgebaseSettings.Enabled = knowledgebaseSettings.Enabled;
 
 
             return View(model);
@@ -2858,7 +2928,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 foreach (string s in model.SecuritySettings.AdminAreaAllowedIpAddresses.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                     if (!String.IsNullOrWhiteSpace(s))
                         securitySettings.AdminAreaAllowedIpAddresses.Add(s.Trim());
-            securitySettings.ForceSslForAllPages = model.SecuritySettings.ForceSslForAllPages;
             securitySettings.EnableXsrfProtectionForAdminArea = model.SecuritySettings.EnableXsrfProtectionForAdminArea;
             securitySettings.EnableXsrfProtectionForPublicStore = model.SecuritySettings.EnableXsrfProtectionForPublicStore;
             securitySettings.HoneypotEnabled = model.SecuritySettings.HoneypotEnabled;
@@ -2940,6 +3009,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             commonSettings.FullTextMode = (FulltextSearchMode)model.FullTextSettings.SearchMode;
             _settingService.SaveSetting(commonSettings);
 
+            //admin settings
+            var adminareasettings = _settingService.LoadSetting<AdminAreaSettings>(storeScope);
+            adminareasettings.AdminLayout = model.Layout.ToString();
+            adminareasettings.KendoLayout = model.GridLayout.ToString();
+
+            _settingService.SaveSetting(adminareasettings);
 
             //googleanalytics settings
             var googleAnalyticsSettings = _settingService.LoadSetting<GoogleAnalyticsSettings>(storeScope);
@@ -3007,6 +3082,14 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(displayMenuItemSettings, x => x.DisplayContactUsMenu, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(displayMenuItemSettings, x => x.DisplayContactUsMenu, storeScope);
+
+            //Knowledgebase
+            var knowledgebaseSettings = _settingService.LoadSetting<KnowledgebaseSettings>(storeScope);
+            knowledgebaseSettings.Enabled = model.KnowledgebaseSettings.Enabled;
+            if (model.KnowledgebaseSettings.Enabled_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(knowledgebaseSettings, x => x.Enabled, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(knowledgebaseSettings, x => x.Enabled, storeScope);
 
             //now clear cache
             _cacheManager.Clear();
@@ -3139,10 +3222,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return RedirectToAction("GeneralCommon");
         }
-
-
-
-
         //all settings
         public IActionResult AllSettings()
         {
@@ -3199,6 +3278,97 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return Json(gridModel);
         }
+
+        public IActionResult PushNotifications()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var settings = _settingService.LoadSetting<PushNotificationsSettings>(storeScope);
+
+            var model = new ConfigurationModel();
+            model.AllowGuestNotifications = settings.AllowGuestNotifications;
+            model.AuthDomain = settings.AuthDomain;
+            model.DatabaseUrl = settings.DatabaseUrl;
+            model.ProjectId = settings.ProjectId;
+            model.PushApiKey = settings.PublicApiKey;
+            model.SenderId = settings.SenderId;
+            model.StorageBucket = settings.StorageBucket;
+            model.PrivateApiKey = settings.PrivateApiKey;
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [AdminAntiForgery(true)]
+        public IActionResult PushNotifications(DataSourceRequest command, ConfigurationModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var settings = _settingService.LoadSetting<PushNotificationsSettings>(storeScope);
+            settings.AllowGuestNotifications = model.AllowGuestNotifications;
+            settings.AuthDomain = model.AuthDomain;
+            settings.DatabaseUrl = model.DatabaseUrl;
+            settings.ProjectId = model.ProjectId;
+            settings.PublicApiKey = model.PushApiKey;
+            settings.SenderId = model.SenderId;
+            settings.StorageBucket = model.StorageBucket;
+            settings.PrivateApiKey = model.PrivateApiKey;
+            settings.Enabled = model.Enabled;
+            _settingService.SaveSetting(settings);
+
+            //edit js file needed by firebase
+            var jsFilePath = CommonHelper.MapPath("~/wwwroot/firebase-messaging-sw.js");
+            if (System.IO.File.Exists(jsFilePath))
+            {
+                string[] lines = System.IO.File.ReadAllLines(jsFilePath);
+
+                int i = 0;
+                foreach (var line in lines)
+                {
+                    if (line.Contains("apiKey"))
+                    {
+                        lines[i] = "apiKey: \"" + model.PushApiKey + "\",";
+                    }
+
+                    if (line.Contains("authDomain"))
+                    {
+                        lines[i] = "authDomain: \"" + model.AuthDomain + "\",";
+                    }
+
+                    if (line.Contains("databaseURL"))
+                    {
+                        lines[i] = "databaseURL: \"" + model.DatabaseUrl + "\",";
+                    }
+
+                    if (line.Contains("projectId"))
+                    {
+                        lines[i] = "projectId: \"" + model.ProjectId + "\",";
+                    }
+
+                    if (line.Contains("storageBucket"))
+                    {
+                        lines[i] = "storageBucket: \"" + model.StorageBucket + "\",";
+                    }
+
+                    if (line.Contains("messagingSenderId"))
+                    {
+                        lines[i] = "messagingSenderId: \"" + model.SenderId + "\",";
+                    }
+
+                    i++;
+                }
+
+                System.IO.File.WriteAllLines(jsFilePath, lines);
+            }
+
+            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
+            return PushNotifications();
+        }
+
         [HttpPost]
         [AdminAntiForgery(true)]
         public IActionResult SettingUpdate(SettingModel model)

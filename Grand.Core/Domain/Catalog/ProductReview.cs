@@ -40,6 +40,16 @@ namespace Grand.Core.Domain.Catalog
         public string ReviewText { get; set; }
 
         /// <summary>
+        /// Gets or sets the reply text
+        /// </summary>
+        public string ReplyText { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Signature (for response text)
+        /// </summary>
+        public string Signature { get; set; }
+
+        /// <summary>
         /// Review rating
         /// </summary>
         public int Rating { get; set; }
@@ -58,6 +68,11 @@ namespace Grand.Core.Domain.Catalog
         /// Gets or sets the date and time of instance creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
+
+        /// <summary>
+        /// Gets or sets the date and time of instance updated
+        /// </summary>
+        public DateTime UpdatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets the entries of product review helpfulness

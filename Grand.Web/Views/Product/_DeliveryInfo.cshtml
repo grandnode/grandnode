@@ -1,17 +1,15 @@
 ﻿@model ProductDetailsModel
-@if ((Model.FreeShippingNotificationEnabled && Model.IsFreeShipping) || !String.IsNullOrWhiteSpace(Model.DeliveryDate))
+@if ((Model.FreeShippingNotificationEnabled && Model.IsFreeShipping) || !string.IsNullOrWhiteSpace(Model.DeliveryDate))
 {
     <div class="delivery generalMarginSupporter">
         @if (Model.FreeShippingNotificationEnabled && Model.IsFreeShipping)
         {
             <div class="btn btn-sm btn-secondary free-shipping"><i class="fa fa-truck"></i> @T("Products.FreeShipping")</div>
         }
-        @if (!String.IsNullOrWhiteSpace(Model.DeliveryDate))
+        @if (!string.IsNullOrWhiteSpace(Model.DeliveryDate))
         {
-            <div class="delivery-date">
+            <div class="delivery-date" style="color:@(Model.DeliveryColorSquaresRgb)">
                 <span class="label">@T("Products.DeliveryDate"):</span>
-                <span class="color" style="background-color: @(Model.DeliveryColorSquaresRgb);
-                      @(!String.IsNullOrEmpty(Model.DeliveryColorSquaresRgb) ? "" : "display:none;")" title="@Model.DeliveryDate"></span>
                 <span class="value">@Model.DeliveryDate</span>
             </div>
         }

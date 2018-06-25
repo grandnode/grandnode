@@ -3,22 +3,21 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Stores.AddNew").Text;
 }
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="Store" asp-action="Create" method="post">
+    <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
                 <div class="portlet-title">
                     <div class="caption">
                         <i class="fa fa-shopping-cart"></i>
-                        @T("Admin.Configuration.Stores.AddNew") 
+                        @T("Admin.Configuration.Stores.AddNew")
                         <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Configuration.Stores.BackToList").Text, "List") </small>
                     </div>
                     <div class="actions">
                         <div class="btn-group btn-group-devided">
                             <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
-                            <button class="btn btn-success" type="submit" name="save-continue"><i class="fa fa-check-circle"></i> @T("Admin.Common.SaveContinue") </button>                            
+                            <button class="btn btn-success" type="submit" name="save-continue"><i class="fa fa-check-circle"></i> @T("Admin.Common.SaveContinue") </button>
                         </div>
                     </div>
                 </div>
@@ -28,6 +27,4 @@
             </div>
         </div>
     </div>
-
-
-}
+</form>
