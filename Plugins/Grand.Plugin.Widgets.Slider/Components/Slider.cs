@@ -54,7 +54,7 @@ namespace Grand.Plugin.Widgets.Slider.ViewComponents
             });
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(object arguments)
+        public IViewComponentResult Invoke(string widgetZone, object additionalData = null)
         {
 
             var sliderSettings = _settingService.LoadSetting<SliderSettings>(_storeContext.CurrentStore.Id);
