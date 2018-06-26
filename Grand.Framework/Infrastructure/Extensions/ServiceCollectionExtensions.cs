@@ -227,7 +227,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         public static IMvcBuilder AddGrandMvc(this IServiceCollection services)
         {
             //add basic MVC feature
-            var mvcBuilder = services.AddMvc();
+            var mvcBuilder = services.AddMvc().SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_1);
 
             //MVC now serializes JSON with camel case names by default, use this code to avoid it
             mvcBuilder.AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
