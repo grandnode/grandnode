@@ -2,7 +2,7 @@
     @await Component.InvokeAsync("Widget", new { widgetZone = "header" })
     <nav class="navbar fixed-top navbar-light bg-dark navUp p-0">
         <ul class="mobile-top-menu d-lg-none d-flex mb-0 w-100">
-            <li class="logo-mobile">@await Component.InvokeAsync("Logo")</li>
+            <li class="logo-mobile"><span class="logo-mobile-holder"></span></li>
             <li class="nav-item d-flex align-items-center d-lg-none mobile-search" data-toggle="modal" data-target="#searchModal">
                 <a class="nav-link">
                     <span class="fa fa-search"></span>
@@ -42,6 +42,7 @@
     <div class="container">
         <div class="headBottom d-flex align-items-center d-lg-inline-flex text-lg-left text-center mt-0 mb-0">
             <div class="col header-logo pr-0 pl-0 d-lg-block d-none">
+                <span class="logo-desktop-holder"></span>
                 @await Component.InvokeAsync("Logo")
             </div>
             <div class="col formSearch pr-0 pl-0 d-none d-lg-block">
