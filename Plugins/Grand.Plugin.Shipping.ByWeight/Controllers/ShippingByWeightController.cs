@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Grand.Core;
 using Grand.Core.Domain.Directory;
 using Grand.Plugin.Shipping.ByWeight.Domain;
 using Grand.Plugin.Shipping.ByWeight.Models;
@@ -14,7 +13,6 @@ using Grand.Services.Security;
 using Grand.Services.Shipping;
 using Grand.Services.Stores;
 using Grand.Framework.Controllers;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security;
@@ -82,7 +80,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
 
         [HttpPost]
         [AdminAntiForgery]
-        public ActionResult SaveGeneralSettings(ShippingByWeightListModel model)
+        public IActionResult SaveGeneralSettings(ShippingByWeightListModel model)
         {
             //save settings
             _shippingByWeightSettings.LimitMethodsToCreated = model.LimitMethodsToCreated;
@@ -94,7 +92,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
 
         [HttpPost]
         [AdminAntiForgery]
-        public ActionResult RatesList(DataSourceRequest command)
+        public IActionResult RatesList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return Content("Access denied");
@@ -214,7 +212,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
         }
         [HttpPost]
         [AdminAntiForgery]
-        public ActionResult AddPopup(ShippingByWeightModel model)
+        public IActionResult AddPopup(ShippingByWeightModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return Content("Access denied");
@@ -242,7 +240,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
         }
 
         //edit
-        public ActionResult EditPopup(string id)
+        public IActionResult EditPopup(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return Content("Access denied");
@@ -306,7 +304,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
         }
         [HttpPost]
         [AdminAntiForgery]
-        public ActionResult EditPopup(ShippingByWeightModel model)
+        public IActionResult EditPopup(ShippingByWeightModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return Content("Access denied");

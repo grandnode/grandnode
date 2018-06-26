@@ -7,20 +7,12 @@ using Grand.Plugin.Shipping.ShippingPoint.Services;
 using Grand.Framework.Kendoui;
 using Grand.Services.Security;
 using Grand.Framework.Mvc;
-using Grand.Core.Domain.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Stores;
-using System.IO;
-using System.Linq;
-using System.Xml.Serialization;
-using Grand.Core.Domain.Shipping;
-using System.Text;
 using Grand.Services.Catalog;
 using Grand.Framework.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Grand.Plugin.Shipping.ShippingPoint.Controllers
@@ -109,14 +101,14 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Controllers
             return model;
         }
 
-        public ActionResult Create()
+        public IActionResult Create()
         {
             var model = new ShippingPointModel();
             return View("~/Plugins/Shipping.ShippingPoint/Views/Create.cshtml", PrepareShippingPointModel(model));
         }
 
         [HttpPost]
-        public ActionResult Create(ShippingPointModel model)
+        public IActionResult Create(ShippingPointModel model)
         {
             if (ModelState.IsValid)
             {
@@ -131,7 +123,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Controllers
             return View("~/Plugins/Shipping.ShippingPoint/Views/Create.cshtml", model);
         }
 
-        public ActionResult Edit(string id)
+        public IActionResult Edit(string id)
         {
             var shippingPoints = _shippingPointService.GetStoreShippingPointById(id);
             var model = shippingPoints.ToModel();
@@ -140,7 +132,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(ShippingPointModel model)
+        public IActionResult Edit(ShippingPointModel model)
         {
             if (ModelState.IsValid)
             {
@@ -156,7 +148,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Controllers
         }
 
         [HttpPost]
-        public ActionResult Delete(string id)
+        public IActionResult Delete(string id)
         {
             var model = _shippingPointService.GetStoreShippingPointById(id);
             _shippingPointService.DeleteStoreShippingPoint(model);

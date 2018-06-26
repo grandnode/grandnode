@@ -48,7 +48,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._dateTimeHelper = dateTimeHelper;
         }
 
-        public ActionResult Send()
+        public IActionResult Send()
         {
             var model = new PushModel();
             model.MessageText = _localizationService.GetResource("PushNotifications.MessageTextPlaceholder");
@@ -60,7 +60,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Send(PushModel model)
+        public IActionResult Send(PushModel model)
         {
             if (!string.IsNullOrEmpty(_pushNotificationsSettings.PrivateApiKey) && !string.IsNullOrEmpty(model.MessageText))
             {
@@ -88,7 +88,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return RedirectToAction("Send");
         }
 
-        public ActionResult Messages()
+        public IActionResult Messages()
         {
             var model = new MessagesModel();
             model.Allowed = _pushNotificationsService.GetAllowedReceivers();
@@ -97,7 +97,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        public ActionResult Receivers()
+        public IActionResult Receivers()
         {
             var model = new ReceiversModel();
             model.Allowed = _pushNotificationsService.GetAllowedReceivers();
@@ -107,7 +107,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
                
         [HttpPost]
-        public ActionResult PushMessagesList(DataSourceRequest command)
+        public IActionResult PushMessagesList(DataSourceRequest command)
         {
             var messages = _pushNotificationsService.GetPushMessages(command.Page - 1, command.PageSize);
             var gridModel = new DataSourceResult();
@@ -125,7 +125,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult PushReceiversList(DataSourceRequest command)
+        public IActionResult PushReceiversList(DataSourceRequest command)
         {
             var receivers = _pushNotificationsService.GetPushReceivers(command.Page - 1, command.PageSize);
             var gridModel = new DataSourceResult();
