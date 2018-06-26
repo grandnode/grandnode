@@ -21,6 +21,9 @@ using Microsoft.AspNetCore.DataProtection;
 using Grand.Framework.Mvc.Routing;
 using Grand.Services.Authentication;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.Extensions.Caching.Memory;
+using Grand.Core.Domain;
+using Grand.Services.Security;
 
 namespace Grand.Framework.Infrastructure.Extensions
 {
@@ -236,6 +239,28 @@ namespace Grand.Framework.Infrastructure.Extensions
             mvcBuilder.AddFluentValidation(configuration => configuration.ValidatorFactoryType = typeof(GrandValidatorFactory));
 
             return mvcBuilder;
+        }
+
+        /// <summary>
+        /// Add mini profiler service for the application
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddGrandMiniProfiler(this IServiceCollection services)
+        {
+            //whether database is already installed
+            if (!DataSettingsHelper.DatabaseIsInstalled())
+                return;
+
+            //add MiniProfiler services
+            services.AddMiniProfiler(options => {
+                var memoryCache = EngineContext.Current.Resolve<IMemoryCache>();
+                options.Storage = new StackExchange.Profiling.Storage.MemoryCacheStorage(memoryCache, TimeSpan.FromMinutes(60));
+                //determine who can access the MiniProfiler results
+                options.ResultsAuthorize = request =>
+                    !EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore ||
+                    EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.AccessAdminPanel);
+
+            });
         }
 
         /// <summary>
