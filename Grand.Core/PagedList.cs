@@ -43,7 +43,7 @@ namespace Grand.Core
 
         public PagedList(IMongoCollection<T> source, FilterDefinition<T> filterdefinition, SortDefinition<T> sortdefinition, int pageIndex, int pageSize)
         {
-            TotalCount = (int)source.Count(filterdefinition);
+            TotalCount = (int)source.CountDocuments(filterdefinition);
             AddRange(source.Find(filterdefinition).Sort(sortdefinition).Skip(pageIndex * pageSize).Limit(pageSize).ToListAsync().Result);
             if (pageSize > 0)
             {

@@ -564,7 +564,7 @@ namespace Grand.Services.Catalog
                 filter = filter & (builder.AnyIn(x => x.Stores, currentStoreId) | builder.Where(x => !x.LimitedToStores));
             }
 
-            return Convert.ToInt32(_productRepository.Collection.Find(filter).CountAsync().Result);
+            return Convert.ToInt32(_productRepository.Collection.Find(filter).CountDocuments());
 
         }
 

@@ -3207,8 +3207,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     commonSettings.UseFullTextSearch = true;
                     _settingService.SaveSetting(commonSettings);
-                    var index = Builders<Product>.IndexKeys.Text("$**");
-                    _productRepository.Collection.Indexes.CreateOneAsync(index, new CreateIndexOptions() { Name = "ProductText" });
+                    _productRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<Product>((Builders<Product>.IndexKeys.Text("$**")), new CreateIndexOptions() { Name = "ProductText" }));
                     SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Enabled"));
                 }
             }
