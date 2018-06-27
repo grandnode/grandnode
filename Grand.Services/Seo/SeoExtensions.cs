@@ -132,13 +132,19 @@ namespace Grand.Services.Seo
             if (entity == null)
                 throw new ArgumentNullException("entity");
 
-            string seName = entity.SeName;
+            string seName = string.Empty;
             if(!String.IsNullOrEmpty(languageId))
             {
                 var value = entity.Locales.Where(x => x.LanguageId == languageId && x.LocaleKey == "SeName").FirstOrDefault();
                 if (value != null)
                     if(!String.IsNullOrEmpty(value.LocaleValue))
                     seName = value.LocaleValue;
+            }
+
+            //set default value if required
+            if (string.IsNullOrEmpty(seName) && returnDefaultValue)
+            {
+                seName = entity.SeName;
             }
 
             return seName;
