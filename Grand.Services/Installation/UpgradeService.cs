@@ -822,7 +822,7 @@ namespace Grand.Services.Installation
             {
                 e.ResourceName = e.ResourceName.ToLowerInvariant();
                 _localeStringResource.Update(e);
-            }).RunSynchronously();
+            }).Wait();
 
             #endregion
             
