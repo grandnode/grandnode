@@ -51,7 +51,7 @@
     else
     {
         Html.AppendCssFileParts("~/Administration/global/css/plugins.min.css", excludeFromBundle: true);
-        Html.AppendCssFileParts($"~/Administration/layout/themes/{adminAreaSettings.AdminLayout.ToLowerInvariant()}.min.css", excludeFromBundle: true);
+        Html.AppendCssFileParts($"~/Administration/layout/themes/{(adminAreaSettings.AdminLayout != null ? adminAreaSettings.AdminLayout.ToLowerInvariant() : "Default")}.min.css", excludeFromBundle: true);
         Html.AppendCssFileParts("~/Administration/layout/custom.min.css", excludeFromBundle: true);
         Html.AppendCssFileParts("~/Administration/layout/layout.min.css", excludeFromBundle: true);
         Html.AppendCssFileParts("~/Administration/global/css/components.min.css", excludeFromBundle: true);
