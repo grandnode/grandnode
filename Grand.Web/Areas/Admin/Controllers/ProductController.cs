@@ -5731,8 +5731,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                         }
 
 
-                        if (insert && counter++ < 1000)
+                        if (insert)
                         {
+                            if (counter++ > 1000)
+                                break;
+
                             _productReservationService.InsertProductReservation(new ProductReservation
                             {
                                 OrderId = "",
