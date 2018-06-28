@@ -324,18 +324,52 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View();
         }
 
-        [HttpPost,]
-        public IActionResult TreeLoadChildren(string id = "")
+        public IActionResult NodeList()
         {
-            var categories = _categoryService.GetAllCategoriesByParentCategoryId(id, true)
-                .Select(x => new
-                {
-                    id = x.Id,
-                    Name = x.Name,
-                    hasChildren = _categoryService.GetAllCategoriesByParentCategoryId(x.Id, true).Count > 0,
-                });
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+                return AccessDeniedView();
 
-            return Json(categories);
+            var categories = _categoryService.GetAllCategories();
+            List<TreeNode> nodeList = new List<TreeNode>();
+            List<ITreeNode> list = new List<ITreeNode>();
+            list.AddRange(categories);
+
+            foreach (var node in list)
+            {
+                if (string.IsNullOrEmpty(node.ParentCategoryId))
+                {
+                    var newNode = new TreeNode
+                    {
+                        id = node.Id,
+                        text = node.Name,
+                        nodes = new List<TreeNode>()
+                    };
+
+                    FillChildNodes(newNode, list);
+
+                    nodeList.Add(newNode);
+                }
+            }
+
+            return Json(nodeList);
+        }
+
+        public void FillChildNodes(TreeNode parentNode, List<ITreeNode> nodes)
+        {
+            var children = nodes.Where(x => x.ParentCategoryId == parentNode.id);
+            foreach (var child in children)
+            {
+                var newNode = new TreeNode
+                {
+                    id = child.Id,
+                    text = child.Name,
+                    nodes = new List<TreeNode>()
+                };
+
+                FillChildNodes(newNode, nodes);
+
+                parentNode.nodes.Add(newNode);
+            }
         }
 
         #endregion

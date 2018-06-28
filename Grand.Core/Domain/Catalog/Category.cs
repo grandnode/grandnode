@@ -10,7 +10,7 @@ namespace Grand.Core.Domain.Catalog
     /// <summary>
     /// Represents a category
     /// </summary>
-    public partial class Category : BaseEntity, ISlugSupported, IAclSupported, ILocalizedEntity, IStoreMappingSupported
+    public partial class Category : BaseEntity, ISlugSupported, IAclSupported, ILocalizedEntity, IStoreMappingSupported, ITreeNode
     {
         private ICollection<string> _appliedDiscounts;
 
