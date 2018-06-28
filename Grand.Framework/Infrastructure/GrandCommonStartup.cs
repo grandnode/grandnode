@@ -114,10 +114,7 @@ namespace Grand.Framework.Infrastructure
                 application.UseInstallUrl();
 
             //use HTTP session
-            application.UseSession();
-
-            //use request localization
-            application.UseRequestLocalization();
+            application.UseSession();            
 
             //use powered by
             if (!grandConfig.IgnoreUsePoweredByMiddleware)
