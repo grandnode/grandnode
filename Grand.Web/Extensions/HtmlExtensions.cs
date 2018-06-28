@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-using Microsoft.AspNetCore.Mvc;
 using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Infrastructure;
