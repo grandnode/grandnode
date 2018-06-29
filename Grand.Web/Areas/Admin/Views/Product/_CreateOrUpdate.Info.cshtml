@@ -562,7 +562,7 @@
                 <span asp-validation-for="AdminComment"></span>
             </div>
         </div>
-        <div @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+        <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
             <admin-label asp-for="VendorId" />
             <div class="col-md-9 col-sm-9">
                 <admin-select asp-for="VendorId" asp-items="Model.AvailableVendors" />
