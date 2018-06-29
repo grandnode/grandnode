@@ -36,7 +36,8 @@
                         </tr>
                       </thead>
                       <tbody>
-                        @foreach (var item in Model.ProductBidList.Where(x => !x.Ended))
+                        @{ var ongoing = Model.ProductBidList.Where(x => !x.Ended); }
+                        @foreach (var item in ongoing)
                         {
                             <tr>
                                 <th scope="row">
@@ -84,7 +85,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in Model.ProductBidList.Where(x => x.Ended))
+                                @{ var ended = Model.ProductBidList.Where(x => x.Ended); }
+                                @foreach (var item in ended)
                                 {
                                     <tr>
                                         <th scope="row">
