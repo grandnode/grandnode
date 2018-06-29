@@ -1,5 +1,6 @@
 ﻿@model DateTime
-<input id="@Html.IdForModel()" name="@Html.NameForModel()" value="@((Model > DateTime.MinValue ? Model : DateTime.Today).ToShortDateString())" />
+@using System.Globalization
+<input id="@Html.IdForModel()" name="@Html.NameForModel()" value="@((Model > DateTime.MinValue ? Model : DateTime.Today).ToString(CultureInfo.CurrentCulture.DateTimeFormat.UniversalSortableDateTimePattern))" />
 <script>
     $(document).ready(function () {
         $("#@Html.IdForModel()").kendoDatePicker();
