@@ -36,7 +36,6 @@ namespace Grand.Plugin.Payments.CheckMoneyOrder.Controllers
             this._languageService = languageService;
         }
         
-        [AuthorizeAdmin]
         public IActionResult  Configure()
         {
             //load settings for a chosen store scope
@@ -67,7 +66,6 @@ namespace Grand.Plugin.Payments.CheckMoneyOrder.Controllers
         }
 
         [HttpPost]
-        [AuthorizeAdmin]
         public IActionResult  Configure(ConfigurationModel model)
         {
             if (!ModelState.IsValid)

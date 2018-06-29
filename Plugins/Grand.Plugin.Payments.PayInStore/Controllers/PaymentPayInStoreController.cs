@@ -22,7 +22,6 @@ namespace Grand.Plugin.Payments.PayInStore.Controllers
             this._localizationService = localizationService;
         }
 
-        [AuthorizeAdmin]
         public IActionResult Configure()
         {
             var model = new ConfigurationModel();
@@ -34,7 +33,6 @@ namespace Grand.Plugin.Payments.PayInStore.Controllers
         }
 
         [HttpPost]
-        [AuthorizeAdmin]
         public IActionResult Configure(ConfigurationModel model)
         {
             if (!ModelState.IsValid)

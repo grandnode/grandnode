@@ -41,7 +41,6 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
             this._localizationService = localizationService;
         }
 
-        [AuthorizeAdmin]
         public IActionResult Configure()
         {
             //load settings for a chosen store scope
@@ -87,7 +86,6 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
         }
 
         [HttpPost]
-        [AuthorizeAdmin]
         public IActionResult Configure(ConfigurationModel model)
         {
             //load settings for a chosen store scope

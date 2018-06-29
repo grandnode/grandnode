@@ -881,13 +881,13 @@ namespace Grand.Web.Controllers
                     var _forumTopic = _forumService.GetTopicById(forumPost.TopicId);
                     if (pageIndex > 1)
                     {
-                        url = Url.RouteUrl("TopicSlugPaged", new { id = forumPost.TopicId, slug = _forumTopic.GetSeName(), page = pageIndex });
+                        url = Url.RouteUrl("TopicSlugPaged", new { id = forumPost.TopicId, slug = _forumTopic.GetSeName(), pageNumber = pageIndex });
                     }
                     else
                     {
                         url = Url.RouteUrl("TopicSlug", new { id = forumPost.TopicId, slug = _forumTopic.GetSeName() });
                     }
-                    return Redirect(string.Format("{0}#{1}", url, forumPost.Id));
+                    return Redirect($"{url}#{forumPost.Id}");
                 }
                 catch (Exception ex)
                 {
