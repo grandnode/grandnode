@@ -164,35 +164,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         {
             application.UseMiddleware<InstallUrlMiddleware>();
         }
-
-        /// <summary>
-        /// Set current culture info
-        /// </summary>
-        /// <param name="application">Builder for configuring an application's request pipeline</param>
-        public static void UseCulture(this IApplicationBuilder application)
-        {
-            var lang = EngineContext.Current.Resolve<Grand.Services.Localization.ILanguageService>().GetAllLanguages();            
-            var supportedCultures = new List<CultureInfo>();
-            foreach (var item in lang)
-            {
-                supportedCultures.Add(new CultureInfo(item.LanguageCulture));
-            }
-
-            if (!supportedCultures.Any(x => x.TwoLetterISOLanguageName == "en"))
-                supportedCultures.Add(new CultureInfo("en-US"));
-
-            var options = new RequestLocalizationOptions
-            {
-                DefaultRequestCulture = new RequestCulture("en-US", "en-US"),
-                // Formatting numbers, dates, etc.
-                SupportedCultures = supportedCultures,
-                // UI strings that we have localized.
-                SupportedUICultures = supportedCultures,
-
-            };
-            application.UseRequestLocalization(options);
-        }
-
+        
         /// <summary>
         /// Congifure authentication
         /// </summary>

@@ -1,9 +1,11 @@
 @model Decimal?
 @Html.TextBoxFor(model => model)
+@using System.Globalization
 <script>
     $(document).ready(function () {
         $("#@Html.IdForModel()").kendoNumericTextBox({
-            decimals: 2 //always display 2 digits
+           culture: "@CultureInfo.CurrentCulture.Name",
+           format: "n2",
         });
         $("#@Html.IdForModel()").rules("remove", "number");
     });
