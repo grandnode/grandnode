@@ -141,6 +141,7 @@ namespace Grand.Services.Knowledgebase
         /// <param name="kc"></param>
         public virtual void UpdateKnowledgebaseCategory(KnowledgebaseCategory kc)
         {
+            kc.UpdatedOnUtc = DateTime.UtcNow;
             _knowledgebaseCategoryRepository.Update(kc);
             _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
@@ -197,6 +198,8 @@ namespace Grand.Services.Knowledgebase
         /// <param name="kc"></param>
         public virtual void InsertKnowledgebaseCategory(KnowledgebaseCategory kc)
         {
+            kc.CreatedOnUtc = DateTime.UtcNow;
+            kc.UpdatedOnUtc = DateTime.UtcNow;
             _knowledgebaseCategoryRepository.Insert(kc);
             _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
@@ -237,6 +240,8 @@ namespace Grand.Services.Knowledgebase
         /// <param name="ka"></param>
         public virtual void InsertKnowledgebaseArticle(KnowledgebaseArticle ka)
         {
+            ka.CreatedOnUtc = DateTime.UtcNow;
+            ka.UpdatedOnUtc = DateTime.UtcNow;
             _knowledgebaseArticleRepository.Insert(ka);
             _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
@@ -249,6 +254,7 @@ namespace Grand.Services.Knowledgebase
         /// <param name="ka"></param>
         public virtual void UpdateKnowledgebaseArticle(KnowledgebaseArticle ka)
         {
+            ka.UpdatedOnUtc = DateTime.UtcNow;
             _knowledgebaseArticleRepository.Update(ka);
             _cacheManager.RemoveByPattern(ARTICLES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
