@@ -50,7 +50,7 @@
             <div class="@if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
         {<text>product-price col-12 d-inline-flex align-items-center</text>}
         else
-        {<text>non-discounted-price</text>}">
+        {<text>non-discounted-price col-12</text>}">
                 @if ((!String.IsNullOrWhiteSpace(Model.OldPrice) || !String.IsNullOrWhiteSpace(Model.PriceWithDiscount)) && Model.IsAuction)
                 {
                     @*display "Price:" label if we have old price or discounted one*@
