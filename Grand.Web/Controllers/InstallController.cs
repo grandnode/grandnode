@@ -16,7 +16,6 @@ using Grand.Web.Models.Install;
 using MongoDB.Driver;
 using MongoDB.Bson;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Newtonsoft.Json;
 using Grand.Core.Caching;
 using Grand.Services.Logging;
 
@@ -28,16 +27,17 @@ namespace Grand.Web.Controllers
 
         private readonly IInstallationLocalizationService _locService;
         private readonly GrandConfig _config;
-        private readonly ILogger _logger;
+        private readonly ICacheManager _cacheManager;
 
         #endregion
 
         #region Ctor
 
-        public InstallController(IInstallationLocalizationService locService, GrandConfig config)
+        public InstallController(IInstallationLocalizationService locService, GrandConfig config, ICacheManager cacheManager)
         {
             this._locService = locService;
             this._config = config;
+            this._cacheManager = cacheManager;
         }
 
         #endregion
@@ -242,6 +242,7 @@ namespace Grand.Web.Controllers
                 {
                     //reset cache
                     DataSettingsHelper.ResetCache();
+                    _cacheManager.Clear();
 
                     System.IO.File.Delete(CommonHelper.MapPath("~/App_Data/Settings.txt"));
 
