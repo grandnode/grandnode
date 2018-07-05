@@ -13,7 +13,7 @@ namespace Grand.Services.Messages.Tests
     public class NewsLetterSubscriptionServiceTests {
         private Mock<IEventPublisher> tempEventPublisher;
         private IEventPublisher _eventPublisher;
-        private Mock<IRepository<NewsLetterSubscription>> tempNewsLetterSubscriptionRepository;
+        //private Mock<IRepository<NewsLetterSubscription>> tempNewsLetterSubscriptionRepository;
         private IRepository<NewsLetterSubscription> _newsLetterSubscriptionRepository;
         private IRepository<Customer> _customerRepository;
         private ICustomerService _customerService;
