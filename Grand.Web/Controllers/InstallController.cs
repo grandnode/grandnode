@@ -16,6 +16,9 @@ using Grand.Web.Models.Install;
 using MongoDB.Driver;
 using MongoDB.Bson;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
+using Grand.Core.Caching;
+using Grand.Services.Logging;
 
 namespace Grand.Web.Controllers
 {
@@ -25,6 +28,8 @@ namespace Grand.Web.Controllers
 
         private readonly IInstallationLocalizationService _locService;
         private readonly GrandConfig _config;
+        private readonly ILogger _logger;
+
         #endregion
 
         #region Ctor
@@ -46,7 +51,7 @@ namespace Grand.Web.Controllers
         {
             get { return false; }
         }
-        
+
 
         #endregion
 
@@ -68,7 +73,7 @@ namespace Grand.Web.Controllers
             {
                 model.AvailableLanguages.Add(new SelectListItem
                 {
-                    Value = Url.Action("ChangeLanguage", "Install", new { language = lang.Code}),
+                    Value = Url.Action("ChangeLanguage", "Install", new { language = lang.Code }),
                     Text = lang.Name,
                     Selected = _locService.GetCurrentLanguage().Code == lang.Code,
                 });
@@ -90,7 +95,7 @@ namespace Grand.Web.Controllers
 
             if (model.MongoDBConnectionInfo)
             {
-                if(String.IsNullOrEmpty(model.DatabaseConnectionString))
+                if (String.IsNullOrEmpty(model.DatabaseConnectionString))
                 {
                     ModelState.AddModelError("", _locService.GetResource("ConnectionStringRequired"));
                 }
@@ -114,8 +119,8 @@ namespace Grand.Web.Controllers
                 {
                     userNameandPassword = model.MongoDBUsername + ":" + model.MongoDBPassword + "@";
                 }
-                connectionString = "mongodb://" + userNameandPassword + model.MongoDBServerName + "/" + model.MongoDBDatabaseName;
 
+                connectionString = "mongodb://" + userNameandPassword + model.MongoDBServerName + "/" + model.MongoDBDatabaseName;
             }
 
             if (!string.IsNullOrEmpty(connectionString))
@@ -126,6 +131,12 @@ namespace Grand.Web.Controllers
                     var databaseName = new MongoUrl(connectionString).DatabaseName;
                     var database = client.GetDatabase(databaseName);
                     database.RunCommandAsync((Command<BsonDocument>)"{ping:1}").Wait();
+
+                    var filter = new BsonDocument("name", "GrandNodeVersion");
+                    var found = database.ListCollectionsAsync(new ListCollectionsOptions { Filter = filter }).Result;
+
+                    if (found.Any())
+                        ModelState.AddModelError("", _locService.GetResource("AlreadyInstalled"));
                 }
                 catch (Exception ex)
                 {
@@ -147,21 +158,19 @@ namespace Grand.Web.Controllers
             foreach (string file in filesToCheck)
                 if (!FilePermissionHelper.CheckPermissions(file, false, true, true, true))
                     ModelState.AddModelError("", string.Format(_locService.GetResource("ConfigureFilePermissions"), WindowsIdentity.GetCurrent().Name, file));
-            
+
             if (ModelState.IsValid)
             {
                 var settingsManager = new DataSettingsManager();
                 try
                 {
                     //save settings
-                    var dataProvider = model.DataProvider;
                     var settings = new DataSettings
                     {
                         DataProvider = "mongodb",
                         DataConnectionString = connectionString
                     };
                     settingsManager.SaveSettings(settings);
-
 
                     var dataProviderInstance = EngineContext.Current.Resolve<BaseDataProviderManager>().LoadDataProvider();
                     dataProviderInstance.InitDatabase();
@@ -183,19 +192,30 @@ namespace Grand.Web.Controllers
                         .OrderBy(x => x.PluginDescriptor.Group)
                         .ThenBy(x => x.PluginDescriptor.DisplayOrder)
                         .ToList();
+
                     var pluginsIgnoredDuringInstallation = String.IsNullOrEmpty(_config.PluginsIgnoredDuringInstallation) ?
                         new List<string>() :
                         _config.PluginsIgnoredDuringInstallation
                         .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                         .Select(x => x.Trim())
                         .ToList();
+
                     foreach (var plugin in plugins)
                     {
                         if (pluginsIgnoredDuringInstallation.Contains(plugin.PluginDescriptor.SystemName))
                             continue;
-                        plugin.Install();
-                    }
 
+                        try
+                        {
+                            plugin.Install();
+                        }
+                        catch (Exception ex)
+                        {
+                            var _logger = EngineContext.Current.Resolve<ILogger>();
+                            _logger.InsertLog(Core.Domain.Logging.LogLevel.Error, "Error during installing plugin " + plugin.PluginDescriptor.SystemName,
+                                ex.Message + " " + ex.InnerException?.Message);
+                        }
+                    }
 
                     //register default permissions
                     var permissionProviders = new List<Type>();
@@ -217,19 +237,13 @@ namespace Grand.Web.Controllers
                     {
                         return View(new InstallModel() { Installed = true });
                     }
-
                 }
                 catch (Exception exception)
                 {
                     //reset cache
                     DataSettingsHelper.ResetCache();
 
-                    //clear provider settings if something got wrong
-                    settingsManager.SaveSettings(new DataSettings
-                    {
-                        DataProvider = null,
-                        DataConnectionString = null
-                    });
+                    System.IO.File.Delete(CommonHelper.MapPath("~/App_Data/Settings.txt"));
 
                     ModelState.AddModelError("", string.Format(_locService.GetResource("SetupFailed"), exception.Message + " " + exception.InnerException?.Message));
                 }
@@ -245,7 +259,6 @@ namespace Grand.Web.Controllers
                     Selected = _locService.GetCurrentLanguage().Code == lang.Code,
                 });
             }
-
 
             return View(model);
         }
@@ -265,7 +278,7 @@ namespace Grand.Web.Controllers
         {
             if (DataSettingsHelper.DatabaseIsInstalled())
                 return RedirectToRoute("HomePage");
-            
+
             //restart application
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();
             webHelper.RestartAppDomain();

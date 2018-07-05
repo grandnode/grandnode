@@ -137,4 +137,7 @@
   <LocaleResource Name="Installed">
     <Value>Application has been installed successfully, please restart application.</Value>
   </LocaleResource>
+  <LocaleResource Name="AlreadyInstalled">
+    <Value>This database already exists and has GrandNode installed on it. Choose different database.</Value>
+  </LocaleResource>
 </Language>

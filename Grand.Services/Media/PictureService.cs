@@ -781,13 +781,13 @@ namespace Grand.Services.Media
                 {
                     //horizontal rectangle or square
                     if (image.Width > _mediaSettings.MaximumImageSize && image.Height > _mediaSettings.MaximumImageSize)
-                        byteArray = ApplyResize(byteArray, _mediaSettings.MaximumImageSize);
+                        byteArray = ApplyResize(byteArray, _mediaSettings.MaximumImageSize, new Size(image.Width, image.Height));
                 }
                 else if (image.Width < image.Height)
                 {
                     //vertical rectangle
                     if (image.Width > _mediaSettings.MaximumImageSize)
-                        byteArray = ApplyResize(byteArray, _mediaSettings.MaximumImageSize);
+                        byteArray = ApplyResize(byteArray, _mediaSettings.MaximumImageSize, new Size(image.Width, image.Height));
                 }
                 return byteArray;
             };
@@ -797,6 +797,11 @@ namespace Grand.Services.Media
         {
             using (MemoryStream ms = new MemoryStream(byteArray))
             {
+                if (targetSize <= 0)
+                {
+                    targetSize = 800;
+                }
+
                 var image = Image.FromStream(ms);
                 var size = default(Size);
                 if (originalSize != default(Size))
@@ -807,7 +812,7 @@ namespace Grand.Services.Media
                 {
                     size = new Size(targetSize, targetSize);
                 }
-                
+
                 var resized = new Bitmap(size.Width, size.Height);
                 using (var graphics = Graphics.FromImage(resized))
                 {
@@ -818,11 +823,11 @@ namespace Grand.Services.Media
                 }
                 using (var ms2 = new MemoryStream())
                 {
-                    resized.Save(ms2, _mediaSettings.ImageFormatPNG ? System.Drawing.Imaging.ImageFormat.Png: System.Drawing.Imaging.ImageFormat.Jpeg);
+                    resized.Save(ms2, _mediaSettings.ImageFormatPNG ? System.Drawing.Imaging.ImageFormat.Png : System.Drawing.Imaging.ImageFormat.Jpeg);
                     return ms2.ToArray();
                 }
             };
-        }        
+        }
         #endregion
 
         #region Properties

@@ -8,6 +8,11 @@ namespace Grand.Core.Domain.Seo
     /// </summary>
     public class SeoSettings : ISettings
     {
+        public SeoSettings()
+        {
+            ReservedUrlRecordSlugs = new List<string>();
+        }
+
         /// <summary>
         /// Page title separator
         /// </summary>

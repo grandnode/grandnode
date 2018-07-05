@@ -140,4 +140,7 @@
     <LocaleResource Name="Installed">
     <Value>Aplikacja została zainstalowana, proszę ponownie uruchomić usługę.</Value>
   </LocaleResource>
+  <LocaleResource Name="AlreadyInstalled">
+    <Value>Ta baza danych już istnieje i zainstalowany jest na niej GrandNode. Proszę wybrać inną bazę danych.</Value>
+  </LocaleResource>
 </Language>

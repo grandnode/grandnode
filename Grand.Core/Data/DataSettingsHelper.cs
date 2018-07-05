@@ -40,7 +40,7 @@ namespace Grand.Core.Data
         //Reset information cached in the "DatabaseIsInstalled" method
         public static void ResetCache()
         {
-            _databaseIsInstalled = null;
+            _databaseIsInstalled = false;
         }
        
     }
