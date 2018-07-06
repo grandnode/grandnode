@@ -3292,7 +3292,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //add a note
                 _orderService.InsertOrderNote(new OrderNote
                 {
-                    Note = "A shipment has been added",
+                    Note = $"A shipment #{shipment.ShipmentNumber} has been added",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
                     OrderId = order.Id,
@@ -3357,7 +3357,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //add a note
             _orderService.InsertOrderNote(new OrderNote
             {
-                Note = "A shipment has been deleted",
+                Note = $"A shipment #{shipment.ShipmentNumber} has been deleted",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
                 OrderId = order.Id,

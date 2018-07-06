@@ -2134,7 +2134,7 @@ namespace Grand.Services.Orders
             //add a note
             _orderService.InsertOrderNote(new OrderNote
             {
-                Note = string.Format("Shipment# {0} has been sent", shipment.Id),
+                Note = $"Shipment #{shipment.ShipmentNumber} has been sent",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
                 OrderId = order.Id,
@@ -2193,7 +2193,7 @@ namespace Grand.Services.Orders
             //add a note
             _orderService.InsertOrderNote(new OrderNote
             {
-                Note = string.Format("Shipment# {0} has been delivered", shipment.Id),
+                Note = $"Shipment #{shipment.ShipmentNumber} has been delivered",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
                 OrderId = order.Id,
