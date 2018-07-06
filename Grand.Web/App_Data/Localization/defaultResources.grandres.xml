@@ -7678,7 +7678,7 @@
     <Value>Require customers to accept or decline terms of service before processing the order (on the shopping cart page)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.UserCanCancelUnpaidOrder">
-    <Value>User Can Cancel Orders</Value>
+    <Value>User can cancel orders</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.UserCanCancelUnpaidOrder.Hint">
     <Value>Show or Hide Button That Allows User to Cancel Unpaid and Unshipped Orders (Available in the Order Details)</Value>
