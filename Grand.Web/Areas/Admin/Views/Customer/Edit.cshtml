@@ -45,7 +45,7 @@
 <div id="sendemail-window" style="display:none;">
     <form asp-controller="Customer" asp-action="SendEmail" method="post" asp-route-id="Id">
         <antiforgery-token />
-        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="Id" id="sendemail_customerId" />
         <div class="form-horizontal">
             <div class="form-body">
                 <div class="form-group">
@@ -108,7 +108,7 @@
 <div id="sendprivatemessage-window" style="display:none;">
     <form asp-controller="Customer" asp-action="SendPm" method="post" asp-route-id="Id" >
         <antiforgery-token />
-        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="Id" id="sendprivatemessage_customerId" />
         <div class="form-horizontal">
             <div class="form-body">
                 <div class="form-group">
