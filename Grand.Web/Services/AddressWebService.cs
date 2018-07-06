@@ -134,6 +134,8 @@ namespace Grand.Web.Services
                 model.Address2 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2);
                 model.ZipPostalCode = customer.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode);
                 model.City = customer.GetAttribute<string>(SystemCustomerAttributeNames.City);
+                model.CountryId = customer.GetAttribute<string>(SystemCustomerAttributeNames.CountryId);
+                model.StateProvinceId = customer.GetAttribute<string>(SystemCustomerAttributeNames.StateProvinceId);
                 model.PhoneNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone);
                 model.FaxNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.Fax);
             }
