@@ -159,6 +159,9 @@ select.form-control {
     margin-top: 6px;
     padding-left: 20px;
 }
+.mt-checkbox, .mt-radio {
+    margin-top: 6px;
+}
 
 a span.username {
     color: #a4aebb;
