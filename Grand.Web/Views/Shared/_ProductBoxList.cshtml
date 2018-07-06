@@ -72,7 +72,7 @@
                     <div class="product-rating-box list-group" title="@string.Format(T("Reviews.TotalReviews").Text, Model.ReviewOverviewModel.TotalReviews)">
                         <div class="rating rating_@Model.Id">
                         </div>
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function () {
                                 productStarProgress10('@(ratingPercent)', 'rating_@Model.Id');
                             });

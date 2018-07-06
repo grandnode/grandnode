@@ -91,7 +91,7 @@ else
 @if (Model.AllowPrivateMessages && !string.IsNullOrEmpty(Model.AlertMessage))
 {
     //new private message notification
-    <script type="text/javascript" asp-location="Footer">
+    <script>
             $(document).ready(function () {
                 displayPopupNotification('@Html.Raw(JavaScriptEncoder.Default.Encode(Model.AlertMessage))', 'success', false);
             });

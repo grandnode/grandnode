@@ -326,9 +326,9 @@ namespace Grand.Framework.UI
 
                     //render
                     if (File.Exists(bundleDirectory + (Grand.Core.OperatingSystem.IsWindows() ? "\\" : "/") + outputFileName + ".min.js"))
-                        result.AppendFormat("<script src=\"{0}\" type=\"{1}\"></script>", urlHelper.Content("~/bundles/" + outputFileName + ".min.js"), "text/javascript");
+                        result.AppendFormat("<script src=\"{0}\"></script>", urlHelper.Content("~/bundles/" + outputFileName + ".min.js"));
                     else
-                        result.AppendFormat("<script src=\"{0}\" type=\"{1}\"></script>", urlHelper.Content("~/bundles/" + outputFileName + ".js"), "text/javascript");
+                        result.AppendFormat("<script src=\"{0}\"></script>", urlHelper.Content("~/bundles/" + outputFileName + ".js"));
 
                     result.Append(Environment.NewLine);
                 }
@@ -338,7 +338,7 @@ namespace Grand.Framework.UI
                 foreach (var item in partsToDontBundle)
                 {
                     var src = debugModel ? item.DebugSrc : item.Src;
-                    result.AppendFormat("<script {2}src=\"{0}\" type=\"{1}\"></script>", urlHelper.Content(src), "text/javascript", item.IsAsync ? "async " : "");
+                    result.AppendFormat("<script {1} src=\"{0}\"></script>", urlHelper.Content(src), item.IsAsync ? "async" : "");
                     result.Append(Environment.NewLine);
                 }
                 return result.ToString();
@@ -350,7 +350,7 @@ namespace Grand.Framework.UI
                 foreach (var item in _scriptParts[location].Distinct())
                 {
                     var src = debugModel ? item.DebugSrc : item.Src;
-                    result.AppendFormat("<script {2}src=\"{0}\" type=\"{1}\"></script>", urlHelper.Content(src), "text/javascript", item.IsAsync ? "async " : "");
+                    result.AppendFormat("<script {1}src=\"{0}\"></script>", urlHelper.Content(src), item.IsAsync ? "async " : "");
                     result.Append(Environment.NewLine);
                 }
                 return result.ToString();

@@ -31,7 +31,7 @@
 }
 @foreach (var message in successMessages)
 {
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
             displayPopupNotification('@Html.Raw(JavaScriptEncoder.Default.Encode(message))', 'success', false);
         });
@@ -39,7 +39,7 @@
 }
 @foreach (var message in errorMessages)
 {
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
             displayPopupNotification('@Html.Raw(JavaScriptEncoder.Default.Encode(message))', 'error', false);
         });

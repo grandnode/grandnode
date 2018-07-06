@@ -31,7 +31,6 @@ namespace Grand.Framework.Security.Captcha
             {
                 var scriptCallbackTag = new TagBuilder("script");
                 scriptCallbackTag.TagRenderMode = TagRenderMode.Normal;
-                scriptCallbackTag.Attributes.Add("type", "text/javascript");
                 scriptCallbackTag.InnerHtml.AppendHtml(string.Format("var onloadCallback = function() {{grecaptcha.render('{0}', {{'sitekey' : '{1}', 'theme' : '{2}' }});}};", Id, PublicKey, Theme));
                
                 var captchaTag = new TagBuilder("div");

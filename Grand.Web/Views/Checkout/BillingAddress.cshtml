@@ -116,7 +116,7 @@
                                                 </div>
                                                 <div class="card-footer select-button">
                                                     <input type="button" value="@T("Checkout.BillToThisAddress")" class="btn btn-secondary select-billing-address-button" onclick="selectBillingAddress@(item.Id)()" />
-                                                    <script type="text/javascript">
+                                                    <script>
                                                         function selectBillingAddress@(item.Id)() {
                                                             if ($('#@Html.IdFor(model => model.ShipToSameAddress)').is(':checked')) {
                                                                 setLocation('@Html.Raw(Url.RouteUrl("CheckoutSelectBillingAddress", new {addressId = item.Id, shipToSameAddress = "true"}))');

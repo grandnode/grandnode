@@ -22,7 +22,7 @@
                     </label>
                     @if (Model.RewardPointsEnoughToPayForOrder)
                     {
-                        <script type="text/javascript">
+                        <script>
                             $(document).ready(function () {
                                 $("#@Html.IdFor(model => model.UseRewardPoints)").change(toggleUseRewardPoints);
                                 toggleUseRewardPoints();

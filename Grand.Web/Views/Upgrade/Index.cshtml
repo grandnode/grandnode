@@ -6,13 +6,13 @@
     Layout = "";
 }
 <link href="@Url.Content("~/Content/install/style.css")" type="text/css" rel="stylesheet" />
-<script src="@Url.Content("~/Scripts/jquery-1.10.2.min.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Scripts/public.common.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery-1.10.2.min.js")" ></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" ></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" ></script>
+<script src="@Url.Content("~/Scripts/public.common.js")" ></script>
 <link href="@Url.Content("~/Content/bootstrap/bootstrap.min.css")" rel="stylesheet">
-<script src="@Url.Content("~/Content/bootstrap/popper.min.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Content/bootstrap/bootstrap.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Content/bootstrap/popper.min.js")" ></script>
+<script src="@Url.Content("~/Content/bootstrap/bootstrap.min.js")" ></script>
 
 <div class="container">
     <div class="page upgrade-page">
@@ -32,7 +32,7 @@
                 <div class="btn-group my-3">
                     <input type="submit" name="run-upgrade" class="btn btn-success upgrade-page" value="@T("UpgradeSystem.RunUpgrade")">
                 </div>
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function () {
                         $('#upgrade-form').submit(function () {
                             $('html,body').animate({

@@ -2,7 +2,7 @@
 @if (Model.DisplayBackInStockSubscription)
 {
     <input type="button" id="back-in-stock-subscribe-@Model.Id" class="btn btn-secondary btn-sm subscribe-button" value="@T("BackInStockSubscriptions.NotifyMeWhenAvailable")" />
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
             $("#back-in-stock-subscribe-@Model.Id").click(function (event) {
                 var posting = $.get('@Url.RouteUrl("BackInStockSubscribePopup", new { productId = Model.Id })');

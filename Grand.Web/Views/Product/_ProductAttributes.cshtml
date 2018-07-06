@@ -157,34 +157,34 @@
                                             </ul>
                                         </div>
                                     </script>
-                                    <script type="text/javascript">
-                            $(document).ready(function() {
-                                $("#@(controlId)uploader").fineUploader({
-                                    request: {
-                                        endpoint: '@(Url.RouteUrl("UploadFileProductAttribute", new { attributeId = attribute.Id, productId = attribute.ProductId }))'
-                                    },
-                                    template: "@(controlId)-qq-template",
-                                    multiple: false,
-                                    validation: {
-                                        allowedExtensions: [@Html.Raw(allowedFileExtensions)]
-                                    }
-                                }).on("complete", function(event, id, name, responseJSON, xhr) {
-                                    $("#@(controlId)").val(responseJSON.downloadGuid);
-                                    if (responseJSON.success) {
-                                        $("#@(controlId + "downloadurl")").html("<a href='" + responseJSON.downloadUrl + "'>@T("Common.FileUploader.DownloadUploadedFile")</a>");
-                                        $("#@(controlId + "remove")").show();
-                                    }
-                                    if (responseJSON.message) {
-                                        alert(responseJSON.message);
-                                    }
-                                });
+                                    <script>
+                                        $(document).ready(function() {
+                                            $("#@(controlId)uploader").fineUploader({
+                                                request: {
+                                                    endpoint: '@(Url.RouteUrl("UploadFileProductAttribute", new { attributeId = attribute.Id, productId = attribute.ProductId }))'
+                                                },
+                                                template: "@(controlId)-qq-template",
+                                                multiple: false,
+                                                validation: {
+                                                    allowedExtensions: [@Html.Raw(allowedFileExtensions)]
+                                                }
+                                            }).on("complete", function(event, id, name, responseJSON, xhr) {
+                                                $("#@(controlId)").val(responseJSON.downloadGuid);
+                                                if (responseJSON.success) {
+                                                    $("#@(controlId + "downloadurl")").html("<a href='" + responseJSON.downloadUrl + "'>@T("Common.FileUploader.DownloadUploadedFile")</a>");
+                                                    $("#@(controlId + "remove")").show();
+                                                }
+                                                if (responseJSON.message) {
+                                                    alert(responseJSON.message);
+                                                }
+                                            });
 
-                                $("#@(controlId + "remove")").click(function(e) {
-                                    $("#@(controlId + "downloadurl")").html("");
-                                    $("#@(controlId)").val('');
-                                    $(this).hide();
-                                });
-                            });
+                                            $("#@(controlId + "remove")").click(function(e) {
+                                                $("#@(controlId + "downloadurl")").html("");
+                                                $("#@(controlId)").val('');
+                                                $(this).hide();
+                                            });
+                                        });
                                     </script>
                                     <div id="@(controlId + "downloadurl")">
                                         @if (download != null)
@@ -223,13 +223,13 @@
                                             </li>
                                         }
                                     </ul>
-                                    <script type="text/javascript">
-                            $(document).ready(function() {
-                                $('.attributes #color-squares-@(attribute.Id)').delegate('input', 'click', function(event) {
-                                    $('.attributes #color-squares-@(attribute.Id)').find('li').removeClass('selected-value');
-                                    $(this).closest('li').addClass('selected-value');
-                                });
-                            });
+                                    <script>
+                                        $(document).ready(function() {
+                                            $('.attributes #color-squares-@(attribute.Id)').delegate('input', 'click', function(event) {
+                                                $('.attributes #color-squares-@(attribute.Id)').find('li').removeClass('selected-value');
+                                                $(this).closest('li').addClass('selected-value');
+                                            });
+                                        });
                                     </script>
                                 }
                                 break;
@@ -257,13 +257,13 @@
                                             </li>
                                         }
                                     </ul>
-                                    <script type="text/javascript">
-	                                $(document).ready(function() {
-	                                    $('.attributes #color-squares-@(attribute.Id)').delegate('input', 'click', function(event) {
-	                                        $('.attributes #color-squares-@(attribute.Id)').find('li').removeClass('selected-value');
-	                                        $(this).closest('li').addClass('selected-value');
+                                    <script>
+	                                    $(document).ready(function() {
+	                                        $('.attributes #color-squares-@(attribute.Id)').delegate('input', 'click', function(event) {
+	                                            $('.attributes #color-squares-@(attribute.Id)').find('li').removeClass('selected-value');
+	                                            $(this).closest('li').addClass('selected-value');
+	                                        });
 	                                    });
-	                                });
                                     </script>
                                 }
                                 break;
@@ -320,7 +320,7 @@
             }
         }
         //render scripts
-        <script type="text/javascript">
+        <script>
             function @(attributeChangeHandlerFuncName)() {
                 $.ajax({
                     cache: false,

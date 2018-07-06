@@ -32,7 +32,7 @@ namespace Grand.Web.Extensions
             var storeLocation = EngineContext.Current.Resolve<IWebHelper>().GetStoreLocation();
             string bbEditorWebRoot = String.Format("{0}Content/", storeLocation);
 
-            sb.AppendFormat("<script src=\"{0}Content/BBEditor/ed.js\" type=\"text/javascript\"></script>", storeLocation);
+            sb.AppendFormat("<script src=\"{0}Content/BBEditor/ed.js\" ></script>", storeLocation);
             sb.Append(Environment.NewLine);
             sb.Append("<script language=\"javascript\" type=\"text/javascript\">");
             sb.Append(Environment.NewLine);

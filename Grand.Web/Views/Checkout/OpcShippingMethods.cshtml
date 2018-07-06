@@ -3,7 +3,7 @@
 @{ 
     var storeLocation = webHelper.GetStoreLocation();
 }
-<script type="text/javascript">
+<script>
     function loadPartialView(arg_value) {
         var url = '@(storeLocation)checkout/GetShippingFormPartialView?shippingOption=' + arg_value;
         $.ajax({
@@ -23,7 +23,7 @@
             var selectedShippingMethod = Model.ShippingMethods.FirstOrDefault(x => x.Selected);
             if (selectedShippingMethod != null)
             {
-                <script type="text/javascript">
+                <script>
                     $(document).ready(function () {
                         loadPartialView('@(selectedShippingMethod.Name)___@(selectedShippingMethod.ShippingRateComputationMethodSystemName)');
                     });

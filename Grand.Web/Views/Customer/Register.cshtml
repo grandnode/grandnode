@@ -8,7 +8,7 @@
 }
 @if (Model.CountryEnabled && Model.StateProvinceEnabled)
 {
-    <script type="text/javascript">
+    <script>
         $(function () {
             $("#@Html.IdFor(model => model.CountryId)").change(function () {
                 var selectedItem = $(this).val();
@@ -37,7 +37,7 @@
     </script>
 }
 
-<script type="text/javascript">
+<script>
     $(function () {
         $("#@Html.IdFor(model => model.Newsletter)").click(toggleNewsletterCat);
         toggleNewsletterCat();
@@ -348,7 +348,7 @@
 
         @if (Model.AcceptPrivacyPolicyEnabled)
         {
-            <script type="text/javascript">
+            <script>
                 $(document).ready(function () {
                     $('#register-button').click(function () {
                         if ($('#accept-privacy-policy').is(':checked')) {

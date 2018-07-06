@@ -37,7 +37,7 @@
         {
             <input type="submit" id="back-in-stock-notify-me" value="@(Model.AlreadySubscribed ? @T("BackInStockSubscriptions.Unsubscribe").Text : @T("BackInStockSubscriptions.NotifyMe").Text)"
                    class="btn btn-success btn-sm notify-me-button" />
-                <script type="text/javascript">
+                <script>
                         $(document).ready(function () {
                             $('#back-in-stock-subscription-form').submit(function (event) {
                                 event.preventDefault();

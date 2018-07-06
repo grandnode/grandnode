@@ -161,34 +161,34 @@
                                 </ul>
                             </div>
                         </script>
-                        <script type="text/javascript">
-                                    $(document).ready(function() {
-                                        $("#@(controlId)uploader").fineUploader({
-                                            request: {
-                                                endpoint: '@(Url.RouteUrl("UploadFileContactAttribute", new {attributeId = attribute.Id}))'
-                                            },
-                                            template: "@(controlId)-qq-template",
-                                            multiple: false,
-                                            validation: {
-                                                allowedExtensions: [@Html.Raw(allowedFileExtensions)]
-                                            }
-                                        }).on("complete", function(event, id, name, responseJSON, xhr) {
-                                            $("#@(controlId)").val(responseJSON.downloadGuid);
-                                            if (responseJSON.success) {
-                                                $("#@(controlId + "downloadurl")").html("<a href='" + responseJSON.downloadUrl + "'>@T("Common.FileUploader.DownloadUploadedFile")</a>");
-                                                $("#@(controlId + "remove")").show();
-                                            }
-                                            if (responseJSON.message) {
-                                                alert(responseJSON.message);
-                                            }
-                                        });
-
-                                        $("#@(controlId + "remove")").click(function(e) {
-                                            $("#@(controlId + "downloadurl")").html("");
-                                            $("#@(controlId)").val('');
-                                            $(this).hide();
-                                        });
+                        <script>
+                                $(document).ready(function() {
+                                    $("#@(controlId)uploader").fineUploader({
+                                        request: {
+                                            endpoint: '@(Url.RouteUrl("UploadFileContactAttribute", new {attributeId = attribute.Id}))'
+                                        },
+                                        template: "@(controlId)-qq-template",
+                                        multiple: false,
+                                        validation: {
+                                            allowedExtensions: [@Html.Raw(allowedFileExtensions)]
+                                        }
+                                    }).on("complete", function(event, id, name, responseJSON, xhr) {
+                                        $("#@(controlId)").val(responseJSON.downloadGuid);
+                                        if (responseJSON.success) {
+                                            $("#@(controlId + "downloadurl")").html("<a href='" + responseJSON.downloadUrl + "'>@T("Common.FileUploader.DownloadUploadedFile")</a>");
+                                            $("#@(controlId + "remove")").show();
+                                        }
+                                        if (responseJSON.message) {
+                                            alert(responseJSON.message);
+                                        }
                                     });
+
+                                    $("#@(controlId + "remove")").click(function(e) {
+                                        $("#@(controlId + "downloadurl")").html("");
+                                        $("#@(controlId)").val('');
+                                        $(this).hide();
+                                    });
+                                });
                         </script>
                         <div id="@(controlId + "downloadurl")">
                             @if (download != null)
@@ -225,7 +225,7 @@
                                 attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').click(function(){{contactAttributeChange();}});\n", controlId, attributeValue.Id);
                             }
                         </ul>
-                        <script type="text/javascript">
+                        <script>
                                     $(document).ready(function() {
                                         $('.contact-attributes #color-squares-@(attribute.Id)').delegate('input', 'click', function (event) {
                                             $('.contact-attributes #color-squares-@(attribute.Id)').find('li').removeClass('selected-value border border-primary');
@@ -245,7 +245,7 @@
     }
 </div>
 
-    <script type="text/javascript">
+    <script>
         $(document).ready(function() {
             contactAttributeChange();
             @Html.Raw(attributeChangeScriptsBuilder.ToString())

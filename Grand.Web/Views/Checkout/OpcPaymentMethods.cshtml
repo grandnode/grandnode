@@ -13,7 +13,7 @@
 
             @if (Model.RewardPointsEnoughToPayForOrder)
                 {
-                <script type="text/javascript">
+                <script>
                         $(document).ready(function() {
                             PaymentMethod.toggleUseRewardPoints($('#@Html.IdFor(model => model.UseRewardPoints)'));
                         });

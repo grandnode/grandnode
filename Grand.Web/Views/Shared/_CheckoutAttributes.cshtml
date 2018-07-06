@@ -162,7 +162,7 @@
                                 </ul>
                             </div>
                         </script>
-                        <script type="text/javascript">
+                        <script>
                                     $(document).ready(function() {
                                         $("#@(controlId)uploader").fineUploader({
                                             request: {
@@ -230,7 +230,7 @@
                                 attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').click(function(){{checkoutAttributeChange();}});\n", controlId, attributeValue.Id);
                             }
                         </ul>
-                        <script type="text/javascript">
+                        <script>
                                     $(document).ready(function() {
                                         $('.checkout-attributes #color-squares-@(attribute.Id)').delegate('input', 'click', function (event) {
                                             $('.checkout-attributes #color-squares-@(attribute.Id)').find('li').removeClass('selected-value border border-primary');
@@ -250,7 +250,7 @@
     }
 </div>
 
-    <script type="text/javascript">
+    <script>
         $(document).ready(function() {
             checkoutAttributeChange();
             @Html.Raw(attributeChangeScriptsBuilder.ToString())
