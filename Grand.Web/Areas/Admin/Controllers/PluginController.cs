@@ -1,4 +1,5 @@
 ﻿using Grand.Core;
+using Grand.Core.Caching;
 using Grand.Core.Domain.Cms;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Payments;
@@ -47,6 +48,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly IThemeProvider _themeProvider;
         private readonly IEventPublisher _eventPublisher;
+        private readonly ICacheManager _cacheManager;
         private readonly PaymentSettings _paymentSettings;
         private readonly ShippingSettings _shippingSettings;
         private readonly TaxSettings _taxSettings;
@@ -66,6 +68,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             IStoreService storeService,
             IThemeProvider themeProvider,
             IEventPublisher eventPublisher,
+            ICacheManager cacheManager,
             PaymentSettings paymentSettings,
             ShippingSettings shippingSettings,
             TaxSettings taxSettings, 
@@ -82,6 +85,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._storeService = storeService;
             this._themeProvider = themeProvider;
             this._eventPublisher = eventPublisher;
+            this._cacheManager = cacheManager;
             this._paymentSettings = paymentSettings;
             this._shippingSettings = shippingSettings;
             this._taxSettings = taxSettings;
@@ -721,7 +725,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         }
                     }
                 }
-
+                _cacheManager.Clear();
                 ViewBag.RefreshPage = true;
                 ViewBag.btnId = btnId;
                 ViewBag.formId = formId;
