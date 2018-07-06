@@ -482,6 +482,7 @@ namespace Grand.Web.Controllers
                     WasHelpful = washelpful,
                 };
                 productReview.ProductReviewHelpfulnessEntries.Add(prh);
+                _productService.UpdateProductReview(productReview);
                 if (!_workContext.CurrentCustomer.IsHasProductReviewH)
                 {
                     _workContext.CurrentCustomer.IsHasProductReviewH = true;

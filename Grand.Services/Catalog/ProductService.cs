@@ -1165,8 +1165,6 @@ namespace Grand.Services.Catalog
 
             //event notification
             _eventPublisher.EntityUpdated(product);
-
-            //UpdateProduct(product);
         }
 
         public virtual void UpdateProductReview(ProductReview productreview)
@@ -1182,7 +1180,10 @@ namespace Grand.Services.Catalog
                 .Set(x => x.ReplyText, productreview.ReplyText)
                 .Set(x => x.Signature, productreview.Signature)
                 .Set(x => x.UpdatedOnUtc, DateTime.UtcNow)
-                .Set(x => x.IsApproved, productreview.IsApproved);
+                .Set(x => x.IsApproved, productreview.IsApproved)
+                .Set(x => x.HelpfulNoTotal, productreview.HelpfulNoTotal)
+                .Set(x => x.HelpfulYesTotal, productreview.HelpfulYesTotal)
+                .Set(x => x.ProductReviewHelpfulnessEntries, productreview.ProductReviewHelpfulnessEntries);
 
             var result = _productReviewRepository.Collection.UpdateManyAsync(filter, update).Result;
 
