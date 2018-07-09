@@ -197,7 +197,7 @@ namespace Grand.Services.Media
                     BucketName = _bucketName,
                     InputStream = stream,
                     Key = thumbFileName,
-                    StorageClass = S3StorageClass.ReducedRedundancy,
+                    StorageClass = S3StorageClass.Standard,
                 };
                 EnsureValidResponse(_s3Client.PutObjectAsync(putObjectRequest).Result, HttpStatusCode.OK);
             }
