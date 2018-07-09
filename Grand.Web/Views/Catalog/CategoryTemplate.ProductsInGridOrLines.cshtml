@@ -100,7 +100,7 @@
                     @foreach (var item in Model.FeaturedProducts)
                     {
                         <div class="col-lg-4 col-sm-6 col-6 product-container">
-                            @await Html.PartialAsync("_ProductBox", item)
+                            <partial name="_ProductBox" model="item" />
                         </div>
                     }
                 </div>
@@ -110,7 +110,7 @@
 
         @if (Model.Products.Any())
         {
-            @await Html.PartialAsync("_CatalogSelectors", Model.PagingFilteringContext)
+            <partial name="_CatalogSelectors" model="Model.PagingFilteringContext" />
         }
         @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_before_filters", additionalData = Model.Id })
         @await Component.InvokeAsync("Widget", new { widgetZone = "categorydetails_before_product_list", additionalData = Model.Id })
@@ -124,7 +124,7 @@
                         @foreach (var product in Model.Products)
                         {
                             <div class="col-lg-4 col-sm-6 col-6 product-container">
-                                @await Html.PartialAsync("_ProductBox", product)
+                                <partial name="_ProductBox" model="product" />
                             </div>
                         }
                     </div>
@@ -147,7 +147,7 @@
                     <div class="row">
                         @foreach (var product in Model.Products)
                         {
-                            @await Html.PartialAsync("_ProductBoxList", product)
+                            <partial name="_ProductBoxList" model="product" />
                         }
                         @{
                             var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
@@ -170,11 +170,11 @@
         @*filtering*@
         @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)
         { 
-            @await Html.PartialAsync("_FilterPriceBox", Model.PagingFilteringContext.PriceRangeFilter)
+            <partial name="_FilterPriceBox" model="Model.PagingFilteringContext.PriceRangeFilter" />
         }
         @*filtering*@
         @if (Model.PagingFilteringContext.SpecificationFilter.Enabled)
         {
-            @await Html.PartialAsync("_FilterSpecsBox", Model.PagingFilteringContext.SpecificationFilter)
+            <partial name="_FilterSpecsBox" model="Model.PagingFilteringContext.SpecificationFilter" />
         }
 }

@@ -39,8 +39,8 @@
     {
         <ul class="sub-menu">
             @foreach (var childItem in childNodes)
-                {
-                @await Html.PartialAsync("_MenuItem", childItem)
+            {
+                <partial name="_MenuItem" model="childItem"/>
             }
         </ul>
     }

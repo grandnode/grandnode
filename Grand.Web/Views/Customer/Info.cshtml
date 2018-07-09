@@ -156,7 +156,7 @@
                                 <span asp-validation-for="Username"></span>
                                 @if (Model.CheckUsernameAvailabilityEnabled)
                                 {
-                                    @await Html.PartialAsync("_CheckUsernameAvailability")
+                                    <partial name="_CheckUsernameAvailability"/>
                                 }
                             </div>
                         </fieldset>
@@ -319,12 +319,12 @@
                                     <label asp-for="Newsletter" class="custom-control-description">@T("Account.Fields.Newsletter")</label>
                                 </label>
                             </div>
-                            @await Html.PartialAsync("_NewsLetterCategories", Model.NewsletterCategories)
+                            <partial name="_NewsLetterCategories" model="Model.NewsletterCategories" />
                         }
 
                         @if (Model.CustomerAttributes.Any())
                         {
-                            @await Html.PartialAsync("_CustomerAttributes", Model.CustomerAttributes)
+                            <partial name="_CustomerAttributes" model="Model.CustomerAttributes" />
                         }
                     </fieldset>
                 </div>

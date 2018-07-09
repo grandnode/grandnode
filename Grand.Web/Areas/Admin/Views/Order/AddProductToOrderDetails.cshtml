@@ -71,14 +71,13 @@
                                 </div>
                                 @{
                                     var dataDict = new ViewDataDictionary(ViewData) { new KeyValuePair<string, object>("productId", Model.ProductId) };
-                                    @await Html.PartialAsync("_ProductAddAttributes", Model.ProductAttributes, dataDict)
+                                    <partial name="_ProductAddAttributes" model="Model.ProductAttributes" view-data="dataDict" />
                                 }
                                 @{
 
                                     var dataDictGiftCard = new ViewDataDictionary(ViewData);
                                     dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = "giftcard";
-                                    @await Html.PartialAsync("_ProductAddGiftCardInfo", Model.GiftCard, dataDictGiftCard)
-
+                                    <partial name="_ProductAddGiftCardInfo" model="Model.GiftCard" view-data="dataDictGiftCard" />
                                 }
                                 <div class="form-actions">
                                     <div class="row">

@@ -5,7 +5,7 @@
             <h2 class="generalTitle text-center">@T("Polls.Title")</h2>
             @foreach (var poll in Model)
             {
-               @await Html.PartialAsync("_Poll", poll) 
+               <partial name="_Poll" model="poll" />
             }
     </div>
 }

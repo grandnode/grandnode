@@ -32,7 +32,7 @@
                             Level = Model.Level + 1,
                             ResponsiveMobileMenu = Model.ResponsiveMobileMenu
                         };
-                        @await Html.PartialAsync("_CategoryLine.TopMenu", categoryLineModel)
+                        <partial name="_CategoryLine.TopMenu" model="categoryLineModel" />
                     }
                 </ul>
             }
@@ -52,7 +52,7 @@
                         Level = Model.Level + 1,
                         ResponsiveMobileMenu = Model.ResponsiveMobileMenu
                     };
-                    @await Html.PartialAsync("_CategoryLine.TopMenu", categoryLineModel)
+                    <partial name="_CategoryLine.TopMenu" model="categoryLineModel" />
                 }
             </ul>
         }

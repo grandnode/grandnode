@@ -36,7 +36,7 @@
             }
             @foreach (var item in rootNode.ChildNodes.Where(x => x.Visible))
             {
-                @await Html.PartialAsync("_MenuItem", item)
+                <partial name="_MenuItem" model="item" />
             }
         </ul>
     </div>

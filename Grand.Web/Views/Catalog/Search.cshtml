@@ -114,7 +114,7 @@
     @if (Model.Products.Any())
     {
         <div class="col">
-            @await Html.PartialAsync("_CatalogSelectors", Model.PagingFilteringContext)
+            <partial name="_CatalogSelectors" model="Model.PagingFilteringContext" />
         </div>
     }
     @await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_before_results" })
@@ -140,7 +140,7 @@
                     @foreach (var product in Model.Products)
                     {
                         <div class="col-lg-4 col-sm-6 col-6 product-container">
-                            @await Html.PartialAsync("_ProductBox", product)
+                            <partial name="_ProductBox" model="product" />
                         </div>
                     }
                 </div>
@@ -153,7 +153,7 @@
                     @foreach (var product in Model.Products)
                     {
                         <div class="col-12 Boxlist pb-1">
-                            @await Html.PartialAsync("_ProductBoxList", product)
+                            <partial name="_ProductBoxList" model="product" />
                         </div>
                     }
                 </div>

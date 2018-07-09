@@ -44,7 +44,7 @@
                    @if (Model.VendorReviewOverview.AllowCustomerReviews)
                    {
                         <div>
-                            @await Html.PartialAsync("_VendorReviewOverview", Model.VendorReviewOverview)
+                            <partial name="_VendorReviewOverview" model="Model.VendorReviewOverview" />
                         </div>
                    }
                </div>
@@ -134,7 +134,7 @@
            @*contact vendor*@
            @if (Model.Products.Any())
            {
-               @await Html.PartialAsync("_CatalogSelectors", Model.PagingFilteringContext)
+               <partial name="_CatalogSelectors" model="Model.PagingFilteringContext" />
            }
        </div>
         
@@ -148,7 +148,7 @@
                         @foreach (var product in Model.Products)
                         {
                             <div class="col-lg-4 col-sm-6 col-12">
-                                @await Html.PartialAsync("_ProductBox", product)
+                                <partial name="_ProductBox" model="product" />
                             </div>
                         }
                     </div>
@@ -159,7 +159,7 @@
                 <div class="col-12">
                     @foreach (var product in Model.Products)
                     {
-                        @await Html.PartialAsync("_ProductBoxList", product)
+                        <partial name="_ProductBoxList" model="product" />
                     }
                 </div>
             }

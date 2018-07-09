@@ -13,8 +13,7 @@
         {
             Category = category
         };
-        @await Html.PartialAsync("_CategoryLine.TopMenu", categoryLineModel)
-
+        <partial name="_CategoryLine.TopMenu" model="categoryLineModel" />
     }
 
     @foreach (var topic in Model.Topics)

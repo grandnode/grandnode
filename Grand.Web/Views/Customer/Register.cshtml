@@ -56,7 +56,7 @@
 <form asp-route="Register" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
     <div class="page registration-page">
         <div asp-validation-summary="ModelOnly" class="message-error"></div>
-        @await Html.PartialAsync("_ExternalAuthentication.AssociateMessage")
+        <partial name="_ExternalAuthentication.AssociateMessage" />
         <div class="card mb-3">
             <h3 class="h4 card-header">@T("Account.YourPersonalDetails")</h3>
             <div class="card-body">
@@ -139,7 +139,7 @@
                             <span asp-validation-for="Username"></span>
                             @if (Model.CheckUsernameAvailabilityEnabled)
                             {
-                                @await Html.PartialAsync("_CheckUsernameAvailability")
+                                <partial name="_CheckUsernameAvailability" />
                             }
                         </div>
                     }
@@ -289,11 +289,11 @@
                                 </label>
                                 <span asp-validation-for="Newsletter"></span>
                             </div>
-                            @await Html.PartialAsync("_NewsLetterCategories", Model.NewsletterCategories)
+                            <partial name="_NewsLetterCategories" model="Model.NewsletterCategories" />
                         }
                         @if (Model.CustomerAttributes.Any())
                         {
-                            @await Html.PartialAsync("_CustomerAttributes", Model.CustomerAttributes)
+                            <partial name="_CustomerAttributes" model="Model.CustomerAttributes" />
                         }
                 </div>
             </div>

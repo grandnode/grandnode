@@ -131,6 +131,6 @@
     }
     @if (Model.CustomAddressAttributes.Any())
     {
-        @await Html.PartialAsync("_AddressAttributes", Model.CustomAddressAttributes)
+        <partial name="_AddressAttributes" model="Model.CustomAddressAttributes" />
     }
 </div>

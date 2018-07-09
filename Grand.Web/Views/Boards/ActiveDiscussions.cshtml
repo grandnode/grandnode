@@ -7,9 +7,9 @@
 }
 <div class="page active-discussions-page">
     @await Component.InvokeAsync("ForumBreadcrumb")
-    @await Html.PartialAsync("_ForumHeader")
+    <partial name="_ForumHeader" />
     @await Component.InvokeAsync("Widget", new { widgetZone = "boards_activediscussions_after_header" })
-    @await Html.PartialAsync("_ActiveTopics", Model)
+    <partial name="_ActiveTopics" model="Model" />
     @await Component.InvokeAsync("Widget", new { widgetZone = "boards_activediscussions_after_topics" })
 
 

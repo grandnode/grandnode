@@ -9,6 +9,6 @@
                 <span class="value" id="stock-availability-value-@Model.Id">@Model.StockAvailability</span>
             </div>
         }
-        @await Html.PartialAsync("_BackInStockSubscription", Model)
+        <partial name="_BackInStockSubscription" model="Model" />
     </div>
 }

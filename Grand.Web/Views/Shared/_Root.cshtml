@@ -2,27 +2,27 @@
     Layout = "_Root.Head";
 }
 @await Component.InvokeAsync("Widget", new { widgetZone = "body_start_html_tag_after" })
-@await Html.PartialAsync("_Notifications")
-@await Html.PartialAsync("_JavaScriptDisabledWarning")
-@await Html.PartialAsync("_OldInternetExplorerWarning")
-@await Html.PartialAsync("Header")
-    <nav class="navbar navbar-expand-md mainNav d-none d-lg-flex w-100 mb-1 px-3">
-        <div class="collapse navbar-collapse container" id="collapsing-navbar-2">
-            <div class="d-none" id="menu_standing"></div>
-            <ul class="nav navbar-nav">
-                @await Component.InvokeAsync("TopMenu")
-            </ul>
-        </div>
-    </nav>
-    <div class="container page-container">
-        @await Component.InvokeAsync("Widget", new { widgetZone = "content_before"})
-        @if (IsSectionDefined("Breadcrumb"))
-        {
-            @RenderSection("Breadcrumb")
-        }
-        @RenderBody()
-        @await Component.InvokeAsync("Widget", new { widgetZone = "content_after" })
+<partial name="_Notifications" />
+<partial name="_JavaScriptDisabledWarning" />
+<partial name="_OldInternetExplorerWarning" />
+<partial name="Header" />
+<nav class="navbar navbar-expand-md mainNav d-none d-lg-flex w-100 mb-1 px-3">
+    <div class="collapse navbar-collapse container" id="collapsing-navbar-2">
+        <div class="d-none" id="menu_standing"></div>
+        <ul class="nav navbar-nav">
+            @await Component.InvokeAsync("TopMenu")
+        </ul>
     </div>
+</nav>
+<div class="container page-container">
+    @await Component.InvokeAsync("Widget", new { widgetZone = "content_before" })
+    @if (IsSectionDefined("Breadcrumb"))
+    {
+        @RenderSection("Breadcrumb")
+    }
+    @RenderBody()
+    @await Component.InvokeAsync("Widget", new { widgetZone = "content_after" })
+</div>
 @await Component.InvokeAsync("Footer")
 <script>
     AjaxCart.init('.header-links .cart-qty', '.header-links .wishlist-qty', '.flyout-cart');

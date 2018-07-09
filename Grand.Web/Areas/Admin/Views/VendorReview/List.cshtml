@@ -43,7 +43,7 @@
                         </div>
                         @if (workContext.CurrentVendor == null)
                         {
-                            @await Html.PartialAsync("_SearchVendor", Model)
+                            <partial name="_SearchVendor" model="Model" />
                         }
                     </div>
                     <div class="form-actions">

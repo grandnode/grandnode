@@ -7,7 +7,7 @@
             <a href="@Url.RouteUrl("KnowledgebaseCategory", new { SeName = Model.SeName })"><strong>@Model.Name</strong></a>
             @foreach (var category in Model.Children)
             {
-                @await Html.PartialAsync("_KnowledgebaseCategoryLine.Navigation", category)
+                <partial name="_KnowledgebaseCategoryLine.Navigation" model="category" />
             }
         }
         else

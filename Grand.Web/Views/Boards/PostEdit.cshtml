@@ -6,5 +6,5 @@
     Html.AddTitleParts(T("Forum.PageTitle.PostEdit").Text);
 }
 <form asp-route="PostEdit" method="post">
-    @await Html.PartialAsync("_CreateUpdatePost", Model)
+    <partial name="_CreateUpdatePost" model="Model" />
 </form>

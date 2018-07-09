@@ -8,7 +8,7 @@
 }
 <div class="page forum-topic-page">
     @await Component.InvokeAsync("ForumBreadcrumb", new { forumTopicId = Model.Id })
-    @await Html.PartialAsync("_ForumHeader")
+    <partial name="_ForumHeader" />
     @await Component.InvokeAsync("Widget", new { widgetZone = "boards_topic_after_header", additionalData = Model.Id })
     <h2 class="generalTitle text--center">@Model.Subject</h2>
     <div class="topic-actions upper">
@@ -49,21 +49,19 @@
                 RouteValues = new RouteValues { id = Model.Id, slug = Model.SeName }
             });
         }
-        @if (pager!=null)
+        @if (pager != null)
         {
             <div class="pager upper my-3">
                 @pager
             </div>
         }
     </div>
-
     <div class="topic-posts">
         @foreach (var post in @Model.ForumPostModels)
         {
             Html.RenderPartial("_ForumPost", post);
         }
     </div>
-
     <div class="topic-actions">
         <div class="actions">
             @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new { id = Model.Id }, new { @class = "btn btn-secondary reply-topic-button mt-1 mb-1" })
@@ -72,7 +70,7 @@
                 <a class="btn btn-secondary watch-topic-button" href="#" id="watch-topic-bottom">@Model.WatchTopicText</a>
             }
         </div>
-        @if (pager!=null)
+        @if (pager != null)
         {
             <div class="pager lower">
                 @pager

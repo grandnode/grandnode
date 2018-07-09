@@ -52,7 +52,7 @@
                             </div>
                         }
                     </div>
-                    @await Html.PartialAsync("_ContactAttributes", Model.ContactAttributes)
+                    <partial name="_ContactAttributes" model="Model.ContactAttributes" />
                 <div class="buttons mt-1 mb-1">
                     <input type="submit" name="send-email" class="btn btn-info contact-us-button" value="@T("ContactUs.Button")" />
                 </div>

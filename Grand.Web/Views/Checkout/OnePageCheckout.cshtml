@@ -49,7 +49,7 @@
             <div id="checkout-step-billing" class="step mt-2 mb-2 a-item" style="display: none;">
                 <form id="co-billing-form" action="">
                     <div id="checkout-billing-load">
-                        @await Html.PartialAsync("OpcBillingAddress", Model.BillingAddress)
+                        <partial name="OpcBillingAddress" model="Model.BillingAddress" />
                         @*billing address content will be loaded here*@
                     </div>
                 </form>

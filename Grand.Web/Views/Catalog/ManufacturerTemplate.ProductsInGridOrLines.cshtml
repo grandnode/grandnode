@@ -39,7 +39,7 @@
                 @foreach (var product in Model.FeaturedProducts)
                 {
                     <div class="col-6 col-md-6 col-lg-4 product-container">
-                        @await Html.PartialAsync("_ProductBox", product)
+                        <partial name="_ProductBox" model="product" />
                     </div>
                 }
             </div>
@@ -48,25 +48,25 @@
     @await Component.InvokeAsync("Widget", new { widgetZone = "manufacturerdetails_after_featured_products", additionalData = Model.Id })
     @if (Model.Products.Any())
     {
-        @await Html.PartialAsync("_CatalogSelectors", Model.PagingFilteringContext)
+        <partial name="_CatalogSelectors" model="Model.PagingFilteringContext" />
     }
     @await Component.InvokeAsync("Widget", new { widgetZone = "manufacturerdetails_before_filters", additionalData = Model.Id })
     @*filtering*@
     @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)
     {
-        @await Html.PartialAsync("_FilterPriceBox", Model.PagingFilteringContext.PriceRangeFilter)
+        <partial name="_FilterPriceBox" model="Model.PagingFilteringContext.PriceRangeFilter" />
     }
     @await Component.InvokeAsync("Widget", new { widgetZone = "manufacturerdetails_before_product_list", additionalData = Model.Id })
     @if (Model.Products.Any())
-            {
-                if (Model.PagingFilteringContext.ViewMode == "grid")
-                {
+    {
+        if (Model.PagingFilteringContext.ViewMode == "grid")
+        {
             <div class="manufactureGrid">
                 <div class="row flex-grid">
                     @foreach (var product in Model.Products)
                     {
                         <div class="col-lg-4 col-sm-6 col-6 product-container">
-                            @await Html.PartialAsync("_ProductBox", product)
+                            <partial name="_ProductBox" model="product" />
                         </div>
                     }
                 </div>
@@ -78,7 +78,7 @@
                 <div class="row">
                     @foreach (var product in Model.Products)
                     {
-                        @await Html.PartialAsync("_ProductBoxList", product)
+                        <partial name="_ProductBoxList" model="product" />
                     }
                 </div>
             </div>

@@ -50,7 +50,9 @@
 
         <div class="language-selector d-none d-lg-block btn-group btn-group-sm float-xs-right pr-1">
             <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
-                <span @await Html.PartialAsync("LanguageAttributes")>@languages.FirstOrDefault(x => x.Selected).Text</span>
+                <span>
+                    @languages.FirstOrDefault(x => x.Selected).Text
+                </span>
                 <span class="sr-only">Toggle Dropdown</span>
             </button>
             <div class="dropdown-menu dropdown-menu-right">

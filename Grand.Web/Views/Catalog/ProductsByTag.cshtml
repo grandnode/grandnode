@@ -1,4 +1,5 @@
 ﻿@model ProductsByTagModel
+@inject SeoSettings seoSettings
 @{
     Layout = "_ColumnsTwo";
 
@@ -6,7 +7,7 @@
     Html.AddTitleParts(string.Format(T("PageTitle.ProductsByTag").Text, Model.TagName));
 
     //canonical URL
-    var canonicalUrlsEnabled = EngineContext.Current.Resolve<SeoSettings>().CanonicalUrlsEnabled;
+    var canonicalUrlsEnabled = seoSettings.CanonicalUrlsEnabled;
     if (canonicalUrlsEnabled)
     {
         var productsByTagUrl = Url.RouteUrl("ProductsByTag", new { productTagId = Model.Id, SeName = Model.TagSeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
@@ -14,14 +15,13 @@
     }
 }
 @using Grand.Core.Domain.Seo
-@using Grand.Core.Infrastructure
 @using Grand.Web.Models.Catalog;
 <div class="page product-tag-page">
     <h2 class="generalTitle">@String.Format(T("Products.Tags.ProductsTaggedWith").Text, Model.TagName)</h2>
         @await Component.InvokeAsync("Widget", new { widgetZone = "productsbytag_top", additionalData = Model.Id })
         @if (Model.Products.Any())
         {
-            @await Html.PartialAsync("_CatalogSelectors", Model.PagingFilteringContext)
+            <partial name="_CatalogSelectors" model="Model.PagingFilteringContext" />
         }
         @await Component.InvokeAsync("Widget", new { widgetZone = "productsbytag_before_product_list", additionalData = Model.Id })
             @if (Model.Products.Any())
@@ -32,7 +32,7 @@
                         @foreach (var product in Model.Products)
                         {
                                 <div class="col-6 col-sm-6  col-md-6 col-lg-4 product-container">
-                                    @await Html.PartialAsync("_ProductBox", product)
+                                    <partial name="_ProductBox" model="product" />
                                 </div>
                         }
                     </div>
@@ -43,7 +43,7 @@
                         @foreach (var product in Model.Products)
                         {
                             <div class="col-12 Boxlist pb-1">
-                                @await Html.PartialAsync("_ProductBoxList", product)
+                                <partial name="_ProductBoxList" model="product" />
                             </div>
                         }
                     </div>

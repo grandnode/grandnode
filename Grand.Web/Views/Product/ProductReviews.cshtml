@@ -131,7 +131,7 @@
                         </div>
                         <div class="card-footer text-right">
                             @await Component.InvokeAsync("Widget", new { widgetZone = "productreviews_page_inside_review", additionalData = review.Id })
-                            @await Html.PartialAsync("_ProductReviewHelpfulness", review.Helpfulness)
+                            <partial name="_ProductReviewHelpfulness" model="review.Helpfulness" />
                         </div>
                     </div>
                 }

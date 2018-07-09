@@ -3,7 +3,7 @@
 @inject IWorkContext workContext
 <div class="order-summary-content mt-3">
     @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_content_before" })
-    @await Html.PartialAsync("_OrderReviewData", Model.OrderReviewData)
+    <partial name="_OrderReviewData" model="Model.OrderReviewData" />
     @if (Model.Items.Any())
     {
         if (Model.Warnings.Any())
@@ -199,7 +199,7 @@
                 @if (Model.IsEditable)
                 {
                     <div class="col-12 col-md-6 checkoutAttributes">
-                        @await Html.PartialAsync("_CheckoutAttributes", Model.CheckoutAttributes)
+                        <partial name="_CheckoutAttributes" model="Model.CheckoutAttributes" />
                     </div>
                 }
                 @if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo))
@@ -229,8 +229,8 @@
                             @if (Model.GiftCardBox.Display || Model.DiscountBox.Display)
                             {
                                 <div class="deals">
-                                    @await Html.PartialAsync("_GiftCardBox", Model.GiftCardBox)
-                                    @await Html.PartialAsync("_DiscountBox", Model.DiscountBox)
+                                    <partial name="_GiftCardBox" model="Model.GiftCardBox" />
+                                    <partial name="_DiscountBox" model="Model.DiscountBox" />
                                     @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_content_deals" })
                                 </div>
                             }
@@ -287,10 +287,10 @@
                                     </div>
                                 </div>
                             }
-                                <div class="checkout-buttons text-center float-sm-right">
-                                    @if (String.IsNullOrEmpty(Model.MinOrderSubtotalWarning))
-                                    {
-                                        <script>
+                            <div class="checkout-buttons text-center float-sm-right">
+                                @if (String.IsNullOrEmpty(Model.MinOrderSubtotalWarning))
+                                {
+                                    <script>
                                             $(document).ready(function () {
                                                 function checkTermOfService() {
                                                     var termOfServiceOk = true;
@@ -320,25 +320,25 @@
                                             });
 
 
-                                        </script>
-                                        @if (Model.ShowCheckoutAsGuestButton)
-                                        {
-                                            <button type="button" id="checkoutasguest" class="btn btn-secondary checkout-as-guest-button mr-1">
-                                                @T("Account.Login.CheckoutAsGuest")
-                                            </button>
-                                        }
-                                        <button type="submit" id="checkout" name="checkout" value="checkout" class="float-sm-right btn btn-info checkout-button">
-                                            @if (Model.IsGuest)
-                                            {
-                                                @T("Checkout.Button.Login")
-                                            }
-                                            else
-                                            {
-                                                @T("Checkout.Button")
-                                            }
+                                    </script>
+                                    @if (Model.ShowCheckoutAsGuestButton)
+                                    {
+                                        <button type="button" id="checkoutasguest" class="btn btn-secondary checkout-as-guest-button mr-1">
+                                            @T("Account.Login.CheckoutAsGuest")
                                         </button>
                                     }
-                                </div>
+                                    <button type="submit" id="checkout" name="checkout" value="checkout" class="float-sm-right btn btn-info checkout-button">
+                                        @if (Model.IsGuest)
+                                        {
+                                            @T("Checkout.Button.Login")
+                                        }
+                                        else
+                                        {
+                                            @T("Checkout.Button")
+                                        }
+                                    </button>
+                                }
+                            </div>
                             <div class="addon-buttons">
                                 @*Payment method buttons (e.g. GoogleCheckoutButton, Paypal Express)*@
                                 @foreach (var pm in Model.ButtonPaymentMethodViewComponentNames)

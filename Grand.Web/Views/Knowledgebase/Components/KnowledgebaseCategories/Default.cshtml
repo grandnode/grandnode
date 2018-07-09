@@ -10,7 +10,7 @@
             <ul class="list">
                 @foreach (var category in Model.Categories)
                 {
-                    @await Html.PartialAsync("_KnowledgebaseCategoryLine.Navigation", category)
+                    <partial name="_KnowledgebaseCategoryLine.Navigation" model="category" />
                 }
             </ul>
         </div>

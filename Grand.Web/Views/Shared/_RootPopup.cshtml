@@ -1,9 +1,5 @@
-﻿@{
-    //resources
-    Html.AppendScriptParts("~/Scripts/jquery-1.10.2.min.js");
-}
-<!DOCTYPE html>
-<html @await Html.PartialAsync("LanguageAttributes")>
+﻿<!DOCTYPE html>
+<html lang="@(this.WorkingLanguage())  @(this.ShouldUseRtlTheme() ? Html.Raw(" dir=\"rtl\"") : null)">
 <head>
     <title>@Html.GrandTitle(true)</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
@@ -11,7 +7,7 @@
     <meta name="keywords" content="@(Html.GrandMetaKeywords())" />
     @Html.GrandHeadCustom()
     @*This is used so that themes can inject content into the header*@
-    @await Html.PartialAsync("Head")
+    <partial name="Head" />
     @Html.GrandCssFiles(this.Url, ResourceLocation.Head)
     @Html.GrandScripts(this.Url, ResourceLocation.Head)
     @Html.GrandCanonicalUrls()
