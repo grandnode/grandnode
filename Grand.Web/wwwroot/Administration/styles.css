@@ -269,9 +269,12 @@ a span.username {
 }
 
 
-@media only screen and (min-device-width : 375px) and (max-device-width : 667px) {
+@media only screen and (min-device-width : 375px) and (max-device-width : 767px) {
     .form-horizontal .form-body.col-md-6.advanced-filter {
         padding: 0;
+    }
+    .col-md-4.col-sm-4.text-right {
+        text-align: left;
     }
 }
 
