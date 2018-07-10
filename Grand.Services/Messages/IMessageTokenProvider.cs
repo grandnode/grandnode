@@ -31,7 +31,7 @@ namespace Grand.Services.Messages
         void AddProductReviewTokens(IList<Token> tokens, ProductReview productReview);
         void AddVendorReviewTokens(IList<Token> tokens, VendorReview VendorReview);
         void AddBlogCommentTokens(string storeId, IList<Token> tokens, BlogComment blogComment);
-        void AddNewsCommentTokens(IList<Token> tokens, NewsComment newsComment);
+        void AddNewsCommentTokens(string storeId, IList<Token> tokens, NewsComment newsComment);
         void AddProductTokens(IList<Token> tokens, Product product, string languageId);
         void AddAttributeCombinationTokens(IList<Token> tokens, ProductAttributeCombination combination, string languageId);
         void AddForumTokens(IList<Token> tokens, Forum forum);

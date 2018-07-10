@@ -1844,7 +1844,7 @@ namespace Grand.Services.Messages
             //tokens
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddNewsCommentTokens(tokens, newsComment);
+            _messageTokenProvider.AddNewsCommentTokens(store.Id, tokens, newsComment);
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(newsComment.CustomerId);
             if (customer != null)
                 _messageTokenProvider.AddCustomerTokens(tokens, customer);

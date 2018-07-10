@@ -1031,10 +1031,15 @@ namespace Grand.Services.Messages
             _eventPublisher.EntityTokensAdded(blogComment, tokens);
         }
 
-        public virtual void AddNewsCommentTokens(IList<Token> tokens, NewsComment newsComment)
+        public virtual void AddNewsCommentTokens(string storeId, IList<Token> tokens, NewsComment newsComment)
         {
             var newsitem = EngineContext.Current.Resolve<INewsService>().GetNewsById(newsComment.NewsItemId);
             tokens.Add(new Token("NewsComment.NewsTitle", newsitem.Title));
+            tokens.Add(new Token("NewsComment.CommentText", newsComment.CommentText));
+            tokens.Add(new Token("NewsComment.CommentTitle", newsComment.CommentTitle));
+
+            var newsUrl = $"{GetStoreUrl(storeId)}{newsitem.GetSeName()}";
+            tokens.Add(new Token("News.Url", newsUrl, true));
 
             //event notification
             _eventPublisher.EntityTokensAdded(newsComment, tokens);
@@ -1292,6 +1297,9 @@ namespace Grand.Services.Messages
                 "%BlogComment.BlogPostTitle%",
                 "%BlogPost.URL%",
                 "%NewsComment.NewsTitle%",
+                "%NewsComment.CommentText%",
+                "%NewsComment.CommentTitle%",
+                "%News.Url%",
                 "%Product.ID%", 
                 "%Product.Name%",
                 "%Product.ShortDescription%", 
