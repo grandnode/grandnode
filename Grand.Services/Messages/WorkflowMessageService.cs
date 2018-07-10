@@ -1804,9 +1804,10 @@ namespace Grand.Services.Messages
             //tokens
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddBlogCommentTokens(tokens, blogComment);
+            _messageTokenProvider.AddBlogCommentTokens(store.Id, tokens, blogComment);
+
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(blogComment.CustomerId);
-            if (customer != null)
+            if (customer != null && customer.IsRegistered())
                 _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
             //event notification

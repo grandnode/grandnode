@@ -1019,10 +1019,13 @@ namespace Grand.Services.Messages
             _eventPublisher.EntityTokensAdded(vendorReview, tokens);
         }
 
-        public virtual void AddBlogCommentTokens(IList<Token> tokens, BlogComment blogComment)
+        public virtual void AddBlogCommentTokens(string storeId, IList<Token> tokens, BlogComment blogComment)
         {
             var blogPost = EngineContext.Current.Resolve<IBlogService>().GetBlogPostById(blogComment.BlogPostId);
             tokens.Add(new Token("BlogComment.BlogPostTitle", blogPost.Title));
+
+            var blogUrl = $"{GetStoreUrl(storeId)}{blogPost.GetSeName()}";
+            tokens.Add(new Token("BlogPost.URL", blogUrl, true));
 
             //event notification
             _eventPublisher.EntityTokensAdded(blogComment, tokens);
@@ -1286,7 +1289,8 @@ namespace Grand.Services.Messages
                 "%NewsLetterSubscription.ActivationUrl%",
                 "%NewsLetterSubscription.DeactivationUrl%", 
                 "%ProductReview.ProductName%", 
-                "%BlogComment.BlogPostTitle%", 
+                "%BlogComment.BlogPostTitle%",
+                "%BlogPost.URL%",
                 "%NewsComment.NewsTitle%",
                 "%Product.ID%", 
                 "%Product.Name%",

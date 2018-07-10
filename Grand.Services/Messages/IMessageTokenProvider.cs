@@ -30,7 +30,7 @@ namespace Grand.Services.Messages
         void AddNewsLetterSubscriptionTokens(IList<Token> tokens, NewsLetterSubscription subscription);
         void AddProductReviewTokens(IList<Token> tokens, ProductReview productReview);
         void AddVendorReviewTokens(IList<Token> tokens, VendorReview VendorReview);
-        void AddBlogCommentTokens(IList<Token> tokens, BlogComment blogComment);
+        void AddBlogCommentTokens(string storeId, IList<Token> tokens, BlogComment blogComment);
         void AddNewsCommentTokens(IList<Token> tokens, NewsComment newsComment);
         void AddProductTokens(IList<Token> tokens, Product product, string languageId);
         void AddAttributeCombinationTokens(IList<Token> tokens, ProductAttributeCombination combination, string languageId);
