@@ -16,6 +16,10 @@
                     </div>
                     <div class="actions">
                         <div class="btn-group btn-group-devided">
+                            <button type="button" onclick="javascript:OpenWindow('@Url.RouteUrl("NewsItem", new {SeName = Model.SeName})', 800, 600, true); return false;" class="btn purple">
+                                <i class="fa fa-eye"></i>
+                                @T("Admin.Common.Preview")
+                            </button>
                             <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
                             <button class="btn btn-success" type="submit" name="save-continue"><i class="fa fa-check-circle"></i> @T("Admin.Common.SaveContinue") </button>
                             <span id="newsitem-delete" class="btn red"><i class="fa fa-trash-o"></i> @T("Admin.Common.Delete")</span>
