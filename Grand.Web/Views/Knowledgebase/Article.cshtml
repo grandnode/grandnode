@@ -14,31 +14,53 @@
     }
 }
 
+@*breadcrumb*@
+@section Breadcrumb
+    {
+    @if (Model.CategoryBreadcrumb.Any())
+    {
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="@Url.RouteUrl("Knowledgebase")" title="@T("Knowledgebase")">@T("Knowledgebase")</a>
+            </li>
+
+            @foreach (var cat in Model.CategoryBreadcrumb)
+            {
+                <li class="breadcrumb-item">
+                    <a href="@Url.RouteUrl("KnowledgebaseCategory", new { SeName = cat.SeName })" title="@cat.Name">@cat.Name</a>
+                </li>
+            }
+        </ol>
+    }
+}
+
 @section left {
     @await Component.InvokeAsync("KnowledgebaseCategories", new Grand.Web.Models.Knowledgebase.KnowledgebaseHomePageModel { CurrentCategoryId = Model.ParentCategoryId })
 }
 
-<h1 class="h2 generalTitle">
-    @Model.Name
-    <a class=" fa fa-home float-right text-info" title="@T("Knowledgebase.Backtohomepage")" data-toggle="tooltip" data-placement="right" href="@Url.RouteUrl("Knowledgebase")"></a>
-</h1>
+<div class="page">
+    <h1 class="h2 generalTitle">
+        @Model.Name
+    </h1>
 
-@Html.Raw(@Model.Content)
+    @Html.Raw(@Model.Content)
 
-<div class="col-xs-12" style="height:100px;"></div>
+    <div class="col-xs-12" style="height:100px;"></div>
 
-@if (Model.RelatedArticles.Any())
-{
-    <h4>@T("Knowledgebase.Article.RelatedArticles")</h4>
-    <div class="list-group">
-        @foreach (var article in Model.RelatedArticles)
-        {
-            <a class="list-group-item" href="@Url.RouteUrl("KnowledgebaseArticle", new { SeName = article.SeName })">
-                @article.Name
-            </a>
-        }
-    </div>
-}
+    @if (Model.RelatedArticles.Any())
+    {
+        <h4>@T("Knowledgebase.Article.RelatedArticles")</h4>
+        <div class="list-group">
+            @foreach (var article in Model.RelatedArticles)
+            {
+                <a class="list-group-item" href="@Url.RouteUrl("KnowledgebaseArticle", new { SeName = article.SeName })">
+                    @article.Name
+                </a>
+            }
+        </div>
+    }
+</div>
+
 <script>
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();

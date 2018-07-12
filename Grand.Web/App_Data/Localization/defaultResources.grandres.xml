@@ -16605,9 +16605,6 @@
   <LocaleResource Name="Knowledgebase.Article.RelatedArticles">
     <Value>Related articles</Value>
   </LocaleResource>
-  <LocaleResource Name="Knowledgebase.Backtohomepage">
-    <Value>Back to knowledgebase homepage</Value>
-  </LocaleResource>
   <LocaleResource Name="Knowledgebase.Categories">
     <Value>Categories</Value>
   </LocaleResource>
@@ -16619,6 +16616,9 @@
   </LocaleResource>
   <LocaleResource Name="Knowledgebase.SearchPlaceholder">
     <Value>Search in knowledgebase...</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Knowledgebase.ResultsFor">
+    <Value>Results for</Value>
   </LocaleResource>
   <LocaleResource Name="Languages">
     <Value>Languages</Value>

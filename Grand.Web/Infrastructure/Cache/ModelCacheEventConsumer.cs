@@ -3,6 +3,7 @@ using Grand.Core.Domain.Blogs;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Configuration;
 using Grand.Core.Domain.Directory;
+using Grand.Core.Domain.Knowledgebase;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Media;
 using Grand.Core.Domain.News;
@@ -261,6 +262,18 @@ namespace Grand.Web.Infrastructure.Cache
         /// </remarks>
         public const string CATEGORY_BREADCRUMB_KEY = "Grand.pres.category.breadcrumb-{0}-{1}-{2}-{3}";
         public const string CATEGORY_BREADCRUMB_PATTERN_KEY = "Grand.pres.category.breadcrumb";
+
+        /// <summary>
+        /// Key for caching of knowledgebase category breadcrumb
+        /// </summary>
+        /// <remarks>
+        /// {0} : category id
+        /// {1} : roles of the current user
+        /// {2} : current store ID
+        /// {3} : language ID
+        /// </remarks>
+        public const string KNOWLEDGEBASE_CATEGORY_BREADCRUMB_KEY = "Grand.knowledgebase.category.breadcrumb-{0}-{1}-{2}-{3}";
+        public const string KNOWLEDGEBASE_CATEGORY_BREADCRUMB_PATTERN_KEY = "Grand.knowledgebase.category.breadcrumb";
 
         /// <summary>
         /// Key for caching of subcategories of certain category
@@ -956,6 +969,18 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(CATEGORY_HOMEPAGE_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_HOMEPAGE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<KnowledgebaseCategory> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(KNOWLEDGEBASE_CATEGORY_BREADCRUMB_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<KnowledgebaseCategory> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(KNOWLEDGEBASE_CATEGORY_BREADCRUMB_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityInserted<KnowledgebaseCategory> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(KNOWLEDGEBASE_CATEGORY_BREADCRUMB_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<Category> eventMessage)
         {

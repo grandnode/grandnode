@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Grand.Services.Localization;
 using System.Text;
 using System.Linq;
+using Grand.Services.Stores;
 
 namespace Grand.Services.Knowledgebase
 {
@@ -68,6 +69,46 @@ namespace Grand.Services.Knowledgebase
                 category = (from c in allCategories
                             where c.Id == category.ParentCategoryId
                             select c).FirstOrDefault();
+            }
+
+            result.Reverse();
+            return result;
+        }
+
+        /// <summary>
+        /// Get category breadcrumb 
+        /// </summary>
+        /// <param name="category">Category</param>
+        /// <param name="categoryService">Category service</param>
+        /// <param name="aclService">ACL service</param>
+        /// <param name="storeMappingService">Store mapping service</param>
+        /// <param name="showHidden">A value indicating whether to load hidden records</param>
+        /// <returns>Category breadcrumb </returns>
+        public static IList<KnowledgebaseCategory> GetCategoryBreadCrumb(this KnowledgebaseCategory category,
+            IKnowledgebaseService knowledgebaseService,
+            IAclService aclService,
+            IStoreMappingService storeMappingService,
+            bool showHidden = false)
+        {
+            if (category == null)
+                throw new ArgumentNullException("category");
+
+            var result = new List<KnowledgebaseCategory>();
+
+            //used to prevent circular references
+            var alreadyProcessedCategoryIds = new List<string>();
+
+            while (category != null && //not null                
+                (showHidden || category.Published) && //published
+                (showHidden || aclService.Authorize(category)) && //ACL
+                (showHidden || storeMappingService.Authorize(category)) && //Store mapping
+                !alreadyProcessedCategoryIds.Contains(category.Id)) //prevent circular references
+            {
+                result.Add(category);
+
+                alreadyProcessedCategoryIds.Add(category.Id);
+
+                category = knowledgebaseService.GetKnowledgebaseCategory(category.ParentCategoryId);
             }
 
             result.Reverse();

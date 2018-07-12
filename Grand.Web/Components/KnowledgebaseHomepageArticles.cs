@@ -30,14 +30,15 @@ namespace Grand.Web.Components
 
             foreach (var article in articles)
             {
-                var a = new KnowledgebaseArticleModel
+                var a = new KnowledgebaseItemModel
                 {
                     Id = article.Id,
                     Name = article.GetLocalized(y => y.Name),
-                    SeName = article.GetLocalized(y => y.SeName)
+                    SeName = article.GetLocalized(y => y.SeName),
+                    IsArticle = true
                 };
 
-                model.Articles.Add(a);
+                model.Items.Add(a);
             }
 
             return View(model);

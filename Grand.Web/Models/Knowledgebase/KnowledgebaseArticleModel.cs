@@ -12,6 +12,7 @@ namespace Grand.Web.Models.Knowledgebase
         public KnowledgebaseArticleModel()
         {
             RelatedArticles = new List<KnowledgebaseArticleModel>();
+            CategoryBreadcrumb = new List<KnowledgebaseCategoryModel>();
         }
 
         public string Name { get; set; }
@@ -29,5 +30,7 @@ namespace Grand.Web.Models.Knowledgebase
         public string MetaTitle { get; set; }
 
         public IList<KnowledgebaseArticleModel> RelatedArticles { get; set; }
+
+        public List<KnowledgebaseCategoryModel> CategoryBreadcrumb { get; set; }
     }
 }

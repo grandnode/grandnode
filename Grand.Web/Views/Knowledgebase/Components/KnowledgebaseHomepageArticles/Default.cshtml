@@ -1,15 +1,18 @@
 ﻿@model Grand.Web.Models.Knowledgebase.KnowledgebaseHomePageModel
 
-@if (Model.Articles.Any())
+@if (Model.Items.Any())
 {
-<div class="viewBox listbox page">
-    <ul class="list pl-0">
-        @foreach (var article in Model.Articles)
-        {
-            <a class="list-group-item" href="@Url.RouteUrl("KnowledgebaseArticle", new { SeName = article.SeName })">
-                @article.Name
-            </a>
-        }
-    </ul>
-</div>
+    <div class="viewBox listbox">
+        <ul class="list pl-0">
+            @foreach (var item in Model.Items)
+            {
+                if (item.IsArticle)
+                {
+                    <a class="list-group-item" href="@Url.RouteUrl("KnowledgebaseArticle", new { SeName = item.SeName })">
+                        @item.Name
+                    </a>
+                }
+            }
+        </ul>
+    </div>
 }

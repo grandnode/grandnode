@@ -81,6 +81,16 @@ namespace Grand.Services.Knowledgebase
 
         /// <summary>
         /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : keyword
+        /// {1} : customer roles
+        /// {2} : store id
+        /// </remarks>
+        private const string CATEGORIES_BY_KEYWORD = "Knowledgebase.category.keyword-{0}-{1}-{2}";
+
+        /// <summary>
+        /// Key for caching
         /// {0} : customer roles
         /// {1} : store id
         /// </summary>
@@ -459,6 +469,52 @@ namespace Grand.Services.Knowledgebase
 
                 var builderSort = Builders<KnowledgebaseArticle>.Sort.Ascending(x => x.DisplayOrder);
                 var toReturn = _knowledgebaseArticleRepository.Collection.Find(filter).Sort(builderSort);
+                return toReturn.ToList();
+            });
+        }
+
+        /// <summary>
+        /// Gets public(published etc) knowledgebase categories for keyword
+        /// </summary>
+        /// <returns>List of public knowledgebase categories</returns>
+        public virtual List<KnowledgebaseCategory> GetPublicKnowledgebaseCategoriesByKeyword(string keyword)
+        {
+            var key = string.Format(CATEGORIES_BY_KEYWORD, keyword, string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                _storeContext.CurrentStore.Id);
+            return _cacheManager.Get(key, () =>
+            {
+                var builder = Builders<KnowledgebaseCategory>.Filter;
+                var filter = FilterDefinition<KnowledgebaseCategory>.Empty;
+                filter = filter & builder.Where(x => x.Published);
+
+                if (_commonSettings.UseFullTextSearch)
+                {
+                    keyword = "\"" + keyword + "\"";
+                    keyword = keyword.Replace("+", "\" \"");
+                    keyword = keyword.Replace(" ", "\" \"");
+                    filter = filter & builder.Text(keyword);
+                }
+                else
+                {
+                    filter = filter & builder.Where(p => p.Locales.Any(x => x.LocaleValue != null && x.LocaleValue.ToLower().Contains(keyword.ToLower()))
+                    || p.Name.ToLower().Contains(keyword.ToLower()) || p.Description.ToLower().Contains(keyword.ToLower()));
+                }
+
+                if (!_catalogSettings.IgnoreAcl)
+                {
+                    var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
+                    filter = filter & (builder.AnyIn(x => x.CustomerRoles, allowedCustomerRolesIds) | builder.Where(x => !x.SubjectToAcl));
+                }
+
+                if (!_catalogSettings.IgnoreStoreLimitations)
+                {
+                    //Store mapping
+                    var currentStoreId = new List<string> { _storeContext.CurrentStore.Id };
+                    filter = filter & (builder.AnyIn(x => x.Stores, currentStoreId) | builder.Where(x => !x.LimitedToStores));
+                }
+
+                var builderSort = Builders<KnowledgebaseCategory>.Sort.Ascending(x => x.DisplayOrder);
+                var toReturn = _knowledgebaseCategoryRepository.Collection.Find(filter).Sort(builderSort);
                 return toReturn.ToList();
             });
         }

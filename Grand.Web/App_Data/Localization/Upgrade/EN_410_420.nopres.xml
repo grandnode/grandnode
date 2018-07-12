@@ -269,8 +269,8 @@
   <LocaleResource Name="Knowledgebase.SearchPlaceholder">
     <Value>Search in knowledgebase...</Value>
   </LocaleResource>
-  <LocaleResource Name="Knowledgebase.Backtohomepage">
-    <Value>Back to knowledgebase homepage</Value>
+  <LocaleResource Name="Knowledgebase.ResultsFor">
+    <Value>Results for</Value>
   </LocaleResource>
   <LocaleResource Name="Knowledgebase.Notfound">
     <Value>No articles were found that matched your criteria</Value>
