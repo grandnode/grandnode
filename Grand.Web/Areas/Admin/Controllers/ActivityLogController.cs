@@ -14,6 +14,7 @@ using Grand.Services.Catalog;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Grand.Services.Knowledgebase;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -28,6 +29,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ICustomerService _customerService;
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
+        private readonly IKnowledgebaseService _knowledgebaseService;
         private readonly IProductService _productService;
         #endregion Fields
 
@@ -37,7 +39,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             IDateTimeHelper dateTimeHelper, ILocalizationService localizationService,
             IPermissionService permissionService, ICustomerService customerService,
             ICategoryService categoryService, IManufacturerService manufacturerService,
-            IProductService productService)
+            IProductService productService, IKnowledgebaseService knowledgebaseService)
         {
             this._customerActivityService = customerActivityService;
             this._dateTimeHelper = dateTimeHelper;
@@ -47,6 +49,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
             this._productService = productService;
+            this._knowledgebaseService = knowledgebaseService;
         }
 
         #endregion
@@ -255,6 +258,30 @@ namespace Grand.Web.Areas.Admin.Controllers
                         if (systemKeywordsUrl.Contains(activityLogType.SystemKeyword))
                         {
                             _name = x.EntityKeyId;
+                        }
+
+                        IList<string> systemKeywordsKnowledgebaseCategory = new List<string>();
+                        systemKeywordsKnowledgebaseCategory.Add("CreateKnowledgebaseCategory");
+                        systemKeywordsKnowledgebaseCategory.Add("UpdateKnowledgebaseCategory");
+                        systemKeywordsKnowledgebaseCategory.Add("DeleteKnowledgebaseCategory");
+
+                        if (systemKeywordsKnowledgebaseCategory.Contains(activityLogType.SystemKeyword))
+                        {
+                            var category = _knowledgebaseService.GetKnowledgebaseCategory(x.EntityKeyId);
+                            if (category != null)
+                                _name = category.Name;
+                        }
+
+                        IList<string> systemKeywordsKnowledgebaseArticle = new List<string>();
+                        systemKeywordsKnowledgebaseArticle.Add("CreateKnowledgebaseArticle");
+                        systemKeywordsKnowledgebaseArticle.Add("UpdateKnowledgebaseArticle");
+                        systemKeywordsKnowledgebaseArticle.Add("DeleteKnowledgebaseArticle");
+
+                        if (systemKeywordsKnowledgebaseArticle.Contains(activityLogType.SystemKeyword))
+                        {
+                            var article = _knowledgebaseService.GetKnowledgebaseArticle(x.EntityKeyId);
+                            if (article != null)
+                                _name = article.Name;
                         }
                     }
 
