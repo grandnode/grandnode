@@ -453,7 +453,7 @@
     <Value>Knowledge base enabled</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.KnowledgebaseSettings.Enabled.hint">
-    <Value>Allow store owner to knowledge base enabled</Value>
+    <Value>Indicates whether knowledge base should be enabled or not.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowUsersToExportData">
     <Value>Allow users to export account</Value>
