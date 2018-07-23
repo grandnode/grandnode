@@ -57,7 +57,6 @@
     Html.AppendCssFileParts("~/Administration/font-awesome/css/font-awesome.min.css", excludeFromBundle: true);
 
     //js
-    //js
     Html.AppendScriptParts(string.Format("~/Scripts/kendo/{0}/cultures/kendo.culture.{1}.min.js", kendoVersion, "en-US"), excludeFromBundle: true);
     Html.AppendScriptParts(string.Format("~/Scripts/kendo/{0}/cultures/kendo.culture.{1}.min.js", kendoVersion, @System.Globalization.CultureInfo.CurrentCulture.Name), excludeFromBundle: true);
     Html.AppendScriptParts(string.Format("~/Scripts/kendo/{0}/kendo.grid.js", kendoVersion), excludeFromBundle: true);
