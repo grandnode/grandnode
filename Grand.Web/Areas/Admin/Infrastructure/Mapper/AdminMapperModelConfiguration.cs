@@ -51,6 +51,7 @@ using Grand.Web.Areas.Admin.Models.Tax;
 using Grand.Web.Areas.Admin.Models.Templates;
 using Grand.Web.Areas.Admin.Models.Topics;
 using Grand.Web.Areas.Admin.Models.Vendors;
+using Grand.Web.Areas.Admin.Extensions;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
 {
@@ -86,7 +87,12 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                .ForMember(dest => dest.PhoneRequired, mo => mo.Ignore())
                .ForMember(dest => dest.FaxEnabled, mo => mo.Ignore())
                .ForMember(dest => dest.FaxRequired, mo => mo.Ignore())
+               .ForMember(dest => dest.CountryName,
+                    mo => mo.MapFrom(src => !string.IsNullOrEmpty(src.CountryId) ? src.CountryName(): null))
+               .ForMember(dest => dest.StateProvinceName,
+                    mo => mo.MapFrom(src => !string.IsNullOrEmpty(src.StateProvinceId) ? src.StateProvinceName() : null))
                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+
 
             //address
             CreateMap<AddressModel, Address>()
