@@ -227,7 +227,18 @@ namespace Grand.Framework.Infrastructure.Extensions
         public static IMvcBuilder AddGrandMvc(this IServiceCollection services)
         {
             //add basic MVC feature
-            var mvcBuilder = services.AddMvc().SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_1);
+            var mvcBuilder = services.AddMvc();
+
+            //set compatibility version
+            mvcBuilder.SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_1);
+
+            var config = services.BuildServiceProvider().GetRequiredService<GrandConfig>();
+
+            //use session-based temp data provider
+            if (config.UseSessionStateTempDataProvider)
+            {
+                mvcBuilder.AddSessionStateTempDataProvider();
+            }
 
             //MVC now serializes JSON with camel case names by default, use this code to avoid it
             mvcBuilder.AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());

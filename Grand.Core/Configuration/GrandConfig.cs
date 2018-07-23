@@ -104,6 +104,7 @@ namespace Grand.Core.Configuration
         /// </summary>
         public bool UseResponseCompression { get; set; }
 
+        public bool UseSessionStateTempDataProvider { get; set; }
         /// <summary>
         /// Gets or sets a value indicating whether we use url rewrite
         /// </summary>
