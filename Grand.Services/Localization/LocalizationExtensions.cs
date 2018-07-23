@@ -14,19 +14,6 @@ namespace Grand.Services.Localization
 {
     public static class LocalizationExtensions
     {
-
-        public static IWorkContext WorkContext
-        {
-            get
-            {
-                if (_workContext == null)
-                    _workContext = EngineContext.Current.Resolve<IWorkContext>();
-                return _workContext;
-            }
-        }
-
-        private static IWorkContext _workContext { get; set; }
-
         /// <summary>
         /// Get localized property of an entity
         /// </summary>
@@ -38,7 +25,7 @@ namespace Grand.Services.Localization
             Expression<Func<T, string>> keySelector)
             where T : ParentEntity, ILocalizedEntity
         {
-            var workContext = WorkContext;
+            var workContext = EngineContext.Current.Resolve<IWorkContext>();
             return GetLocalized(entity, keySelector, workContext.WorkingLanguage.Id);
         }
         
