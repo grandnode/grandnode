@@ -78,12 +78,6 @@ namespace Grand.Core.Configuration
         public string AmazonRegion { get; set; }
 
         /// <summary>
-        /// A value indicating whether a store owner can install sample data during installation
-        /// </summary>
-        public bool DisableSampleDataDuringInstallation { get; set; }
-
-        
-        /// <summary>
         /// A list of plugins ignored during installation
         /// </summary>
         public string PluginsIgnoredDuringInstallation { get; set; }
