@@ -21,6 +21,9 @@ using System.Threading.Tasks;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
 using System.Collections.Generic;
+using Microsoft.Net.Http.Headers;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
 
 namespace Grand.Framework.Infrastructure.Extensions
 {
@@ -186,6 +189,47 @@ namespace Grand.Framework.Infrastructure.Extensions
                 EngineContext.Current.Resolve<IRoutePublisher>().RegisterRoutes(routeBuilder);
             });
         }
+
+        /// <summary>
+        /// Configure static file serving
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void UseGrandStaticFiles(this IApplicationBuilder application, GrandConfig grandConfig)
+        {
+            //static files
+            application.UseStaticFiles(new StaticFileOptions
+            {
+                OnPrepareResponse = ctx =>
+                {
+                    if (!String.IsNullOrEmpty(grandConfig.StaticFilesCacheControl))
+                        ctx.Context.Response.Headers.Append(HeaderNames.CacheControl, grandConfig.StaticFilesCacheControl);
+                }
+            });
+            //themes
+            application.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Themes")),
+                RequestPath = new PathString("/Themes"),
+                OnPrepareResponse = ctx =>
+                {
+                    if (!String.IsNullOrEmpty(grandConfig.StaticFilesCacheControl))
+                        ctx.Context.Response.Headers.Append(HeaderNames.CacheControl, grandConfig.StaticFilesCacheControl);
+                }
+            });
+            //plugins
+            application.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Plugins")),
+                RequestPath = new PathString("/Plugins"),
+                OnPrepareResponse = ctx =>
+                {
+                    if (!String.IsNullOrEmpty(grandConfig.StaticFilesCacheControl))
+                        ctx.Context.Response.Headers.Append(HeaderNames.CacheControl, grandConfig.StaticFilesCacheControl);
+                }
+            });
+
+        }
+
 
         /// <summary>
         /// Create and configure MiniProfiler service
