@@ -19053,4 +19053,13 @@
   <LocaleResource Name="Admin.Catalog.Products.Calendar.Clearold">
     <Value>Clear old, unused records</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.PushNotifications.Receivers">
+    <Value>Receivers</Value>
+  </LocaleResource>
+<LocaleResource Name="Admin.PushNotifications.Send">
+    <Value>Send</Value>
+  </LocaleResource>
+<LocaleResource Name="Admin.Customers.CustomerRoles">
+    <Value>CustomerRoles</Value>
+  </LocaleResource>
 </Language>
