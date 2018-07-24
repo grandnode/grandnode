@@ -14,7 +14,7 @@
                         @T("Admin.Configuration.Plugins.Local")
                     </div>
                     <div class="actions btn-group btn-group-devided">
-                        <a href="@Url.Action("ReloadList")" class="btn default">@T("Admin.Configuration.Plugins.ReloadList")</a>
+                        <a href="@Url.Action("ReloadList")" class="btn default" id="reload-plugin-list">@T("Admin.Configuration.Plugins.ReloadList")</a>
                         <input type="button" id="importfile" class="btn btn-success" value="@T("Admin.Configuration.Plugins.Upload")" />
                     </div>
                 </div>
@@ -96,6 +96,13 @@
             $("#plugins-grid").on("click", ".uninstall-plugin-link", function (e) {
                 $("html, body").animate({ scrollTop: 0 }, 400);
                 showThrobber('@Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(T("Admin.Configuration.Plugins.Fields.Uninstall.Progress").Text))');
+                return true;
+            });
+            
+            //relist a plugin list
+            $("#plugins-form").on("click", "#reload-plugin-list", function (e) {
+                $("html, body").animate({ scrollTop: 0 }, 400);
+                showThrobber('@Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(T("Admin.Configuration.Plugins.Fields.Reload.List").Text))');
                 return true;
             });
 
