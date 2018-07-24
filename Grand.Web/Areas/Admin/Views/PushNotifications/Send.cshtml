@@ -1,6 +1,8 @@
 ﻿@model Grand.Web.Areas.Admin.Models.PushNotifications.PushModel
 @{
     Layout = "_AdminLayout";
+    //page title
+    ViewBag.Title = T("Admin.PushNotifications.Send").Text;
 }
 <form asp-controller="PushNotifications" asp-action="Send" method="post">
     <antiforgery-token />
