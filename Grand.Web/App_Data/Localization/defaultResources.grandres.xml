@@ -5478,6 +5478,9 @@
   <LocaleResource Name="Admin.Configuration.Plugins.Fields.Uninstall.Progress">
     <Value>Uninstalling plugin...</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Fields.Reload.List">
+    <Value>Refreshing plugin list...</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Fields.Version">
     <Value>Version</Value>
   </LocaleResource>
