@@ -840,4 +840,7 @@
   <LocaleResource Name="Admin.Catalog.Products.Calendar.Clearold">
     <Value>Clear old, unused records</Value>
   </LocaleResource>
+   <LocaleResource Name="Admin.Configuration.Plugins.Fields.Reload.List">
+    <Value>Refreshing plugin list...</Value>
+  </LocaleResource>
 </Language>
