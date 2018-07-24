@@ -843,4 +843,13 @@
    <LocaleResource Name="Admin.Configuration.Plugins.Fields.Reload.List">
     <Value>Refreshing plugin list...</Value>
   </LocaleResource>
+   <LocaleResource Name="Admin.PushNotifications.Receivers">
+    <Value>Receivers</Value>
+  </LocaleResource>
+<LocaleResource Name="Admin.PushNotifications.Send">
+    <Value>Send</Value>
+  </LocaleResource>
+<LocaleResource Name="Admin.Customers.CustomerRoles">
+    <Value>CustomerRoles</Value>
+  </LocaleResource>
 </Language>
