@@ -32,6 +32,7 @@ using Grand.Core.Domain.Catalog;
 using Grand.Services.Media;
 using System.IO;
 using Grand.Core.Domain.Media;
+using System.Net;
 
 namespace Grand.Web.Controllers
 {
@@ -192,6 +193,8 @@ namespace Grand.Web.Controllers
 
             if (permanentRedirect)
                 return RedirectPermanent(url);
+
+            url = Uri.EscapeUriString(WebUtility.UrlDecode(url));
 
             return Redirect(url);
         }
