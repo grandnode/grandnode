@@ -411,17 +411,18 @@
                             </table>
                         </div>
                     }
+                    @if (Model.NumberOfExternalAuthenticationProviders > Model.AssociatedExternalAuthRecords.Count)
+                    {
+                        //we can add more external records
+                        <div class="form-fields add-more-external-records">
+                            @T("Account.AssociatedExternalAuth.AddMoreRecords") <a href="@Url.RouteUrl("Login", null, "http")">@Url.RouteUrl("Login", null, "http")</a>
+                        </div>
+                    }
                 </div>
             </div>
         }
 
-        @if (Model.NumberOfExternalAuthenticationProviders > Model.AssociatedExternalAuthRecords.Count)
-        {
-            //we can add more external records
-            <div class="form-fields add-more-external-records">
-                @T("Account.AssociatedExternalAuth.AddMoreRecords") <a href="@Url.RouteUrl("Login", null, "http")">@Url.RouteUrl("Login", null, "http")</a>
-            </div>
-        }
+        
         <div class="generalMarginSupporter">
             <input type="submit" value="@T("Common.Save")" name="save-info-button" class="btn btn-secondary save-customer-info-button" />
         </div>
