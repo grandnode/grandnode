@@ -849,7 +849,7 @@
 <LocaleResource Name="Admin.PushNotifications.Send">
     <Value>Send</Value>
   </LocaleResource>
-<LocaleResource Name="Admin.Customers.CustomerRoles">
-    <Value>CustomerRoles</Value>
+<LocaleResource Name="Admin.PushNotifications.Messages">
+    <Value>Messages</Value>
   </LocaleResource>
 </Language>
