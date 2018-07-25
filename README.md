@@ -33,7 +33,7 @@ Forums: [http://www.grandnode.com/boards/](http://www.grandnode.com/boards/)
 The latest stable version is 4.20
 Active development version: 4.30 (branch [develop](https://github.com/grandnode/grandnode/projects/1))
 
-[Roadmap for 4.30](https://github.com/grandnode/grandnode/milestone/3)
+[Roadmap for 4.30](https://github.com/grandnode/grandnode/projects/1)
 
 [Tickets linked to 4.30](https://github.com/grandnode/grandnode/issues)
 
