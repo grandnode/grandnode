@@ -4,7 +4,7 @@ using Grand.Core.Infrastructure;
 
 namespace Grand.Data
 {
-    public class EfStartUpTask : IStartupTask
+    public class MongoDBStartUpTask : IStartupTask
     {
         public void Execute()
         {
