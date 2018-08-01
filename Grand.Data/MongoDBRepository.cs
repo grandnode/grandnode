@@ -1,7 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Grand.Core;
 using Grand.Core.Data;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
@@ -104,14 +108,35 @@ namespace Grand.Data
         }
 
         /// <summary>
+        /// Async Insert entity
+        /// </summary>
+        /// <param name="entity">Entity</param>
+        public virtual async Task<T> InsertAsync(T entity)
+        {
+            await this._collection.InsertOneAsync(entity);
+            return entity;
+        }
+
+
+        /// <summary>
         /// Insert entities
         /// </summary>
         /// <param name="entities">Entities</param>
         public virtual void Insert(IEnumerable<T> entities)
-        {            
-            foreach (var entity in entities)
-                Insert(entity);
+        {
+            this._collection.InsertMany(entities);
         }
+
+        /// <summary>
+        /// Async Insert entities
+        /// </summary>
+        /// <param name="entities">Entities</param>
+        public virtual async Task<IEnumerable<T>> InsertAsync(IEnumerable<T> entities)
+        {
+            await this._collection.InsertManyAsync(entities);
+            return entities;
+        }
+
 
         /// <summary>
         /// Update entity
@@ -123,6 +148,17 @@ namespace Grand.Data
             return entity;
 
         }
+
+        /// <summary>
+        /// Async Update entity
+        /// </summary>
+        /// <param name="entity">Entity</param>
+        public virtual async Task<T> UpdateAsync(T entity)
+        {
+            await this._collection.ReplaceOneAsync(x => x.Id == entity.Id, entity, new UpdateOptions() { IsUpsert = false });
+            return entity;
+        }
+
 
         /// <summary>
         /// Update entities
@@ -137,12 +173,35 @@ namespace Grand.Data
         }
 
         /// <summary>
+        /// Async Update entities
+        /// </summary>
+        /// <param name="entities">Entities</param>
+        public virtual async Task<IEnumerable<T>> UpdateAsync(IEnumerable<T> entities)
+        {
+            foreach (T entity in entities)
+            {
+                await UpdateAsync(entity);
+            }
+            return entities;
+        }
+
+        /// <summary>
         /// Delete entity
         /// </summary>
         /// <param name="entity">Entity</param>
         public virtual void Delete(T entity)
         {
             this._collection.FindOneAndDeleteAsync(e => e.Id == entity.Id);           
+        }
+
+        /// <summary>
+        /// Async Delete entity
+        /// </summary>
+        /// <param name="entity">Entity</param>
+        public virtual async Task<T> DeleteAsync(T entity)
+        {
+            await this._collection.DeleteOneAsync(e=>e.Id == entity.Id);
+            return entity;
         }
 
         /// <summary>
@@ -155,6 +214,101 @@ namespace Grand.Data
             {
                 this._collection.FindOneAndDeleteAsync(e => e.Id == entity.Id);
             }
+        }
+
+        /// <summary>
+        /// Async Delete entities
+        /// </summary>
+        /// <param name="entities">Entities</param>
+        public virtual async Task<IEnumerable<T>> DeleteAsync(IEnumerable<T> entities)
+        {
+            foreach (T entity in entities)
+            {
+                await DeleteAsync(entity);
+            }
+            return entities;
+        }
+
+
+        #endregion
+
+
+        #region Methods
+
+        /// <summary>
+        /// Determines whether a list contains any elements
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool Any()
+        {
+            return this._collection.AsQueryable().Any();
+        }
+
+        /// <summary>
+        /// Determines whether any element of a list satisfies a condition.
+        /// </summary>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public virtual bool Any(Expression<Func<T, bool>> where)
+        {
+            return this._collection.Find(where).Any();
+        }
+
+        /// <summary>
+        /// Async determines whether a list contains any elements
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<bool> AnyAsync()
+        {
+            return await this._collection.AsQueryable().AnyAsync();
+        }
+
+        /// <summary>
+        /// Async determines whether any element of a list satisfies a condition.
+        /// </summary>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public virtual async Task<bool> AnyAsync(Expression<Func<T, bool>> where)
+        {
+            return await this._collection.Find(where).AnyAsync();
+        }
+
+        /// <summary>
+        /// Returns the number of elements in the specified sequence.
+        /// </summary>
+        /// <returns></returns>
+        public virtual long Count()
+        {
+            return this._collection.CountDocuments(new BsonDocument());
+        }
+
+        /// <summary>
+        /// Returns the number of elements in the specified sequence that satisfies a condition.
+        /// </summary>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public virtual long Count(Expression<Func<T, bool>> where)
+        {
+            return this._collection.CountDocuments(where);
+        }
+
+        /// <summary>
+        /// Async returns the number of elements in the specified sequence
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<long> CountAsync()
+        {
+            return await this._collection.CountDocumentsAsync(new BsonDocument());
+        }
+
+        /// <summary>
+        /// Async returns the number of elements in the specified sequence that satisfies a condition.
+        /// </summary>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public virtual async Task<long> CountAsync(Expression<Func<T, bool>> where)
+        {
+            return await this._collection.CountDocumentsAsync(where);
         }
 
 
