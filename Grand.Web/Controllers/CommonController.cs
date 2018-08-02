@@ -1,38 +1,37 @@
-﻿using System;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Core.Domain;
+using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Forums;
 using Grand.Core.Domain.Localization;
+using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Messages;
 using Grand.Core.Domain.Vendors;
+using Grand.Core.Infrastructure;
+using Grand.Framework.Localization;
+using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security;
+using Grand.Framework.Security.Captcha;
+using Grand.Framework.Themes;
 using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
-using Grand.Services.Messages;
-using Grand.Services.Vendors;
-using Grand.Framework.Localization;
-using Grand.Framework.Security;
-using Grand.Framework.Security.Captcha;
-using Grand.Framework.Themes;
-using Grand.Web.Models.Common;
-using System.Text.RegularExpressions;
-using Grand.Web.Services;
-using Grand.Core.Infrastructure;
-using Microsoft.AspNetCore.Diagnostics;
-using Grand.Framework.Mvc.Filters;
-using Microsoft.AspNetCore.Http;
-using Grand.Services.Stores;
-using System.Collections.Generic;
-using Grand.Core.Domain.Catalog;
 using Grand.Services.Media;
+using Grand.Services.Messages;
+using Grand.Services.Stores;
+using Grand.Services.Vendors;
+using Grand.Web.Models.Common;
+using Grand.Web.Services;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 using System.IO;
-using Grand.Core.Domain.Media;
+using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace Grand.Web.Controllers
 {
@@ -43,21 +42,11 @@ namespace Grand.Web.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
-        private readonly ILanguageService _languageService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerActionEventService _customerActionEventService;
         private readonly IPopupService _popupService;
-        private readonly IInteractiveFormService _interactiveFormService;
-        private readonly ILogger _logger;
         private readonly IContactAttributeService _contactAttributeService;
-        private readonly IContactAttributeParser _contactAttributeParser;
-        private readonly IContactAttributeFormatter _contactAttributeFormatter;
-
-        private readonly StoreInformationSettings _storeInformationSettings;
         private readonly CommonSettings _commonSettings;
-        private readonly ForumSettings _forumSettings;
-        private readonly LocalizationSettings _localizationSettings;
         private readonly CaptchaSettings _captchaSettings;
         private readonly VendorSettings _vendorSettings;
 
@@ -70,20 +59,11 @@ namespace Grand.Web.Controllers
             ILocalizationService localizationService,
             IWorkContext workContext,
             IStoreContext storeContext,
-            IStoreService storeService,
             ICustomerActivityService customerActivityService,
             ICustomerActionEventService customerActionEventService,
             IPopupService popupService,
-            IInteractiveFormService interactiveFormService,
-            ILogger logger,
-            ILanguageService languageService,
             IContactAttributeService contactAttributeService,
-            IContactAttributeParser contactAttributeParser,
-            IContactAttributeFormatter contactAttributeFormatter,
-            StoreInformationSettings storeInformationSettings,
             CommonSettings commonSettings,
-            ForumSettings forumSettings,
-            LocalizationSettings localizationSettings,
             CaptchaSettings captchaSettings,
             VendorSettings vendorSettings
             )
@@ -92,20 +72,11 @@ namespace Grand.Web.Controllers
             this._localizationService = localizationService;
             this._workContext = workContext;
             this._storeContext = storeContext;
-            this._storeService = storeService;
             this._customerActivityService = customerActivityService;
             this._customerActionEventService = customerActionEventService;
             this._popupService = popupService;
-            this._interactiveFormService = interactiveFormService;
-            this._logger = logger;
-            this._languageService = languageService;
             this._contactAttributeService = contactAttributeService;
-            this._contactAttributeParser = contactAttributeParser;
-            this._contactAttributeFormatter = contactAttributeFormatter;
-            this._storeInformationSettings = storeInformationSettings;
             this._commonSettings = commonSettings;
-            this._forumSettings = forumSettings;
-            this._localizationSettings = localizationSettings;
             this._captchaSettings = captchaSettings;
             this._vendorSettings = vendorSettings;
         }
@@ -115,13 +86,12 @@ namespace Grand.Web.Controllers
         #region Methods
 
         //page not found
-        public virtual IActionResult PageNotFound()
+        public virtual IActionResult PageNotFound([FromServices] ILogger logger)
         {
             if (_commonSettings.Log404Errors)
             {
                 var statusCodeReExecuteFeature = HttpContext?.Features?.Get<IStatusCodeReExecuteFeature>();
-                //TODO add locale resource
-                _logger.Error(string.Format("Error 404. The requested page ({0}) was not found", statusCodeReExecuteFeature?.OriginalPath),
+                logger.Error(string.Format("Error 404. The requested page ({0}) was not found", statusCodeReExecuteFeature?.OriginalPath),
                     customer: _workContext.CurrentCustomer);
             }
 
@@ -135,10 +105,13 @@ namespace Grand.Web.Controllers
         [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual IActionResult SetLanguage(string langid, string returnUrl = "")
+        public virtual IActionResult SetLanguage(
+            [FromServices] ILanguageService languageService,
+            [FromServices] LocalizationSettings localizationSettings,
+            string langid, string returnUrl = "")
         {
 
-            var language = _languageService.GetLanguageById(langid);
+            var language = languageService.GetLanguageById(langid);
             if (!language?.Published ?? false)
                 language = _workContext.WorkingLanguage;
 
@@ -151,7 +124,7 @@ namespace Grand.Web.Controllers
                 returnUrl = Url.RouteUrl("HomePage");
 
             //language part in URL
-            if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+            if (localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
             {
                 //remove current language code if it's already localized URL
                 if (returnUrl.IsLocalizedUrl(this.Request.PathBase, true, out Language _))
@@ -218,14 +191,16 @@ namespace Grand.Web.Controllers
 
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual IActionResult SetStore(string store, string returnUrl = "")
+        public virtual IActionResult SetStore(
+            [FromServices] IStoreService storeService,
+            string store, string returnUrl = "")
         {
             var currentstoreid = _storeContext.CurrentStore.Id;
             if (currentstoreid != store)
                 _commonWebService.SetStore(store);
 
-            var prevStore = _storeService.GetStoreById(currentstoreid);
-            var currStore = _storeService.GetStoreById(store);
+            var prevStore = storeService.GetStoreById(currentstoreid);
+            var currStore = storeService.GetStoreById(store);
 
             if (prevStore != null && currStore != null)
             {
@@ -277,7 +252,8 @@ namespace Grand.Web.Controllers
         [ValidateCaptcha]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
-        public virtual IActionResult ContactUsSend(ContactUsModel model, IFormCollection form, bool captchaValid)
+        public virtual IActionResult ContactUsSend(ContactUsModel model, IFormCollection form, bool captchaValid,
+            IContactAttributeFormatter contactAttributeFormatter)
         {
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage && !captchaValid)
@@ -299,7 +275,7 @@ namespace Grand.Web.Controllers
             if (ModelState.IsValid)
             {
                 model.ContactAttributeXml = attributeXml;
-                model.ContactAttributeInfo = _contactAttributeFormatter.FormatAttributes(attributeXml, _workContext.CurrentCustomer);
+                model.ContactAttributeInfo = contactAttributeFormatter.FormatAttributes(attributeXml, _workContext.CurrentCustomer);
                 model = _commonWebService.SendContactUs(model);
                 //activity log
                 _customerActivityService.InsertActivity("PublicStore.ContactUs", "", _localizationService.GetResource("ActivityLog.PublicStore.ContactUs"));
@@ -397,9 +373,9 @@ namespace Grand.Web.Controllers
         [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual IActionResult EuCookieLawAccept()
+        public virtual IActionResult EuCookieLawAccept([FromServices] StoreInformationSettings storeInformationSettings)
         {
-            if (!_storeInformationSettings.DisplayEuCookieLawWarning)
+            if (!storeInformationSettings.DisplayEuCookieLawWarning)
                 //disabled
                 return Json(new { stored = false });
 
@@ -434,7 +410,8 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult ContactAttributeChange(IFormCollection form)
+        public virtual IActionResult ContactAttributeChange(IFormCollection form,
+            [FromServices] IContactAttributeParser contactAttributeParser)
         {
             var attributeXml = _commonWebService.ParseContactAttributes(form);
 
@@ -443,7 +420,7 @@ namespace Grand.Web.Controllers
             var attributes = _contactAttributeService.GetAllContactAttributes(_storeContext.CurrentStore.Id);
             foreach (var attribute in attributes)
             {
-                var conditionMet = _contactAttributeParser.IsConditionMet(attribute, attributeXml);
+                var conditionMet = contactAttributeParser.IsConditionMet(attribute, attributeXml);
                 if (conditionMet.HasValue)
                 {
                     if (conditionMet.Value)
@@ -580,11 +557,12 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost, ActionName("PopupInteractiveForm")]
-        public virtual IActionResult PopupInteractiveForm(IFormCollection formCollection)
+        public virtual IActionResult PopupInteractiveForm(IFormCollection formCollection,
+           [FromServices] IInteractiveFormService interactiveFormService)
         {
 
             var formid = formCollection["Id"];
-            var form = _interactiveFormService.GetFormById(formid);
+            var form = interactiveFormService.GetFormById(formid);
             if (form == null)
                 return Content("");
             string enquiry = "";
