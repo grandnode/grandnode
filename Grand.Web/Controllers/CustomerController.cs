@@ -1,7 +1,5 @@
-﻿using System;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc;
-using Grand.Core;
+﻿using Grand.Core;
+using Grand.Core.Domain;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Forums;
@@ -9,11 +7,17 @@ using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Messages;
 using Grand.Core.Domain.Tax;
+using Grand.Core.Infrastructure;
+using Grand.Framework.Controllers;
+using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security;
+using Grand.Framework.Security.Captcha;
 using Grand.Services.Authentication;
 using Grand.Services.Authentication.External;
 using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
+using Grand.Services.Events;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
@@ -22,28 +26,23 @@ using Grand.Services.Messages;
 using Grand.Services.Orders;
 using Grand.Services.Tax;
 using Grand.Web.Extensions;
-using Grand.Framework.Controllers;
-using Grand.Framework.Security;
-using Grand.Framework.Security.Captcha;
 using Grand.Web.Models.Customer;
-using Grand.Services.Events;
-using Grand.Core.Domain;
 using Grand.Web.Services;
-using Grand.Core.Infrastructure;
-using System.Net;
-using Grand.Framework.Mvc.Filters;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 
 namespace Grand.Web.Controllers
 {
     public partial class CustomerController : BasePublicController
     {
         #region Fields
+
         private readonly ICustomerWebService _customerWebService;
         private readonly IGrandAuthenticationService _authenticationService;
-        private readonly DateTimeSettings _dateTimeSettings;
-        private readonly TaxSettings _taxSettings;
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
@@ -52,15 +51,15 @@ namespace Grand.Web.Controllers
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICustomerRegistrationService _customerRegistrationService;
         private readonly ITaxService _taxService;
-        private readonly CustomerSettings _customerSettings;
         private readonly ICountryService _countryService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly IWebHelper _webHelper;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IAddressWebService _addressWebService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly CustomerSettings _customerSettings;
+        private readonly DateTimeSettings _dateTimeSettings;
+        private readonly TaxSettings _taxSettings;
         private readonly LocalizationSettings _localizationSettings;
         private readonly CaptchaSettings _captchaSettings;
 
@@ -71,8 +70,6 @@ namespace Grand.Web.Controllers
         public CustomerController(
             ICustomerWebService customerWebService,
             IGrandAuthenticationService authenticationService,
-            DateTimeSettings dateTimeSettings, 
-            TaxSettings taxSettings,
             ILocalizationService localizationService,
             IWorkContext workContext,
             IStoreContext storeContext,
@@ -81,17 +78,17 @@ namespace Grand.Web.Controllers
             IGenericAttributeService genericAttributeService,
             ICustomerRegistrationService customerRegistrationService,
             ITaxService taxService, 
-            CustomerSettings customerSettings,
             ICountryService countryService,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
-            IShoppingCartService shoppingCartService,
-            IWebHelper webHelper,
             ICustomerActivityService customerActivityService,
             IAddressWebService addressWebService,
             IEventPublisher eventPublisher,
             IWorkflowMessageService workflowMessageService,
+            CaptchaSettings captchaSettings,
+            CustomerSettings customerSettings,
+            DateTimeSettings dateTimeSettings,
             LocalizationSettings localizationSettings,
-            CaptchaSettings captchaSettings
+            TaxSettings taxSettings
             )
         {
             this._customerWebService = customerWebService;
@@ -109,8 +106,6 @@ namespace Grand.Web.Controllers
             this._customerSettings = customerSettings;
             this._countryService = countryService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._shoppingCartService = shoppingCartService;
-            this._webHelper = webHelper;
             this._customerActivityService = customerActivityService;
             this._addressWebService = addressWebService;
             this._workflowMessageService = workflowMessageService;
@@ -153,7 +148,8 @@ namespace Grand.Web.Controllers
         [CheckAccessPublicStore(true)]
         [ValidateCaptcha]
         [PublicAntiForgery]
-        public virtual IActionResult Login(LoginModel model, string returnUrl, bool captchaValid)
+        public virtual IActionResult Login(LoginModel model, string returnUrl, bool captchaValid,
+                       [FromServices] IShoppingCartService shoppingCartService)
         {
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnLoginPage && !captchaValid)
@@ -175,7 +171,7 @@ namespace Grand.Web.Controllers
                             var customer = _customerSettings.UsernamesEnabled ? _customerService.GetCustomerByUsername(model.Username) : _customerService.GetCustomerByEmail(model.Email);
 
                             //migrate shopping cart
-                            _shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, customer, true);
+                            shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, customer, true);
 
                             //sign in new customer
                             _authenticationService.SignIn(customer, model.RememberMe);
@@ -608,7 +604,10 @@ namespace Grand.Web.Controllers
 
                                 var redirectUrl = Url.RouteUrl("RegisterResult", new { resultId = (int)UserRegistrationType.Standard });
                                 if (!String.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-                                    redirectUrl = _webHelper.ModifyQueryString(redirectUrl, "returnurl=" + WebUtility.UrlEncode(returnUrl), null);
+                                {
+                                    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+                                    redirectUrl = webHelper.ModifyQueryString(redirectUrl, "returnurl=" + WebUtility.UrlEncode(returnUrl), null);
+                                }
                                 return Redirect(redirectUrl);
                             }
                         default:
