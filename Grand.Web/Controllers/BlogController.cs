@@ -26,13 +26,9 @@ namespace Grand.Web.Controllers
 
         private readonly IBlogWebService _blogWebService;
         private readonly IBlogService _blogService;
-        private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly ILocalizationService _localizationService;
         private readonly IWebHelper _webHelper;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IPermissionService _permissionService;
-
         private readonly BlogSettings _blogSettings;
         private readonly CaptchaSettings _captchaSettings;
 
@@ -42,25 +38,17 @@ namespace Grand.Web.Controllers
 
         public BlogController(IBlogWebService blogWebService,
             IBlogService blogService, 
-            IWorkContext workContext,
             IStoreContext storeContext,
             ILocalizationService localizationService,
             IWebHelper webHelper,
-            IStoreMappingService storeMappingService,
-            IPermissionService permissionService,
             BlogSettings blogSettings,
-            CaptchaSettings captchaSettings
-        )
+            CaptchaSettings captchaSettings)
         {
             this._blogWebService = blogWebService;
             this._blogService = blogService;
-            this._workContext = workContext;
             this._storeContext = storeContext;
             this._localizationService = localizationService;
             this._webHelper = webHelper;
-            this._storeMappingService = storeMappingService;
-            this._permissionService = permissionService;
-
             this._blogSettings = blogSettings;
             this._captchaSettings = captchaSettings;
         }
@@ -116,7 +104,9 @@ namespace Grand.Web.Controllers
             return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
         }
 
-        public virtual IActionResult BlogPost(string blogPostId)
+        public virtual IActionResult BlogPost(string blogPostId,
+            [FromServices] IStoreMappingService storeMappingService,
+            [FromServices] IPermissionService permissionService)
         {
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("HomePage");
@@ -128,14 +118,14 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("HomePage");
 
             //Store mapping
-            if (!_storeMappingService.Authorize(blogPost))
+            if (!storeMappingService.Authorize(blogPost))
                 return InvokeHttp404();
             
             var model = new BlogPostModel();
             _blogWebService.PrepareBlogPostModel(model, blogPost, true);
 
             //display "edit" (manage) link
-            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+            if (permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 DisplayEditLink(Url.Action("Edit", "Blog", new { id = blogPost.Id, area = "Admin" }));
 
 
@@ -146,7 +136,8 @@ namespace Grand.Web.Controllers
         [PublicAntiForgery]
         [FormValueRequired("add-comment")]
         [ValidateCaptcha]
-        public virtual IActionResult BlogCommentAdd(string blogPostId, BlogPostModel model, bool captchaValid)
+        public virtual IActionResult BlogCommentAdd(string blogPostId, BlogPostModel model, bool captchaValid,
+                       [FromServices] IWorkContext workContext)
         {
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("HomePage");
@@ -155,7 +146,7 @@ namespace Grand.Web.Controllers
             if (blogPost == null || !blogPost.AllowComments)
                 return RedirectToRoute("HomePage");
 
-            if (_workContext.CurrentCustomer.IsGuest() && !_blogSettings.AllowNotRegisteredUsersToLeaveComments)
+            if (workContext.CurrentCustomer.IsGuest() && !_blogSettings.AllowNotRegisteredUsersToLeaveComments)
             {
                 ModelState.AddModelError("", _localizationService.GetResource("Blog.Comments.OnlyRegisteredUsersLeaveComments"));
             }
