@@ -413,7 +413,9 @@ ul.ui-autocomplete li img {
 	display: none;
 }
 /*external modal*/
-
+.external-authentication {
+	display: flex;
+}
 #action_modal_banner {
 	position: relative;
 	background: #FFF;
