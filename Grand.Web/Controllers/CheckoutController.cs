@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Payments;
 using Grand.Core.Domain.Shipping;
+using Grand.Core.Http;
 using Grand.Core.Plugins;
+using Grand.Framework.Controllers;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Customers;
@@ -17,12 +15,13 @@ using Grand.Services.Orders;
 using Grand.Services.Payments;
 using Grand.Services.Shipping;
 using Grand.Web.Extensions;
-using Grand.Framework.Controllers;
 using Grand.Web.Models.Checkout;
-using Grand.Core.Infrastructure;
 using Grand.Web.Services;
 using Microsoft.AspNetCore.Http;
-using Grand.Core.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Grand.Web.Controllers
 {
@@ -32,9 +31,7 @@ namespace Grand.Web.Controllers
         private readonly ICheckoutWebService _checkoutWebService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
-        private readonly IShoppingCartService _shoppingCartService;
         private readonly ILocalizationService _localizationService;
-        private readonly IOrderProcessingService _orderProcessingService;
         private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IShippingService _shippingService;
@@ -44,7 +41,6 @@ namespace Grand.Web.Controllers
         private readonly IOrderService _orderService;
         private readonly IWebHelper _webHelper;
         private readonly IAddressWebService _addressWebService;
-
         private readonly OrderSettings _orderSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly PaymentSettings _paymentSettings;
@@ -56,10 +52,8 @@ namespace Grand.Web.Controllers
 
         public CheckoutController(ICheckoutWebService checkoutWebService,
             IWorkContext workContext,
-            IStoreContext storeContext,
-            IShoppingCartService shoppingCartService,
+            IStoreContext storeContext,            
             ILocalizationService localizationService,
-            IOrderProcessingService orderProcessingService,
             ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
             IShippingService shippingService,
@@ -77,9 +71,7 @@ namespace Grand.Web.Controllers
             this._checkoutWebService = checkoutWebService;
             this._workContext = workContext;
             this._storeContext = storeContext;
-            this._shoppingCartService = shoppingCartService;
             this._localizationService = localizationService;
-            this._orderProcessingService = orderProcessingService;
             this._customerService = customerService;
             this._genericAttributeService = genericAttributeService;
             this._shippingService = shippingService;
@@ -122,7 +114,7 @@ namespace Grand.Web.Controllers
 
         #region Methods (common)
 
-        public virtual IActionResult Index()
+        public virtual IActionResult Index([FromServices] IShoppingCartService shoppingCartService, [FromServices] IProductService productService)
         {
             var customer = _workContext.CurrentCustomer;
 
@@ -141,16 +133,15 @@ namespace Grand.Web.Controllers
 
             //validation (cart)
             var checkoutAttributesXml = customer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);
-            var scWarnings = _shoppingCartService.GetShoppingCartWarnings(cart, checkoutAttributesXml, true);
+            var scWarnings = shoppingCartService.GetShoppingCartWarnings(cart, checkoutAttributesXml, true);
             if (scWarnings.Any())
                 return RedirectToRoute("ShoppingCart");
 
-            var productService = EngineContext.Current.Resolve<IProductService>();
             //validation (each shopping cart item)
             foreach (ShoppingCartItem sci in cart)
             {
                 var product = productService.GetProductById(sci.ProductId);
-                var sciWarnings = _shoppingCartService.GetShoppingCartItemWarnings(customer, sci, product, false);
+                var sciWarnings = shoppingCartService.GetShoppingCartItemWarnings(customer, sci, product, false);
                 if (sciWarnings.Any())
                     return RedirectToRoute("ShoppingCart");
             }
@@ -855,7 +846,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
         [HttpPost, ActionName("Confirm")]
-        public virtual IActionResult ConfirmOrder()
+        public virtual IActionResult ConfirmOrder([FromServices] IOrderProcessingService orderProcessingService)
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -896,7 +887,7 @@ namespace Grand.Web.Controllers
                 processPaymentRequest.PaymentMethodSystemName = _workContext.CurrentCustomer.GetAttribute<string>(
                     SystemCustomerAttributeNames.SelectedPaymentMethod,
                     _storeContext.CurrentStore.Id);
-                var placeOrderResult = _orderProcessingService.PlaceOrder(processPaymentRequest);
+                var placeOrderResult = orderProcessingService.PlaceOrder(processPaymentRequest);
                 if (placeOrderResult.Success)
                 {
                     this.HttpContext.Session.Set<ProcessPaymentRequest>("OrderPaymentInfo", null);
@@ -1618,7 +1609,7 @@ namespace Grand.Web.Controllers
             }
         }
 
-        public virtual IActionResult OpcConfirmOrder()
+        public virtual IActionResult OpcConfirmOrder([FromServices] IOrderProcessingService orderProcessingService)
         {
             try
             {
@@ -1658,7 +1649,7 @@ namespace Grand.Web.Controllers
                 processPaymentRequest.PaymentMethodSystemName = _workContext.CurrentCustomer.GetAttribute<string>(
                     SystemCustomerAttributeNames.SelectedPaymentMethod,
                     _storeContext.CurrentStore.Id);
-                var placeOrderResult = _orderProcessingService.PlaceOrder(processPaymentRequest);
+                var placeOrderResult = orderProcessingService.PlaceOrder(processPaymentRequest);
                 if (placeOrderResult.Success)
                 {
                     this.HttpContext.Session.Set<ProcessPaymentRequest>("OrderPaymentInfo", null);
