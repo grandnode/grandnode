@@ -1,33 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc;
-using Grand.Core;
-using Grand.Core.Caching;
+﻿using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Localization;
+using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Orders;
+using Grand.Core.Infrastructure;
+using Grand.Framework.Controllers;
+using Grand.Framework.Mvc;
+using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Mvc.Rss;
+using Grand.Framework.Security;
+using Grand.Framework.Security.Captcha;
 using Grand.Services.Catalog;
+using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Events;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
+using Grand.Services.Media;
 using Grand.Services.Orders;
 using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
-using Grand.Framework.Controllers;
-using Grand.Framework.Security;
-using Grand.Framework.Security.Captcha;
 using Grand.Web.Models.Catalog;
-using Grand.Core.Infrastructure;
-using Grand.Services.Common;
 using Grand.Web.Services;
-using Grand.Framework.Mvc.Filters;
-using Grand.Framework.Mvc.Rss;
-using Grand.Framework.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace Grand.Web.Controllers
 {
@@ -37,26 +39,19 @@ namespace Grand.Web.Controllers
 
         private readonly IProductService _productService;
         private readonly IProductWebService _productWebService;
-        private readonly IProductReservationService _productReservationService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly ILocalizationService _localizationService;
-        private readonly IWebHelper _webHelper;
         private readonly IRecentlyViewedProductsService _recentlyViewedProductsService;
         private readonly ICompareProductsService _compareProductsService;
-        private readonly IOrderReportService _orderReportService;
         private readonly IAclService _aclService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IPermissionService _permissionService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerActionEventService _customerActionEventService;
-        private readonly IEventPublisher _eventPublisher;
         private readonly CatalogSettings _catalogSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
-        private readonly LocalizationSettings _localizationSettings;
         private readonly CaptchaSettings _captchaSettings;
-        private readonly ICacheManager _cacheManager;
-        private readonly IOrderService _orderService;
 
         #endregion
 
@@ -65,50 +60,36 @@ namespace Grand.Web.Controllers
         public ProductController(
             IProductService productService,
             IProductWebService productWebService,
-            IProductReservationService productReservationService,
             IWorkContext workContext,
             IStoreContext storeContext,
             ILocalizationService localizationService,
-            IWebHelper webHelper,
             IRecentlyViewedProductsService recentlyViewedProductsService,
             ICompareProductsService compareProductsService,
-            IOrderReportService orderReportService,
             IAclService aclService,
             IStoreMappingService storeMappingService,
             IPermissionService permissionService,
             ICustomerActivityService customerActivityService,
             ICustomerActionEventService customerActionEventService,
-            IEventPublisher eventPublisher,
             CatalogSettings catalogSettings,
             ShoppingCartSettings shoppingCartSettings,
-            LocalizationSettings localizationSettings,
-            CaptchaSettings captchaSettings,
-            ICacheManager cacheManager,
-            IOrderService orderService
-            )
+            CaptchaSettings captchaSettings
+        )
         {
             this._productService = productService;
             this._productWebService = productWebService;
-            this._productReservationService = productReservationService;
             this._workContext = workContext;
             this._storeContext = storeContext;
             this._localizationService = localizationService;
-            this._webHelper = webHelper;
             this._recentlyViewedProductsService = recentlyViewedProductsService;
             this._compareProductsService = compareProductsService;
-            this._orderReportService = orderReportService;
             this._aclService = aclService;
             this._storeMappingService = storeMappingService;
             this._permissionService = permissionService;
             this._customerActivityService = customerActivityService;
             this._customerActionEventService = customerActionEventService;
-            this._eventPublisher = eventPublisher;
             this._catalogSettings = catalogSettings;
             this._shoppingCartSettings = shoppingCartSettings;
-            this._localizationSettings = localizationSettings;
             this._captchaSettings = captchaSettings;
-            this._cacheManager = cacheManager;
-            this._orderService = orderService;
         }
 
         #endregion
@@ -201,6 +182,116 @@ namespace Grand.Web.Controllers
 
             return View(productTemplateViewPath, model);
         }
+
+        //handle product attribute selection event. this way we return new price, overridden gtin/sku/mpn
+        //currently we use this method on the product details pages
+        [HttpPost]
+        public virtual IActionResult ProductDetails_AttributeChange(string productId, bool validateAttributeConditions, bool loadPicture, IFormCollection form)
+        {
+            var product = _productService.GetProductById(productId);
+            if (product == null)
+                return new NullJsonResult();
+
+            var model = _productWebService.PrepareProductDetailsAttributeChangeModel(product, validateAttributeConditions, loadPicture, form);
+
+            return Json(new
+            {
+                gtin = model.Gtin,
+                mpn = model.Mpn,
+                sku = model.Sku,
+                price = model.Price,
+                stockAvailability = model.StockAvailability,
+                enabledattributemappingids = model.EnabledAttributeMappingIds.ToArray(),
+                disabledattributemappingids = model.DisabledAttributeMappingids.ToArray(),
+                pictureFullSizeUrl = model.PictureFullSizeUrl,
+                pictureDefaultSizeUrl = model.PictureDefaultSizeUrl,
+            });
+        }
+
+
+        [HttpPost]
+        public virtual IActionResult UploadFileProductAttribute(string attributeId, string productId,
+            [FromServices] IDownloadService downloadService)
+        {
+            var product = _productService.GetProductById(productId);
+            var attribute = product.ProductAttributeMappings.Where(x => x.Id == attributeId).FirstOrDefault();
+            if (attribute == null || attribute.AttributeControlType != AttributeControlType.FileUpload)
+            {
+                return Json(new
+                {
+                    success = false,
+                    downloadGuid = Guid.Empty,
+                });
+            }
+            var httpPostedFile = Request.Form.Files.FirstOrDefault();
+            if (httpPostedFile == null)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "No file uploaded",
+                    downloadGuid = Guid.Empty,
+                });
+            }
+            var fileBinary = httpPostedFile.GetDownloadBits();
+
+            var qqFileNameParameter = "qqfilename";
+            var fileName = httpPostedFile.FileName;
+            if (String.IsNullOrEmpty(fileName) && Request.Form.ContainsKey(qqFileNameParameter))
+                fileName = Request.Form[qqFileNameParameter].ToString();
+            //remove path (passed in IE)
+            fileName = Path.GetFileName(fileName);
+
+            var contentType = httpPostedFile.ContentType;
+
+            var fileExtension = Path.GetExtension(fileName);
+            if (!String.IsNullOrEmpty(fileExtension))
+                fileExtension = fileExtension.ToLowerInvariant();
+
+
+            if (attribute.ValidationFileMaximumSize.HasValue)
+            {
+                //compare in bytes
+                var maxFileSizeBytes = attribute.ValidationFileMaximumSize.Value * 1024;
+                if (fileBinary.Length > maxFileSizeBytes)
+                {
+                    //when returning JSON the mime-type must be set to text/plain
+                    //otherwise some browsers will pop-up a "Save As" dialog.
+                    return Json(new
+                    {
+                        success = false,
+                        message = string.Format(_localizationService.GetResource("ShoppingCart.MaximumUploadedFileSize"), attribute.ValidationFileMaximumSize.Value),
+                        downloadGuid = Guid.Empty,
+                    });
+                }
+            }
+
+            var download = new Download
+            {
+                DownloadGuid = Guid.NewGuid(),
+                UseDownloadUrl = false,
+                DownloadUrl = "",
+                DownloadBinary = fileBinary,
+                ContentType = contentType,
+                //we store filename without extension for downloads
+                Filename = Path.GetFileNameWithoutExtension(fileName),
+                Extension = fileExtension,
+                IsNew = true
+            };
+            downloadService.InsertDownload(download);
+
+            //when returning JSON the mime-type must be set to text/plain
+            //otherwise some browsers will pop-up a "Save As" dialog.
+            return Json(new
+            {
+                success = true,
+                message = _localizationService.GetResource("ShoppingCart.FileUploaded"),
+                downloadUrl = Url.Action("GetFileUpload", "Download", new { downloadId = download.DownloadGuid }),
+                downloadGuid = download.DownloadGuid,
+            });
+        }
+
+
 
         #region Quick view product
 
@@ -296,6 +387,11 @@ namespace Grand.Web.Controllers
 
         #endregion
 
+        #region Add product to cart
+
+        
+        #endregion
+
         #region Recently viewed products
 
         public virtual IActionResult RecentlyViewedProducts()
@@ -332,16 +428,16 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        public virtual IActionResult NewProductsRss()
+        public virtual IActionResult NewProductsRss([FromServices] IWebHelper webHelper)
         {
             var feed = new RssFeed(
                                     string.Format("{0}: New products", _storeContext.CurrentStore.GetLocalized(x => x.Name)),
                                     "Information about products",
-                                    new Uri(_webHelper.GetStoreLocation(false)),
+                                    new Uri(webHelper.GetStoreLocation(false)),
                                     DateTime.UtcNow);
 
             if (!_catalogSettings.NewProductsEnabled)
-                return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
+                return new RssActionResult(feed, webHelper.GetThisPageUrl(false));
 
             var items = new List<RssItem>();
 
@@ -353,14 +449,14 @@ namespace Grand.Web.Controllers
                 pageSize: _catalogSettings.NewProductsNumber);
             foreach (var product in products)
             {
-                string productUrl = Url.RouteUrl("Product", new { SeName = product.GetSeName() }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
+                string productUrl = Url.RouteUrl("Product", new { SeName = product.GetSeName() }, webHelper.IsCurrentConnectionSecured() ? "https" : "http");
                 string productName = product.GetLocalized(x => x.Name);
                 string productDescription = product.GetLocalized(x => x.ShortDescription);
                 var item = new RssItem(productName, productDescription, new Uri(productUrl), String.Format("urn:store:{0}:newProducts:product:{1}", _storeContext.CurrentStore.Id, product.Id), product.CreatedOnUtc);
                 items.Add(item);
             }
             feed.Items = items;
-            return new RssActionResult(feed, _webHelper.GetThisPageUrl(false));
+            return new RssActionResult(feed, webHelper.GetThisPageUrl(false));
         }
 
         #endregion
@@ -386,7 +482,8 @@ namespace Grand.Web.Controllers
         [FormValueRequired("add-review")]
         [PublicAntiForgery]
         [ValidateCaptcha]
-        public virtual IActionResult ProductReviewsAdd(string productId, ProductReviewsModel model, bool captchaValid)
+        public virtual IActionResult ProductReviewsAdd(string productId, ProductReviewsModel model, bool captchaValid,
+            [FromServices] IOrderService orderService, [FromServices] IEventPublisher eventPublisher)
         {
             var product = _productService.GetProductById(productId);
             if (product == null || !product.Published || !product.AllowCustomerReviews)
@@ -404,7 +501,7 @@ namespace Grand.Web.Controllers
             }
 
             if (_catalogSettings.ProductReviewPossibleOnlyAfterPurchasing &&
-                    !_orderService.SearchOrders(customerId: _workContext.CurrentCustomer.Id, productId: productId, os: OrderStatus.Complete).Any())
+                    !orderService.SearchOrders(customerId: _workContext.CurrentCustomer.Id, productId: productId, os: OrderStatus.Complete).Any())
                 ModelState.AddModelError(string.Empty, _localizationService.GetResource("Reviews.ProductReviewPossibleOnlyAfterPurchasing"));
 
             if (ModelState.IsValid)
@@ -415,7 +512,7 @@ namespace Grand.Web.Controllers
 
                 //raise event
                 if (productReview.IsApproved)
-                    _eventPublisher.Publish(new ProductReviewApprovedEvent(productReview));
+                    eventPublisher.Publish(new ProductReviewApprovedEvent(productReview));
 
                 _productWebService.PrepareProductReviewsModel(model, product);
                 model.AddProductReview.Title = null;
@@ -725,9 +822,9 @@ namespace Grand.Web.Controllers
             return RedirectToRoute("CompareProducts");
         }
 
-        public IActionResult GetDatesForMonth(string productId, int month, string parameter, int year)
+        public IActionResult GetDatesForMonth(string productId, int month, string parameter, int year, [FromServices] IProductReservationService productReservationService)
         {
-            var allReservations = _productReservationService.GetProductReservationsByProductId(productId, true, null);
+            var allReservations = productReservationService.GetProductReservationsByProductId(productId, true, null);
             var query = allReservations.Where(x => x.Date.Month == month && x.Date.Year == year && x.Date >= DateTime.UtcNow);
             if (!string.IsNullOrEmpty(parameter))
             {

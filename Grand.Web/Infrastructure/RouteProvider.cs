@@ -152,20 +152,20 @@ namespace Grand.Web.Infrastructure
             //add product to cart (without any attributes and options). used on catalog pages.
             routeBuilder.MapLocalizedRoute("AddProductToCart-Catalog",
                             "addproducttocart/catalog/{productId}/{shoppingCartTypeId}",
-                            new { controller = "ShoppingCart", action = "AddProductToCart_Catalog" },
+                            new { controller = "AddToCart", action = "AddProductToCart_Catalog" },
                             new { productId = @"\w+", shoppingCartTypeId = @"\d+" },
                             new[] { "Grand.Web.Controllers" });
             //add product to cart (with attributes and options). used on the product details pages.
             routeBuilder.MapLocalizedRoute("AddProductToCart-Details",
                             "addproducttocart/details/{productId}/{shoppingCartTypeId}",
-                            new { controller = "ShoppingCart", action = "AddProductToCart_Details" },
+                            new { controller = "AddToCart", action = "AddProductToCart_Details" },
                             new { productId = @"\w+", shoppingCartTypeId = @"\d+" },
                             new[] { "Grand.Web.Controllers" });
 
             //add product to bid, use on the product details page
             routeBuilder.MapLocalizedRoute("AddBid",
                             "addbid/AddBid/{productId}/{shoppingCartTypeId}",
-                            new { controller = "ShoppingCart", action = "AddBid" },
+                            new { controller = "AddToCart", action = "AddBid" },
                             new { productId = @"\w+", shoppingCartTypeId = @"\d+" },
                             new[] { "Grand.Web.Controllers" });
 
@@ -456,7 +456,7 @@ namespace Grand.Web.Infrastructure
             //product attributes with "upload file" type
             routeBuilder.MapLocalizedRoute("UploadFileProductAttribute",
                             "uploadfileproductattribute/{attributeId}",
-                            new { controller = "ShoppingCart", action = "UploadFileProductAttribute" });
+                            new { controller = "Product", action = "UploadFileProductAttribute" });
             //checkout attributes with "upload file" type
             routeBuilder.MapLocalizedRoute("UploadFileCheckoutAttribute",
                             "uploadfilecheckoutattribute/{attributeId}",
