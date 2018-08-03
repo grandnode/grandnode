@@ -320,7 +320,7 @@
             }
         }
         //render scripts
-        <script>
+    <script>
             function @(attributeChangeHandlerFuncName)() {
                 $.ajax({
                     cache: false,
@@ -374,7 +374,7 @@
                             });
                         });
                         if (data.pictureFullSizeUrl) {
-                            $('#main-product-img-lightbox-anchor-@productId').attr("href", data.pictureFullSizeUrl);
+                            $(".sp-thumbs.sp-tb-active a[href$='" + data.pictureFullSizeUrl + "']").click();
                         }
                     }
                 });
@@ -383,6 +383,6 @@
                 @(attributeChangeHandlerFuncName)();
                 @Html.Raw(attributeChangeScriptsBuilder.ToString())
             });
-        </script>
+    </script>
     }
 }
