@@ -1,6 +1,5 @@
 ﻿using Grand.Core;
 using Grand.Core.Domain.PushNotifications;
-using Grand.Framework.Controllers;
 using Grand.Framework.Mvc;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
@@ -10,7 +9,7 @@ using System;
 
 namespace Grand.Web.Controllers
 {
-    public class PushNotificationsController : BaseController
+    public class PushNotificationsController : BasePublicController
     {
         private readonly IWorkContext _workContext;
         private readonly IPushNotificationsService _pushNotificationsService;
