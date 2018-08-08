@@ -2991,6 +2991,9 @@ span.product-quantity {
 	margin-bottom: 0;
 	padding-left: 0;
 }
+.product-details-page .attributes .selected-value label {
+    border: 2px solid #17a2b8;
+}
 /*datapicker*/
 
 .ui-datepicker {

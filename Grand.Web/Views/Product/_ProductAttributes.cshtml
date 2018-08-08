@@ -320,7 +320,7 @@
             }
         }
         //render scripts
-    <script>
+        <script>
             function @(attributeChangeHandlerFuncName)() {
                 $.ajax({
                     cache: false,
@@ -355,6 +355,21 @@
                                 $('#product_attribute_input_' + data.disabledattributemappingids[i]).hide();
                             }
                         }
+                        setTimeout(function () { if (data.pictureDefaultSizeUrl) {
+                            $('#main-product-img-@productId').attr("src", data.pictureDefaultSizeUrl);
+                            $('.sp-large img').attr("src", data.pictureFullSizeUrl);
+                            $('.sp-large a').attr("href", data.pictureFullSizeUrl);
+                            $(".sp-thumbs a").each(function () {
+                                if ($(this).attr("href") === $('.sp-large a').attr("href")) {
+                                    $(".sp-thumbs .sp-current").removeClass("sp-current");
+                                    $(this).addClass("sp-current");
+                                }
+                            });
+                        }}, 100);
+                        
+                        if (data.pictureFullSizeUrl) {
+                            $('#main-product-img-lightbox-anchor-@productId').attr("href", data.pictureFullSizeUrl);
+                        }
                         $(".color-squares li").click(function () {
                             var clicked_square = $(this).index();
                             $(".sp-thumbs a").each(function () {
@@ -373,9 +388,6 @@
                                 }
                             });
                         });
-                        if (data.pictureFullSizeUrl) {
-                            $(".sp-thumbs.sp-tb-active a[href$='" + data.pictureFullSizeUrl + "']").click();
-                        }
                     }
                 });
             }
@@ -383,6 +395,6 @@
                 @(attributeChangeHandlerFuncName)();
                 @Html.Raw(attributeChangeScriptsBuilder.ToString())
             });
-    </script>
+        </script>
     }
 }
