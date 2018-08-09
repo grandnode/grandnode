@@ -67,12 +67,12 @@ And that's all, you are GrandNode official contributor!
 ##### Frontend:
 [http://demo.grandnode.com/](http://demo.grandnode.com/)
 
-[![ScreenShot](https://grandnode.com/content/images/storefront.gif)](http://demo.grandnode.com/)
+[![ScreenShot](https://grandnode.com/content/images/uploaded/storepublic.gif)](http://demo.grandnode.com/)
 
 ##### Backend:
 [http://demo.grandnode.com/login?ReturnUrl=%2fadmin](http://demo.grandnode.com/login?ReturnUrl=%2fadmin)
 
-[![ScreenShot](https://grandnode.com/content/images/adminpanel.gif)](http://demo.grandnode.com/login?ReturnUrl=%2fadmin)
+[![ScreenShot](https://grandnode.com/content/images/uploaded/adminpanel.gif)](http://demo.grandnode.com/login?ReturnUrl=%2fadmin)
 
 Demo is restoring every hour to the original state.
 
