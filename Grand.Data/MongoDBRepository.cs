@@ -72,14 +72,14 @@ namespace Grand.Data
         public MongoDBRepository(IMongoClient client)
         {
             string connectionString = DataSettingsHelper.ConnectionString();
-            var databaseName = new MongoUrl(connectionString).DatabaseName;            
+            var databaseName = new MongoUrl(connectionString).DatabaseName;
             _database = client.GetDatabase(databaseName);
             _collection = _database.GetCollection<T>(typeof(T).Name);
         }
 
-        public MongoDBRepository(IMongoClient client, IMongoDatabase mongodatabase)
+        public MongoDBRepository(IMongoDatabase database)
         {
-            _database = mongodatabase;
+            _database = database;
             _collection = _database.GetCollection<T>(typeof(T).Name);
         }
 
