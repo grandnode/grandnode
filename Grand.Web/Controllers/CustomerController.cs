@@ -220,11 +220,8 @@ namespace Grand.Web.Controllers
         [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual IActionResult Logout()
+        public virtual IActionResult Logout([FromServices] StoreInformationSettings storeInformationSettings)
         {
-            //external authentication
-            ExternalAuthorizerHelper.RemoveParameters();
-
             if (_workContext.OriginalCustomerIfImpersonated != null)
             {
                 //logout impersonated customer
@@ -242,7 +239,7 @@ namespace Grand.Web.Controllers
             _authenticationService.SignOut();
 
             //EU Cookie
-            if (EngineContext.Current.Resolve<StoreInformationSettings>().DisplayEuCookieLawWarning)
+            if (storeInformationSettings.DisplayEuCookieLawWarning)
             {
                 //the cookie law message should not pop up immediately after logout.
                 //otherwise, the user will have to click it again...
@@ -533,9 +530,6 @@ namespace Grand.Web.Controllers
                     if (isApproved)
                         _authenticationService.SignIn(customer, true);
 
-                    //associated with external account (if possible)
-                    _customerWebService.TryAssociateAccountWithExternalAccount(customer);
-                    
                     //insert default address (if possible)
                     var defaultAddress = new Address
                     {

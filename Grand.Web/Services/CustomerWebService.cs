@@ -139,14 +139,6 @@ namespace Grand.Web.Services
             this._vendorSettings = vendorSettings;
         }
 
-        public virtual void TryAssociateAccountWithExternalAccount(Customer customer)
-        {
-            var parameters = ExternalAuthorizerHelper.RetrieveParametersFromRoundTrip(true);
-
-            if (parameters != null && _externalAuthenticationService.GetUserByExternalAuthenticationParameters(parameters) == null)
-                _externalAuthenticationService.AssociateExternalAccountWithUser(customer, parameters);
-        }
-
         public virtual void DeleteAccount(Customer customer)
         {
             //send notification to customer

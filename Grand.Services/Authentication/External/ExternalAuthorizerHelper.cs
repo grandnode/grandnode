@@ -31,22 +31,6 @@ namespace Grand.Services.Authentication.External
             EngineContext.Current.Resolve<IHttpContextAccessor>().HttpContext?.Session?.Set(EXTERNAL_AUTHENTICATION_PARAMETERS, parameters);
         }
 
-        public static ExternalAuthenticationParameters RetrieveParametersFromRoundTrip(bool removeOnRetrieval)
-        {
-            var parameters = EngineContext.Current.Resolve<IHttpContextAccessor>().HttpContext?.Session?
-                .Get<ExternalAuthenticationParameters>(EXTERNAL_AUTHENTICATION_PARAMETERS);
-
-            if (parameters != null && removeOnRetrieval)
-                RemoveParameters();
-
-            return parameters;
-        }
-
-        public static void RemoveParameters()
-        {
-            EngineContext.Current.Resolve<IHttpContextAccessor>().HttpContext?.Session?.Remove(EXTERNAL_AUTHENTICATION_PARAMETERS);
-        }
-
         public static void AddErrorsToDisplay(string error)
         {
             var session = EngineContext.Current.Resolve<IHttpContextAccessor>().HttpContext?.Session;
