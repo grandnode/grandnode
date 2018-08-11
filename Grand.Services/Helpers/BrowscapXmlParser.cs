@@ -32,27 +32,12 @@ namespace Grand.Services.Helpers
             using (var stream = new FileStream(filePath, FileMode.Open))
             using (var sr = new StreamReader(stream))
             {
-                var browsercapItems = XDocument.Load(sr).Root.Return(x => x.Element("browsercapitems"), null);
-
+                var browsercapItems = XDocument.Load(sr).Element("browsercapitems").Elements("browscapitem").Select(x => x.Attribute("name").Value).ToList();
                 if (browsercapItems == null)
                     throw new Exception("Incorrect file format");
 
-                _crawlerUserAgentsRegexp.AddRange(browsercapItems.Elements("browscapitem")
-                    //only crawlers
-                    .Where(IsBrowscapItemIsCrawler)
-                    //get only user agent names
-                    .Select(e => e.Attribute("name"))
-                    .Where(e => e != null && !string.IsNullOrEmpty(e.Value))
-                    .Select(e => e.Value)
-                    .Select(ToRegexp));
+                _crawlerUserAgentsRegexp.AddRange(browsercapItems.Select(ToRegexp));
             }
-        }
-
-        private static bool IsBrowscapItemIsCrawler(XElement browscapItem)
-        {
-            var el = browscapItem.Elements("item").FirstOrDefault(e => e.Attribute("name").Return(a => a.Value, "") == "Crawler");
-
-            return el != null && el.Attribute("value").Return(a => a.Value.ToLower() == "true", false);
         }
 
         private static string ToRegexp(string str)
