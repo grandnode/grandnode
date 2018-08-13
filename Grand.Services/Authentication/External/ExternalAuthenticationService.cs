@@ -163,7 +163,7 @@ namespace Grand.Services.Authentication.External
             var registrationRequest = new CustomerRegistrationRequest(_workContext.CurrentCustomer,
                 parameters.Email, parameters.Email,
                 CommonHelper.GenerateRandomDigitCode(20),
-                PasswordFormat.Clear,
+                PasswordFormat.Hashed,
                 _storeContext.CurrentStore.Id,
                 registrationIsApproved);
 
