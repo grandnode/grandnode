@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Grand.Web.Services
 {
-    public partial class WidgetWebService: IWidgetWebService
+    public partial class WidgetWebService : IWidgetWebService
     {
         private readonly IStoreContext _storeContext;
         private readonly ICacheManager _cacheManager;
@@ -32,7 +32,8 @@ namespace Grand.Web.Services
             //add widget zone to view component arguments
             additionalData = new RouteValueDictionary(additionalData)
             {
-                { "widgetZone", widgetZone }
+                { "widgetZone", widgetZone },
+                { "additionalData", additionalData}
             };
 
             var cachedModel = _cacheManager.Get(cacheKey, () =>
