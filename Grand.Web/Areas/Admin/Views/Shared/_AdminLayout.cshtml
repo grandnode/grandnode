@@ -254,10 +254,16 @@
             <i class="icon-arrow-up"></i>
         </div>
     </div>
-    <script type="text/javascript">
+    <script>
             $(document).ready(function () {
                 $("#restart-application").click(function (e) {
+                    event.preventDefault();
                     showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Admin.Header.RestartApplication.Progress").Text))');
+                    $("html, body").animate({ scrollTop: 0 }, 400);
+                    $.get($(this).attr("href"), function (data) { });
+                    setTimeout(function () {
+                        location.reload();
+                    }, 10000);
                 });
             });
     </script>

@@ -70,7 +70,6 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-
             //import plugin
             $("#importfile").click(function (e) {
                 e.preventDefault();
@@ -87,23 +86,27 @@
 
             //install a plugin
             $("#plugins-grid").on("click", ".install-plugin-link", function (e) {
-                $("html, body").animate({ scrollTop: 0 }, 400);
                 showThrobber('@Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(T("Admin.Configuration.Plugins.Fields.Install.Progress").Text))');
+                $("html, body").animate({ scrollTop: 0 }, 400);
                 return true;
             });
 
             //uninstall a plugin
             $("#plugins-grid").on("click", ".uninstall-plugin-link", function (e) {
-                $("html, body").animate({ scrollTop: 0 }, 400);
                 showThrobber('@Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(T("Admin.Configuration.Plugins.Fields.Uninstall.Progress").Text))');
+                $("html, body").animate({ scrollTop: 0 }, 400);
                 return true;
             });
             
             //relist a plugin list
             $("#plugins-form").on("click", "#reload-plugin-list", function (e) {
+                event.preventDefault();
+                showThrobber('@Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(T("Admin.Configuration.Plugins.Fields.Reload.List").Text))')
                 $("html, body").animate({ scrollTop: 0 }, 400);
-                showThrobber('@Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(T("Admin.Configuration.Plugins.Fields.Reload.List").Text))');
-                return true;
+                $(this).submit();
+                setTimeout(function () {
+                    location.reload();
+                }, 10000);
             });
 
     });
