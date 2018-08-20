@@ -222,7 +222,7 @@ namespace Grand.Services.Knowledgebase
         /// <returns>List of knowledgebase categories</returns>
         public virtual List<KnowledgebaseCategory> GetKnowledgebaseCategories()
         {
-            return _knowledgebaseCategoryRepository.Table.OrderBy(x => x.DisplayOrder).ToList();
+            return _knowledgebaseCategoryRepository.Table.OrderBy(x => x.ParentCategoryId).ThenBy(x => x.DisplayOrder).ToList().SortCategoriesForTree();
         }
 
         /// <summary>
