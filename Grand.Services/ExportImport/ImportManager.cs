@@ -601,44 +601,59 @@ namespace Grand.Services.ExportImport
                     {
                         if (String.IsNullOrEmpty(picturePath))
                             continue;
-
-                        var mimeType = GetMimeTypeFromFilePath(picturePath);
-                        var newPictureBinary = File.ReadAllBytes(picturePath);
-                        var pictureAlreadyExists = false;
-                        if (!isNew)
+                        if (!picturePath.ToLower().StartsWith(("http".ToLower())))
                         {
-                            //compare with existing product pictures
-                            var existingPictures = product.ProductPictures;
-                            foreach (var existingPicture in existingPictures)
+                            var mimeType = GetMimeTypeFromFilePath(picturePath);
+                            var newPictureBinary = File.ReadAllBytes(picturePath);
+                            var pictureAlreadyExists = false;
+                            if (!isNew)
                             {
-                                var pp = _pictureService.GetPictureById(existingPicture.PictureId);
-                                var existingBinary = _pictureService.LoadPictureBinary(pp);
-                                //picture binary after validation (like in database)
-                                var validatedPictureBinary = _pictureService.ValidatePicture(newPictureBinary, mimeType);
-                                if (existingBinary.SequenceEqual(validatedPictureBinary) || existingBinary.SequenceEqual(newPictureBinary))
+                                //compare with existing product pictures
+                                var existingPictures = product.ProductPictures;
+                                foreach (var existingPicture in existingPictures)
                                 {
-                                    //the same picture content
-                                    pictureAlreadyExists = true;
-                                    break;
+                                    var pp = _pictureService.GetPictureById(existingPicture.PictureId);
+                                    var existingBinary = _pictureService.LoadPictureBinary(pp);
+                                    //picture binary after validation (like in database)
+                                    var validatedPictureBinary = _pictureService.ValidatePicture(newPictureBinary, mimeType);
+                                    if (existingBinary.SequenceEqual(validatedPictureBinary) || existingBinary.SequenceEqual(newPictureBinary))
+                                    {
+                                        //the same picture content
+                                        pictureAlreadyExists = true;
+                                        break;
+                                    }
                                 }
                             }
-                        }
 
-                        if (!pictureAlreadyExists)
-                        {
-                            var picture = _pictureService.InsertPicture(newPictureBinary, mimeType, _pictureService.GetPictureSeName(product.Name));
-                            var productPicture = new ProductPicture
+                            if (!pictureAlreadyExists)
                             {
-                                PictureId = picture.Id,
-                                ProductId = product.Id,
-                                DisplayOrder = 1,
-                            };
-                            _productService.InsertProductPicture(productPicture);
+                                var picture = _pictureService.InsertPicture(newPictureBinary, mimeType, _pictureService.GetPictureSeName(product.Name));
+                                var productPicture = new ProductPicture
+                                {
+                                    PictureId = picture.Id,
+                                    ProductId = product.Id,
+                                    DisplayOrder = 1,
+                                };
+                                _productService.InsertProductPicture(productPicture);
+                            }
+                        }
+                        else
+                        {
+                            byte[] fileBinary = DownloadUrl.DownloadFile(picturePath).Result;
+                            if (fileBinary!=null)
+                            {
+                                var mimeType = GetMimeTypeFromFilePath(picturePath);
+                                var picture = _pictureService.InsertPicture(fileBinary, mimeType, _pictureService.GetPictureSeName(product.Name));
+                                var productPicture = new ProductPicture
+                                {
+                                    PictureId = picture.Id,
+                                    ProductId = product.Id,
+                                    DisplayOrder = 1,
+                                };
+                                _productService.InsertProductPicture(productPicture);
+                            }
                         }
                     }
-
-                    //update "HasTierPrices" and "HasDiscountsApplied" properties
-                    _productService.UpdateHasTierPricesProperty(product.Id);
 
                     //next product
                     iRow++;
