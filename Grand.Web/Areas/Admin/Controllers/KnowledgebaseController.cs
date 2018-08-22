@@ -713,7 +713,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
                 return AccessDeniedView();
 
-            var articles = _knowledgebaseService.GetKnowledgebaseArticlesByName(model.SearchArticleName);
+            var articles = _knowledgebaseService.GetKnowledgebaseArticlesByName(model.SearchArticleName, command.Page - 1, command.PageSize);
             var gridModel = new DataSourceResult();
             gridModel.Data = articles.Select(x => x.ToModel());
             gridModel.Total = articles.TotalCount;
