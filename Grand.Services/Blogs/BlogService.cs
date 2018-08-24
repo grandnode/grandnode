@@ -77,13 +77,17 @@ namespace Grand.Services.Blogs
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <param name="blogPostName">Blog post name</param>
         /// <returns>Blog posts</returns>
         public virtual IPagedList<BlogPost> GetAllBlogPosts(string storeId = "", 
             DateTime? dateFrom = null, DateTime? dateTo = null,
-            int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false, string tag = null)
+            int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false, string tag = null, string blogPostName = "")
         {
 
             var query = _blogPostRepository.Table;
+
+            if (!String.IsNullOrWhiteSpace(blogPostName))
+                query = query.Where(b => b.Title != null && b.Title.ToLower().Contains(blogPostName.ToLower()));
 
             if (dateFrom.HasValue)
                 query = query.Where(b => dateFrom.Value <= b.CreatedOnUtc);
