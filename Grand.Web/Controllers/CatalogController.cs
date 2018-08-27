@@ -89,8 +89,20 @@ namespace Grand.Web.Controllers
 
         #endregion
 
+        #region Utilities
+
+        protected void SaveLastContinueShoppingPage(Customer customer)
+        {
+            _genericAttributeService.SaveAttribute(customer,
+                SystemCustomerAttributeNames.LastContinueShoppingPage,
+                _webHelper.GetThisPageUrl(false),
+                _storeContext.CurrentStore.Id);
+        }
+
+        #endregion
+
         #region Categories
-        
+
         public virtual IActionResult Category(string categoryId, CatalogPagingFilteringModel command)
         {
             var category = _catalogWebService.GetCategoryById(categoryId);
@@ -113,10 +125,7 @@ namespace Grand.Web.Controllers
                 return InvokeHttp404();
 
             //'Continue shopping' URL
-            _genericAttributeService.SaveAttribute(customer, 
-                SystemCustomerAttributeNames.LastContinueShoppingPage, 
-                _webHelper.GetThisPageUrl(false),
-                _storeContext.CurrentStore.Id);
+            SaveLastContinueShoppingPage(customer);
 
             //display "edit" (manage) link
             if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel, customer) && _permissionService.Authorize(StandardPermissionProvider.ManageCategories, customer))
@@ -160,11 +169,8 @@ namespace Grand.Web.Controllers
                 return InvokeHttp404();
 
             //'Continue shopping' URL
-            _genericAttributeService.SaveAttribute(customer, 
-                SystemCustomerAttributeNames.LastContinueShoppingPage, 
-                _webHelper.GetThisPageUrl(false),
-                _storeContext.CurrentStore.Id);
-            
+            SaveLastContinueShoppingPage(customer);
+
             //display "edit" (manage) link
             if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel, customer) && _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers, customer))
                 DisplayEditLink(Url.Action("Edit", "Manufacturer", new { id = manufacturer.Id, area = "Admin" }));
@@ -202,14 +208,13 @@ namespace Grand.Web.Controllers
             if (!vendor.Active)
                 return InvokeHttp404();
 
+            var customer = _workContext.CurrentCustomer;
+
             //'Continue shopping' URL
-            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
-                SystemCustomerAttributeNames.LastContinueShoppingPage,
-                _webHelper.GetThisPageUrl(false),
-                _storeContext.CurrentStore.Id);
-            
+            SaveLastContinueShoppingPage(customer);
+
             //display "edit" (manage) link
-            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel, customer) && _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers, customer))
                 DisplayEditLink(Url.Action("Edit", "Vendor", new { id = vendor.Id, area = "Admin" }));
 
             var model = _catalogWebService.PrepareVendor(vendor, command);
@@ -401,11 +406,9 @@ namespace Grand.Web.Controllers
         public virtual IActionResult Search(SearchModel model, CatalogPagingFilteringModel command)
         {
             //'Continue shopping' URL
-            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
-                SystemCustomerAttributeNames.LastContinueShoppingPage,
-                _webHelper.GetThisPageUrl(false),
-                _storeContext.CurrentStore.Id);
-
+            SaveLastContinueShoppingPage(_workContext.CurrentCustomer);
+            
+            //Prepare model
             var searchmodel = _catalogWebService.PrepareSearch(model, command);
 
             return View(searchmodel);
