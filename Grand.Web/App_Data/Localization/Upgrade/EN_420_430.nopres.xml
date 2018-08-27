@@ -60,7 +60,7 @@
     <Value>Maximum search results count</Value>
   </LocaleResource>
   <LocaleResource Name="AdminSearch.Fields.MaxSearchResultsCount.Hint">
-    <Value>Number of maximum search results to show in result box.</Value>
+    <Value>Number of maximum search results to show in result box. Shouldn't be greater than 100.</Value>
   </LocaleResource>
   <LocaleResource Name="AdminSearch.Fields.ProductsDisplayOrder">
     <Value>Products display order</Value>

@@ -176,7 +176,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             result = result.OrderBy(x => x.Item2).ToList();
-            return Json(result.Select(x => x.Item1).ToList());
+            return Json(result.Take(_adminSearchSettings.MaxSearchResultsCount).Select(x => x.Item1).ToList());
         }
     }
 }

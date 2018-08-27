@@ -19074,82 +19074,82 @@
   <LocaleResource Name="AdminSearch.Fields.SearchInCategories">
     <Value>Search in categories</Value>
   </LocaleResource>
- <LocaleResource Name="AdminSearch.Fields.SearchInCategories.Hint">
+  <LocaleResource Name="AdminSearch.Fields.SearchInCategories.Hint">
     <Value>Searches by category name.</Value>
   </LocaleResource>
- <LocaleResource Name="AdminSearch.Fields.SearchInManufacturers">
+  <LocaleResource Name="AdminSearch.Fields.SearchInManufacturers">
     <Value>Search in manufacturers</Value>
   </LocaleResource>
- <LocaleResource Name="AdminSearch.Fields.SearchInManufacturers.Hint">
+  <LocaleResource Name="AdminSearch.Fields.SearchInManufacturers.Hint">
     <Value>Searches by manufacturer name.</Value>
   </LocaleResource>
- <LocaleResource Name="AdminSearch.Fields.SearchInTopics">
+  <LocaleResource Name="AdminSearch.Fields.SearchInTopics">
     <Value>Search in topics</Value>
   </LocaleResource>
- <LocaleResource Name="AdminSearch.Fields.SearchInTopics.Hint">
+  <LocaleResource Name="AdminSearch.Fields.SearchInTopics.Hint">
     <Value>Searches by topic system name.</Value>
   </LocaleResource>
- <LocaleResource Name="AdminSearch.Fields.SearchInNews">
+  <LocaleResource Name="AdminSearch.Fields.SearchInNews">
     <Value>Search in news</Value>
   </LocaleResource>
- <LocaleResource Name="AdminSearch.Fields.SearchInNews.Hint">
+  <LocaleResource Name="AdminSearch.Fields.SearchInNews.Hint">
     <Value>Searches by news item title.</Value>
   </LocaleResource>
- <LocaleResource Name="AdminSearch.Fields.SearchInBlogs">
+  <LocaleResource Name="AdminSearch.Fields.SearchInBlogs">
     <Value>Search in blogs</Value>
   </LocaleResource>
- <LocaleResource Name="AdminSearch.Fields.SearchInBlogs.Hint">
+  <LocaleResource Name="AdminSearch.Fields.SearchInBlogs.Hint">
     <Value>Searches by blog post title.</Value>
   </LocaleResource>
- <LocaleResource Name="AdminSearch.Fields.SearchInCustomers">
+  <LocaleResource Name="AdminSearch.Fields.SearchInCustomers">
     <Value>Search in customers</Value>
   </LocaleResource>
- <LocaleResource Name="AdminSearch.Fields.SearchInCustomers.Hint">
+  <LocaleResource Name="AdminSearch.Fields.SearchInCustomers.Hint">
     <Value>Searches by customer email and username.</Value>
   </LocaleResource>
- <LocaleResource Name="AdminSearch.Fields.SearchInOrders">
+  <LocaleResource Name="AdminSearch.Fields.SearchInOrders">
     <Value>Search in orders</Value>
   </LocaleResource>
- <LocaleResource Name="AdminSearch.Fields.SearchInOrders.Hint">
+  <LocaleResource Name="AdminSearch.Fields.SearchInOrders.Hint">
     <Value>Searches by order number, should be integer.</Value>
   </LocaleResource>
- <LocaleResource Name="AdminSearch.Fields.MinSearchTermLength">
+  <LocaleResource Name="AdminSearch.Fields.MinSearchTermLength">
     <Value>Minimum search term length</Value>
   </LocaleResource>
- <LocaleResource Name="AdminSearch.Fields.MinSearchTermLength.Hint">
+  <LocaleResource Name="AdminSearch.Fields.MinSearchTermLength.Hint">
     <Value>Minimum number of characters required to perform search for inputed phrase.</Value>
   </LocaleResource>
- <LocaleResource Name="AdminSearch.Fields.MaxSearchResultsCount">
+  <LocaleResource Name="AdminSearch.Fields.MaxSearchResultsCount">
     <Value>Maximum search results count</Value>
   </LocaleResource>
- <LocaleResource Name="AdminSearch.Fields.MaxSearchResultsCount.Hint">
-    <Value>Number of maximum search results to show in result box.</Value>
+  <LocaleResource Name="AdminSearch.Fields.MaxSearchResultsCount.Hint">
+    <Value>Number of maximum search results to show in result box. Shouldn't be greater than 100.</Value>
   </LocaleResource>
- <LocaleResource Name="AdminSearch.Fields.ProductsDisplayOrder">
+  <LocaleResource Name="AdminSearch.Fields.ProductsDisplayOrder">
     <Value>Products display order</Value>
   </LocaleResource>
- <LocaleResource Name="AdminSearch.Fields.CategoriesDisplayOrder">
+  <LocaleResource Name="AdminSearch.Fields.CategoriesDisplayOrder">
     <Value>Categories display order</Value>
   </LocaleResource>
- <LocaleResource Name="AdminSearch.Fields.ManufacturersDisplayOrder">
+  <LocaleResource Name="AdminSearch.Fields.ManufacturersDisplayOrder">
     <Value>Manufacturers display order</Value>
   </LocaleResource>
- <LocaleResource Name="AdminSearch.Fields.TopicsDisplayOrder">
+  <LocaleResource Name="AdminSearch.Fields.TopicsDisplayOrder">
     <Value>Topics display order</Value>
   </LocaleResource>
- <LocaleResource Name="AdminSearch.Fields.NewsDisplayOrder">
+  <LocaleResource Name="AdminSearch.Fields.NewsDisplayOrder">
     <Value>News display order</Value>
   </LocaleResource>
- <LocaleResource Name="AdminSearch.Fields.BlogsDisplayOrder">
+  <LocaleResource Name="AdminSearch.Fields.BlogsDisplayOrder">
     <Value>Blogs display order</Value>
   </LocaleResource>
- <LocaleResource Name="AdminSearch.Fields.CustomersDisplayOrder">
+  <LocaleResource Name="AdminSearch.Fields.CustomersDisplayOrder">
     <Value>Customers display order</Value>
   </LocaleResource>
- <LocaleResource Name="AdminSearch.Fields.OrdersDisplayOrder">
+  <LocaleResource Name="AdminSearch.Fields.OrdersDisplayOrder">
     <Value>Orders display order</Value>
   </LocaleResource>
- <LocaleResource Name="AdminSearch.Fields.ProductsDisplayOrder.Hint">
+  <LocaleResource Name="AdminSearch.Fields.ProductsDisplayOrder.Hint">
     <Value>Display order of results for this search, e.g. if you want found categories to be shown before products, set 0 for categories and 1 for products.</Value>
   </LocaleResource>
   <LocaleResource Name="AdminSearch.Fields.CategoriesDisplayOrder.Hint">
