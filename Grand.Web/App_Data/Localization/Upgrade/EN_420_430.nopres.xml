@@ -1,0 +1,17 @@
+﻿<Language>
+  <LocaleResource Name="Admin.System.Roslyn">
+    <Value>Roslyn compilation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Roslyn.Disabled">
+    <Value>Compilation of files ctx are disabled. </Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Roslyn.Errors">
+    <Value>Errors during compilation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Roslyn.FileName">
+    <Value>File name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Roslyn.IsCompiled">
+    <Value>Is compiled successfully</Value>
+  </LocaleResource>
+</Language>

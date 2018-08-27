@@ -14553,6 +14553,21 @@
   <LocaleResource Name="Admin.System.QueuedEmails.Updated">
     <Value>The queued email has been updated successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Roslyn">
+    <Value>Roslyn compilation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Roslyn.Disabled">
+    <Value>Compilation of files ctx are disabled. </Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Roslyn.Errors">
+    <Value>Errors during compilation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Roslyn.FileName">
+    <Value>File name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Roslyn.IsCompiled">
+    <Value>Is compiled successfully</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks">
     <Value>Schedule tasks</Value>
   </LocaleResource>

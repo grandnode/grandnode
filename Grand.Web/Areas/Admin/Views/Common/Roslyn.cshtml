@@ -1,0 +1,81 @@
+﻿@model bool
+@inject AdminAreaSettings adminAreaSettings
+@{
+    //page title
+    ViewBag.Title = T("Admin.System.Roslyn").Text;
+}
+
+<antiforgery-token />
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light form-fit">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-sitemap"></i>
+                    @T("Admin.System.Roslyn")
+                </div>
+            </div>
+            @if (!Model)
+            {
+                <div class="note note-success">
+                    @T("Admin.System.Roslyn.Disabled")
+                </div>
+            }
+            <div class="portlet-body">
+                <div id="roslyn-grid"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#roslyn-grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("Roslyn", "Common"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors"
+                },
+                error: function(e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                pageSize: @(adminAreaSettings.DefaultGridPageSize),
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: [@(adminAreaSettings.GridPageSizes)]
+            },
+            scrollable: false,
+            columns: [{
+                field: "FileName",
+                title: "@T("Admin.System.Roslyn.FileName")",
+                width: 100,
+            },{
+                field: "IsCompiled",
+                title: "@T("Admin.System.Roslyn.IsCompiled")",
+                width: 50,
+                headerAttributes: { style: "text-align:center" },
+                attributes: { style: "text-align:center" },
+                template: '# if(IsCompiled) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+            }, {
+                field: "Errors",
+                title: "@T("Admin.System.Roslyn.Errors")",
+                width: 500
+            }]
+        });
+    });
+</script>

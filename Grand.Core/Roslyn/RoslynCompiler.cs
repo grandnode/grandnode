@@ -90,7 +90,7 @@ namespace Grand.Core.Roslyn
                             Assembly shadowCopiedAssembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(shadowFileName);
                             csxcript.DLLAssemblyFile = shadowFileName;
                             csxcript.ReferencedAssembly = shadowCopiedAssembly;
-                            csxcript.IsCompile = true;
+                            csxcript.IsCompiled = true;
                             applicationPartManager.ApplicationParts.Add(new AssemblyPart(shadowCopiedAssembly));
                         }
                         else
@@ -137,7 +137,7 @@ namespace Grand.Core.Roslyn
                 var compilationResult = compilation.Emit(ms);
                 if (compilationResult.Success)
                 {
-                    result.IsCompile = true;
+                    result.IsCompiled = true;
                 }
                 else
                 {

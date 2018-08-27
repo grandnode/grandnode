@@ -23,4 +23,13 @@
     <Content Remove="wwwroot\Content\Images\Thumbs\*.jpeg;wwwroot\Content\Images\Thumbs\*.jpg;wwwroot\Content\Images\Thumbs\*.png" />
     <Content Remove="wwwroot\bundles\*.css;wwwroot\bundles\*.js" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="App_Data\Localization\Upgrade\EN_420_430.nopres.xml" />
+    <None Remove="Roslyn\CodeFile - Copy.csx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="Areas\Admin\Views\Common\Roslyn.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+  </ItemGroup>
 </Project>
