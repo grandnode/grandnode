@@ -1,18 +1,24 @@
 ﻿@model Grand.Web.Areas.Admin.Models.PushNotifications.ConfigurationModel
 
 <form asp-controller="Setting" asp-action="PushNotifications" method="post">
-    <div class="col-md-12">
-        <div class="portlet light form-fit">
-            <div class="portlet-title">
-                <div class="caption">
-                    <i class="fa fa-cubes"></i>
-                    @T("PushNotifications.PushNotications")
+    <antiforgery-token />
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-cubes"></i>
+                        @T("PushNotifications.PushNotications")
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group btn-group-devided">
+                            <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="portlet-body form">
-                <div class="form-horizontal">
-                    <div class="form-body">
-                        <div class="portlet-body">
+                <div class="portlet-body form">
+                    <div class="form-horizontal">
+                        <div class="form-body">
                             <div class="alert alert-info">
                                 <p>@T("PushNotifications.PushNotications.Info")</p>
                             </div>
@@ -77,13 +83,6 @@
                                         <admin-input asp-for="AllowGuestNotifications" />
                                         <span></span>
                                     </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-actions">
-                            <div class="row">
-                                <div class="col-md-9 col-md-offset-3">
-                                    <input type="submit" name="save" class="btn green" value="@T("Admin.Common.Save")" />
                                 </div>
                             </div>
                         </div>
