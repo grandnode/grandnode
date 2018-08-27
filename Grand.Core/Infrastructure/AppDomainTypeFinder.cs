@@ -84,38 +84,28 @@ namespace Grand.Core.Infrastructure
                 foreach (var a in assemblies)
                 {
                     Type[] types = null;
-                    try
+                    types = a.GetTypes();
+                    if (types == null)
+                        continue;
+
+                    foreach (var t in types)
                     {
-                        types = a.GetTypes();
-                    }
-                    catch
-                    {
-                        if (!ignoreReflectionErrors)
+                        if (!assignTypeFrom.IsAssignableFrom(t) && (!assignTypeFrom.IsGenericTypeDefinition || !DoesTypeImplementOpenGeneric(t, assignTypeFrom)))
+                            continue;
+
+                        if (t.IsInterface)
+                            continue;
+
+                        if (onlyConcreteClasses)
                         {
-                            throw;
-                        }
-                    }
-                    if (types != null)
-                    {
-                        foreach (var t in types)
-                        {
-                            if (assignTypeFrom.IsAssignableFrom(t) || (assignTypeFrom.GetTypeInfo().IsGenericTypeDefinition))
+                            if (t.IsClass && !t.IsAbstract)
                             {
-                                if (!t.GetTypeInfo().IsInterface)
-                                {
-                                    if (onlyConcreteClasses)
-                                    {
-                                        if (t.GetTypeInfo().IsClass && !t.GetTypeInfo().IsAbstract)
-                                        {
-                                            result.Add(t);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        result.Add(t);
-                                    }
-                                }
+                                result.Add(t);
                             }
+                        }
+                        else
+                        {
+                            result.Add(t);
                         }
                     }
                 }
@@ -132,6 +122,34 @@ namespace Grand.Core.Infrastructure
                 throw fail;
             }
             return result;
+        }
+
+        // <summary>
+        /// Does type implement generic?
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="openGeneric"></param>
+        /// <returns></returns>
+        protected virtual bool DoesTypeImplementOpenGeneric(Type type, Type openGeneric)
+        {
+            try
+            {
+                var genericTypeDefinition = openGeneric.GetGenericTypeDefinition();
+                foreach (var implementedInterface in type.FindInterfaces((objType, objCriteria) => true, null))
+                {
+                    if (!implementedInterface.IsGenericType)
+                        continue;
+
+                    var isMatch = genericTypeDefinition.IsAssignableFrom(implementedInterface.GetGenericTypeDefinition());
+                    return isMatch;
+                }
+
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         /// <summary>Gets the assemblies related to the current implementation.</summary>
