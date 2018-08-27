@@ -22,6 +22,8 @@ using Grand.Framework.Kendoui;
 using Grand.Framework.Localization;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.UI;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Grand.Services.Events;
 
 namespace Grand.Framework.Controllers
 {
@@ -56,7 +58,6 @@ namespace Grand.Framework.Controllers
             if (actionContextAccessor == null)
                 throw new Exception("IActionContextAccessor cannot be resolved");
 
-            //var context = actionContextAccessor.ActionContext; //= HttpContext.;  //actionContextAccessor.ActionContext;
             var context = new ActionContext(this.HttpContext, this.RouteData, this.ControllerContext.ActionDescriptor, this.ModelState);
 
             var viewComponentResult = ViewComponent(componentName, arguments);
@@ -364,7 +365,23 @@ namespace Grand.Framework.Controllers
 
             return ErrorForKendoGridJson(localizationService.GetResource("Admin.AccessDenied.Description"));
         }
-        
+
         #endregion
+
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            // do something before the action executes
+            //event notification
+            EngineContext.Current.Resolve<IEventPublisher>().Publish<ActionExecutingContext>(context);            //EngineContext.Current.Resolve<IEventPublisher>().ActionExecuting(context);
+        }
+
+        public override void OnActionExecuted(ActionExecutedContext context)
+        {
+            // do something after the action executes
+            // event notification
+            EngineContext.Current.Resolve<IEventPublisher>().Publish<ActionExecutedContext>(context);
+        }
+
+
     }
 }
