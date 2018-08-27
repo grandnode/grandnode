@@ -15,6 +15,7 @@ using Grand.Core.Infrastructure.DependencyManagement;
 using Grand.Core.Infrastructure.Mapper;
 using Grand.Core.Plugins;
 using Grand.Core.Infrastructure.MongoDB;
+using Grand.Core.Roslyn;
 
 namespace Grand.Core.Infrastructure
 {
@@ -152,6 +153,9 @@ namespace Grand.Core.Infrastructure
             //initialize plugins
             var mvcCoreBuilder = services.AddMvcCore();
             PluginManager.Initialize(mvcCoreBuilder.PartManager, grandConfig);
+
+            //initialize CTX sctipts
+            RoslynCompiler.Initialize(mvcCoreBuilder.PartManager, grandConfig);
 
         }
 

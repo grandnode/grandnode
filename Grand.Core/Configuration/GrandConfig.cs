@@ -83,6 +83,11 @@ namespace Grand.Core.Configuration
         public string PluginsIgnoredDuringInstallation { get; set; }
 
         /// <summary>
+        /// Enable scripting C# applications to execute code.
+        /// </summary>
+        public bool UseRoslynScripts { get; set; }
+
+        /// <summary>
         /// Gets or sets a value of "Cache-Control" header value for static content
         /// </summary>
         public string StaticFilesCacheControl { get; set; }
