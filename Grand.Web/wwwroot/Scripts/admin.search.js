@@ -44,7 +44,7 @@ Admin.Search = (function () {
                             }
                         });
                     },
-                    limit: 10
+                    limit: 100
                 });
 
             var navigateTo = function (item) {
