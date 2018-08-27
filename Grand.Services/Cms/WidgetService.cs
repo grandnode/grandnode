@@ -43,7 +43,7 @@ namespace Grand.Services.Cms
         /// <summary>
         /// Load active widgets
         /// </summary>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+        /// <param name="storeId">Load records allowed only in a specified store; pass "" to load all records</param>
         /// <returns>Widgets</returns>
         public virtual IList<IWidgetPlugin> LoadActiveWidgets(string storeId = "")
         {
@@ -56,7 +56,7 @@ namespace Grand.Services.Cms
         /// Load active widgets
         /// </summary>
         /// <param name="widgetZone">Widget zone</param>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+        /// <param name="storeId">Load records allowed only in a specified store; pass "" to load all records</param>
         /// <returns>Widgets</returns>
         public virtual IList<IWidgetPlugin> LoadActiveWidgetsByWidgetZone(string  widgetZone, string storeId = "")
         {
@@ -85,7 +85,7 @@ namespace Grand.Services.Cms
         /// <summary>
         /// Load all widgets
         /// </summary>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+        /// <param name="storeId">Load records allowed only in a specified store; pass "" to load all records</param>
         /// <returns>Widgets</returns>
         public virtual IList<IWidgetPlugin> LoadAllWidgets(string storeId = "")
         {

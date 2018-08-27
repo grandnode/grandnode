@@ -70,7 +70,7 @@ namespace Grand.Services.Blogs
         /// <summary>
         /// Gets all blog posts
         /// </summary>
-        /// <param name="storeId">The store identifier; pass 0 to load all records</param>
+        /// <param name="storeId">The store identifier; pass "" to load all records</param>
         /// <param name="languageId">Language identifier; 0 if you want to get all records</param>
         /// <param name="dateFrom">Filter by created date; null if you want to get all records</param>
         /// <param name="dateTo">Filter by created date; null if you want to get all records</param>
@@ -119,7 +119,7 @@ namespace Grand.Services.Blogs
         /// <summary>
         /// Gets all blog posts
         /// </summary>
-        /// <param name="storeId">The store identifier; pass 0 to load all records</param>
+        /// <param name="storeId">The store identifier; pass "" to load all records</param>
         /// <param name="languageId">Language identifier. 0 if you want to get all news</param>
         /// <param name="tag">Tag</param>
         /// <param name="pageIndex">Page index</param>
@@ -150,7 +150,7 @@ namespace Grand.Services.Blogs
         /// <summary>
         /// Gets all blog post tags
         /// </summary>
-        /// <param name="storeId">The store identifier; pass 0 to load all records</param>
+        /// <param name="storeId">The store identifier; pass "" to load all records</param>
         /// <param name="languageId">Language identifier. 0 if you want to get all news</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Blog post tags</returns>

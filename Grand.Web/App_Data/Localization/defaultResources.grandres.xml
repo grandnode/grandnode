@@ -19173,4 +19173,7 @@
   <LocaleResource Name="AdminSearch.Fields.OrdersDisplayOrder.Hint">
     <Value>Display order of results for this search, e.g. if you want found categories to be shown before products, set 0 for categories and 1 for products.</Value>
   </LocaleResource>
+  <LocaleResource Name="AdminSearch.Placehloder">
+    <Value>Search in store...</Value>
+  </LocaleResource>
 </Language>

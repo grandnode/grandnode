@@ -56,42 +56,42 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 if (result.Count() < _adminSearchSettings.MaxSearchResultsCount && _adminSearchSettings.SearchInProducts)
                 {
-                    var products = _productService.SearchProducts(keywords: searchTerm);
+                    var products = _productService.SearchProducts(keywords: searchTerm, pageSize: _adminSearchSettings.MaxSearchResultsCount - result.Count());
                     foreach (var product in products)
                     {
                         result.Add(new Tuple<object, int>(new
                         {
                             title = product.Name,
                             link = Url.Content("~/Admin/Product/Edit/") + product.Id,
-                            source = "Products"
+                            source = _localizationService.GetResource("Admin.Catalog.Products")
                         }, _adminSearchSettings.ProductsDisplayOrder));
                     }
                 }
 
                 if (result.Count() < _adminSearchSettings.MaxSearchResultsCount && _adminSearchSettings.SearchInCategories)
                 {
-                    var categories = _categoryService.GetAllCategories(searchTerm);
+                    var categories = _categoryService.GetAllCategories(searchTerm, pageSize: _adminSearchSettings.MaxSearchResultsCount - result.Count());
                     foreach (var category in categories)
                     {
                         result.Add(new Tuple<object, int>(new
                         {
                             title = category.Name,
                             link = Url.Content("~/Admin/Category/Edit/") + category.Id,
-                            source = "Categories"
+                            source = _localizationService.GetResource("Admin.Catalog.Categories")
                         }, _adminSearchSettings.CategoriesDisplayOrder));
                     }
                 }
 
                 if (result.Count() < _adminSearchSettings.MaxSearchResultsCount && _adminSearchSettings.SearchInManufacturers)
                 {
-                    var manufacturers = _manufacturerService.GetAllManufacturers(searchTerm);
+                    var manufacturers = _manufacturerService.GetAllManufacturers(searchTerm, pageSize: _adminSearchSettings.MaxSearchResultsCount - result.Count());
                     foreach (var manufacturer in manufacturers)
                     {
                         result.Add(new Tuple<object, int>(new
                         {
                             title = manufacturer.Name,
                             link = Url.Content("~/Admin/Manufacturer/Edit/") + manufacturer.Id,
-                            source = "Manufacturers"
+                            source = _localizationService.GetResource("Admin.Catalog.Manufacturers")
                         }, _adminSearchSettings.ManufacturersDisplayOrder));
                     }
                 }
@@ -105,43 +105,44 @@ namespace Grand.Web.Areas.Admin.Controllers
                         {
                             title = topic.SystemName,
                             link = Url.Content("~/Admin/Topic/Edit/") + topic.Id,
-                            source = "Topics"
+                            source = _localizationService.GetResource("Admin.ContentManagement.Topics")
                         }, _adminSearchSettings.TopicsDisplayOrder));
                     }
                 }
 
                 if (result.Count() < _adminSearchSettings.MaxSearchResultsCount && _adminSearchSettings.SearchInNews)
                 {
-                    var news = _newsService.GetAllNews(newsTitle: searchTerm);
+                    var news = _newsService.GetAllNews(newsTitle: searchTerm, pageSize: _adminSearchSettings.MaxSearchResultsCount - result.Count());
                     foreach (var signleNews in news)
                     {
                         result.Add(new Tuple<object, int>(new
                         {
                             title = signleNews.Title,
                             link = Url.Content("~/Admin/News/Edit/") + signleNews.Id,
-                            source = "News"
+                            source = _localizationService.GetResource("Admin.ContentManagement.News")
                         }, _adminSearchSettings.NewsDisplayOrder));
                     }
                 }
 
                 if (result.Count() < _adminSearchSettings.MaxSearchResultsCount && _adminSearchSettings.SearchInBlogs)
                 {
-                    var blogPosts = _blogService.GetAllBlogPosts(blogPostName: searchTerm);
+                    var blogPosts = _blogService.GetAllBlogPosts(blogPostName: searchTerm, pageSize: _adminSearchSettings.MaxSearchResultsCount - result.Count());
                     foreach (var blogPost in blogPosts)
                     {
                         result.Add(new Tuple<object, int>(new
                         {
                             title = blogPost.Title,
                             link = Url.Content("~/Admin/Blog/Edit/") + blogPost.Id,
-                            source = "Blog posts"
+                            source = _localizationService.GetResource("Admin.ContentManagement.Blog")
                         }, _adminSearchSettings.BlogsDisplayOrder));
                     }
                 }
 
                 if (result.Count() < _adminSearchSettings.MaxSearchResultsCount && _adminSearchSettings.SearchInCustomers)
                 {
-                    var customersByEmail = _customerService.GetAllCustomers(email: searchTerm);
-                    var customersByUsername = _customerService.GetAllCustomers(username: searchTerm);
+                    var customersByEmail = _customerService.GetAllCustomers(email: searchTerm, pageSize: _adminSearchSettings.MaxSearchResultsCount - result.Count());
+                    var customersByUsername = _customerService.GetAllCustomers(username: searchTerm, pageSize: _adminSearchSettings.MaxSearchResultsCount - result.Count()
+                        - customersByEmail.Count());
                     var combined = customersByEmail.Intersect(customersByUsername);
 
                     foreach (var customer in combined)
@@ -150,7 +151,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         {
                             title = customer.Email,
                             link = Url.Content("~/Admin/Customer/Edit/") + customer.Id,
-                            source = "Customers"
+                            source = _localizationService.GetResource("Admin.Customers")
                         }, _adminSearchSettings.CustomersDisplayOrder));
                     }
                 }
@@ -168,7 +169,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         {
                             title = order.OrderNumber,
                             link = Url.Content("~/Admin/Order/Edit/") + order.Id,
-                            source = "Orders"
+                            source = _localizationService.GetResource("Admin.Orders")
                         }, _adminSearchSettings.OrdersDisplayOrder));
                     }
                 }
