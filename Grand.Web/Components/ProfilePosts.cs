@@ -15,10 +15,11 @@ using Grand.Services.Directory;
 using System.Collections.Generic;
 using Grand.Services.Seo;
 using Grand.Web.Models.Common;
+using Grand.Framework.Components;
 
 namespace Grand.Web.ViewComponents
 {
-    public class ProfilePostsViewComponent : ViewComponent
+    public class ProfilePostsViewComponent : BaseViewComponent
     {
         private readonly IForumService _forumService;
         private readonly ICustomerService _customerService;

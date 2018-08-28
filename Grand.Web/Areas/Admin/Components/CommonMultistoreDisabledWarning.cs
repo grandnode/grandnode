@@ -1,11 +1,12 @@
 ﻿using Grand.Core.Domain.Catalog;
+using Grand.Framework.Components;
 using Grand.Services.Configuration;
 using Grand.Services.Stores;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Grand.Web.Areas.Admin.Components
 {
-    public class CommonMultistoreDisabledWarningViewComponent : ViewComponent
+    public class CommonMultistoreDisabledWarningViewComponent : BaseViewComponent
     {
         private readonly ISettingService _settingService;
         private readonly IStoreService _storeService;
@@ -18,7 +19,7 @@ namespace Grand.Web.Areas.Admin.Components
             this._catalogSettings = catalogSettings;
         }
 
-        public IViewComponentResult Invoke()//original Action name: MultistoreDisabledWarning
+        public IViewComponentResult Invoke()
         {
             //action displaying notification (warning) to a store owner that "limit per store" feature is ignored
             //default setting

@@ -2,10 +2,11 @@
 using Grand.Web.Services;
 using System.Linq;
 using Grand.Core.Domain.Vendors;
+using Grand.Framework.Components;
 
 namespace Grand.Web.ViewComponents
 {
-    public class VendorNavigationViewComponent : ViewComponent
+    public class VendorNavigationViewComponent : BaseViewComponent
     {
         private readonly ICatalogWebService _catalogWebService;
         private readonly VendorSettings _vendorSettings;

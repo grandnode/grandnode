@@ -9,7 +9,7 @@ using System.Runtime.Loader;
 namespace Grand.Core.Infrastructure
 {
     /// <summary>
-    /// A class that finds types needed by Nop by looping assemblies in the 
+    /// A class that finds types needed by Grand by looping assemblies in the 
     /// currently executing AppDomain. Only assemblies whose names matches
     /// certain patterns are investigated and an optional list of assemblies
     /// referenced by <see cref="AssemblyNames"/> are always investigated.
@@ -18,7 +18,6 @@ namespace Grand.Core.Infrastructure
     {
         #region Fields
 
-        private bool ignoreReflectionErrors = true;
         private bool loadAppDomainAssemblies = true;
         private string assemblySkipLoadingPattern = "^System|^mscorlib|^Microsoft|^AjaxControlToolkit|^Antlr3|^Autofac|^AutoMapper|^Castle|^ComponentArt|^CppCodeProvider|^DotNetOpenAuth|^EPPlus|^FluentValidation|^ImageProcessor|^itextsharp|^log4net|^MaxMind|^MbUnit|^MiniProfiler|^Mono.Math|^MongoDB|^MvcContrib|^Newtonsoft|^NHibernate|^nunit|^Org.Mentalis|^PerlRegex|^QuickGraph|^Recaptcha|^Remotion|^RestSharp|^Rhino|^Telerik|^Iesi|^TestDriven|^TestFu|^UserAgentStringLibrary|^VJSharpCodeProvider|^WebActivator|^WebDev|^WebGrease";
         private string assemblyRestrictToLoadingPattern = ".*";

@@ -7,10 +7,11 @@ using Grand.Core;
 using Grand.Services.Customers;
 using Grand.Services.Security;
 using Grand.Services.Stores;
+using Grand.Framework.Components;
 
 namespace Grand.Web.Components
 {
-    public class RecommendedProductsViewComponent : ViewComponent
+    public class RecommendedProductsViewComponent : BaseViewComponent
     {
         #region Fields
         private readonly IProductService _productService;

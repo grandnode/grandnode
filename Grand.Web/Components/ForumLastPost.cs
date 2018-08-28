@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Grand.Web.Services;
 using Grand.Services.Forums;
+using Grand.Framework.Components;
 
 namespace Grand.Web.ViewComponents
 {
-    public class ForumLastPostViewComponent : ViewComponent
+    public class ForumLastPostViewComponent : BaseViewComponent
     {
         private readonly IForumService _forumService;
         private readonly IBoardsWebService _boardsWebService;

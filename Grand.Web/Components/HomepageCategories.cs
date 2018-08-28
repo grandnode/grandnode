@@ -1,10 +1,11 @@
 ﻿using System.Linq;
+using Grand.Framework.Components;
 using Grand.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Grand.Web.Components
 {
-    public class HomePageCategoriesViewComponent : ViewComponent
+    public class HomePageCategoriesViewComponent : BaseViewComponent
     {
         #region Fields
         private readonly ICatalogWebService _catalogWebService;

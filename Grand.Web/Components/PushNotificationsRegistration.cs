@@ -1,18 +1,13 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.PushNotifications;
-using Grand.Web.Areas.Admin.Models.PushNotifications;
+using Grand.Framework.Components;
 using Grand.Web.Models.PushNotifications;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Grand.Web.Components
 {
-    public class PushNotificationsRegistration : ViewComponent
+    public class PushNotificationsRegistration : BaseViewComponent
     {
         private PushNotificationsSettings _pushNotificationsSettings;
         private IWorkContext _workContext;

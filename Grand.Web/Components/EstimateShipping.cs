@@ -4,10 +4,11 @@ using System.Linq;
 using Grand.Core.Domain.Orders;
 using Grand.Core;
 using Grand.Services.Orders;
+using Grand.Framework.Components;
 
 namespace Grand.Web.ViewComponents
 {
-    public class EstimateShippingViewComponent : ViewComponent
+    public class EstimateShippingViewComponent : BaseViewComponent
     {
         private readonly IShoppingCartWebService _shoppingCartWebService;
         private readonly IWorkContext _workContext;

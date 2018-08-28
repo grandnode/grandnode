@@ -1,5 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Core.Domain.Customers;
+using Grand.Framework.Components;
 using Grand.Services.Common;
 using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Models.Settings;
@@ -8,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Grand.Web.Areas.Admin.Components
 {
-    public class StoreScopeConfigurationViewComponent : ViewComponent
+    public class StoreScopeConfigurationViewComponent : BaseViewComponent
     {
         #region Fields
 
@@ -29,7 +30,7 @@ namespace Grand.Web.Areas.Admin.Components
 
         #region Invoker
 
-        public IViewComponentResult Invoke()//original Action name: StoreScopeConfiguration
+        public IViewComponentResult Invoke()
         {
             var allStores = _storeService.GetAllStores();
             if (allStores.Count < 2)

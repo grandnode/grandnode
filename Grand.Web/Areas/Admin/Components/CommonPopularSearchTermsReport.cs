@@ -1,9 +1,10 @@
-﻿using Grand.Services.Security;
+﻿using Grand.Framework.Components;
+using Grand.Services.Security;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Grand.Web.Areas.Admin.Components
 {
-    public class CommonPopularSearchTermsReportViewComponent : ViewComponent
+    public class CommonPopularSearchTermsReportViewComponent : BaseViewComponent
     {
         private readonly IPermissionService _permissionService;
 

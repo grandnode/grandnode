@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Grand.Web.Services;
 using Grand.Core.Domain;
+using Grand.Framework.Components;
 
 namespace Grand.Web.ViewComponents
 {
-    public class StoreThemeSelectorViewComponent : ViewComponent
+    public class StoreThemeSelectorViewComponent : BaseViewComponent
     {
         private readonly ICommonWebService _commonWebService;
         private readonly StoreInformationSettings _storeInformationSettings;

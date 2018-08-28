@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Grand.Web.Services;
 using Grand.Core.Domain.Blogs;
+using Grand.Framework.Components;
 
 namespace Grand.Web.ViewComponents
 {
-    public class HomePageBlogViewComponent : ViewComponent
+    public class HomePageBlogViewComponent : BaseViewComponent
     {
         private readonly IBlogWebService _blogWebService;
         private readonly BlogSettings _blogSettings;

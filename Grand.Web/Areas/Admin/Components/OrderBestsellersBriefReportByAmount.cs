@@ -1,10 +1,10 @@
-﻿using Grand.Services.Localization;
+﻿using Grand.Framework.Components;
 using Grand.Services.Security;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Grand.Web.Areas.Admin.Components
 {
-    public class OrderBestsellersBriefReportByAmountViewComponent : ViewComponent
+    public class OrderBestsellersBriefReportByAmountViewComponent : BaseViewComponent
     {
         private readonly IPermissionService _permissionService;
 
@@ -13,7 +13,7 @@ namespace Grand.Web.Areas.Admin.Components
             this._permissionService = permissionService;
         }
 
-        public IViewComponentResult Invoke()//original Action name: BestsellersBriefReportByAmount
+        public IViewComponentResult Invoke()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");

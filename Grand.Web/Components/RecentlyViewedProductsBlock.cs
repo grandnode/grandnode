@@ -8,10 +8,11 @@ using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Web.Models.Catalog;
 using System.Collections.Generic;
+using Grand.Framework.Components;
 
 namespace Grand.Web.Components
 {
-    public class RecentlyViewedProductsBlockViewComponent : ViewComponent
+    public class RecentlyViewedProductsBlockViewComponent : BaseViewComponent
     {
         #region Fields
         private readonly IProductService _productService;

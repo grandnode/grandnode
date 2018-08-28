@@ -534,7 +534,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
-            var scripts = RoslynCompiler.ReferencedScripts.ToList();
+            var scripts = RoslynCompiler.ReferencedScripts != null ? RoslynCompiler.ReferencedScripts.ToList() : new List<ResultCompiler>();
 
             var gridModel = new DataSourceResult
             {

@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Grand.Web.Services;
 using System.Linq;
+using Grand.Framework.Components;
 
 namespace Grand.Web.ViewComponents
 {
-    public class HomePagePollsViewComponent : ViewComponent
+    public class HomePagePollsViewComponent : BaseViewComponent
     {
         private readonly IPollWebService _pollWebService;
 

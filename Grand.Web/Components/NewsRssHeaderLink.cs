@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Grand.Core.Domain.News;
 using Grand.Core;
+using Grand.Framework.Components;
 
 namespace Grand.Web.ViewComponents
 {
-    public class NewsRssHeaderLinkViewComponent : ViewComponent
+    public class NewsRssHeaderLinkViewComponent : BaseViewComponent
     {
         private readonly NewsSettings _newsSettings;
         private readonly IWorkContext _workContext;

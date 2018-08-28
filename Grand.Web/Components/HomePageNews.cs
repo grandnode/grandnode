@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Grand.Web.Services;
 using Grand.Core.Domain.News;
+using Grand.Framework.Components;
 
 namespace Grand.Web.ViewComponents
 {
-    public class HomePageNewsViewComponent : ViewComponent
+    public class HomePageNewsViewComponent : BaseViewComponent
     {
         private readonly INewsWebService _newsWebService;
         private readonly NewsSettings _newsSettings;

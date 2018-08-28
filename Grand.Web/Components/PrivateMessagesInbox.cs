@@ -9,10 +9,11 @@ using System.Collections.Generic;
 using Grand.Services.Customers;
 using Grand.Core.Domain.Customers;
 using Grand.Services.Helpers;
+using Grand.Framework.Components;
 
 namespace Grand.Web.ViewComponents
 {
-    public class PrivateMessagesInboxViewComponent : ViewComponent
+    public class PrivateMessagesInboxViewComponent : BaseViewComponent
     {
         private readonly ForumSettings _forumSettings;
         private readonly IForumService _forumService;

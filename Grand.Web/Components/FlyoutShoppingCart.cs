@@ -2,10 +2,11 @@
 using Grand.Web.Services;
 using Grand.Core.Domain.Orders;
 using Grand.Services.Security;
+using Grand.Framework.Components;
 
 namespace Grand.Web.ViewComponents
 {
-    public class FlyoutShoppingCartViewComponent : ViewComponent
+    public class FlyoutShoppingCartViewComponent : BaseViewComponent
     {
         private readonly IShoppingCartWebService _shoppingCartWebService;
         private readonly IPermissionService _permissionService;

@@ -1,9 +1,10 @@
-﻿using Grand.Web.Services;
+﻿using Grand.Framework.Components;
+using Grand.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Grand.Web.Components
 {
-    public class CustomerNavigationViewComponent : ViewComponent
+    public class CustomerNavigationViewComponent : BaseViewComponent
     {
         private readonly ICustomerWebService _customerWebService;
 

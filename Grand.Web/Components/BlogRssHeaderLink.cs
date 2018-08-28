@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Grand.Core;
 using Grand.Core.Domain.Blogs;
+using Grand.Framework.Components;
 
 namespace Grand.Web.ViewComponents
 {
-    public class BlogRssHeaderLinkViewComponent : ViewComponent
+    public class BlogRssHeaderLinkViewComponent : BaseViewComponent
     {
         private readonly BlogSettings _blogSettings;
         private readonly IWorkContext _workContext;

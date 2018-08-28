@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Grand.Web.Models.Checkout;
+using Grand.Framework.Components;
 
 namespace Grand.Web.ViewComponents
 {
-    public class CheckoutProgressViewComponent : ViewComponent
+    public class CheckoutProgressViewComponent : BaseViewComponent
     {
         public CheckoutProgressViewComponent()
         {

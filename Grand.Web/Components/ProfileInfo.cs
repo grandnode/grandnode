@@ -13,10 +13,11 @@ using Grand.Services.Common;
 using Grand.Services.Media;
 using Grand.Core.Domain.Media;
 using Grand.Services.Directory;
+using Grand.Framework.Components;
 
 namespace Grand.Web.ViewComponents
 {
-    public class ProfileInfoViewComponent : ViewComponent
+    public class ProfileInfoViewComponent : BaseViewComponent
     {
         private readonly IForumService _forumService;
         private readonly ICustomerService _customerService;
