@@ -33,9 +33,8 @@ namespace Grand.Services.Topics
         /// Gets all topics
         /// </summary>
         /// <param name="storeId">Store identifier; pass "" to load all records</param>
-        /// <param name="topicSystemName">Topic system name (optional)</param>
         /// <returns>Topics</returns>
-        IList<Topic> GetAllTopics(string storeId, bool ignorAcl = false, string topicSystemName = "");
+        IList<Topic> GetAllTopics(string storeId, bool ignorAcl = false);
 
         /// <summary>
         /// Inserts a topic

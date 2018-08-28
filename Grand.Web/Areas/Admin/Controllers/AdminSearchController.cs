@@ -1,4 +1,6 @@
-﻿using Grand.Core.Domain.AdminSearch;
+﻿using Grand.Core;
+using Grand.Core.Domain.AdminSearch;
+using Grand.Core.Domain.Customers;
 using Grand.Services.Blogs;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;
@@ -98,7 +100,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
                 if (result.Count() < _adminSearchSettings.MaxSearchResultsCount && _adminSearchSettings.SearchInTopics)
                 {
-                    var topics = _topicService.GetAllTopics("", topicSystemName: searchTerm);
+                    var topics = _topicService.GetAllTopics("").Where(x => x.SystemName.ToLower().Contains(searchTerm.ToLower()) ||
+                    x.Title.ToLower().Contains(searchTerm.ToLower()));
                     foreach (var topic in topics)
                     {
                         result.Add(new Tuple<object, int>(new
@@ -141,8 +144,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (result.Count() < _adminSearchSettings.MaxSearchResultsCount && _adminSearchSettings.SearchInCustomers)
                 {
                     var customersByEmail = _customerService.GetAllCustomers(email: searchTerm, pageSize: _adminSearchSettings.MaxSearchResultsCount - result.Count());
-                    var customersByUsername = _customerService.GetAllCustomers(username: searchTerm, pageSize: _adminSearchSettings.MaxSearchResultsCount - result.Count()
-                        - customersByEmail.Count());
+                    IPagedList<Customer> customersByUsername = new PagedList<Customer>();
+                    if (_adminSearchSettings.MaxSearchResultsCount - result.Count() - customersByEmail.Count() > 0)
+                    {
+                        customersByUsername = _customerService.GetAllCustomers(username: searchTerm, pageSize: _adminSearchSettings.MaxSearchResultsCount
+                            - result.Count() - customersByEmail.Count());
+                    }
                     var combined = customersByEmail.Intersect(customersByUsername);
 
                     foreach (var customer in combined)
