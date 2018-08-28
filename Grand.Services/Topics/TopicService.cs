@@ -132,17 +132,13 @@ namespace Grand.Services.Topics
         /// Gets all topics
         /// </summary>
         /// <param name="storeId">Store identifier; pass "" to load all records</param>
-        /// <param name="topicSystemName">Topic system name (optional)</param>
         /// <returns>Topics</returns>
-        public virtual IList<Topic> GetAllTopics(string storeId, bool ignorAcl = false, string topicSystemName = "")
+        public virtual IList<Topic> GetAllTopics(string storeId, bool ignorAcl = false)
         {
             string key = string.Format(TOPICS_ALL_KEY, storeId, ignorAcl);
             return _cacheManager.Get(key, () =>
             {
                 var query = _topicRepository.Table;
-
-                if (!String.IsNullOrWhiteSpace(topicSystemName))
-                    query = query.Where(t => t.SystemName != null && t.SystemName.ToLower().Contains(topicSystemName.ToLower()));
 
                 query = query.OrderBy(t => t.DisplayOrder).ThenBy(t => t.SystemName);
 
