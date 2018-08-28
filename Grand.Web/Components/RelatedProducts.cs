@@ -8,10 +8,11 @@ using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Core.Caching;
 using Grand.Web.Infrastructure.Cache;
+using Grand.Framework.Components;
 
 namespace Grand.Web.Components
 {
-    public class RelatedProductsViewComponent : ViewComponent
+    public class RelatedProductsViewComponent : BaseViewComponent
     {
         #region Fields
         private readonly IProductService _productService;

@@ -4,10 +4,11 @@ using Grand.Core.Domain;
 using Grand.Core.Domain.Customers;
 using Grand.Core;
 using Grand.Services.Common;
+using Grand.Framework.Components;
 
 namespace Grand.Web.ViewComponents
 {
-    public class EuCookieLawViewComponent : ViewComponent
+    public class EuCookieLawViewComponent : BaseViewComponent
     {
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly IWorkContext _workContext;

@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Grand.Web.Services;
+using Grand.Framework.Components;
 
 namespace Grand.Web.ViewComponents
 {
-    public class TopMenuViewComponent : ViewComponent
+    public class TopMenuViewComponent : BaseViewComponent
     {
         private readonly ICatalogWebService _catalogWebService;
 

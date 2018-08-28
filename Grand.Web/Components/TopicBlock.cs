@@ -1,9 +1,10 @@
-﻿using Grand.Web.Services;
+﻿using Grand.Framework.Components;
+using Grand.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Grand.Web.Components
 {
-    public class TopicBlockViewComponent : ViewComponent
+    public class TopicBlockViewComponent : BaseViewComponent
     {
         #region Fields
         private readonly ITopicWebService _topicWebService;

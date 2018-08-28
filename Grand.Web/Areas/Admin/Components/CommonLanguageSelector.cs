@@ -1,4 +1,5 @@
 ﻿using Grand.Core;
+using Grand.Framework.Components;
 using Grand.Services.Localization;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Common;
@@ -8,7 +9,7 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Components
 {
-    public class CommonLanguageSelectorViewComponent : ViewComponent
+    public class CommonLanguageSelectorViewComponent : BaseViewComponent
     {
         private readonly IWorkContext _workContext;
         private readonly ILanguageService _languageService;

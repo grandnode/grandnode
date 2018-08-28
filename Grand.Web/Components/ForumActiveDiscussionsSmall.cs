@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Grand.Web.Services;
+using Grand.Framework.Components;
 
 namespace Grand.Web.ViewComponents
 {
-    public class ForumActiveDiscussionsSmallViewComponent : ViewComponent
+    public class ForumActiveDiscussionsSmallViewComponent : BaseViewComponent
     {
         private readonly IBoardsWebService _boardsWebService;
 

@@ -9,10 +9,11 @@ using Grand.Services.Stores;
 using Grand.Core.Caching;
 using Grand.Services.Orders;
 using Grand.Web.Infrastructure.Cache;
+using Grand.Framework.Components;
 
 namespace Grand.Web.Components
 {
-    public class ProductsAlsoPurchasedViewComponent : ViewComponent
+    public class ProductsAlsoPurchasedViewComponent : BaseViewComponent
     {
         #region Fields
         private readonly IProductService _productService;

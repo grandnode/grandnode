@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Grand.Web.Services;
 using System.Linq;
+using Grand.Framework.Components;
 
 namespace Grand.Web.ViewComponents
 {
-    public class HomePageManufacturersViewComponent : ViewComponent
+    public class HomePageManufacturersViewComponent : BaseViewComponent
     {
         private readonly ICatalogWebService _catalogWebService;
 

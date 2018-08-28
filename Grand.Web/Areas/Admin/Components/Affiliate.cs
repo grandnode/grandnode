@@ -9,10 +9,11 @@ using Grand.Services.Localization;
 using Grand.Services.Security;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Grand.Framework.Extensions;
+using Grand.Framework.Components;
 
 namespace Grand.Web.Areas.Admin.Components
 {
-    public class AffiliateViewComponent : ViewComponent
+    public class AffiliateViewComponent : BaseViewComponent
     {
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;

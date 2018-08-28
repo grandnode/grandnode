@@ -6,10 +6,11 @@ using Grand.Services.Catalog;
 using Grand.Core;
 using Grand.Services.Security;
 using Grand.Services.Stores;
+using Grand.Framework.Components;
 
 namespace Grand.Web.Components
 {
-    public class HomePageProductsViewComponent : ViewComponent
+    public class HomePageProductsViewComponent : BaseViewComponent
     {
         #region Fields
         private readonly IProductService _productService;

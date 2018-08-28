@@ -2,10 +2,11 @@
 using Grand.Web.Services;
 using System.Linq;
 using Grand.Core.Domain.Catalog;
+using Grand.Framework.Components;
 
 namespace Grand.Web.ViewComponents
 {
-    public class ManufacturerNavigationViewComponent : ViewComponent
+    public class ManufacturerNavigationViewComponent : BaseViewComponent
     {
         private readonly ICatalogWebService _catalogWebService;
         private readonly CatalogSettings _catalogSettings;

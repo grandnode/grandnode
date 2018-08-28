@@ -1,4 +1,5 @@
-﻿using Grand.Services.Cms;
+﻿using Grand.Framework.Components;
+using Grand.Services.Cms;
 using Grand.Web.Areas.Admin.Models.Cms;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -7,7 +8,7 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Components
 {
-    public class AdminWidgetViewComponent : ViewComponent
+    public class AdminWidgetViewComponent : BaseViewComponent
     {
         #region Fields
 

@@ -8,10 +8,11 @@ using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Core.Domain.Orders;
 using Grand.Services.Orders;
+using Grand.Framework.Components;
 
 namespace Grand.Web.Components
 {
-    public class CrossSellProductsViewComponent : ViewComponent
+    public class CrossSellProductsViewComponent : BaseViewComponent
     {
         #region Fields
         private readonly IProductService _productService;

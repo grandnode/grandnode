@@ -1,11 +1,12 @@
 ﻿using Grand.Core.Domain.Catalog;
+using Grand.Framework.Components;
 using Grand.Services.Configuration;
 using Grand.Services.Stores;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Grand.Web.Areas.Admin.Components
 {
-    public class CommonAclDisabledWarningViewComponent : ViewComponent
+    public class CommonAclDisabledWarningViewComponent : BaseViewComponent
     {
         private readonly ISettingService _settingService;
         private readonly IStoreService _storeService;

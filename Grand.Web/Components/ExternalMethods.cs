@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Grand.Web.Services;
+using Grand.Framework.Components;
 
 namespace Grand.Web.ViewComponents
 {
-    public class ExternalMethodsViewComponent : ViewComponent
+    public class ExternalMethodsViewComponent : BaseViewComponent
     {
         private readonly IExternalAuthenticationWebService _externalAuthenticationWebService;
 

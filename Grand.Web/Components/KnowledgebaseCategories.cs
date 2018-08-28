@@ -1,16 +1,15 @@
 ﻿using Grand.Core.Domain.Knowledgebase;
+using Grand.Framework.Components;
 using Grand.Services.Knowledgebase;
 using Grand.Services.Localization;
 using Grand.Web.Models.Knowledgebase;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Grand.Web.ViewComponents
 {
-    public class KnowledgebaseCategories : ViewComponent
+    public class KnowledgebaseCategories : BaseViewComponent
     {
         private readonly IKnowledgebaseService _knowledgebaseService;
         private readonly KnowledgebaseSettings _knowledgebaseSettings;

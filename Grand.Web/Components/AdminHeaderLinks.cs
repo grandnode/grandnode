@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Grand.Web.Services;
 using Grand.Core;
+using Grand.Framework.Components;
 
 namespace Grand.Web.ViewComponents
 {
-    public class AdminHeaderLinksViewComponent : ViewComponent
+    public class AdminHeaderLinksViewComponent : BaseViewComponent
     {
         private readonly ICommonWebService _commonWebService;
         private readonly IWorkContext _workContext;

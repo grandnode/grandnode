@@ -1,10 +1,10 @@
-﻿using Grand.Services.Localization;
+﻿using Grand.Framework.Components;
 using Grand.Services.Security;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Grand.Web.Areas.Admin.Components
 {
-    public class CustomerReportCustomerTimeChartViewComponent : ViewComponent
+    public class CustomerReportCustomerTimeChartViewComponent : BaseViewComponent
     {
         private readonly IPermissionService _permissionService;
 

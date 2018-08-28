@@ -6,10 +6,11 @@ using Grand.Services.Localization;
 using Grand.Core.Domain.Forums;
 using Grand.Services.Common;
 using Grand.Core.Domain.Customers;
+using Grand.Framework.Components;
 
 namespace Grand.Web.ViewComponents
 {
-    public class HeaderLinksViewComponent : ViewComponent
+    public class HeaderLinksViewComponent : BaseViewComponent
     {
         private readonly ICommonWebService _commonWebService;
         private readonly IWorkContext _workContext;

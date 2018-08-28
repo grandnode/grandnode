@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using Grand.Web.Services;
+using Grand.Framework.Components;
 
 namespace Grand.Web.ViewComponents
 {
-    public class FaviconViewComponent : ViewComponent
+    public class FaviconViewComponent : BaseViewComponent
     {
         private readonly ICommonWebService _commonWebService;
 

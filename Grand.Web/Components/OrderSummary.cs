@@ -5,10 +5,11 @@ using Grand.Web.Models.ShoppingCart;
 using Grand.Core.Domain.Orders;
 using Grand.Core;
 using Grand.Services.Orders;
+using Grand.Framework.Components;
 
 namespace Grand.Web.ViewComponents
 {
-    public class OrderSummaryViewComponent : ViewComponent
+    public class OrderSummaryViewComponent : BaseViewComponent
     {
         private readonly IShoppingCartWebService _shoppingCartWebService;
         private readonly IWorkContext _workContext;
