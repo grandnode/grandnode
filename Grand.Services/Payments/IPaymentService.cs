@@ -13,8 +13,8 @@ namespace Grand.Services.Payments
         /// Load active payment methods
         /// </summary>
         /// <param name="filterByCustomerId">Filter payment methods by customer; null to load all records</param>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
-        /// <param name="filterByCountryId">Load records allowed only in a specified country; pass 0 to load all records</param>
+        /// <param name="storeId">Load records allowed only in a specified store; pass "" to load all records</param>
+        /// <param name="filterByCountryId">Load records allowed only in a specified country; pass "" to load all records</param>
         /// <returns>Payment methods</returns>
         IList<IPaymentMethod> LoadActivePaymentMethods(Customer filterByCustomer = null, string storeId = "", string filterByCountryId = "");
 
@@ -28,8 +28,8 @@ namespace Grand.Services.Payments
         /// <summary>
         /// Load all payment providers
         /// </summary>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
-        /// <param name="filterByCountryId">Load records allowed only in a specified country; pass 0 to load all records</param>
+        /// <param name="storeId">Load records allowed only in a specified store; pass "" to load all records</param>
+        /// <param name="filterByCountryId">Load records allowed only in a specified country; pass "" to load all records</param>
         /// <returns>Payment providers</returns>
         IList<IPaymentMethod> LoadAllPaymentMethods(string storeId = "", string filterByCountryId = "");
 

@@ -51,12 +51,13 @@ using Grand.Web.Areas.Admin.Helpers;
 using Grand.Core.Domain.Knowledgebase;
 using Grand.Core.Domain.PushNotifications;
 using Grand.Web.Areas.Admin.Models.PushNotifications;
+using Grand.Core.Domain.AdminSearch;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
     public partial class SettingController : BaseAdminController
-	{
-		#region Fields
+    {
+        #region Fields
 
         private readonly ISettingService _settingService;
         private readonly ICountryService _countryService;
@@ -86,22 +87,22 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Constructors
 
         public SettingController(ISettingService settingService,
-            ICountryService countryService, 
+            ICountryService countryService,
             IStateProvinceService stateProvinceService,
-            IAddressService addressService, 
+            IAddressService addressService,
             ITaxCategoryService taxCategoryService,
             ICurrencyService currencyService,
-            IPictureService pictureService, 
-            ILocalizationService localizationService, 
+            IPictureService pictureService,
+            ILocalizationService localizationService,
             IDateTimeHelper dateTimeHelper,
             IOrderService orderService,
             IEncryptionService encryptionService,
             IThemeProvider themeProvider,
-            ICustomerService customerService, 
+            ICustomerService customerService,
             ICustomerActivityService customerActivityService,
             IPermissionService permissionService,
             IStoreService storeService,
-            IWorkContext workContext, 
+            IWorkContext workContext,
             IGenericAttributeService genericAttributeService,
             IRepository<Product> productRepository,
             IReturnRequestService returnRequestService,
@@ -238,27 +239,27 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(blogSettings, x => x.Enabled, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(blogSettings, x => x.Enabled, storeScope);
-            
+
             if (model.PostsPageSize_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(blogSettings, x => x.PostsPageSize, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(blogSettings, x => x.PostsPageSize, storeScope);
-            
+
             if (model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(blogSettings, x => x.AllowNotRegisteredUsersToLeaveComments, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(blogSettings, x => x.AllowNotRegisteredUsersToLeaveComments, storeScope);
-            
+
             if (model.NotifyAboutNewBlogComments_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(blogSettings, x => x.NotifyAboutNewBlogComments, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(blogSettings, x => x.NotifyAboutNewBlogComments, storeScope);
-            
+
             if (model.NumberOfTags_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(blogSettings, x => x.NumberOfTags, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(blogSettings, x => x.NumberOfTags, storeScope);
-            
+
             if (model.ShowHeaderRssUrl_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(blogSettings, x => x.ShowHeaderRssUrl, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
@@ -336,7 +337,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.AllowAnonymousUsersToReviewVendor_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.AllowAnonymousUsersToReviewVendor, storeScope);
                 model.VendorReviewPossibleOnlyAfterPurchasing_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.VendorReviewPossibleOnlyAfterPurchasing, storeScope);
                 model.NotifyVendorAboutNewVendorReviews_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.NotifyVendorAboutNewVendorReviews, storeScope);
-                
+
             }
 
             return View(model);
@@ -423,12 +424,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(vendorSettings, x => x.AllowAnonymousUsersToReviewVendor, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(vendorSettings, x => x.AllowAnonymousUsersToReviewVendor, storeScope);
-            
+
             if (model.VendorReviewPossibleOnlyAfterPurchasing_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(vendorSettings, x => x.VendorReviewPossibleOnlyAfterPurchasing, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(vendorSettings, x => x.VendorReviewPossibleOnlyAfterPurchasing, storeScope);
-            
+
             if (model.NotifyVendorAboutNewVendorReviews_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(vendorSettings, x => x.NotifyVendorAboutNewVendorReviews, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
@@ -508,97 +509,97 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(forumSettings, x => x.ForumsEnabled, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(forumSettings, x => x.ForumsEnabled, storeScope);
-            
+
             if (model.RelativeDateTimeFormattingEnabled_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(forumSettings, x => x.RelativeDateTimeFormattingEnabled, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(forumSettings, x => x.RelativeDateTimeFormattingEnabled, storeScope);
-            
+
             if (model.ShowCustomersPostCount_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(forumSettings, x => x.ShowCustomersPostCount, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(forumSettings, x => x.ShowCustomersPostCount, storeScope);
-            
+
             if (model.AllowGuestsToCreatePosts_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(forumSettings, x => x.AllowGuestsToCreatePosts, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(forumSettings, x => x.AllowGuestsToCreatePosts, storeScope);
-            
+
             if (model.AllowGuestsToCreateTopics_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(forumSettings, x => x.AllowGuestsToCreateTopics, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(forumSettings, x => x.AllowGuestsToCreateTopics, storeScope);
-            
+
             if (model.AllowCustomersToEditPosts_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(forumSettings, x => x.AllowCustomersToEditPosts, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(forumSettings, x => x.AllowCustomersToEditPosts, storeScope);
-            
+
             if (model.AllowCustomersToDeletePosts_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(forumSettings, x => x.AllowCustomersToDeletePosts, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(forumSettings, x => x.AllowCustomersToDeletePosts, storeScope);
-            
+
             if (model.AllowCustomersToManageSubscriptions_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(forumSettings, x => x.AllowCustomersToManageSubscriptions, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(forumSettings, x => x.AllowCustomersToManageSubscriptions, storeScope);
-            
+
             if (model.TopicsPageSize_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(forumSettings, x => x.TopicsPageSize, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(forumSettings, x => x.TopicsPageSize, storeScope);
-            
+
             if (model.PostsPageSize_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(forumSettings, x => x.PostsPageSize, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(forumSettings, x => x.PostsPageSize, storeScope);
-            
+
             if (model.ForumEditor_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(forumSettings, x => x.ForumEditor, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(forumSettings, x => x.ForumEditor, storeScope);
-            
+
             if (model.SignaturesEnabled_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(forumSettings, x => x.SignaturesEnabled, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(forumSettings, x => x.SignaturesEnabled, storeScope);
-            
+
             if (model.AllowPrivateMessages_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(forumSettings, x => x.AllowPrivateMessages, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(forumSettings, x => x.AllowPrivateMessages, storeScope);
-            
+
             if (model.ShowAlertForPM_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(forumSettings, x => x.ShowAlertForPM, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(forumSettings, x => x.ShowAlertForPM, storeScope);
-            
+
             if (model.NotifyAboutPrivateMessages_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(forumSettings, x => x.NotifyAboutPrivateMessages, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(forumSettings, x => x.NotifyAboutPrivateMessages, storeScope);
-            
+
             if (model.ActiveDiscussionsFeedEnabled_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(forumSettings, x => x.ActiveDiscussionsFeedEnabled, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(forumSettings, x => x.ActiveDiscussionsFeedEnabled, storeScope);
-            
+
             if (model.ActiveDiscussionsFeedCount_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(forumSettings, x => x.ActiveDiscussionsFeedCount, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(forumSettings, x => x.ActiveDiscussionsFeedCount, storeScope);
-            
+
             if (model.ForumFeedsEnabled_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(forumSettings, x => x.ForumFeedsEnabled, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(forumSettings, x => x.ForumFeedsEnabled, storeScope);
-            
+
             if (model.ForumFeedCount_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(forumSettings, x => x.ForumFeedCount, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(forumSettings, x => x.ForumFeedCount, storeScope);
-            
+
             if (model.SearchResultsPageSize_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(forumSettings, x => x.SearchResultsPageSize, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
@@ -614,7 +615,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(forumSettings, x => x.AllowPostVoting, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(forumSettings, x => x.AllowPostVoting, storeScope);
-            
+
             if (model.MaxVotesPerDay_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(forumSettings, x => x.MaxVotesPerDay, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
@@ -706,7 +707,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //now clear cache
             _cacheManager.Clear();
-            
+
 
             //activity log
             _customerActivityService.InsertActivity("EditSettings", "", _localizationService.GetResource("ActivityLog.EditSettings"));
@@ -731,7 +732,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!String.IsNullOrEmpty(storeScope))
             {
                 model.ShipToSameAddress_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.ShipToSameAddress, storeScope);
-                model.AllowPickUpInStore_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.AllowPickUpInStore, storeScope);                
+                model.AllowPickUpInStore_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.AllowPickUpInStore, storeScope);
                 model.UseWarehouseLocation_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.UseWarehouseLocation, storeScope);
                 model.NotifyCustomerAboutShippingFromMultipleLocations_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.NotifyCustomerAboutShippingFromMultipleLocations, storeScope);
                 model.FreeShippingOverXEnabled_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.FreeShippingOverXEnabled, storeScope);
@@ -753,7 +754,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.ShippingOriginAddress = new AddressModel();
 
             model.ShippingOriginAddress.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "" });
-            foreach (var c in _countryService.GetAllCountries(showHidden:true))
+            foreach (var c in _countryService.GetAllCountries(showHidden: true))
                 model.ShippingOriginAddress.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (originAddress != null && c.Id == originAddress.CountryId) });
 
             var states = originAddress != null && !String.IsNullOrEmpty(originAddress.CountryId) ? _stateProvinceService.GetStateProvincesByCountryId(originAddress.CountryId, showHidden: true).ToList() : new List<StateProvince>();
@@ -770,7 +771,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.ShippingOriginAddress.StreetAddressEnabled = true;
             model.ShippingOriginAddress.ZipPostalCodeEnabled = true;
             model.ShippingOriginAddress.ZipPostalCodeRequired = true;
-            
+
             return View(model);
         }
         [HttpPost]
@@ -855,7 +856,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     };
                 //update ID manually (in case we're in multi-store configuration mode it'll be set to the shared one)
                 originAddress = model.ShippingOriginAddress.ToEntity(originAddress);
-                if (_addressService.GetAddressByIdSettings(addressId)!=null)
+                if (_addressService.GetAddressByIdSettings(addressId) != null)
                     _addressService.UpdateAddressSettings(originAddress);
                 else
                     _addressService.InsertAddressSettings(originAddress);
@@ -935,7 +936,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //EU VAT countries
             model.EuVatShopCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "" });
-            foreach (var c in _countryService.GetAllCountries(showHidden:true))
+            foreach (var c in _countryService.GetAllCountries(showHidden: true))
                 model.EuVatShopCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = c.Id == taxSettings.EuVatShopCountryId });
 
             //default tax address
@@ -951,7 +952,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             foreach (var c in _countryService.GetAllCountries(showHidden: true))
                 model.DefaultTaxAddress.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (defaultAddress != null && c.Id == defaultAddress.CountryId) });
 
-            var states = defaultAddress != null && !String.IsNullOrEmpty(defaultAddress.CountryId) ? _stateProvinceService.GetStateProvincesByCountryId(defaultAddress.CountryId, showHidden:true).ToList() : new List<StateProvince>();
+            var states = defaultAddress != null && !String.IsNullOrEmpty(defaultAddress.CountryId) ? _stateProvinceService.GetStateProvincesByCountryId(defaultAddress.CountryId, showHidden: true).ToList() : new List<StateProvince>();
             if (states.Count > 0)
             {
                 foreach (var s in states)
@@ -985,32 +986,32 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(taxSettings, x => x.PricesIncludeTax, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(taxSettings, x => x.PricesIncludeTax, storeScope);
-            
+
             if (model.AllowCustomersToSelectTaxDisplayType_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(taxSettings, x => x.AllowCustomersToSelectTaxDisplayType, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(taxSettings, x => x.AllowCustomersToSelectTaxDisplayType, storeScope);
-            
+
             if (model.TaxDisplayType_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(taxSettings, x => x.TaxDisplayType, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(taxSettings, x => x.TaxDisplayType, storeScope);
-            
+
             if (model.DisplayTaxSuffix_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(taxSettings, x => x.DisplayTaxSuffix, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(taxSettings, x => x.DisplayTaxSuffix, storeScope);
-            
+
             if (model.DisplayTaxRates_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(taxSettings, x => x.DisplayTaxRates, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(taxSettings, x => x.DisplayTaxRates, storeScope);
-            
+
             if (model.HideZeroTax_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(taxSettings, x => x.HideZeroTax, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(taxSettings, x => x.HideZeroTax, storeScope);
-            
+
             if (model.HideTaxInOrderSummary_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(taxSettings, x => x.HideTaxInOrderSummary, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
@@ -1020,7 +1021,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(taxSettings, x => x.ForceTaxExclusionFromOrderSubtotal, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(taxSettings, x => x.ForceTaxExclusionFromOrderSubtotal, storeScope);
-            
+
             if (model.TaxBasedOn_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(taxSettings, x => x.TaxBasedOn, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
@@ -1070,37 +1071,37 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(taxSettings, x => x.ShippingPriceIncludesTax, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(taxSettings, x => x.ShippingPriceIncludesTax, storeScope);
-            
+
             if (model.ShippingTaxClassId_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(taxSettings, x => x.ShippingTaxClassId, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(taxSettings, x => x.ShippingTaxClassId, storeScope);
-            
+
             if (model.PaymentMethodAdditionalFeeIsTaxable_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(taxSettings, x => x.PaymentMethodAdditionalFeeIsTaxable, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(taxSettings, x => x.PaymentMethodAdditionalFeeIsTaxable, storeScope);
-            
+
             if (model.PaymentMethodAdditionalFeeIncludesTax_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(taxSettings, x => x.PaymentMethodAdditionalFeeIncludesTax, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(taxSettings, x => x.PaymentMethodAdditionalFeeIncludesTax, storeScope);
-            
+
             if (model.PaymentMethodAdditionalFeeTaxClassId_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(taxSettings, x => x.PaymentMethodAdditionalFeeTaxClassId, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(taxSettings, x => x.PaymentMethodAdditionalFeeTaxClassId, storeScope);
-            
+
             if (model.EuVatEnabled_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(taxSettings, x => x.EuVatEnabled, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(taxSettings, x => x.EuVatEnabled, storeScope);
-            
+
             if (model.EuVatShopCountryId_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(taxSettings, x => x.EuVatShopCountryId, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(taxSettings, x => x.EuVatShopCountryId, storeScope);
-            
+
             if (model.EuVatAllowVatExemption_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(taxSettings, x => x.EuVatAllowVatExemption, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
@@ -1251,7 +1252,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(catalogSettings, x => x.ShowManufacturerPartNumber, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.ShowManufacturerPartNumber, storeScope);
-            
+
             if (model.ShowGtin_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.ShowGtin, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
@@ -1261,37 +1262,37 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(catalogSettings, x => x.ShowFreeShippingNotification, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.ShowFreeShippingNotification, storeScope);
-            
+
             if (model.AllowProductSorting_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.AllowProductSorting, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.AllowProductSorting, storeScope);
-            
+
             if (model.AllowProductViewModeChanging_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.AllowProductViewModeChanging, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.AllowProductViewModeChanging, storeScope);
-            
+
             if (model.ShowProductsFromSubcategories_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.ShowProductsFromSubcategories, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.ShowProductsFromSubcategories, storeScope);
-            
+
             if (model.ShowCategoryProductNumber_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.ShowCategoryProductNumber, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.ShowCategoryProductNumber, storeScope);
-            
+
             if (model.ShowCategoryProductNumberIncludingSubcategories_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.ShowCategoryProductNumberIncludingSubcategories, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.ShowCategoryProductNumberIncludingSubcategories, storeScope);
-            
+
             if (model.CategoryBreadcrumbEnabled_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.CategoryBreadcrumbEnabled, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.CategoryBreadcrumbEnabled, storeScope);
-            
+
             if (model.ShowShareButton_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.ShowShareButton, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
@@ -1306,7 +1307,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(catalogSettings, x => x.ProductReviewsMustBeApproved, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.ProductReviewsMustBeApproved, storeScope);
-            
+
             if (model.AllowAnonymousUsersToReviewProduct_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.AllowAnonymousUsersToReviewProduct, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
@@ -1321,7 +1322,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(catalogSettings, x => x.NotifyStoreOwnerAboutNewProductReviews, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.NotifyStoreOwnerAboutNewProductReviews, storeScope);
-            
+
             if (model.EmailAFriendEnabled_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.EmailAFriendEnabled, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
@@ -1336,12 +1337,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(catalogSettings, x => x.AllowAnonymousUsersToEmailAFriend, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.AllowAnonymousUsersToEmailAFriend, storeScope);
-            
+
             if (model.RecentlyViewedProductsNumber_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.RecentlyViewedProductsNumber, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.RecentlyViewedProductsNumber, storeScope);
-            
+
             if (model.RecentlyViewedProductsEnabled_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.RecentlyViewedProductsEnabled, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
@@ -1376,17 +1377,17 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(catalogSettings, x => x.CompareProductsEnabled, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.CompareProductsEnabled, storeScope);
-            
+
             if (model.ShowBestsellersOnHomepage_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.ShowBestsellersOnHomepage, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.ShowBestsellersOnHomepage, storeScope);
-            
+
             if (model.NumberOfBestsellersOnHomepage_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.NumberOfBestsellersOnHomepage, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.NumberOfBestsellersOnHomepage, storeScope);
-            
+
             if (model.SearchPageProductsPerPage_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.SearchPageProductsPerPage, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
@@ -1401,17 +1402,17 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(catalogSettings, x => x.SearchPagePageSizeOptions, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.SearchPagePageSizeOptions, storeScope);
-            
+
             if (model.ProductSearchAutoCompleteEnabled_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.ProductSearchAutoCompleteEnabled, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.ProductSearchAutoCompleteEnabled, storeScope);
-            
+
             if (model.ProductSearchAutoCompleteNumberOfProducts_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.ProductSearchAutoCompleteNumberOfProducts, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.ProductSearchAutoCompleteNumberOfProducts, storeScope);
-            
+
             if (model.ShowProductImagesInSearchAutoComplete_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.ShowProductImagesInSearchAutoComplete, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
@@ -1421,52 +1422,52 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(catalogSettings, x => x.ProductSearchTermMinimumLength, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.ProductSearchTermMinimumLength, storeScope);
-            
+
             if (model.ProductsAlsoPurchasedEnabled_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.ProductsAlsoPurchasedEnabled, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.ProductsAlsoPurchasedEnabled, storeScope);
-            
+
             if (model.ProductsAlsoPurchasedNumber_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.ProductsAlsoPurchasedNumber, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.ProductsAlsoPurchasedNumber, storeScope);
-                        
+
             if (model.NumberOfProductTags_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.NumberOfProductTags, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.NumberOfProductTags, storeScope);
-            
+
             if (model.ProductsByTagPageSize_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.ProductsByTagPageSize, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.ProductsByTagPageSize, storeScope);
-            
+
             if (model.ProductsByTagAllowCustomersToSelectPageSize_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.ProductsByTagAllowCustomersToSelectPageSize, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.ProductsByTagAllowCustomersToSelectPageSize, storeScope);
-            
+
             if (model.ProductsByTagPageSizeOptions_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.ProductsByTagPageSizeOptions, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.ProductsByTagPageSizeOptions, storeScope);
-            
+
             if (model.IncludeShortDescriptionInCompareProducts_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.IncludeShortDescriptionInCompareProducts, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.IncludeShortDescriptionInCompareProducts, storeScope);
-            
+
             if (model.IncludeFullDescriptionInCompareProducts_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.IncludeFullDescriptionInCompareProducts, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.IncludeFullDescriptionInCompareProducts, storeScope);
-            
+
             if (model.IgnoreDiscounts_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.IgnoreDiscounts, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.IgnoreDiscounts, storeScope);
-            
+
             if (model.IgnoreFeaturedProducts_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.IgnoreFeaturedProducts, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
@@ -1535,7 +1536,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (model.ShowProductReviewsPerStore_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.ShowProductReviewsPerStore, storeScope, false);
-                       else if (!String.IsNullOrEmpty(storeScope))
+            else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.ShowProductReviewsPerStore, storeScope);
 
             //now clear cache
@@ -1627,9 +1628,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                     _settingService.SettingExists(rewardPointsSettings, x => x.PointsForPurchases_Points, storeScope);
                 model.PointsForPurchases_Awarded_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.PointsForPurchases_Awarded, storeScope);
                 model.PointsForPurchases_Canceled_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.PointsForPurchases_Canceled, storeScope);
-                model.DisplayHowMuchWillBeEarned_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.DisplayHowMuchWillBeEarned, storeScope); model.PointsForRegistration_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.PointsForRegistration, storeScope);
+                model.DisplayHowMuchWillBeEarned_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.DisplayHowMuchWillBeEarned, storeScope);
+                model.PointsForRegistration_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.PointsForRegistration, storeScope);
             }
-            var currencySettings = _settingService.LoadSetting<CurrencySettings>(storeScope); 
+            var currencySettings = _settingService.LoadSetting<CurrencySettings>(storeScope);
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
 
             return View(model);
@@ -1654,22 +1656,22 @@ namespace Grand.Web.Areas.Admin.Controllers
                     _settingService.SaveSetting(rewardPointsSettings, x => x.Enabled, storeScope, false);
                 else if (!String.IsNullOrEmpty(storeScope))
                     _settingService.DeleteSetting(rewardPointsSettings, x => x.Enabled, storeScope);
-                
+
                 if (model.ExchangeRate_OverrideForStore || storeScope == "")
                     _settingService.SaveSetting(rewardPointsSettings, x => x.ExchangeRate, storeScope, false);
                 else if (!String.IsNullOrEmpty(storeScope))
                     _settingService.DeleteSetting(rewardPointsSettings, x => x.ExchangeRate, storeScope);
-                
+
                 if (model.MinimumRewardPointsToUse_OverrideForStore || storeScope == "")
                     _settingService.SaveSetting(rewardPointsSettings, x => x.MinimumRewardPointsToUse, storeScope, false);
                 else if (!String.IsNullOrEmpty(storeScope))
                     _settingService.DeleteSetting(rewardPointsSettings, x => x.MinimumRewardPointsToUse, storeScope);
-                
+
                 if (model.PointsForRegistration_OverrideForStore || storeScope == "")
                     _settingService.SaveSetting(rewardPointsSettings, x => x.PointsForRegistration, storeScope, false);
                 else if (!String.IsNullOrEmpty(storeScope))
                     _settingService.DeleteSetting(rewardPointsSettings, x => x.PointsForRegistration, storeScope);
-                
+
                 if (model.PointsForPurchases_OverrideForStore || storeScope == "")
                     _settingService.SaveSetting(rewardPointsSettings, x => x.PointsForPurchases_Amount, storeScope, false);
                 else if (!String.IsNullOrEmpty(storeScope))
@@ -1679,17 +1681,17 @@ namespace Grand.Web.Areas.Admin.Controllers
                     _settingService.SaveSetting(rewardPointsSettings, x => x.PointsForPurchases_Points, storeScope, false);
                 else if (!String.IsNullOrEmpty(storeScope))
                     _settingService.DeleteSetting(rewardPointsSettings, x => x.PointsForPurchases_Points, storeScope);
-                
+
                 if (model.PointsForPurchases_Awarded_OverrideForStore || storeScope == "")
                     _settingService.SaveSetting(rewardPointsSettings, x => x.PointsForPurchases_Awarded, storeScope, false);
                 else if (!String.IsNullOrEmpty(storeScope))
                     _settingService.DeleteSetting(rewardPointsSettings, x => x.PointsForPurchases_Awarded, storeScope);
-                
+
                 if (model.PointsForPurchases_Canceled_OverrideForStore || storeScope == "")
                     _settingService.SaveSetting(rewardPointsSettings, x => x.PointsForPurchases_Canceled, storeScope, false);
                 else if (!String.IsNullOrEmpty(storeScope))
                     _settingService.DeleteSetting(rewardPointsSettings, x => x.PointsForPurchases_Canceled, storeScope);
-                
+
                 if (model.DisplayHowMuchWillBeEarned_OverrideForStore || storeScope == "")
                     _settingService.SaveSetting(rewardPointsSettings, x => x.DisplayHowMuchWillBeEarned, storeScope, false);
                 else if (!String.IsNullOrEmpty(storeScope))
@@ -1786,7 +1788,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     _settingService.SaveSetting(orderSettings, x => x.IsReOrderAllowed, storeScope, false);
                 else if (!String.IsNullOrEmpty(storeScope))
                     _settingService.DeleteSetting(orderSettings, x => x.IsReOrderAllowed, storeScope);
-                
+
                 if (model.MinOrderSubtotalAmount_OverrideForStore || storeScope == "")
                     _settingService.SaveSetting(orderSettings, x => x.MinOrderSubtotalAmount, storeScope, false);
                 else if (!String.IsNullOrEmpty(storeScope))
@@ -1801,7 +1803,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     _settingService.SaveSetting(orderSettings, x => x.MinOrderTotalAmount, storeScope, false);
                 else if (!String.IsNullOrEmpty(storeScope))
                     _settingService.DeleteSetting(orderSettings, x => x.MinOrderTotalAmount, storeScope);
-                
+
                 if (model.AnonymousCheckoutAllowed_OverrideForStore || storeScope == "")
                     _settingService.SaveSetting(orderSettings, x => x.AnonymousCheckoutAllowed, storeScope, false);
                 else if (!String.IsNullOrEmpty(storeScope))
@@ -1816,7 +1818,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     _settingService.SaveSetting(orderSettings, x => x.TermsOfServiceOnOrderConfirmPage, storeScope, false);
                 else if (!String.IsNullOrEmpty(storeScope))
                     _settingService.DeleteSetting(orderSettings, x => x.TermsOfServiceOnOrderConfirmPage, storeScope);
-                
+
                 if (model.OnePageCheckoutEnabled_OverrideForStore || storeScope == "")
                     _settingService.SaveSetting(orderSettings, x => x.OnePageCheckoutEnabled, storeScope, false);
                 else if (!String.IsNullOrEmpty(storeScope))
@@ -1851,7 +1853,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     _settingService.SaveSetting(orderSettings, x => x.AttachPdfInvoiceToOrderCompletedEmail, storeScope, false);
                 else if (!String.IsNullOrEmpty(storeScope))
                     _settingService.DeleteSetting(orderSettings, x => x.AttachPdfInvoiceToOrderCompletedEmail, storeScope);
-                
+
                 if (model.ReturnRequestsEnabled_OverrideForStore || storeScope == "")
                     _settingService.SaveSetting(orderSettings, x => x.ReturnRequestsEnabled, storeScope, false);
                 else if (!String.IsNullOrEmpty(storeScope))
@@ -1879,7 +1881,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
                 //now clear cache
                 _cacheManager.Clear();
-                
+
                 //order ident
                 if (model.OrderIdent > 0)
                 {
@@ -1887,7 +1889,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     int maxOrderNumber = 0;
                     if (orderRepository.Table.Count() > 0)
                         maxOrderNumber = orderRepository.Table.Max(x => x.OrderNumber);
-                    if(model.OrderIdent > maxOrderNumber)
+                    if (model.OrderIdent > maxOrderNumber)
                     {
                         orderRepository.Insert(new Order() { OrderNumber = model.OrderIdent.Value, Deleted = true, CreatedOnUtc = DateTime.UtcNow });
                         /* another solution
@@ -1970,72 +1972,72 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(shoppingCartSettings, x => x.DisplayCartAfterAddingProduct, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(shoppingCartSettings, x => x.DisplayCartAfterAddingProduct, storeScope);
-            
+
             if (model.DisplayWishlistAfterAddingProduct_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(shoppingCartSettings, x => x.DisplayWishlistAfterAddingProduct, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(shoppingCartSettings, x => x.DisplayWishlistAfterAddingProduct, storeScope);
-            
+
             if (model.MaximumShoppingCartItems_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(shoppingCartSettings, x => x.MaximumShoppingCartItems, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(shoppingCartSettings, x => x.MaximumShoppingCartItems, storeScope);
-            
+
             if (model.MaximumWishlistItems_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(shoppingCartSettings, x => x.MaximumWishlistItems, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(shoppingCartSettings, x => x.MaximumWishlistItems, storeScope);
-            
+
             if (model.AllowOutOfStockItemsToBeAddedToWishlist_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(shoppingCartSettings, x => x.AllowOutOfStockItemsToBeAddedToWishlist, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(shoppingCartSettings, x => x.AllowOutOfStockItemsToBeAddedToWishlist, storeScope);
-            
+
             if (model.MoveItemsFromWishlistToCart_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(shoppingCartSettings, x => x.MoveItemsFromWishlistToCart, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(shoppingCartSettings, x => x.MoveItemsFromWishlistToCart, storeScope);
-            
+
             if (model.ShowProductImagesOnShoppingCart_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(shoppingCartSettings, x => x.ShowProductImagesOnShoppingCart, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(shoppingCartSettings, x => x.ShowProductImagesOnShoppingCart, storeScope);
-            
+
             if (model.ShowProductImagesOnWishList_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(shoppingCartSettings, x => x.ShowProductImagesOnWishList, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(shoppingCartSettings, x => x.ShowProductImagesOnWishList, storeScope);
-            
+
             if (model.ShowDiscountBox_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(shoppingCartSettings, x => x.ShowDiscountBox, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(shoppingCartSettings, x => x.ShowDiscountBox, storeScope);
-            
+
             if (model.ShowGiftCardBox_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(shoppingCartSettings, x => x.ShowGiftCardBox, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(shoppingCartSettings, x => x.ShowGiftCardBox, storeScope);
-            
+
             if (model.CrossSellsNumber_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(shoppingCartSettings, x => x.CrossSellsNumber, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(shoppingCartSettings, x => x.CrossSellsNumber, storeScope);
-            
+
             if (model.EmailWishlistEnabled_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(shoppingCartSettings, x => x.EmailWishlistEnabled, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(shoppingCartSettings, x => x.EmailWishlistEnabled, storeScope);
-            
+
             if (model.AllowAnonymousUsersToEmailWishlist_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(shoppingCartSettings, x => x.AllowAnonymousUsersToEmailWishlist, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(shoppingCartSettings, x => x.AllowAnonymousUsersToEmailWishlist, storeScope);
-            
+
             if (model.MiniShoppingCartEnabled_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(shoppingCartSettings, x => x.MiniShoppingCartEnabled, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(shoppingCartSettings, x => x.MiniShoppingCartEnabled, storeScope);
-            
+
             if (model.ShowProductImagesInMiniShoppingCart_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(shoppingCartSettings, x => x.ShowProductImagesInMiniShoppingCart, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
@@ -2058,7 +2060,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //now clear cache
             _cacheManager.Clear();
-            
+
 
             //activity log
             _customerActivityService.InsertActivity("EditSettings", "", _localizationService.GetResource("ActivityLog.EditSettings"));
@@ -2244,7 +2246,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var rra = model.ToEntity();
-                
+
                 _returnRequestService.InsertReturnRequestAction(rra);
                 //locales
                 rra.Locales = UpdateLocales(rra, model);
@@ -2374,17 +2376,17 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(mediaSettings, x => x.AvatarPictureSize, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(mediaSettings, x => x.AvatarPictureSize, storeScope);
-            
+
             if (model.ProductThumbPictureSize_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(mediaSettings, x => x.ProductThumbPictureSize, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(mediaSettings, x => x.ProductThumbPictureSize, storeScope);
-            
+
             if (model.ProductDetailsPictureSize_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(mediaSettings, x => x.ProductDetailsPictureSize, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(mediaSettings, x => x.ProductDetailsPictureSize, storeScope);
-            
+
             if (model.ProductThumbPictureSizeOnProductDetailsPage_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(mediaSettings, x => x.ProductThumbPictureSizeOnProductDetailsPage, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
@@ -2394,12 +2396,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(mediaSettings, x => x.AssociatedProductPictureSize, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(mediaSettings, x => x.AssociatedProductPictureSize, storeScope);
-            
+
             if (model.CategoryThumbPictureSize_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(mediaSettings, x => x.CategoryThumbPictureSize, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(mediaSettings, x => x.CategoryThumbPictureSize, storeScope);
-            
+
             if (model.ManufacturerThumbPictureSize_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(mediaSettings, x => x.ManufacturerThumbPictureSize, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
@@ -2414,7 +2416,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(mediaSettings, x => x.CartThumbPictureSize, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(mediaSettings, x => x.CartThumbPictureSize, storeScope);
-            
+
             if (model.MiniCartThumbPictureSize_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(mediaSettings, x => x.MiniCartThumbPictureSize, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
@@ -2431,9 +2433,9 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.DeleteSetting(mediaSettings, x => x.MultipleThumbDirectories, storeScope);
 
             if (model.DefaultImageQuality_OverrideForStore || storeScope == "")
-              _settingService.SaveSetting(mediaSettings, x => x.DefaultImageQuality, storeScope, false);
+                _settingService.SaveSetting(mediaSettings, x => x.DefaultImageQuality, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
-              _settingService.DeleteSetting(mediaSettings, x => x.DefaultImageQuality, storeScope);
+                _settingService.DeleteSetting(mediaSettings, x => x.DefaultImageQuality, storeScope);
 
 
 
@@ -2489,11 +2491,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             foreach (TimeZoneInfo timeZone in _dateTimeHelper.GetSystemTimeZones())
             {
                 model.DateTimeSettings.AvailableTimeZones.Add(new SelectListItem
-                    {
-                        Text = timeZone.DisplayName,
-                        Value = timeZone.Id,
-                        Selected = timeZone.Id.Equals(_dateTimeHelper.DefaultStoreTimeZone.Id, StringComparison.OrdinalIgnoreCase)
-                    });
+                {
+                    Text = timeZone.DisplayName,
+                    Value = timeZone.Id,
+                    Selected = timeZone.Id.Equals(_dateTimeHelper.DefaultStoreTimeZone.Id, StringComparison.OrdinalIgnoreCase)
+                });
             }
 
             model.ExternalAuthenticationSettings.AutoRegisterEnabled = externalAuthenticationSettings.AutoRegisterEnabled;
@@ -2635,7 +2637,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.SeoSettings.TwitterMetaTags_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.TwitterMetaTags, storeScope);
                 model.SeoSettings.OpenGraphMetaTags_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.OpenGraphMetaTags, storeScope);
             }
-            
+
             //security settings
             var securitySettings = _settingService.LoadSetting<SecuritySettings>(storeScope);
             var captchaSettings = _settingService.LoadSetting<CaptchaSettings>(storeScope);
@@ -2827,12 +2829,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(commonSettings, x => x.SubjectFieldOnContactUsForm, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(commonSettings, x => x.SubjectFieldOnContactUsForm, storeScope);
-            
+
             if (model.StoreInformationSettings.UseSystemEmailForContactUsForm_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(commonSettings, x => x.UseSystemEmailForContactUsForm, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(commonSettings, x => x.UseSystemEmailForContactUsForm, storeScope);
-            
+
 
             //seo settings
             var seoSettings = _settingService.LoadSetting<SeoSettings>(storeScope);
@@ -2857,22 +2859,22 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(seoSettings, x => x.PageTitleSeparator, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(seoSettings, x => x.PageTitleSeparator, storeScope);
-            
+
             if (model.SeoSettings.PageTitleSeoAdjustment_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(seoSettings, x => x.PageTitleSeoAdjustment, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(seoSettings, x => x.PageTitleSeoAdjustment, storeScope);
-            
+
             if (model.SeoSettings.DefaultTitle_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(seoSettings, x => x.DefaultTitle, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(seoSettings, x => x.DefaultTitle, storeScope);
-            
+
             if (model.SeoSettings.DefaultMetaKeywords_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(seoSettings, x => x.DefaultMetaKeywords, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(seoSettings, x => x.DefaultMetaKeywords, storeScope);
-            
+
             if (model.SeoSettings.DefaultMetaDescription_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(seoSettings, x => x.DefaultMetaDescription, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
@@ -2882,12 +2884,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(seoSettings, x => x.GenerateProductMetaDescription, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(seoSettings, x => x.GenerateProductMetaDescription, storeScope);
-            
+
             if (model.SeoSettings.ConvertNonWesternChars_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(seoSettings, x => x.ConvertNonWesternChars, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(seoSettings, x => x.ConvertNonWesternChars, storeScope);
-            
+
             if (model.SeoSettings.CanonicalUrlsEnabled_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(seoSettings, x => x.CanonicalUrlsEnabled, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
@@ -2897,7 +2899,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(seoSettings, x => x.WwwRequirement, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(seoSettings, x => x.WwwRequirement, storeScope);
-            
+
             if (model.SeoSettings.EnableJsBundling_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(seoSettings, x => x.EnableJsBundling, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
@@ -2925,7 +2927,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 securitySettings.AdminAreaAllowedIpAddresses = new List<string>();
             securitySettings.AdminAreaAllowedIpAddresses.Clear();
             if (!String.IsNullOrEmpty(model.SecuritySettings.AdminAreaAllowedIpAddresses))
-                foreach (string s in model.SecuritySettings.AdminAreaAllowedIpAddresses.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                foreach (string s in model.SecuritySettings.AdminAreaAllowedIpAddresses.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                     if (!String.IsNullOrWhiteSpace(s))
                         securitySettings.AdminAreaAllowedIpAddresses.Add(s.Trim());
             securitySettings.EnableXsrfProtectionForAdminArea = model.SecuritySettings.EnableXsrfProtectionForAdminArea;
@@ -2964,7 +2966,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
-            
+
             if (model.PdfSettings.LetterPageSizeEnabled_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(pdfSettings, x => x.LetterPageSizeEnabled, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
@@ -3256,7 +3258,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         Name = x.Name,
                         Value = x.Value,
                         Store = storeName,
-                        StoreId = string.IsNullOrEmpty(x.StoreId)? " ": x.StoreId
+                        StoreId = string.IsNullOrEmpty(x.StoreId) ? " " : x.StoreId
                     };
                     return settingModel;
                 });
@@ -3368,6 +3370,71 @@ namespace Grand.Web.Areas.Admin.Controllers
             return PushNotifications();
         }
 
+        public IActionResult AdminSearch()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var settings = _settingService.LoadSetting<AdminSearchSettings>(storeScope);
+
+            var model = new AdminSearchSettingsModel();
+            model.SearchInBlogs = settings.SearchInBlogs;
+            model.SearchInCategories = settings.SearchInCategories;
+            model.SearchInCustomers = settings.SearchInCustomers;
+            model.SearchInManufacturers = settings.SearchInManufacturers;
+            model.SearchInNews = settings.SearchInNews;
+            model.SearchInOrders = settings.SearchInOrders;
+            model.SearchInProducts = settings.SearchInProducts;
+            model.SearchInTopics = settings.SearchInTopics;
+            model.MinSearchTermLength = settings.MinSearchTermLength;
+            model.MaxSearchResultsCount = settings.MaxSearchResultsCount;
+            model.ProductsDisplayOrder = settings.ProductsDisplayOrder;
+            model.CategoriesDisplayOrder = settings.CategoriesDisplayOrder;
+            model.ManufacturersDisplayOrder = settings.ManufacturersDisplayOrder;
+            model.TopicsDisplayOrder = settings.TopicsDisplayOrder;
+            model.NewsDisplayOrder = settings.NewsDisplayOrder;
+            model.BlogsDisplayOrder = settings.BlogsDisplayOrder;
+            model.CustomersDisplayOrder = settings.CustomersDisplayOrder;
+            model.OrdersDisplayOrder = settings.OrdersDisplayOrder;
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [AdminAntiForgery(true)]
+        public IActionResult AdminSearch(DataSourceRequest command, AdminSearchSettingsModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var settings = _settingService.LoadSetting<AdminSearchSettings>(storeScope);
+            settings.SearchInBlogs = model.SearchInBlogs;
+            settings.SearchInCategories = model.SearchInCategories;
+            settings.SearchInCustomers = model.SearchInCustomers;
+            settings.SearchInManufacturers = model.SearchInManufacturers;
+            settings.SearchInNews = model.SearchInNews;
+            settings.SearchInOrders = model.SearchInOrders;
+            settings.SearchInProducts = model.SearchInProducts;
+            settings.SearchInTopics = model.SearchInTopics;
+            settings.MinSearchTermLength = model.MinSearchTermLength;
+            settings.MaxSearchResultsCount = model.MaxSearchResultsCount;
+            settings.ProductsDisplayOrder = model.ProductsDisplayOrder;
+            settings.CategoriesDisplayOrder = model.CategoriesDisplayOrder;
+            settings.ManufacturersDisplayOrder = model.ManufacturersDisplayOrder;
+            settings.TopicsDisplayOrder = model.TopicsDisplayOrder;
+            settings.NewsDisplayOrder = model.NewsDisplayOrder;
+            settings.BlogsDisplayOrder = model.BlogsDisplayOrder;
+            settings.CustomersDisplayOrder = model.CustomersDisplayOrder;
+            settings.OrdersDisplayOrder = model.OrdersDisplayOrder;
+
+            _settingService.SaveSetting(settings);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
+            return AdminSearch();
+        }
+
         [HttpPost]
         [AdminAntiForgery(true)]
         public IActionResult SettingUpdate(SettingModel model)
@@ -3415,7 +3482,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
         [HttpPost]
         [AdminAntiForgery(true)]
-        public IActionResult SettingAdd( SettingModel model)
+        public IActionResult SettingAdd(SettingModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();

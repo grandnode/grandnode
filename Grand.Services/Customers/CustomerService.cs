@@ -171,7 +171,7 @@ namespace Grand.Services.Customers
                 }
             }
             if (!String.IsNullOrWhiteSpace(email))
-                query = query.Where(c => c.Email!=null && c.Email.ToLower().Contains(email.ToLower()));
+                query = query.Where(c => c.Email!=null && c.Email.Contains(email.ToLower()));
             if (!String.IsNullOrWhiteSpace(username))
                 query = query.Where(c => c.Username!=null && c.Username.ToLower().Contains(username.ToLower()));
             

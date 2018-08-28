@@ -42,7 +42,7 @@ namespace Grand.Services.Topics
         private const string TOPICS_PATTERN_KEY = "Grand.topics.";
 
         #endregion
-        
+
         #region Fields
 
         private readonly IRepository<Topic> _topicRepository;
@@ -131,14 +131,18 @@ namespace Grand.Services.Topics
         /// <summary>
         /// Gets all topics
         /// </summary>
-        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
+        /// <param name="storeId">Store identifier; pass "" to load all records</param>
+        /// <param name="topicSystemName">Topic system name (optional)</param>
         /// <returns>Topics</returns>
-        public virtual IList<Topic> GetAllTopics(string storeId, bool ignorAcl = false)
+        public virtual IList<Topic> GetAllTopics(string storeId, bool ignorAcl = false, string topicSystemName = "")
         {
             string key = string.Format(TOPICS_ALL_KEY, storeId, ignorAcl);
             return _cacheManager.Get(key, () =>
             {
                 var query = _topicRepository.Table;
+
+                if (!String.IsNullOrWhiteSpace(topicSystemName))
+                    query = query.Where(t => t.SystemName != null && t.SystemName.ToLower().Contains(topicSystemName.ToLower()));
 
                 query = query.OrderBy(t => t.DisplayOrder).ThenBy(t => t.SystemName);
 
@@ -163,9 +167,9 @@ namespace Grand.Services.Topics
                     }
                 }
 
-                
 
-                return query.ToList();                            
+
+                return query.ToList();
             });
         }
 

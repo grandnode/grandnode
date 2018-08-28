@@ -66,7 +66,7 @@ namespace Grand.Services.Catalog
         /// Gets all subscriptions
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
-        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
+        /// <param name="storeId">Store identifier; pass "" to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Subscriptions</returns>
@@ -91,7 +91,7 @@ namespace Grand.Services.Catalog
         /// Gets all subscriptions
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
+        /// <param name="storeId">Store identifier; pass "" to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Subscriptions</returns>

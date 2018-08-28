@@ -65,6 +65,8 @@
     Html.AppendScriptParts("~/Scripts/jquery-ui-1.10.3.custom.min.js", excludeFromBundle: true);
     Html.AppendScriptParts("~/Scripts/jquery.validate.unobtrusive.min.js", excludeFromBundle: true);
     Html.AppendScriptParts("~/Scripts/jquery.validate.min.js", excludeFromBundle: true);
+    Html.AppendScriptParts("~/Scripts/admin.search.js", excludeFromBundle: true);
+    Html.AppendScriptParts("~/Scripts/typeahead.js", excludeFromBundle: true);
 
     Html.AppendScriptParts("~/Administration/layout/js/layout.js", excludeFromBundle: true);
     Html.AppendScriptParts("~/Administration/global/js/jquery.cookieBar.min.js", excludeFromBundle: true);
@@ -120,6 +122,7 @@
                     <div class="menu-toggler sidebar-toggler">
                         <span></span>
                     </div>
+
                 </div>
                 <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse">
                     <span></span>
@@ -204,6 +207,14 @@
                         </li>
                     </ul>
                 </div>
+            </div>
+            <div class="input-group">
+                <input id="searchInput" type="text" class="form-control" placeholder="@T("AdminSearch.Placehloder")">
+                <script>
+                    $(document).ready(function () {
+                        Admin.Search.init("@(Url.Action("Search", "AdminSearch"))");
+                    });
+                </script>
             </div>
         </div>
     }

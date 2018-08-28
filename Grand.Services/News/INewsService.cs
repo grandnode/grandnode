@@ -30,9 +30,10 @@ namespace Grand.Services.News
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <param name="newsTitle">News title</param>
         /// <returns>News items</returns>
         IPagedList<NewsItem> GetAllNews(string storeId = "",
-            int pageIndex = 0, int pageSize = int.MaxValue, bool ignorAcl = false, bool showHidden = false);
+            int pageIndex = 0, int pageSize = int.MaxValue, bool ignorAcl = false, bool showHidden = false, string newsTitle = "");
 
         /// <summary>
         /// Inserts a news item

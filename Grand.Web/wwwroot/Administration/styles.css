@@ -3,15 +3,13 @@
 /* kendo */
 /* reset everything to the default box model */
 
-*, :before, :after
-{
+*, :before, :after {
     -webkit-box-sizing: content-box;
     -moz-box-sizing: content-box;
     box-sizing: content-box;
 }
 
-.daterangepicker *
-{
+.daterangepicker * {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -34,8 +32,7 @@
 .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9,
 .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10,
 .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11,
-.col-xs-12, .col-sm-12, .col-md-12, .col-lg-12
-{
+.col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -48,36 +45,40 @@
 /* end Kedno*/
 
 /* spinner */
-.throbber-header{
+.throbber-header {
     font-size: 42px;
     font-weight: 100;
     color: #fff;
 }
-.throbber{
+
+.throbber {
     display: none;
 }
-.throbber .curtain{
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #3e4d45;
-    opacity: 0.9;
-    filter: alpha(opacity=90);
-}
-.throbber .curtain-content{
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-}
-.throbber .curtain-content div{
-    text-align: center;
-    padding: 10px;
-    color: #FFF;
-}
+
+    .throbber .curtain {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #3e4d45;
+        opacity: 0.9;
+        filter: alpha(opacity=90);
+    }
+
+    .throbber .curtain-content {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+        .throbber .curtain-content div {
+            text-align: center;
+            padding: 10px;
+            color: #FFF;
+        }
 
 .spinner svg {
     -webkit-transform-origin: 50% 50% 0;
@@ -86,11 +87,12 @@
     animation: spinner-rotate 1.333s linear infinite;
 }
 
-.spinner-container.active>.spinner, .spinner.active {
+.spinner-container.active > .spinner, .spinner.active {
     background-color: transparent;
     border: none;
     display: inline-block;
 }
+
 .spinner {
     position: relative;
     text-align: center;
@@ -98,39 +100,144 @@
     display: none;
 }
 
-.spinner circle {
-    fill: transparent;
-    stroke: #ff9800;
-    stroke-linecap: round;
-    stroke-dasharray: 200.96;
-    stroke-dashoffset: 58px;
-    -webkit-animation: spinner-dash 1.333s linear infinite,spinner-colors 10.644s linear infinite;
-    animation: spinner-dash 1.333s linear infinite,spinner-colors 10.644s linear infinite;
-}
+    .spinner circle {
+        fill: transparent;
+        stroke: #ff9800;
+        stroke-linecap: round;
+        stroke-dasharray: 200.96;
+        stroke-dashoffset: 58px;
+        -webkit-animation: spinner-dash 1.333s linear infinite,spinner-colors 10.644s linear infinite;
+        animation: spinner-dash 1.333s linear infinite,spinner-colors 10.644s linear infinite;
+    }
 
 
 .spinner-container {
-    position:relative;
-    display:none;
-    -webkit-align-items:center;
-    -webkit-box-align:center;
-    -ms-flex-align:center;
-    align-items:center;
-    -webkit-box-pack:center;
-    -webkit-justify-content:center;
-    -ms-flex-pack:center;
-    justify-content:center
+    position: relative;
+    display: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center
 }
 
 
-html.ie .spinner circle{stroke-dashoffset:80px}
-@keyframes spinner-dash{0%{stroke-dashoffset:58px}50%{stroke-dashoffset:200.96px}100%{stroke-dashoffset:58px}}
-@-webkit-keyframes spinner-dash{0%{stroke-dashoffset:58px}50%{stroke-dashoffset:200.96px}100%{stroke-dashoffset:58px}}
-@keyframes spinner-rotate{50%{transform:rotate(600deg)}100%{transform:rotate(720deg)}}
-@-webkit-keyframes spinner-rotate{50%{transform:rotate(600deg)}100%{transform:rotate(720deg)}}
-@keyframes spinner-rotate-ie{50%{transform:rotate(360deg)}100%{transform:rotate(720deg)}}
-@keyframes spinner-colors{0%{stroke:#3f51b5}20%{stroke:#09b7bf}40%{stroke:#90d36b}60%{stroke:#f44336}80%{stroke:#f90}100%{stroke:#3f51b5}}
-@-webkit-keyframes spinner-colors{0%{stroke:#3f51b5}20%{stroke:#09b7bf}40%{stroke:#90d36b}60%{stroke:#f44336}80%{stroke:#f90}100%{stroke:#3f51b5}}
+html.ie .spinner circle {
+    stroke-dashoffset: 80px
+}
+
+@keyframes spinner-dash {
+    0% {
+        stroke-dashoffset: 58px
+    }
+
+    50% {
+        stroke-dashoffset: 200.96px
+    }
+
+    100% {
+        stroke-dashoffset: 58px
+    }
+}
+
+@-webkit-keyframes spinner-dash {
+    0% {
+        stroke-dashoffset: 58px
+    }
+
+    50% {
+        stroke-dashoffset: 200.96px
+    }
+
+    100% {
+        stroke-dashoffset: 58px
+    }
+}
+
+@keyframes spinner-rotate {
+    50% {
+        transform: rotate(600deg)
+    }
+
+    100% {
+        transform: rotate(720deg)
+    }
+}
+
+@-webkit-keyframes spinner-rotate {
+    50% {
+        transform: rotate(600deg)
+    }
+
+    100% {
+        transform: rotate(720deg)
+    }
+}
+
+@keyframes spinner-rotate-ie {
+    50% {
+        transform: rotate(360deg)
+    }
+
+    100% {
+        transform: rotate(720deg)
+    }
+}
+
+@keyframes spinner-colors {
+    0% {
+        stroke: #3f51b5
+    }
+
+    20% {
+        stroke: #09b7bf
+    }
+
+    40% {
+        stroke: #90d36b
+    }
+
+    60% {
+        stroke: #f44336
+    }
+
+    80% {
+        stroke: #f90
+    }
+
+    100% {
+        stroke: #3f51b5
+    }
+}
+
+@-webkit-keyframes spinner-colors {
+    0% {
+        stroke: #3f51b5
+    }
+
+    20% {
+        stroke: #09b7bf
+    }
+
+    40% {
+        stroke: #90d36b
+    }
+
+    60% {
+        stroke: #f44336
+    }
+
+    80% {
+        stroke: #f90
+    }
+
+    100% {
+        stroke: #3f51b5
+    }
+}
 
 
 /* validator */
@@ -159,6 +266,7 @@ select.form-control {
     margin-top: 6px;
     padding-left: 20px;
 }
+
 .mt-checkbox, .mt-radio {
     margin-top: 6px;
 }
@@ -171,11 +279,11 @@ a span.username {
     padding: 0px 10px 0px 0px;
 }
 
-.k-grid  .k-grid-header  .k-header  .k-link {
+.k-grid .k-grid-header .k-header .k-link {
     height: auto;
 }
-  
-.k-grid  .k-grid-header  .k-header {
+
+.k-grid .k-grid-header .k-header {
     white-space: normal;
 }
 
@@ -186,7 +294,7 @@ a span.username {
 }
 
 
-.feeds li .col2>.date {
+.feeds li .col2 > .date {
     padding-top: 15px;
     color: #337ab7;
     font-style: normal;
@@ -207,29 +315,31 @@ a span.username {
     text-decoration: initial;
 }
 
-.page-footer .page-footer-inner{
-    float:left;
+.page-footer .page-footer-inner {
+    float: left;
 }
 
-.page-sidebar .page-sidebar-menu .sub-menu li>.sub-menu>li>a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu li>.sub-menu>li>a {
+.page-sidebar .page-sidebar-menu .sub-menu li > .sub-menu > li > a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu li > .sub-menu > li > a {
     padding-left: 40px;
 }
 
-.page-sidebar .page-sidebar-menu .sub-menu li>a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu li>a {
-    padding: 6px 15px 6px 23px; 
+.page-sidebar .page-sidebar-menu .sub-menu li > a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu li > a {
+    padding: 6px 15px 6px 23px;
 }
 
-.portlet.light>.portlet-title>.caption > small {
+.portlet.light > .portlet-title > .caption > small {
     font-weight: normal;
     margin-left: 10px;
     margin-right: 5px;
 }
-.portlet.light>.portlet-title>.caption > small >i {
-    margin-right: 5px;
-}
-.portlet.light>.portlet-title>.caption > small >a:hover {
-    text-decoration:none;
-}
+
+    .portlet.light > .portlet-title > .caption > small > i {
+        margin-right: 5px;
+    }
+
+    .portlet.light > .portlet-title > .caption > small > a:hover {
+        text-decoration: none;
+    }
 
 /* Checkboxes in admin area */
 
@@ -273,6 +383,7 @@ a span.username {
     .form-horizontal .form-body.col-md-6.advanced-filter {
         padding: 0;
     }
+
     .col-md-4.col-sm-4.text-right {
         text-align: left;
     }
@@ -304,9 +415,11 @@ a span.username {
         padding: 5px 20px 10px;
     }
 }
+
 .page-content-white .page-content .page-bar {
     border-bottom: 0px;
 }
+
 .k-input.text-box {
     padding: 6px 12px;
 }
@@ -320,3 +433,68 @@ textarea.form-control.k-input {
     width: 0;
     height: 0;
 }
+
+/*typeahead*/
+.tt-query,
+.tt-hint {
+    width: 396px;
+    height: 30px;
+    padding: 8px 12px;
+    font-size: 5px;
+    line-height: 30px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+}
+
+.tt-query {
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.tt-hint {
+    color: #999;
+}
+
+.tt-menu {
+    width: 422px;
+    background-color: lightgray;
+    border: 0;
+    border-radius: 8px;
+    box-shadow: 0 5px 10px rgba(0,0,0,.2);
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.twitter-typeahead, .tt-hint, .tt-input, .tt-menu {
+    width: 100%;
+}
+
+.tt-suggestion {
+    padding: 3px 20px;
+    font-size: 10px;
+    line-height: 24px;
+    margin: 2px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.tt-suggestion.tt-is-under-cursor {
+    color: #fff;
+    background-color: #0097cf;
+}
+
+.tt-suggestion p {
+    margin: 0;
+}
+
+#searchInput {
+    width: 500px;
+    margin: 10px;
+}
+
+@media screen and (max-width: 800px) {
+    #searchInput {
+        width: 100%;
+        max-width: 500px;
+    }
+}   
