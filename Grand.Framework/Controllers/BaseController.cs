@@ -371,8 +371,8 @@ namespace Grand.Framework.Controllers
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             // do something before the action executes
-            //event notification
-            EngineContext.Current.Resolve<IEventPublisher>().Publish<ActionExecutingContext>(context);            //EngineContext.Current.Resolve<IEventPublisher>().ActionExecuting(context);
+            // event notification
+            EngineContext.Current.Resolve<IEventPublisher>().Publish<ActionExecutingContext>(context);
         }
 
         public override void OnActionExecuted(ActionExecutedContext context)
