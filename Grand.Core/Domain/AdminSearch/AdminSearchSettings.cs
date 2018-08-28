@@ -42,5 +42,9 @@ namespace Grand.Core.Domain.AdminSearch
         public int CustomersDisplayOrder { get; set; }
 
         public int OrdersDisplayOrder { get; set; }
+
+        public bool SearchInMenu { get; set; }
+
+        public int MenuDisplayOrder { get; set; }
     }
 }

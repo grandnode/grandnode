@@ -19191,4 +19191,16 @@
   <LocaleResource Name="AdminSearch.Placehloder">
     <Value>Search in store...</Value>
   </LocaleResource>
+  <LocaleResource Name="AdminSearch.Fields.SearchInMenu">
+    <Value>Search in menu</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminSearch.Fields.SearchInMenu.Hint">
+    <Value>Searches in left side menu items.</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminSearch.Fields.MenuDisplayOrder">
+    <Value>Display order of results for this search, e.g. if you want found categories to be shown before products, set 0 for categories and 1 for products.</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminSearch.Menu">
+    <Value>Menu</Value>
+  </LocaleResource>
 </Language>

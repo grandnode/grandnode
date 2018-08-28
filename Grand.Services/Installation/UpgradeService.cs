@@ -1010,6 +1010,8 @@ namespace Grand.Services.Installation
             adminSearchSettings.SearchInProducts = true;
             adminSearchSettings.SearchInTopics = true;
             adminSearchSettings.TopicsDisplayOrder = 0;
+            adminSearchSettings.SearchInMenu = true;
+            adminSearchSettings.MenuDisplayOrder = -1;
             _settingService.SaveSetting(adminSearchSettings);
         }
 

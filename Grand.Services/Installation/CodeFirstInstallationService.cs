@@ -5453,7 +5453,9 @@ namespace Grand.Services.Installation
                 SearchInOrders = true,
                 SearchInProducts = true,
                 SearchInTopics = true,
-                TopicsDisplayOrder = 0
+                TopicsDisplayOrder = 0,
+                SearchInMenu = true,
+                MenuDisplayOrder = -1
             });
 
             _settingService.SaveSetting(new NewsSettings

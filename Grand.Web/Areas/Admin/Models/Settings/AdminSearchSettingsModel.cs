@@ -61,5 +61,11 @@ namespace Grand.Web.Areas.Admin.Models.Settings
 
         [GrandResourceDisplayName("AdminSearch.Fields.MaxSearchResultsCount")]
         public int MaxSearchResultsCount { get; set; }
+
+        [GrandResourceDisplayName("AdminSearch.Fields.SearchInMenu")]
+        public bool SearchInMenu { get; set; }
+
+        [GrandResourceDisplayName("AdminSearch.Fields.MenuDisplayOrder")]
+        public int MenuDisplayOrder { get; set; }
     }
 }
