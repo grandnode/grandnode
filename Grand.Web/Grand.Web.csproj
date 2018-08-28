@@ -18,8 +18,18 @@
     <Content Include="App_Data\**" CopyToPublishDirectory="PreserveNewest" Exclude="App_Data\appsettings.json;App_Data\DataProtectionKeys\*.xml" />
     <Content Include="Themes\**" CopyToPublishDirectory="PreserveNewest" Exclude="Themes\**\*.config;Themes\**\*.cshtml" />
     <Content Include="Plugins\**" CopyToPublishDirectory="PreserveNewest" Exclude="Plugins\**\*.cshtml;Plugins\**\*.json;Plugins\bin\**" />
+    <Content Include="Roslyn\**" CopyToPublishDirectory="PreserveNewest" Exclude="Roslyn\**\*.dll" />
     <Content Include="logs\**" CopyToPublishDirectory="PreserveNewest" />
     <Content Remove="wwwroot\Content\Images\Thumbs\*.jpeg;wwwroot\Content\Images\Thumbs\*.jpg;wwwroot\Content\Images\Thumbs\*.png" />
     <Content Remove="wwwroot\bundles\*.css;wwwroot\bundles\*.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="App_Data\Localization\Upgrade\EN_420_430.nopres.xml" />
+    <None Remove="Roslyn\CodeFile - Copy.csx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="Areas\Admin\Views\Common\Roslyn.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
   </ItemGroup>
 </Project>

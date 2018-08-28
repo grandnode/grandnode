@@ -32,6 +32,8 @@ using Grand.Core.Data;
 using MongoDB.Driver;
 using System.Runtime.InteropServices;
 using Grand.Services.Infrastructure;
+using Grand.Core.Configuration;
+using Grand.Core.Roslyn;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -61,7 +63,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IRepository<Product> _repositoryProduct;
         private readonly CatalogSettings _catalogSettings;
         private readonly IHttpContextAccessor _httpContext;
-
+        private readonly GrandConfig _grandConfig;
         #endregion
 
         #region Constructors
@@ -87,7 +89,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             IStoreService storeService,
             IRepository<Product> repositoryProduct,
             CatalogSettings catalogSettings,
-            IHttpContextAccessor httpContext
+            IHttpContextAccessor httpContext,
+            GrandConfig grandConfig
             )
         {
             this._paymentService = paymentService;
@@ -112,6 +115,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._repositoryProduct = repositoryProduct;
             this._catalogSettings = catalogSettings;
             this._httpContext = httpContext;
+            this._grandConfig = grandConfig;
         }
 
         #endregion
@@ -516,6 +520,37 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Redirect(returnUrl);
         }
 
+        public IActionResult Roslyn()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+                return AccessDeniedView();
+            
+            return View(_grandConfig.UseRoslynScripts);
+        }
+
+        [HttpPost]
+        public IActionResult Roslyn(DataSourceRequest command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+                return AccessDeniedView();
+
+            var scripts = RoslynCompiler.ReferencedScripts.ToList();
+
+            var gridModel = new DataSourceResult
+            {
+                Data = scripts.Select(x =>
+                {
+                    return new 
+                    {
+                        FileName = x.OriginalFile,
+                        IsCompiled = x.IsCompiled,
+                        Errors = string.Join(",", x.ErrorInfo)
+                    };
+                }),
+                Total = scripts.Count
+            };
+            return Json(gridModel);
+        }
 
         public IActionResult SeNames()
         {
