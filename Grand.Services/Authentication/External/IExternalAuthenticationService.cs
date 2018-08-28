@@ -15,7 +15,7 @@ namespace Grand.Services.Authentication.External
         /// Load active external authentication methods
         /// </summary>
         /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+        /// <param name="storeId">Load records allowed only in a specified store; pass "" to load all records</param>
         /// <returns>Payment methods</returns>
         IList<IExternalAuthenticationMethod> LoadActiveExternalAuthenticationMethods(Customer customer = null, string storeId = "");
 
@@ -30,7 +30,7 @@ namespace Grand.Services.Authentication.External
         /// Load all external authentication methods
         /// </summary>
         /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+        /// <param name="storeId">Load records allowed only in a specified store; pass "" to load all records</param>
         /// <returns>External authentication methods</returns>
         IList<IExternalAuthenticationMethod> LoadAllExternalAuthenticationMethods(Customer customer = null, string storeId = "");
 

@@ -11,7 +11,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Services
         /// <summary>
         /// Gets all pickup points
         /// </summary>
-        /// <param name="storeId">The store identifier; pass 0 to load all records</param>
+        /// <param name="storeId">The store identifier; pass "" to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Pickup points</returns>

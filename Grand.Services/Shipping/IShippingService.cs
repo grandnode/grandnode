@@ -14,7 +14,7 @@ namespace Grand.Services.Shipping
         /// <summary>
         /// Load active shipping rate computation methods
         /// </summary>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+        /// <param name="storeId">Load records allowed only in a specified store; pass "" to load all records</param>
         /// <returns>Shipping rate computation methods</returns>
         IList<IShippingRateComputationMethod> LoadActiveShippingRateComputationMethods(string storeId = "", IList<ShoppingCartItem> cart = null);
 
@@ -28,7 +28,7 @@ namespace Grand.Services.Shipping
         /// <summary>
         /// Load all shipping rate computation methods
         /// </summary>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+        /// <param name="storeId">Load records allowed only in a specified store; pass "" to load all records</param>
         /// <returns>Shipping rate computation methods</returns>
         IList<IShippingRateComputationMethod> LoadAllShippingRateComputationMethods(string storeId = "");
 
@@ -221,7 +221,7 @@ namespace Grand.Services.Shipping
         /// </summary>
         /// <param name="cart">Shopping cart</param>
         /// <param name="shippingAddress">Shipping address</param>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+        /// <param name="storeId">Load records allowed only in a specified store; pass "" to load all records</param>
         /// <returns>Shipment packages (requests)</returns>
         /// <param name="shippingFromMultipleLocations">Value indicating whether shipping is done from multiple locations (warehouses)</param>
         IList<GetShippingOptionRequest> CreateShippingOptionRequests(Customer customer,
@@ -234,7 +234,7 @@ namespace Grand.Services.Shipping
         /// <param name="cart">Shopping cart</param>
         /// <param name="shippingAddress">Shipping address</param>
         /// <param name="allowedShippingRateComputationMethodSystemName">Filter by shipping rate computation method identifier; null to load shipping options of all shipping rate computation methods</param>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+        /// <param name="storeId">Load records allowed only in a specified store; pass "" to load all records</param>
         /// <returns>Shipping options</returns>
         GetShippingOptionResponse GetShippingOptions(Customer customer, IList<ShoppingCartItem> cart, Address shippingAddress,
             string allowedShippingRateComputationMethodSystemName = "", string storeId = "");

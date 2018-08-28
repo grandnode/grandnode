@@ -78,11 +78,15 @@ namespace Grand.Services.News
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <param name="newsTitle">News title</param>
         /// <returns>News items</returns>
         public virtual IPagedList<NewsItem> GetAllNews(string storeId = "",
-            int pageIndex = 0, int pageSize = int.MaxValue, bool ignorAcl = false, bool showHidden = false)
+            int pageIndex = 0, int pageSize = int.MaxValue, bool ignorAcl = false, bool showHidden = false, string newsTitle = "")
         {
             var query = _newsItemRepository.Table;
+
+            if (!String.IsNullOrWhiteSpace(newsTitle))
+                query = query.Where(n => n.Title != null && n.Title.ToLower().Contains(newsTitle.ToLower()));
 
             if (!showHidden)
             {

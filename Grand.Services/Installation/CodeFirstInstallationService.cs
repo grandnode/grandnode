@@ -50,6 +50,7 @@ using Grand.Services.Events;
 using Microsoft.AspNetCore.Hosting;
 using Grand.Core.Domain.Knowledgebase;
 using Grand.Core.Domain.PushNotifications;
+using Grand.Core.Domain.AdminSearch;
 
 namespace Grand.Services.Installation
 {
@@ -5431,6 +5432,28 @@ namespace Grand.Services.Installation
             {
                 Enabled = false,
                 AllowGuestNotifications = true
+            });
+
+            _settingService.SaveSetting(new AdminSearchSettings
+            {
+                BlogsDisplayOrder = 0,
+                CategoriesDisplayOrder = 0,
+                CustomersDisplayOrder = 0,
+                ManufacturersDisplayOrder = 0,
+                MaxSearchResultsCount = 10,
+                MinSearchTermLength = 3,
+                NewsDisplayOrder = 0,
+                OrdersDisplayOrder = 0,
+                ProductsDisplayOrder = 0,
+                SearchInBlogs = true,
+                SearchInCategories = true,
+                SearchInCustomers = true,
+                SearchInManufacturers = true,
+                SearchInNews = true,
+                SearchInOrders = true,
+                SearchInProducts = true,
+                SearchInTopics = true,
+                TopicsDisplayOrder = 0
             });
 
             _settingService.SaveSetting(new NewsSettings

@@ -178,7 +178,7 @@ namespace Grand.Services.Messages
         /// <summary>
         /// Gets all message templates
         /// </summary>
-        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
+        /// <param name="storeId">Store identifier; pass "" to load all records</param>
         /// <returns>Message template list</returns>
         public virtual IList<MessageTemplate> GetAllMessageTemplates(string storeId)
         {

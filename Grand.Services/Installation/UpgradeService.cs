@@ -33,6 +33,7 @@ using Grand.Core.Domain.Security;
 using Grand.Core.Domain.Knowledgebase;
 using Grand.Core.Domain;
 using Grand.Core.Domain.PushNotifications;
+using Grand.Core.Domain.AdminSearch;
 
 namespace Grand.Services.Installation
 {
@@ -119,7 +120,7 @@ namespace Grand.Services.Installation
         private void From360To370()
         {
             #region Install String resources
-                InstallStringResources("360_370.nopres.xml");
+            InstallStringResources("360_370.nopres.xml");
             #endregion
 
             #region MessageTemplates
@@ -284,7 +285,7 @@ namespace Grand.Services.Installation
         {
 
             #region Run scripts
-            
+
             var filePath = Path.Combine(CommonHelper.MapPath("~/App_Data/Upgrade"), "UpgradeScript_380_390.js");
             string upgrade_script = File.ReadAllText(filePath);
             var bscript = new BsonJavaScript(upgrade_script);
@@ -558,12 +559,12 @@ namespace Grand.Services.Installation
 
             IPermissionProvider provider = new StandardPermissionProvider();
             EngineContext.Current.Resolve<IPermissionService>().InstallPermissions(provider);
-             
+
             #endregion
         }
 
         private void From390To400()
-        {            
+        {
             #region Install String resources
             InstallStringResources("390_400.nopres.xml");
             #endregion
@@ -615,7 +616,7 @@ namespace Grand.Services.Installation
             var products = productRepository.Collection.Find(filter).ToList();
             foreach (var product in products)
             {
-                if(product.MinStockQuantity >= product.StockQuantity)
+                if (product.MinStockQuantity >= product.StockQuantity)
                 {
                     product.LowStock = true;
                     var _filter = Builders<Product>.Filter.Eq("Id", product.Id);
@@ -646,7 +647,7 @@ namespace Grand.Services.Installation
             #region Install new Topics
 
             var defaultTopicTemplate = EngineContext.Current.Resolve<IRepository<TopicTemplate>>().Table.FirstOrDefault(tt => tt.Name == "Default template");
-            if(defaultTopicTemplate==null)
+            if (defaultTopicTemplate == null)
                 defaultTopicTemplate = EngineContext.Current.Resolve<IRepository<TopicTemplate>>().Table.FirstOrDefault();
 
             var vendorTermsOfService = new Topic
@@ -773,7 +774,7 @@ namespace Grand.Services.Installation
             keepliveTask.Insert(endtask);
 
             var _keepAliveScheduleTask = keepliveTask.Table.Where(x => x.Type == "Grand.Services.Tasks.KeepAliveScheduleTask").FirstOrDefault();
-            if(_keepAliveScheduleTask !=null)
+            if (_keepAliveScheduleTask != null)
                 keepliveTask.Delete(_keepAliveScheduleTask);
 
             #endregion
@@ -809,11 +810,11 @@ namespace Grand.Services.Installation
         private void From410To420()
         {
             var _settingService = EngineContext.Current.Resolve<ISettingService>();
-            
+
             #region Install String resources
             InstallStringResources("EN_410_420.nopres.xml");
             #endregion
-            
+
             #region Update string resources
 
             var _localeStringResource = EngineContext.Current.Resolve<IRepository<LocaleStringResource>>();
@@ -825,7 +826,7 @@ namespace Grand.Services.Installation
             }).Wait();
 
             #endregion
-            
+
             #region Admin area settings
 
             var adminareasettings = EngineContext.Current.Resolve<AdminAreaSettings>();
@@ -834,7 +835,7 @@ namespace Grand.Services.Installation
             _settingService.SaveSetting(adminareasettings);
 
             #endregion
-            
+
             #region ActivityLog
 
             var _activityLogTypeRepository = EngineContext.Current.Resolve<IRepository<ActivityLogType>>();
@@ -900,7 +901,7 @@ namespace Grand.Services.Installation
             });
 
             #endregion
-            
+
             #region MessageTemplates
 
             var emailAccount = EngineContext.Current.Resolve<IRepository<EmailAccount>>().Table.FirstOrDefault();
@@ -919,7 +920,7 @@ namespace Grand.Services.Installation
             };
             EngineContext.Current.Resolve<IRepository<MessageTemplate>>().Insert(messageTemplates);
             #endregion
-            
+
             #region Install new Topics
             var defaultTopicTemplate = EngineContext.Current.Resolve<IRepository<TopicTemplate>>().Table.FirstOrDefault(tt => tt.Name == "Default template");
             if (defaultTopicTemplate == null)
@@ -983,13 +984,42 @@ namespace Grand.Services.Installation
             #endregion
 
         }
+
+        private void From420To430()
+        {
+            var _settingService = EngineContext.Current.Resolve<ISettingService>();
+
+            InstallStringResources("EN_420_430.nopres.xml");
+
+            var adminSearchSettings = EngineContext.Current.Resolve<AdminSearchSettings>();
+            adminSearchSettings.BlogsDisplayOrder = 0;
+            adminSearchSettings.CategoriesDisplayOrder = 0;
+            adminSearchSettings.CustomersDisplayOrder = 0;
+            adminSearchSettings.ManufacturersDisplayOrder = 0;
+            adminSearchSettings.MaxSearchResultsCount = 10;
+            adminSearchSettings.MinSearchTermLength = 3;
+            adminSearchSettings.NewsDisplayOrder = 0;
+            adminSearchSettings.OrdersDisplayOrder = 0;
+            adminSearchSettings.ProductsDisplayOrder = 0;
+            adminSearchSettings.SearchInBlogs = true;
+            adminSearchSettings.SearchInCategories = true;
+            adminSearchSettings.SearchInCustomers = true;
+            adminSearchSettings.SearchInManufacturers = true;
+            adminSearchSettings.SearchInNews = true;
+            adminSearchSettings.SearchInOrders = true;
+            adminSearchSettings.SearchInProducts = true;
+            adminSearchSettings.SearchInTopics = true;
+            adminSearchSettings.TopicsDisplayOrder = 0;
+            _settingService.SaveSetting(adminSearchSettings);
+        }
+
         private void InstallStringResources(string filenames)
         {
             //'English' language            
             var language = EngineContext.Current.Resolve<IRepository<Language>>().Table.Single(l => l.Name == "English");
 
             //save resources
-            foreach (var filePath in System.IO.Directory.EnumerateFiles(CommonHelper.MapPath("~/App_Data/Localization/Upgrade"), "*" + filenames , SearchOption.TopDirectoryOnly))
+            foreach (var filePath in System.IO.Directory.EnumerateFiles(CommonHelper.MapPath("~/App_Data/Localization/Upgrade"), "*" + filenames, SearchOption.TopDirectoryOnly))
             {
                 var localesXml = File.ReadAllText(filePath);
                 var localizationService = EngineContext.Current.Resolve<ILocalizationService>();

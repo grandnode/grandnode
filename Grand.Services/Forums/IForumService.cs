@@ -210,7 +210,7 @@ namespace Grand.Services.Forums
         /// <summary>
         /// Gets private messages
         /// </summary>
-        /// <param name="storeId">The store identifier; pass 0 to load all messages</param>
+        /// <param name="storeId">The store identifier; pass "" to load all messages</param>
         /// <param name="fromCustomerId">The customer identifier who sent the message</param>
         /// <param name="toCustomerId">The customer identifier who should receive the message</param>
         /// <param name="isRead">A value indicating whether loaded messages are read. false - to load not read messages only, 1 to load read messages only, null to load all messages</param>

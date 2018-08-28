@@ -115,7 +115,7 @@ namespace Grand.Core.Plugins
         /// </summary>
         /// <typeparam name="T">The type of plugins to get.</typeparam>
         /// <param name="loadMode">Load plugins mode</param>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+        /// <param name="storeId">Load records allowed only in a specified store; pass "" to load all records</param>
         /// <param name="group">Filter by plugin group; pass null to load all records</param>
         /// <returns>Plugins</returns>
         public virtual IEnumerable<T> GetPlugins<T>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly, 
@@ -128,7 +128,7 @@ namespace Grand.Core.Plugins
         /// Get plugin descriptors
         /// </summary>
         /// <param name="loadMode">Load plugins mode</param>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+        /// <param name="storeId">Load records allowed only in a specified store; pass "" to load all records</param>
         /// <param name="group">Filter by plugin group; pass null to load all records</param>
         /// <returns>Plugin descriptors</returns>
         public virtual IEnumerable<PluginDescriptor> GetPluginDescriptors(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
@@ -145,7 +145,7 @@ namespace Grand.Core.Plugins
         /// </summary>
         /// <typeparam name="T">The type of plugin to get.</typeparam>
         /// <param name="loadMode">Load plugins mode</param>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+        /// <param name="storeId">Load records allowed only in a specified store; pass "" to load all records</param>
         /// <param name="group">Filter by plugin group; pass null to load all records</param>
         /// <returns>Plugin descriptors</returns>
         public virtual IEnumerable<PluginDescriptor> GetPluginDescriptors<T>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
