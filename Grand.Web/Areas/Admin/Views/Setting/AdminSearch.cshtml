@@ -20,6 +20,21 @@
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group">
+                                <admin-label asp-for="SearchInMenu" />
+                                <div class="col-md-9">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        <admin-input asp-for="SearchInMenu" />
+                                        <span></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <admin-label asp-for="MenuDisplayOrder" />
+                                <div class="col-md-9">
+                                    <admin-input asp-for="MenuDisplayOrder" />
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <admin-label asp-for="SearchInProducts" />
                                 <div class="col-md-9">
                                     <label class="mt-checkbox mt-checkbox-outline">

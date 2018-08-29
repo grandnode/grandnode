@@ -8,6 +8,7 @@ using Grand.Services.Localization;
 using Grand.Services.News;
 using Grand.Services.Orders;
 using Grand.Services.Topics;
+using Grand.Web.Areas.Admin.Models.Settings;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -46,7 +47,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Search(string searchTerm)
+        public IActionResult Search(string searchTerm, FoundMenuItem[] foundMenuItems)
         {
             if (string.IsNullOrEmpty(searchTerm))
                 return Json("error");
@@ -100,8 +101,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
                 if (result.Count() < _adminSearchSettings.MaxSearchResultsCount && _adminSearchSettings.SearchInTopics)
                 {
-                    var topics = _topicService.GetAllTopics("").Where(x => x.SystemName.ToLower().Contains(searchTerm.ToLower()) ||
-                    x.Title.ToLower().Contains(searchTerm.ToLower()));
+                    var topics = _topicService.GetAllTopics("").Where(x => (x.SystemName != null && x.SystemName.ToLower().Contains(searchTerm.ToLower())) ||
+                    (x.Title != null && x.Title.ToLower().Contains(searchTerm.ToLower())));
                     foreach (var topic in topics)
                     {
                         result.Add(new Tuple<object, int>(new
@@ -160,6 +161,32 @@ namespace Grand.Web.Areas.Admin.Controllers
                             link = Url.Content("~/Admin/Customer/Edit/") + customer.Id,
                             source = _localizationService.GetResource("Admin.Customers")
                         }, _adminSearchSettings.CustomersDisplayOrder));
+                    }
+                }
+
+                if (result.Count() < _adminSearchSettings.MaxSearchResultsCount && _adminSearchSettings.SearchInMenu && foundMenuItems != null && foundMenuItems.Any())
+                {
+                    foreach (var menuItem in foundMenuItems)
+                    {
+                        if (result.Count() >= _adminSearchSettings.MaxSearchResultsCount)
+                            break;
+
+                        string formatted = _localizationService.GetResource("AdminSearch.Menu") + " > ";
+                        if (string.IsNullOrEmpty(menuItem.grandParent))
+                        {
+                            formatted += menuItem.parent;
+                        }
+                        else
+                        {
+                            formatted += menuItem.grandParent + " > " + menuItem.parent;
+                        }
+
+                        result.Add(new Tuple<object, int>(new
+                        {
+                            title = menuItem.title,
+                            link = menuItem.link,
+                            source = formatted
+                        }, _adminSearchSettings.MenuDisplayOrder));
                     }
                 }
             }

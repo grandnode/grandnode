@@ -3397,6 +3397,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.BlogsDisplayOrder = settings.BlogsDisplayOrder;
             model.CustomersDisplayOrder = settings.CustomersDisplayOrder;
             model.OrdersDisplayOrder = settings.OrdersDisplayOrder;
+            model.SearchInMenu = settings.SearchInMenu;
+            model.MenuDisplayOrder = settings.MenuDisplayOrder;
 
             return View(model);
         }
@@ -3428,6 +3430,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             settings.BlogsDisplayOrder = model.BlogsDisplayOrder;
             settings.CustomersDisplayOrder = model.CustomersDisplayOrder;
             settings.OrdersDisplayOrder = model.OrdersDisplayOrder;
+            settings.SearchInMenu = model.SearchInMenu;
+            settings.MenuDisplayOrder = model.MenuDisplayOrder;
 
             _settingService.SaveSetting(settings);
 
