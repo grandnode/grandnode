@@ -290,7 +290,7 @@ namespace Grand.Services.Knowledgebase
         /// <returns>IPagedList<KnowledgebaseArticle></returns>
         public virtual IPagedList<KnowledgebaseArticle> GetKnowledgebaseArticlesByCategoryId(string id, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var articles = _knowledgebaseArticleRepository.Table.Where(x => x.ParentCategoryId == id).ToList();
+            var articles = _knowledgebaseArticleRepository.Table.Where(x => x.ParentCategoryId == id).OrderBy(x => x.DisplayOrder).ToList();
             return new PagedList<KnowledgebaseArticle>(articles, pageIndex, pageSize);
         }
 
