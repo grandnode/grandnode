@@ -253,7 +253,7 @@ namespace Grand.Web.Controllers
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
         public virtual IActionResult ContactUsSend(ContactUsModel model, IFormCollection form, bool captchaValid,
-            IContactAttributeFormatter contactAttributeFormatter)
+            [FromServices] IContactAttributeFormatter contactAttributeFormatter)
         {
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage && !captchaValid)
