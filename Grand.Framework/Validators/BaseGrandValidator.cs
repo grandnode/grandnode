@@ -1,9 +1,6 @@
-using System.Linq;
-//using System.Linq.Dynamic;
 using FluentValidation;
 using Grand.Core.Infrastructure;
-using Grand.Data;
-using Grand.Services.Localization;
+using Grand.Services.Events;
 
 namespace Grand.Framework.Validators
 {
@@ -20,7 +17,7 @@ namespace Grand.Framework.Validators
         /// </summary>
         protected virtual void PostInitialize()
         {
-
+            EngineContext.Current.Resolve<IEventPublisher>().Publish(this);
         }
 
 
