@@ -909,6 +909,8 @@ namespace Grand.Services.Orders
             if (getReservationWarnings)
                 warnings.AddRange(GetReservationProductWarnings(customer, product, shoppingCartItem));
 
+            //event notification
+            _eventPublisher.ShoppingCartItemWarningsAdded(warnings, customer, shoppingCartItem, product);
 
             return warnings;
         }
