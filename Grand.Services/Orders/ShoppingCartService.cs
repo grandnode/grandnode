@@ -10,6 +10,7 @@ using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Events;
+using Grand.Services.Events.Web;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Security;
@@ -1039,6 +1040,9 @@ namespace Grand.Services.Orders
                     }
                 }
             }
+
+            //event notification
+            _eventPublisher.ShoppingCartWarningsAdd(warnings, shoppingCart, checkoutAttributesXml, validateCheckoutAttributes);
 
             return warnings;
         }
