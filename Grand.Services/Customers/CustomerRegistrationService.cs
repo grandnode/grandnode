@@ -7,6 +7,8 @@ using Grand.Services.Messages;
 using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Services.Orders;
+using Grand.Services.Events;
+using Grand.Services.Events.Web;
 
 namespace Grand.Services.Customers
 {
@@ -22,6 +24,7 @@ namespace Grand.Services.Customers
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly ILocalizationService _localizationService;
         private readonly IStoreService _storeService;
+        private readonly IEventPublisher _eventPublisher;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly IRewardPointsService _rewardPointsService;
@@ -38,6 +41,7 @@ namespace Grand.Services.Customers
         /// <param name="newsLetterSubscriptionService">Newsletter subscription service</param>
         /// <param name="localizationService">Localization service</param>
         /// <param name="storeService">Store service</param>
+        /// <param name="eventPublisher">Event publisher</param>
         /// <param name="rewardPointsSettings">Reward points settings</param>
         /// <param name="customerSettings">Customer settings</param>
         /// <param name="rewardPointsService">Reward points service</param>
@@ -46,6 +50,7 @@ namespace Grand.Services.Customers
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             ILocalizationService localizationService,
             IStoreService storeService,
+            IEventPublisher eventPublisher,
             RewardPointsSettings rewardPointsSettings,
             CustomerSettings customerSettings,
             IRewardPointsService rewardPointsService)
@@ -55,6 +60,7 @@ namespace Grand.Services.Customers
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
             this._localizationService = localizationService;
             this._storeService = storeService;
+            this._eventPublisher = eventPublisher;
             this._rewardPointsSettings = rewardPointsSettings;
             this._customerSettings = customerSettings;
             this._rewardPointsService = rewardPointsService;
@@ -215,6 +221,13 @@ namespace Grand.Services.Customers
                     return result;
                 }
             }
+
+            //event notification
+            _eventPublisher.CustomerRegistrationEvent(result, request);
+
+            //return if exist errors
+            if (result.Errors.Any())
+                return result;
 
             //at this point request is valid
             request.Customer.Username = request.Username;

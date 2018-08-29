@@ -1,6 +1,7 @@
 ﻿using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
+using Grand.Services.Customers;
 using System.Collections.Generic;
 
 namespace Grand.Services.Events.Web
@@ -15,6 +16,11 @@ namespace Grand.Services.Events.Web
         public static void ShoppingCartItemWarningsAdded<C, S, P>(this IEventPublisher eventPublisher, IList<string> warnings, C customer, S shoppingcartItem, P product) where C : Customer where S : ShoppingCartItem where P : Product
         {
             eventPublisher.Publish(new ShoppingCartItemWarningsEvent<C, S, P>(warnings, customer, shoppingcartItem, product));
+        }
+
+        public static void CustomerRegistrationEvent<C, R>(this IEventPublisher eventPublisher, C result, R request) where C : CustomerRegistrationResult where R : CustomerRegistrationRequest
+        {
+            eventPublisher.Publish(new CustomerRegistrationEvent<C, R>(result, request));
         }
     }
 }
