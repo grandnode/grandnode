@@ -2,6 +2,7 @@
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
 using Grand.Services.Customers;
+using Grand.Services.Orders;
 using System.Collections.Generic;
 
 namespace Grand.Services.Events.Web
@@ -22,5 +23,11 @@ namespace Grand.Services.Events.Web
         {
             eventPublisher.Publish(new CustomerRegistrationEvent<C, R>(result, request));
         }
+
+        public static void PlaceOrderDetailsEvent<R, O>(this IEventPublisher eventPublisher, R result, O order) where R : PlaceOrderResult where O : PlaceOrderContainter
+        {
+            eventPublisher.Publish(new PlaceOrderDetailsEvent<R, O>(result, order));
+        }
+
     }
 }

@@ -32,6 +32,7 @@ using Grand.Services.Shipping;
 using Grand.Services.Tax;
 using Grand.Services.Vendors;
 using Grand.Core.Infrastructure;
+using Grand.Services.Events.Web;
 
 namespace Grand.Services.Orders
 {
@@ -174,60 +175,6 @@ namespace Grand.Services.Orders
             this._taxSettings = taxSettings;
             this._localizationSettings = localizationSettings;
             this._currencySettings = currencySettings;
-        }
-
-        #endregion
-
-        #region Nested classes
-
-        protected class PlaceOrderContainter
-        {
-            public PlaceOrderContainter()
-            {
-                this.Cart = new List<ShoppingCartItem>();
-                this.AppliedDiscounts = new List<AppliedDiscount>();
-                this.AppliedGiftCards = new List<AppliedGiftCard>();
-            }
-
-            public Customer Customer { get; set; }
-            public Language CustomerLanguage { get; set; }
-            public string AffiliateId { get; set; }
-            public TaxDisplayType CustomerTaxDisplayType { get; set; }
-            public string CustomerCurrencyCode { get; set; }
-            public decimal CustomerCurrencyRate { get; set; }
-
-            public Address BillingAddress { get; set; }
-            public Address ShippingAddress { get; set; }
-            public ShippingStatus ShippingStatus { get; set; }
-            public string ShippingMethodName { get; set; }
-            public string ShippingRateComputationMethodSystemName { get; set; }
-            public bool PickUpInStore { get; set; }
-            public PickupPoint PickupPoint { get; set; }
-            public bool IsRecurringShoppingCart { get; set; }
-            //initial order (used with recurring payments)
-            public Order InitialOrder { get; set; }
-
-            public string CheckoutAttributeDescription { get; set; }
-            public string CheckoutAttributesXml { get; set; }
-
-            public IList<ShoppingCartItem> Cart { get; set; }
-            public List<AppliedDiscount> AppliedDiscounts { get; set; }
-            public List<AppliedGiftCard> AppliedGiftCards { get; set; }
-
-            public decimal OrderSubTotalInclTax { get; set; }
-            public decimal OrderSubTotalExclTax { get; set; }
-            public decimal OrderSubTotalDiscountInclTax { get; set; }
-            public decimal OrderSubTotalDiscountExclTax { get; set; }
-            public decimal OrderShippingTotalInclTax { get; set; }
-            public decimal OrderShippingTotalExclTax { get; set; }
-            public decimal PaymentAdditionalFeeInclTax { get; set; }
-            public decimal PaymentAdditionalFeeExclTax { get; set; }
-            public decimal OrderTaxTotal { get; set; }
-            public string TaxRates { get; set; }
-            public decimal OrderDiscountAmount { get; set; }
-            public int RedeemedRewardPoints { get; set; }
-            public decimal RedeemedRewardPointsAmount { get; set; }
-            public decimal OrderTotal { get; set; }
         }
 
         #endregion
@@ -1079,7 +1026,14 @@ namespace Grand.Services.Orders
 
                 //prepare order details
                 var details = PreparePlaceOrderDetails(processPaymentRequest);
-                var store = _storeContext.CurrentStore;
+
+                // event notification
+                _eventPublisher.PlaceOrderDetailsEvent(result, details);
+
+                //return if exist errors
+                if (result.Errors.Any())
+                    return result;
+
                 #region Payment workflow
 
 
@@ -1277,7 +1231,8 @@ namespace Grand.Services.Orders
                                 attributeDescription = _localizationService.GetResource("ShoppingCart.auctionwonon") + " " + product.AvailableEndDateTimeUtc;
 
                             var itemWeight = _shippingService.GetShoppingCartItemWeight(sc);
-                            var warehouseId = store.DefaultWarehouseId;
+
+                            var warehouseId = _storeContext.CurrentStore.DefaultWarehouseId;
                             if (!product.UseMultipleWarehouses)
                             {
                                 if (!string.IsNullOrEmpty(product.WarehouseId))
