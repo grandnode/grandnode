@@ -43,27 +43,27 @@
                 </div>
                 <div class="portlet-body form">
                     <div class="form-horizontal">
-                        <div class="form-body col-md-6">
-                            <div class="form-group">
-                                <admin-label asp-for="SearchCustomerRoleIds" class="control-label col-md-4 col-sm-4" />
-                                <div class="col-md-8 col-sm-8">
-                                    <admin-input asp-for="SearchCustomerRoleIds" asp-template="MultiSelect" asp-selectitem="Model.AvailableCustomerRoles" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <admin-label asp-for="SearchCustomerTagIds" class="control-label col-md-4 col-sm-4" />
-                                <div class="col-md-8 col-sm-8">
-                                    <admin-input asp-for="SearchCustomerTagIds" asp-template="MultiSelect" asp-selectitem="Model.AvailableCustomerTags" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <admin-label asp-for="SearchEmail" class="control-label col-md-4 col-sm-4" />
-                                <div class="col-md-8 col-sm-8">
+
+                        <div class="form-body">
+                            <div class="form-group popup">
+                                <admin-label asp-for="SearchEmail" class="control-label col-sm-2" />
+                                <div class="col-md-4 col-sm-4">
                                     <admin-input asp-for="SearchEmail" />
+                                </div>
+                                <div class="col-md-4 col-sm-4 mt-mobile-10">
+                                    <div class="btn-group btn-group-devided">
+                                        <button class="btn btn-success filter-submit" id="search-customers">
+                                            <i class="fa fa-search"></i> @T("Admin.Common.Search")
+                                        </button>
+                                        <button type="button" class="btn btn-default filter-extend-button">
+                                            <i class="fa fa-filter"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-body col-md-6">
+
+                        <div class="form-body col-md-6 extend-collapse">
                             @if (Model.UsernamesEnabled)
                             {
                                 <div class="form-group">
@@ -94,6 +94,20 @@
                                     </div>
                                 </div>
                             }
+                        </div>
+                        <div class="form-body col-md-6 extend-collapse">
+                            <div class="form-group">
+                                <admin-label asp-for="SearchCustomerRoleIds" class="control-label col-md-4 col-sm-4" />
+                                <div class="col-md-8 col-sm-8">
+                                    <admin-input asp-for="SearchCustomerRoleIds" asp-template="MultiSelect" asp-selectitem="Model.AvailableCustomerRoles" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <admin-label asp-for="SearchCustomerTagIds" class="control-label col-md-4 col-sm-4" />
+                                <div class="col-md-8 col-sm-8">
+                                    <admin-input asp-for="SearchCustomerTagIds" asp-template="MultiSelect" asp-selectitem="Model.AvailableCustomerTags" />
+                                </div>
+                            </div>
                             @if (Model.PhoneEnabled)
                             {
                                 <div class="form-group">
@@ -113,15 +127,6 @@
                                 </div>
                             }
                         </div>
-                        <div class="form-actions">
-                            <div class="row">
-                                <div class="col-md-offset-3 col-sm-offset-3 col-md-8 col-sm-8">
-                                    <button class="btn btn-success filter-submit" id="search-customers">
-                                        <i class="fa fa-search"></i> @T("Admin.Common.Search")
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div class="portlet-body">
@@ -134,7 +139,14 @@
 
 
     <script>
-            $(document).ready(function () {
+        $(document).ready(function () {
+
+            $('.extend-collapse').hide();
+            $('.filter-extend-button').click(function () {
+                $('.extend-collapse').toggle("slow");
+                $('.filter-text-close').toggle();
+            });
+
                 $("#customers-grid").kendoGrid({
                     dataSource: {
                         transport: {
