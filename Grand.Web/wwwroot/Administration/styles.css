@@ -497,4 +497,10 @@ textarea.form-control.k-input {
         width: 100%;
         max-width: 500px;
     }
+}
+
+@media screen and (max-width: 769px) {
+    .popup .mt-mobile-10 {
+        margin-top: 10px;
+    }
 }   
