@@ -816,22 +816,6 @@ pagination .pagination a:not([href]) {
 .pagination .page-link {
 	transition: all .3s ease;
 }
-/*.pagination .page-item .page-link::before {
-    content: '';
-    position: absolute;
-    top: -4px;
-    left: 3px;
-    width: 100%;
-    height: 3px;
-    background: #4F575E;
-    transform: skewX(-45deg);
-    z-index: 0;
-}*/
-
-/*.pagination .page-item.current-page .page-link::before,
-.pagination .page-item.current-page:last-child .page-link::after {
-    background: #02899C;
-}*/
 
 .pagination .page-item.current-page:hover .page-link {
 	background: #02899C;
@@ -843,17 +827,6 @@ pagination .pagination a:not([href]) {
 .pagination .page-item:hover .page-link {
 	background-color: #4F575E;
 }
-/*.pagination .page-item:last-child .page-link::after {
-    content: "";
-    position: absolute;
-    top: -1px;
-    right: -4px;
-    width: 3px;
-    height: 97%;
-    background: #4F575E;
-    transform: skewY(-45deg);
-    z-index: 0;
-}*/
 
 /* mobile collapsing menu */
 
@@ -985,9 +958,7 @@ pagination .pagination a:not([href]) {
 	-o-transition: .25s ease-in-out;
 	transition: .25s ease-in-out;
 }
-#mobile-menu-opener {
-	/* position: absolute; */
-}
+
 #mobile-menu-opener span:nth-child(1) {
 	top: 0px;
 	-webkit-transform-origin: left center;
@@ -1029,10 +1000,7 @@ pagination .pagination a:not([href]) {
 	top: 22px;
 	left: 5px;
 }
-.mobile-menu-button {
-	/* position: relative; */
-	/* width: 61px; */
-}
+
 .logo-mobile {
 	display: flex;
 	height: 51px;
@@ -1306,7 +1274,6 @@ pagination .pagination a:not([href]) {
     text-align: right;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    /* transform: translateX(calc(100% - 50px)); */
     transition: all .5s ease;
 }
 .block-account-navigation .list li {
@@ -1613,7 +1580,6 @@ list settings .list__item,
 	top: 1px;
 	width: 100%;
 	left: 0;
-	/* background: #fff; */
 	border-top-left-radius: 5px;
 	border-top-right-radius: 5px;
 	transition: all .3s ease;
@@ -1745,9 +1711,14 @@ list settings .list__item,
 .product-details-page #product_tab_content {
     margin-top: 15px;
 }
+
+.product-contact-error, .product-contact-send {
+    display: none;
+}
+
 .generalLeftSide li {
-	list-style-type: none;
-	font-size: 14px;
+    list-style-type: none;
+    font-size: 14px;
 }
 .generalLeftSide li a {
 	color: #4c4c4d;
@@ -3388,7 +3359,6 @@ footer .list-group .list-group-item {
 		z-index: 0;
 	}
 	.shopping-cart .product-picture {
-		/* float: left; */
 		width: 100%;
 		display: flex;
 		align-items: center;

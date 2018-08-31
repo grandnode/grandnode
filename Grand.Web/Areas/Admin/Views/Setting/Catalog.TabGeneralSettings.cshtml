@@ -281,6 +281,20 @@
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.AskQuestionOnProduct_OverrideForStore, model => model.AskQuestionOnProduct, Model.ActiveStoreScopeConfiguration)
+                <admin-label asp-for="AskQuestionOnProduct" class="control-label" />
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    <admin-input asp-for="AskQuestionOnProduct" />
+                    <span></span>
+                </label>
+                <span asp-validation-for="AskQuestionOnProduct"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.EmailAFriendEnabled_OverrideForStore, model => model.EmailAFriendEnabled, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="EmailAFriendEnabled" class="control-label" />
             </div>

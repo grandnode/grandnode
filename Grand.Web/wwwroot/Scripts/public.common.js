@@ -488,6 +488,39 @@ $(document).ready(function () {
     });
 });
 
+function sendcontactusform(urladd) {
+    if ($("#product-details-form").valid()) {
+        var contactData = {
+            AskQuestionEmail: $('#AskQuestionEmail').val(),
+            AskQuestionFullName: $('#AskQuestionFullName').val(),
+            AskQuestionPhone: $('#AskQuestionPhone').val(),
+            AskQuestionMessage: $('#AskQuestionMessage').val(),
+            'g-recaptcha-response': $('#g-recaptcha-response').val()
+        };
+        addAntiForgeryToken(contactData);
+        $.ajax({
+            cache: false,
+            url: urladd,
+            data: contactData,
+            type: 'post',
+            success: function (successprocess) {
+                if (successprocess.success) {
+                    $('#contact-us-product').hide();
+                    $('.product-contact-error').hide();
+                    $('.product-contact-send .card-body').html(successprocess.message);
+                    $('.product-contact-send').show();
+                }
+                else {
+                    $('.product-contact-error .card-body').html(successprocess.message);
+                    $('.product-contact-error').show();
+                }
+            },
+            error: function (error) {
+                alert('Error: ' + error);
+            }
+        });
+    }
+}
 
 function minicartclose() {
     $("#topcartlink").removeClass("fly-in");

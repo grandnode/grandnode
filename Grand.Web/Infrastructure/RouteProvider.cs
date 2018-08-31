@@ -192,6 +192,12 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("AskQuestion",
                             "askquestion/{productId}",
                             new { controller = "Product", action = "AskQuestion" });
+
+            //product ask question on product page
+            routeBuilder.MapLocalizedRoute("AskQuestionOnProduct",
+                            "askquestiononproduct/{productId}",
+                            new { controller = "Product", action = "AskQuestionOnProduct" });
+
             //reviews
             routeBuilder.MapLocalizedRoute("ProductReviews",
                             "productreviews/{productId}",

@@ -5700,6 +5700,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.AskQuestionEnabled.Hint">
     <Value>Check to allow customers to use the 'Ask question' option on the product page in your store</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.AskQuestionOnProduct">
+    <Value>'Ask question on the product page' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.AskQuestionOnProduct.Hint">
+    <Value>Check to allow customers to use the 'Ask question on the product page' option in your store</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.CacheProductPrices">
     <Value>Cache product prices</Value>
   </LocaleResource>
@@ -17834,6 +17840,9 @@
   </LocaleResource>
   <LocaleResource Name="Products.Compare.Title">
     <Value>Compare products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.ContactUs">
+    <Value>Contact us</Value>
   </LocaleResource>
   <LocaleResource Name="Products.DeliveryDate">
     <Value>Delivery date</Value>

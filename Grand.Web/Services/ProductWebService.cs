@@ -35,6 +35,7 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Http;
 using Grand.Services.Discounts;
+using Grand.Services.Common;
 
 namespace Grand.Web.Services
 {
@@ -628,6 +629,11 @@ namespace Grand.Web.Services
             model.EmailAFriendEnabled = _catalogSettings.EmailAFriendEnabled;
             //ask question product
             model.AskQuestionEnabled = _catalogSettings.AskQuestionEnabled;
+            //ask question us on the product
+            model.AskQuestionOnProduct = _catalogSettings.AskQuestionOnProduct;
+            if (model.AskQuestionOnProduct)
+                model.ProductAskQuestion = PrepareProductAskQuestionSimpleModel(product);
+
             //compare products
             model.CompareProductsEnabled = _catalogSettings.CompareProductsEnabled;
             //store name
@@ -1564,5 +1570,36 @@ namespace Grand.Web.Services
             return model;
         }
 
+
+        public virtual ProductAskQuestionModel PrepareProductAskQuestionModel(Product product)
+        {
+            var customer = _workContext.CurrentCustomer;
+
+            var model = new ProductAskQuestionModel();
+            model.Id = product.Id;
+            model.ProductName = product.GetLocalized(x => x.Name);
+            model.ProductSeName = product.GetSeName();
+            model.Email = customer.Email;
+            model.FullName = customer.GetFullName();
+            model.Phone = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone);
+            model.Message = "";
+            model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnAskQuestionPage;
+
+            return model;
+        }
+
+        public virtual ProductAskQuestionSimpleModel PrepareProductAskQuestionSimpleModel(Product product)
+        {
+            var customer = _workContext.CurrentCustomer;
+
+            var model = new ProductAskQuestionSimpleModel();
+            model.Id = product.Id;
+            model.AskQuestionEmail = customer.Email;
+            model.AskQuestionFullName = customer.GetFullName();
+            model.AskQuestionPhone = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone);
+            model.AskQuestionMessage = "";
+            model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnAskQuestionPage;
+            return model;
+        }
     }
 }

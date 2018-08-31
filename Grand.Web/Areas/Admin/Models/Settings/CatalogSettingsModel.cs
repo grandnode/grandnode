@@ -102,6 +102,10 @@ namespace Grand.Web.Areas.Admin.Models.Settings
         public bool AskQuestionEnabled { get; set; }
         public bool AskQuestionEnabled_OverrideForStore { get; set; }
 
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Catalog.AskQuestionOnProduct")]
+        public bool AskQuestionOnProduct { get; set; }
+        public bool AskQuestionOnProduct_OverrideForStore { get; set; }
+
         [GrandResourceDisplayName("Admin.Configuration.Settings.Catalog.AllowAnonymousUsersToEmailAFriend")]
         public bool AllowAnonymousUsersToEmailAFriend { get; set; }
         public bool AllowAnonymousUsersToEmailAFriend_OverrideForStore { get; set; }
