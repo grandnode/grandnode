@@ -140,4 +140,14 @@
   <LocaleResource Name="AdminSearch.Menu">
     <Value>Menu</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.AskQuestionOnProduct">
+    <Value>'Ask question on the product page' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.AskQuestionOnProduct.Hint">
+    <Value>Check to allow customers to use the 'Ask question on the product page' option in your store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.ContactUs">
+    <Value>Contact us</Value>
+  </LocaleResource>
+
 </Language>

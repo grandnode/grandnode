@@ -28,5 +28,7 @@ namespace Grand.Web.Services
         void SendProductEmailAFriendMessage(Product product, ProductEmailAFriendModel model);
         void SendProductAskQuestionMessage(Product product, ProductAskQuestionModel model);
         ProductDetailsAttributeChangeModel PrepareProductDetailsAttributeChangeModel(Product product, bool validateAttributeConditions, bool loadPicture, IFormCollection form);
+        ProductAskQuestionModel PrepareProductAskQuestionModel(Product product);
+        ProductAskQuestionSimpleModel PrepareProductAskQuestionSimpleModel(Product product);
     }
 }

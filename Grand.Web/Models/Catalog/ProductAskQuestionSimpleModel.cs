@@ -5,29 +5,22 @@ using Grand.Framework.Mvc.ModelBinding;
 
 namespace Grand.Web.Models.Catalog
 {
-    [Validator(typeof(ProductAskQuestionValidator))]
-    public partial class ProductAskQuestionModel: BaseGrandEntityModel
+    [Validator(typeof(ProductAskQuestionSimpleValidator))]
+    public partial class ProductAskQuestionSimpleModel: BaseGrandEntityModel
     {
         public string ProductId { get; set; }
 
-        public string ProductName { get; set; }
-
-        public string ProductSeName { get; set; }
-
         [GrandResourceDisplayName("Products.AskQuestion.Email")]
-        public string Email { get; set; }
+        public string AskQuestionEmail { get; set; }
 
         [GrandResourceDisplayName("Products.AskQuestion.FullName")]
-        public string FullName { get; set; }
+        public string AskQuestionFullName { get; set; }
 
         [GrandResourceDisplayName("Products.AskQuestion.Phone")]
-        public string Phone { get; set; }
+        public string AskQuestionPhone { get; set; }
 
         [GrandResourceDisplayName("Products.AskQuestion.Message")]
-        public string Message { get; set; }
-
-        public bool SuccessfullySent { get; set; }
-        public string Result { get; set; }
+        public string AskQuestionMessage { get; set; }
 
         public bool DisplayCaptcha { get; set; }
 

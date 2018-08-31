@@ -1169,6 +1169,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.NotifyStoreOwnerAboutNewProductReviews_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.NotifyStoreOwnerAboutNewProductReviews, storeScope);
                 model.EmailAFriendEnabled_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.EmailAFriendEnabled, storeScope);
                 model.AskQuestionEnabled_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.AskQuestionEnabled, storeScope);
+                model.AskQuestionOnProduct_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.AskQuestionOnProduct, storeScope);
                 model.AllowAnonymousUsersToEmailAFriend_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.AllowAnonymousUsersToEmailAFriend, storeScope);
                 model.RecentlyViewedProductsNumber_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.RecentlyViewedProductsNumber, storeScope);
                 model.RecentlyViewedProductsEnabled_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.RecentlyViewedProductsEnabled, storeScope);
@@ -1332,6 +1333,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(catalogSettings, x => x.AskQuestionEnabled, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.AskQuestionEnabled, storeScope);
+
+            if (model.AskQuestionOnProduct_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(catalogSettings, x => x.AskQuestionOnProduct, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(catalogSettings, x => x.AskQuestionOnProduct, storeScope);
 
             if (model.AllowAnonymousUsersToEmailAFriend_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.AllowAnonymousUsersToEmailAFriend, storeScope, false);

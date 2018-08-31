@@ -5105,6 +5105,7 @@ namespace Grand.Services.Installation
                 NotifyStoreOwnerAboutNewProductReviews = false,
                 EmailAFriendEnabled = true,
                 AskQuestionEnabled = false,
+                AskQuestionOnProduct = true,
                 AllowAnonymousUsersToEmailAFriend = false,
                 RecentlyViewedProductsNumber = 3,
                 RecentlyViewedProductsEnabled = true,

@@ -675,17 +675,7 @@ namespace Grand.Web.Controllers
             if (product == null ||  !product.Published || !_catalogSettings.AskQuestionEnabled)
                 return NotFound();
 
-            var customer = _workContext.CurrentCustomer;
-
-            var model = new ProductAskQuestionModel();
-            model.Id = product.Id;
-            model.ProductName = product.GetLocalized(x => x.Name);
-            model.ProductSeName = product.GetSeName();
-            model.Email = customer.Email;
-            model.FullName = customer.GetFullName();
-            model.Phone = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone);
-            model.Message = "";
-            model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnAskQuestionPage;
+            var model = _productWebService.PrepareProductAskQuestionModel(product);
 
             return View(model);
         }
@@ -728,6 +718,59 @@ namespace Grand.Web.Controllers
             model.ProductSeName = product.GetSeName();
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnAskQuestionPage;
             return View(model);
+        }
+
+        [HttpPost]
+        [PublicAntiForgery]
+        [ValidateCaptcha]
+        public virtual IActionResult AskQuestionOnProduct(ProductAskQuestionSimpleModel model, bool captchaValid)
+        {
+            var product = _productService.GetProductById(model.ProductId);
+            if (product == null || !product.Published || !_catalogSettings.AskQuestionEnabled)
+                return Json(new
+                {
+                    success = false,
+                    message = "Product not found"
+                }); 
+
+            // validate CAPTCHA
+            if (_captchaSettings.Enabled && _captchaSettings.ShowOnAskQuestionPage && !captchaValid)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = _captchaSettings.GetWrongCaptchaMessage(_localizationService)
+                });
+            }
+
+            if (ModelState.IsValid)
+            {
+                var productaskqestionmodel = new ProductAskQuestionModel() {
+                    Email = model.AskQuestionEmail,
+                    FullName = model.AskQuestionFullName,
+                    Phone = model.AskQuestionPhone,
+                    Message = model.AskQuestionMessage
+                };
+                // email
+                _productWebService.SendProductAskQuestionMessage(product, productaskqestionmodel);
+                //activity log
+                _customerActivityService.InsertActivity("PublicStore.AskQuestion", _workContext.CurrentCustomer.Id, _localizationService.GetResource("ActivityLog.PublicStore.AskQuestion"));
+                //return Json
+                return Json(new
+                {
+                    success = true,
+                    message = _localizationService.GetResource("Products.AskQuestion.SuccessfullySent")
+                });
+
+            }
+
+            // If we got this far, something failed, redisplay form
+            return Json(new
+            {
+                success = false,
+                message = string.Join(",", ModelState.Values.SelectMany(v => v.Errors).Select(x => x.ErrorMessage))
+            });
+
         }
 
         #endregion

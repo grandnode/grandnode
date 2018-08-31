@@ -135,6 +135,11 @@ namespace Grand.Core.Domain.Catalog
         public bool AskQuestionEnabled { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether 'contact us on the product page' feature is enabled
+        /// </summary>
+        public bool AskQuestionOnProduct { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to allow anonymous users to email a friend.
         /// </summary>
         public bool AllowAnonymousUsersToEmailAFriend { get; set; }
