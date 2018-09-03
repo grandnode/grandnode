@@ -4406,6 +4406,14 @@ namespace Grand.Services.Installation
                                        },
                                    new MessageTemplate
                                        {
+                                           Name = "Knowledgebase.ArticleComment",
+                                           Subject = "%Store.Name%. New article comment.",
+                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />A new article comment has been created for article \"%Article.ArticleTitle%\".</p>",
+                                           IsActive = true,
+                                           EmailAccountId = eaGeneral.Id,
+                                       },
+                                   new MessageTemplate
+                                       {
                                            Name = "Customer.BackInStock",
                                            Subject = "%Store.Name%. Back in stock notification",
                                            Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />Hello %Customer.FullName%, <br />Product <a target=\"_blank\" href=\"%BackInStockSubscription.ProductUrl%\">%BackInStockSubscription.ProductName%</a> is in stock.</p>",
@@ -5426,7 +5434,9 @@ namespace Grand.Services.Installation
 
             _settingService.SaveSetting(new KnowledgebaseSettings
             {
-                Enabled = false
+                Enabled = false,
+                AllowNotRegisteredUsersToLeaveComments = true,
+                NotifyAboutNewArticleComments = false
             });
 
             _settingService.SaveSetting(new PushNotificationsSettings
@@ -10418,6 +10428,12 @@ namespace Grand.Services.Installation
                                                   SystemKeyword = "PublicStore.AddBlogComment",
                                                   Enabled = false,
                                                   Name = "Public store. Add blog comment"
+                                              },
+                                        new ActivityLogType
+                                              {
+                                                  SystemKeyword = "PublicStore.AddArticleComment",
+                                                  Enabled = false,
+                                                  Name = "Public store. Add article comment"
                                               },
                                           new ActivityLogType
                                               {

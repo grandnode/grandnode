@@ -66,9 +66,9 @@ namespace Grand.Services.Blogs
         void InsertBlogPost(BlogPost blogPost);
 
         /// <summary>
-        /// Inserts an blog post
+        /// Inserts a blog post comment
         /// </summary>
-        /// <param name="blogPost">Blog post</param>
+        /// <param name="blogPost">Blog post comment</param>
         void InsertBlogComment(BlogComment blogComment);
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace Grand.Services.Blogs
         /// <summary>
         /// Gets all comments
         /// </summary>
-        /// <param name="customerId">Customer identifier; 0 to load all records</param>
+        /// <param name="customerId">Customer identifier; "" to load all records</param>
         /// <returns>Comments</returns>
         IList<BlogComment> GetAllComments(string customerId);
 
@@ -100,6 +100,5 @@ namespace Grand.Services.Blogs
 
         IList<BlogComment> GetBlogCommentsByBlogPostId(string blogPostId);
         void DeleteBlogComment(BlogComment blogComment);
-
     }
 }

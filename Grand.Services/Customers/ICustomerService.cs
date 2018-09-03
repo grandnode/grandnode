@@ -196,6 +196,11 @@ namespace Grand.Services.Customers
         /// Updates the customer
         /// </summary>
         /// <param name="customer">Customer</param>
+        void UpdateHasArticleComments(string customerId);
+        /// <summary>
+        /// Updates the customer
+        /// </summary>
+        /// <param name="customer">Customer</param>
         void UpdateHasProductReview(string customerId);
         /// <summary>
         /// Updates the customer

@@ -203,9 +203,9 @@ namespace Grand.Services.Orders
         /// <summary>
         /// Search recurring payments
         /// </summary>
-        /// <param name="storeId">The store identifier; 0 to load all records</param>
-        /// <param name="customerId">The customer identifier; 0 to load all records</param>
-        /// <param name="initialOrderId">The initial order identifier; 0 to load all records</param>
+        /// <param name="storeId">The store identifier; "" to load all records</param>
+        /// <param name="customerId">The customer identifier; "" to load all records</param>
+        /// <param name="initialOrderId">The initial order identifier; "" to load all records</param>
         /// <param name="initialOrderStatus">Initial order status identifier; null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>

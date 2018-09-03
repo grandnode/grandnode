@@ -59,10 +59,10 @@ namespace Grand.Services.Shipping
         /// <summary>
         /// Search shipments
         /// </summary>
-        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
+        /// <param name="vendorId">Vendor identifier; "" to load all records</param>
         /// <param name="warehouseId">Warehouse identifier, only shipments with products from a specified warehouse will be loaded; 0 to load all orders</param>
-        /// <param name="shippingCountryId">Shipping country identifier; 0 to load all records</param>
-        /// <param name="shippingStateId">Shipping state identifier; 0 to load all records</param>
+        /// <param name="shippingCountryId">Shipping country identifier; "" to load all records</param>
+        /// <param name="shippingStateId">Shipping state identifier; "" to load all records</param>
         /// <param name="shippingCity">Shipping city; null to load all records</param>
         /// <param name="trackingNumber">Search by tracking number</param>
         /// <param name="loadNotShipped">A value indicating whether we should load only not shipped shipments</param>

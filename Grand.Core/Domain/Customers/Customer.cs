@@ -123,6 +123,11 @@ namespace Grand.Core.Domain.Customers
         public bool IsHasBlogComments { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the customer has a blog comments
+        /// </summary>
+        public bool IsHasArticleComments { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the customer has a product review
         /// </summary>
         public bool IsHasProductReview { get; set; }

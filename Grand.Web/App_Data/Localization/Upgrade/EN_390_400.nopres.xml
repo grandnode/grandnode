@@ -279,7 +279,7 @@
     <Value>You will see the vendor review after approving by a store administrator or a vendor.</Value>
   </LocaleResource>
   <LocaleResource Name="VendorReviews.SuccessfullyAdded">
-    <Value>Vendor review is successfully added.</Value>
+    <Value>Vendor review was successfully added.</Value>
   </LocaleResource>
   <LocaleResource Name="VendorReviews.VendorReviewPossibleOnlyAfterPurchasing">
     <Value>Vendor can be reviewed only after purchasing a product from this vendor.</Value>

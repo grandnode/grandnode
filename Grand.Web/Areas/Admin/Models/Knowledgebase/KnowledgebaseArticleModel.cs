@@ -52,6 +52,9 @@ namespace Grand.Web.Areas.Admin.Models.Knowledgebase
         [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.ShowOnHomepage")]
         public bool ShowOnHomepage { get; set; }
 
+        [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.AllowComments")]
+        public bool AllowComments { get; set; }
+
         public List<SelectListItem> Categories { get; set; }
 
         public IList<KnowledgebaseArticleLocalizedModel> Locales { get; set; }

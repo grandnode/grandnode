@@ -61,6 +61,16 @@
             </div>
         </div>
         <div class="form-group">
+            <admin-label asp-for="AllowComments" />
+            <div class="col-md-9 col-sm-9">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    <admin-input asp-for="AllowComments" />
+                    <span></span>
+                </label>
+                <span asp-validation-for="AllowComments"></span>
+            </div>
+        </div>
+        <div class="form-group">
             <admin-label asp-for="Published" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">

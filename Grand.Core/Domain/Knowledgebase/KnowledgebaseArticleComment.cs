@@ -1,11 +1,10 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace Grand.Core.Domain.Blogs
+namespace Grand.Core.Domain.Knowledgebase
 {
-    /// <summary>
-    /// Represents a blog comment
-    /// </summary>
-    public partial class BlogComment : BaseEntity
+    public partial class KnowledgebaseArticleComment : BaseEntity
     {
         /// <summary>
         /// Gets or sets the customer identifier
@@ -20,12 +19,12 @@ namespace Grand.Core.Domain.Blogs
         /// <summary>
         /// Gets or sets the blog post title
         /// </summary>
-        public string BlogPostTitle { get; set; }
+        public string ArticleTitle { get; set; }
 
         /// <summary>
         /// Gets or sets the blog post identifier
         /// </summary>
-        public string BlogPostId { get; set; }
+        public string ArticleId { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance creation

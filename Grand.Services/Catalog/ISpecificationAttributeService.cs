@@ -85,8 +85,8 @@ namespace Grand.Services.Catalog
         /// <summary>
         /// Gets a count of product specification attribute mapping records
         /// </summary>
-        /// <param name="productId">Product identifier; 0 to load all records</param>
-        /// <param name="specificationAttributeOptionId">The specification attribute option identifier; 0 to load all records</param>
+        /// <param name="productId">Product identifier; "" to load all records</param>
+        /// <param name="specificationAttributeOptionId">The specification attribute option identifier; "" to load all records</param>
         /// <returns>Count</returns>
         int GetProductSpecificationAttributeCount(string productId = "", string specificationAttributeId = "", string specificationAttributeOptionId = "");
 

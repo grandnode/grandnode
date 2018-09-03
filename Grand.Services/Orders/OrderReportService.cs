@@ -352,16 +352,16 @@ namespace Grand.Services.Orders
         /// <summary>
         /// Get best sellers report
         /// </summary>
-        /// <param name="storeId">Store identifier; 0 to load all records</param>
-        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
-        /// <param name="categoryId">Category identifier; 0 to load all records</param>
-        /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
+        /// <param name="storeId">Store identifier; "" to load all records</param>
+        /// <param name="vendorId">Vendor identifier; "" to load all records</param>
+        /// <param name="categoryId">Category identifier; "" to load all records</param>
+        /// <param name="manufacturerId">Manufacturer identifier; "" to load all records</param>
         /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
         /// <param name="os">Order status; null to load all records</param>
         /// <param name="ps">Order payment status; null to load all records</param>
         /// <param name="ss">Shipping status; null to load all records</param>
-        /// <param name="billingCountryId">Billing country identifier; 0 to load all records</param>
+        /// <param name="billingCountryId">Billing country identifier; "" to load all records</param>
         /// <param name="orderBy">1 - order by quantity, 2 - order by total amount</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>

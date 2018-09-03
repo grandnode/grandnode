@@ -55,7 +55,7 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             public bool StoreClosed_OverrideForStore { get; set; }
 
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme")]
-            
+
             public string DefaultStoreTheme { get; set; }
             public bool DefaultStoreTheme_OverrideForStore { get; set; }
             public IList<ThemeConfigurationModel> AvailableStoreThemes { get; set; }
@@ -72,7 +72,7 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayEuCookieLawWarning")]
             public bool DisplayEuCookieLawWarning { get; set; }
             public bool DisplayEuCookieLawWarning_OverrideForStore { get; set; }
-            
+
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.FacebookLink")]
             public string FacebookLink { get; set; }
             public bool FacebookLink_OverrideForStore { get; set; }
@@ -100,7 +100,7 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.UseSystemEmailForContactUsForm")]
             public bool UseSystemEmailForContactUsForm { get; set; }
             public bool UseSystemEmailForContactUsForm_OverrideForStore { get; set; }
-            
+
             #region Nested classes
 
             public partial class ThemeConfigurationModel
@@ -119,32 +119,32 @@ namespace Grand.Web.Areas.Admin.Models.Settings
         public partial class SeoSettingsModel : BaseGrandModel
         {
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PageTitleSeparator")]
-            
+
             public string PageTitleSeparator { get; set; }
             public bool PageTitleSeparator_OverrideForStore { get; set; }
-            
+
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PageTitleSeoAdjustment")]
             public int PageTitleSeoAdjustment { get; set; }
             public bool PageTitleSeoAdjustment_OverrideForStore { get; set; }
             public SelectList PageTitleSeoAdjustmentValues { get; set; }
 
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DefaultTitle")]
-            
+
             public string DefaultTitle { get; set; }
             public bool DefaultTitle_OverrideForStore { get; set; }
 
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DefaultMetaKeywords")]
-            
+
             public string DefaultMetaKeywords { get; set; }
             public bool DefaultMetaKeywords_OverrideForStore { get; set; }
 
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DefaultMetaDescription")]
-            
+
             public string DefaultMetaDescription { get; set; }
             public bool DefaultMetaDescription_OverrideForStore { get; set; }
 
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.GenerateProductMetaDescription")]
-            
+
             public bool GenerateProductMetaDescription { get; set; }
             public bool GenerateProductMetaDescription_OverrideForStore { get; set; }
 
@@ -185,11 +185,11 @@ namespace Grand.Web.Areas.Admin.Models.Settings
                 this.AvailableReCaptchaVersions = new List<SelectListItem>();
             }
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.EncryptionKey")]
-            
+
             public string EncryptionKey { get; set; }
 
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.AdminAreaAllowedIpAddresses")]
-            
+
             public string AdminAreaAllowedIpAddresses { get; set; }
 
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForAdminArea")]
@@ -225,6 +225,8 @@ namespace Grand.Web.Areas.Admin.Models.Settings
 
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnBlogCommentPage")]
             public bool CaptchaShowOnBlogCommentPage { get; set; }
+            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnArticleCommentPage")]
+            public bool CaptchaShowOnArticleCommentPage { get; set; }
 
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnNewsCommentPage")]
             public bool CaptchaShowOnNewsCommentPage { get; set; }
@@ -237,11 +239,11 @@ namespace Grand.Web.Areas.Admin.Models.Settings
 
 
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.reCaptchaPublicKey")]
-            
+
             public string ReCaptchaPublicKey { get; set; }
 
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.reCaptchaPrivateKey")]
-            
+
             public string ReCaptchaPrivateKey { get; set; }
 
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.reCaptchaVersion")]
@@ -265,12 +267,12 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             public bool DisablePdfInvoicesForPendingOrders_OverrideForStore { get; set; }
 
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.InvoiceFooterTextColumn1")]
-            
+
             public string InvoiceFooterTextColumn1 { get; set; }
             public bool InvoiceFooterTextColumn1_OverrideForStore { get; set; }
 
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.InvoiceFooterTextColumn2")]
-            
+
             public string InvoiceFooterTextColumn2 { get; set; }
             public bool InvoiceFooterTextColumn2_OverrideForStore { get; set; }
 
@@ -307,10 +309,10 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             public int SearchMode { get; set; }
             public SelectList SearchModeValues { get; set; }
         }
-        
-        public partial class GoogleAnalyticsSettingsModel: BaseGrandModel
+
+        public partial class GoogleAnalyticsSettingsModel : BaseGrandModel
         {
-            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.GoogleAnalyticsPrivateKey")]            
+            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.GoogleAnalyticsPrivateKey")]
             public string gaprivateKey { get; set; }
             public bool gaprivateKey_OverrideForStore { get; set; }
 
@@ -348,11 +350,18 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             public bool DisplayContactUsMenu { get; set; }
             public bool DisplayContactUsMenu_OverrideForStore { get; set; }
         }
+
         public partial class KnowledgebaseSettingsModel : BaseGrandModel
         {
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.KnowledgebaseSettings.Enabled")]
             public bool Enabled { get; set; }
             public bool Enabled_OverrideForStore { get; set; }
+            [GrandResourceDisplayName("Admin.Configuration.Settings.Knowledgebase.AllowNotRegisteredUsersToLeaveComments")]
+            public bool AllowNotRegisteredUsersToLeaveComments { get; set; }
+            public bool AllowNotRegisteredUsersToLeaveComments_OverrideForStore { get; set; }
+            [GrandResourceDisplayName("Admin.Configuration.Settings.Knowledgebase.NotifyAboutNewArticleComments")]
+            public bool NotifyAboutNewArticleComments { get; set; }
+            public bool NotifyAboutNewArticleComments_OverrideForStore { get; set; }
         }
 
         #endregion

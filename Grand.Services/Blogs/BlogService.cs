@@ -198,9 +198,9 @@ namespace Grand.Services.Blogs
         }
 
         /// <summary>
-        /// Inserts an blog post
+        /// Inserts a blog post comment
         /// </summary>
-        /// <param name="blogPost">Blog post</param>
+        /// <param name="blogPost">Blog post comment</param>
         public virtual void InsertBlogComment(BlogComment blogComment)
         {
             if (blogComment == null)
@@ -230,7 +230,7 @@ namespace Grand.Services.Blogs
         /// <summary>
         /// Gets all comments
         /// </summary>
-        /// <param name="customerId">Customer identifier; 0 to load all records</param>
+        /// <param name="customerId">Customer identifier; "" to load all records</param>
         /// <returns>Comments</returns>
         public virtual IList<BlogComment> GetAllComments(string customerId)
         {
@@ -260,7 +260,6 @@ namespace Grand.Services.Blogs
                         select c;
             var content = query.ToList();
             return content;
-
         }
 
         /// Get blog comments by identifiers

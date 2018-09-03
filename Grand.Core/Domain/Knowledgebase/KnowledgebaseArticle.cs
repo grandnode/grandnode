@@ -93,6 +93,11 @@ namespace Grand.Core.Domain.Knowledgebase
         public IList<string> RelatedArticles { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the comments are allowed 
+        /// </summary>
+        public bool AllowComments { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
         /// </summary>
         public bool LimitedToStores { get; set; }
