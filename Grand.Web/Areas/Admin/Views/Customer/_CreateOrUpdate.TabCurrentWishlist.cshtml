@@ -1,10 +1,12 @@
 ﻿@model CustomerModel
 <div class="panel panel-default">
+    <div class="panel-heading">
+        @T("Admin.Customers.Customers.CurrentWishlist")
+    </div>
     <div class="panel-body">
         <div id="currentwishlist-grid"></div>
     </div>
 </div>
-
 <script>
 $(document).ready(function () {
     $("#currentwishlist-grid").kendoGrid({

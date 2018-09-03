@@ -59,21 +59,18 @@
                 @T("Admin.Customers.Customers.Addresses")
             </li>
             <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
-                @T("Admin.Customers.Customers.CurrentShoppingCart")
+                @T("Admin.Customers.Customers.ShoppingCartWishlist")
             </li>
             <li @Html.RenderSelectedTabIndex(5, GetSelectedTabIndex())>
-                @T("Admin.Customers.Customers.CurrentWishlist")
-            </li>
-            <li @Html.RenderSelectedTabIndex(6, GetSelectedTabIndex())>
                 @T("Admin.Customers.Customers.ProductPrice")
             </li>
-            <li @Html.RenderSelectedTabIndex(7, GetSelectedTabIndex())>
+            <li @Html.RenderSelectedTabIndex(6, GetSelectedTabIndex())>
                 @T("Admin.Customers.Customers.ActivityLog")
             </li>
-            <li @Html.RenderSelectedTabIndex(8, GetSelectedTabIndex())>
+            <li @Html.RenderSelectedTabIndex(7, GetSelectedTabIndex())>
                 @T("Admin.Customers.Customers.Impersonate")
             </li>
-            <li @Html.RenderSelectedTabIndex(9, GetSelectedTabIndex())>
+            <li @Html.RenderSelectedTabIndex(8, GetSelectedTabIndex())>
                 @T("Admin.Customers.Customers.BackInStockSubscriptions")
             </li>
         }
@@ -100,8 +97,6 @@
         </div>
         <div>
             @Html.Partial("_CreateOrUpdate.TabCurrentShoppingCart", Model)
-        </div>
-        <div>
             @Html.Partial("_CreateOrUpdate.TabCurrentWishlist", Model)
         </div>
         <div>

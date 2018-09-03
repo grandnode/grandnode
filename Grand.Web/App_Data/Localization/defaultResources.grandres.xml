@@ -11403,6 +11403,9 @@
   <LocaleResource Name="Admin.Customers.Customers.SendWelcomeMessage.Success">
     <Value>Welcome email has been successfully sent.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.ShoppingCartWishlist">
+    <Value>Current cart and wishlist</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Updated">
     <Value>The customer has been updated successfully.</Value>
   </LocaleResource>

@@ -149,5 +149,8 @@
   <LocaleResource Name="Products.ContactUs">
     <Value>Contact us</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.ShoppingCartWishlist">
+    <Value>Current cart and wishlist</Value>
+  </LocaleResource>
 
 </Language>
