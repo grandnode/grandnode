@@ -21,6 +21,7 @@ namespace Grand.Services.Tests.Knowledgebase
     public class KnowledgebaseTests
     {
         private IRepository<KnowledgebaseArticle> _articleRepository;
+        private IRepository<KnowledgebaseArticleComment> _articleCommentRepository;
         private IRepository<KnowledgebaseCategory> _categoryRepository;
         private IKnowledgebaseService _knowledgebaseService;
         private IEventPublisher _eventPublisher;
@@ -35,6 +36,7 @@ namespace Grand.Services.Tests.Knowledgebase
         {
             _articleRepository = new MongoDBRepositoryTest<KnowledgebaseArticle>();
             _categoryRepository = new MongoDBRepositoryTest<KnowledgebaseCategory>();
+            _articleCommentRepository = new MongoDBRepositoryTest<KnowledgebaseArticleComment>();
 
             var eventPublisher = new Mock<IEventPublisher>();
             eventPublisher.Setup(x => x.Publish(new object()));
@@ -64,7 +66,7 @@ namespace Grand.Services.Tests.Knowledgebase
             _cacheManager = cacheManager.Object;
 
             _knowledgebaseService = new KnowledgebaseService(_categoryRepository, _articleRepository, _eventPublisher, _commonSettings, _catalogSettings,
-                _workContext, _cacheManager, _storeContext);
+                _workContext, _cacheManager, _storeContext, _articleCommentRepository);
         }
 
         [TestMethod()]

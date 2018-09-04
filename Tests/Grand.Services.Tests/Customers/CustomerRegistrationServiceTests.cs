@@ -9,6 +9,7 @@ using Grand.Services.Common;
 using Grand.Services.Events;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
+using Grand.Services.Orders;
 using Grand.Services.Security;
 using Grand.Services.Stores;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -32,6 +33,7 @@ namespace Grand.Services.Customers.Tests
         private ICustomerService _customerService;
         private ICustomerRegistrationService _customerRegistrationService;
         private ILocalizationService _localizationService;
+        private IRewardPointsService _rewardPointsService;
         private CustomerSettings _customerSettings;
         private INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private IEventPublisher _eventPublisher;
@@ -143,6 +145,7 @@ namespace Grand.Services.Customers.Tests
             _genericAttributeService = new Mock<IGenericAttributeService>().Object;
             _newsLetterSubscriptionService = new Mock<INewsLetterSubscriptionService>().Object;
             _localizationService = new Mock<ILocalizationService>().Object;
+            _rewardPointsService = new Mock<IRewardPointsService>().Object;
             _customerRoleProductRepo = new Mock<IRepository<CustomerRoleProduct>>().Object;
 
             _customerSettings = new CustomerSettings();
@@ -159,9 +162,10 @@ namespace Grand.Services.Customers.Tests
                 _newsLetterSubscriptionService,
                 _localizationService,
                 _storeService,
+                _eventPublisher,
                 _rewardPointsSettings,
                 _customerSettings,
-                null);
+                _rewardPointsService);
         }
 
         [TestMethod()]
