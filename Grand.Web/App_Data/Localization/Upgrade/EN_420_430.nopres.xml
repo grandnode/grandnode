@@ -200,4 +200,7 @@
   <LocaleResource Name="Knowledgebase.Article.Comments.SuccessfullyAdded">
     <Value>Article comment was successfully added.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.ShoppingCartWishlist">
+    <Value>Current cart and wishlist</Value>
+  </LocaleResource>
 </Language>
