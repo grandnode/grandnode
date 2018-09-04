@@ -178,6 +178,12 @@ namespace Grand.Web.Controllers
             if (article == null)
                 return RedirectToAction("List");
 
+            PrepareKnowledgebaseArticleModel(model, article);
+            return View("Article", model);
+        }
+
+        private void PrepareKnowledgebaseArticleModel(KnowledgebaseArticleModel model, KnowledgebaseArticle article)
+        {
             model.Content = article.GetLocalized(y => y.Content);
             model.Name = article.GetLocalized(y => y.Name);
             model.Id = article.Id;
@@ -242,8 +248,6 @@ namespace Grand.Web.Controllers
                     .ToList()
                 );
             }
-
-            return View("Article", model);
         }
 
         [HttpPost, ActionName("KnowledgebaseArticle")]
@@ -304,7 +308,8 @@ namespace Grand.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            return View(model);
+            PrepareKnowledgebaseArticleModel(model, article);
+            return View("Article", model);
         }
     }
 }
