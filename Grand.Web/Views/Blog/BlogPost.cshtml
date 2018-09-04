@@ -60,7 +60,7 @@
                 }
                 @if (!String.IsNullOrEmpty(result))
                 {
-                    <div class="result">@result</div>
+                <div class="result card bg-info p-3 text-white">@result</div>
                 }
             </div>
             <form asp-route="BlogPost" asp-route-sename="@Model.SeName" method="post">
