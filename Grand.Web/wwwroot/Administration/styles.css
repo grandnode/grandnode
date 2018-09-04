@@ -492,7 +492,7 @@ textarea.form-control.k-input {
     margin: 10px;
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 1300px) {
     #searchInput {
         width: 100%;
         max-width: 500px;
