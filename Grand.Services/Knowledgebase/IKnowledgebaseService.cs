@@ -140,5 +140,35 @@ namespace Grand.Services.Knowledgebase
         /// <param name="name"></param>
         /// <returns>IPagedList<KnowledgebaseArticle></returns>
         IPagedList<KnowledgebaseArticle> GetRelatedKnowledgebaseArticles(string articleId, int pageIndex = 0, int pageSize = int.MaxValue);
+
+        /// <summary>
+        /// Inserts an article comment
+        /// </summary>
+        /// <param name="articleComment">Article comment</param>
+        void InsertArticleComment(KnowledgebaseArticleComment articleComment);
+
+        /// <summary>
+        /// Gets all comments
+        /// </summary>
+        /// <param name="customerId">Customer identifier; "" to load all records</param>
+        /// <returns>Comments</returns>
+        IList<KnowledgebaseArticleComment> GetAllComments(string customerId);
+
+        /// <summary>
+        /// Gets an article comment
+        /// </summary>
+        /// <param name="articleId">Article identifier</param>
+        /// <returns>Article comment</returns>
+        KnowledgebaseArticleComment GetArticleCommentById(string articleId);
+
+        /// <summary>
+        /// Get article comments by identifiers
+        /// </summary>
+        /// <param name="commentIds"Article comment identifiers</param>
+        /// <returns>Article comments</returns>
+        IList<KnowledgebaseArticleComment> GetArticleCommentsByIds(string[] commentIds);
+
+        IList<KnowledgebaseArticleComment> GetArticleCommentsByArticleId(string articleId);
+        void DeleteArticleComment(KnowledgebaseArticleComment articleComment);
     }
 }

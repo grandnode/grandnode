@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.Http;
 using System.Net;
 using Grand.Services.Vendors;
 using Grand.Services.Common;
+using Grand.Core.Domain.Knowledgebase;
 
 namespace Grand.Services.Messages
 {
@@ -1807,6 +1808,46 @@ namespace Grand.Services.Messages
             _messageTokenProvider.AddBlogCommentTokens(store.Id, tokens, blogComment);
 
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(blogComment.CustomerId);
+            if (customer != null && customer.IsRegistered())
+                _messageTokenProvider.AddCustomerTokens(tokens, customer);
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+
+            var toEmail = emailAccount.Email;
+            var toName = emailAccount.DisplayName;
+            return SendNotification(messageTemplate, emailAccount,
+                languageId, tokens,
+                toEmail, toName);
+        }
+
+        /// <summary>
+        /// Sends an article comment notification message to a store owner
+        /// </summary>
+        /// <param name="articleComment">Article comment</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual int SendArticleCommentNotificationMessage(KnowledgebaseArticleComment articleComment, string languageId)
+        {
+            if (articleComment == null)
+                throw new ArgumentNullException("articleComment");
+
+            var store = _storeContext.CurrentStore;
+            languageId = EnsureLanguageIsActive(languageId, store.Id);
+
+            var messageTemplate = GetActiveMessageTemplate("Knowledgebase.ArticleComment", store.Id);
+            if (messageTemplate == null)
+                return 0;
+
+            //email account
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+
+            //tokens
+            var tokens = new List<Token>();
+            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+            _messageTokenProvider.AddArticleCommentTokens(store.Id, tokens, articleComment);
+
+            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(articleComment.CustomerId);
             if (customer != null && customer.IsRegistered())
                 _messageTokenProvider.AddCustomerTokens(tokens, customer);
 

@@ -538,6 +538,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 .GetAllStores()
                 .Select(s => s.ToModel())
                 .ToList();
+            model.AllowComments = true;
 
             if (!string.IsNullOrEmpty(parentCategoryId))
                 model.ParentCategoryId = parentCategoryId;
@@ -562,6 +563,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.SeName = knowledgebaseArticle.ValidateSeName(model.SeName, knowledgebaseArticle.Name, true);
                 knowledgebaseArticle.SeName = model.SeName;
                 knowledgebaseArticle.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
+                knowledgebaseArticle.AllowComments = model.AllowComments;
 
                 _knowledgebaseService.InsertKnowledgebaseArticle(knowledgebaseArticle);
 
@@ -628,6 +630,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             .Select(s => s.ToModel())
             .ToList();
             model.SelectedStoreIds = knowledgebaseArticle.Stores.ToArray();
+            model.AllowComments = knowledgebaseArticle.AllowComments;
 
             return View(model);
         }
@@ -651,6 +654,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.SeName = knowledgebaseArticle.ValidateSeName(model.SeName, knowledgebaseArticle.Name, true);
                 knowledgebaseArticle.SeName = model.SeName;
                 knowledgebaseArticle.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
+                knowledgebaseArticle.AllowComments = model.AllowComments;
 
                 _knowledgebaseService.UpdateKnowledgebaseArticle(knowledgebaseArticle);
 

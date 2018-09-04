@@ -3,6 +3,7 @@ using Grand.Core.Domain.Blogs;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Forums;
+using Grand.Core.Domain.Knowledgebase;
 using Grand.Core.Domain.Messages;
 using Grand.Core.Domain.News;
 using Grand.Core.Domain.Orders;
@@ -406,6 +407,14 @@ namespace Grand.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
         int SendBlogCommentNotificationMessage(BlogComment blogComment, string languageId);
+
+        /// <summary>
+        /// Sends an article comment notification message to a store owner
+        /// </summary>
+        /// <param name="articleComment">Article comment</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        int SendArticleCommentNotificationMessage(KnowledgebaseArticleComment articleComment, string languageId);
 
         /// <summary>
         /// Sends a news comment notification message to a store owner

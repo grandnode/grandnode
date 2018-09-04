@@ -97,13 +97,13 @@ namespace Grand.Services.Vendors
         /// <summary>
         /// Gets all vendor reviews
         /// </summary>
-        /// <param name="customerId">Customer identifier; 0 to load all records</param>
+        /// <param name="customerId">Customer identifier; "" to load all records</param>
         /// <param name="approved">A value indicating whether to content is approved; null to load all records</param> 
         /// <param name="fromUtc">Item creation from; null to load all records</param>
         /// <param name="toUtc">Item item creation to; null to load all records</param>
         /// <param name="message">Search title or review text; null to load all records</param>
-        /// <param name="storeId">Store identifier; 0 to load all records</param>
-        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
+        /// <param name="storeId">Store identifier; "" to load all records</param>
+        /// <param name="vendorId">Vendor identifier; "" to load all records</param>
         /// <returns>Reviews</returns>
         IPagedList<VendorReview> GetAllVendorReviews(string customerId, bool? approved,
             DateTime? fromUtc = null, DateTime? toUtc = null,
@@ -113,7 +113,7 @@ namespace Grand.Services.Vendors
         /// Get rating sum for vendor
         /// </summary>
         /// <param name="vendorId">Vendor identifier</param>
-        /// <param name="storeId">Store identifier, 0 to load all records</param> 
+        /// <param name="storeId">Store identifier, "" to load all records</param> 
         /// <returns>Sum</returns>
         int RatingSumVendor(string vendorId, string storeId);
 
@@ -121,7 +121,7 @@ namespace Grand.Services.Vendors
         /// Total reviews for vendor
         /// </summary>
         /// <param name="vendorId">Vendor identifier</param>
-        /// <param name="storeId">Store identifier, 0 to load all records</param> 
+        /// <param name="storeId">Store identifier, "" to load all records</param> 
         /// <returns>Sum</returns>
         int TotalReviewsVendor(string vendorId, string storeId);
 
@@ -141,7 +141,7 @@ namespace Grand.Services.Vendors
         /// <summary>
         /// Search vendors
         /// </summary>
-        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
+        /// <param name="vendorId">Vendor identifier; "" to load all records</param>
         /// <param name="keywords">Keywords</param>
         /// <returns>Vendors</returns>
         IList<Vendor> SearchVendors(string vendorId = "", string keywords = null);

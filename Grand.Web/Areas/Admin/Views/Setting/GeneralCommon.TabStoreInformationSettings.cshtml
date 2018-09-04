@@ -191,5 +191,31 @@
                 <span asp-validation-for="KnowledgebaseSettings.Enabled"></span>
             </div>
         </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.KnowledgebaseSettings.AllowNotRegisteredUsersToLeaveComments_OverrideForStore, model => model.KnowledgebaseSettings.AllowNotRegisteredUsersToLeaveComments, Model.ActiveStoreScopeConfiguration)
+                <admin-label asp-for="KnowledgebaseSettings.AllowNotRegisteredUsersToLeaveComments" class="control-label" />
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    <admin-input asp-for="KnowledgebaseSettings.AllowNotRegisteredUsersToLeaveComments" />
+                    <span></span>
+                </label>
+                <span asp-validation-for="KnowledgebaseSettings.AllowNotRegisteredUsersToLeaveComments"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.KnowledgebaseSettings.NotifyAboutNewArticleComments_OverrideForStore, model => model.KnowledgebaseSettings.NotifyAboutNewArticleComments, Model.ActiveStoreScopeConfiguration)
+                <admin-label asp-for="KnowledgebaseSettings.NotifyAboutNewArticleComments" class="control-label" />
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    <admin-input asp-for="KnowledgebaseSettings.NotifyAboutNewArticleComments" />
+                    <span></span>
+                </label>
+                <span asp-validation-for="KnowledgebaseSettings.NotifyAboutNewArticleComments"></span>
+            </div>
+        </div>
     </div>
 </div>

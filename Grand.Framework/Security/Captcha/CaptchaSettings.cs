@@ -40,6 +40,10 @@ namespace Grand.Framework.Security.Captcha
         /// </summary>
         public bool ShowOnBlogCommentPage { get; set; }
         /// <summary>
+        /// A value indicating whether CAPTCHA should be displayed on the "comment blog" page
+        /// </summary>
+        public bool ShowOnArticleCommentPage { get; set; }
+        /// <summary>
         /// A value indicating whether CAPTCHA should be displayed on the "comment news" page
         /// </summary>
         public bool ShowOnNewsCommentPage { get; set; }

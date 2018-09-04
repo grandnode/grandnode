@@ -186,7 +186,7 @@ namespace Grand.Services.Vendors
         /// <summary>
         /// Gets all vendor reviews
         /// </summary>
-        /// <param name="customerId">Customer identifier; 0 to load all records</param>
+        /// <param name="customerId">Customer identifier; "" to load all records</param>
         /// <param name="approved">A value indicating whether to content is approved; null to load all records</param> 
         /// <param name="fromUtc">Item creation from; null to load all records</param>
         /// <param name="toUtc">Item item creation to; null to load all records</param>
@@ -348,7 +348,7 @@ namespace Grand.Services.Vendors
         /// <summary>
         /// Search vendors
         /// </summary>
-        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
+        /// <param name="vendorId">Vendor identifier; "" to load all records</param>
         /// <param name="keywords">Keywords</param>
         /// <returns>Vendors</returns>
         public virtual IList<Vendor> SearchVendors(

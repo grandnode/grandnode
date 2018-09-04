@@ -681,6 +681,14 @@ namespace Grand.Services.Customers
                 .Set(x => x.IsHasBlogComments, true);
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
         }
+        public virtual void UpdateHasArticleComments(string customerId)
+        {
+            var builder = Builders<Customer>.Filter;
+            var filter = builder.Eq(x => x.Id, customerId);
+            var update = Builders<Customer>.Update
+                .Set(x => x.IsHasArticleComments, true);
+            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
+        }
         public virtual void UpdateHasProductReview(string customerId)
         {
             var builder = Builders<Customer>.Filter;
@@ -857,6 +865,7 @@ namespace Grand.Services.Customers
 
             filter = filter & builder.Eq(x => x.IsHasOrders, false);
             filter = filter & builder.Eq(x => x.IsHasBlogComments, false);
+            filter = filter & builder.Eq(x => x.IsHasArticleComments, false);
             filter = filter & builder.Eq(x => x.IsNewsItem, false);
             filter = filter & builder.Eq(x => x.IsHasProductReview, false);
             filter = filter & builder.Eq(x => x.IsHasProductReviewH, false);

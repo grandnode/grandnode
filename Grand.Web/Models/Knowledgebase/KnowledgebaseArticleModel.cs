@@ -13,6 +13,8 @@ namespace Grand.Web.Models.Knowledgebase
         {
             RelatedArticles = new List<KnowledgebaseArticleModel>();
             CategoryBreadcrumb = new List<KnowledgebaseCategoryModel>();
+            Comments = new List<KnowledgebaseArticleCommentModel>();
+            AddNewComment = new AddKnowledgebaseArticleCommentModel();
         }
 
         public string Name { get; set; }
@@ -29,8 +31,14 @@ namespace Grand.Web.Models.Knowledgebase
 
         public string MetaTitle { get; set; }
 
+        public bool AllowComments { get; set; }
+
         public IList<KnowledgebaseArticleModel> RelatedArticles { get; set; }
 
         public List<KnowledgebaseCategoryModel> CategoryBreadcrumb { get; set; }
+
+        public AddKnowledgebaseArticleCommentModel AddNewComment { get; set; }
+
+        public IList<KnowledgebaseArticleCommentModel> Comments { get; set; }
     }
 }

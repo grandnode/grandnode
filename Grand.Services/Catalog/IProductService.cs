@@ -108,7 +108,7 @@ namespace Grand.Services.Catalog
         /// Get (visible) product number in certain category
         /// </summary>
         /// <param name="categoryIds">Category identifiers</param>
-        /// <param name="storeId">Store identifier; 0 to load all records</param>
+        /// <param name="storeId">Store identifier; "" to load all records</param>
         /// <returns>Product number</returns>
         int GetCategoryProductNumber(IList<string> categoryIds = null, string storeId = "");
 
@@ -118,16 +118,16 @@ namespace Grand.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="categoryIds">Category identifiers</param>
-        /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
-        /// <param name="storeId">Store identifier; 0 to load all records</param>
-        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
-        /// <param name="warehouseId">Warehouse identifier; 0 to load all records</param>
-        /// <param name="productType">Product type; 0 to load all records</param>
+        /// <param name="manufacturerId">Manufacturer identifier; "" to load all records</param>
+        /// <param name="storeId">Store identifier; "" to load all records</param>
+        /// <param name="vendorId">Vendor identifier; "" to load all records</param>
+        /// <param name="warehouseId">Warehouse identifier; "" to load all records</param>
+        /// <param name="productType">Product type; "" to load all records</param>
         /// <param name="visibleIndividuallyOnly">A values indicating whether to load only products marked as "visible individually"; "false" to load all records; "true" to load "visible individually" only</param>
         /// <param name="featuredProducts">A value indicating whether loaded products are marked as featured (relates only to categories and manufacturers). 0 to load featured products only, 1 to load not featured products only, null to load all products</param>
         /// <param name="priceMin">Minimum price; null to load all records</param>
         /// <param name="priceMax">Maximum price; null to load all records</param>
-        /// <param name="productTagId">Product tag identifier; 0 to load all records</param>
+        /// <param name="productTagId">Product tag identifier; "" to load all records</param>
         /// <param name="keywords">Keywords</param>
         /// <param name="searchDescriptions">A value indicating whether to search by a specified "keyword" in product descriptions</param>
         /// <param name="searchSku">A value indicating whether to search by a specified "keyword" in product SKU</param>
@@ -175,16 +175,16 @@ namespace Grand.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="categoryIds">Category identifiers</param>
-        /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
-        /// <param name="storeId">Store identifier; 0 to load all records</param>
-        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
-        /// <param name="warehouseId">Warehouse identifier; 0 to load all records</param>
-        /// <param name="productType">Product type; 0 to load all records</param>
+        /// <param name="manufacturerId">Manufacturer identifier; "" to load all records</param>
+        /// <param name="storeId">Store identifier; "" to load all records</param>
+        /// <param name="vendorId">Vendor identifier; "" to load all records</param>
+        /// <param name="warehouseId">Warehouse identifier; "" to load all records</param>
+        /// <param name="productType">Product type; "" to load all records</param>
         /// <param name="visibleIndividuallyOnly">A values indicating whether to load only products marked as "visible individually"; "false" to load all records; "true" to load "visible individually" only</param>
         /// <param name="featuredProducts">A value indicating whether loaded products are marked as featured (relates only to categories and manufacturers). 0 to load featured products only, 1 to load not featured products only, null to load all products</param>
         /// <param name="priceMin">Minimum price; null to load all records</param>
         /// <param name="priceMax">Maximum price; null to load all records</param>
-        /// <param name="productTagId">Product tag identifier; 0 to load all records</param>
+        /// <param name="productTagId">Product tag identifier; "" to load all records</param>
         /// <param name="keywords">Keywords</param>
         /// <param name="searchDescriptions">A value indicating whether to search by a specified "keyword" in product descriptions</param>
         /// <param name="searchSku">A value indicating whether to search by a specified "keyword" in product SKU</param>
@@ -240,8 +240,8 @@ namespace Grand.Services.Catalog
         /// Gets associated products
         /// </summary>
         /// <param name="parentGroupedProductId">Parent product identifier (used with grouped products)</param>
-        /// <param name="storeId">Store identifier; 0 to load all records</param>
-        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
+        /// <param name="storeId">Store identifier; "" to load all records</param>
+        /// <param name="vendorId">Vendor identifier; "" to load all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Products</returns>
         IList<Product> GetAssociatedProducts(string parentGroupedProductId,
@@ -273,7 +273,7 @@ namespace Grand.Services.Catalog
         /// <summary>
         /// Get low stock products
         /// </summary>
-        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
+        /// <param name="vendorId">Vendor identifier; "" to load all records</param>
         /// <param name="products">Low stock products</param>
         /// <param name="combinations">Low stock attribute combinations</param>
         void GetLowStockProducts(string vendorId,
@@ -482,13 +482,13 @@ namespace Grand.Services.Catalog
         /// <summary>
         /// Gets all product reviews
         /// </summary>
-        /// <param name="customerId">Customer identifier; 0 to load all records</param>
+        /// <param name="customerId">Customer identifier; "" to load all records</param>
         /// <param name="approved">A value indicating whether to content is approved; null to load all records</param> 
         /// <param name="fromUtc">Item creation from; null to load all records</param>
         /// <param name="toUtc">Item item creation to; null to load all records</param>
         /// <param name="message">Search title or review text; null to load all records</param>
-        /// <param name="storeId">Store identifier; 0 to load all records</param>
-        /// <param name="productId">Product identifier; 0 to load all records</param>
+        /// <param name="storeId">Store identifier; "" to load all records</param>
+        /// <param name="productId">Product identifier; "" to load all records</param>
         /// <returns>Reviews</returns>
         IList<ProductReview> GetAllProductReviews(string customerId, bool? approved,
             DateTime? fromUtc = null, DateTime? toUtc = null,
@@ -498,7 +498,7 @@ namespace Grand.Services.Catalog
         /// Get rating sum for product
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        /// <param name="storeId">Store identifier, 0 to load all records</param> 
+        /// <param name="storeId">Store identifier, "" to load all records</param> 
         /// <returns>Sum</returns>
         int RatingSumProduct(string productId, string storeId);
 
@@ -506,7 +506,7 @@ namespace Grand.Services.Catalog
         /// Total reviews for product
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        /// <param name="storeId">Store identifier, 0 to load all records</param> 
+        /// <param name="storeId">Store identifier, "" to load all records</param> 
         /// <returns>Sum</returns>
         int TotalReviewsProduct(string productId, string storeId);
 

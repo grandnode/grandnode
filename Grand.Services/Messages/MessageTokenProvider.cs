@@ -38,6 +38,8 @@ using Grand.Core.Domain;
 using Grand.Core.Domain.Media;
 using System.Net;
 using Grand.Services.Vendors;
+using Grand.Core.Domain.Knowledgebase;
+using Grand.Services.Knowledgebase;
 
 namespace Grand.Services.Messages
 {
@@ -1029,6 +1031,18 @@ namespace Grand.Services.Messages
 
             //event notification
             _eventPublisher.EntityTokensAdded(blogComment, tokens);
+        }
+
+        public virtual void AddArticleCommentTokens(string storeId, IList<Token> tokens, KnowledgebaseArticleComment articleComment)
+        {
+            var article = EngineContext.Current.Resolve<IKnowledgebaseService>().GetPublicKnowledgebaseArticle(articleComment.ArticleId);
+            tokens.Add(new Token("Article.ArticleTitle", article.Name));
+
+            var articleUrl = $"{GetStoreUrl(storeId)}{article.GetSeName()}";
+            tokens.Add(new Token("Article.URL", articleUrl, true));
+
+            //event notification
+            _eventPublisher.EntityTokensAdded(articleComment, tokens);
         }
 
         public virtual void AddNewsCommentTokens(string storeId, IList<Token> tokens, NewsComment newsComment)

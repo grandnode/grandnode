@@ -104,6 +104,7 @@ namespace Grand.Services.Knowledgebase
         private readonly IWorkContext _workContext;
         private readonly ICacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
+        private readonly IRepository<KnowledgebaseArticleComment> _articleCommentRepository;
 
         /// <summary>
         /// Ctor
@@ -113,7 +114,8 @@ namespace Grand.Services.Knowledgebase
         /// <param name="eventPublisher"></param>
         public KnowledgebaseService(IRepository<KnowledgebaseCategory> knowledgebaseCategoryRepository,
             IRepository<KnowledgebaseArticle> knowledgebaseArticleRepository, IEventPublisher eventPublisher, CommonSettings commonSettings,
-            CatalogSettings catalogSettings, IWorkContext workContext, ICacheManager cacheManager, IStoreContext storeContext)
+            CatalogSettings catalogSettings, IWorkContext workContext, ICacheManager cacheManager, IStoreContext storeContext,
+            IRepository<KnowledgebaseArticleComment> articleCommentRepository)
         {
             this._knowledgebaseCategoryRepository = knowledgebaseCategoryRepository;
             this._knowledgebaseArticleRepository = knowledgebaseArticleRepository;
@@ -123,6 +125,7 @@ namespace Grand.Services.Knowledgebase
             this._workContext = workContext;
             this._cacheManager = cacheManager;
             this._storeContext = storeContext;
+            this._articleCommentRepository = articleCommentRepository;
         }
 
         /// <summary>
@@ -605,6 +608,90 @@ namespace Grand.Services.Knowledgebase
             }
 
             return new PagedList<KnowledgebaseArticle>(toReturn.ToList(), pageIndex, pageSize);
+        }
+
+        /// <summary>
+        /// Inserts an article comment
+        /// </summary>
+        /// <param name="articleComment">Article comment</param>
+        public void InsertArticleComment(KnowledgebaseArticleComment articleComment)
+        {
+            if (articleComment == null)
+                throw new ArgumentNullException("articleComment");
+
+            _articleCommentRepository.Insert(articleComment);
+
+            //event notification
+            _eventPublisher.EntityInserted(articleComment);
+        }
+
+        /// <summary>
+        /// Gets all comments
+        /// </summary>
+        /// <param name="customerId">Customer identifier; "" to load all records</param>
+        /// <returns>Comments</returns>
+        public IList<KnowledgebaseArticleComment> GetAllComments(string customerId)
+        {
+            var query = from c in _articleCommentRepository.Table
+                        orderby c.CreatedOnUtc
+                        where (customerId == "" || c.CustomerId == customerId)
+                        select c;
+            var content = query.ToList();
+            return content;
+        }
+
+        /// <summary>
+        /// Gets an article comment
+        /// </summary>
+        /// <param name="articleId">Article identifier</param>
+        /// <returns>Article comment</returns>
+        public KnowledgebaseArticleComment GetArticleCommentById(string articleId)
+        {
+            return _articleCommentRepository.GetById(articleId);
+        }
+
+        /// <summary>
+        /// Get article comments by identifiers
+        /// </summary>
+        /// <param name="commentIds"Article comment identifiers</param>
+        /// <returns>Article comments</returns>
+        public IList<KnowledgebaseArticleComment> GetArticleCommentsByIds(string[] commentIds)
+        {
+            if (commentIds == null || commentIds.Length == 0)
+                return new List<KnowledgebaseArticleComment>();
+
+            var query = from bc in _articleCommentRepository.Table
+                        where commentIds.Contains(bc.Id)
+                        select bc;
+            var comments = query.ToList();
+            //sort by passed identifiers
+            var sortedComments = new List<KnowledgebaseArticleComment>();
+            foreach (string id in commentIds)
+            {
+                var comment = comments.Find(x => x.Id == id);
+                if (comment != null)
+                    sortedComments.Add(comment);
+            }
+
+            return sortedComments;
+        }
+
+        public IList<KnowledgebaseArticleComment> GetArticleCommentsByArticleId(string articleId)
+        {
+            var query = from c in _articleCommentRepository.Table
+                        where c.ArticleId == articleId
+                        orderby c.CreatedOnUtc
+                        select c;
+            var content = query.ToList();
+            return content;
+        }
+
+        public void DeleteArticleComment(KnowledgebaseArticleComment articleComment)
+        {
+            if (articleComment == null)
+                throw new ArgumentNullException("articleComment");
+
+            _articleCommentRepository.Delete(articleComment);
         }
     }
 }

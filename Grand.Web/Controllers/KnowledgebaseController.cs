@@ -11,6 +11,20 @@ using Grand.Services.Security;
 using Grand.Services.Stores;
 using System.Linq;
 using Grand.Services.Seo;
+using Grand.Framework.Security;
+using Grand.Framework.Controllers;
+using Grand.Framework.Mvc.Filters;
+using Grand.Core.Domain.Customers;
+using Grand.Framework.Security.Captcha;
+using System;
+using Grand.Core.Domain.Localization;
+using Grand.Services.Messages;
+using Grand.Services.Logging;
+using Grand.Core.Infrastructure;
+using Grand.Services.Helpers;
+using Grand.Core.Domain.Media;
+using Grand.Services.Common;
+using Grand.Services.Media;
 
 namespace Grand.Web.Controllers
 {
@@ -23,9 +37,21 @@ namespace Grand.Web.Controllers
         private readonly ICacheManager _cacheManager;
         private readonly IAclService _aclService;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly ILocalizationService _localizationService;
+        private readonly CaptchaSettings _captchaSettings;
+        private readonly LocalizationSettings _localizationSettings;
+        private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly ICustomerActivityService _customerActivityService;
+        private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly CustomerSettings _customerSettings;
+        private readonly MediaSettings _mediaSettings;
+        private readonly IPictureService _pictureService;
 
         public KnowledgebaseController(KnowledgebaseSettings knowledgebaseSettings, IKnowledgebaseService knowledgebaseService, IWorkContext workContext,
-            IStoreContext storeContext, ICacheManager cacheManager, IAclService aclService, IStoreMappingService storeMappingService)
+            IStoreContext storeContext, ICacheManager cacheManager, IAclService aclService, IStoreMappingService storeMappingService, ILocalizationService localizationService,
+            CaptchaSettings captchaSettings, LocalizationSettings localizationSettings, IWorkflowMessageService workflowMessageService,
+            ICustomerActivityService customerActivityService, IDateTimeHelper dateTimeHelper, CustomerSettings customerSettings,
+            MediaSettings mediaSettings, IPictureService pictureService)
         {
             this._knowledgebaseSettings = knowledgebaseSettings;
             this._knowledgebaseService = knowledgebaseService;
@@ -34,6 +60,15 @@ namespace Grand.Web.Controllers
             this._cacheManager = cacheManager;
             this._aclService = aclService;
             this._storeMappingService = storeMappingService;
+            this._localizationService = localizationService;
+            this._captchaSettings = captchaSettings;
+            this._localizationSettings = localizationSettings;
+            this._workflowMessageService = workflowMessageService;
+            this._customerActivityService = customerActivityService;
+            this._dateTimeHelper = dateTimeHelper;
+            this._customerSettings = customerSettings;
+            this._mediaSettings = mediaSettings;
+            this._pictureService = pictureService;
         }
 
         public IActionResult List()
@@ -143,11 +178,43 @@ namespace Grand.Web.Controllers
             if (article == null)
                 return RedirectToAction("List");
 
+            PrepareKnowledgebaseArticleModel(model, article);
+            return View("Article", model);
+        }
+
+        private void PrepareKnowledgebaseArticleModel(KnowledgebaseArticleModel model, KnowledgebaseArticle article)
+        {
             model.Content = article.GetLocalized(y => y.Content);
             model.Name = article.GetLocalized(y => y.Name);
             model.Id = article.Id;
             model.ParentCategoryId = article.ParentCategoryId;
             model.SeName = article.GetLocalized(y => y.SeName);
+            model.AllowComments = article.AllowComments;
+            model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnArticleCommentPage;
+            var articleComments = _knowledgebaseService.GetArticleCommentsByArticleId(article.Id);
+            foreach (var ac in articleComments)
+            {
+                var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(ac.CustomerId);
+                var commentModel = new KnowledgebaseArticleCommentModel
+                {
+                    Id = ac.Id,
+                    CustomerId = ac.CustomerId,
+                    CustomerName = customer.FormatUserName(),
+                    CommentText = ac.CommentText,
+                    CreatedOn = _dateTimeHelper.ConvertToUserTime(ac.CreatedOnUtc, DateTimeKind.Utc),
+                    AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !customer.IsGuest(),
+                };
+                if (_customerSettings.AllowCustomersToUploadAvatars)
+                {
+                    commentModel.CustomerAvatarUrl = _pictureService.GetPictureUrl(
+                        customer.GetAttribute<string>(SystemCustomerAttributeNames.AvatarPictureId),
+                        _mediaSettings.AvatarPictureSize,
+                        _customerSettings.DefaultAvatarEnabled,
+                        defaultPictureType: PictureType.Avatar);
+                }
+
+                model.Comments.Add(commentModel);
+            }
 
             foreach (var id in article.RelatedArticles)
             {
@@ -181,7 +248,67 @@ namespace Grand.Web.Controllers
                     .ToList()
                 );
             }
+        }
 
+        [HttpPost, ActionName("KnowledgebaseArticle")]
+        [PublicAntiForgery]
+        [FormValueRequired("add-comment")]
+        [ValidateCaptcha]
+        public virtual IActionResult ArticleCommentAdd(string articleId, KnowledgebaseArticleModel model, bool captchaValid,
+               [FromServices] IWorkContext workContext)
+        {
+            if (!_knowledgebaseSettings.Enabled)
+                return RedirectToRoute("HomePage");
+
+            var article = _knowledgebaseService.GetPublicKnowledgebaseArticle(articleId);
+            if (article == null || !article.AllowComments)
+                return RedirectToRoute("HomePage");
+
+            if (workContext.CurrentCustomer.IsGuest() && !_knowledgebaseSettings.AllowNotRegisteredUsersToLeaveComments)
+            {
+                ModelState.AddModelError("", _localizationService.GetResource("Knowledgebase.Article.Comments.OnlyRegisteredUsersLeaveComments"));
+            }
+
+            //validate CAPTCHA
+            if (_captchaSettings.Enabled && _captchaSettings.ShowOnArticleCommentPage && !captchaValid)
+            {
+                ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
+            }
+
+            if (ModelState.IsValid)
+            {
+                var customer = _workContext.CurrentCustomer;
+                var comment = new KnowledgebaseArticleComment
+                {
+                    ArticleId = article.Id,
+                    CustomerId = customer.Id,
+                    CommentText = model.AddNewComment.CommentText,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    ArticleTitle = article.Name,
+                };
+                _knowledgebaseService.InsertArticleComment(comment);
+
+                if (!customer.IsHasArticleComments)
+                {
+                    customer.IsHasArticleComments = true;
+                    EngineContext.Current.Resolve<ICustomerService>().UpdateHasArticleComments(customer.Id);
+                }
+
+                //notify a store owner
+                if (_knowledgebaseSettings.NotifyAboutNewArticleComments)
+                    _workflowMessageService.SendArticleCommentNotificationMessage(comment, _localizationSettings.DefaultAdminLanguageId);
+
+                //activity log
+                _customerActivityService.InsertActivity("PublicStore.AddArticleComment", comment.Id, _localizationService.GetResource("ActivityLog.PublicStore.AddArticleComment"));
+
+                //The text boxes should be cleared after a comment has been posted
+                //That' why we reload the page
+                TempData["Grand.knowledgebase.addarticlecomment.result"] = _localizationService.GetResource("Knowledgebase.Article.Comments.SuccessfullyAdded");
+                return RedirectToRoute("KnowledgebaseArticle", new { SeName = article.GetSeName() });
+            }
+
+            //If we got this far, something failed, redisplay form
+            PrepareKnowledgebaseArticleModel(model, article);
             return View("Article", model);
         }
     }

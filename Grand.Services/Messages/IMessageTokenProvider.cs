@@ -3,6 +3,7 @@ using Grand.Core.Domain.Blogs;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Forums;
+using Grand.Core.Domain.Knowledgebase;
 using Grand.Core.Domain.Messages;
 using Grand.Core.Domain.News;
 using Grand.Core.Domain.Orders;
@@ -31,6 +32,7 @@ namespace Grand.Services.Messages
         void AddProductReviewTokens(IList<Token> tokens, ProductReview productReview);
         void AddVendorReviewTokens(IList<Token> tokens, VendorReview VendorReview);
         void AddBlogCommentTokens(string storeId, IList<Token> tokens, BlogComment blogComment);
+        void AddArticleCommentTokens(string storeId, IList<Token> tokens, KnowledgebaseArticleComment articleComment);
         void AddNewsCommentTokens(string storeId, IList<Token> tokens, NewsComment newsComment);
         void AddProductTokens(IList<Token> tokens, Product product, string languageId);
         void AddAttributeCombinationTokens(IList<Token> tokens, ProductAttributeCombination combination, string languageId);

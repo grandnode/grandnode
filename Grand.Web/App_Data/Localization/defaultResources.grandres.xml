@@ -978,6 +978,9 @@
   <LocaleResource Name="ActivityLog.PublicStore.AddBlogComment">
     <Value>Added a blog comment</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.PublicStore.AddArticleComment">
+    <Value>Added an article comment</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.PublicStore.AddNewsComment">
     <Value>Added a news comment</Value>
   </LocaleResource>
@@ -15268,7 +15271,7 @@
     <Value>New comment</Value>
   </LocaleResource>
   <LocaleResource Name="Blog.Comments.SuccessfullyAdded">
-    <Value>Blog comment is successfully added.</Value>
+    <Value>Blog comment was successfully added.</Value>
   </LocaleResource>
   <LocaleResource Name="Blog.CommentsLink">
     <Value>Comments ({0:d})</Value>
@@ -16834,7 +16837,7 @@
     <Value>New comment</Value>
   </LocaleResource>
   <LocaleResource Name="News.Comments.SuccessfullyAdded">
-    <Value>News comment is successfully added.</Value>
+    <Value>News comment was successfully added.</Value>
   </LocaleResource>
   <LocaleResource Name="News.MoreInfo">
     <Value>details</Value>
@@ -18241,7 +18244,7 @@
     <Value>Submit review</Value>
   </LocaleResource>
   <LocaleResource Name="Reviews.SuccessfullyAdded">
-    <Value>Product review is successfully added.</Value>
+    <Value>Product review was successfully added.</Value>
   </LocaleResource>
   <LocaleResource Name="Reviews.TotalReviews">
     <Value>{0} review(s)</Value>
@@ -18805,7 +18808,7 @@
     <Value>You will see the vendor review after approving by a store administrator or a vendor.</Value>
   </LocaleResource>
   <LocaleResource Name="VendorReviews.SuccessfullyAdded">
-    <Value>Vendor review is successfully added.</Value>
+    <Value>Vendor review was successfully added.</Value>
   </LocaleResource>
   <LocaleResource Name="VendorReviews.VendorReviewPossibleOnlyAfterPurchasing">
     <Value>Vendor can be reviewed only after purchasing a product from this vendor.</Value>
@@ -19214,5 +19217,56 @@
   </LocaleResource>
   <LocaleResource Name="AdminSearch.Menu">
     <Value>Menu</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.AllowComments">
+    <Value>Allow comments</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.AllowComments.Hint">
+    <Value>When checked, customers can leave comments about your article.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Knowledgebase.Article.CommentText">
+    <Value>Comment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Knowledgebase.Article.CommentText.Required">
+    <Value>Enter comment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Knowledgebase.Article.Comments.LeaveYourComment">
+    <Value>Leave your comment</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Knowledgebase.Article.Comments">
+    <Value>Comments</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Knowledgebase.Article.Comments.SubmitButton">
+    <Value>New comment</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Knowledgebase.Article.Comments.CreatedOn">
+    <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Knowledgebase.AllowNotRegisteredUsersToLeaveComments">
+    <Value>Allow not registered users to leave comments</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Knowledgebase.AllowNotRegisteredUsersToLeaveComments.Hint">
+    <Value>Check to allow not registered users to leave comments.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Knowledgebase.Article.Comments.OnlyRegisteredUsersLeaveComments">
+    <Value>Only registered users can leave comments.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Knowledgebase.NotifyAboutNewArticleComments">
+    <Value>Notify about new article comments</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Knowledgebase.NotifyAboutNewArticleComments.Hint">
+    <Value>Check to notify store owner about new article comments.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.PublicStore.AddArticleComment">
+    <Value>Added an article comment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnArticleCommentPage">
+    <Value>Show on article page (comments)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnArticleCommentPage.Hint">
+    <Value>Check to show CAPTCHA on article page when writing a comment.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Knowledgebase.Article.Comments.SuccessfullyAdded">
+    <Value>Article comment was successfully added.</Value>
   </LocaleResource>
 </Language>

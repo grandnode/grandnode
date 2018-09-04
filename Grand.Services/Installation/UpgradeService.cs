@@ -952,6 +952,8 @@ namespace Grand.Services.Installation
 
             var knowledgesettings = EngineContext.Current.Resolve<KnowledgebaseSettings>();
             knowledgesettings.Enabled = false;
+            knowledgesettings.AllowNotRegisteredUsersToLeaveComments = true;
+            knowledgesettings.NotifyAboutNewArticleComments = false;
             _settingService.SaveSetting(knowledgesettings);
 
             #endregion
@@ -1013,6 +1015,35 @@ namespace Grand.Services.Installation
             adminSearchSettings.SearchInMenu = true;
             adminSearchSettings.MenuDisplayOrder = -1;
             _settingService.SaveSetting(adminSearchSettings);
+
+            var emailAccount = EngineContext.Current.Resolve<IRepository<EmailAccount>>().Table.FirstOrDefault();
+            if (emailAccount == null)
+                throw new Exception("Default email account cannot be loaded");
+            var messageTemplates = new List<MessageTemplate>
+            {
+                new MessageTemplate
+                {
+                    Name = "Knowledgebase.ArticleComment",
+                    Subject = "%Store.Name%. New article comment.",
+                    Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />A new article comment has been created for article \"%Article.ArticleTitle%\".</p>",
+                    IsActive = true,
+                    EmailAccountId = emailAccount.Id,
+                },
+            };
+            EngineContext.Current.Resolve<IRepository<MessageTemplate>>().Insert(messageTemplates);
+
+            var _activityLogTypeRepository = EngineContext.Current.Resolve<IRepository<ActivityLogType>>();
+            _activityLogTypeRepository.Insert(new ActivityLogType
+            {
+                SystemKeyword = "PublicStore.AddArticleComment",
+                Enabled = false,
+                Name = "Public store. Add article comment"
+            });
+
+            var knowledgebaseSettings = EngineContext.Current.Resolve<KnowledgebaseSettings>();
+            knowledgebaseSettings.AllowNotRegisteredUsersToLeaveComments = true;
+            knowledgebaseSettings.NotifyAboutNewArticleComments = false;
+            _settingService.SaveSetting(knowledgebaseSettings);
         }
 
         private void InstallStringResources(string filenames)

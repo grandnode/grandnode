@@ -153,7 +153,7 @@ namespace Grand.Services.News
         /// <summary>
         /// Gets all comments
         /// </summary>
-        /// <param name="customerId">Customer identifier; 0 to load all records</param>
+        /// <param name="customerId">Customer identifier; "" to load all records</param>
         /// <returns>Comments</returns>
         public virtual IList<NewsComment> GetAllComments(string customerId)
         {
