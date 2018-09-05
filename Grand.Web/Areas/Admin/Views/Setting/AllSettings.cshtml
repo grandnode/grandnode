@@ -5,6 +5,7 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.AllSettings").Text;
 }
+<antiforgery-token />
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light form-fit">
@@ -181,11 +182,11 @@
         $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:StoreId"/>')
             .appendTo(container)
             .kendoDropDownList({
-                dataSource: allStores,                            
-                autoBind: true,                            
+                dataSource: allStores,
+                autoBind: true,
             });
     }
-    
+
     $(document).ready(function() {
         $('#search-settings').click(function() {
             var grid = $('#settings-grid').data('kendoGrid');
