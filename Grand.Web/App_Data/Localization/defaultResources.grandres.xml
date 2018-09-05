@@ -7674,6 +7674,18 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestsEnabled.Hint">
     <Value>Check if you want to allow customers to submit return requests for items they've previously purchased.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequests_AllowToSpecifyPickupAddress">
+    <Value>Allow to specify return pickup address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequests_AllowToSpecifyPickupAddress.Hint">
+    <Value>Check if you want to allow customers to specify return pickup address.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequests_AllowToSpecifyPickupDate">
+    <Value>Allow to specify return pickup date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequests_AllowToSpecifyPickupDate.Hint">
+    <Value>Check if you want to allow customers to specify return pickup date.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestSettings">
     <Value>Return request settings</Value>
   </LocaleResource>
@@ -18167,9 +18179,6 @@
   </LocaleResource>
   <LocaleResource Name="ReturnRequests.Title">
     <Value>Return item(s) from order #{0}</Value>
-  </LocaleResource>
-  <LocaleResource Name="ReturnRequests.WhyReturning">
-    <Value>Why are you returning these items?</Value>
   </LocaleResource>
   <LocaleResource Name="Reviews">
     <Value>Reviews</Value>

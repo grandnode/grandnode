@@ -79,6 +79,16 @@ namespace Grand.Core.Domain.Orders
         public bool ReturnRequestsEnabled { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether return request pickup address can be specified by customer
+        /// </summary>
+        public bool ReturnRequests_AllowToSpecifyPickupAddress { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether return request pickup date can be specified by customer
+        /// </summary>
+        public bool ReturnRequests_AllowToSpecifyPickupDate { get; set; }
+
+        /// <summary>
         /// Gets or sets a number of days that the Return Request Link will be available for customers after order placing.
         /// </summary>
         public int NumberOfDaysReturnRequestAvailable { get; set; }

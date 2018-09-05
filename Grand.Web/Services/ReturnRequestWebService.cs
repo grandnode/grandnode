@@ -8,7 +8,9 @@ using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
 using Grand.Services.Seo;
+using Grand.Services.Stores;
 using Grand.Web.Infrastructure.Cache;
+using Grand.Web.Models.Common;
 using Grand.Web.Models.Order;
 using System;
 using System.Collections.Generic;
@@ -16,7 +18,7 @@ using System.Linq;
 
 namespace Grand.Web.Services
 {
-    public partial class ReturnRequestWebService: IReturnRequestWebService
+    public partial class ReturnRequestWebService : IReturnRequestWebService
     {
 
         private readonly IReturnRequestService _returnRequestService;
@@ -29,6 +31,9 @@ namespace Grand.Web.Services
         private readonly ILocalizationService _localizationService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ICacheManager _cacheManager;
+        private readonly ICountryService _countryService;
+        private readonly IStoreMappingService _storeMappingService;
+        private readonly IAddressWebService _addressWebService;
 
         public ReturnRequestWebService(IReturnRequestService returnRequestService,
             IOrderService orderService,
@@ -39,7 +44,10 @@ namespace Grand.Web.Services
             IPriceFormatter priceFormatter,
             ILocalizationService localizationService,
             IDateTimeHelper dateTimeHelper,
-            ICacheManager cacheManager)
+            ICacheManager cacheManager,
+            ICountryService countryService,
+            IStoreMappingService storeMappingService,
+            IAddressWebService addressWebService)
         {
             this._returnRequestService = returnRequestService;
             this._orderService = orderService;
@@ -51,6 +59,9 @@ namespace Grand.Web.Services
             this._localizationService = localizationService;
             this._dateTimeHelper = dateTimeHelper;
             this._cacheManager = cacheManager;
+            this._countryService = countryService;
+            this._storeMappingService = storeMappingService;
+            this._addressWebService = addressWebService;
         }
 
         public virtual SubmitReturnRequestModel PrepareReturnRequest(SubmitReturnRequestModel model, Order order)
@@ -98,7 +109,16 @@ namespace Grand.Web.Services
             foreach (var orderItem in orderItems)
             {
                 var qtyDelivery = shipments.Where(x => x.DeliveryDateUtc.HasValue).SelectMany(x => x.ShipmentItems).Where(x => x.OrderItemId == orderItem.Id).Sum(x => x.Quantity);
-                var qtyReturn = _returnRequestService.SearchReturnRequests(customerId: order.CustomerId, orderItemId: orderItem.Id).Sum(x => x.Quantity);
+                var returnRequests = _returnRequestService.SearchReturnRequests(customerId: order.CustomerId, orderItemId: orderItem.Id);
+                int qtyReturn = 0;
+
+                foreach (var rr in returnRequests)
+                {
+                    foreach (var rrItem in rr.ReturnRequestItems)
+                    {
+                        qtyReturn += rrItem.Quantity;
+                    }
+                }
 
                 var product = _productService.GetProductByIdIncludeArch(orderItem.ProductId);
                 if (!product.NotReturnable)
@@ -129,6 +149,26 @@ namespace Grand.Web.Services
                 }
             }
 
+            var addresses = _workContext.CurrentCustomer.Addresses
+                //allow shipping
+                .Where(a => a.CountryId == "" ||
+                (_countryService.GetCountryById(a.CountryId) != null ? _countryService.GetCountryById(a.CountryId).AllowsShipping : false)
+                //a.Country.AllowsShipping
+                )
+                //enabled for the current store
+                .Where(a => a.CountryId == "" ||
+                _storeMappingService.Authorize(_countryService.GetCountryById(a.CountryId)))
+                .ToList();
+            foreach (var address in addresses)
+            {
+                var addressModel = new AddressModel();
+                _addressWebService.PrepareModel(model: addressModel,
+                    address: address,
+                    excludeProperties: false);
+
+                model.ExistingAddresses.Add(addressModel);
+            }
+
             return model;
         }
         public virtual CustomerReturnRequestsModel PrepareCustomerReturnRequests()
@@ -140,7 +180,7 @@ namespace Grand.Web.Services
             foreach (var returnRequest in returnRequests)
             {
                 var order = _orderService.GetOrderById(returnRequest.OrderId);
-                var orderItem = order.OrderItems.Where(x => x.Id == returnRequest.OrderItemId).FirstOrDefault();
+                OrderItem orderItem = null;
                 if (orderItem != null)
                 {
                     var product = _productService.GetProductByIdIncludeArch(orderItem.ProductId);
@@ -153,9 +193,6 @@ namespace Grand.Web.Services
                         ProductId = product.Id,
                         ProductName = product.GetLocalized(x => x.Name),
                         ProductSeName = product.GetSeName(),
-                        Quantity = returnRequest.Quantity,
-                        ReturnAction = returnRequest.RequestedAction,
-                        ReturnReason = returnRequest.ReasonForReturn,
                         Comments = returnRequest.CustomerComments,
                         CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc),
                     };

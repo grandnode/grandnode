@@ -1753,6 +1753,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.AttachPdfInvoiceToOrderPaidEmail_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.AttachPdfInvoiceToOrderPaidEmail, storeScope);
                 model.AttachPdfInvoiceToOrderCompletedEmail_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.AttachPdfInvoiceToOrderCompletedEmail, storeScope);
                 model.ReturnRequestsEnabled_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.ReturnRequestsEnabled, storeScope);
+                model.ReturnRequests_AllowToSpecifyPickupAddress_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.ReturnRequests_AllowToSpecifyPickupAddress, storeScope);
+                model.ReturnRequests_AllowToSpecifyPickupDate_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.ReturnRequests_AllowToSpecifyPickupDate, storeScope);
                 model.NumberOfDaysReturnRequestAvailable_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.NumberOfDaysReturnRequestAvailable, storeScope);
             }
 
@@ -1865,6 +1867,16 @@ namespace Grand.Web.Areas.Admin.Controllers
                 else if (!String.IsNullOrEmpty(storeScope))
                     _settingService.DeleteSetting(orderSettings, x => x.ReturnRequestsEnabled, storeScope);
 
+                if (model.ReturnRequests_AllowToSpecifyPickupAddress_OverrideForStore || storeScope == "")
+                    _settingService.SaveSetting(orderSettings, x => x.ReturnRequests_AllowToSpecifyPickupAddress, storeScope, false);
+                else if (!String.IsNullOrEmpty(storeScope))
+                    _settingService.DeleteSetting(orderSettings, x => x.ReturnRequests_AllowToSpecifyPickupAddress, storeScope);
+
+                if (model.ReturnRequests_AllowToSpecifyPickupDate_OverrideForStore || storeScope == "")
+                    _settingService.SaveSetting(orderSettings, x => x.ReturnRequests_AllowToSpecifyPickupDate, storeScope, false);
+                else if (!String.IsNullOrEmpty(storeScope))
+                    _settingService.DeleteSetting(orderSettings, x => x.ReturnRequests_AllowToSpecifyPickupDate, storeScope);
+
                 if (model.NumberOfDaysReturnRequestAvailable_OverrideForStore || storeScope == "")
                     _settingService.SaveSetting(orderSettings, x => x.NumberOfDaysReturnRequestAvailable, storeScope, false);
                 else if (!String.IsNullOrEmpty(storeScope))
@@ -1879,11 +1891,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(orderSettings, x => x.CompleteOrderWhenDelivered, "", false);
                 _settingService.SaveSetting(orderSettings, x => x.GiftCards_Activated_OrderStatusId, "", false);
                 _settingService.SaveSetting(orderSettings, x => x.GiftCards_Deactivated_OrderStatusId, "", false);
-
-                if (model.ReturnRequestsEnabled_OverrideForStore || storeScope == "")
-                    _settingService.SaveSetting(orderSettings, x => x.ReturnRequestsEnabled, storeScope, false);
-                else if (!String.IsNullOrEmpty(storeScope))
-                    _settingService.DeleteSetting(orderSettings, x => x.ReturnRequestsEnabled, storeScope);
 
                 //now clear cache
                 _cacheManager.Clear();

@@ -80,7 +80,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 throw new ArgumentNullException("returnRequest");
 
             var order = _orderService.GetOrderById(returnRequest.OrderId);
-            var orderItem = order.OrderItems.Where(x=>x.Id == returnRequest.OrderItemId).FirstOrDefault();
+            OrderItem orderItem = null;
             if (orderItem == null)
                 return false;
             var product = _productService.GetProductByIdIncludeArch(orderItem.ProductId);
@@ -93,13 +93,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.CustomerId = returnRequest.CustomerId;
             var customer = _customerService.GetCustomerById(returnRequest.CustomerId);
             model.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
-            model.Quantity = returnRequest.Quantity;
             model.ReturnRequestStatusStr = returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
             if (!excludeProperties)
             {
-                model.ReasonForReturn = returnRequest.ReasonForReturn;
-                model.RequestedAction = returnRequest.RequestedAction;
                 model.CustomerComments = returnRequest.CustomerComments;
                 model.StaffNotes = returnRequest.StaffNotes;
                 model.ReturnRequestStatusId = returnRequest.ReturnRequestStatusId;
@@ -179,9 +176,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                returnRequest.Quantity = model.Quantity;
-                returnRequest.ReasonForReturn = model.ReasonForReturn;
-                returnRequest.RequestedAction = model.RequestedAction;
                 returnRequest.CustomerComments = model.CustomerComments;
                 returnRequest.StaffNotes = model.StaffNotes;
                 returnRequest.ReturnRequestStatusId = model.ReturnRequestStatusId;
@@ -217,7 +211,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //var customer = returnRequest.Customer;
             var order = _orderService.GetOrderById(returnRequest.OrderId);
-            var orderItem = order.OrderItems.Where(x=>x.Id == returnRequest.OrderItemId).FirstOrDefault();
+            OrderItem orderItem = null;
             int queuedEmailId = _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, orderItem, _localizationSettings.DefaultAdminLanguageId);
             if (queuedEmailId > 0)
                 SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Notified"));

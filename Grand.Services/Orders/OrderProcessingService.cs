@@ -3138,7 +3138,16 @@ namespace Grand.Services.Orders
                     return false;
 
                 var qtyDelivery = shipments.Where(x => x.DeliveryDateUtc.HasValue).SelectMany(x => x.ShipmentItems).Where(x => x.OrderItemId == item.Id).Sum(x => x.Quantity);
-                var qtyReturn = _returnRequestService.SearchReturnRequests(customerId: order.CustomerId, orderItemId: item.Id).Sum(x => x.Quantity);
+                var returnRequests = _returnRequestService.SearchReturnRequests(customerId: order.CustomerId, orderItemId: item.Id);
+                int qtyReturn = 0;
+
+                foreach (var rr in returnRequests)
+                {
+                    foreach(var rrItem in rr.ReturnRequestItems)
+                    {
+                        qtyReturn += rrItem.Quantity;
+                    }
+                }
 
                 if (!product.NotReturnable && qtyDelivery - qtyReturn > 0)
                     return true;

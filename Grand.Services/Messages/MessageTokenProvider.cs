@@ -862,10 +862,7 @@ namespace Grand.Services.Messages
             var orderService = EngineContext.Current.Resolve<IOrderService>();
             tokens.Add(new Token("ReturnRequest.ID", returnRequest.ReturnNumber.ToString()));
             tokens.Add(new Token("ReturnRequest.OrderId", orderService.GetOrderByOrderItemId(orderItem.Id).OrderNumber.ToString()));
-            tokens.Add(new Token("ReturnRequest.Product.Quantity", returnRequest.Quantity.ToString()));
             tokens.Add(new Token("ReturnRequest.Product.Name", productService.GetProductByIdIncludeArch(orderItem.ProductId).Name));
-            tokens.Add(new Token("ReturnRequest.Reason", returnRequest.ReasonForReturn));
-            tokens.Add(new Token("ReturnRequest.RequestedAction", returnRequest.RequestedAction));
             tokens.Add(new Token("ReturnRequest.CustomerComment", HtmlHelper.FormatText(returnRequest.CustomerComments, false, true, false, false, false, false), true));
             tokens.Add(new Token("ReturnRequest.StaffNotes", HtmlHelper.FormatText(returnRequest.StaffNotes, false, true, false, false, false, false), true));
             tokens.Add(new Token("ReturnRequest.Status", returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext)));

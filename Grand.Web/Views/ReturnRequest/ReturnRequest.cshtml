@@ -18,7 +18,7 @@
     {
         <form asp-route="ReturnRequest" method="post">
             <div class="AntiForgeryToken mt-2">
-                    <h2 class="h5 mt-3"><strong>@T("ReturnRequests.SelectProduct(s)")</strong></h2>
+                <h2 class="h5 mt-3"><strong>@T("ReturnRequests.SelectProduct(s)")</strong></h2>
                 <div class="table-responsive">
                     <table class="table table-hover data-table">
                         <colgroup>
@@ -36,6 +36,12 @@
                                 </th>
                                 <th class="quantity">
                                     @T("ReturnRequests.Products.Quantity")
+                                </th>
+                                <th>
+                                    @T("ReturnRequests.ReturnReason")
+                                </th>
+                                <th>
+                                    @T("ReturnRequests.ReturnAction")
                                 </th>
                             </tr>
                         </thead>
@@ -63,40 +69,91 @@
                                             }
                                         </select>
                                     </td>
+                                    <td>
+                                        @{
+                                            var reasonsSelectList = Model.AvailableReturnReasons.Select(x => new SelectListItem
+                                            {
+                                                Text = x.Name,
+                                                Value = x.Id.ToString()
+                                            }).ToList();
+                                        }
+                                        <select asp-for="ReturnRequestReasonId" asp-items="@reasonsSelectList" class="form-control custom-select return-reasons"></select>
+                                    </td>
+                                    <td>
+                                        @{
+                                            var actionsSelectList = Model.AvailableReturnActions.Select(x => new SelectListItem
+                                            {
+                                                Text = x.Name,
+                                                Value = x.Id.ToString()
+                                            }).ToList();
+                                        }
+                                        <select asp-for="ReturnRequestActionId" asp-items="@actionsSelectList" class="form-control custom-select return-actions"></select>
+                                    </td>
                                 </tr>
                             }
                         </tbody>
                     </table>
                 </div>
             </div>
-            <h5 class="mb-3"><strong>@T("ReturnRequests.WhyReturning")</strong></h5>
             <div class="form-fields">
-                <div class="form-group">
-                    @{
-                        var reasonsSelectList = Model.AvailableReturnReasons.Select(x => new SelectListItem
-                        {
-                            Text = x.Name,
-                            Value = x.Id.ToString()
-                        }).ToList();
-                    }
-                    <label asp-for="ReturnRequestReasonId" class="col-form-label">@T("ReturnRequests.ReturnReason"):</label>
-                    <select asp-for="ReturnRequestReasonId" asp-items="@reasonsSelectList" class="form-control custom-select return-reasons"></select>
-                </div>
-                <div class="form-group">
-                    @{
-                        var actionsSelectList = Model.AvailableReturnActions.Select(x => new SelectListItem
-                        {
-                            Text = x.Name,
-                            Value = x.Id.ToString()
-                        }).ToList();
-                    }
-                    <label asp-for="ReturnRequestActionId" class="col-form-label">@T("ReturnRequests.ReturnAction"):</label>
-                    <select asp-for="ReturnRequestActionId" asp-items="@actionsSelectList" class="form-control custom-select return-actions"></select>
-                </div>
                 <div class="form-group">
                     <label asp-for="Comments" class="col-form-label">@T("ReturnRequests.Comments"):</label>
                     <textarea asp-for="Comments" class="form-control comment"></textarea>
                     <span asp-validation-for="Comments"></span>
+                </div>
+                <div class="form-group">
+                    <div class="shipping-addresses" id="shipping-addresses-form">
+                        @if (Model.ExistingAddresses.Any())
+                        {
+                            <div class="section select-shipping-address">
+                                <label for="shipping-address-select">@T("Checkout.SelectShippingAddressOrEnterNewOne")</label>
+                                <div>
+                                    <select name="shipping_address_id" id="shipping-address-select" class="custom-select address-select"
+                                            title="" onchange="Shipping.newAddress(!this.value)">
+                                        @foreach (var address in Model.ExistingAddresses)
+                                        {
+                                            var addressLine = "";
+                                            addressLine += address.FirstName;
+                                            addressLine += " " + address.LastName;
+                                            if (address.StreetAddressEnabled && !String.IsNullOrEmpty(address.Address1))
+                                            {
+                                                addressLine += ", " + address.Address1;
+                                            }
+                                            if (address.CityEnabled && !String.IsNullOrEmpty(address.City))
+                                            {
+                                                addressLine += ", " + address.City;
+                                            }
+                                            if (address.StateProvinceEnabled && !String.IsNullOrEmpty(address.StateProvinceName))
+                                            {
+                                                addressLine += ", " + address.StateProvinceName;
+                                            }
+                                            if (address.ZipPostalCodeEnabled && !String.IsNullOrEmpty(address.ZipPostalCode))
+                                            {
+                                                addressLine += " " + address.ZipPostalCode;
+                                            }
+                                            if (address.CountryEnabled && !String.IsNullOrWhiteSpace(address.CountryName))
+                                            {
+                                                addressLine += ", " + address.CountryName;
+                                            }
+                                            //how should we render "FormattedCustomAddressAttributes" here?
+                                            <option value="@(address.Id)">@(addressLine)</option>
+                                        }
+                                        <option value="" selected="@Model.NewAddressPreselected">@T("Checkout.NewAddress")</option>
+                                    </select>
+                                </div>
+                            </div>
+                        }
+                        <div class="section new-shipping-address" id="shipping-new-address-form">
+                            <div class="enter-address">
+                                <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                                @{
+                                    var dataDictAddress = new ViewDataDictionary(ViewData);
+                                    dataDictAddress.TemplateInfo.HtmlFieldPrefix = "ShippingNewAddress";
+                                    <partial name="_CreateOrUpdateAddress" model="Model.NewAddress" view-data="dataDictAddress" />
+                                }
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-12 btn-group mt-1 mb-1">
@@ -104,6 +161,6 @@
                     <input type="submit" name="submit-return-request" class="btn btn-secondary submit-return-request-button" value="@T("ReturnRequests.Submit")" />
                 </div>
             </div>
-         </form>
+        </form>
     }
 </div>

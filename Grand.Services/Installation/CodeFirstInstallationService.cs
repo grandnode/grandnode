@@ -5346,6 +5346,8 @@ namespace Grand.Services.Installation
                 AttachPdfInvoiceToOrderCompletedEmail = false,
                 AttachPdfInvoiceToOrderPaidEmail = false,
                 ReturnRequestsEnabled = true,
+                ReturnRequests_AllowToSpecifyPickupAddress = true,
+                ReturnRequests_AllowToSpecifyPickupDate = true,
                 NumberOfDaysReturnRequestAvailable = 365,
                 MinimumOrderPlacementInterval = 30,
                 DeactivateGiftCardsAfterDeletingOrder = false,

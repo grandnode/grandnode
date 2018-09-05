@@ -120,11 +120,7 @@ namespace Grand.Web.Controllers
                         {
                             StoreId = _storeContext.CurrentStore.Id,
                             OrderId = order.Id,
-                            OrderItemId = orderItem.Id,
-                            Quantity = quantity,
                             CustomerId = _workContext.CurrentCustomer.Id,
-                            ReasonForReturn = rrr != null ? rrr.GetLocalized(x => x.Name) : "not available",
-                            RequestedAction = rra != null ? rra.GetLocalized(x => x.Name) : "not available",
                             CustomerComments = model.Comments,
                             StaffNotes = string.Empty,
                             ReturnRequestStatus = ReturnRequestStatus.Pending,
