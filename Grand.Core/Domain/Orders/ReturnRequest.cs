@@ -9,6 +9,11 @@ namespace Grand.Core.Domain.Orders
     /// </summary>
     public partial class ReturnRequest : BaseEntity
     {
+        public ReturnRequest()
+        {
+            ReturnRequestItems = new List<ReturnRequestItem>();
+        }
+
         public int ReturnNumber { get; set; }
 
         /// <summary>

@@ -34,6 +34,7 @@ namespace Grand.Web.Services
         private readonly ICountryService _countryService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IAddressWebService _addressWebService;
+        private readonly OrderSettings _orderSettings;
 
         public ReturnRequestWebService(IReturnRequestService returnRequestService,
             IOrderService orderService,
@@ -47,7 +48,8 @@ namespace Grand.Web.Services
             ICacheManager cacheManager,
             ICountryService countryService,
             IStoreMappingService storeMappingService,
-            IAddressWebService addressWebService)
+            IAddressWebService addressWebService,
+            OrderSettings orderSettings)
         {
             this._returnRequestService = returnRequestService;
             this._orderService = orderService;
@@ -62,6 +64,7 @@ namespace Grand.Web.Services
             this._countryService = countryService;
             this._storeMappingService = storeMappingService;
             this._addressWebService = addressWebService;
+            this._orderSettings = orderSettings;
         }
 
         public virtual SubmitReturnRequestModel PrepareReturnRequest(SubmitReturnRequestModel model, Order order)
@@ -149,6 +152,7 @@ namespace Grand.Web.Services
                 }
             }
 
+            //existing addresses
             var addresses = _workContext.CurrentCustomer.Addresses
                 //allow shipping
                 .Where(a => a.CountryId == "" ||
@@ -159,6 +163,7 @@ namespace Grand.Web.Services
                 .Where(a => a.CountryId == "" ||
                 _storeMappingService.Authorize(_countryService.GetCountryById(a.CountryId)))
                 .ToList();
+
             foreach (var address in addresses)
             {
                 var addressModel = new AddressModel();
@@ -169,36 +174,41 @@ namespace Grand.Web.Services
                 model.ExistingAddresses.Add(addressModel);
             }
 
+            //new address
+            _addressWebService.PrepareModel(model: model.NewAddress,
+                address: null,
+                excludeProperties: false,
+                loadCountries: () => _countryService.GetAllCountriesForShipping(),
+                prePopulateWithCustomerFields: true,
+                customer: _workContext.CurrentCustomer);
+
+            model.ShowPickupAddress = _orderSettings.ReturnRequests_AllowToSpecifyPickupAddress;
+            model.ShowPickupDate = _orderSettings.ReturnRequests_AllowToSpecifyPickupDate;
+
             return model;
         }
+
         public virtual CustomerReturnRequestsModel PrepareCustomerReturnRequests()
         {
             var model = new CustomerReturnRequestsModel();
 
-            var returnRequests = _returnRequestService.SearchReturnRequests(_storeContext.CurrentStore.Id,
-                _workContext.CurrentCustomer.Id);
+            var returnRequests = _returnRequestService.SearchReturnRequests(_storeContext.CurrentStore.Id, _workContext.CurrentCustomer.Id);
             foreach (var returnRequest in returnRequests)
             {
                 var order = _orderService.GetOrderById(returnRequest.OrderId);
-                OrderItem orderItem = null;
-                if (orderItem != null)
-                {
-                    var product = _productService.GetProductByIdIncludeArch(orderItem.ProductId);
 
-                    var itemModel = new CustomerReturnRequestsModel.ReturnRequestModel
-                    {
-                        Id = returnRequest.Id,
-                        ReturnNumber = returnRequest.ReturnNumber,
-                        ReturnRequestStatus = returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext),
-                        ProductId = product.Id,
-                        ProductName = product.GetLocalized(x => x.Name),
-                        ProductSeName = product.GetSeName(),
-                        Comments = returnRequest.CustomerComments,
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc),
-                    };
-                    model.Items.Add(itemModel);
-                }
+                var itemModel = new CustomerReturnRequestsModel.ReturnRequestModel
+                {
+                    Id = returnRequest.Id,
+                    ReturnNumber = returnRequest.ReturnNumber,
+                    ReturnRequestStatus = returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext),
+                    Comments = returnRequest.CustomerComments,
+                    CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc),
+                };
+
+                model.Items.Add(itemModel);
             }
+
             return model;
         }
     }

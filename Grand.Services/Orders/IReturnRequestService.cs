@@ -96,20 +96,20 @@ namespace Grand.Services.Orders
         /// <summary>
         /// Gets a return request reaspn
         /// </summary>
-        /// <param name="returnRequestReasonId">Return request reaspn identifier</param>
+        /// <param name="returnRequestReasonId">Return request reason identifier</param>
         /// <returns>Return request reaspn</returns>
         ReturnRequestReason GetReturnRequestReasonById(string returnRequestReasonId);
 
         /// <summary>
         /// Inserts a return request reaspn
         /// </summary>
-        /// <param name="returnRequestReason">Return request reaspn</param>
+        /// <param name="returnRequestReason">Return request reason</param>
         void InsertReturnRequestReason(ReturnRequestReason returnRequestReason);
 
         /// <summary>
         /// Updates the  return request reaspn
         /// </summary>
-        /// <param name="returnRequestReason">Return request reaspn</param>
+        /// <param name="returnRequestReason">Return request reason</param>
         void UpdateReturnRequestReason(ReturnRequestReason returnRequestReason);
     }
 }

@@ -603,3 +603,20 @@ $(document).mouseup(function (e) {
         $(".mainNav .nav-item .dropdown-menu").removeClass("show");
     });
 });
+
+
+function newAddress(isNew) {
+    if (isNew) {
+        this.resetSelectedAddress();
+        $('#shipping-new-address-form').show();
+    } else {
+        $('#shipping-new-address-form').hide();
+    }
+}
+
+function resetSelectedAddress() {
+    var selectElement = $('#shipping-address-select');
+    if (selectElement) {
+        selectElement.val('');
+    }
+}

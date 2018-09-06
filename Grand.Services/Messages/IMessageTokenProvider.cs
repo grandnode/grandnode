@@ -21,7 +21,7 @@ namespace Grand.Services.Messages
         void AddShipmentTokens(IList<Token> tokens, Shipment shipment, string languageId);
         void AddOrderNoteTokens(IList<Token> tokens, OrderNote orderNote);
         void AddRecurringPaymentTokens(IList<Token> tokens, RecurringPayment recurringPayment);
-        void AddReturnRequestTokens(IList<Token> tokens, ReturnRequest returnRequest, OrderItem orderItem);
+        void AddReturnRequestTokens(IList<Token> tokens, ReturnRequest returnRequest, Order orderItem);
         void AddGiftCardTokens(IList<Token> tokens, GiftCard giftCard);
         void AddCustomerTokens(IList<Token> tokens, Customer customer);
         void AddShoppingCartTokens(IList<Token> tokens, Customer customer);

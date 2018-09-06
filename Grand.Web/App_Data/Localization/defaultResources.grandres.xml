@@ -19278,4 +19278,13 @@
   <LocaleResource Name="Knowledgebase.Article.Comments.SuccessfullyAdded">
     <Value>Article comment was successfully added.</Value>
   </LocaleResource>
+  <LocaleResource Name="ReturnRequests.SelectShippingAddressOrEnterNewOne">
+    <Value>Select a pickup address from your address book or enter a new address.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ReturnRequests.NewAddress">
+    <Value>New Address</Value>
+  </LocaleResource>  
+  <LocaleResource Name="ReturnRequests.PickupDate">
+    <Value>Specify pickup date</Value>
+  </LocaleResource>
 </Language>

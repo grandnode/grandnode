@@ -211,8 +211,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //var customer = returnRequest.Customer;
             var order = _orderService.GetOrderById(returnRequest.OrderId);
-            OrderItem orderItem = null;
-            int queuedEmailId = _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, orderItem, _localizationSettings.DefaultAdminLanguageId);
+            int queuedEmailId = _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, order, _localizationSettings.DefaultAdminLanguageId);
             if (queuedEmailId > 0)
                 SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Notified"));
             return RedirectToAction("Edit",  new {id = returnRequest.Id});

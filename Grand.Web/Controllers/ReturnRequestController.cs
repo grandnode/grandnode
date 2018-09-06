@@ -12,6 +12,7 @@ using Grand.Framework.Security;
 using Grand.Web.Models.Order;
 using Grand.Web.Services;
 using Microsoft.AspNetCore.Http;
+using Grand.Web.Extensions;
 
 namespace Grand.Web.Controllers
 {
@@ -98,6 +99,19 @@ namespace Grand.Web.Controllers
             if (!_orderProcessingService.IsReturnRequestAllowed(order))
                 return RedirectToRoute("HomePage");
 
+            var rr = new ReturnRequest
+            {
+                StoreId = _storeContext.CurrentStore.Id,
+                OrderId = order.Id,
+                CustomerId = _workContext.CurrentCustomer.Id,
+                CustomerComments = model.Comments,
+                StaffNotes = string.Empty,
+                ReturnRequestStatus = ReturnRequestStatus.Pending,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                PickupAddress = model.NewAddress.ToEntity()
+            };
+
             int count = 0;
             foreach (var orderItem in order.OrderItems)
             {
@@ -105,34 +119,37 @@ namespace Grand.Web.Controllers
                 if (!product.NotReturnable)
                 {
                     int quantity = 0; //parse quantity
+                    string rrrId = "";
+                    string rraId = "";
                     foreach (string formKey in form.Keys)
+                    {
                         if (formKey.Equals(string.Format("quantity{0}", orderItem.Id), StringComparison.OrdinalIgnoreCase))
                         {
                             int.TryParse(form[formKey], out quantity);
-                            break;
                         }
+
+                        if (formKey.Equals(string.Format("reason{0}", orderItem.Id), StringComparison.OrdinalIgnoreCase))
+                        {
+                            rrrId = form[formKey];
+                        }
+
+                        if (formKey.Equals(string.Format("action{0}", orderItem.Id), StringComparison.OrdinalIgnoreCase))
+                        {
+                            rraId = form[formKey];
+                        }
+                    }
+
                     if (quantity > 0)
                     {
-                        var rrr = _returnRequestService.GetReturnRequestReasonById(model.ReturnRequestReasonId);
-                        var rra = _returnRequestService.GetReturnRequestActionById(model.ReturnRequestActionId);
-
-                        var rr = new ReturnRequest
+                        var rrr = _returnRequestService.GetReturnRequestReasonById(rrrId);
+                        var rra = _returnRequestService.GetReturnRequestActionById(rraId);
+                        rr.ReturnRequestItems.Add(new ReturnRequestItem
                         {
-                            StoreId = _storeContext.CurrentStore.Id,
-                            OrderId = order.Id,
-                            CustomerId = _workContext.CurrentCustomer.Id,
-                            CustomerComments = model.Comments,
-                            StaffNotes = string.Empty,
-                            ReturnRequestStatus = ReturnRequestStatus.Pending,
-                            CreatedOnUtc = DateTime.UtcNow,
-                            UpdatedOnUtc = DateTime.UtcNow
-                        };
-
-                        _returnRequestService.InsertReturnRequest(rr);
-                        //notify store owner here (email)
-                        _workflowMessageService.SendNewReturnRequestStoreOwnerNotification(rr, orderItem, _localizationSettings.DefaultAdminLanguageId);
-                        //notify customer
-                        _workflowMessageService.SendNewReturnRequestCustomerNotification(rr, orderItem, order.CustomerLanguageId);
+                            RequestedAction = rra != null ? rra.GetLocalized(x => x.Name) : "not available",
+                            ReasonForReturn = rrr != null ? rrr.GetLocalized(x => x.Name) : "not available",
+                            Quantity = quantity,
+                            OrderItemId = orderItem.Id
+                        });
 
                         count++;
                     }
@@ -141,9 +158,19 @@ namespace Grand.Web.Controllers
 
             model = _returnRequestWebService.PrepareReturnRequest(model, order);
             if (count > 0)
+            {
                 model.Result = _localizationService.GetResource("ReturnRequests.Submitted");
+
+                _returnRequestService.InsertReturnRequest(rr);
+                //notify store owner here (email)
+                _workflowMessageService.SendNewReturnRequestStoreOwnerNotification(rr, order, _localizationSettings.DefaultAdminLanguageId);
+                //notify customer
+                _workflowMessageService.SendNewReturnRequestCustomerNotification(rr, order, order.CustomerLanguageId);
+            }
             else
+            {
                 model.Result = _localizationService.GetResource("ReturnRequests.NoItemsSubmitted");
+            }
 
             return View(model);
         }
