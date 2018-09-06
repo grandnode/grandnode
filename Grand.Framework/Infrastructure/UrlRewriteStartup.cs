@@ -30,26 +30,31 @@ namespace Grand.Framework.Infrastructure
         public void Configure(IApplicationBuilder application)
         {
             var grandConfig = EngineContext.Current.Resolve<GrandConfig>();
+            var urlRewriteOptions = new RewriteOptions();
+            var rewriteOptions = false;
             if (grandConfig.UseUrlRewrite)
             {
-                var urlRewriteOptions = new RewriteOptions();
                 if (File.Exists("App_Data/UrlRewrite.xml"))
                 {
                     using (var streamReader = File.OpenText("App_Data/UrlRewrite.xml"))
                     {
+                        rewriteOptions = true;
                         urlRewriteOptions.AddIISUrlRewrite(streamReader);
                     }
                 }
-                if (grandConfig.UrlRewriteHttpsOptions)
-                {
-                    urlRewriteOptions.AddRedirectToHttps(grandConfig.UrlRewriteHttpsOptionsStatusCode, grandConfig.UrlRewriteHttpsOptionsPort);
-                }
-                if (grandConfig.UrlRedirectToHttpsPermanent)
-                {
-                    urlRewriteOptions.AddRedirectToHttpsPermanent();
-                }
-                application.UseRewriter(urlRewriteOptions);
             }
+            if (grandConfig.UrlRewriteHttpsOptions)
+            {
+                rewriteOptions = true;
+                urlRewriteOptions.AddRedirectToHttps(grandConfig.UrlRewriteHttpsOptionsStatusCode, grandConfig.UrlRewriteHttpsOptionsPort);
+            }
+            if (grandConfig.UrlRedirectToHttpsPermanent)
+            {
+                rewriteOptions = true;
+                urlRewriteOptions.AddRedirectToHttpsPermanent();
+            }
+            if(rewriteOptions)
+                application.UseRewriter(urlRewriteOptions);
         }
 
         /// <summary>
