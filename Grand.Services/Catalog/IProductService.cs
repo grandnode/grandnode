@@ -39,6 +39,13 @@ namespace Grand.Services.Catalog
         IList<Product> GetSuggestedProducts(string[] customerTagIds);
 
         /// <summary>
+        /// Gets personalized products for customer 
+        /// </summary>
+        /// <param name="customerId">Customer Id</param>
+        /// <returns>Products</returns>
+        IList<Product> GetPersonalizedProducts(string customerId);
+
+        /// <summary>
         /// Gets product
         /// </summary>
         /// <param name="productId">Product identifier</param>

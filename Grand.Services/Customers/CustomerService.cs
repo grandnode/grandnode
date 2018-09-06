@@ -47,6 +47,11 @@ namespace Grand.Services.Customers
         private const string CUSTOMERROLESPRODUCTS_PATTERN_KEY = "Grand.product.cr";
 
         /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
+        private const string CUSTOMER_PRODUCT_KEY = "Grand.product.personal-{0}";
+
+        /// <summary>
         /// Key for caching
         /// </summary>
         /// <remarks>
@@ -62,6 +67,7 @@ namespace Grand.Services.Customers
         private readonly IRepository<CustomerRole> _customerRoleRepository;
         private readonly IRepository<CustomerRoleProduct> _customerRoleProductRepository;
         private readonly IRepository<CustomerProductPrice> _customerProductPriceRepository;
+        private readonly IRepository<CustomerProduct> _customerProductRepository;
         private readonly IRepository<CustomerHistoryPassword> _customerHistoryPasswordProductRepository;
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<ForumPost> _forumPostRepository;
@@ -82,6 +88,7 @@ namespace Grand.Services.Customers
         public CustomerService(ICacheManager cacheManager,
             IRepository<Customer> customerRepository,
             IRepository<CustomerRole> customerRoleRepository,
+            IRepository<CustomerProduct> customerProductRepository,
             IRepository<CustomerProductPrice> customerProductPriceRepository,
             IRepository<CustomerHistoryPassword> customerHistoryPasswordProductRepository,
             IRepository<CustomerRoleProduct> customerRoleProductRepository,
@@ -99,6 +106,7 @@ namespace Grand.Services.Customers
             this._cacheManager = cacheManager;
             this._customerRepository = customerRepository;
             this._customerRoleRepository = customerRoleRepository;
+            this._customerProductRepository = customerProductRepository;
             this._customerProductPriceRepository = customerProductPriceRepository;
             this._customerHistoryPasswordProductRepository = customerHistoryPasswordProductRepository;
             this._customerRoleProductRepository = customerRoleProductRepository;
@@ -1411,12 +1419,108 @@ namespace Grand.Services.Customers
             _eventPublisher.EntityDeleted(customerProductPrice);
         }
 
-        public virtual IPagedList<CustomerProductPrice> GetProductsByCustomer(string customerId, int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual IPagedList<CustomerProductPrice> GetProductsPriceByCustomer(string customerId, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = from pp in _customerProductPriceRepository.Table
                         where pp.CustomerId == customerId
                         select pp;
             return new PagedList<CustomerProductPrice>(query, pageIndex, pageSize);
+        }
+
+        #endregion
+
+        #region Personalize products
+
+        /// <summary>
+        /// Gets a customer product 
+        /// </summary>
+        /// <param name="id">Identifier</param>
+        /// <returns>Customer product</returns>
+        public virtual CustomerProduct GetCustomerProduct(string id)
+        {
+            var query = from pp in _customerProductRepository.Table
+                        where pp.Id == id
+                        select pp;
+
+            return query.FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Gets a customer product 
+        /// </summary>
+        /// <param name="customerId">Customer Identifier</param>
+        /// <param name="productId">Product Identifier</param>
+        /// <returns>Customer product</returns>
+        public virtual CustomerProduct GetCustomerProduct(string customerId, string productId)
+        {
+            var query = from pp in _customerProductRepository.Table
+                        where pp.CustomerId == customerId && pp.ProductId == productId
+                        select pp;
+
+            return query.FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Insert a customer product 
+        /// </summary>
+        /// <param name="customerProduct">Customer product</param>
+        public virtual void InsertCustomerProduct(CustomerProduct customerProduct)
+        {
+            if (customerProduct == null)
+                throw new ArgumentNullException("customerProduct");
+
+            _customerProductRepository.Insert(customerProduct);
+
+            //clear cache
+            _cacheManager.RemoveByPattern(string.Format(CUSTOMER_PRODUCT_KEY, customerProduct.CustomerId));
+
+            //event notification
+            _eventPublisher.EntityInserted(customerProduct);
+        }
+
+        /// <summary>
+        /// Updates the customer product
+        /// </summary>
+        /// <param name="customerProduct">Customer product </param>
+        public virtual void UpdateCustomerProduct(CustomerProduct customerProduct)
+        {
+            if (customerProduct == null)
+                throw new ArgumentNullException("customerProduct");
+
+            _customerProductRepository.Update(customerProduct);
+
+            //clear cache
+            _cacheManager.RemoveByPattern(string.Format(CUSTOMER_PRODUCT_KEY, customerProduct.CustomerId));
+
+            //event notification
+            _eventPublisher.EntityUpdated(customerProduct);
+        }
+
+        /// <summary>
+        /// Delete a customer product 
+        /// </summary>
+        /// <param name="customerProduct">Customer product</param>
+        public virtual void DeleteCustomerProduct(CustomerProduct customerProduct)
+        {
+            if (customerProduct == null)
+                throw new ArgumentNullException("customerProduct");
+
+            _customerProductRepository.Delete(customerProduct);
+
+            //clear cache
+            _cacheManager.RemoveByPattern(string.Format(CUSTOMER_PRODUCT_KEY, customerProduct.CustomerId));
+
+            //event notification
+            _eventPublisher.EntityDeleted(customerProduct);
+        }
+
+        public virtual IPagedList<CustomerProduct> GetProductsByCustomer(string customerId, int pageIndex = 0, int pageSize = int.MaxValue)
+        {
+            var query = from pp in _customerProductRepository.Table
+                        where pp.CustomerId == customerId
+                        orderby pp.DisplayOrder
+                        select pp;
+            return new PagedList<CustomerProduct>(query, pageIndex, pageSize);
         }
 
         #endregion

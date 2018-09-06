@@ -212,6 +212,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.DisplayTaxShippingInfoOrderDetailsPage_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.SuggestedProductsEnabled_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.SuggestedProductsNumber_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.PersonalizedProductsEnabled_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.PersonalizedProductsNumber_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.AskQuestionEnabled_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.IgnoreFilterableAvailableStartEndDateTime_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.IgnoreFilterableSpecAttributeOption_OverrideForStore, mo => mo.Ignore())

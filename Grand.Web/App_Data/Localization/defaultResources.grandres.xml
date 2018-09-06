@@ -5874,6 +5874,18 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.Performance">
     <Value>Performance</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.PersonalizedProductsEnabled">
+    <Value>'Personalized products' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.PersonalizedProductsEnabled.Hint">
+    <Value>Check to allow customers to use the 'Personalized products' feature in your store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.PersonalizedProductsNumber">
+    <Value>Number of 'Personalized products'</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.PersonalizedProductsNumber.Hint">
+    <Value>The number of 'Personalized products' to display when 'Personalized products' option is enabled.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewPossibleOnlyAfterPurchasing">
     <Value>Product review possible only after purchasing product</Value>
   </LocaleResource>
@@ -11292,6 +11304,18 @@
   <LocaleResource Name="Admin.Customers.Customers.PasswordChanged">
     <Value>The password has been changed successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.PersonalizedProduct">
+    <Value>Personalized products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.PersonalizedProduct.AddNew">
+    <Value>Add new product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.PersonalizedProduct.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.PersonalizedProduct.ProductName">
+    <Value>Product name</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.ProductPrice">
     <Value>Individual Product Prices</Value>
   </LocaleResource>
@@ -16619,6 +16643,9 @@
   </LocaleResource>
   <LocaleResource Name="HomePage">
     <Value>Home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="HomePage.Personalized.Products">
+    <Value>Personalized products for you</Value>
   </LocaleResource>
   <LocaleResource Name="HomePage.Products">
     <Value>Featured products</Value>

@@ -442,6 +442,21 @@ namespace Grand.Services.Customers
         decimal? GetPriceByCustomerProduct(string customerId, string productId);
 
         /// <summary>
+        /// Gets a customer product 
+        /// </summary>
+        /// <param name="id">Identifier</param>
+        /// <returns>Customer product</returns>
+        CustomerProduct GetCustomerProduct(string id);
+
+        /// <summary>
+        /// Gets a customer product 
+        /// </summary>
+        /// <param name="customerId">Customer Identifier</param>
+        /// <param name="productId">Product Identifier</param>
+        /// <returns>Customer product</returns>
+        CustomerProduct GetCustomerProduct(string customerId, string productId);
+
+        /// <summary>
         /// Inserts a customer product price
         /// </summary>
         /// <param name="customerProductPrice">Customer product price</param>
@@ -466,9 +481,32 @@ namespace Grand.Services.Customers
         /// </summary>
         /// <param name="customerId">Customer id</param>
         /// <returns>Customer products price</returns>
-        IPagedList<CustomerProductPrice> GetProductsByCustomer(string customerId, int pageIndex = 0, int pageSize = int.MaxValue);
+        IPagedList<CustomerProductPrice> GetProductsPriceByCustomer(string customerId, int pageIndex = 0, int pageSize = int.MaxValue);
 
         #endregion
 
+        #region Customer product
+
+        /// <summary>
+        /// Inserts a customer product 
+        /// </summary>
+        /// <param name="customerProduct">Customer product</param>
+        void InsertCustomerProduct(CustomerProduct customerProduct);
+
+        /// <summary>
+        /// Updates the customer product
+        /// </summary>
+        /// <param name="customerProduct">Customer product </param>
+        void UpdateCustomerProduct(CustomerProduct customerProduct);
+
+        /// <summary>
+        /// Delete a customer product 
+        /// </summary>
+        /// <param name="customerProduct">Customer product </param>
+        void DeleteCustomerProduct(CustomerProduct customerProduct);
+
+        IPagedList<CustomerProduct> GetProductsByCustomer(string customerId, int pageIndex = 0, int pageSize = int.MaxValue);
+
+        #endregion
     }
 }

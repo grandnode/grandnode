@@ -1,35 +1,35 @@
 ﻿@model CustomerModel
 @inject AdminAreaSettings adminAreaSettings
 @{
-    <strong>@T("Admin.Customers.Customers.ProductPrice")</strong>
+<strong>@T("Admin.Customers.Customers.PersonalizedProduct")</strong>
     <div class="panel panel-default">
         <div class="panel-body">
-            <div id="productprice-grid"></div>
+            <div id="personalizedproduct-grid"></div>
         </div>
         <div class="panel-footer">
-            <input type="submit" id="btnAddNewProduct" value="@T("Admin.Customers.Customers.ProductPrice.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Customer", new { customerId = Model.Id, btnId = "btnRefreshProducts", formId = "customer-form" }))', 800, 800, true); return false;" class="k-button" />
-            <input type="submit" id="btnRefreshProducts" style="display: none" />
+            <input type="submit" id="btnAddNewPersonalizedProduct" value="@T("Admin.Customers.Customers.PersonalizedProduct.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Customer", new { customerId = Model.Id, btnId = "btnRefreshPersonalizedProducts", formId = "customer-form", personalized = "true" }))', 800, 800, true); return false;" class="k-button" />
+            <input type="submit" id="btnRefreshPersonalizedProducts" style="display: none" />
         </div>
     </div>
     <script>
         $(document).ready(function () {
-            $("#productprice-grid").kendoGrid({
+            $("#personalizedproduct-grid").kendoGrid({
                 dataSource: {
                     transport: {
                         read: {
-                            url: "@Html.Raw(Url.Action("ProductsPrice", "Customer", new { customerId = Model.Id }))",
+                            url: "@Html.Raw(Url.Action("PersonalizedProducts", "Customer", new { customerId = Model.Id }))",
                             type: "POST",
                             dataType: "json",
                             data: addAntiForgeryToken
                         },
                         update: {
-                            url:"@Html.Raw(Url.Action("UpdateProductPrice", "Customer"))",
+                            url:"@Html.Raw(Url.Action("UpdatePersonalizedProduct", "Customer"))",
                             type: "POST",
                             dataType: "json",
                             data: addAntiForgeryToken
                         },
                         destroy: {
-                            url: "@Html.Raw(Url.Action("DeleteProductPrice", "Customer"))",
+                            url: "@Html.Raw(Url.Action("DeletePersonalizedProduct", "Customer"))",
                             type: "POST",
                             dataType: "json",
                             data: addAntiForgeryToken
@@ -43,7 +43,7 @@
                             id: "Id",
                             fields: {
                                 ProductName: {editable: false, type: "string" },
-                                Price: {editable: true, type: "number", format:"{0:c2}" },
+                                DisplayOrder: {editable: true, type: "number", format:"{0:n2}" },
                             }
                         }
                     },
@@ -68,12 +68,12 @@
                 scrollable: false,
                 columns: [{
                     field: "ProductName",
-                    title: "@T("Admin.Customers.Customers.ProductPrice.ProductName")",
+                    title: "@T("Admin.Customers.Customers.PersonalizedProduct.ProductName")",
                     width: 300,
                     template: '<a href="/Admin/Product/Edit/#=ProductId#" target="_blank">#=ProductName#</a>'
                 }, {
-                    field: "Price",
-                    title: "@T("Admin.Customers.Customers.ProductPrice.Price")",
+                    field: "DisplayOrder",
+                    title: "@T("Admin.Customers.Customers.PersonalizedProduct.DisplayOrder")",
                     width: 100,
                     type: "number",
 
@@ -94,9 +94,9 @@
     </script>
     <script type="text/javascript">
             $(document).ready(function () {
-                $('#btnRefreshProducts').click(function () {
+                $('#btnRefreshPersonalizedProducts').click(function () {
                     //refresh grid
-                    var grid = $("#productprice-grid").data('kendoGrid');
+                    var grid = $("#personalizedproduct-grid").data('kendoGrid');
                     grid.dataSource.read();
 
                     //return false to don't reload a page

@@ -174,6 +174,16 @@ namespace Grand.Core.Domain.Catalog
         public int SuggestedProductsNumber { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether "Personalized products" feature is enabled
+        /// </summary>
+        public bool PersonalizedProductsEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a number of "Personalized products"
+        /// </summary>
+        public int PersonalizedProductsNumber { get; set; }
+
+        /// <summary>
         /// Gets or sets a number of products on the "New products" page
         /// </summary>
         public int NewProductsNumber { get; set; }

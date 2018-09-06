@@ -7,6 +7,7 @@
         $("#@Html.FieldIdFor(model => model.EmailAFriendEnabled)").click(toggleEmailAFriend);
         $("#@Html.FieldIdFor(model => model.RecentlyViewedProductsEnabled)").click(toggleRecentlyViewedProducts);
         $("#@Html.FieldIdFor(model => model.SuggestedProductsEnabled)").click(toggleSuggestedProducts);
+        $("#@Html.FieldIdFor(model => model.PersonalizedProductsEnabled)").click(togglePersonalizedProducts);
         $("#@Html.FieldIdFor(model => model.NewProductsEnabled)").click(toggleNewProducts);
         $("#@Html.FieldIdFor(model => model.ShowBestsellersOnHomepage)").click(toggleBestsellersOnHomepage);
         $("#@Html.FieldIdFor(model => model.ProductsAlsoPurchasedEnabled)").click(toggleProductsAlsoPurchasedNumber);
@@ -16,6 +17,7 @@
         toggleEmailAFriend();
         toggleRecentlyViewedProducts();
         toggleSuggestedProducts();
+        togglePersonalizedProducts();
         toggleNewProducts();
         toggleBestsellersOnHomepage();
         toggleProductsAlsoPurchasedNumber();
@@ -55,6 +57,15 @@
         }
         else {
             $('#pnlSuggestedProductsNumber').hide();
+        }
+    }
+
+    function togglePersonalizedProducts() {
+        if ($('#@Html.FieldIdFor(model => model.PersonalizedProductsEnabled)').is(':checked')) {
+            $('#pnlPersonalizedProductsNumber').show();
+        }
+        else {
+            $('#pnlPersonalizedProductsNumber').hide();
         }
     }
 
@@ -376,6 +387,29 @@
             <div class="col-md-8 col-sm-8">
                 <admin-input asp-for="SuggestedProductsNumber" />
                 <span asp-validation-for="SuggestedProductsNumber"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.PersonalizedProductsEnabled_OverrideForStore, model => model.PersonalizedProductsEnabled, Model.ActiveStoreScopeConfiguration)
+                <admin-label asp-for="PersonalizedProductsEnabled" class="control-label" />
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    <admin-input asp-for="PersonalizedProductsEnabled" />
+                    <span></span>
+                </label>
+                <span asp-validation-for="PersonalizedProductsEnabled"></span>
+            </div>
+        </div>
+        <div class="form-group" id="pnlPersonalizedProductsNumber">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.PersonalizedProductsNumber_OverrideForStore, model => model.PersonalizedProductsNumber, Model.ActiveStoreScopeConfiguration)
+                <admin-label asp-for="PersonalizedProductsNumber" class="control-label" />
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <admin-input asp-for="PersonalizedProductsNumber" />
+                <span asp-validation-for="PersonalizedProductsNumber"></span>
             </div>
         </div>
         <div class="form-group">
