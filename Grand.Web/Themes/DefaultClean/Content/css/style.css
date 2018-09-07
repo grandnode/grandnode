@@ -536,6 +536,20 @@ ul.ui-autocomplete li img {
 	right: 20px;
 	opacity: 1;
 }
+#ModalAddToCart .cross-sell-container {
+    max-height: 500px;
+    overflow: auto;
+    margin-top: 15px;
+}
+#ModalAddToCart .modal-header {
+    min-height: 54px;
+}
+#ModalAddToCart .cross-sell-container .btn-group .btn.btn-primary .add-cart-text {
+    display: none !important;
+}
+#ModalAddToCart .cross-sell-container .btn-group .btn.btn-primary .fa-shopping-cart {
+    display: block !important;
+}
 /*navbar*/
 
 .navbar-nav .generalDropDown .dropdown-menu ul a:hover {
@@ -4068,6 +4082,19 @@ footer .list-group .list-group-item {
 	}
 }
 @media (max-width: 767px) {
+    #ModalAddToCart .cross-sell-container {
+        max-height: calc(100vh - 30px);
+    }
+    #ModalAddToCart .modal-body {
+        max-height: 675px;
+        overflow: hidden;
+    }
+    #ModalAddToCart .cross-sell-container .btn-group .btn.btn-primary .add-cart-text {
+        display: block !important;
+    }
+    #ModalAddToCart .cross-sell-container .btn-group .btn.btn-primary .fa-shopping-cart {
+        display: none !important;
+    }
 	.order-details-page .quantity .td-title {
 		position: static;
 	}
@@ -4483,6 +4510,10 @@ footer .list-group .list-group-item {
 		max-height: 200px;
 		width: auto;
 	}
+    #ModalAddToCart .cross-sell-container img {
+        max-height: unset;
+        width: 100%;
+    }
 	#ModalAddToCart .modal-body .modal-border h4 a {
 		font-size: 16px;
 	}
