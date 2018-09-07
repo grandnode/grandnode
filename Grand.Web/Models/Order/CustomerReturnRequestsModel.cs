@@ -18,8 +18,9 @@ namespace Grand.Web.Models.Order
         {
             public int ReturnNumber { get; set; }
             public string ReturnRequestStatus { get; set; }
-            public string Comments { get; set; }
             public DateTime CreatedOn { get; set; }
+            public int ProductsCount { get; set; }
+            public string ReturnTotal { get; set; }
         }
         #endregion
     }

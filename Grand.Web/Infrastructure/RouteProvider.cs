@@ -375,6 +375,9 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("ReturnRequest",
                             "returnrequest/{orderId}",
                             new { controller = "ReturnRequest", action = "ReturnRequest" });
+            routeBuilder.MapLocalizedRoute("ReturnRequestDetails",
+                "returnrequestdetails/{returnRequestId}",
+                new { controller = "ReturnRequest", action = "ReturnRequestDetails" });
             routeBuilder.MapLocalizedRoute("ReOrder",
                             "reorder/{orderId}",
                             new { controller = "Order", action = "ReOrder" });

@@ -224,4 +224,25 @@
   <LocaleResource Name="ReturnRequests.PickupDate">
     <Value>Specify pickup date</Value>
   </LocaleResource>
+  <LocaleResource Name="PageTitle.ReturnRequestDetails">
+    <Value>Return request details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerReturnRequests.Quantity">
+    <Value>Quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerReturnRequests.UnitPrice">
+    <Value>Unit price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerReturnRequests.Totals">
+    <Value>{0} product(s), {1} total</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerReturnRequests.Details">
+    <Value>Details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerReturnRequests.PickupDate">
+    <Value>Pickup date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerReturnRequests.PickupAddress">
+    <Value>Pickup address</Value>
+  </LocaleResource>
 </Language>

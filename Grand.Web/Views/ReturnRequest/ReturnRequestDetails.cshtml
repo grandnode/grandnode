@@ -1,0 +1,188 @@
+﻿@model ReturnRequestDetailsModel
+@using Grand.Web.Models.Order
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.ReturnRequestDetails").Text);
+}
+@section left
+    {
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.ReturnRequests })
+}
+<div class="page account-page pl-lg-3">
+    <h1 class="h2 generalTitle">@string.Format(T("Account.CustomerReturnRequests.Title").Text, Model.ReturnNumber, Model.ReturnRequestStatus)</h1>
+    <div class="row pl-lg-3 flex-column">
+        <div class="details pl-0 date">
+            <label>@T("Account.CustomerReturnRequests.Date")</label>
+            <span>@Model.CreatedOnUtc.ToString()</span>
+        </div>
+        <div class="products">
+            <h5 class="generalTitle">@T("Order.Product(s)")</h5>
+            <div class="mt-1">
+                <div class="shopping-cart-container">
+                    <table class="shopping-cart">
+                        <colgroup>
+                            <col width="1">
+                            <col width="1">
+                            <col width="1">
+                            <col width="1">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th class="product text-center">
+                                    @T("Account.CustomerReturnRequests.Item")
+                                </th>
+                                <th class="quantity text-center">
+                                    @T("Account.CustomerReturnRequests.Quantity")
+                                </th>
+                                <th class="text-center">
+                                    @T("Account.CustomerReturnRequests.UnitPrice")
+                                </th>
+                                <th class="text-center">
+                                    @T("Account.CustomerReturnRequests.Reason")
+                                </th>
+                                <th class="text-center">
+                                    @T("Account.CustomerReturnRequests.Action")
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.ReturnRequestItems)
+                            {
+                                <tr class="item-container">
+                                    <td class="product">
+                                        <em><a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a></em>
+                                    </td>
+
+                                    <td class="quantity text-center">
+                                        @item.Quantity
+                                    </td>
+
+                                    <td class="quantity text-center">
+                                        @item.ProductPrice
+                                    </td>
+
+                                    <td class="text-center">
+                                        <span>@item.ReasonForReturn</span>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <span>@item.RequestedAction</span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        @if (!String.IsNullOrEmpty(Model.Comments))
+        {
+            <div class="comments">
+                <label>@T("Account.CustomerReturnRequests.Comments")</label>
+                <div>@Html.Raw(Grand.Core.Html.HtmlHelper.FormatText(Model.Comments, false, true, false, false, false, false))</div>
+            </div>
+        }
+
+        @if (Model.ShowPickupAddress)
+        {
+            <div class="card">
+                <div class="card-body d-flex flex-row row">
+                    <div class="col-sm-6 col-12 billing">
+                        <ul class="billing-info pl-0">
+                            <li class="title">
+                                <h5 class="generalTitle">@T("Account.CustomerReturnRequests.PickupAddress")</h5>
+                            </li>
+                            <li class="name">
+                                @Model.PickupAddress.FirstName @Model.PickupAddress.LastName
+                            </li>
+                            <li class="email">
+                                @T("Order.Email"): @Model.PickupAddress.Email
+                            </li>
+                            @if (Model.PickupAddress.PhoneEnabled)
+                            {
+                                <li class="phone">
+                                    @T("Order.Phone"): @Model.PickupAddress.PhoneNumber
+                                </li>
+                            }
+                            @if (Model.PickupAddress.FaxEnabled)
+                            {
+                                <li class="fax">
+                                    @T("Order.Fax"): @Model.PickupAddress.FaxNumber
+                                </li>
+                            }
+                            @if (Model.PickupAddress.CompanyEnabled && !String.IsNullOrEmpty(Model.PickupAddress.Company))
+                            {
+                                <li class="company">
+                                    @Model.PickupAddress.Company
+                                </li>
+                            }
+                            @if (Model.PickupAddress.VatNumberEnabled && !String.IsNullOrEmpty(Model.PickupAddress.VatNumber))
+                            {
+                                <li class="company">
+                                    @Model.PickupAddress.VatNumber
+                                </li>
+                            }
+                            @if (Model.PickupAddress.StreetAddressEnabled)
+                            {
+                                <li class="address1">
+                                    @Model.PickupAddress.Address1
+                                </li>
+                            }
+                            @if (Model.PickupAddress.StreetAddress2Enabled && !String.IsNullOrEmpty(Model.PickupAddress.Address2))
+                            {
+                                <li class="address2">
+                                    @Model.PickupAddress.Address2
+                                </li>
+                            }
+                            @if (Model.PickupAddress.CityEnabled || Model.PickupAddress.StateProvinceEnabled || Model.PickupAddress.ZipPostalCodeEnabled)
+                            {
+                                <li class="city-state-zip">
+                                    @if (Model.PickupAddress.CityEnabled)
+                                    {
+                                        @Model.PickupAddress.City
+                                    }
+                                    @if (Model.PickupAddress.CityEnabled && (Model.PickupAddress.StateProvinceEnabled || Model.PickupAddress.ZipPostalCodeEnabled))
+                                    {
+                                        <text>,</text>
+                                    }
+                                    @if (Model.PickupAddress.StateProvinceEnabled)
+                                    {
+                                        @Model.PickupAddress.StateProvinceName
+                                    }
+                                    @if (Model.PickupAddress.ZipPostalCodeEnabled)
+                                    {
+                                        @Model.PickupAddress.ZipPostalCode
+                                    }
+                                </li>
+                            }
+                            @if (Model.PickupAddress.CountryEnabled && !String.IsNullOrEmpty(Model.PickupAddress.CountryName))
+                            {
+                                <li class="country">
+                                    @Model.PickupAddress.CountryName
+                                </li>
+                            }
+
+                            @if (!String.IsNullOrEmpty(Model.PickupAddress.FormattedCustomAddressAttributes))
+                            {
+                                <li class="custom-attributes-view">
+                                    @Html.Raw(Model.PickupAddress.FormattedCustomAddressAttributes)
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (Model.ShowPickupDate)
+        {
+            <div class="date">
+                <label>@T("Account.CustomerReturnRequests.PickupDate")</label>
+                <span>@Model.PickupDate</span>
+            </div>
+        }
+    </div>
+</div>

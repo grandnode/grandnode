@@ -202,8 +202,9 @@ namespace Grand.Web.Services
                     Id = returnRequest.Id,
                     ReturnNumber = returnRequest.ReturnNumber,
                     ReturnRequestStatus = returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext),
-                    Comments = returnRequest.CustomerComments,
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc),
+                    ProductsCount = returnRequest.ReturnRequestItems.Sum(x => x.Quantity),
+                    ReturnTotal = _priceFormatter.FormatPrice(order.OrderTotal)
                 };
 
                 model.Items.Add(itemModel);

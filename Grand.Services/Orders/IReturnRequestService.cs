@@ -36,12 +36,6 @@ namespace Grand.Services.Orders
             string orderItemId = "", ReturnRequestStatus? rs = null,
             int pageIndex = 0, int pageSize = int.MaxValue);
 
-
-
-
-
-
-
         /// <summary>
         /// Delete a return request action
         /// </summary>
