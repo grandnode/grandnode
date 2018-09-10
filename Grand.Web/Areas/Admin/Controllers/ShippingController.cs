@@ -1028,6 +1028,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ActionName("Restrictions")]
+        [RequestFormLimits(ValueCountLimit = 2048)]
         public IActionResult RestrictionSave(IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
