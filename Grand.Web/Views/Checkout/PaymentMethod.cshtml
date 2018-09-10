@@ -14,9 +14,8 @@
             @if (Model.DisplayRewardPoints && Model.PaymentMethods.Any())
             {
                 <div class="use-reward-points pt-1 pb-1">
-
                     <label class="custom-control custom-checkbox">
-                        @Html.CheckBoxFor(model => model.UseRewardPoints, new { @class = "custom-control-input" })
+                        <input asp-for="UseRewardPoints" class="custom-control-input" />
                         <span class="custom-control-label"></span>
                         <span class="custom-control-description">@string.Format(T("Checkout.UseRewardPoints").Text, Model.RewardPointsBalance, Model.RewardPointsAmount)</span>
                     </label>
@@ -24,7 +23,7 @@
                     {
                         <script>
                             $(document).ready(function () {
-                                $("#@Html.IdFor(model => model.UseRewardPoints)").change(toggleUseRewardPoints);
+                                $("#@Html.IdFor(model => model.UseRewardPoints)").on('change', toggleUseRewardPoints);
                                 toggleUseRewardPoints();
                             });
                             function toggleUseRewardPoints() {
@@ -72,9 +71,9 @@
                     }
                 </ul>
 
-                    <div class="col-12 buttons mt-1 mb-1">
-                        <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="btn btn-info new-address-next-step-button" />
-                    </div>
+                <div class="col-12 buttons mt-1 mb-1">
+                    <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="btn btn-info new-address-next-step-button" />
+                </div>
             }
             else
             {

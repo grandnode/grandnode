@@ -366,7 +366,7 @@
 </div>
 <script>
     $(".removeAll-cart-button").click(function () {
-        $("td.remove-from-cart .checkbox-u").click();
-        $(".update-cart-button").click();
+        $("td.remove-from-cart .checkbox-u").trigger("click");
+        $(".update-cart-button").trigger("click");
     });
 </script>

@@ -366,7 +366,7 @@
                                 }
                             });
                         }}, 100);
-                        
+
                         if (data.pictureFullSizeUrl) {
                             $('#main-product-img-lightbox-anchor-@productId').attr("href", data.pictureFullSizeUrl);
                         }
@@ -375,7 +375,7 @@
                             $(".sp-thumbs a").each(function () {
                                 var slide_for_click = $(this).index();
                                 if (clicked_square == slide_for_click) {
-                                    $(this).click();
+                                    $(this).trigger("click")
                                 }
                             });
                         });
@@ -384,7 +384,7 @@
                             $(".sp-thumbs a").each(function () {
                                 var slide_for_click = $(this).index();
                                 if (clicked_square == slide_for_click) {
-                                    $(this).click();
+                                    $(this).trigger("click")
                                 }
                             });
                         });

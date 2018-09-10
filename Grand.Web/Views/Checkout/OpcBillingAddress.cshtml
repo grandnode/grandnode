@@ -6,7 +6,7 @@
         <div class="ship-to-same-address">
              <p class="selector">
                  <label class="custom-control custom-checkbox">
-                     @Html.CheckBoxFor(x => x.ShipToSameAddress, new { @class = "custom-control-input" })
+                     <input asp-for="ShipToSameAddress" class="custom-control-input" />
                      <span class="custom-control-label"></span>
                      <span class="custom-control-description">@T("Checkout.ShipToSameAddress")</span>
                  </label>
