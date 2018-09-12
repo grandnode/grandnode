@@ -479,10 +479,9 @@ namespace Grand.Web.Controllers
                         UpdatedOnUtc = nowUtc
                     };
                     _forumService.InsertTopic(forumTopic, true);
-                    if(!_workContext.CurrentCustomer.IsHasForumTopic)
+                    if(!_workContext.CurrentCustomer.HasContributions)
                     {
-                        _workContext.CurrentCustomer.IsHasForumTopic = true;
-                        EngineContext.Current.Resolve<ICustomerService>().UpdateHasForumTopic(_workContext.CurrentCustomer.Id);
+                        EngineContext.Current.Resolve<ICustomerService>().UpdateContributions(_workContext.CurrentCustomer);
                     }
                     //forum post
                     var forumPost = new ForumPost
@@ -839,10 +838,9 @@ namespace Grand.Web.Controllers
                         UpdatedOnUtc = nowUtc
                     };
                     _forumService.InsertPost(forumPost, true);
-                    if (!_workContext.CurrentCustomer.IsHasForumPost)
+                    if (!_workContext.CurrentCustomer.HasContributions)
                     {
-                        _workContext.CurrentCustomer.IsHasForumPost = true;
-                        EngineContext.Current.Resolve<ICustomerService>().UpdateHasForumPost(_workContext.CurrentCustomer.Id);
+                        EngineContext.Current.Resolve<ICustomerService>().UpdateContributions(_workContext.CurrentCustomer);
                     }
 
                     //subscription

@@ -359,10 +359,9 @@ namespace Grand.Web.Controllers
                     WasHelpful = washelpful,
                 };
                 vendorReview.VendorReviewHelpfulnessEntries.Add(prh);
-                if (!customer.IsHasVendorReviewH)
+                if (!customer.HasContributions)
                 {
-                    customer.IsHasVendorReviewH = true;
-                    EngineContext.Current.Resolve<ICustomerService>().UpdateHasVendorReviewH(customer.Id);
+                    EngineContext.Current.Resolve<ICustomerService>().UpdateContributions(customer);
                 }
             }
 

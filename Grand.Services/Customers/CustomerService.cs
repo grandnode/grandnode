@@ -647,80 +647,18 @@ namespace Grand.Services.Customers
                 .Set(x => x.Active, customer.Active);
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
         }
-        public virtual void UpdateNewsItem(Customer customer)
+
+        public virtual void UpdateContributions(Customer customer)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, customer.Id);
             var update = Builders<Customer>.Update
-                .Set(x => x.IsNewsItem, true);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
-        }        
-        public virtual void UpdateHasForumTopic(string customerId)
-        {
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customerId);
-            var update = Builders<Customer>.Update
-                .Set(x => x.IsHasForumTopic, true);
+                .Set(x => x.HasContributions, true);
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
         }
-        public virtual void UpdateHasForumPost(string customerId)
-        {
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customerId);
-            var update = Builders<Customer>.Update
-                .Set(x => x.IsHasForumPost, true);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
-        }
-        public virtual void UpdateHasOrders(string customerId)
-        {
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customerId);
-            var update = Builders<Customer>.Update
-                .Set(x => x.IsHasOrders, true);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
-        }
-        public virtual void UpdateHasBlogComments(string customerId)
-        {
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customerId);
-            var update = Builders<Customer>.Update
-                .Set(x => x.IsHasBlogComments, true);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
-        }
-        public virtual void UpdateHasArticleComments(string customerId)
-        {
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customerId);
-            var update = Builders<Customer>.Update
-                .Set(x => x.IsHasArticleComments, true);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
-        }
-        public virtual void UpdateHasProductReview(string customerId)
-        {
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customerId);
-            var update = Builders<Customer>.Update
-                .Set(x => x.IsHasProductReview, true);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
-        }
-        public virtual void UpdateHasProductReviewH(string customerId)
-        {
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customerId);
-            var update = Builders<Customer>.Update
-                .Set(x => x.IsHasProductReviewH, true);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
-        }
-        public virtual void UpdateHasPoolVoting(string customerId)
-        {
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customerId);
-            var update = Builders<Customer>.Update
-                .Set(x => x.IsHasPoolVoting, true);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
-        }
+
         public virtual void UpdateCustomerLastPurchaseDate(string customerId, DateTime date)
         {
             var builder = Builders<Customer>.Filter;
@@ -747,23 +685,7 @@ namespace Grand.Services.Customers
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
 
         }
-        public virtual void UpdateHasVendorReview(string customerId)
-        {
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customerId);
-            var update = Builders<Customer>.Update
-                .Set(x => x.IsHasVendorReview, true);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
-        }
-        public virtual void UpdateHasVendorReviewH(string customerId)
-        {
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customerId);
-            var update = Builders<Customer>.Update
-                .Set(x => x.IsHasVendorReviewH, true);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
-        }
-
+       
         /// <summary>
         /// Reset data required for checkout
         /// </summary>
@@ -871,16 +793,7 @@ namespace Grand.Services.Customers
             if (onlyWithoutShoppingCart)
                 filter = filter & builder.Eq(x => x.HasShoppingCartItems, false);
 
-            filter = filter & builder.Eq(x => x.IsHasOrders, false);
-            filter = filter & builder.Eq(x => x.IsHasBlogComments, false);
-            filter = filter & builder.Eq(x => x.IsHasArticleComments, false);
-            filter = filter & builder.Eq(x => x.IsNewsItem, false);
-            filter = filter & builder.Eq(x => x.IsHasProductReview, false);
-            filter = filter & builder.Eq(x => x.IsHasProductReviewH, false);
-            filter = filter & builder.Eq(x => x.IsHasPoolVoting, false);
-            filter = filter & builder.Eq(x => x.IsHasForumPost, false);
-            filter = filter & builder.Eq(x => x.IsHasForumTopic, false);
-            filter = filter & builder.Eq(x => x.IsSystemAccount, false);
+            filter = filter & builder.Eq(x => x.HasContributions, false);
 
             var customers = _customerRepository.Collection.DeleteMany(filter);
 

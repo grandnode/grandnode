@@ -346,10 +346,9 @@ namespace Grand.Web.Services
             //update totals
             blogPost.CommentCount = _blogService.GetBlogCommentsByBlogPostId(blogPost.Id).Count;
             _blogService.UpdateBlogPost(blogPost);
-            if (!customer.IsHasBlogComments)
+            if (!customer.HasContributions)
             {
-                customer.IsHasBlogComments = true;
-                EngineContext.Current.Resolve<ICustomerService>().UpdateHasBlogComments(customer.Id);
+                EngineContext.Current.Resolve<ICustomerService>().UpdateContributions(customer);
             }
             //notify a store owner
             if (_blogSettings.NotifyAboutNewBlogComments)

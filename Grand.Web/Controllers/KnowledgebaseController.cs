@@ -288,10 +288,9 @@ namespace Grand.Web.Controllers
                 };
                 _knowledgebaseService.InsertArticleComment(comment);
 
-                if (!customer.IsHasArticleComments)
+                if (!customer.HasContributions)
                 {
-                    customer.IsHasArticleComments = true;
-                    EngineContext.Current.Resolve<ICustomerService>().UpdateHasArticleComments(customer.Id);
+                    EngineContext.Current.Resolve<ICustomerService>().UpdateContributions(customer);
                 }
 
                 //notify a store owner

@@ -167,52 +167,12 @@ namespace Grand.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         void UpdateActive(Customer customer);
+
         /// <summary>
-        /// Updates the customer
+        /// Update the customer
         /// </summary>
-        /// <param name="customer">Customer</param>
-        void UpdateNewsItem(Customer customer);
-        /// <summary>
-        /// Updates the customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        void UpdateHasForumTopic(string customerId);
-        /// <summary>
-        /// Updates the customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        void UpdateHasForumPost(string customerId);
-        /// <summary>
-        /// Updates the customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        void UpdateHasOrders(string customerId);
-        /// <summary>
-        /// Updates the customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        void UpdateHasBlogComments(string customerId);
-        /// <summary>
-        /// Updates the customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        void UpdateHasArticleComments(string customerId);
-        /// <summary>
-        /// Updates the customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        void UpdateHasProductReview(string customerId);
-        /// <summary>
-        /// Updates the customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        void UpdateHasProductReviewH(string customerId);
-        /// <summary>
-        /// Updates the customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        void UpdateHasPoolVoting(string customerId);
-        
+        /// <param name="customer"></param>
+        void UpdateContributions(Customer customer);
 
         /// <summary>
         /// Updates the customer
@@ -269,17 +229,6 @@ namespace Grand.Services.Customers
         /// <param name="orderId"></param>
         void UpdateCustomerReminderHistory(string customerId, string orderId);
 
-
-        /// <summary>
-        /// Updates the customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        void UpdateHasVendorReview(string customerId);
-        /// <summary>
-        /// Updates the customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        void UpdateHasVendorReviewH(string customerId);
 
         /// <summary>
         /// Delete guest customer records

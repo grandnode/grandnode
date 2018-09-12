@@ -1064,6 +1064,39 @@ namespace Grand.Services.Installation
 
             #endregion
 
+            #region Update customer
+
+            var dbContext = EngineContext.Current.Resolve<IMongoDatabase>();
+            var customerRepository = EngineContext.Current.Resolve<IRepository<Customer>>();
+
+            var builderCustomer = Builders<Customer>.Filter;
+            var filterCustomer = builderCustomer.Eq("IsNewsItem", true) | builderCustomer.Eq("IsHasOrders", true) | builderCustomer.Eq("IsHasBlogComments", true) | builderCustomer.Eq("IsHasArticleComments", true)
+                 | builderCustomer.Eq("IsHasProductReview", true) | builderCustomer.Eq("IsHasProductReviewH", true) | builderCustomer.Eq("IsHasVendorReview", true)
+                 | builderCustomer.Eq("IsHasVendorReviewH", true) | builderCustomer.Eq("IsHasPoolVoting", true) | builderCustomer.Eq("IsHasForumPost", true) | builderCustomer.Eq("IsHasForumTopic", true);
+
+            var updateCustomer = Builders<Customer>.Update
+               .Set(x => x.HasContributions, true);
+
+            var resultUpdate = customerRepository.Collection.UpdateOneAsync(filterCustomer, updateCustomer).Result;
+
+            var removeFields = Builders<object>.Update
+               .Unset("IsNewsItem")
+               .Unset("IsHasOrders")
+               .Unset("IsHasBlogComments")
+               .Unset("IsHasArticleComments")
+               .Unset("IsHasProductReview")
+               .Unset("IsHasProductReviewH")
+               .Unset("IsHasVendorReview")
+               .Unset("IsHasVendorReviewH")
+               .Unset("IsHasPoolVoting")
+               .Unset("IsHasForumPost")
+               .Unset("IsHasForumTopic");
+
+            var resultRemove = dbContext.GetCollection<object>(typeof(Customer).Name).UpdateMany(new BsonDocument(), removeFields);
+
+
+            #endregion
+
         }
 
         private void InstallStringResources(string filenames)

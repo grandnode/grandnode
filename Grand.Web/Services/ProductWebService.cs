@@ -1449,10 +1449,9 @@ namespace Grand.Web.Services
             };
             _productService.InsertProductReview(productReview);
 
-            if (!_workContext.CurrentCustomer.IsHasProductReview)
+            if (!_workContext.CurrentCustomer.HasContributions)
             {
-                _workContext.CurrentCustomer.IsHasProductReview = true;
-                EngineContext.Current.Resolve<ICustomerService>().UpdateHasProductReview(_workContext.CurrentCustomer.Id);
+                EngineContext.Current.Resolve<ICustomerService>().UpdateContributions(_workContext.CurrentCustomer);
             }
 
             //update product totals
