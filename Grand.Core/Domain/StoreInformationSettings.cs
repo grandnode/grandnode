@@ -56,5 +56,10 @@ namespace Grand.Core.Domain
         /// Gets or sets a value of Google+ page URL of the site
         /// </summary>
         public string GooglePlusLink { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value of Instagram page URL of the site
+        /// </summary>
+        public string InstagramLink { get; set; }
     }
 }

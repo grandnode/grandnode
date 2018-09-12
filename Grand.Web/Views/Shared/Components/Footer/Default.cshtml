@@ -51,6 +51,12 @@
                                 <a href="@Model.GooglePlusLink" target="google-plus"><span class="fab fa-google-plus fa-2x"></span><span class="sr-only">google plus</span></a>
                             </li>
                         }
+                        @if (!string.IsNullOrEmpty(Model.InstagramLink))
+                        {
+                            <li class="list-group-item instagram">
+                                <a href="@Model.InstagramLink" target="instagram"><span class="fab fa-instagram fa-2x"></span><span class="sr-only">instagram</span></a>
+                            </li>
+                        }
                     </ol>
                 </div>
             </div>

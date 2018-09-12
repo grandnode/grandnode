@@ -89,6 +89,10 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             public string GooglePlusLink { get; set; }
             public bool GooglePlusLink_OverrideForStore { get; set; }
 
+            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.InstagramLink")]
+            public string InstagramLink { get; set; }
+            public bool InstagramLink_OverrideForStore { get; set; }
+
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.StoreInDatabaseContactUsForm")]
             public bool StoreInDatabaseContactUsForm { get; set; }
             public bool StoreInDatabaseContactUsForm_OverrideForStore { get; set; }
