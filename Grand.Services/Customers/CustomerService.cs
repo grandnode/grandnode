@@ -297,7 +297,6 @@ namespace Grand.Services.Customers
             customer.GenericAttributes.Clear();
             //delete shopping cart
             customer.ShoppingCartItems.Clear();
-            customer.HasShoppingCartItems = false;
             //delete customer roles
             customer.CustomerRoles.Clear();
             //clear customer tags
@@ -791,7 +790,7 @@ namespace Grand.Services.Customers
             if (createdToUtc.HasValue)
                 filter = filter & builder.Lte(x => x.LastActivityDateUtc, createdToUtc.Value);
             if (onlyWithoutShoppingCart)
-                filter = filter & builder.Eq(x => x.HasShoppingCartItems, false);
+                filter = filter & builder.Eq(x => x.ShoppingCartItems.Any(), false);
 
             filter = filter & builder.Eq(x => x.HasContributions, false);
 
@@ -1242,16 +1241,6 @@ namespace Grand.Services.Customers
 
         }
 
-        public virtual void UpdateHasShoppingCartItems(Customer customer)
-        {
-            if (customer == null)
-                throw new ArgumentNullException("customer");
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customer.Id);
-            var update = Builders<Customer>.Update
-                .Set(x => x.HasShoppingCartItems, customer.HasShoppingCartItems);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
-        }
         #endregion
 
         #region Customer Product Price

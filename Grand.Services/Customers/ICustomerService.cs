@@ -370,7 +370,6 @@ namespace Grand.Services.Customers
         void DeleteShoppingCartItem(string customerId, ShoppingCartItem shoppingCartItem);
         void InsertShoppingCartItem(string customerId, ShoppingCartItem shoppingCartItem);
         void UpdateShoppingCartItem(string customerId, ShoppingCartItem shoppingCartItem);
-        void UpdateHasShoppingCartItems(Customer customer);
         #endregion
 
         #region Customer Product Price

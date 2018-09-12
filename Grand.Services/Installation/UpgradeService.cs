@@ -1090,7 +1090,8 @@ namespace Grand.Services.Installation
                .Unset("IsHasVendorReviewH")
                .Unset("IsHasPoolVoting")
                .Unset("IsHasForumPost")
-               .Unset("IsHasForumTopic");
+               .Unset("IsHasForumTopic")
+               .Unset("HasShoppingCartItems");
 
             var resultRemove = dbContext.GetCollection<object>(typeof(Customer).Name).UpdateMany(new BsonDocument(), removeFields);
 

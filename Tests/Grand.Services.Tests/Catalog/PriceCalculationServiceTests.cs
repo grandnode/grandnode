@@ -303,7 +303,6 @@ namespace Grand.Services.Catalog.Tests
                 Quantity = 2
             };
 
-            customer001.HasShoppingCartItems = true;
             customer001.ShoppingCartItems.Add(shoppingCartItem);
 
             tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToCategories, "", "", false)).Returns(new List<Discount>());
@@ -326,7 +325,7 @@ namespace Grand.Services.Catalog.Tests
             };
             tempProductService.Setup(x => x.GetProductById("242422")).Returns(product001);
 
-            var customer001 = new Customer { Id = "98767", HasShoppingCartItems = true };
+            var customer001 = new Customer { Id = "98767" };
             tempWorkContext.Setup(x => x.CurrentCustomer).Returns(customer001);
 
             var shoppingCartItem = new ShoppingCartItem
