@@ -196,6 +196,24 @@ namespace Grand.Web.Services
             foreach (var returnRequest in returnRequests)
             {
                 var order = _orderService.GetOrderById(returnRequest.OrderId);
+                decimal total = 0;
+                foreach (var rrItem in returnRequest.ReturnRequestItems)
+                {
+                    var orderItem = order.OrderItems.Where(x => x.Id == rrItem.OrderItemId).First();
+
+                    if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
+                    {
+                        //including tax
+                        var unitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceInclTax, order.CurrencyRate);
+                        total += unitPriceInclTaxInCustomerCurrency * rrItem.Quantity;
+                    }
+                    else
+                    {
+                        //excluding tax
+                        var unitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceExclTax, order.CurrencyRate);
+                        total += unitPriceExclTaxInCustomerCurrency * rrItem.Quantity;
+                    }
+                }
 
                 var itemModel = new CustomerReturnRequestsModel.ReturnRequestModel
                 {
@@ -204,7 +222,7 @@ namespace Grand.Web.Services
                     ReturnRequestStatus = returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext),
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc),
                     ProductsCount = returnRequest.ReturnRequestItems.Sum(x => x.Quantity),
-                    ReturnTotal = _priceFormatter.FormatPrice(order.OrderTotal)
+                    ReturnTotal = _priceFormatter.FormatPrice(total)
                 };
 
                 model.Items.Add(itemModel);

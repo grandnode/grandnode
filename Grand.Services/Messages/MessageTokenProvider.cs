@@ -448,6 +448,60 @@ namespace Grand.Services.Messages
             return result;
         }
 
+        protected virtual string ProductListToHtmlTable(ReturnRequest returnRequest)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("<table border=\"0\" style=\"width:100%;\">");
+
+            sb.AppendLine(string.Format("<tr style=\"text-align:center;\">"));
+            sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.Order.Product(s).Name")));
+            sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.Order.Product(s).Price")));
+            sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.Order.Product(s).Quantity")));
+            sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.Order.Product(s).ReturnReason")));
+            sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.Order.Product(s).ReturnAction")));
+            sb.AppendLine("</tr>");
+
+            var order = _orderService.GetOrderById(returnRequest.OrderId);
+            IProductService _productService = EngineContext.Current.Resolve<IProductService>();
+
+            foreach (var rrItem in returnRequest.ReturnRequestItems)
+            {
+                var orderItem = order.OrderItems.Where(x => x.Id == rrItem.OrderItemId).First();
+
+                sb.AppendLine(string.Format("<tr style=\"background-color: {0};text-align: center;\">", _templatesSettings.Color2));
+                string productName = _productService.GetProductById(orderItem.ProductId).GetLocalized(x => x.Name, order.CustomerLanguageId);
+
+                sb.AppendLine("<td style=\"padding: 0.6em 0.4em;text-align: left;\">" + WebUtility.HtmlEncode(productName));
+
+                sb.AppendLine("</td>");
+
+                string unitPriceStr;
+                var language = _languageService.GetLanguageById(order.CustomerLanguageId);
+                if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
+                {
+                    //including tax
+                    var unitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceInclTax, order.CurrencyRate);
+                    unitPriceStr = _priceFormatter.FormatPrice(unitPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, true);
+                }
+                else
+                {
+                    //excluding tax
+                    var unitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceExclTax, order.CurrencyRate);
+                    unitPriceStr = _priceFormatter.FormatPrice(unitPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, false);
+                }
+                sb.AppendLine(string.Format("<td style=\"padding: 0.6em 0.4em;text-align: right;\">{0}</td>", unitPriceStr));
+
+                sb.AppendLine(string.Format("<td style=\"padding: 0.6em 0.4em;text-align: center;\">{0}</td>", orderItem.Quantity));
+
+                sb.AppendLine(string.Format("<td style=\"padding: 0.6em 0.4em;text-align: center;\">{0}</td>", rrItem.ReasonForReturn));
+
+                sb.AppendLine(string.Format("<td style=\"padding: 0.6em 0.4em;text-align: center;\">{0}</td>", rrItem.RequestedAction));
+            }
+
+            sb.AppendLine("</table>");
+            return sb.ToString();
+        }
+
         /// <summary>
         /// Convert a collection to a HTML table
         /// </summary>
@@ -859,12 +913,35 @@ namespace Grand.Services.Messages
         public virtual void AddReturnRequestTokens(IList<Token> tokens, ReturnRequest returnRequest, Order order)
         {
             var productService = EngineContext.Current.Resolve<IProductService>();
+            var countryService = EngineContext.Current.Resolve<ICountryService>();
             var orderService = EngineContext.Current.Resolve<IOrderService>();
             tokens.Add(new Token("ReturnRequest.ID", returnRequest.ReturnNumber.ToString()));
             tokens.Add(new Token("ReturnRequest.OrderId", order.OrderNumber.ToString()));
             tokens.Add(new Token("ReturnRequest.CustomerComment", HtmlHelper.FormatText(returnRequest.CustomerComments, false, true, false, false, false, false), true));
             tokens.Add(new Token("ReturnRequest.StaffNotes", HtmlHelper.FormatText(returnRequest.StaffNotes, false, true, false, false, false, false), true));
             tokens.Add(new Token("ReturnRequest.Status", returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext)));
+            tokens.Add(new Token("ReturnRequest.Products", ProductListToHtmlTable(returnRequest), true));
+
+            if (returnRequest.PickupDate != default(DateTime))
+                tokens.Add(new Token("ReturnRequest.PickupDate", returnRequest.PickupDate.ToShortDateString()));
+
+            if (returnRequest.PickupAddress != null)
+            {
+                tokens.Add(new Token("PickupAddress.FirstName", order.BillingAddress.FirstName));
+                tokens.Add(new Token("PickupAddress.LastName", order.BillingAddress.LastName));
+                tokens.Add(new Token("PickupAddress.PhoneNumber", order.BillingAddress.PhoneNumber));
+                tokens.Add(new Token("PickupAddress.Email", order.BillingAddress.Email));
+                tokens.Add(new Token("PickupAddress.FaxNumber", order.BillingAddress.FaxNumber));
+                tokens.Add(new Token("PickupAddress.Company", order.BillingAddress.Company));
+                tokens.Add(new Token("PickupAddress.VatNumber", order.BillingAddress.VatNumber));
+                tokens.Add(new Token("PickupAddress.Address1", order.BillingAddress.Address1));
+                tokens.Add(new Token("PickupAddress.Address2", order.BillingAddress.Address2));
+                tokens.Add(new Token("PickupAddress.City", order.BillingAddress.City));
+                tokens.Add(new Token("PickupAddress.StateProvince", !String.IsNullOrEmpty(order.BillingAddress.StateProvinceId) ? EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(order.BillingAddress.StateProvinceId).GetLocalized(x => x.Name) : ""));
+                tokens.Add(new Token("PickupAddress.ZipPostalCode", order.BillingAddress.ZipPostalCode));
+                tokens.Add(new Token("PickupAddress.Country", !String.IsNullOrEmpty(order.BillingAddress.CountryId) ? EngineContext.Current.Resolve<ICountryService>().GetCountryById(order.BillingAddress.CountryId).GetLocalized(x => x.Name) : ""));
+                tokens.Add(new Token("PickupAddress.CustomAttributes", _addressAttributeFormatter.FormatAttributes(order.BillingAddress.CustomAttributes), true));
+            }
 
             //event notification
             _eventPublisher.EntityTokensAdded(returnRequest, tokens);

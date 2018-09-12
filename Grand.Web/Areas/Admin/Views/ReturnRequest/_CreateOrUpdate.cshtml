@@ -1,4 +1,5 @@
 ﻿@model ReturnRequestModel
+@inject AdminAreaSettings adminAreaSettings
 @using Grand.Core.Domain.Orders;
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
@@ -23,37 +24,10 @@
             </div>
         </div>
         <div class="form-group">
-            <admin-label asp-for="ProductName" />
-            <div class="col-md-9 col-sm-9">
-                <label class="control-label">@Html.ActionLink(Model.ProductName, "Edit", "Product", new { id = Model.ProductId }, new { }) </label>
-            </div>
-        </div>
-        <div class="form-group">
-            <admin-label asp-for="Quantity" />
-            <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="Quantity" />
-                <span asp-validation-for="Quantity"></span>
-            </div>
-        </div>
-        <div class="form-group">
             <admin-label asp-for="ReturnRequestStatusId" />
             <div class="col-md-9 col-sm-9">
                 <admin-select asp-for="ReturnRequestStatusId" asp-items="((ReturnRequestStatus)Model.ReturnRequestStatusId).ToSelectList()" />
                 <span asp-validation-for="ReturnRequestStatusId"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <admin-label asp-for="ReasonForReturn" />
-            <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="ReasonForReturn" />
-                <span asp-validation-for="ReasonForReturn"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <admin-label asp-for="RequestedAction" />
-            <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="RequestedAction" />
-                <span asp-validation-for="RequestedAction"></span>
             </div>
         </div>
         <div class="form-group">
@@ -76,5 +50,96 @@
                 <label class="control-label">@Html.DisplayFor(model => model.CreatedOn)</label>
             </div>
         </div>
+        <div class="form-group">
+            <admin-label asp-for="NotifyCustomer" />
+            <div class="col-md-9 col-sm-9">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    <admin-input asp-for="NotifyCustomer" />
+                    <span></span>
+                </label>
+                <span asp-validation-for="NotifyCustomer"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div id="products-grid"></div>
+        </div>
+        @if (Model.PickupDate != default(DateTime))
+        {
+            <div class="form-group">
+                <admin-label asp-for="PickupDate" />
+                <div class="col-md-9 col-sm-9">
+                    <label class="control-label">@Model.PickupDate.ToShortDateString()</label>
+                </div>
+            </div>
+        }
+        @if (Model.PickupAddress != null)
+        {
+            <admin-label asp-for="PickupAddress" />
+            <admin-input asp-for="PickupAddress" asp-template="Address" />
+        }
     </div>
 </div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var data = { returnRequestId: "@Model.Id" };
+        addAntiForgeryToken(data);
+
+        $("#products-grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("ProductsForReturnRequest", "ReturnRequest"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: data
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors"
+                },
+                error: function(e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                pageSize: @(adminAreaSettings.DefaultGridPageSize),
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            editable: {
+                confirmation: false,
+                mode: "inline"
+            },
+            scrollable: false,
+            columns: [
+                {
+                    field: "ProductName",
+                    title: "@T("Admin.ReturnRequests.Fields.Item")",
+                    width: 200,
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#=ProductName#</a>'
+                }, {
+                    field: "Quantity",
+                    title: "@T("Admin.ReturnRequests.Fields.Quantity")",
+                    width: 80
+                }, {
+                    field: "UnitPrice",
+                    title: "@T("Admin.ReturnRequests.Fields.UnitPrice")",
+                    width: 100
+                }, {
+                    field: "ReasonForReturn",
+                    title: "@T("Admin.ReturnRequests.Fields.ReturnReason")",
+                    width: 200
+                }, {
+                    field: "RequestedAction",
+                    title: "@T("Admin.ReturnRequests.Fields.ReturnAction")",
+                    width: 200,
+                }
+            ]
+        });
+    });
+</script>

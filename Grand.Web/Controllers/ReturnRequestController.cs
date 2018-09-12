@@ -17,6 +17,9 @@ using Grand.Services.Seo;
 using System.Linq;
 using Grand.Core.Domain.Tax;
 using Grand.Services.Directory;
+using System.Globalization;
+using Grand.Core.Domain.Common;
+using Grand.Services.Common;
 
 namespace Grand.Web.Controllers
 {
@@ -89,7 +92,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        public virtual IActionResult ReturnRequest(string orderId)
+        public virtual IActionResult ReturnRequest(string orderId, string errors = "")
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
@@ -100,6 +103,7 @@ namespace Grand.Web.Controllers
 
             var model = new SubmitReturnRequestModel();
             model = _returnRequestWebService.PrepareReturnRequest(model, order);
+            model.Error = errors;
             return View(model);
         }
 
@@ -114,6 +118,36 @@ namespace Grand.Web.Controllers
             if (!_orderProcessingService.IsReturnRequestAllowed(order))
                 return RedirectToRoute("HomePage");
 
+            string pD = form["pickupDate"];
+            DateTime pickupDate = default(DateTime);
+            if (!string.IsNullOrEmpty(pD))
+                pickupDate = DateTime.ParseExact(form["pickupDate"], "MM/dd/yyyy", CultureInfo.InvariantCulture);
+
+            string shippingAddressId = form["shipping_address_id"];
+            Address address = new Address();
+            if (!String.IsNullOrEmpty(shippingAddressId))
+            {
+                address = _workContext.CurrentCustomer.Addresses.FirstOrDefault(a => a.Id == shippingAddressId);
+            }
+            else
+            {
+                var customAttributes = _addressWebService.ParseCustomAddressAttributes(form);
+
+                address = _workContext.CurrentCustomer.Addresses.ToList().FindAddress(
+                    model.NewAddress.FirstName, model.NewAddress.LastName, model.NewAddress.PhoneNumber,
+                    model.NewAddress.Email, model.NewAddress.FaxNumber, model.NewAddress.Company,
+                    model.NewAddress.Address1, model.NewAddress.Address2, model.NewAddress.City,
+                    model.NewAddress.StateProvinceId, model.NewAddress.ZipPostalCode,
+                    model.NewAddress.CountryId, customAttributes);
+
+                if (address == null)
+                {
+                    address = model.NewAddress.ToEntity();
+                    address.CustomAttributes = customAttributes;
+                    address.CreatedOnUtc = DateTime.UtcNow;
+                }
+            }
+
             var rr = new ReturnRequest
             {
                 StoreId = _storeContext.CurrentStore.Id,
@@ -124,7 +158,8 @@ namespace Grand.Web.Controllers
                 ReturnRequestStatus = ReturnRequestStatus.Pending,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
-                PickupAddress = model.NewAddress.ToEntity()
+                PickupAddress = address,
+                PickupDate = pickupDate
             };
 
             int count = 0;
@@ -136,6 +171,7 @@ namespace Grand.Web.Controllers
                     int quantity = 0; //parse quantity
                     string rrrId = "";
                     string rraId = "";
+
                     foreach (string formKey in form.Keys)
                     {
                         if (formKey.Equals(string.Format("quantity{0}", orderItem.Id), StringComparison.OrdinalIgnoreCase))
@@ -185,6 +221,7 @@ namespace Grand.Web.Controllers
             else
             {
                 model.Result = _localizationService.GetResource("ReturnRequests.NoItemsSubmitted");
+                return ReturnRequest(orderId, model.Result);
             }
 
             return View(model);

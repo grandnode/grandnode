@@ -18,6 +18,13 @@
     }
     else
     {
+        @if (!String.IsNullOrEmpty(Model.Error))
+        {
+            <div class="result">
+                <div class="result card bg-warning p-3 text-white">@Model.Error</div>
+            </div>
+        }
+
         <form asp-route="ReturnRequest" method="post">
             <div class="AntiForgeryToken mt-2">
                 <h2 class="h5 mt-3"><strong>@T("ReturnRequests.SelectProduct(s)")</strong></h2>
@@ -164,7 +171,7 @@
                 {
                     <div class="form-group">
                         @T("ReturnRequests.PickupDate"):
-                        <input id="pickupDateDatePicker" class="form-control datepicker" />
+                        <input id="pickupDateDatePicker" name="pickupDate" class="form-control datepicker" />
                     </div>
                 }
             </div>

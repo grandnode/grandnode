@@ -32,6 +32,8 @@ namespace Grand.Web.Models.Order
 
         public string Result { get; set; }
 
+        public string Error { get; set; }
+
         public IList<AddressModel> ExistingAddresses { get; set; }
 
         public bool NewAddressPreselected { get; set; }

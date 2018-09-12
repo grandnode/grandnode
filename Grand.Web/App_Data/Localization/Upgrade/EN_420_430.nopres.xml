@@ -245,4 +245,28 @@
   <LocaleResource Name="Account.CustomerReturnRequests.PickupAddress">
     <Value>Pickup address</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.Total">
+    <Value>Total</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.Item">
+    <Value>Returned item</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.UnitPrice">
+    <Value>Unit price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.ReturnReason">
+    <Value>Return reason</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.ReturnAction">
+    <Value>Return action</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Admin.ReturnRequests.NotifyCustomer.Hint">
+    <Value>Check if you want customer to be notified by email abouy this return request status change.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.PickupDate">
+    <Value>Pickup date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.PickupAddress">
+    <Value>Pickup address</Value>
+  </LocaleResource>
 </Language>

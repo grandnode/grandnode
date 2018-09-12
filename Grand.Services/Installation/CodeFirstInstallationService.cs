@@ -4496,7 +4496,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "NewReturnRequest.CustomerNotification",
                                            Subject = "%Store.Name%. New return request.",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />Hello %Customer.FullName%!<br /> You have just submitted a new return request. Details are below:<br />Request ID: %ReturnRequest.CustomNumber%<br />Product: %ReturnRequest.Product.Quantity% x Product: %ReturnRequest.Product.Name%<br />Reason for return: %ReturnRequest.Reason%<br />Requested action: %ReturnRequest.RequestedAction%<br />Customer comments:<br />%ReturnRequest.CustomerComment%</p>",
+                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />Hello %Customer.FullName%!<br /> You have just submitted a new return request. Details are below:<br />Request ID: %ReturnRequest.ID%<br />Products:<br />%ReturnRequest.Products%<br />Customer comments: %ReturnRequest.CustomerComment%<br />Pickup date: %ReturnRequest.PickupDate%<br /><br />Pickup address:<br />%PickupAddress.FirstName% %PickupAddress.LastName%<br />%PickupAddress.Address1%<br />%PickupAddress.City% %PickupAddress.ZipPostalCode%<br />%PickupAddress.StateProvince% %PickupAddress.Country%<br /></p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4504,7 +4504,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "NewReturnRequest.StoreOwnerNotification",
                                            Subject = "%Store.Name%. New return request.",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />%Customer.FullName% has just submitted a new return request. Details are below:<br />Request ID: %ReturnRequest.ID%<br />Product: %ReturnRequest.Product.Quantity% x Product: %ReturnRequest.Product.Name%<br />Reason for return: %ReturnRequest.Reason%<br />Requested action: %ReturnRequest.RequestedAction%<br />Customer comments:<br />%ReturnRequest.CustomerComment%</p>",
+                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />%Customer.FullName% has just submitted a new return request. Details are below:<br />Request ID: %ReturnRequest.ID%<br />Products:<br />%ReturnRequest.Products%<br />Customer comments: %ReturnRequest.CustomerComment%<br />Pickup date: %ReturnRequest.PickupDate%<br /><br />Pickup address:<br />%PickupAddress.FirstName% %PickupAddress.LastName%<br />%PickupAddress.Address1%<br />%PickupAddress.City% %PickupAddress.ZipPostalCode%<br />%PickupAddress.StateProvince% %PickupAddress.Country%<br /></p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },

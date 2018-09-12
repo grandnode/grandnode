@@ -19,6 +19,8 @@ using Grand.Framework.Kendoui;
 using System.Linq;
 using Grand.Core.Data;
 using Grand.Services.Catalog;
+using Grand.Services.Directory;
+using Grand.Web.Areas.Admin.Extensions;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -38,6 +40,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly IRepository<ReturnRequest> _returnRequest;
         private readonly IReturnRequestService _returnRequestService;
+        private readonly IPriceFormatter _priceFormatter;
+        private readonly ICurrencyService _currencyService;
         #endregion Fields
 
         #region Constructors
@@ -49,7 +53,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             IWorkflowMessageService workflowMessageService, LocalizationSettings localizationSettings,
             ICustomerActivityService customerActivityService, IPermissionService permissionService,
             IRepository<ReturnRequest> returnRequest,
-            IReturnRequestService returnRequestService)
+            IReturnRequestService returnRequestService,
+            IPriceFormatter priceFormatter,
+            ICurrencyService currencyService)
         {
             this._orderService = orderService;
             this._productService = productService;
@@ -63,6 +69,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._permissionService = permissionService;
             this._returnRequest = returnRequest;
             this._returnRequestService = returnRequestService;
+            this._priceFormatter = priceFormatter;
+            this._currencyService = currencyService;
         }
 
         #endregion
@@ -70,7 +78,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        protected virtual bool PrepareReturnRequestModel(ReturnRequestModel model,
+        protected virtual ReturnRequestModel PrepareReturnRequestModel(ReturnRequestModel model,
             ReturnRequest returnRequest, bool excludeProperties)
         {
             if (model == null)
@@ -80,13 +88,16 @@ namespace Grand.Web.Areas.Admin.Controllers
                 throw new ArgumentNullException("returnRequest");
 
             var order = _orderService.GetOrderById(returnRequest.OrderId);
-            OrderItem orderItem = null;
-            if (orderItem == null)
-                return false;
-            var product = _productService.GetProductByIdIncludeArch(orderItem.ProductId);
+            decimal unitPriceInclTaxInCustomerCurrency = 0;
+            foreach (var item in returnRequest.ReturnRequestItems)
+            {
+                var orderItem = order.OrderItems.Where(x => x.Id == item.OrderItemId).First();
+                unitPriceInclTaxInCustomerCurrency += _currencyService.ConvertCurrency(orderItem.UnitPriceInclTax, order.CurrencyRate) * item.Quantity;
+            }
+
+            model.Total = _priceFormatter.FormatPrice(unitPriceInclTaxInCustomerCurrency);
+            model.Quantity = returnRequest.ReturnRequestItems.Sum(x => x.Quantity);
             model.Id = returnRequest.Id;
-            model.ProductId = orderItem.ProductId;
-            model.ProductName = product.Name;
             model.OrderId = order.Id;
             model.OrderNumber = order.OrderNumber;
             model.ReturnNumber = returnRequest.ReturnNumber;
@@ -95,14 +106,16 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
             model.ReturnRequestStatusStr = returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
+            model.PickupAddress = returnRequest.PickupAddress.ToModel();
+            model.PickupDate = returnRequest.PickupDate;
             if (!excludeProperties)
             {
                 model.CustomerComments = returnRequest.CustomerComments;
                 model.StaffNotes = returnRequest.StaffNotes;
                 model.ReturnRequestStatusId = returnRequest.ReturnRequestStatusId;
             }
-            //model is successfully prepared
-            return true;
+
+            return model;
         }
 
         #endregion
@@ -133,14 +146,47 @@ namespace Grand.Web.Areas.Admin.Controllers
             var returnRequestModels = new List<ReturnRequestModel>();
             foreach (var rr in returnRequests)
             {
-                var m = new ReturnRequestModel();
-                if (PrepareReturnRequestModel(m, rr, false))
-                    returnRequestModels.Add(m);
+                var model = new ReturnRequestModel();
+                returnRequestModels.Add(PrepareReturnRequestModel(model, rr, false));
             }
             var gridModel = new DataSourceResult
             {
                 Data = returnRequestModels,
                 Total = returnRequests.TotalCount,
+            };
+
+            return Json(gridModel);
+        }
+
+        [HttpPost]
+        public IActionResult ProductsForReturnRequest(string returnRequestId, DataSourceRequest command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
+                return AccessDeniedView();
+
+            var returnRequest = _returnRequestService.GetReturnRequestById(returnRequestId);
+            List<ReturnRequestModel.ReturnRequestItemModel> items = new List<ReturnRequestModel.ReturnRequestItemModel>();
+            var order = _orderService.GetOrderById(returnRequest.OrderId);
+
+            foreach (var item in returnRequest.ReturnRequestItems)
+            {
+                var orderItem = order.OrderItems.Where(x => x.Id == item.OrderItemId).FirstOrDefault();
+
+                items.Add(new ReturnRequestModel.ReturnRequestItemModel
+                {
+                    ProductId = orderItem.ProductId,
+                    ProductName = _productService.GetProductByIdIncludeArch(orderItem.ProductId).Name,
+                    Quantity = item.Quantity,
+                    UnitPrice = _priceFormatter.FormatPrice(orderItem.UnitPriceInclTax),
+                    ReasonForReturn = item.ReasonForReturn,
+                    RequestedAction = item.RequestedAction
+                });
+            }
+
+            var gridModel = new DataSourceResult
+            {
+                Data = items,
+                Total = items.Count,
             };
 
             return Json(gridModel);
@@ -156,7 +202,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (returnRequest == null)
                 //No return request found with the specified id
                 return RedirectToAction("List");
-            
+
             var model = new ReturnRequestModel();
             PrepareReturnRequestModel(model, returnRequest, false);
             return View(model);
@@ -187,8 +233,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //activity log
                 _customerActivityService.InsertActivity("EditReturnRequest", returnRequest.Id, _localizationService.GetResource("ActivityLog.EditReturnRequest"), returnRequest.Id);
 
+                if (model.NotifyCustomer)
+                    NotifyCustomer(model);
+
                 SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Updated"));
-                return continueEditing ? RedirectToAction("Edit", new { id = returnRequest.Id}) : RedirectToAction("List");
+                return continueEditing ? RedirectToAction("Edit", new { id = returnRequest.Id }) : RedirectToAction("List");
             }
 
 
@@ -197,8 +246,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost, ActionName("Edit")]
-        [FormValueRequired("notify-customer")]
         public IActionResult NotifyCustomer(ReturnRequestModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
@@ -214,7 +261,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             int queuedEmailId = _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, order, _localizationSettings.DefaultAdminLanguageId);
             if (queuedEmailId > 0)
                 SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Notified"));
-            return RedirectToAction("Edit",  new {id = returnRequest.Id});
+            return RedirectToAction("Edit", new { id = returnRequest.Id });
         }
 
         //delete

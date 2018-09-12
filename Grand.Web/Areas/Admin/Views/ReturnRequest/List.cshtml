@@ -68,15 +68,16 @@
                     width: 50,
                     template: '<a class="k-link" href="Edit/#=Id#">#=ReturnNumber#</a>'
                 }, {
-                    field: "ProductName",
-                    title: "@T("Admin.ReturnRequests.Fields.Product")",
-                    width: 200,
-                    template: '<a class="k-link" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:ProductName#</a>'
-                }, {
                     field: "Quantity",
                     title: "@T("Admin.ReturnRequests.Fields.Quantity")",
-                    width: 80
+                    width: 80,
+                    template: '<a class="k-link" href="Edit/#=Id#">#=Quantity#</a>'
                 }, {
+                    field: "Total",
+                    title: "@T("Admin.ReturnRequests.Fields.Total")",
+                    width: 100,
+                    template: '<a class="k-link" href="Edit/#=Id#">#=Total#</a>'
+                } , {
                     field: "CustomerId",
                     title: "@T("Admin.ReturnRequests.Fields.Customer")",
                     width: 200,
