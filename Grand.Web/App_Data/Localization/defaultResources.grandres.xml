@@ -18180,6 +18180,9 @@
   <LocaleResource Name="ReturnRequests.NoItemsSubmitted">
     <Value>Your return request has not been submitted because you haven't chosen any items.</Value>
   </LocaleResource>
+  <LocaleResource Name="ReturnRequests.PickupDateRequired">
+    <Value>Pickup date is required</Value>
+  </LocaleResource>
   <LocaleResource Name="ReturnRequests.Products.Name">
     <Value>Product</Value>
   </LocaleResource>
@@ -18202,7 +18205,7 @@
     <Value>Submit return request</Value>
   </LocaleResource>
   <LocaleResource Name="ReturnRequests.Submitted">
-    <Value>Your return request has been submitted successfully. Return number: {0}, link: {1}</Value>
+    <Value><![CDATA[<p>Your return request has been submitted successfully. <a class="text-white" href="{1}">Return number: {0} </a></p>]]></Value>
   </LocaleResource>
   <LocaleResource Name="ReturnRequests.Title">
     <Value>Return item(s) from order #{0}</Value>

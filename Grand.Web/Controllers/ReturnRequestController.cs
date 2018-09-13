@@ -19,7 +19,6 @@ using Grand.Core.Domain.Tax;
 using Grand.Services.Directory;
 using System.Globalization;
 using Grand.Core.Domain.Common;
-using Grand.Services.Common;
 
 namespace Grand.Web.Controllers
 {
@@ -79,7 +78,6 @@ namespace Grand.Web.Controllers
 
         #endregion
 
-
         #region Methods
 
         public virtual IActionResult CustomerReturnRequests()
@@ -121,7 +119,13 @@ namespace Grand.Web.Controllers
             string pD = form["pickupDate"];
             DateTime pickupDate = default(DateTime);
             if (!string.IsNullOrEmpty(pD))
+            {
                 pickupDate = DateTime.ParseExact(form["pickupDate"], "MM/dd/yyyy", CultureInfo.InvariantCulture);
+            }
+            else if (_orderSettings.ReturnRequests_PickupDateRequired)
+            {
+                ModelState.AddModelError("", _localizationService.GetResource("ReturnRequests.PickupDateRequired"));
+            }
 
             string pickupAddressId = form["pickup_address_id"];
             Address address = new Address();
@@ -132,9 +136,22 @@ namespace Grand.Web.Controllers
             else
             {
                 var customAttributes = _addressWebService.ParseCustomAddressAttributes(form);
+                var customAttributeWarnings = _addressWebService.GetAttributeWarnings(customAttributes);
+                foreach (var error in customAttributeWarnings)
+                {
+                    ModelState.AddModelError("", error);
+                }
                 address = model.NewAddress.ToEntity();
+                model.NewAddressPreselected = true;
                 address.CustomAttributes = customAttributes;
                 address.CreatedOnUtc = DateTime.UtcNow;
+            }
+
+            if (!ModelState.IsValid && ModelState.ErrorCount > 0)
+            {
+                model.Error = string.Join(", ", ModelState.Keys.SelectMany(k => ModelState[k].Errors).Select(m => m.ErrorMessage).ToArray());
+                model = _returnRequestWebService.PrepareReturnRequest(model, order);
+                return View(model);
             }
 
             var rr = new ReturnRequest
@@ -195,7 +212,6 @@ namespace Grand.Web.Controllers
                     }
                 }
             }
-
             model = _returnRequestWebService.PrepareReturnRequest(model, order);
             if (count > 0)
             {
@@ -210,8 +226,8 @@ namespace Grand.Web.Controllers
             }
             else
             {
-                model.Result = _localizationService.GetResource("ReturnRequests.NoItemsSubmitted");
-                return ReturnRequest(orderId, model.Result);
+                model.Error = _localizationService.GetResource("ReturnRequests.NoItemsSubmitted");
+                return View(model);
             }
 
             return View(model);
@@ -226,9 +242,6 @@ namespace Grand.Web.Controllers
             var order = _orderService.GetOrderById(rr.OrderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return Challenge();
-
-            if (!_orderProcessingService.IsReturnRequestAllowed(order))
-                return RedirectToRoute("HomePage");
 
             var model = new ReturnRequestDetailsModel();
             model.Comments = rr.CustomerComments;

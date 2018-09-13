@@ -224,6 +224,9 @@
   <LocaleResource Name="ReturnRequests.PickupDate">
     <Value>Specify pickup date</Value>
   </LocaleResource>
+  <LocaleResource Name="ReturnRequests.Submitted">
+    <Value><![CDATA[<p>Your return request has been submitted successfully. <a class="text-white" href="{1}">Return number: {0} </a></p>]]></Value>
+  </LocaleResource>
   <LocaleResource Name="PageTitle.ReturnRequestDetails">
     <Value>Return request details</Value>
   </LocaleResource>
@@ -300,7 +303,7 @@
     <Value>Instagram page URL</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.InstagramLink.Hint">
-    <Value>Specify your Instagram page URL. Leave empty if you have no such/ page.</Value>
+    <Value>Specify your Instagram page URL. Leave empty if you have no such page.</Value>
   </LocaleResource>
   <LocaleResource Name="Messages.Order.Product(s).ReturnReason">
     <Value>Return reason</Value>
@@ -308,4 +311,7 @@
   <LocaleResource Name="Messages.Order.Product(s).ReturnAction">
     <Value>Requested action</Value>
   </LocaleResource>
+  <LocaleResource Name="ReturnRequests.PickupDateRequired">
+    <Value>Pickup date is required</Value>
+  </LocaleResource>  
 </Language>

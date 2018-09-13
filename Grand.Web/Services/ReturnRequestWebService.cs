@@ -2,6 +2,7 @@
 using Grand.Core.Caching;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Tax;
+using Grand.Core.Infrastructure;
 using Grand.Services.Catalog;
 using Grand.Services.Directory;
 using Grand.Services.Helpers;
@@ -105,7 +106,7 @@ namespace Grand.Web.Services
                     return actions;
                 });
 
-            var shipments = Grand.Core.Infrastructure.EngineContext.Current.Resolve<Grand.Services.Shipping.IShipmentService>().GetShipmentsByOrder(order.Id);
+            var shipments = EngineContext.Current.Resolve<Grand.Services.Shipping.IShipmentService>().GetShipmentsByOrder(order.Id);
 
             //products
             var orderItems = _orderService.GetAllOrderItems(order.Id, null, null, null, null, null, null);
@@ -135,7 +136,8 @@ namespace Grand.Web.Services
                         AttributeInfo = orderItem.AttributeDescription,
                         Quantity = qtyDelivery - qtyReturn,
                     };
-                    model.Items.Add(orderItemModel);
+                    if(orderItemModel.Quantity > 0)
+                        model.Items.Add(orderItemModel);
                     //unit price
                     if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
                     {

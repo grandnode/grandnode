@@ -13,7 +13,7 @@
     @if (!String.IsNullOrEmpty(Model.Result))
     {
         <div class="result">
-            <div class="result card bg-info p-3 text-white">@Model.Result</div>
+            <div class="result card bg-info p-3 text-white">@Html.Raw(Model.Result)</div>
         </div>
     }
     else
@@ -146,8 +146,7 @@
                                                 {
                                                     addressLine += ", " + address.CountryName;
                                                 }
-                                                //how should we render "FormattedCustomAddressAttributes" here?
-                                                <option value="@(address.Id)">@(addressLine)</option>
+                                                <option selected="@(!Model.NewAddressPreselected && Model.ExistingAddresses[0].Id == address.Id)" value="@(address.Id)">@(addressLine)</option>
                                             }
                                             <option value="" selected="@Model.NewAddressPreselected">@T("ReturnRequests.NewAddress")</option>
                                         </select>
@@ -184,11 +183,11 @@
     }
 </div>
 <script>
-    if (document.getElementById("pickup-address-select").length > 1) {
-        newAddress(false);
-    }
-
     $(document).ready(function () {
+        if ($("#pickup-address-select option:selected").val() != "") {
+            newAddress(false);
+        }
+
         $("#pickupDateDatePicker").datepicker({
             firstDay: 1
         });
