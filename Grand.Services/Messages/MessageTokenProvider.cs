@@ -927,20 +927,20 @@ namespace Grand.Services.Messages
 
             if (returnRequest.PickupAddress != null)
             {
-                tokens.Add(new Token("PickupAddress.FirstName", order.BillingAddress.FirstName));
-                tokens.Add(new Token("PickupAddress.LastName", order.BillingAddress.LastName));
-                tokens.Add(new Token("PickupAddress.PhoneNumber", order.BillingAddress.PhoneNumber));
-                tokens.Add(new Token("PickupAddress.Email", order.BillingAddress.Email));
-                tokens.Add(new Token("PickupAddress.FaxNumber", order.BillingAddress.FaxNumber));
-                tokens.Add(new Token("PickupAddress.Company", order.BillingAddress.Company));
-                tokens.Add(new Token("PickupAddress.VatNumber", order.BillingAddress.VatNumber));
-                tokens.Add(new Token("PickupAddress.Address1", order.BillingAddress.Address1));
-                tokens.Add(new Token("PickupAddress.Address2", order.BillingAddress.Address2));
-                tokens.Add(new Token("PickupAddress.City", order.BillingAddress.City));
-                tokens.Add(new Token("PickupAddress.StateProvince", !String.IsNullOrEmpty(order.BillingAddress.StateProvinceId) ? EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(order.BillingAddress.StateProvinceId).GetLocalized(x => x.Name) : ""));
-                tokens.Add(new Token("PickupAddress.ZipPostalCode", order.BillingAddress.ZipPostalCode));
-                tokens.Add(new Token("PickupAddress.Country", !String.IsNullOrEmpty(order.BillingAddress.CountryId) ? EngineContext.Current.Resolve<ICountryService>().GetCountryById(order.BillingAddress.CountryId).GetLocalized(x => x.Name) : ""));
-                tokens.Add(new Token("PickupAddress.CustomAttributes", _addressAttributeFormatter.FormatAttributes(order.BillingAddress.CustomAttributes), true));
+                tokens.Add(new Token("PickupAddress.FirstName", returnRequest.PickupAddress.FirstName));
+                tokens.Add(new Token("PickupAddress.LastName", returnRequest.PickupAddress.LastName));
+                tokens.Add(new Token("PickupAddress.PhoneNumber", returnRequest.PickupAddress.PhoneNumber));
+                tokens.Add(new Token("PickupAddress.Email", returnRequest.PickupAddress.Email));
+                tokens.Add(new Token("PickupAddress.FaxNumber", returnRequest.PickupAddress.FaxNumber));
+                tokens.Add(new Token("PickupAddress.Company", returnRequest.PickupAddress.Company));
+                tokens.Add(new Token("PickupAddress.VatNumber", returnRequest.PickupAddress.VatNumber));
+                tokens.Add(new Token("PickupAddress.Address1", returnRequest.PickupAddress.Address1));
+                tokens.Add(new Token("PickupAddress.Address2", returnRequest.PickupAddress.Address2));
+                tokens.Add(new Token("PickupAddress.City", returnRequest.PickupAddress.City));
+                tokens.Add(new Token("PickupAddress.StateProvince", !String.IsNullOrEmpty(returnRequest.PickupAddress.StateProvinceId) ? EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(returnRequest.PickupAddress.StateProvinceId).GetLocalized(x => x.Name) : ""));
+                tokens.Add(new Token("PickupAddress.ZipPostalCode", returnRequest.PickupAddress.ZipPostalCode));
+                tokens.Add(new Token("PickupAddress.Country", !String.IsNullOrEmpty(returnRequest.PickupAddress.CountryId) ? EngineContext.Current.Resolve<ICountryService>().GetCountryById(order.BillingAddress.CountryId).GetLocalized(x => x.Name) : ""));
+                tokens.Add(new Token("PickupAddress.CustomAttributes", _addressAttributeFormatter.FormatAttributes(returnRequest.PickupAddress.CustomAttributes), true));
             }
 
             //event notification

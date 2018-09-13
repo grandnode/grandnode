@@ -123,29 +123,18 @@ namespace Grand.Web.Controllers
             if (!string.IsNullOrEmpty(pD))
                 pickupDate = DateTime.ParseExact(form["pickupDate"], "MM/dd/yyyy", CultureInfo.InvariantCulture);
 
-            string shippingAddressId = form["shipping_address_id"];
+            string pickupAddressId = form["pickup_address_id"];
             Address address = new Address();
-            if (!String.IsNullOrEmpty(shippingAddressId))
+            if (!String.IsNullOrEmpty(pickupAddressId))
             {
-                address = _workContext.CurrentCustomer.Addresses.FirstOrDefault(a => a.Id == shippingAddressId);
+                address = _workContext.CurrentCustomer.Addresses.FirstOrDefault(a => a.Id == pickupAddressId);
             }
             else
             {
                 var customAttributes = _addressWebService.ParseCustomAddressAttributes(form);
-
-                address = _workContext.CurrentCustomer.Addresses.ToList().FindAddress(
-                    model.NewAddress.FirstName, model.NewAddress.LastName, model.NewAddress.PhoneNumber,
-                    model.NewAddress.Email, model.NewAddress.FaxNumber, model.NewAddress.Company,
-                    model.NewAddress.Address1, model.NewAddress.Address2, model.NewAddress.City,
-                    model.NewAddress.StateProvinceId, model.NewAddress.ZipPostalCode,
-                    model.NewAddress.CountryId, customAttributes);
-
-                if (address == null)
-                {
-                    address = model.NewAddress.ToEntity();
-                    address.CustomAttributes = customAttributes;
-                    address.CreatedOnUtc = DateTime.UtcNow;
-                }
+                address = model.NewAddress.ToEntity();
+                address.CustomAttributes = customAttributes;
+                address.CreatedOnUtc = DateTime.UtcNow;
             }
 
             var rr = new ReturnRequest
@@ -248,8 +237,7 @@ namespace Grand.Web.Controllers
             model.ShowPickupAddress = _orderSettings.ReturnRequests_AllowToSpecifyPickupAddress;
             model.ShowPickupDate = _orderSettings.ReturnRequests_AllowToSpecifyPickupDate;
             model.PickupDate = rr.PickupDate;
-
-            _addressWebService.PrepareModel(model: model.PickupAddress, address: order.BillingAddress, excludeProperties: false);
+            _addressWebService.PrepareModel(model: model.PickupAddress, address: rr.PickupAddress, excludeProperties: false);
 
             foreach (var item in rr.ReturnRequestItems)
             {

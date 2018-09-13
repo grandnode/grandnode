@@ -113,13 +113,13 @@
                 @if (Model.ShowPickupAddress)
                 {
                     <div class="form-group">
-                        <div class="shipping-addresses" id="shipping-addresses-form">
+                        <div class="pickup-addresses" id="pickup-addresses-form">
                             @if (Model.ExistingAddresses.Any())
                             {
-                                <div class="section select-shipping-address">
-                                    <label for="shipping-address-select">@T("ReturnRequests.SelectShippingAddressOrEnterNewOne")</label>
+                                <div class="section select-pickup-address">
+                                    <label for="pickup-address-select">@T("ReturnRequests.SelectPickupAddressOrEnterNewOne")</label>
                                     <div>
-                                        <select name="shipping_address_id" id="shipping-address-select" class="custom-select address-select"
+                                        <select name="pickup_address_id" id="pickup-address-select" class="custom-select address-select"
                                                 title="" onchange="newAddress(!this.value)">
                                             @foreach (var address in Model.ExistingAddresses)
                                             {
@@ -154,12 +154,12 @@
                                     </div>
                                 </div>
                             }
-                            <div class="section new-shipping-address" id="shipping-new-address-form">
+                            <div class="section new-pickup-address" id="pickup-new-address-form">
                                 <div class="enter-address">
                                     <div asp-validation-summary="ModelOnly" class="message-error"></div>
                                     @{
                                         var dataDictAddress = new ViewDataDictionary(ViewData);
-                                        dataDictAddress.TemplateInfo.HtmlFieldPrefix = "ShippingNewAddress";
+                                        dataDictAddress.TemplateInfo.HtmlFieldPrefix = "NewAddress";
                                         <partial name="_CreateOrUpdateAddress" model="Model.NewAddress" view-data="dataDictAddress" />
                                     }
                                 </div>
@@ -184,7 +184,7 @@
     }
 </div>
 <script>
-    if (document.getElementById("shipping-address-select").length > 1) {
+    if (document.getElementById("pickup-address-select").length > 1) {
         newAddress(false);
     }
 

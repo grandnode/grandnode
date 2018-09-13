@@ -608,14 +608,14 @@ $(document).mouseup(function (e) {
 function newAddress(isNew) {
     if (isNew) {
         this.resetSelectedAddress();
-        $('#shipping-new-address-form').show();
+        $('#pickup-new-address-form').show();
     } else {
-        $('#shipping-new-address-form').hide();
+        $('#pickup-new-address-form').hide();
     }
 }
 
 function resetSelectedAddress() {
-    var selectElement = $('#shipping-address-select');
+    var selectElement = $('#pickup-address-select');
     if (selectElement) {
         selectElement.val('');
     }

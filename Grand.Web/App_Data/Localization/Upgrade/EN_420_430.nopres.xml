@@ -215,7 +215,7 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequests_AllowToSpecifyPickupDate.Hint">
     <Value>Check if you want to allow customers to specify return pickup date.</Value>
   </LocaleResource>
-  <LocaleResource Name="ReturnRequests.SelectShippingAddressOrEnterNewOne">
+  <LocaleResource Name="ReturnRequests.SelectPickupAddressOrEnterNewOne">
     <Value>Select a pickup address from your address book or enter a new address.</Value>
   </LocaleResource>
   <LocaleResource Name="ReturnRequests.NewAddress">

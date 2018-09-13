@@ -88,10 +88,13 @@
 
         @if (Model.ShowPickupDate)
         {
-            <div class="date">
-                <label>@T("Account.CustomerReturnRequests.PickupDate"): </label>
-                <span>@Model.PickupDate.ToShortDateString()</span>
-            </div>
+            @if (Model.PickupDate != default(DateTime))
+            {
+                <div class="date">
+                    <label>@T("Account.CustomerReturnRequests.PickupDate"): </label>
+                    <span>@Model.PickupDate.ToShortDateString()</span>
+                </div>
+            }
         }
 
         @if (Model.ShowPickupAddress)

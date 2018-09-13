@@ -21,6 +21,12 @@ using Grand.Core.Data;
 using Grand.Services.Catalog;
 using Grand.Services.Directory;
 using Grand.Web.Areas.Admin.Extensions;
+using Grand.Core.Domain.Common;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Grand.Web.Services;
+using Grand.Web.Areas.Admin.Models.Common;
+using Grand.Core.Domain.Directory;
+using Grand.Services.Common;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -42,6 +48,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IReturnRequestService _returnRequestService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly ICurrencyService _currencyService;
+        private readonly AddressSettings _addressSettings;
+        private readonly ICountryService _countryService;
+        private readonly IStateProvinceService _stateProvinceService;
+        private readonly IAddressWebService _addressWebService;
+        private readonly IAddressAttributeService _addressAttributeService;
+        private readonly IAddressAttributeParser _addressAttributeParser;
         #endregion Fields
 
         #region Constructors
@@ -55,7 +67,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             IRepository<ReturnRequest> returnRequest,
             IReturnRequestService returnRequestService,
             IPriceFormatter priceFormatter,
-            ICurrencyService currencyService)
+            ICurrencyService currencyService,
+            AddressSettings addressSettings,
+            ICountryService countryService,
+            IStateProvinceService stateProvinceService,
+            IAddressWebService addressWebService,
+            IAddressAttributeService addressAttributeService,
+            IAddressAttributeParser addressAttributeParser)
         {
             this._orderService = orderService;
             this._productService = productService;
@@ -71,6 +89,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._returnRequestService = returnRequestService;
             this._priceFormatter = priceFormatter;
             this._currencyService = currencyService;
+            this._addressSettings = addressSettings;
+            this._countryService = countryService;
+            this._stateProvinceService = stateProvinceService;
+            this._addressWebService = addressWebService;
+            this._addressAttributeService = addressAttributeService;
+            this._addressAttributeParser = addressAttributeParser;
         }
 
         #endregion
@@ -106,16 +130,74 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
             model.ReturnRequestStatusStr = returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
-            model.PickupAddress = returnRequest.PickupAddress.ToModel();
             model.PickupDate = returnRequest.PickupDate;
+
             if (!excludeProperties)
             {
+                var addr = new AddressModel();
+                PrepareAddressModel(ref addr, returnRequest.PickupAddress, excludeProperties);
+                model.PickupAddress = addr;
                 model.CustomerComments = returnRequest.CustomerComments;
                 model.StaffNotes = returnRequest.StaffNotes;
                 model.ReturnRequestStatusId = returnRequest.ReturnRequestStatusId;
             }
 
             return model;
+        }
+
+        [NonAction]
+        protected virtual void PrepareAddressModel(ref AddressModel model, Address address, bool excludeProperties)
+        {
+            if (address != null)
+            {
+                if (!excludeProperties)
+                {
+                    model = address.ToModel();
+                }
+            }
+
+            if (model == null)
+                model = new AddressModel();
+
+            model.FirstNameEnabled = true;
+            model.FirstNameRequired = true;
+            model.LastNameEnabled = true;
+            model.LastNameRequired = true;
+            model.EmailEnabled = true;
+            model.EmailRequired = true;
+            model.CompanyEnabled = _addressSettings.CompanyEnabled;
+            model.CompanyRequired = _addressSettings.CompanyRequired;
+            model.VatNumberEnabled = _addressSettings.VatNumberEnabled;
+            model.VatNumberRequired = _addressSettings.VatNumberRequired;
+            model.CountryEnabled = _addressSettings.CountryEnabled;
+            model.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
+            model.CityEnabled = _addressSettings.CityEnabled;
+            model.CityRequired = _addressSettings.CityRequired;
+            model.StreetAddressEnabled = _addressSettings.StreetAddressEnabled;
+            model.StreetAddressRequired = _addressSettings.StreetAddressRequired;
+            model.StreetAddress2Enabled = _addressSettings.StreetAddress2Enabled;
+            model.StreetAddress2Required = _addressSettings.StreetAddress2Required;
+            model.ZipPostalCodeEnabled = _addressSettings.ZipPostalCodeEnabled;
+            model.ZipPostalCodeRequired = _addressSettings.ZipPostalCodeRequired;
+            model.PhoneEnabled = _addressSettings.PhoneEnabled;
+            model.PhoneRequired = _addressSettings.PhoneRequired;
+            model.FaxEnabled = _addressSettings.FaxEnabled;
+            model.FaxRequired = _addressSettings.FaxRequired;
+            //countries
+            model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "" });
+            foreach (var c in _countryService.GetAllCountries(showHidden: true))
+                model.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.CountryId) });
+            //states
+            var states = !String.IsNullOrEmpty(model.CountryId) ? _stateProvinceService.GetStateProvincesByCountryId(model.CountryId, showHidden: true).ToList() : new List<StateProvince>();
+            if (states.Count > 0)
+            {
+                foreach (var s in states)
+                    model.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
+            }
+            else
+                model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "" });
+            //customer attribute services
+            model.PrepareCustomAddressAttributes(address, _addressAttributeService, _addressAttributeParser);
         }
 
         #endregion
@@ -147,7 +229,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             foreach (var rr in returnRequests)
             {
                 var model = new ReturnRequestModel();
-                returnRequestModels.Add(PrepareReturnRequestModel(model, rr, false));
+                returnRequestModels.Add(PrepareReturnRequestModel(model, rr, true));
             }
             var gridModel = new DataSourceResult
             {
@@ -226,6 +308,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 returnRequest.StaffNotes = model.StaffNotes;
                 returnRequest.ReturnRequestStatusId = model.ReturnRequestStatusId;
                 returnRequest.UpdatedOnUtc = DateTime.UtcNow;
+                returnRequest.PickupAddress = model.PickupAddress.ToEntity();
 
                 _returnRequest.Update(returnRequest);
                 //_customerService.UpdateCustomer(returnRequest.Customer);
@@ -242,7 +325,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
 
             //If we got this far, something failed, redisplay form
-            PrepareReturnRequestModel(model, returnRequest, true);
+            PrepareReturnRequestModel(model, returnRequest, false);
             return View(model);
         }
 

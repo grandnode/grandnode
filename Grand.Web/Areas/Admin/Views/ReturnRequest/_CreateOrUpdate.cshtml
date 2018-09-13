@@ -74,8 +74,11 @@
         }
         @if (Model.PickupAddress != null)
         {
-            <admin-label asp-for="PickupAddress" />
-            <admin-input asp-for="PickupAddress" asp-template="Address" />
+            <div class="form-group">
+                <admin-label asp-for="PickupAddress" />
+                <br />
+                <admin-input asp-for="PickupAddress" asp-template="Address" />
+            </div>
         }
     </div>
 </div>
