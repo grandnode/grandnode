@@ -199,9 +199,10 @@ namespace Grand.Web.Controllers
             model = _returnRequestWebService.PrepareReturnRequest(model, order);
             if (count > 0)
             {
-                model.Result = _localizationService.GetResource("ReturnRequests.Submitted");
-
                 _returnRequestService.InsertReturnRequest(rr);
+
+                model.Result = string.Format(_localizationService.GetResource("ReturnRequests.Submitted"), rr.ReturnNumber, Url.Link("ReturnRequestDetails", new { returnRequestId = rr.Id }));
+
                 //notify store owner here (email)
                 _workflowMessageService.SendNewReturnRequestStoreOwnerNotification(rr, order, _localizationSettings.DefaultAdminLanguageId);
                 //notify customer

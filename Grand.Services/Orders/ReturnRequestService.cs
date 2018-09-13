@@ -98,7 +98,7 @@ namespace Grand.Services.Orders
                 query = query.Where(rr => rr.ReturnRequestStatusId == returnStatusId);
             }
             if (!String.IsNullOrEmpty(orderItemId))
-                query = query.Where(rr => rr.ReturnRequestItems.Any(x => x.Id == orderItemId));
+                query = query.Where(rr => rr.ReturnRequestItems.Any(x => x.OrderItemId == orderItemId));
 
             query = query.OrderByDescending(rr => rr.CreatedOnUtc).ThenByDescending(rr => rr.Id);
 

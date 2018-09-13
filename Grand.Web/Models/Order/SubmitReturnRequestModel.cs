@@ -44,6 +44,8 @@ namespace Grand.Web.Models.Order
 
         public bool ShowPickupDate { get; set; }
 
+        public bool PickupDateRequired { get; set; }
+
         #region Nested classes
 
         public partial class OrderItemModel : BaseGrandEntityModel

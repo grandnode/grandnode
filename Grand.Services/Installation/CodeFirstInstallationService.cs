@@ -5354,6 +5354,7 @@ namespace Grand.Services.Installation
                 ReturnRequestsEnabled = true,
                 ReturnRequests_AllowToSpecifyPickupAddress = true,
                 ReturnRequests_AllowToSpecifyPickupDate = true,
+                ReturnRequests_PickupDateRequired = false,
                 NumberOfDaysReturnRequestAvailable = 365,
                 MinimumOrderPlacementInterval = 30,
                 DeactivateGiftCardsAfterDeletingOrder = false,

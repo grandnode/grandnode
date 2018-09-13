@@ -184,6 +184,7 @@ namespace Grand.Web.Services
 
             model.ShowPickupAddress = _orderSettings.ReturnRequests_AllowToSpecifyPickupAddress;
             model.ShowPickupDate = _orderSettings.ReturnRequests_AllowToSpecifyPickupDate;
+            model.PickupDateRequired = _orderSettings.ReturnRequests_PickupDateRequired;
 
             return model;
         }

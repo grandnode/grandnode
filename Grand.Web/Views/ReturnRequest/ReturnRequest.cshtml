@@ -21,7 +21,7 @@
         @if (!String.IsNullOrEmpty(Model.Error))
         {
             <div class="result">
-                <div class="result card bg-warning p-3 text-white">@Model.Error</div>
+                <div class="result card bg-danger p-3 text-white">@Model.Error</div>
             </div>
         }
 
@@ -171,7 +171,7 @@
                 {
                     <div class="form-group">
                         @T("ReturnRequests.PickupDate"):
-                        <input id="pickupDateDatePicker" name="pickupDate" class="form-control datepicker" />
+                        <input id="pickupDateDatePicker" name="pickupDate" class="form-control datepicker" required="@Model.PickupDateRequired" />
                     </div>
                 }
             </div>
