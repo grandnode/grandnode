@@ -257,29 +257,29 @@ namespace Grand.Services.Messages
         /// Sends 'New Return Request' message to a store owner
         /// </summary>
         /// <param name="returnRequest">Return request</param>
-        /// <param name="orderItem">Order item</param>
+        /// <param name="order">Order</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendNewReturnRequestStoreOwnerNotification(ReturnRequest returnRequest, OrderItem orderItem, string languageId);
+        int SendNewReturnRequestStoreOwnerNotification(ReturnRequest returnRequest, Order order, string languageId);
         
 
         /// <summary>
         /// Sends 'Return Request status changed' message to a customer
         /// </summary>
         /// <param name="returnRequest">Return request</param>
-        /// <param name="orderItem">Order item</param>
+        /// <param name="order">Order item</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendReturnRequestStatusChangedCustomerNotification(ReturnRequest returnRequest, OrderItem orderItem, string languageId);
+        int SendReturnRequestStatusChangedCustomerNotification(ReturnRequest returnRequest, Order order, string languageId);
 
         /// <summary>
         /// Sends 'New Return Request' message to a customer
         /// </summary>
         /// <param name="returnRequest"></param>
-        /// <param name="orderItem"></param>
+        /// <param name="order"></param>
         /// <param name="languageId"></param>
         /// <returns></returns>
-        int SendNewReturnRequestCustomerNotification(ReturnRequest returnRequest, OrderItem orderItem, string languageId);
+        int SendNewReturnRequestCustomerNotification(ReturnRequest returnRequest, Order order, string languageId);
         
         #endregion
 

@@ -1166,14 +1166,13 @@ namespace Grand.Services.Messages
         /// Sends 'New Return Request' message to a store owner
         /// </summary>
         /// <param name="returnRequest">Return request</param>
-        /// <param name="orderItem">Order item</param>
+        /// <param name="orderItem">Order</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendNewReturnRequestStoreOwnerNotification(ReturnRequest returnRequest, OrderItem orderItem, string languageId)
+        public virtual int SendNewReturnRequestStoreOwnerNotification(ReturnRequest returnRequest, Order order, string languageId)
         {
             if (returnRequest == null)
                 throw new ArgumentNullException("returnRequest");
-            var order = EngineContext.Current.Resolve<IOrderService>().GetOrderByOrderItemId(orderItem.Id);
             var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
@@ -1190,7 +1189,7 @@ namespace Grand.Services.Messages
             if (customer != null)
                 _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
-            _messageTokenProvider.AddReturnRequestTokens(tokens, returnRequest, orderItem);
+            _messageTokenProvider.AddReturnRequestTokens(tokens, returnRequest, order);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
@@ -1206,14 +1205,13 @@ namespace Grand.Services.Messages
         /// Sends 'Return Request status changed' message to a customer
         /// </summary>
         /// <param name="returnRequest">Return request</param>
-        /// <param name="orderItem">Order item</param>
+        /// <param name="order">Order</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendReturnRequestStatusChangedCustomerNotification(ReturnRequest returnRequest, OrderItem orderItem, string languageId)
+        public virtual int SendReturnRequestStatusChangedCustomerNotification(ReturnRequest returnRequest, Order order, string languageId)
         {
             if (returnRequest == null)
                 throw new ArgumentNullException("returnRequest");
-            var order = EngineContext.Current.Resolve<IOrderService>().GetOrderByOrderItemId(orderItem.Id);
             var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
@@ -1230,7 +1228,7 @@ namespace Grand.Services.Messages
             if (customer != null)
                 _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
-            _messageTokenProvider.AddReturnRequestTokens(tokens, returnRequest, orderItem);
+            _messageTokenProvider.AddReturnRequestTokens(tokens, returnRequest, order);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
@@ -1250,15 +1248,14 @@ namespace Grand.Services.Messages
         /// Sends 'New Return Request' message to a customer
         /// </summary>
         /// <param name="returnRequest">Return request</param>
-        /// <param name="orderItem">Order item</param>
+        /// <param name="order">Order</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendNewReturnRequestCustomerNotification(ReturnRequest returnRequest, OrderItem orderItem, string languageId)
+        public virtual int SendNewReturnRequestCustomerNotification(ReturnRequest returnRequest, Order order, string languageId)
         {
             if (returnRequest == null)
                 throw new ArgumentNullException("returnRequest");
 
-            var order = EngineContext.Current.Resolve<IOrderService>().GetOrderByOrderItemId(orderItem.Id);
             var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
@@ -1275,7 +1272,7 @@ namespace Grand.Services.Messages
             if (customer != null)
                 _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
-            _messageTokenProvider.AddReturnRequestTokens(tokens, returnRequest, orderItem);
+            _messageTokenProvider.AddReturnRequestTokens(tokens, returnRequest, order);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Grand.Framework;
 using Grand.Framework.Mvc.Models;
 using Grand.Framework.Mvc.ModelBinding;
+using Grand.Web.Models.Common;
 
 namespace Grand.Web.Models.Order
 {
@@ -13,25 +14,35 @@ namespace Grand.Web.Models.Order
             Items = new List<OrderItemModel>();
             AvailableReturnReasons = new List<ReturnRequestReasonModel>();
             AvailableReturnActions = new List<ReturnRequestActionModel>();
+            ExistingAddresses = new List<AddressModel>();
+            NewAddress = new AddressModel();
         }
 
         public string OrderId { get; set; }
         public int OrderNumber { get; set; }
 
         public IList<OrderItemModel> Items { get; set; }
-
-        [GrandResourceDisplayName("ReturnRequests.ReturnReason")]
-        public string ReturnRequestReasonId { get; set; }
+        
         public IList<ReturnRequestReasonModel> AvailableReturnReasons { get; set; }
 
-        [GrandResourceDisplayName("ReturnRequests.ReturnAction")]
-        public string ReturnRequestActionId { get; set; }
         public IList<ReturnRequestActionModel> AvailableReturnActions { get; set; }
 
         [GrandResourceDisplayName("ReturnRequests.Comments")]
         public string Comments { get; set; }
 
         public string Result { get; set; }
+
+        public string Error { get; set; }
+
+        public IList<AddressModel> ExistingAddresses { get; set; }
+
+        public bool NewAddressPreselected { get; set; }
+
+        public AddressModel NewAddress { get; set; }
+
+        public bool ShowPickupAddress { get; set; }
+
+        public bool ShowPickupDate { get; set; }
 
         #region Nested classes
 
@@ -48,6 +59,12 @@ namespace Grand.Web.Models.Order
             public string UnitPrice { get; set; }
 
             public int Quantity { get; set; }
+
+            [GrandResourceDisplayName("ReturnRequests.ReturnReason")]
+            public string ReturnRequestReasonId { get; set; }
+
+            [GrandResourceDisplayName("ReturnRequests.ReturnAction")]
+            public string ReturnRequestActionId { get; set; }
         }
 
         public partial class ReturnRequestReasonModel : BaseGrandEntityModel

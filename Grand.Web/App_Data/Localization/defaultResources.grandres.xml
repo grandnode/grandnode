@@ -7692,6 +7692,18 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestsEnabled.Hint">
     <Value>Check if you want to allow customers to submit return requests for items they've previously purchased.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequests_AllowToSpecifyPickupAddress">
+    <Value>Allow to specify return pickup address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequests_AllowToSpecifyPickupAddress.Hint">
+    <Value>Check if you want to allow customers to specify return pickup address.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequests_AllowToSpecifyPickupDate">
+    <Value>Allow to specify return pickup date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequests_AllowToSpecifyPickupDate.Hint">
+    <Value>Check if you want to allow customers to specify return pickup date.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestSettings">
     <Value>Return request settings</Value>
   </LocaleResource>
@@ -13857,12 +13869,6 @@
   <LocaleResource Name="Admin.ReturnRequests.Fields.Order.Hint">
     <Value>Order information.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.ReturnRequests.Fields.Product">
-    <Value>Product</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ReturnRequests.Fields.Product.Hint">
-    <Value>Product information.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.Fields.Quantity">
     <Value>Quantity</Value>
   </LocaleResource>
@@ -18201,9 +18207,6 @@
   <LocaleResource Name="ReturnRequests.Title">
     <Value>Return item(s) from order #{0}</Value>
   </LocaleResource>
-  <LocaleResource Name="ReturnRequests.WhyReturning">
-    <Value>Why are you returning these items?</Value>
-  </LocaleResource>
   <LocaleResource Name="Reviews">
     <Value>Reviews</Value>
   </LocaleResource>
@@ -19265,13 +19268,13 @@
   </LocaleResource>
   <LocaleResource Name="Knowledgebase.Article.Comments.LeaveYourComment">
     <Value>Leave your comment</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Knowledgebase.Article.Comments">
     <Value>Comments</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Knowledgebase.Article.Comments.SubmitButton">
     <Value>New comment</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Knowledgebase.Article.Comments.CreatedOn">
     <Value>Created on</Value>
   </LocaleResource>
@@ -19301,5 +19304,59 @@
   </LocaleResource>
   <LocaleResource Name="Knowledgebase.Article.Comments.SuccessfullyAdded">
     <Value>Article comment was successfully added.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ReturnRequests.SelectPickupAddressOrEnterNewOne">
+    <Value>Select a pickup address from your address book or enter a new address.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ReturnRequests.NewAddress">
+    <Value>New Address</Value>
+  </LocaleResource>
+  <LocaleResource Name="ReturnRequests.PickupDate">
+    <Value>Specify pickup date</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.ReturnRequestDetails">
+    <Value>Return request details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerReturnRequests.Quantity">
+    <Value>Quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerReturnRequests.UnitPrice">
+    <Value>Unit price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerReturnRequests.Totals">
+    <Value>{0} product(s), {1} total</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerReturnRequests.Details">
+    <Value>Details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerReturnRequests.PickupDate">
+    <Value>Pickup date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerReturnRequests.PickupAddress">
+    <Value>Pickup address</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.ReturnRequests.Fields.Total">
+    <Value>Total</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.Item">
+    <Value>Returned item</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.UnitPrice">
+    <Value>Unit price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.ReturnReason">
+    <Value>Return reason</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.ReturnAction">
+    <Value>Return action</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.PickupDate">
+    <Value>Pickup date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.PickupAddress">
+    <Value>Pickup address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.NotifyCustomer.Hint">
+    <Value>Check if you want customer to be notified by email abouy this return request status change.</Value>
   </LocaleResource>
 </Language>

@@ -83,6 +83,14 @@ namespace Grand.Web.Areas.Admin.Models.Settings
         public bool ReturnRequestsEnabled { get; set; }
         public bool ReturnRequestsEnabled_OverrideForStore { get; set; }
 
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequests_AllowToSpecifyPickupAddress")]
+        public bool ReturnRequests_AllowToSpecifyPickupAddress { get; set; }
+        public bool ReturnRequests_AllowToSpecifyPickupAddress_OverrideForStore { get; set; }
+
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequests_AllowToSpecifyPickupDate")]
+        public bool ReturnRequests_AllowToSpecifyPickupDate { get; set; }
+        public bool ReturnRequests_AllowToSpecifyPickupDate_OverrideForStore { get; set; }
+
 
         [GrandResourceDisplayName("Admin.Configuration.Settings.Order.NumberOfDaysReturnRequestAvailable")]
         public int NumberOfDaysReturnRequestAvailable { get; set; }

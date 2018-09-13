@@ -76,9 +76,9 @@ namespace Grand.Services.Messages
         #region Ctor
 
         public MessageTokenProvider(ILanguageService languageService,
-            ILocalizationService localizationService, 
+            ILocalizationService localizationService,
             IDateTimeHelper dateTimeHelper,
-            IPriceFormatter priceFormatter, 
+            IPriceFormatter priceFormatter,
             ICurrencyService currencyService,
             IWorkContext workContext,
             IDownloadService downloadService,
@@ -220,7 +220,7 @@ namespace Grand.Services.Messages
 
                 sb.AppendLine(string.Format("<td style=\"padding: 0.6em 0.4em;text-align: center;\">{0}</td>", orderItem.Quantity));
 
-                string priceStr; 
+                string priceStr;
                 if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
                 {
                     //including tax
@@ -242,7 +242,7 @@ namespace Grand.Services.Messages
             if (String.IsNullOrEmpty(vendorId))
             {
                 //we render checkout attributes and totals only for store owners (hide for vendors)
-            
+
                 #region Checkout Attributes
 
                 if (!String.IsNullOrEmpty(order.CheckoutAttributeDescription))
@@ -290,14 +290,14 @@ namespace Grand.Services.Messages
                         displaySubTotalDiscount = true;
                     }
                 }
-                
+
                 //shipping, payment method fee
                 string cusShipTotal;
                 string cusPaymentMethodAdditionalFee;
                 var taxRates = new SortedDictionary<decimal, decimal>();
                 string cusTaxTotal = string.Empty;
                 string cusDiscount = string.Empty;
-                string cusTotal; 
+                string cusTotal;
                 if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
                 {
                     //including tax
@@ -418,13 +418,13 @@ namespace Grand.Services.Messages
                 }
 
                 //gift cards
-                var _servicegiftCard = EngineContext.Current.Resolve<IGiftCardService>();                
-                var gcuhC = _servicegiftCard.GetAllGiftCardUsageHistory(order.Id); 
+                var _servicegiftCard = EngineContext.Current.Resolve<IGiftCardService>();
+                var gcuhC = _servicegiftCard.GetAllGiftCardUsageHistory(order.Id);
                 foreach (var gcuh in gcuhC)
                 {
                     var giftCard = EngineContext.Current.Resolve<IGiftCardService>().GetGiftCardById(gcuh.GiftCardId);
                     string giftCardText = String.Format(_localizationService.GetResource("Messages.Order.GiftCardInfo", languageId), WebUtility.HtmlEncode(giftCard.GiftCardCouponCode));
-                    
+
                     string giftCardAmount = _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(gcuh.UsedValue, order.CurrencyRate)), true, order.CustomerCurrencyCode, false, language);
                     sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", _templatesSettings.Color3, giftCardText, giftCardAmount));
                 }
@@ -446,6 +446,60 @@ namespace Grand.Services.Messages
             sb.AppendLine("</table>");
             result = sb.ToString();
             return result;
+        }
+
+        protected virtual string ProductListToHtmlTable(ReturnRequest returnRequest)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("<table border=\"0\" style=\"width:100%;\">");
+
+            sb.AppendLine(string.Format("<tr style=\"text-align:center;\">"));
+            sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.Order.Product(s).Name")));
+            sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.Order.Product(s).Price")));
+            sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.Order.Product(s).Quantity")));
+            sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.Order.Product(s).ReturnReason")));
+            sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.Order.Product(s).ReturnAction")));
+            sb.AppendLine("</tr>");
+
+            var order = _orderService.GetOrderById(returnRequest.OrderId);
+            IProductService _productService = EngineContext.Current.Resolve<IProductService>();
+
+            foreach (var rrItem in returnRequest.ReturnRequestItems)
+            {
+                var orderItem = order.OrderItems.Where(x => x.Id == rrItem.OrderItemId).First();
+
+                sb.AppendLine(string.Format("<tr style=\"background-color: {0};text-align: center;\">", _templatesSettings.Color2));
+                string productName = _productService.GetProductById(orderItem.ProductId).GetLocalized(x => x.Name, order.CustomerLanguageId);
+
+                sb.AppendLine("<td style=\"padding: 0.6em 0.4em;text-align: left;\">" + WebUtility.HtmlEncode(productName));
+
+                sb.AppendLine("</td>");
+
+                string unitPriceStr;
+                var language = _languageService.GetLanguageById(order.CustomerLanguageId);
+                if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
+                {
+                    //including tax
+                    var unitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceInclTax, order.CurrencyRate);
+                    unitPriceStr = _priceFormatter.FormatPrice(unitPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, true);
+                }
+                else
+                {
+                    //excluding tax
+                    var unitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceExclTax, order.CurrencyRate);
+                    unitPriceStr = _priceFormatter.FormatPrice(unitPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, false);
+                }
+                sb.AppendLine(string.Format("<td style=\"padding: 0.6em 0.4em;text-align: right;\">{0}</td>", unitPriceStr));
+
+                sb.AppendLine(string.Format("<td style=\"padding: 0.6em 0.4em;text-align: center;\">{0}</td>", orderItem.Quantity));
+
+                sb.AppendLine(string.Format("<td style=\"padding: 0.6em 0.4em;text-align: center;\">{0}</td>", rrItem.ReasonForReturn));
+
+                sb.AppendLine(string.Format("<td style=\"padding: 0.6em 0.4em;text-align: center;\">{0}</td>", rrItem.RequestedAction));
+            }
+
+            sb.AppendLine("</table>");
+            return sb.ToString();
         }
 
         /// <summary>
@@ -473,7 +527,7 @@ namespace Grand.Services.Messages
             for (int i = 0; i <= table.Count - 1; i++)
             {
                 var si = table[i];
-                var orderItem = order.OrderItems.Where(x=>x.Id == si.OrderItemId).FirstOrDefault();
+                var orderItem = order.OrderItems.Where(x => x.Id == si.OrderItemId).FirstOrDefault();
                 if (orderItem == null)
                     continue;
 
@@ -509,7 +563,7 @@ namespace Grand.Services.Messages
                 sb.AppendLine("</tr>");
             }
             #endregion
-            
+
             sb.AppendLine("</table>");
             result = sb.ToString();
             return result;
@@ -533,20 +587,20 @@ namespace Grand.Services.Messages
             var productService = EngineContext.Current.Resolve<IProductService>();
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
 
-            foreach (var item in cart ? customer.ShoppingCartItems.Where(x=>x.ShoppingCartType == ShoppingCartType.ShoppingCart) :
+            foreach (var item in cart ? customer.ShoppingCartItems.Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart) :
                 customer.ShoppingCartItems.Where(x => x.ShoppingCartType == ShoppingCartType.Wishlist))
             {
                 var product = productService.GetProductById(item.ProductId);
                 sb.AppendLine(string.Format("<tr style=\"background-color: {0};text-align: center;\">", _templatesSettings.Color2));
                 //product name
                 string productName = product.GetLocalized(x => x.Name, languageId);
-                if(withPicture)
+                if (withPicture)
                 {
                     string pictureUrl = "";
                     if (product.ProductPictures.Any())
                     {
-                        var picture = pictureService.GetPictureById(product.ProductPictures.OrderBy(x=>x.DisplayOrder).FirstOrDefault().PictureId);
-                        if(picture!=null)
+                        var picture = pictureService.GetPictureById(product.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault().PictureId);
+                        if (picture != null)
                         {
                             pictureUrl = pictureService.GetPictureUrl(picture, _templatesSettings.PictureSize);
                         }
@@ -591,9 +645,9 @@ namespace Grand.Services.Messages
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
             var products = productService.GetRecommendedProducts(customer.GetCustomerRoleIds());
 
-            foreach(var item in products)
+            foreach (var item in products)
             {
-                
+
                 sb.AppendLine(string.Format("<tr style=\"background-color: {0};text-align: center;\">", _templatesSettings.Color2));
                 //product name
                 string productName = item.GetLocalized(x => x.Name, languageId);
@@ -611,7 +665,7 @@ namespace Grand.Services.Messages
                     sb.Append(string.Format("<td><img src=\"{0}\" alt=\"\"/></td>", pictureUrl));
                 }
                 sb.AppendLine("<td style=\"padding: 0.6em 0.4em;text-align: left;\">" + WebUtility.HtmlEncode(productName));
-                
+
                 sb.AppendLine("</td>");
 
                 sb.AppendLine("</tr>");
@@ -766,7 +820,7 @@ namespace Grand.Services.Messages
                 }
             }
             tokens.Add(new Token("Order.CustomValues", sbCustomValues.ToString(), true));
-            
+
             tokens.Add(new Token("Order.Product(s)", ProductListToHtmlTable(order, languageId, vendorId), true));
 
             var language = _languageService.GetLanguageById(languageId);
@@ -857,19 +911,38 @@ namespace Grand.Services.Messages
             _eventPublisher.EntityTokensAdded(recurringPayment, tokens);
         }
 
-        public virtual void AddReturnRequestTokens(IList<Token> tokens, ReturnRequest returnRequest, OrderItem orderItem)
+        public virtual void AddReturnRequestTokens(IList<Token> tokens, ReturnRequest returnRequest, Order order)
         {
             var productService = EngineContext.Current.Resolve<IProductService>();
+            var countryService = EngineContext.Current.Resolve<ICountryService>();
             var orderService = EngineContext.Current.Resolve<IOrderService>();
             tokens.Add(new Token("ReturnRequest.ID", returnRequest.ReturnNumber.ToString()));
-            tokens.Add(new Token("ReturnRequest.OrderId", orderService.GetOrderByOrderItemId(orderItem.Id).OrderNumber.ToString()));
-            tokens.Add(new Token("ReturnRequest.Product.Quantity", returnRequest.Quantity.ToString()));
-            tokens.Add(new Token("ReturnRequest.Product.Name", productService.GetProductByIdIncludeArch(orderItem.ProductId).Name));
-            tokens.Add(new Token("ReturnRequest.Reason", returnRequest.ReasonForReturn));
-            tokens.Add(new Token("ReturnRequest.RequestedAction", returnRequest.RequestedAction));
+            tokens.Add(new Token("ReturnRequest.OrderId", order.OrderNumber.ToString()));
             tokens.Add(new Token("ReturnRequest.CustomerComment", HtmlHelper.FormatText(returnRequest.CustomerComments, false, true, false, false, false, false), true));
             tokens.Add(new Token("ReturnRequest.StaffNotes", HtmlHelper.FormatText(returnRequest.StaffNotes, false, true, false, false, false, false), true));
             tokens.Add(new Token("ReturnRequest.Status", returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext)));
+            tokens.Add(new Token("ReturnRequest.Products", ProductListToHtmlTable(returnRequest), true));
+
+            if (returnRequest.PickupDate != default(DateTime))
+                tokens.Add(new Token("ReturnRequest.PickupDate", returnRequest.PickupDate.ToShortDateString()));
+
+            if (returnRequest.PickupAddress != null)
+            {
+                tokens.Add(new Token("PickupAddress.FirstName", returnRequest.PickupAddress.FirstName));
+                tokens.Add(new Token("PickupAddress.LastName", returnRequest.PickupAddress.LastName));
+                tokens.Add(new Token("PickupAddress.PhoneNumber", returnRequest.PickupAddress.PhoneNumber));
+                tokens.Add(new Token("PickupAddress.Email", returnRequest.PickupAddress.Email));
+                tokens.Add(new Token("PickupAddress.FaxNumber", returnRequest.PickupAddress.FaxNumber));
+                tokens.Add(new Token("PickupAddress.Company", returnRequest.PickupAddress.Company));
+                tokens.Add(new Token("PickupAddress.VatNumber", returnRequest.PickupAddress.VatNumber));
+                tokens.Add(new Token("PickupAddress.Address1", returnRequest.PickupAddress.Address1));
+                tokens.Add(new Token("PickupAddress.Address2", returnRequest.PickupAddress.Address2));
+                tokens.Add(new Token("PickupAddress.City", returnRequest.PickupAddress.City));
+                tokens.Add(new Token("PickupAddress.StateProvince", !String.IsNullOrEmpty(returnRequest.PickupAddress.StateProvinceId) ? EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(returnRequest.PickupAddress.StateProvinceId).GetLocalized(x => x.Name) : ""));
+                tokens.Add(new Token("PickupAddress.ZipPostalCode", returnRequest.PickupAddress.ZipPostalCode));
+                tokens.Add(new Token("PickupAddress.Country", !String.IsNullOrEmpty(returnRequest.PickupAddress.CountryId) ? EngineContext.Current.Resolve<ICountryService>().GetCountryById(order.BillingAddress.CountryId).GetLocalized(x => x.Name) : ""));
+                tokens.Add(new Token("PickupAddress.CustomAttributes", _addressAttributeFormatter.FormatAttributes(returnRequest.PickupAddress.CustomAttributes), true));
+            }
 
             //event notification
             _eventPublisher.EntityTokensAdded(returnRequest, tokens);
@@ -878,13 +951,13 @@ namespace Grand.Services.Messages
         public virtual void AddGiftCardTokens(IList<Token> tokens, GiftCard giftCard)
         {
             tokens.Add(new Token("GiftCard.SenderName", giftCard.SenderName));
-            tokens.Add(new Token("GiftCard.SenderEmail",giftCard.SenderEmail));
+            tokens.Add(new Token("GiftCard.SenderEmail", giftCard.SenderEmail));
             tokens.Add(new Token("GiftCard.RecipientName", giftCard.RecipientName));
             tokens.Add(new Token("GiftCard.RecipientEmail", giftCard.RecipientEmail));
             tokens.Add(new Token("GiftCard.Amount", _priceFormatter.FormatPrice(giftCard.Amount, true, false)));
             tokens.Add(new Token("GiftCard.CouponCode", giftCard.GiftCardCouponCode));
 
-            var giftCardMesage = !String.IsNullOrWhiteSpace(giftCard.Message) ? 
+            var giftCardMesage = !String.IsNullOrWhiteSpace(giftCard.Message) ?
                 HtmlHelper.FormatText(giftCard.Message, false, true, false, false, false, false) : "";
 
             tokens.Add(new Token("GiftCard.Message", giftCardMesage, true));
@@ -922,7 +995,7 @@ namespace Grand.Services.Messages
         public virtual void AddShoppingCartTokens(IList<Token> tokens, Customer customer)
         {
             string languageId = _languageService.GetAllLanguages().FirstOrDefault().Id;
-            if(customer.GenericAttributes.FirstOrDefault(x=>x.Key == "LanguageId")!=null)
+            if (customer.GenericAttributes.FirstOrDefault(x => x.Key == "LanguageId") != null)
             {
                 languageId = customer.GenericAttributes.FirstOrDefault(x => x.Key == "LanguageId").Value;
             }
@@ -942,7 +1015,7 @@ namespace Grand.Services.Messages
                 languageId = customer.GenericAttributes.FirstOrDefault(x => x.Key == "LanguageId").Value;
             }
             //RecommendedProducts
-            
+
             tokens.Add(new Token("RecommendedProducts.Products", RecommendedProductsListToHtmlTable(customer, languageId, false), true));
             tokens.Add(new Token("RecommendedProducts.ProductsWithPictures", RecommendedProductsListToHtmlTable(customer, languageId, true), true));
 
@@ -1015,8 +1088,8 @@ namespace Grand.Services.Messages
 
         public virtual void AddVendorReviewTokens(IList<Token> tokens, VendorReview vendorReview)
         {
-           var vendor = EngineContext.Current.Resolve<IVendorService>().GetVendorById(vendorReview.VendorId);
-           tokens.Add(new Token("VendorReview.VendorName", vendor.Name));
+            var vendor = EngineContext.Current.Resolve<IVendorService>().GetVendorById(vendorReview.VendorId);
+            tokens.Add(new Token("VendorReview.VendorName", vendor.Name));
 
             //event notification
             _eventPublisher.EntityTokensAdded(vendorReview, tokens);
@@ -1079,29 +1152,29 @@ namespace Grand.Services.Messages
             _eventPublisher.EntityTokensAdded(product, tokens);
         }
 
-        public virtual void AddAttributeCombinationTokens(IList<Token> tokens, ProductAttributeCombination combination,  string languageId)
+        public virtual void AddAttributeCombinationTokens(IList<Token> tokens, ProductAttributeCombination combination, string languageId)
         {
             //attributes
             //we cannot inject IProductAttributeFormatter into constructor because it'll cause circular references.
             //that's why we resolve it here this way
             var product = EngineContext.Current.Resolve<IProductService>().GetProductById(combination.ProductId);
             var productAttributeFormatter = EngineContext.Current.Resolve<IProductAttributeFormatter>();
-            string attributes = productAttributeFormatter.FormatAttributes(product, 
-                combination.AttributesXml, 
-                _workContext.CurrentCustomer, 
+            string attributes = productAttributeFormatter.FormatAttributes(product,
+                combination.AttributesXml,
+                _workContext.CurrentCustomer,
                 renderPrices: false);
 
-            
+
 
             tokens.Add(new Token("AttributeCombination.Formatted", attributes, true));
             tokens.Add(new Token("AttributeCombination.SKU", product.FormatSku(combination.AttributesXml, _productAttributeParser)));
             tokens.Add(new Token("AttributeCombination.StockQuantity", combination.StockQuantity.ToString()));
-            
+
             //event notification
             _eventPublisher.EntityTokensAdded(combination, tokens);
         }
 
-        public virtual void AddForumTopicTokens(IList<Token> tokens, ForumTopic forumTopic, 
+        public virtual void AddForumTopicTokens(IList<Token> tokens, ForumTopic forumTopic,
             int? friendlyForumTopicPageIndex = null, string appendedPostIdentifierAnchor = "")
         {
             //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
@@ -1143,7 +1216,7 @@ namespace Grand.Services.Messages
         public virtual void AddPrivateMessageTokens(IList<Token> tokens, PrivateMessage privateMessage)
         {
             tokens.Add(new Token("PrivateMessage.Subject", privateMessage.Subject));
-            tokens.Add(new Token("PrivateMessage.Text",  privateMessage.FormatPrivateMessageText(), true));
+            tokens.Add(new Token("PrivateMessage.Text", privateMessage.FormatPrivateMessageText(), true));
 
             //event notification
             _eventPublisher.EntityTokensAdded(privateMessage, tokens);
@@ -1245,12 +1318,12 @@ namespace Grand.Services.Messages
                 "%Order.ShippingAddress2%",
                 "%Order.ShippingCity%",
                 "%Order.ShippingStateProvince%",
-                "%Order.ShippingZipPostalCode%", 
+                "%Order.ShippingZipPostalCode%",
                 "%Order.ShippingCountry%",
                 "%Order.ShippingCustomAttributes%",
                 "%Order.PaymentMethod%",
-                "%Order.VatNumber%", 
-                "%Order.CustomValues%", 
+                "%Order.VatNumber%",
+                "%Order.CustomValues%",
                 "%Order.Product(s)%",
                 "%Order.CreatedOn%",
                 "%Order.OrderURLForCustomer%",
@@ -1266,27 +1339,27 @@ namespace Grand.Services.Messages
                 "%ReturnRequest.ID%",
                 "%ReturnRequest.OrderId%",
                 "%ReturnRequest.Product.Quantity%",
-                "%ReturnRequest.Product.Name%", 
-                "%ReturnRequest.Reason%", 
-                "%ReturnRequest.RequestedAction%", 
-                "%ReturnRequest.CustomerComment%", 
+                "%ReturnRequest.Product.Name%",
+                "%ReturnRequest.Reason%",
+                "%ReturnRequest.RequestedAction%",
+                "%ReturnRequest.CustomerComment%",
                 "%ReturnRequest.StaffNotes%",
                 "%ReturnRequest.Status%",
-                "%GiftCard.SenderName%", 
+                "%GiftCard.SenderName%",
                 "%GiftCard.SenderEmail%",
-                "%GiftCard.RecipientName%", 
-                "%GiftCard.RecipientEmail%", 
-                "%GiftCard.Amount%", 
+                "%GiftCard.RecipientName%",
+                "%GiftCard.RecipientEmail%",
+                "%GiftCard.Amount%",
                 "%GiftCard.CouponCode%",
                 "%GiftCard.Message%",
-                "%Customer.Email%", 
+                "%Customer.Email%",
                 "%Customer.Username%",
                 "%Customer.FullName%",
                 "%Customer.FirstName%",
                 "%Customer.LastName%",
                 "%Customer.VatNumber%",
                 "%Customer.CustomAttributes%",
-                "%Customer.PasswordRecoveryURL%", 
+                "%Customer.PasswordRecoveryURL%",
                 "%Customer.AccountActivationURL%",
                 "%ContactUs.SenderEmail%",
                 "%ContactUs.SenderName%",
@@ -1304,33 +1377,33 @@ namespace Grand.Services.Messages
                 "%Vendor.PhoneNumber%",
                 "%Vendor.StateProvince%",
                 "%Vendor.ZipPostalCode%",
-                "%Wishlist.URLForCustomer%", 
-                "%NewsLetterSubscription.Email%", 
+                "%Wishlist.URLForCustomer%",
+                "%NewsLetterSubscription.Email%",
                 "%NewsLetterSubscription.ActivationUrl%",
-                "%NewsLetterSubscription.DeactivationUrl%", 
-                "%ProductReview.ProductName%", 
+                "%NewsLetterSubscription.DeactivationUrl%",
+                "%ProductReview.ProductName%",
                 "%BlogComment.BlogPostTitle%",
                 "%BlogPost.URL%",
                 "%NewsComment.NewsTitle%",
                 "%NewsComment.CommentText%",
                 "%NewsComment.CommentTitle%",
                 "%News.Url%",
-                "%Product.ID%", 
+                "%Product.ID%",
                 "%Product.Name%",
-                "%Product.ShortDescription%", 
+                "%Product.ShortDescription%",
                 "%Product.ProductURLForCustomer%",
-                "%Product.SKU%", 
-                "%Product.StockQuantity%", 
+                "%Product.SKU%",
+                "%Product.StockQuantity%",
                 "%Forums.TopicURL%",
-                "%Forums.TopicName%", 
+                "%Forums.TopicName%",
                 "%Forums.PostAuthor%",
                 "%Forums.PostBody%",
-                "%Forums.ForumURL%", 
+                "%Forums.ForumURL%",
                 "%Forums.ForumName%",
                 "%AttributeCombination.Formatted%",
                 "%AttributeCombination.SKU%",
                 "%AttributeCombination.StockQuantity%",
-                "%PrivateMessage.Subject%", 
+                "%PrivateMessage.Subject%",
                 "%PrivateMessage.Text%",
                 "%BackInStockSubscription.ProductName%",
                 "%BackInStockSubscription.ProductUrl%",
@@ -1398,12 +1471,12 @@ namespace Grand.Services.Messages
                 "%Order.ShippingAddress2%",
                 "%Order.ShippingCity%",
                 "%Order.ShippingStateProvince%",
-                "%Order.ShippingZipPostalCode%", 
+                "%Order.ShippingZipPostalCode%",
                 "%Order.ShippingCountry%",
                 "%Order.ShippingCustomAttributes%",
                 "%Order.PaymentMethod%",
-                "%Order.VatNumber%", 
-                "%Order.CustomValues%", 
+                "%Order.VatNumber%",
+                "%Order.CustomValues%",
                 "%Order.Product(s)%",
                 "%Order.CreatedOn%",
                 "%Order.OrderURLForCustomer%",

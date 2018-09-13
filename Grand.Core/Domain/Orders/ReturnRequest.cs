@@ -1,4 +1,6 @@
+using Grand.Core.Domain.Common;
 using System;
+using System.Collections.Generic;
 
 namespace Grand.Core.Domain.Orders
 {
@@ -7,7 +9,13 @@ namespace Grand.Core.Domain.Orders
     /// </summary>
     public partial class ReturnRequest : BaseEntity
     {
+        public ReturnRequest()
+        {
+            ReturnRequestItems = new List<ReturnRequestItem>();
+        }
+
         public int ReturnNumber { get; set; }
+
         /// <summary>
         /// Gets or sets the store identifier
         /// </summary>
@@ -17,30 +25,16 @@ namespace Grand.Core.Domain.Orders
         /// Gets or sets the order item identifier
         /// </summary>
         public string OrderId { get; set; }
+
         /// <summary>
-        /// Gets or sets the order item identifier
+        /// Gets or sets the return request items
         /// </summary>
-        public string OrderItemId { get; set; }
+        public IList<ReturnRequestItem> ReturnRequestItems { get; set; }
 
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
         public string CustomerId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the quantity
-        /// </summary>
-        public int Quantity { get; set; }
-
-        /// <summary>
-        /// Gets or sets the reason to return
-        /// </summary>
-        public string ReasonForReturn { get; set; }
-
-        /// <summary>
-        /// Gets or sets the requested action
-        /// </summary>
-        public string RequestedAction { get; set; }
 
         /// <summary>
         /// Gets or sets the customer comments
@@ -56,7 +50,7 @@ namespace Grand.Core.Domain.Orders
         /// Gets or sets the return status identifier
         /// </summary>
         public int ReturnRequestStatusId { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the date and time of entity creation
         /// </summary>
@@ -66,7 +60,7 @@ namespace Grand.Core.Domain.Orders
         /// Gets or sets the date and time of entity update
         /// </summary>
         public DateTime UpdatedOnUtc { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the return status
         /// </summary>
@@ -81,6 +75,15 @@ namespace Grand.Core.Domain.Orders
                 this.ReturnRequestStatusId = (int)value;
             }
         }
-        
+
+        /// <summary>
+        /// Gets or sets the pickup date
+        /// </summary>
+        public DateTime PickupDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the pickup address
+        /// </summary>
+        public Address PickupAddress { get; set; }
     }
 }

@@ -12,7 +12,7 @@
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.ReturnRequestsEnabled_OverrideForStore, model => model.ReturnRequestsEnabled, Model.ActiveStoreScopeConfiguration)
-                <admin-label asp-for="ReturnRequestsEnabled" class="control-label"/>
+                <admin-label asp-for="ReturnRequestsEnabled" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <label class="mt-checkbox mt-checkbox-outline">
@@ -24,8 +24,34 @@
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.ReturnRequests_AllowToSpecifyPickupAddress_OverrideForStore, model => model.ReturnRequests_AllowToSpecifyPickupAddress, Model.ActiveStoreScopeConfiguration)
+                <admin-label asp-for="ReturnRequests_AllowToSpecifyPickupAddress" class="control-label" />
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    <admin-input asp-for="ReturnRequests_AllowToSpecifyPickupAddress" />
+                    <span></span>
+                </label>
+                <span asp-validation-for="ReturnRequests_AllowToSpecifyPickupAddress"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.ReturnRequests_AllowToSpecifyPickupDate_OverrideForStore, model => model.ReturnRequests_AllowToSpecifyPickupDate, Model.ActiveStoreScopeConfiguration)
+                <admin-label asp-for="ReturnRequests_AllowToSpecifyPickupDate" class="control-label" />
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    <admin-input asp-for="ReturnRequests_AllowToSpecifyPickupDate" />
+                    <span></span>
+                </label>
+                <span asp-validation-for="ReturnRequests_AllowToSpecifyPickupDate"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.NumberOfDaysReturnRequestAvailable_OverrideForStore, model => model.NumberOfDaysReturnRequestAvailable, Model.ActiveStoreScopeConfiguration)
-                <admin-label asp-for="NumberOfDaysReturnRequestAvailable" class="control-label"/>
+                <admin-label asp-for="NumberOfDaysReturnRequestAvailable" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">
                 <admin-input asp-for="NumberOfDaysReturnRequestAvailable" />

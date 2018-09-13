@@ -98,15 +98,13 @@ namespace Grand.Services.Orders
                 query = query.Where(rr => rr.ReturnRequestStatusId == returnStatusId);
             }
             if (!String.IsNullOrEmpty(orderItemId))
-                query = query.Where(rr => rr.OrderItemId == orderItemId);
+                query = query.Where(rr => rr.ReturnRequestItems.Any(x => x.Id == orderItemId));
 
             query = query.OrderByDescending(rr => rr.CreatedOnUtc).ThenByDescending(rr => rr.Id);
 
             var returnRequests = new PagedList<ReturnRequest>(query, pageIndex, pageSize);
             return returnRequests;
         }
-
-
 
         /// <summary>
         /// Delete a return request action
