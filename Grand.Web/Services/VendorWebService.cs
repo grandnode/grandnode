@@ -137,10 +137,9 @@ namespace Grand.Web.Services
             };
             _vendorService.InsertVendorReview(vendorReview);
 
-            if (!_workContext.CurrentCustomer.IsHasVendorReview)
+            if (!_workContext.CurrentCustomer.HasContributions)
             {
-                _workContext.CurrentCustomer.IsHasVendorReview = true;
-                EngineContext.Current.Resolve<ICustomerService>().UpdateHasVendorReview(_workContext.CurrentCustomer.Id);
+                EngineContext.Current.Resolve<ICustomerService>().UpdateContributions(_workContext.CurrentCustomer);
             }
 
             //update vendor totals

@@ -83,6 +83,7 @@ namespace Grand.Services.Installation
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
         private readonly IRepository<CustomerRoleProduct> _customerRoleProductRepository;
+        private readonly IRepository<CustomerProduct> _customerProductRepository;
         private readonly IRepository<CustomerProductPrice> _customerProductPriceRepository;
         private readonly IRepository<CustomerTagProduct> _customerTagProductRepository;
         private readonly IRepository<CustomerHistoryPassword> _customerHistoryPasswordRepository;
@@ -184,6 +185,7 @@ namespace Grand.Services.Installation
             IRepository<Customer> customerRepository,
             IRepository<CustomerRole> customerRoleRepository,
             IRepository<CustomerRoleProduct> customerRoleProductRepository,
+            IRepository<CustomerProduct> customerProductRepository,
             IRepository<CustomerProductPrice> customerProductPriceRepository,
             IRepository<CustomerTagProduct> customerTagProductRepository,
             IRepository<CustomerHistoryPassword> customerHistoryPasswordRepository,
@@ -279,6 +281,7 @@ namespace Grand.Services.Installation
             this._currencyRepository = currencyRepository;
             this._customerRepository = customerRepository;
             this._customerRoleRepository = customerRoleRepository;
+            this._customerProductRepository = customerProductRepository;
             this._customerProductPriceRepository = customerProductPriceRepository;
             this._customerRoleProductRepository = customerRoleProductRepository;
             this._customerTagProductRepository = customerTagProductRepository;
@@ -5120,6 +5123,8 @@ namespace Grand.Services.Installation
                 RecommendedProductsEnabled = false,
                 SuggestedProductsEnabled = false,
                 SuggestedProductsNumber = 6,
+                PersonalizedProductsEnabled = false,
+                PersonalizedProductsNumber = 6,
                 NewProductsNumber = 6,
                 NewProductsEnabled = true,
                 CompareProductsEnabled = true,
@@ -5259,6 +5264,7 @@ namespace Grand.Services.Installation
                 TwitterLink = "https://twitter.com/grandnode",
                 YoutubeLink = "http://www.youtube.com/user/grandnode",
                 GooglePlusLink = "https://plus.google.com/104905799281078572776",
+                InstagramLink = "https://www.instagram.com/grandnode/",
                 HidePoweredByGrandNode = false
             });
 
@@ -11047,6 +11053,10 @@ namespace Grand.Services.Installation
 
             //customer role
             _customerRoleProductRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<CustomerRoleProduct>((Builders<CustomerRoleProduct>.IndexKeys.Ascending(x => x.Id).Ascending(x => x.DisplayOrder)), new CreateIndexOptions() { Name = "CustomerRoleId_DisplayOrder", Unique = false }));
+
+            //customer personalize product 
+            _customerProductRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<CustomerProduct>((Builders<CustomerProduct>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x => x.DisplayOrder)), new CreateIndexOptions() { Name = "CustomerProduct", Unique = false }));
+            _customerProductRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<CustomerProduct>((Builders<CustomerProduct>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x => x.ProductId)), new CreateIndexOptions() { Name = "CustomerProduct_Unique", Unique = true }));
 
             //customer product price
             _customerProductPriceRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<CustomerProductPrice>((Builders<CustomerProductPrice>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x => x.ProductId)), new CreateIndexOptions() { Name = "CustomerProduct", Unique = true }));

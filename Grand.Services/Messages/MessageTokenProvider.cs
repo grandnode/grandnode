@@ -760,6 +760,7 @@ namespace Grand.Services.Messages
             tokens.Add(new Token("Facebook.URL", _storeInformationSettings.FacebookLink));
             tokens.Add(new Token("YouTube.URL", _storeInformationSettings.YoutubeLink));
             tokens.Add(new Token("GooglePlus.URL", _storeInformationSettings.GooglePlusLink));
+            tokens.Add(new Token("Instagram.URL", _storeInformationSettings.InstagramLink));
 
             //event notification
             _eventPublisher.EntityTokensAdded(store, tokens);

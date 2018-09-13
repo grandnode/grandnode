@@ -9,6 +9,7 @@
         @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_before_categories" })
         @await Component.InvokeAsync("HomePageCategories")
         @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_before_products" })
+        @await Component.InvokeAsync("PersonalizedProducts")
         @await Component.InvokeAsync("RecommendedProducts")
         @await Component.InvokeAsync("SuggestedProducts")
         @await Component.InvokeAsync("HomePageProducts")

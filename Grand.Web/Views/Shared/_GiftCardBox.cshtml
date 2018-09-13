@@ -9,29 +9,29 @@
         <div class="coupon-code">
             <div class="form-group">
                 <span for="inputEmail3" class="col-form-label">@T("ShoppingCart.GiftCardCouponCode.Tooltip")</span>
-                    <div class="input-group">
-                        <input id="giftcardcouponcode" name="giftcardcouponcode" type="text" class="form-control gift-card-coupon-code" />
-                        <label for="giftcardcouponcode" class="sr-only">@T("ShoppingCart.GiftCardCouponCode.Button")</label>
-                        <span class="input-group-append">
-                            <button type="submit" name="applygiftcardcouponcode" id="applygiftcardcouponcode" class="btn btn-secondary apply-discount-coupon-code-button">
-                                @T("ShoppingCart.GiftCardCouponCode.Button")
-                            </button>
-                        </span>
-                    </div>
+                <div class="input-group">
+                    <input id="giftcardcouponcode" name="giftcardcouponcode" type="text" class="form-control gift-card-coupon-code" />
+                    <label for="giftcardcouponcode" class="sr-only">@T("ShoppingCart.GiftCardCouponCode.Button")</label>
+                    <span class="input-group-append">
+                        <button type="submit" name="applygiftcardcouponcode" id="applygiftcardcouponcode" class="btn btn-secondary apply-discount-coupon-code-button">
+                            @T("ShoppingCart.GiftCardCouponCode.Button")
+                        </button>
+                    </span>
+                </div>
             </div>
         </div>
         <script>
             $(document).ready(function () {
                 $('#giftcardcouponcode').keydown(function (event) {
                     if (event.keyCode == 13) {
-                        $('#applygiftcardcouponcode').click();
+                        $('#applygiftcardcouponcode').trigger("click")
                         return false;
                     }
                 });
             });
         </script>
         @if (!String.IsNullOrEmpty(Model.Message))
-        { 
+        {
             <div class="card text-white @(Model.IsApplied ? "card-success message-success" : "card-danger message-failure") text-center">
                 <div class="card-body p-3">
                     <blockquote class="card-bodyquote mb-0">

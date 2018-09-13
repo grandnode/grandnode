@@ -175,8 +175,7 @@ namespace Grand.Services.Messages
                                 CustomerTags = customers.CustomerTags,
                                 CustomerRoles = customers.CustomerRoles,
                                 NewsletterCategories = o.Categories,
-                                HasShoppingCartItems = customers.HasShoppingCartItems,
-                                IsHasOrders = customers.IsHasOrders,
+                                HasShoppingCartItems = customers.ShoppingCartItems.Any(),
                                 LastActivityDateUtc = customers.LastActivityDateUtc,
                                 LastPurchaseDateUtc = customers.LastPurchaseDateUtc,
                                 NewsLetterSubscriptionGuid = o.NewsLetterSubscriptionGuid

@@ -343,7 +343,7 @@ namespace Grand.Web.Services
                 AllowPrivateMessages = isRegister && _forumSettings.AllowPrivateMessages,
             };
             //performance optimization (use "HasShoppingCartItems" property)
-            if (customer.HasShoppingCartItems)
+            if (customer.ShoppingCartItems.Any())
             {
                 model.ShoppingCartItems = customer.ShoppingCartItems
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
@@ -404,6 +404,7 @@ namespace Grand.Web.Services
                 TwitterLink = _storeInformationSettings.TwitterLink,
                 YoutubeLink = _storeInformationSettings.YoutubeLink,
                 GooglePlusLink = _storeInformationSettings.GooglePlusLink,
+                InstagramLink = _storeInformationSettings.InstagramLink,
                 BlogEnabled = _blogSettings.Enabled,
                 KnowledgebaseEnabled = _knowledgebaseSettings.Enabled,
                 CompareProductsEnabled = _catalogSettings.CompareProductsEnabled,

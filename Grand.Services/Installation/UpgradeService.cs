@@ -993,6 +993,7 @@ namespace Grand.Services.Installation
 
             InstallStringResources("EN_420_430.nopres.xml");
 
+            #region Admin search settings
             var adminSearchSettings = EngineContext.Current.Resolve<AdminSearchSettings>();
             adminSearchSettings.BlogsDisplayOrder = 0;
             adminSearchSettings.CategoriesDisplayOrder = 0;
@@ -1015,6 +1016,9 @@ namespace Grand.Services.Installation
             adminSearchSettings.SearchInMenu = true;
             adminSearchSettings.MenuDisplayOrder = -1;
             _settingService.SaveSetting(adminSearchSettings);
+            #endregion
+
+            #region Emails
 
             var emailAccount = EngineContext.Current.Resolve<IRepository<EmailAccount>>().Table.FirstOrDefault();
             if (emailAccount == null)
@@ -1032,6 +1036,9 @@ namespace Grand.Services.Installation
             };
             EngineContext.Current.Resolve<IRepository<MessageTemplate>>().Insert(messageTemplates);
 
+            #endregion
+
+            #region Activity log
             var _activityLogTypeRepository = EngineContext.Current.Resolve<IRepository<ActivityLogType>>();
             _activityLogTypeRepository.Insert(new ActivityLogType
             {
@@ -1039,11 +1046,58 @@ namespace Grand.Services.Installation
                 Enabled = false,
                 Name = "Public store. Add article comment"
             });
+            #endregion
+
+            #region Knowledgebase settings
 
             var knowledgebaseSettings = EngineContext.Current.Resolve<KnowledgebaseSettings>();
             knowledgebaseSettings.AllowNotRegisteredUsersToLeaveComments = true;
             knowledgebaseSettings.NotifyAboutNewArticleComments = false;
             _settingService.SaveSetting(knowledgebaseSettings);
+            #endregion
+
+            #region Customer Personalize Product
+
+            var _customerProductRepository = EngineContext.Current.Resolve<IRepository<CustomerProduct>>();
+            _customerProductRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<CustomerProduct>((Builders<CustomerProduct>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x => x.DisplayOrder)), new CreateIndexOptions() { Name = "CustomerProduct", Unique = false }));
+            _customerProductRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<CustomerProduct>((Builders<CustomerProduct>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x => x.ProductId)), new CreateIndexOptions() { Name = "CustomerProduct_Unique", Unique = true }));
+
+            #endregion
+
+            #region Update customer
+
+            var dbContext = EngineContext.Current.Resolve<IMongoDatabase>();
+            var customerRepository = EngineContext.Current.Resolve<IRepository<Customer>>();
+
+            var builderCustomer = Builders<Customer>.Filter;
+            var filterCustomer = builderCustomer.Eq("IsNewsItem", true) | builderCustomer.Eq("IsHasOrders", true) | builderCustomer.Eq("IsHasBlogComments", true) | builderCustomer.Eq("IsHasArticleComments", true)
+                 | builderCustomer.Eq("IsHasProductReview", true) | builderCustomer.Eq("IsHasProductReviewH", true) | builderCustomer.Eq("IsHasVendorReview", true)
+                 | builderCustomer.Eq("IsHasVendorReviewH", true) | builderCustomer.Eq("IsHasPoolVoting", true) | builderCustomer.Eq("IsHasForumPost", true) | builderCustomer.Eq("IsHasForumTopic", true);
+
+            var updateCustomer = Builders<Customer>.Update
+               .Set(x => x.HasContributions, true);
+
+            var resultUpdate = customerRepository.Collection.UpdateOneAsync(filterCustomer, updateCustomer).Result;
+
+            var removeFields = Builders<object>.Update
+               .Unset("IsNewsItem")
+               .Unset("IsHasOrders")
+               .Unset("IsHasBlogComments")
+               .Unset("IsHasArticleComments")
+               .Unset("IsHasProductReview")
+               .Unset("IsHasProductReviewH")
+               .Unset("IsHasVendorReview")
+               .Unset("IsHasVendorReviewH")
+               .Unset("IsHasPoolVoting")
+               .Unset("IsHasForumPost")
+               .Unset("IsHasForumTopic")
+               .Unset("HasShoppingCartItems");
+
+            var resultRemove = dbContext.GetCollection<object>(typeof(Customer).Name).UpdateMany(new BsonDocument(), removeFields);
+
+
+            #endregion
+
         }
 
         private void InstallStringResources(string filenames)

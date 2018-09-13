@@ -167,52 +167,12 @@ namespace Grand.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         void UpdateActive(Customer customer);
+
         /// <summary>
-        /// Updates the customer
+        /// Update the customer
         /// </summary>
-        /// <param name="customer">Customer</param>
-        void UpdateNewsItem(Customer customer);
-        /// <summary>
-        /// Updates the customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        void UpdateHasForumTopic(string customerId);
-        /// <summary>
-        /// Updates the customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        void UpdateHasForumPost(string customerId);
-        /// <summary>
-        /// Updates the customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        void UpdateHasOrders(string customerId);
-        /// <summary>
-        /// Updates the customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        void UpdateHasBlogComments(string customerId);
-        /// <summary>
-        /// Updates the customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        void UpdateHasArticleComments(string customerId);
-        /// <summary>
-        /// Updates the customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        void UpdateHasProductReview(string customerId);
-        /// <summary>
-        /// Updates the customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        void UpdateHasProductReviewH(string customerId);
-        /// <summary>
-        /// Updates the customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        void UpdateHasPoolVoting(string customerId);
-        
+        /// <param name="customer"></param>
+        void UpdateContributions(Customer customer);
 
         /// <summary>
         /// Updates the customer
@@ -269,17 +229,6 @@ namespace Grand.Services.Customers
         /// <param name="orderId"></param>
         void UpdateCustomerReminderHistory(string customerId, string orderId);
 
-
-        /// <summary>
-        /// Updates the customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        void UpdateHasVendorReview(string customerId);
-        /// <summary>
-        /// Updates the customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        void UpdateHasVendorReviewH(string customerId);
 
         /// <summary>
         /// Delete guest customer records
@@ -421,7 +370,6 @@ namespace Grand.Services.Customers
         void DeleteShoppingCartItem(string customerId, ShoppingCartItem shoppingCartItem);
         void InsertShoppingCartItem(string customerId, ShoppingCartItem shoppingCartItem);
         void UpdateShoppingCartItem(string customerId, ShoppingCartItem shoppingCartItem);
-        void UpdateHasShoppingCartItems(Customer customer);
         #endregion
 
         #region Customer Product Price
@@ -440,6 +388,21 @@ namespace Grand.Services.Customers
         /// <param name="productId">Product Identifier</param>
         /// <returns>Customer product price</returns>
         decimal? GetPriceByCustomerProduct(string customerId, string productId);
+
+        /// <summary>
+        /// Gets a customer product 
+        /// </summary>
+        /// <param name="id">Identifier</param>
+        /// <returns>Customer product</returns>
+        CustomerProduct GetCustomerProduct(string id);
+
+        /// <summary>
+        /// Gets a customer product 
+        /// </summary>
+        /// <param name="customerId">Customer Identifier</param>
+        /// <param name="productId">Product Identifier</param>
+        /// <returns>Customer product</returns>
+        CustomerProduct GetCustomerProduct(string customerId, string productId);
 
         /// <summary>
         /// Inserts a customer product price
@@ -466,9 +429,32 @@ namespace Grand.Services.Customers
         /// </summary>
         /// <param name="customerId">Customer id</param>
         /// <returns>Customer products price</returns>
-        IPagedList<CustomerProductPrice> GetProductsByCustomer(string customerId, int pageIndex = 0, int pageSize = int.MaxValue);
+        IPagedList<CustomerProductPrice> GetProductsPriceByCustomer(string customerId, int pageIndex = 0, int pageSize = int.MaxValue);
 
         #endregion
 
+        #region Customer product
+
+        /// <summary>
+        /// Inserts a customer product 
+        /// </summary>
+        /// <param name="customerProduct">Customer product</param>
+        void InsertCustomerProduct(CustomerProduct customerProduct);
+
+        /// <summary>
+        /// Updates the customer product
+        /// </summary>
+        /// <param name="customerProduct">Customer product </param>
+        void UpdateCustomerProduct(CustomerProduct customerProduct);
+
+        /// <summary>
+        /// Delete a customer product 
+        /// </summary>
+        /// <param name="customerProduct">Customer product </param>
+        void DeleteCustomerProduct(CustomerProduct customerProduct);
+
+        IPagedList<CustomerProduct> GetProductsByCustomer(string customerId, int pageIndex = 0, int pageSize = int.MaxValue);
+
+        #endregion
     }
 }

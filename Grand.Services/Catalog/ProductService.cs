@@ -55,7 +55,7 @@ namespace Grand.Services.Catalog
         /// Key for caching
         /// </summary>
         /// <remarks>
-        /// {0} : product ID
+        /// {0} : customer ID
         /// </remarks>
         private const string PRODUCTS_CUSTOMER_ROLE = "Grand.product.cr-{0}";
 
@@ -63,9 +63,17 @@ namespace Grand.Services.Catalog
         /// Key for caching
         /// </summary>
         /// <remarks>
-        /// {0} : product ID
+        /// {0} : customer ID
         /// </remarks>
         private const string PRODUCTS_CUSTOMER_TAG = "Grand.product.ct-{0}";
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : customer ID
+        /// </remarks>
+        private const string PRODUCTS_CUSTOMER_PERSONAL = "Grand.product.personal-{0}";
 
         #endregion
 
@@ -80,6 +88,7 @@ namespace Grand.Services.Catalog
         private readonly IRepository<CustomerRoleProduct> _customerRoleProductRepository;
         private readonly IRepository<CustomerTagProduct> _customerTagProductRepository;
         private readonly IRepository<ProductDeleted> _productDeletedRepository;
+        private readonly IRepository<CustomerProduct> _customerProductRepository;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ILanguageService _languageService;
@@ -111,6 +120,7 @@ namespace Grand.Services.Catalog
             IRepository<CustomerRoleProduct> customerRoleProductRepository,
             IRepository<CustomerTagProduct> customerTagProductRepository,
             IRepository<ProductDeleted> productDeletedRepository,
+            IRepository<CustomerProduct> customerProductRepository,
             IProductAttributeService productAttributeService,
             IProductAttributeParser productAttributeParser,
             ILanguageService languageService,
@@ -150,6 +160,7 @@ namespace Grand.Services.Catalog
             this._aclService = aclService;
             this._storeMappingService = storeMappingService;
             this._productTagRepository = productTagRepository;
+            this._customerProductRepository = customerProductRepository;
         }
 
         #endregion
@@ -1948,6 +1959,8 @@ namespace Grand.Services.Catalog
 
         #endregion
 
+        #region Bundle product
+
         /// <summary>
         /// Deletes a bundle product
         /// </summary>
@@ -2015,6 +2028,7 @@ namespace Grand.Services.Catalog
 
         }
 
+        #endregion
 
         #region Cross-sell products
 
@@ -2380,6 +2394,38 @@ namespace Grand.Services.Catalog
 
         #endregion
 
+
+        #region Personalized products
+
+        /// <summary>
+        /// Gets personalized products for customer 
+        /// </summary>
+        /// <param name="customerId">Customer Id</param>
+        /// <returns>Products</returns>
+        public virtual IList<Product> GetPersonalizedProducts(string customerId)
+        {
+
+            return _cacheManager.Get(string.Format(PRODUCTS_CUSTOMER_PERSONAL, customerId),
+                () =>
+                {
+                    var query = from cr in _customerProductRepository.Table
+                                where cr.CustomerId == customerId
+                                orderby cr.DisplayOrder
+                                select cr.ProductId;
+
+                    var productIds = query.Take(_catalogSettings.PersonalizedProductsNumber).ToList().Distinct();
+
+                    var products = new List<Product>();
+
+                    foreach (var product in GetProductsByIds(productIds.ToArray()))
+                        if (product.Published)
+                            products.Add(product);
+
+                    return products;
+                });
+        }
+
+        #endregion
 
         #region Product reviews
 

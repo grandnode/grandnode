@@ -29,7 +29,7 @@
                 });
                 $("#@Html.IdFor(model => model.ZipPostalCode)").keydown(function (event) {
                     if (event.keyCode == 13) {
-                        $("#estimate-shipping-button").click();
+                        $("#estimate-shipping-button").trigger("click")
                         return false;
                     }
                 });
@@ -47,22 +47,22 @@
                     <label asp-for="CountryId">@T("ShoppingCart.EstimateShipping.Country"):</label>
                     <select asp-for="CountryId" asp-items="Model.AvailableCountries" class="custom-select form-control country-input"></select>
                 </div>
-                </div>
-                <div class="form-group">
-                    <label asp-for="StateProvinceId">@T("ShoppingCart.EstimateShipping.StateProvince"):</label>
-                    <select asp-for="StateProvinceId" asp-items="Model.AvailableStates" class="custom-select form-control state-input"></select>
-                    <span id="estimate-shipping-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="ZipPostalCode">@T("ShoppingCart.EstimateShipping.ZipPostalCode"):</label>
-                    <input asp-for="ZipPostalCode" class="form-control zip-input" />
-                </div>
-                <div class="buttons">
-                    <input id="estimate-shipping-button" type="button" value="@T("ShoppingCart.EstimateShipping.Button")" class="btn btn-secondary float-xs-right estimate-shipping-button" />
-                </div>
             </div>
-            <div class="col-12 px-0 estimate-shipping-result generalMarginSupporter"></div>
+            <div class="form-group">
+                <label asp-for="StateProvinceId">@T("ShoppingCart.EstimateShipping.StateProvince"):</label>
+                <select asp-for="StateProvinceId" asp-items="Model.AvailableStates" class="custom-select form-control state-input"></select>
+                <span id="estimate-shipping-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ZipPostalCode">@T("ShoppingCart.EstimateShipping.ZipPostalCode"):</label>
+                <input asp-for="ZipPostalCode" class="form-control zip-input" />
+            </div>
+            <div class="buttons">
+                <input id="estimate-shipping-button" type="button" value="@T("ShoppingCart.EstimateShipping.Button")" class="btn btn-secondary float-xs-right estimate-shipping-button" />
+            </div>
         </div>
+        <div class="col-12 px-0 estimate-shipping-result generalMarginSupporter"></div>
+    </div>
 }
 <script>
     $(document).ready(function () {

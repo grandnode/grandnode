@@ -130,6 +130,14 @@ namespace Grand.Web.Areas.Admin.Models.Settings
         public int SuggestedProductsNumber { get; set; }
         public bool SuggestedProductsNumber_OverrideForStore { get; set; }
 
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Catalog.PersonalizedProductsEnabled")]
+        public bool PersonalizedProductsEnabled { get; set; }
+        public bool PersonalizedProductsEnabled_OverrideForStore { get; set; }
+
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Catalog.PersonalizedProductsNumber")]
+        public int PersonalizedProductsNumber { get; set; }
+        public bool PersonalizedProductsNumber_OverrideForStore { get; set; }
+
         [GrandResourceDisplayName("Admin.Configuration.Settings.Catalog.NewProductsNumber")]
         public int NewProductsNumber { get; set; }
         public bool NewProductsNumber_OverrideForStore { get; set; }

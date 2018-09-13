@@ -681,7 +681,7 @@ namespace Grand.Services.Customers
             foreach (var reminder in customerReminder)
             {
                 var customers = from cu in _customerRepository.Table
-                                where cu.HasShoppingCartItems && cu.LastUpdateCartDateUtc > reminder.LastUpdateDate
+                                where cu.ShoppingCartItems.Any() && cu.LastUpdateCartDateUtc > reminder.LastUpdateDate
                                 && (!String.IsNullOrEmpty(cu.Email))
                                 select cu;
 

@@ -6,13 +6,13 @@
         <div class="use-reward-points">
 
             <label class="custom-control custom-checkbox">
-                @Html.CheckBoxFor(model => model.UseRewardPoints, new { @class = "custom-control-input" })
+                <input asp-for="UseRewardPoints" class="custom-control-input" />
                 <span class="custom-control-label"></span>
                 <span class="custom-control-description">@string.Format(T("Checkout.UseRewardPoints").Text, Model.RewardPointsBalance, Model.RewardPointsAmount)</span>
             </label>
 
             @if (Model.RewardPointsEnoughToPayForOrder)
-                {
+            {
                 <script>
                         $(document).ready(function() {
                             PaymentMethod.toggleUseRewardPoints($('#@Html.IdFor(model => model.UseRewardPoints)'));

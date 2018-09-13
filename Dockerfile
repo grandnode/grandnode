@@ -43,7 +43,6 @@ RUN dotnet build Plugins/Grand.Plugin.Tax.FixedRate
 RUN dotnet build Plugins/Grand.Plugin.Widgets.GoogleAnalytics
 RUN dotnet build Plugins/Grand.Plugin.Widgets.Slider
 
-
 # Build runtime image
 FROM microsoft/dotnet:2.1-aspnetcore-runtime 
 RUN apt-get update && \

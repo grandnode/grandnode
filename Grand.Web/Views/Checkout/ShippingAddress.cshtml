@@ -15,7 +15,7 @@
                 <div class="selector">
 
                     <label class="custom-control custom-checkbox">
-                        @Html.CheckBoxFor(x => x.PickUpInStore, new { @class = "custom-control-input" } )
+                        <input asp-for="PickUpInStore" class="custom-control-input"/>
                         <span class="custom-control-label"></span>
                         <span for="@Html.IdFor(model => model.PickUpInStore)" class="custom-control-description">@T("Checkout.PickupPoints").Text</span>
                     </label>
@@ -27,7 +27,7 @@
                 </div>
                 <script>
                     $(document).ready(function () {
-                        $("#@Html.IdFor(model => model.PickUpInStore)").change(togglePickUpInStore);
+                        $("#@Html.IdFor(model => model.PickUpInStore)").on('change', togglePickUpInStore);
                         togglePickUpInStore();
                     });
 
@@ -48,11 +48,11 @@
         {
             <div class="pickup-points" id="pickup-points-form">
                 @if (Model.PickupPoints.Any())
+                {
+                    if (Model.PickUpInStoreOnly)
                     {
-                        if (Model.PickUpInStoreOnly)
-                        {
-                            <input asp-for="PickUpInStore" type="hidden" />
-                        }
+                        <input asp-for="PickUpInStore" type="hidden" />
+                    }
                     <div class="select-pickup-point">
                         @if (Model.PickupPoints.Count == 1)
                         {
@@ -72,41 +72,41 @@
                             <div class="title">
                                 <strong>@T("Checkout.PickupPoints.SelectPickupPoint")</strong>
                             </div>
-                                <select name="pickup-point-id" id="pickup-points-select" class="address-select" title="">
-                                    @foreach (var point in Model.PickupPoints)
+                            <select name="pickup-point-id" id="pickup-points-select" class="address-select" title="">
+                                @foreach (var point in Model.PickupPoints)
+                                {
+                                    var addressLine = new System.Text.StringBuilder();
+                                    addressLine.Append(point.Name);
+                                    if (!string.IsNullOrEmpty(point.Address.City))
                                     {
-                                        var addressLine = new System.Text.StringBuilder();
-                                        addressLine.Append(point.Name);
-                                        if (!string.IsNullOrEmpty(point.Address.City))
-                                        {
-                                            addressLine.AppendFormat(", {0}", point.Address.City);
-                                        }
-                                        if (!string.IsNullOrEmpty(point.Address.ZipPostalCode))
-                                        {
-                                            addressLine.AppendFormat(", {0}", point.Address.ZipPostalCode);
-                                        }
-                                        if (!string.IsNullOrEmpty(point.Address.Address1))
-                                        {
-                                            addressLine.AppendFormat(", {0}", point.Address.Address1);
-                                        }
-                                        if (!string.IsNullOrEmpty(point.PickupFee))
-                                        {
-                                            addressLine.AppendFormat(", {0}", point.PickupFee);
-                                        }
-                                        <option value="@point.Id">@(addressLine)</option>
+                                        addressLine.AppendFormat(", {0}", point.Address.City);
                                     }
-                                </select>
+                                    if (!string.IsNullOrEmpty(point.Address.ZipPostalCode))
+                                    {
+                                        addressLine.AppendFormat(", {0}", point.Address.ZipPostalCode);
+                                    }
+                                    if (!string.IsNullOrEmpty(point.Address.Address1))
+                                    {
+                                        addressLine.AppendFormat(", {0}", point.Address.Address1);
+                                    }
+                                    if (!string.IsNullOrEmpty(point.PickupFee))
+                                    {
+                                        addressLine.AppendFormat(", {0}", point.PickupFee);
+                                    }
+                                    <option value="@point.Id">@(addressLine)</option>
+                                }
+                            </select>
                         }
                     </div>
 
-                        <div class="message-error">
-                            <ul>
-                                @foreach (var warning in Model.Warnings)
-                                {
-                                    <li>@warning</li>
-                                }
-                            </ul>
-                        </div>
+                    <div class="message-error">
+                        <ul>
+                            @foreach (var warning in Model.Warnings)
+                            {
+                                <li>@warning</li>
+                            }
+                        </ul>
+                    </div>
                 }
             </div>
         }
@@ -237,7 +237,7 @@
             </div>
         }
         <div class="buttons col-12 mb-2 mt-2">
-           <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="btn btn-info new-address-next-step-button" />
+            <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="btn btn-info new-address-next-step-button" />
         </div>
     </form>
 

@@ -268,5 +268,37 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.Fields.PickupAddress">
     <Value>Pickup address</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.PersonalizedProductsEnabled">
+    <Value>'Personalized products' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.PersonalizedProductsEnabled.Hint">
+    <Value>Check to allow customers to use the 'Personalized products' feature in your store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.PersonalizedProductsNumber">
+    <Value>Number of 'Personalized products'</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.PersonalizedProductsNumber.Hint">
+    <Value>The number of 'Personalized products' to display when 'Personalized products' option is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="HomePage.Personalized.Products">
+    <Value>Personalized products for you</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.PersonalizedProduct">
+    <Value>Personalized products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.PersonalizedProduct.AddNew">
+    <Value>Add new product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.PersonalizedProduct.ProductName">
+    <Value>Product name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.PersonalizedProduct.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.InstagramLink">
+    <Value>Instagram page URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.InstagramLink.Hint">
+    <Value>Specify your Instagram page URL. Leave empty if you have no such page.</Value>
   </LocaleResource>
 </Language>

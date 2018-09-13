@@ -219,6 +219,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ActionName("MethodRestrictions")]
+        [RequestFormLimits(ValueCountLimit = 2048)]
         public IActionResult MethodRestrictionsSave(IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))

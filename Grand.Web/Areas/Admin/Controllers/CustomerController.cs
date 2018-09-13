@@ -107,31 +107,31 @@ namespace Grand.Web.Areas.Admin.Controllers
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             IGenericAttributeService genericAttributeService,
             ICustomerRegistrationService customerRegistrationService,
-            ICustomerReportService customerReportService, 
+            ICustomerReportService customerReportService,
             IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService,
             IRewardPointsService rewardPointsService,
             DateTimeSettings dateTimeSettings,
-            TaxSettings taxSettings, 
+            TaxSettings taxSettings,
             RewardPointsSettings rewardPointsSettings,
-            ICountryService countryService, 
-            IStateProvinceService stateProvinceService, 
+            ICountryService countryService,
+            IStateProvinceService stateProvinceService,
             IAddressService addressService,
             CustomerSettings customerSettings,
-            ITaxService taxService, 
+            ITaxService taxService,
             IWorkContext workContext,
             IVendorService vendorService,
             IStoreContext storeContext,
             IPriceFormatter priceFormatter,
-            IOrderService orderService, 
+            IOrderService orderService,
             IExportManager exportManager,
             ICustomerActivityService customerActivityService,
             IPriceCalculationService priceCalculationService,
             IProductAttributeFormatter productAttributeFormatter,
-            IPermissionService permissionService, 
+            IPermissionService permissionService,
             IQueuedEmailService queuedEmailService,
             EmailAccountSettings emailAccountSettings,
-            IEmailAccountService emailAccountService, 
+            IEmailAccountService emailAccountService,
             ForumSettings forumSettings,
             IForumService forumService,
             IExternalAuthenticationService openAuthenticationService,
@@ -247,7 +247,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     _customerTagService.DeleteTagFromCustomer(existingCustomerTagName.Id, customer.Id);
                 }
             }
-            
+
             foreach (string customerTagName in customerTags)
             {
                 CustomerTag customerTag;
@@ -443,39 +443,39 @@ namespace Grand.Web.Areas.Admin.Controllers
                         case AttributeControlType.DropdownList:
                         case AttributeControlType.RadioList:
                         case AttributeControlType.Checkboxes:
-                        {
-                            if (!String.IsNullOrEmpty(selectedCustomerAttributes))
                             {
-                                //clear default selection
-                                foreach (var item in attributeModel.Values)
-                                    item.IsPreSelected = false;
+                                if (!String.IsNullOrEmpty(selectedCustomerAttributes))
+                                {
+                                    //clear default selection
+                                    foreach (var item in attributeModel.Values)
+                                        item.IsPreSelected = false;
 
-                                //select new values
-                                var selectedValues = _customerAttributeParser.ParseCustomerAttributeValues(selectedCustomerAttributes);
-                                foreach (var attributeValue in selectedValues)
+                                    //select new values
+                                    var selectedValues = _customerAttributeParser.ParseCustomerAttributeValues(selectedCustomerAttributes);
+                                    foreach (var attributeValue in selectedValues)
                                         if (attributeModel.Id == attributeValue.CustomerAttributeId)
                                             foreach (var item in attributeModel.Values)
-                                            if (attributeValue.Id == item.Id)
-                                                item.IsPreSelected = true;
+                                                if (attributeValue.Id == item.Id)
+                                                    item.IsPreSelected = true;
+                                }
                             }
-                        }
                             break;
                         case AttributeControlType.ReadonlyCheckboxes:
-                        {
-                            //do nothing
-                            //values are already pre-set
-                        }
+                            {
+                                //do nothing
+                                //values are already pre-set
+                            }
                             break;
                         case AttributeControlType.TextBox:
                         case AttributeControlType.MultilineTextbox:
-                        {
-                            if (!String.IsNullOrEmpty(selectedCustomerAttributes))
                             {
-                                var enteredText = _customerAttributeParser.ParseValues(selectedCustomerAttributes, attribute.Id);
-                                if (enteredText.Count > 0)
-                                    attributeModel.DefaultValue = enteredText[0];
+                                if (!String.IsNullOrEmpty(selectedCustomerAttributes))
+                                {
+                                    var enteredText = _customerAttributeParser.ParseValues(selectedCustomerAttributes, attribute.Id);
+                                    if (enteredText.Count > 0)
+                                        attributeModel.DefaultValue = enteredText[0];
+                                }
                             }
-                        }
                             break;
                         case AttributeControlType.Datepicker:
                         case AttributeControlType.ColorSquares:
@@ -523,7 +523,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                             var cblAttributes = form[controlId];
                             if (!String.IsNullOrEmpty(cblAttributes))
                             {
-                                foreach (var item in cblAttributes.ToString().Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                foreach (var item in cblAttributes.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
                                     if (!String.IsNullOrEmpty(item))
                                         attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
@@ -578,7 +578,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (customer != null)
             {
                 model.Id = customer.Id;
-                model.ShowMessageContactForm = _commonSettings.StoreInDatabaseContactUsForm; 
+                model.ShowMessageContactForm = _commonSettings.StoreInDatabaseContactUsForm;
                 if (!excludeProperties)
                 {
                     model.Email = customer.Email;
@@ -595,7 +595,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         result.Append(ct.Name);
                         result.Append(", ");
                     }
-                    model.CustomerTags = result.ToString(); 
+                    model.CustomerTags = result.ToString();
                     var affiliate = _affiliateService.GetAffiliateById(customer.AffiliateId);
                     if (affiliate != null)
                     {
@@ -609,7 +609,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         .GetLocalizedEnum(_localizationService, _workContext);
                     model.CreatedOn = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc);
                     model.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
-                    if(customer.LastPurchaseDateUtc.HasValue)
+                    if (customer.LastPurchaseDateUtc.HasValue)
                         model.LastPurchaseDate = _dateTimeHelper.ConvertToUserTime(customer.LastPurchaseDateUtc.Value, DateTimeKind.Utc);
                     model.LastIpAddress = customer.LastIpAddress;
                     model.LastVisitedPage = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage);
@@ -900,7 +900,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return Json(gridModel);
         }
-        
+
         public IActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
@@ -915,7 +915,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        
+
         public IActionResult Create(CustomerModel model, bool continueEditing, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
@@ -946,7 +946,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 ModelState.AddModelError("", customerRolesError);
                 ErrorNotification(customerRolesError, false);
             }
-            
+
             if (ModelState.IsValid)
             {
                 var customer = new Customer
@@ -1048,7 +1048,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 foreach (var customerRole in newCustomerRoles)
                 {
                     //ensure that the current customer cannot add to "Administrators" system role if he's not an admin himself
-                    if (customerRole.SystemName == SystemCustomerRoleNames.Administrators && 
+                    if (customerRole.SystemName == SystemCustomerRoleNames.Administrators &&
                         !_workContext.CurrentCustomer.IsAdmin())
                         continue;
 
@@ -1056,7 +1056,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     customerRole.CustomerId = customer.Id;
                     _customerService.InsertCustomerRoleInCustomer(customerRole);
                 }
-                
+
 
                 //ensure that a customer with a vendor associated is not in "Administrators" role
                 //otherwise, he won't be have access to the other functionality in admin area
@@ -1112,7 +1112,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        [FormValueRequired("save", "save-continue")]        
+        [FormValueRequired("save", "save-continue")]
         public IActionResult Edit(CustomerModel model, bool continueEditing, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
@@ -1135,7 +1135,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 ModelState.AddModelError("", customerRolesError);
                 ErrorNotification(customerRolesError, false);
             }
-            
+
             if (ModelState.IsValid)
             {
                 try
@@ -1178,15 +1178,15 @@ namespace Grand.Web.Areas.Admin.Controllers
                         {
                             if (!model.VatNumber.Equals(prevVatNumber, StringComparison.OrdinalIgnoreCase))
                             {
-                                _genericAttributeService.SaveAttribute(customer, 
-                                    SystemCustomerAttributeNames.VatNumberStatusId, 
+                                _genericAttributeService.SaveAttribute(customer,
+                                    SystemCustomerAttributeNames.VatNumberStatusId,
                                     (int)_taxService.GetVatNumberStatus(model.VatNumber));
                             }
                         }
                         else
                         {
                             _genericAttributeService.SaveAttribute(customer,
-                                SystemCustomerAttributeNames.VatNumberStatusId, 
+                                SystemCustomerAttributeNames.VatNumberStatusId,
                                 (int)VatNumberStatus.Empty);
                         }
                     }
@@ -1288,7 +1288,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         }
                     }
                     _customerService.UpdateCustomerinAdminPanel(customer);
-                    
+
 
                     //ensure that a customer with a vendor associated is not in "Administrators" role
                     //otherwise, he won't have access to the other functionality in admin area
@@ -1324,7 +1324,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         //selected tab
                         SaveSelectedTabIndex();
 
-                        return RedirectToAction("Edit",  new {id = customer.Id});
+                        return RedirectToAction("Edit", new { id = customer.Id });
                     }
                     return RedirectToAction("List");
                 }
@@ -1339,7 +1339,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             PrepareCustomerModel(model, customer, true);
             return View(model);
         }
-        
+
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("changepassword")]
         public IActionResult ChangePassword(CustomerModel model)
@@ -1364,9 +1364,9 @@ namespace Grand.Web.Areas.Admin.Controllers
                         ErrorNotification(error);
             }
 
-            return RedirectToAction("Edit",  new {id = customer.Id});
+            return RedirectToAction("Edit", new { id = customer.Id });
         }
-        
+
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("markVatNumberAsValid")]
         public IActionResult MarkVatNumberAsValid(CustomerModel model)
@@ -1379,11 +1379,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No customer found with the specified id
                 return RedirectToAction("List");
 
-            _genericAttributeService.SaveAttribute(customer, 
+            _genericAttributeService.SaveAttribute(customer,
                 SystemCustomerAttributeNames.VatNumberStatusId,
                 (int)VatNumberStatus.Valid);
 
-            return RedirectToAction("Edit",  new {id = customer.Id});
+            return RedirectToAction("Edit", new { id = customer.Id });
         }
 
         [HttpPost, ActionName("Edit")]
@@ -1401,8 +1401,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             _genericAttributeService.SaveAttribute(customer,
                 SystemCustomerAttributeNames.VatNumberStatusId,
                 (int)VatNumberStatus.Invalid);
-            
-            return RedirectToAction("Edit",  new {id = customer.Id});
+
+            return RedirectToAction("Edit", new { id = customer.Id });
         }
 
         [HttpPost, ActionName("Edit")]
@@ -1416,7 +1416,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (customer == null)
                 //No customer found with the specified id
                 return RedirectToAction("List");
-            
+
             customer.AffiliateId = "";
             _customerService.UpdateAffiliate(customer);
             return RedirectToAction("Edit", new { id = customer.Id });
@@ -1624,9 +1624,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return RedirectToAction("Edit", new { id = customer.Id });
         }
-        
+
         #endregion
-        
+
         #region Reward points history
 
         [HttpPost]
@@ -1644,14 +1644,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 var store = _storeService.GetStoreById(rph.StoreId);
                 model.Add(new CustomerModel.RewardPointsHistoryModel
-                    {
-                        StoreName = store != null ? store.Name : "Unknown",
-                        Points = rph.Points,
-                        PointsBalance = rph.PointsBalance,
-                        Message = rph.Message,
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(rph.CreatedOnUtc, DateTimeKind.Utc)
-                    });
-            } 
+                {
+                    StoreName = store != null ? store.Name : "Unknown",
+                    Points = rph.Points,
+                    PointsBalance = rph.PointsBalance,
+                    Message = rph.Message,
+                    CreatedOn = _dateTimeHelper.ConvertToUserTime(rph.CreatedOnUtc, DateTimeKind.Utc)
+                });
+            }
             var gridModel = new DataSourceResult
             {
                 Data = model,
@@ -1661,7 +1661,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        
+
         public IActionResult RewardPointsHistoryAdd(string customerId, string storeId, int addRewardPointsValue, string addRewardPointsMessage)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
@@ -1676,9 +1676,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return Json(new { Result = true });
         }
-        
+
         #endregion
-        
+
         #region Addresses
 
         [HttpPost]
@@ -1747,7 +1747,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return new NullJsonResult();
         }
-        
+
         public IActionResult AddressCreate(string customerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
@@ -1765,7 +1765,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        
+
         public IActionResult AddressCreate(CustomerAddressModel model, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
@@ -1822,7 +1822,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        
+
         public IActionResult AddressEdit(CustomerAddressModel model, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
@@ -1833,7 +1833,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No customer found with the specified id
                 return RedirectToAction("List");
 
-            var address = customer.Addresses.Where(x=>x.Id == model.Address.Id).FirstOrDefault();
+            var address = customer.Addresses.Where(x => x.Id == model.Address.Id).FirstOrDefault();
             if (address == null)
                 //No address found with the specified id
                 return RedirectToAction("Edit", new { id = customer.Id });
@@ -1865,7 +1865,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #endregion
 
         #region Orders
-        
+
         [HttpPost]
         public IActionResult OrderList(string customerId, DataSourceRequest command)
         {
@@ -1882,7 +1882,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         var store = _storeService.GetStoreById(order.StoreId);
                         var orderModel = new CustomerModel.OrderModel
                         {
-                            Id = order.Id, 
+                            Id = order.Id,
                             OrderNumber = order.OrderNumber,
                             OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
                             PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
@@ -1899,7 +1899,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return Json(gridModel);
         }
-        
+
         #endregion
 
         #region Reports
@@ -1927,7 +1927,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.BestCustomersByOrderTotal.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             model.BestCustomersByOrderTotal.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(false).ToList();
             model.BestCustomersByOrderTotal.AvailableShippingStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
-            
+
             return View(model);
         }
 
@@ -2110,10 +2110,37 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Customer Product Price
+        #region Customer Product Personalize / Price
 
         [HttpPost]
-        public IActionResult ListProductPrice(DataSourceRequest command, string customerId)
+        public IActionResult ProductsPrice(DataSourceRequest command, string customerId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return Content("");
+
+            var productPrices = _customerService.GetProductsPriceByCustomer(customerId, command.Page - 1, command.PageSize);
+            var gridModel = new DataSourceResult
+            {
+                Data = productPrices.Select(x =>
+                {
+                    var m = new CustomerModel.ProductPriceModel
+                    {
+                        Id = x.Id,
+                        Price = x.Price,
+                        ProductId = x.ProductId,
+                        ProductName = _productService.GetProductById(x.ProductId)?.Name
+                    };
+                    return m;
+
+                }),
+                Total = productPrices.TotalCount
+            };
+
+            return Json(gridModel);
+        }
+
+        [HttpPost]
+        public IActionResult PersonalizedProducts(DataSourceRequest command, string customerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return Content("");
@@ -2123,10 +2150,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 Data = productPrices.Select(x =>
                 {
-                    var m = new CustomerModel.ProductPriceModel
+                    var m = new CustomerModel.ProductModel
                     {
                         Id = x.Id,
-                        Price = x.Price,
+                        DisplayOrder = x.DisplayOrder,
                         ProductId = x.ProductId,
                         ProductName = _productService.GetProductById(x.ProductId)?.Name
                     };
@@ -2201,7 +2228,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult ProductAddPopup(string customerId, CustomerModel.AddProductModel model)
+        public IActionResult ProductAddPopup(string customerId, bool personalized, CustomerModel.AddProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -2213,9 +2240,20 @@ namespace Grand.Web.Areas.Admin.Controllers
                     var product = _productService.GetProductById(id);
                     if (product != null)
                     {
-                        if(!_customerService.GetPriceByCustomerProduct(customerId, id).HasValue)
+                        if (!personalized)
                         {
-                            _customerService.InsertCustomerProductPrice(new CustomerProductPrice() { CustomerId = customerId, ProductId = id, Price = product.Price });
+                            if (!_customerService.GetPriceByCustomerProduct(customerId, id).HasValue)
+                            {
+                                _customerService.InsertCustomerProductPrice(new CustomerProductPrice() { CustomerId = customerId, ProductId = id, Price = product.Price });
+                            }
+                        }
+                        else
+                        {
+                            if (_customerService.GetCustomerProduct(customerId, id) == null)
+                            {
+                                _customerService.InsertCustomerProduct(new CustomerProduct() { CustomerId = customerId, ProductId = id, DisplayOrder = 0 });
+                            }
+
                         }
                     }
                 }
@@ -2230,7 +2268,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             var productPrice = _customerService.GetCustomerProductPriceById(model.Id);
-            if(productPrice!=null)
+            if (productPrice != null)
             {
                 productPrice.Price = model.Price;
                 _customerService.UpdateCustomerProductPrice(productPrice);
@@ -2238,7 +2276,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return new NullJsonResult();
         }
-
         public IActionResult DeleteProductPrice(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
@@ -2253,6 +2290,35 @@ namespace Grand.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
 
+        public IActionResult UpdatePersonalizedProduct(CustomerModel.ProductModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            var customerproduct = _customerService.GetCustomerProduct(model.Id);
+            if (customerproduct != null)
+            {
+                customerproduct.DisplayOrder = model.DisplayOrder;
+                _customerService.UpdateCustomerProduct(customerproduct);
+            }
+
+            return new NullJsonResult();
+        }
+
+        public IActionResult DeletePersonalizedProduct(string id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            var customerproduct = _customerService.GetCustomerProduct(id);
+            if (customerproduct == null)
+                throw new ArgumentException("No customerproduct found with the specified id");
+
+            _customerService.DeleteCustomerProduct(customerproduct);
+
+            return new NullJsonResult();
+        }
+
         #endregion
 
         #region Activity log and message contact form
@@ -2263,7 +2329,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return Content("");
 
-            var activityLog = _customerActivityService.GetAllActivities(null, null, customerId, "",null, command.Page - 1, command.PageSize);
+            var activityLog = _customerActivityService.GetAllActivities(null, null, customerId, "", null, command.Page - 1, command.PageSize);
             var gridModel = new DataSourceResult
             {
                 Data = activityLog.Select(x =>
@@ -2307,7 +2373,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             var gridModel = new DataSourceResult
             {
-                Data = contactform.Select(x => {
+                Data = contactform.Select(x =>
+                {
                     var store = _storeService.GetStoreById(x.StoreId);
                     var m = x.ToModel();
                     m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
@@ -2403,7 +2470,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (selectedIds != null)
             {
                 var ids = selectedIds
-                    .Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => x)
                     .ToArray();
                 customers.AddRange(_customerService.GetCustomersByIds(ids));
@@ -2453,7 +2520,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (selectedIds != null)
             {
                 var ids = selectedIds
-                    .Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => x)
                     .ToArray();
                 customers.AddRange(_customerService.GetCustomersByIds(ids));

@@ -6,7 +6,7 @@
         <div class="section pickup-in-store">
             <p class="selector">
                 <label class="custom-control custom-checkbox">
-                    @Html.CheckBoxFor(x => x.PickUpInStore, new { @class = "custom-control-input", @onclick = "Shipping.togglePickUpInStore(this)" })
+                    <input asp-for="PickUpInStore" class="custom-control-input" onclick="Shipping.togglePickUpInStore(this)"/>
                     <span class="custom-control-label"></span>
                     <span class="custom-control-description" for="@Html.IdFor(model => model.PickUpInStore)">
                         @T("Checkout.PickupPoints").Text

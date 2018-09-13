@@ -85,16 +85,6 @@ namespace Grand.Core.Domain.Customers
         public string VendorId { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this customer has some products in the shopping cart
-        /// <remarks>The same as if we run this.ShoppingCartItems.Count > 0
-        /// We use this property for performance optimization:
-        /// if this property is set to false, then we do not need to load "ShoppingCartItems" navigation property for each page load
-        /// It's used only in a couple of places in the presenation layer
-        /// </remarks>
-        /// </summary>
-        public bool HasShoppingCartItems { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether the customer is active
         /// </summary>
         public bool Active { get; set; }
@@ -108,59 +98,11 @@ namespace Grand.Core.Domain.Customers
         /// Gets or sets a value indicating whether the customer account is system
         /// </summary>
         public bool IsSystemAccount { get; set; }
-        /// <summary>
-        /// Gets or sets a value indicating whether the customer add news
-        /// </summary>
-        public bool IsNewsItem { get; set; }
-        /// <summary>
-        /// Gets or sets a value indicating whether the customer has a orders
-        /// </summary>
-        public bool IsHasOrders { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the customer has a blog comments
+        /// Gets or sets a value indicating whether the customer is active by adding comments etc...
         /// </summary>
-        public bool IsHasBlogComments { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the customer has a blog comments
-        /// </summary>
-        public bool IsHasArticleComments { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the customer has a product review
-        /// </summary>
-        public bool IsHasProductReview { get; set; }
-        
-        /// <summary>
-        /// Gets or sets a value indicating whether the customer has a product review help
-        /// </summary>
-        public bool IsHasProductReviewH { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the customer has a Vendor review
-        /// </summary>
-        public bool IsHasVendorReview { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the customer has a Vendor review help
-        /// </summary>
-        public bool IsHasVendorReviewH { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the customer has a pool voting
-        /// </summary>
-        public bool IsHasPoolVoting { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the customer has a forum post
-        /// </summary>
-        public bool IsHasForumPost { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the customer has a forum topic
-        /// </summary>
-        public bool IsHasForumTopic { get; set; }
+        public bool HasContributions { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating number of failed login attempts (wrong password)

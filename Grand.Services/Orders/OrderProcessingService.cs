@@ -1470,10 +1470,9 @@ namespace Grand.Services.Orders
                         //product also purchased
                         _orderService.InsertProductAlsoPurchased(order);
 
-                        if (!details.Customer.IsHasOrders)
+                        if (!details.Customer.HasContributions)
                         {
-                            details.Customer.IsHasOrders = true;
-                            _customerService.UpdateHasOrders(details.Customer.Id);
+                            _customerService.UpdateContributions(details.Customer);
                         }
                     }
                     else

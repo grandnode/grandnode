@@ -580,10 +580,9 @@ namespace Grand.Web.Controllers
                 };
                 productReview.ProductReviewHelpfulnessEntries.Add(prh);
                 _productService.UpdateProductReview(productReview);
-                if (!_workContext.CurrentCustomer.IsHasProductReviewH)
+                if (!_workContext.CurrentCustomer.HasContributions)
                 {
-                    _workContext.CurrentCustomer.IsHasProductReviewH = true;
-                    EngineContext.Current.Resolve<ICustomerService>().UpdateHasProductReviewH(_workContext.CurrentCustomer.Id);
+                    EngineContext.Current.Resolve<ICustomerService>().UpdateContributions(_workContext.CurrentCustomer);
                 }
 
             }

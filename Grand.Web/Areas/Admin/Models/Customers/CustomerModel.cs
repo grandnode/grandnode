@@ -317,7 +317,14 @@ namespace Grand.Web.Areas.Admin.Models.Customers
             [GrandResourceDisplayName("Admin.Customers.Customers.ActivityLog.IpAddress")]
             public string IpAddress { get; set; }
         }
-
+        public partial class ProductModel : BaseGrandEntityModel
+        {
+            [GrandResourceDisplayName("Admin.Customers.Customers.PersonalizedProduct.ProductName")]
+            public string ProductName { get; set; }
+            [GrandResourceDisplayName("Admin.Customers.Customers.PersonalizedProduct.DisplayOrder")]
+            public int DisplayOrder { get; set; }
+            public string ProductId { get; set; }
+        }
         public partial class ProductPriceModel : BaseGrandEntityModel
         {
             [GrandResourceDisplayName("Admin.Customers.Customers.ProductPrice.ProductName")]

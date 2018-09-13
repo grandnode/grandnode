@@ -118,10 +118,9 @@ namespace Grand.Web.Services
             pollAnswer.NumberOfVotes = pollAnswer.PollVotingRecords.Count;
             _pollService.UpdatePoll(poll);
 
-            if (!_workContext.CurrentCustomer.IsHasPoolVoting)
+            if (!_workContext.CurrentCustomer.HasContributions)
             {
-                _workContext.CurrentCustomer.IsHasPoolVoting = true;
-                EngineContext.Current.Resolve<ICustomerService>().UpdateHasPoolVoting(_workContext.CurrentCustomer.Id);
+                EngineContext.Current.Resolve<ICustomerService>().UpdateContributions(_workContext.CurrentCustomer);
             }
         }
 

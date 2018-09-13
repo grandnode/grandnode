@@ -1176,6 +1176,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.RecommendedProductsEnabled_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.RecommendedProductsEnabled, storeScope);
                 model.SuggestedProductsEnabled_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.SuggestedProductsEnabled, storeScope);
                 model.SuggestedProductsNumber_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.SuggestedProductsNumber, storeScope);
+                model.PersonalizedProductsEnabled_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.PersonalizedProductsEnabled, storeScope);
+                model.PersonalizedProductsNumber_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.PersonalizedProductsNumber, storeScope);
                 model.NewProductsNumber_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.NewProductsNumber, storeScope);
                 model.NewProductsEnabled_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.NewProductsEnabled, storeScope);
                 model.CompareProductsEnabled_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.CompareProductsEnabled, storeScope);
@@ -1368,6 +1370,17 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(catalogSettings, x => x.SuggestedProductsNumber, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.SuggestedProductsNumber, storeScope);
+
+            if (model.PersonalizedProductsEnabled_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(catalogSettings, x => x.PersonalizedProductsEnabled, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(catalogSettings, x => x.PersonalizedProductsEnabled, storeScope);
+
+            if (model.PersonalizedProductsNumber_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(catalogSettings, x => x.PersonalizedProductsNumber, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(catalogSettings, x => x.PersonalizedProductsNumber, storeScope);
+
 
             if (model.NewProductsNumber_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.NewProductsNumber, storeScope, false);
@@ -2595,6 +2608,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.StoreInformationSettings.TwitterLink = storeInformationSettings.TwitterLink;
             model.StoreInformationSettings.YoutubeLink = storeInformationSettings.YoutubeLink;
             model.StoreInformationSettings.GooglePlusLink = storeInformationSettings.GooglePlusLink;
+            model.StoreInformationSettings.InstagramLink = storeInformationSettings.InstagramLink;
             //contact us
             model.StoreInformationSettings.StoreInDatabaseContactUsForm = commonSettings.StoreInDatabaseContactUsForm;
             model.StoreInformationSettings.SubjectFieldOnContactUsForm = commonSettings.SubjectFieldOnContactUsForm;
@@ -2611,6 +2625,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.StoreInformationSettings.TwitterLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.TwitterLink, storeScope);
                 model.StoreInformationSettings.YoutubeLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.YoutubeLink, storeScope);
                 model.StoreInformationSettings.GooglePlusLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.GooglePlusLink, storeScope);
+                model.StoreInformationSettings.InstagramLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.InstagramLink, storeScope);
                 model.StoreInformationSettings.StoreInDatabaseContactUsForm_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.StoreInDatabaseContactUsForm, storeScope);
                 model.StoreInformationSettings.SubjectFieldOnContactUsForm_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.SubjectFieldOnContactUsForm, storeScope);
                 model.StoreInformationSettings.UseSystemEmailForContactUsForm_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.UseSystemEmailForContactUsForm, storeScope);
@@ -2781,6 +2796,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             storeInformationSettings.TwitterLink = model.StoreInformationSettings.TwitterLink;
             storeInformationSettings.YoutubeLink = model.StoreInformationSettings.YoutubeLink;
             storeInformationSettings.GooglePlusLink = model.StoreInformationSettings.GooglePlusLink;
+            storeInformationSettings.InstagramLink = model.StoreInformationSettings.InstagramLink;
             //contact us
             commonSettings.StoreInDatabaseContactUsForm = model.StoreInformationSettings.StoreInDatabaseContactUsForm;
             commonSettings.SubjectFieldOnContactUsForm = model.StoreInformationSettings.SubjectFieldOnContactUsForm;
@@ -2834,6 +2850,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(storeInformationSettings, x => x.GooglePlusLink, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(storeInformationSettings, x => x.GooglePlusLink, storeScope);
+
+            if (model.StoreInformationSettings.InstagramLink_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(storeInformationSettings, x => x.InstagramLink, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(storeInformationSettings, x => x.InstagramLink, storeScope);
 
             if (model.StoreInformationSettings.StoreInDatabaseContactUsForm_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(commonSettings, x => x.StoreInDatabaseContactUsForm, storeScope, false);

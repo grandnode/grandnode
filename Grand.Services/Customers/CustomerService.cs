@@ -47,6 +47,11 @@ namespace Grand.Services.Customers
         private const string CUSTOMERROLESPRODUCTS_PATTERN_KEY = "Grand.product.cr";
 
         /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
+        private const string CUSTOMER_PRODUCT_KEY = "Grand.product.personal-{0}";
+
+        /// <summary>
         /// Key for caching
         /// </summary>
         /// <remarks>
@@ -62,6 +67,7 @@ namespace Grand.Services.Customers
         private readonly IRepository<CustomerRole> _customerRoleRepository;
         private readonly IRepository<CustomerRoleProduct> _customerRoleProductRepository;
         private readonly IRepository<CustomerProductPrice> _customerProductPriceRepository;
+        private readonly IRepository<CustomerProduct> _customerProductRepository;
         private readonly IRepository<CustomerHistoryPassword> _customerHistoryPasswordProductRepository;
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<ForumPost> _forumPostRepository;
@@ -82,6 +88,7 @@ namespace Grand.Services.Customers
         public CustomerService(ICacheManager cacheManager,
             IRepository<Customer> customerRepository,
             IRepository<CustomerRole> customerRoleRepository,
+            IRepository<CustomerProduct> customerProductRepository,
             IRepository<CustomerProductPrice> customerProductPriceRepository,
             IRepository<CustomerHistoryPassword> customerHistoryPasswordProductRepository,
             IRepository<CustomerRoleProduct> customerRoleProductRepository,
@@ -99,6 +106,7 @@ namespace Grand.Services.Customers
             this._cacheManager = cacheManager;
             this._customerRepository = customerRepository;
             this._customerRoleRepository = customerRoleRepository;
+            this._customerProductRepository = customerProductRepository;
             this._customerProductPriceRepository = customerProductPriceRepository;
             this._customerHistoryPasswordProductRepository = customerHistoryPasswordProductRepository;
             this._customerRoleProductRepository = customerRoleProductRepository;
@@ -289,7 +297,6 @@ namespace Grand.Services.Customers
             customer.GenericAttributes.Clear();
             //delete shopping cart
             customer.ShoppingCartItems.Clear();
-            customer.HasShoppingCartItems = false;
             //delete customer roles
             customer.CustomerRoles.Clear();
             //clear customer tags
@@ -639,80 +646,18 @@ namespace Grand.Services.Customers
                 .Set(x => x.Active, customer.Active);
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
         }
-        public virtual void UpdateNewsItem(Customer customer)
+
+        public virtual void UpdateContributions(Customer customer)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, customer.Id);
             var update = Builders<Customer>.Update
-                .Set(x => x.IsNewsItem, true);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
-        }        
-        public virtual void UpdateHasForumTopic(string customerId)
-        {
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customerId);
-            var update = Builders<Customer>.Update
-                .Set(x => x.IsHasForumTopic, true);
+                .Set(x => x.HasContributions, true);
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
         }
-        public virtual void UpdateHasForumPost(string customerId)
-        {
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customerId);
-            var update = Builders<Customer>.Update
-                .Set(x => x.IsHasForumPost, true);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
-        }
-        public virtual void UpdateHasOrders(string customerId)
-        {
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customerId);
-            var update = Builders<Customer>.Update
-                .Set(x => x.IsHasOrders, true);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
-        }
-        public virtual void UpdateHasBlogComments(string customerId)
-        {
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customerId);
-            var update = Builders<Customer>.Update
-                .Set(x => x.IsHasBlogComments, true);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
-        }
-        public virtual void UpdateHasArticleComments(string customerId)
-        {
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customerId);
-            var update = Builders<Customer>.Update
-                .Set(x => x.IsHasArticleComments, true);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
-        }
-        public virtual void UpdateHasProductReview(string customerId)
-        {
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customerId);
-            var update = Builders<Customer>.Update
-                .Set(x => x.IsHasProductReview, true);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
-        }
-        public virtual void UpdateHasProductReviewH(string customerId)
-        {
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customerId);
-            var update = Builders<Customer>.Update
-                .Set(x => x.IsHasProductReviewH, true);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
-        }
-        public virtual void UpdateHasPoolVoting(string customerId)
-        {
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customerId);
-            var update = Builders<Customer>.Update
-                .Set(x => x.IsHasPoolVoting, true);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
-        }
+
         public virtual void UpdateCustomerLastPurchaseDate(string customerId, DateTime date)
         {
             var builder = Builders<Customer>.Filter;
@@ -739,23 +684,7 @@ namespace Grand.Services.Customers
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
 
         }
-        public virtual void UpdateHasVendorReview(string customerId)
-        {
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customerId);
-            var update = Builders<Customer>.Update
-                .Set(x => x.IsHasVendorReview, true);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
-        }
-        public virtual void UpdateHasVendorReviewH(string customerId)
-        {
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customerId);
-            var update = Builders<Customer>.Update
-                .Set(x => x.IsHasVendorReviewH, true);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
-        }
-
+       
         /// <summary>
         /// Reset data required for checkout
         /// </summary>
@@ -861,18 +790,9 @@ namespace Grand.Services.Customers
             if (createdToUtc.HasValue)
                 filter = filter & builder.Lte(x => x.LastActivityDateUtc, createdToUtc.Value);
             if (onlyWithoutShoppingCart)
-                filter = filter & builder.Eq(x => x.HasShoppingCartItems, false);
+                filter = filter & builder.Eq(x => x.ShoppingCartItems.Any(), false);
 
-            filter = filter & builder.Eq(x => x.IsHasOrders, false);
-            filter = filter & builder.Eq(x => x.IsHasBlogComments, false);
-            filter = filter & builder.Eq(x => x.IsHasArticleComments, false);
-            filter = filter & builder.Eq(x => x.IsNewsItem, false);
-            filter = filter & builder.Eq(x => x.IsHasProductReview, false);
-            filter = filter & builder.Eq(x => x.IsHasProductReviewH, false);
-            filter = filter & builder.Eq(x => x.IsHasPoolVoting, false);
-            filter = filter & builder.Eq(x => x.IsHasForumPost, false);
-            filter = filter & builder.Eq(x => x.IsHasForumTopic, false);
-            filter = filter & builder.Eq(x => x.IsSystemAccount, false);
+            filter = filter & builder.Eq(x => x.HasContributions, false);
 
             var customers = _customerRepository.Collection.DeleteMany(filter);
 
@@ -1321,16 +1241,6 @@ namespace Grand.Services.Customers
 
         }
 
-        public virtual void UpdateHasShoppingCartItems(Customer customer)
-        {
-            if (customer == null)
-                throw new ArgumentNullException("customer");
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customer.Id);
-            var update = Builders<Customer>.Update
-                .Set(x => x.HasShoppingCartItems, customer.HasShoppingCartItems);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
-        }
         #endregion
 
         #region Customer Product Price
@@ -1411,12 +1321,108 @@ namespace Grand.Services.Customers
             _eventPublisher.EntityDeleted(customerProductPrice);
         }
 
-        public virtual IPagedList<CustomerProductPrice> GetProductsByCustomer(string customerId, int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual IPagedList<CustomerProductPrice> GetProductsPriceByCustomer(string customerId, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = from pp in _customerProductPriceRepository.Table
                         where pp.CustomerId == customerId
                         select pp;
             return new PagedList<CustomerProductPrice>(query, pageIndex, pageSize);
+        }
+
+        #endregion
+
+        #region Personalize products
+
+        /// <summary>
+        /// Gets a customer product 
+        /// </summary>
+        /// <param name="id">Identifier</param>
+        /// <returns>Customer product</returns>
+        public virtual CustomerProduct GetCustomerProduct(string id)
+        {
+            var query = from pp in _customerProductRepository.Table
+                        where pp.Id == id
+                        select pp;
+
+            return query.FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Gets a customer product 
+        /// </summary>
+        /// <param name="customerId">Customer Identifier</param>
+        /// <param name="productId">Product Identifier</param>
+        /// <returns>Customer product</returns>
+        public virtual CustomerProduct GetCustomerProduct(string customerId, string productId)
+        {
+            var query = from pp in _customerProductRepository.Table
+                        where pp.CustomerId == customerId && pp.ProductId == productId
+                        select pp;
+
+            return query.FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Insert a customer product 
+        /// </summary>
+        /// <param name="customerProduct">Customer product</param>
+        public virtual void InsertCustomerProduct(CustomerProduct customerProduct)
+        {
+            if (customerProduct == null)
+                throw new ArgumentNullException("customerProduct");
+
+            _customerProductRepository.Insert(customerProduct);
+
+            //clear cache
+            _cacheManager.RemoveByPattern(string.Format(CUSTOMER_PRODUCT_KEY, customerProduct.CustomerId));
+
+            //event notification
+            _eventPublisher.EntityInserted(customerProduct);
+        }
+
+        /// <summary>
+        /// Updates the customer product
+        /// </summary>
+        /// <param name="customerProduct">Customer product </param>
+        public virtual void UpdateCustomerProduct(CustomerProduct customerProduct)
+        {
+            if (customerProduct == null)
+                throw new ArgumentNullException("customerProduct");
+
+            _customerProductRepository.Update(customerProduct);
+
+            //clear cache
+            _cacheManager.RemoveByPattern(string.Format(CUSTOMER_PRODUCT_KEY, customerProduct.CustomerId));
+
+            //event notification
+            _eventPublisher.EntityUpdated(customerProduct);
+        }
+
+        /// <summary>
+        /// Delete a customer product 
+        /// </summary>
+        /// <param name="customerProduct">Customer product</param>
+        public virtual void DeleteCustomerProduct(CustomerProduct customerProduct)
+        {
+            if (customerProduct == null)
+                throw new ArgumentNullException("customerProduct");
+
+            _customerProductRepository.Delete(customerProduct);
+
+            //clear cache
+            _cacheManager.RemoveByPattern(string.Format(CUSTOMER_PRODUCT_KEY, customerProduct.CustomerId));
+
+            //event notification
+            _eventPublisher.EntityDeleted(customerProduct);
+        }
+
+        public virtual IPagedList<CustomerProduct> GetProductsByCustomer(string customerId, int pageIndex = 0, int pageSize = int.MaxValue)
+        {
+            var query = from pp in _customerProductRepository.Table
+                        where pp.CustomerId == customerId
+                        orderby pp.DisplayOrder
+                        select pp;
+            return new PagedList<CustomerProduct>(query, pageIndex, pageSize);
         }
 
         #endregion

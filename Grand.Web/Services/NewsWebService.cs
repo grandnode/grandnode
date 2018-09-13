@@ -197,7 +197,7 @@ namespace Grand.Web.Services
             //update totals
             newsItem.CommentCount = newsItem.NewsComments.Count;
             _newsService.UpdateNews(newsItem);
-            EngineContext.Current.Resolve<ICustomerService>().UpdateNewsItem(_workContext.CurrentCustomer);
+            EngineContext.Current.Resolve<ICustomerService>().UpdateContributions(_workContext.CurrentCustomer);
 
             //notify a store owner;
             if (_newsSettings.NotifyAboutNewNewsComments)
