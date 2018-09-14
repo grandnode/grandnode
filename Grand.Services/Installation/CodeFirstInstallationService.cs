@@ -4975,7 +4975,7 @@ namespace Grand.Services.Installation
             });
             _settingService.SaveSetting(new SecuritySettings
             {
-                EncryptionKey = CommonHelper.GenerateRandomDigitCode(16),
+                EncryptionKey = CommonHelper.GenerateRandomDigitCode(24),
                 AdminAreaAllowedIpAddresses = null,
                 EnableXsrfProtectionForAdminArea = true,
                 EnableXsrfProtectionForPublicStore = true,
