@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Caching.Memory;
 using Grand.Core.Domain;
 using Grand.Services.Security;
+using Microsoft.AspNetCore.Builder;
 
 namespace Grand.Framework.Infrastructure.Extensions
 {
@@ -233,6 +234,15 @@ namespace Grand.Framework.Infrastructure.Extensions
             mvcBuilder.SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_1);
 
             var config = services.BuildServiceProvider().GetRequiredService<GrandConfig>();
+
+            if (config.UseHsts)
+            {
+                services.AddHsts(options =>
+                {
+                    options.Preload = true;
+                    options.IncludeSubDomains = true;
+                });
+            }
 
             //use session-based temp data provider
             if (config.UseSessionStateTempDataProvider)
