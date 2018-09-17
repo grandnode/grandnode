@@ -2,7 +2,6 @@
 using Grand.Framework.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
-using Grand.Core.Domain.Common;
 using Grand.Web.Areas.Admin.Models.Common;
 
 namespace Grand.Web.Areas.Admin.Models.Orders

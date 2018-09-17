@@ -23,6 +23,13 @@ namespace Grand.Services.Orders
         ReturnRequest GetReturnRequestById(string returnRequestId);
 
         /// <summary>
+        /// Gets a return request
+        /// </summary>
+        /// <param name="id">Return request number</param>t
+        /// <returns>Return request</returns>
+        ReturnRequest GetReturnRequestById(int id);
+
+        /// <summary>
         /// Search return requests
         /// </summary>
         /// <param name="storeId">Store identifier; 0 to load all entries</param>

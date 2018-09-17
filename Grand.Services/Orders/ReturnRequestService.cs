@@ -74,6 +74,16 @@ namespace Grand.Services.Orders
         }
 
         /// <summary>
+        /// Gets a return request
+        /// </summary>
+        /// <param name="returnRequestId">Return request identifier</param>
+        /// <returns>Return request</returns>
+        public virtual ReturnRequest GetReturnRequestById(int id)
+        {
+            return _returnRequestRepository.Table.Where(x=>x.ReturnNumber == id).FirstOrDefault();
+        }
+
+        /// <summary>
         /// Search return requests
         /// </summary>
         /// <param name="storeId">Store identifier; 0 to load all entries</param>

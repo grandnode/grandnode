@@ -1,0 +1,129 @@
+﻿@model ReturnRequestModel
+@inject AdminAreaSettings adminAreaSettings
+
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            <admin-label asp-for="ReturnNumber" />
+            <div class="col-md-9 col-sm-9">
+                <label class="control-label">@Model.ReturnNumber</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="OrderId" />
+            <div class="col-md-9 col-sm-9">
+                <label class="control-label">@Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Order", new { id = Model.OrderId }, new { })</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="CustomerId" />
+            <div class="col-md-9 col-sm-9">
+                <label class="control-label"> @Html.ActionLink(Model.CustomerInfo, "Edit", "Customer", new { id = Model.CustomerId }, new { }) </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="ReturnRequestStatusId" />
+            <div class="col-md-9 col-sm-9">
+                <admin-select asp-for="ReturnRequestStatusId" asp-items="((ReturnRequestStatus)Model.ReturnRequestStatusId).ToSelectList()" />
+                <span asp-validation-for="ReturnRequestStatusId"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="CustomerComments" />
+            <div class="col-md-9 col-sm-9">
+                <admin-textarea asp-for="CustomerComments"></admin-textarea>
+                <span asp-validation-for="CustomerComments"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="StaffNotes" />
+            <div class="col-md-9 col-sm-9">
+                <admin-textarea asp-for="StaffNotes"></admin-textarea>
+                <span asp-validation-for="StaffNotes"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="CreatedOn" />
+            <div class="col-md-9 col-sm-9">
+                <label class="control-label">@Html.DisplayFor(model => model.CreatedOn)</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="NotifyCustomer" />
+            <div class="col-md-9 col-sm-9">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    <admin-input asp-for="NotifyCustomer" />
+                    <span></span>
+                </label>
+                <span asp-validation-for="NotifyCustomer"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div id="products-grid"></div>
+        </div>       
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var data = { returnRequestId: "@Model.Id" };
+        addAntiForgeryToken(data);
+
+        $("#products-grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("ProductsForReturnRequest", "ReturnRequest"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: data
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors"
+                },
+                error: function(e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                pageSize: @(adminAreaSettings.DefaultGridPageSize),
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            editable: {
+                confirmation: false,
+                mode: "inline"
+            },
+            scrollable: false,
+            columns: [
+                {
+                    field: "ProductName",
+                    title: "@T("Admin.ReturnRequests.Fields.Item")",
+                    width: 200,
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#=ProductName#</a>'
+                }, {
+                    field: "Quantity",
+                    title: "@T("Admin.ReturnRequests.Fields.Quantity")",
+                    width: 80
+                }, {
+                    field: "UnitPrice",
+                    title: "@T("Admin.ReturnRequests.Fields.UnitPrice")",
+                    width: 100
+                }, {
+                    field: "ReasonForReturn",
+                    title: "@T("Admin.ReturnRequests.Fields.ReturnReason")",
+                    width: 200
+                }, {
+                    field: "RequestedAction",
+                    title: "@T("Admin.ReturnRequests.Fields.ReturnAction")",
+                    width: 200,
+                }
+            ]
+        });
+    });
+</script>

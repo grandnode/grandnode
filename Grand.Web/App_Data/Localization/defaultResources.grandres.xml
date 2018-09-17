@@ -13830,6 +13830,9 @@
   <LocaleResource Name="Admin.ReturnRequests">
     <Value>Return requests</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Address">
+    <Value>Pickup address</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.BackToList">
     <Value>back to return request list</Value>
   </LocaleResource>
@@ -13905,11 +13908,32 @@
   <LocaleResource Name="Admin.ReturnRequests.Fields.Status.Hint">
     <Value>Choose request status</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Info">
+    <Value>General info</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.Notified">
     <Value>The customer has been notified successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.NotifyCustomer">
     <Value>Notify customer about status change</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.List.GoDirectlyToId">
+    <Value>Go directly to return number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.List.GoDirectlyToId.Hint">
+    <Value>Enter return number and click Go.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.List.SearchCustomerEmail">
+    <Value>Customer Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.List.SearchCustomerEmail.Hint">
+    <Value>Search by a customer email.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.List.SearchReturnRequestStatus">
+    <Value>Return status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.List.SearchReturnRequestStatus.Hint">
+    <Value>Search by a specific return status.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.Updated">
     <Value>The return request has been updated successfully.</Value>

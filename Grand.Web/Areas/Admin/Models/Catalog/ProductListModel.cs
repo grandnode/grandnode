@@ -22,7 +22,6 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
-        
         public string SearchProductName { get; set; }
         [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
         public string SearchCategoryId { get; set; }
