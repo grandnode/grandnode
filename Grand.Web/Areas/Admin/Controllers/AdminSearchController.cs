@@ -28,10 +28,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IOrderService _orderService;
         private readonly AdminSearchSettings _adminSearchSettings;
         private readonly ILocalizationService _localizationService;
+        private readonly IWorkContext _workContext;
 
         public AdminSearchController(IProductService productService, ICategoryService categoryService, IManufacturerService manufacturerService,
             ITopicService topicService, INewsService newsService, IBlogService blogService, ICustomerService customerService, IOrderService orderService,
-            AdminSearchSettings adminSearchSettings, ILocalizationService localizationService)
+            AdminSearchSettings adminSearchSettings, ILocalizationService localizationService, IWorkContext workContext)
         {
             this._productService = productService;
             this._categoryService = categoryService;
@@ -43,6 +44,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._orderService = orderService;
             this._adminSearchSettings = adminSearchSettings;
             this._localizationService = localizationService;
+            this._workContext = workContext;
         }
 
         [HttpPost]
@@ -51,6 +53,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (string.IsNullOrEmpty(searchTerm))
                 return Json("error");
 
+            if(!_workContext.CurrentCustomer.IsAdmin())
+            {
+                return Json("Access Denied");
+            }
             //object = actual result, int = display order for sorting
             List<Tuple<object, int>> result = new List<Tuple<object, int>>();
 

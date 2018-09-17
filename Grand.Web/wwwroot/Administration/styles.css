@@ -487,8 +487,13 @@ textarea.form-control.k-input {
     margin: 0;
 }
 
+.admin-search-input-container {
+    display: flex;
+    max-width: 500px;
+    width: auto;
+}
+
 #searchInput {
-    width: 500px;
     margin: 10px;
 }
 
