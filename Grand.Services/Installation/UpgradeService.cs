@@ -34,6 +34,7 @@ using Grand.Core.Domain.Knowledgebase;
 using Grand.Core.Domain;
 using Grand.Core.Domain.PushNotifications;
 using Grand.Core.Domain.AdminSearch;
+using Grand.Data;
 
 namespace Grand.Services.Installation
 {
@@ -1098,6 +1099,43 @@ namespace Grand.Services.Installation
 
             #endregion
 
+            #region Update Return Request to the newest version
+
+            var dBContext = EngineContext.Current.Resolve<IMongoDBContext>();
+            var orderCollection = EngineContext.Current.Resolve<IRepository<Order>>();
+            var newReturnRequestCollection = EngineContext.Current.Resolve<IRepository<ReturnRequest>>();
+            var oldreturRequestCollection = dBContext.Database().GetCollection<OldReturnRequest>("ReturnRequest");
+
+            foreach (var oldrr in oldreturRequestCollection.AsQueryable().ToList())
+            {
+                //prepare object
+                var newrr = new ReturnRequest();
+                newrr.ReturnNumber = oldrr.ReturnNumber;
+                newrr.OrderId = oldrr.OrderId;
+                newrr.ReturnRequestStatusId = oldrr.ReturnRequestStatusId;
+                newrr.StaffNotes = oldrr.StaffNotes;
+                newrr.UpdatedOnUtc = oldrr.UpdatedOnUtc;
+                newrr.CreatedOnUtc = oldrr.CreatedOnUtc;
+                newrr.CustomerComments = oldrr.CustomerComments;
+                newrr.CustomerId = oldrr.CustomerId;
+                var order = orderCollection.GetById(oldrr.OrderId);
+                if (order != null)
+                    newrr.OrderId = order.StoreId;
+                var rrItem = new ReturnRequestItem();
+                rrItem.OrderItemId = oldrr.OrderItemId;
+                rrItem.Quantity = oldrr.Quantity;
+                rrItem.ReasonForReturn = oldrr.ReasonForReturn;
+                rrItem.RequestedAction = oldrr.RequestedAction;
+                newrr.ReturnRequestItems.Add(rrItem);
+                //remove old document
+                var rrbuilder = Builders<OldReturnRequest>.Filter;
+                var rrfilter = FilterDefinition<OldReturnRequest>.Empty;
+                rrfilter = rrfilter & rrbuilder.Where(x => x.Id == oldrr.Id);
+                var oldresult = oldreturRequestCollection.DeleteOne(rrfilter);
+                //insert new document
+                var newresult = newReturnRequestCollection.Insert(newrr);
+            }
+            #endregion
         }
 
         private void InstallStringResources(string filenames)
@@ -1112,6 +1150,26 @@ namespace Grand.Services.Installation
                 var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
                 localizationService.ImportResourcesFromXmlInstall(language, localesXml);
             }
+        }
+
+        /// <summary>
+        /// Used to convert from 4.20 to 4.30
+        /// </summary>
+        class OldReturnRequest : BaseEntity
+        {
+            public int ReturnNumber { get; set; }
+            public string StoreId { get; set; }
+            public string OrderId { get; set; }
+            public string OrderItemId { get; set; }
+            public string CustomerId { get; set; }
+            public int Quantity { get; set; }
+            public string ReasonForReturn { get; set; }
+            public string RequestedAction { get; set; }
+            public string CustomerComments { get; set; }
+            public string StaffNotes { get; set; }
+            public int ReturnRequestStatusId { get; set; }
+            public DateTime CreatedOnUtc { get; set; }
+            public DateTime UpdatedOnUtc { get; set; }
         }
     }
 }
