@@ -190,6 +190,50 @@ namespace Grand.Web.Services
 
             return model;
         }
+        public virtual ReturnRequestDetailsModel PrepareReturnRequestDetails(ReturnRequest returnRequest, Order order)
+        {
+            var model = new ReturnRequestDetailsModel();
+            model.Comments = returnRequest.CustomerComments;
+            model.ReturnNumber = returnRequest.ReturnNumber;
+            model.ReturnRequestStatus = returnRequest.ReturnRequestStatus;
+            model.CreatedOnUtc = returnRequest.CreatedOnUtc;
+            model.ShowPickupAddress = _orderSettings.ReturnRequests_AllowToSpecifyPickupAddress;
+            model.ShowPickupDate = _orderSettings.ReturnRequests_AllowToSpecifyPickupDate;
+            model.PickupDate = returnRequest.PickupDate;
+            _addressWebService.PrepareModel(model: model.PickupAddress, address: returnRequest.PickupAddress, excludeProperties: false);
+
+            foreach (var item in returnRequest.ReturnRequestItems)
+            {
+                var orderItem = order.OrderItems.Where(x => x.Id == item.OrderItemId).FirstOrDefault();
+                var product = _productService.GetProductByIdIncludeArch(orderItem.ProductId);
+
+                string unitPrice = string.Empty;
+                if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
+                {
+                    //including tax
+                    var unitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceInclTax, order.CurrencyRate);
+                    unitPrice = _priceFormatter.FormatPrice(unitPriceInclTaxInCustomerCurrency);
+                }
+                else
+                {
+                    //excluding tax
+                    var unitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceExclTax, order.CurrencyRate);
+                    unitPrice = _priceFormatter.FormatPrice(unitPriceExclTaxInCustomerCurrency);
+                }
+
+                model.ReturnRequestItems.Add(new ReturnRequestDetailsModel.ReturnRequestItemModel
+                {
+                    OrderItemId = item.OrderItemId,
+                    Quantity = item.Quantity,
+                    ReasonForReturn = item.ReasonForReturn,
+                    RequestedAction = item.RequestedAction,
+                    ProductName = product.GetLocalized(x => x.Name),
+                    ProductSeName = product.GetSeName(),
+                    ProductPrice = unitPrice
+                });
+            }
+            return model;
+        }
 
         public virtual CustomerReturnRequestsModel PrepareCustomerReturnRequests()
         {

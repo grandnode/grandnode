@@ -1,24 +1,21 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
-using Grand.Core;
+﻿using Grand.Core;
+using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Orders;
+using Grand.Framework.Security;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
 using Grand.Services.Orders;
-using Grand.Framework.Security;
+using Grand.Web.Extensions;
 using Grand.Web.Models.Order;
 using Grand.Web.Services;
 using Microsoft.AspNetCore.Http;
-using Grand.Web.Extensions;
-using Grand.Services.Seo;
-using System.Linq;
-using Grand.Core.Domain.Tax;
-using Grand.Services.Directory;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Globalization;
-using Grand.Core.Domain.Common;
+using System.Linq;
 
 namespace Grand.Web.Controllers
 {
@@ -34,12 +31,9 @@ namespace Grand.Web.Controllers
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly ILocalizationService _localizationService;
         private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly LocalizationSettings _localizationSettings;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly ICurrencyService _currencyService;
-        private readonly OrderSettings _orderSettings;
         private readonly IAddressWebService _addressWebService;
-
+        private readonly LocalizationSettings _localizationSettings;
+        private readonly OrderSettings _orderSettings;
         #endregion
 
         #region Constructors
@@ -54,11 +48,9 @@ namespace Grand.Web.Controllers
             IOrderProcessingService orderProcessingService,
             ILocalizationService localizationService,
             IWorkflowMessageService workflowMessageService,
+            IAddressWebService addressWebService,
             LocalizationSettings localizationSettings,
-            IPriceFormatter priceFormatter,
-            ICurrencyService currencyService,
-            OrderSettings orderSettings,
-            IAddressWebService addressWebService)
+            OrderSettings orderSettings)
         {
             this._returnRequestWebService = returnRequestWebService;
             this._returnRequestService = returnRequestService;
@@ -68,12 +60,10 @@ namespace Grand.Web.Controllers
             this._orderProcessingService = orderProcessingService;
             this._localizationService = localizationService;
             this._workflowMessageService = workflowMessageService;
-            this._localizationSettings = localizationSettings;
             this._productService = productService;
-            this._priceFormatter = priceFormatter;
-            this._currencyService = currencyService;
-            this._orderSettings = orderSettings;
             this._addressWebService = addressWebService;
+            this._localizationSettings = localizationSettings;
+            this._orderSettings = orderSettings;
         }
 
         #endregion
@@ -243,46 +233,7 @@ namespace Grand.Web.Controllers
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return Challenge();
 
-            var model = new ReturnRequestDetailsModel();
-            model.Comments = rr.CustomerComments;
-            model.ReturnNumber = rr.ReturnNumber;
-            model.ReturnRequestStatus = rr.ReturnRequestStatus;
-            model.CreatedOnUtc = rr.CreatedOnUtc;
-            model.ShowPickupAddress = _orderSettings.ReturnRequests_AllowToSpecifyPickupAddress;
-            model.ShowPickupDate = _orderSettings.ReturnRequests_AllowToSpecifyPickupDate;
-            model.PickupDate = rr.PickupDate;
-            _addressWebService.PrepareModel(model: model.PickupAddress, address: rr.PickupAddress, excludeProperties: false);
-
-            foreach (var item in rr.ReturnRequestItems)
-            {
-                var orderItem = order.OrderItems.Where(x => x.Id == item.OrderItemId).FirstOrDefault();
-                var product = _productService.GetProductByIdIncludeArch(orderItem.ProductId);
-
-                string unitPrice = string.Empty;
-                if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
-                {
-                    //including tax
-                    var unitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceInclTax, order.CurrencyRate);
-                    unitPrice = _priceFormatter.FormatPrice(unitPriceInclTaxInCustomerCurrency);
-                }
-                else
-                {
-                    //excluding tax
-                    var unitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceExclTax, order.CurrencyRate);
-                    unitPrice = _priceFormatter.FormatPrice(unitPriceExclTaxInCustomerCurrency);
-                }
-
-                model.ReturnRequestItems.Add(new ReturnRequestDetailsModel.ReturnRequestItemModel
-                {
-                    OrderItemId = item.OrderItemId,
-                    Quantity = item.Quantity,
-                    ReasonForReturn = item.ReasonForReturn,
-                    RequestedAction = item.RequestedAction,
-                    ProductName = product.GetLocalized(x => x.Name),
-                    ProductSeName = product.GetSeName(),
-                    ProductPrice = unitPrice
-                });
-            }
+            var model = _returnRequestWebService.PrepareReturnRequestDetails(rr, order);
 
             return View(model);
         }
