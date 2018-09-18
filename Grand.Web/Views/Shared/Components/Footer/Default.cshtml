@@ -57,6 +57,12 @@
                                 <a href="@Model.InstagramLink" target="instagram"><span class="fab fa-instagram fa-2x"></span><span class="sr-only">instagram</span></a>
                             </li>
                         }
+                        @if (!string.IsNullOrEmpty(Model.LinkedInLink))
+                        {
+                            <li class="list-group-item linkedin">
+                                <a href="@Model.LinkedInLink" target="linkedin"><span class="fab fa-linkedin fa-2x"></span><span class="sr-only">linkedin</span></a>
+                            </li>
+                        }
                     </ol>
                 </div>
             </div>

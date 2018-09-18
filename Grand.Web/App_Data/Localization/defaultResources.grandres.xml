@@ -7047,6 +7047,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.KnowledgebaseSettings.Enabled.hint">
     <Value>Indicates whether knowledge base should be enabled or not.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LinkedInLink">
+    <Value>LinkedIn page URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LinkedInLink.Hint">
+    <Value>Specify your LinkedIn page URL. Leave empty if you have no such page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LoadAllLocaleRecordsOnStartup">
     <Value>Load all locale resources on startup</Value>
   </LocaleResource>

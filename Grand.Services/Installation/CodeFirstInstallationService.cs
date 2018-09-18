@@ -5265,6 +5265,7 @@ namespace Grand.Services.Installation
                 YoutubeLink = "http://www.youtube.com/user/grandnode",
                 GooglePlusLink = "https://plus.google.com/104905799281078572776",
                 InstagramLink = "https://www.instagram.com/grandnode/",
+                LinkedInLink = "https://www.linkedin.com/company/grandnode.com/",
                 HidePoweredByGrandNode = false
             });
 

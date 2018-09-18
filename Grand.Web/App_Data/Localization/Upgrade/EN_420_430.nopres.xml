@@ -338,4 +338,10 @@
   <LocaleResource Name="Admin.ReturnRequests.Address">
     <Value>Pickup address</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LinkedInLink">
+    <Value>LinkedIn page URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LinkedInLink.Hint">
+    <Value>Specify your LinkedIn page URL. Leave empty if you have no such page.</Value>
+  </LocaleResource>
 </Language>

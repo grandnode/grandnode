@@ -3,9 +3,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Grand.Framework.Mvc.ModelBinding;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-
-using Grand.Framework;
-using Grand.Framework.Mvc;
 using Grand.Framework.Security.Captcha;
 using Grand.Web.Areas.Admin.Helpers;
 
@@ -92,6 +89,10 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.InstagramLink")]
             public string InstagramLink { get; set; }
             public bool InstagramLink_OverrideForStore { get; set; }
+
+            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.LinkedInLink")]
+            public string LinkedInLink { get; set; }
+            public bool LinkedInLink_OverrideForStore { get; set; }
 
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.StoreInDatabaseContactUsForm")]
             public bool StoreInDatabaseContactUsForm { get; set; }

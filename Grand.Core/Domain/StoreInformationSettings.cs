@@ -61,5 +61,10 @@ namespace Grand.Core.Domain
         /// Gets or sets a value of Instagram page URL of the site
         /// </summary>
         public string InstagramLink { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value of LinkedIn page URL of the site
+        /// </summary>
+        public string LinkedInLink { get; set; }
     }
 }

@@ -761,6 +761,7 @@ namespace Grand.Services.Messages
             tokens.Add(new Token("YouTube.URL", _storeInformationSettings.YoutubeLink));
             tokens.Add(new Token("GooglePlus.URL", _storeInformationSettings.GooglePlusLink));
             tokens.Add(new Token("Instagram.URL", _storeInformationSettings.InstagramLink));
+            tokens.Add(new Token("LinkedIn.URL", _storeInformationSettings.LinkedInLink));
 
             //event notification
             _eventPublisher.EntityTokensAdded(store, tokens);
@@ -1290,6 +1291,8 @@ namespace Grand.Services.Messages
                 "%Facebook.URL%",
                 "%YouTube.URL%",
                 "%GooglePlus.URL%",
+                "%Instagram.URL%",
+                "%LinkedIn.URL%",
                 "%Order.OrderNumber%",
                 "%Order.CustomerFullName%",
                 "%Order.CustomerEmail%",
@@ -1429,7 +1432,9 @@ namespace Grand.Services.Messages
                 "%Twitter.URL%",
                 "%Facebook.URL%",
                 "%YouTube.URL%",
-                "%GooglePlus.URL%"}
+                "%GooglePlus.URL%",
+                "%Instagram.URL%",
+                "%LinkedIn.URL%"}
                 );
 
             if (rule == CustomerReminderRuleEnum.AbandonedCart)
