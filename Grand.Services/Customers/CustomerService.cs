@@ -790,7 +790,7 @@ namespace Grand.Services.Customers
             if (createdToUtc.HasValue)
                 filter = filter & builder.Lte(x => x.LastActivityDateUtc, createdToUtc.Value);
             if (onlyWithoutShoppingCart)
-                filter = filter & builder.Eq(x => x.ShoppingCartItems.Any(), false);
+                filter = filter & builder.Size(x => x.ShoppingCartItems, 0);
 
             filter = filter & builder.Eq(x => x.HasContributions, false);
 
