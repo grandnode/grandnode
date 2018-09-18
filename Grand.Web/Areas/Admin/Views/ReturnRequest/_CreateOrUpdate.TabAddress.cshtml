@@ -1,15 +1,6 @@
 ﻿@model ReturnRequestModel
 <div class="form-horizontal">
     <div class="form-body">
-        @if (Model.PickupDate != default(DateTime))
-        {
-            <div class="form-group">
-                <admin-label asp-for="PickupDate" />
-                <div class="col-md-9 col-sm-9">
-                    <label class="control-label">@Model.PickupDate.ToShortDateString()</label>
-                </div>
-            </div>
-        }
         @if (Model.PickupAddress != null)
         {
             <div class="form-group">

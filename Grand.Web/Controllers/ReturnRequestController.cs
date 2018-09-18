@@ -112,7 +112,7 @@ namespace Grand.Web.Controllers
             {
                 pickupDate = DateTime.ParseExact(form["pickupDate"], "MM/dd/yyyy", CultureInfo.InvariantCulture);
             }
-            else if (_orderSettings.ReturnRequests_PickupDateRequired)
+            else if (_orderSettings.ReturnRequests_AllowToSpecifyPickupDate && _orderSettings.ReturnRequests_PickupDateRequired)
             {
                 ModelState.AddModelError("", _localizationService.GetResource("ReturnRequests.PickupDateRequired"));
             }

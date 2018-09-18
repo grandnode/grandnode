@@ -51,6 +51,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IPriceFormatter _priceFormatter;
         private readonly ICurrencyService _currencyService;
         private readonly AddressSettings _addressSettings;
+        private readonly OrderSettings _orderSettings;
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IAddressWebService _addressWebService;
@@ -75,7 +76,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             IStateProvinceService stateProvinceService,
             IAddressWebService addressWebService,
             IAddressAttributeService addressAttributeService,
-            IAddressAttributeParser addressAttributeParser)
+            IAddressAttributeParser addressAttributeParser,
+            OrderSettings orderSettings)
         {
             this._orderService = orderService;
             this._productService = productService;
@@ -97,6 +99,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._addressWebService = addressWebService;
             this._addressAttributeService = addressAttributeService;
             this._addressAttributeParser = addressAttributeParser;
+            this._orderSettings = orderSettings;
         }
 
         #endregion
@@ -128,9 +131,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.OrderNumber = order.OrderNumber;
             model.ReturnNumber = returnRequest.ReturnNumber;
             model.CustomerId = returnRequest.CustomerId;
-
+            model.NotifyCustomer = returnRequest.NotifyCustomer;
             var customer = _customerService.GetCustomerById(returnRequest.CustomerId);
-            if(customer!=null)
+            if (customer != null)
                 model.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
             else
                 model.CustomerInfo = _localizationService.GetResource("Admin.Customers.Guest");
@@ -232,7 +235,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new ReturnReqestListModel();
-            
+
             //Return request status
             model.ReturnRequestStatus = ReturnRequestStatus.Pending.ToSelectList(false).ToList();
             model.ReturnRequestStatus.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "-1" });
@@ -246,7 +249,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
                 return AccessDeniedView();
             string customerId = string.Empty;
-            if(!string.IsNullOrEmpty(model.SearchCustomerEmail))
+            if (!string.IsNullOrEmpty(model.SearchCustomerEmail))
             {
                 var customer = _customerService.GetCustomerByEmail(model.SearchCustomerEmail.ToLowerInvariant());
                 if (customer != null)
@@ -348,11 +351,15 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No return request found with the specified id
                 return RedirectToAction("List");
 
-            var customAttributes = form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
-            var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
-            foreach (var error in customAttributeWarnings)
+            var customAddressAttributes = string.Empty;
+            if (_orderSettings.ReturnRequests_AllowToSpecifyPickupAddress)
             {
-                ModelState.AddModelError("", error);
+                customAddressAttributes = form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
+                var customAddressAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAddressAttributes);
+                foreach (var error in customAddressAttributeWarnings)
+                {
+                    ModelState.AddModelError("", error);
+                }
             }
             if (ModelState.IsValid)
             {
@@ -360,8 +367,15 @@ namespace Grand.Web.Areas.Admin.Controllers
                 returnRequest.StaffNotes = model.StaffNotes;
                 returnRequest.ReturnRequestStatusId = model.ReturnRequestStatusId;
                 returnRequest.UpdatedOnUtc = DateTime.UtcNow;
-                returnRequest.PickupAddress = model.PickupAddress.ToEntity();
-                returnRequest.PickupAddress.CustomAttributes = customAttributes;
+                if (_orderSettings.ReturnRequests_AllowToSpecifyPickupDate)
+                    returnRequest.PickupDate = model.PickupDate;
+                if (_orderSettings.ReturnRequests_AllowToSpecifyPickupAddress)
+                {
+                    returnRequest.PickupAddress = model.PickupAddress.ToEntity();
+                    if (returnRequest.PickupAddress != null)
+                        returnRequest.PickupAddress.CustomAttributes = customAddressAttributes;
+                }
+                returnRequest.NotifyCustomer = model.NotifyCustomer;
                 _returnRequest.Update(returnRequest);
 
                 //activity log

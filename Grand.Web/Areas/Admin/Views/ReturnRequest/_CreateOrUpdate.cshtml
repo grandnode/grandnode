@@ -1,5 +1,6 @@
 ﻿@model ReturnRequestModel
 @inject AdminAreaSettings adminAreaSettings
+@inject OrderSettings orderSettings
 @inject IEventPublisher eventPublisher
 @using Grand.Core.Domain.Orders;
 <div asp-validation-summary="All"></div>
@@ -23,16 +24,22 @@
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
             @T("Admin.ReturnRequests.Info")
         </li>
-        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-            @T("Admin.ReturnRequests.Address")
-        </li>        
+        @if (orderSettings.ReturnRequests_AllowToSpecifyPickupAddress)
+        {
+            <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                @T("Admin.ReturnRequests.Address")
+            </li>
+        }
     </ul>
     <div>
         @Html.Partial("_CreateOrUpdate.TabInfo", Model)
     </div>
-    <div>
-        @Html.Partial("_CreateOrUpdate.TabAddress", Model)
-    </div>    
+    @if (orderSettings.ReturnRequests_AllowToSpecifyPickupAddress)
+    {
+        <div>
+            @Html.Partial("_CreateOrUpdate.TabAddress", Model)
+        </div>
+    }
 </div>
 
 @{

@@ -1,5 +1,6 @@
 ﻿@model ReturnRequestModel
 @inject AdminAreaSettings adminAreaSettings
+@inject OrderSettings orderSettings
 
 <div class="form-horizontal">
     <div class="form-body">
@@ -42,6 +43,15 @@
                 <span asp-validation-for="StaffNotes"></span>
             </div>
         </div>
+        @if (orderSettings.ReturnRequests_AllowToSpecifyPickupDate)
+        {
+            <div class="form-group">
+                <admin-label asp-for="PickupDate" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="PickupDate" />
+                </div>
+            </div>
+        }
         <div class="form-group">
             <admin-label asp-for="CreatedOn" />
             <div class="col-md-9 col-sm-9">
@@ -60,7 +70,7 @@
         </div>
         <div class="form-group">
             <div id="products-grid"></div>
-        </div>       
+        </div>
     </div>
 </div>
 

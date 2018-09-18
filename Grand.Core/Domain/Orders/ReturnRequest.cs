@@ -85,5 +85,10 @@ namespace Grand.Core.Domain.Orders
         /// Gets or sets the pickup address
         /// </summary>
         public Address PickupAddress { get; set; }
+
+        /// <summary>
+        /// Get or sets notify customer
+        /// </summary>
+        public bool NotifyCustomer { get; set; }
     }
 }
