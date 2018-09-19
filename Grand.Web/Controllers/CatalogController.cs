@@ -413,47 +413,13 @@ namespace Grand.Web.Controllers
             return View(searchmodel);
         }
 
-        public virtual IActionResult SearchTermAutoComplete(string term, string categoryId, 
-            [FromServices] IProductService productService, [FromServices] CatalogSettings catalogSettings,
-            [FromServices] MediaSettings mediaSettings)
+        public virtual IActionResult SearchTermAutoComplete(string term, string categoryId, [FromServices] CatalogSettings catalogSettings)
         {
             if (String.IsNullOrWhiteSpace(term) || term.Length < catalogSettings.ProductSearchTermMinimumLength)
                 return Content("");
 
-            //products
-            var productNumber = catalogSettings.ProductSearchAutoCompleteNumberOfProducts > 0 ?
-                catalogSettings.ProductSearchAutoCompleteNumberOfProducts : 10;
-            var categoryIds = new List<string>();
-            if (!string.IsNullOrEmpty(categoryId))
-            {
-                categoryIds.Add(categoryId);
-                if (catalogSettings.ShowProductsFromSubcategoriesInSearchBox)
-                {
-                    //include subcategories
-                    categoryIds.AddRange(_catalogWebService.GetChildCategoryIds(categoryId));
-                }
-            }
-
-
-            var products = productService.SearchProducts(
-                storeId: _storeContext.CurrentStore.Id,
-                keywords: term,
-                categoryIds: categoryIds,
-                searchSku: catalogSettings.SearchBySku,
-                searchDescriptions: catalogSettings.SearchByDescription,
-                languageId: _workContext.WorkingLanguage.Id,
-                visibleIndividuallyOnly: true,
-                pageSize: productNumber);
-
-            var models =  _productWebService.PrepareProductOverviewModels(products, false, catalogSettings.ShowProductImagesInSearchAutoComplete, mediaSettings.AutoCompleteSearchThumbPictureSize).ToList();
-            var result = (from p in models
-                          select new
-                          {
-                              label = p.Name,
-                              producturl = Url.RouteUrl("Product", new { SeName = p.SeName }),
-                              productpictureurl = p.DefaultPictureModel.ImageUrl
-                          })
-                          .ToList();
+            var result = _catalogWebService.PrepareSearchAutoComplete(term, categoryId);
+            
             return Json(result);
         }
 

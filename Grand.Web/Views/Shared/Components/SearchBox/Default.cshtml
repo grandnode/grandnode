@@ -2,17 +2,16 @@
 @using System.Text.Encodings.Web
 <form asp-route="ProductSearch" method="get" id="small-search-box-form">
     <label for="small-searchterms" class="sr-only">@T("Search.SearchBox.Tooltip")</label>
-
     <div class="input-group flex-row">
-            <input type="text" class="form-control search-box-text" id="small-searchterms" autocomplete="off" name="q" placeholder="@T("Search.SearchBox.Tooltip")">
-            @if (Model.AvailableCategories.Any())
-            {
-                <select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" class="search-box-select custom-select input-group-addon"></select>
-            }
-            @await Component.InvokeAsync("Widget", new { widgetZone = "searchbox_before_search_button" })
-            @if (Model.SearchTermMinimumLength > 0)
-            {
-                <script>
+        <input type="text" class="form-control search-box-text" id="small-searchterms" autocomplete="off" name="q" placeholder="@T("Search.SearchBox.Tooltip")">
+        @if (Model.AvailableCategories.Any())
+        {
+            <select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" class="search-box-select custom-select input-group-addon"></select>
+        }
+        @await Component.InvokeAsync("Widget", new { widgetZone = "searchbox_before_search_button" })
+        @if (Model.SearchTermMinimumLength > 0)
+        {
+            <script>
                     $("#small-search-box-form").submit(function(event) {
                         if ($("#small-searchterms").val() == "") {
                             alert('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Search.EnterSearchTerms").Text))');
@@ -20,61 +19,144 @@
                             event.preventDefault();
                         }
                     });
-                </script>
-            }
-            <div class="input-group-append">
-                <button type="submit" class="btn btn-info search-box-button float-sm-right d-inline-flex">
-                            <span class="sr-only">@T("Search.SearchBox.Tooltip")</span>
-                            <span class="fa fa-search align-self-center"></span>
-                            <span class="pl-2 d-none d-lg-block">@T("search")</span>
-                </button>
-                @await Component.InvokeAsync("AdminHeaderLinks")
-            </div>
+            </script>
+        }
+        <div class="input-group-append">
+            <button type="submit" class="btn btn-info search-box-button float-sm-right d-inline-flex">
+                <span class="sr-only">@T("Search.SearchBox.Tooltip")</span>
+                <span class="fa fa-search align-self-center"></span>                
+            </button>
+            @await Component.InvokeAsync("AdminHeaderLinks")
+        </div>
+        <ul class="advanced-search-results row">
+            <li class="left-side col-md-6 col-12">
+                <ul>
+                    <li class="categories-container">
+                        <a class="title">Categories</a>
+                        <div class="no-data pl-md-3 pl-0">@T("search.noresultstextcategory")</div>
+                        <ul></ul>
+                    </li>
+                    <li class="manufacturers-container">
+                        <a href="@Url.RouteUrl("ManufacturerList")" class="title">Manufacturers</a>
+                        <div class="no-data pl-md-3 pl-0">@T("search.noresultstextmanufacturer")</div>
+                        <ul></ul>
+                    </li>
+                </ul>
+            </li>
+            <li class="right-side col-md-6 col-12">
+                <a class="products-title title">Products</a>
+                <div class="no-data pl-md-3 pl-0">@T("search.noresultstext")</div>
+                <ul class="products-container"></ul>
+            </li>
+            <li class="ceter-side col-12">
+                <ul>
+                    <li class="blog-container mb-3">
+                        <a href="@Url.RouteUrl("Blog")" class="title">Blog</a>
+                        <div class="no-data pl-md-3 pl-0">@T("search.noresultstextblog")</div>
+                        <ul></ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
     </div>
     @if (Model.AutoCompleteEnabled)
     {
         <text>
             <script>
-                $(document).ready(function () {
-                    $('#small-searchterms').autocomplete({
-                        delay: 300,
-                        minLength: @(Model.SearchTermMinimumLength.ToString()),
-                        source: function (request, response) {
-                            var category = '';
-                            if ($("#SearchCategoryId").length > 0) {
-                                category = $("#SearchCategoryId").val();
-                            }
-                            $.ajax({
-                                url: '@(Url.RouteUrl("ProductSearchAutoComplete"))',
-                                dataType: "json",
-                                data: {
-                                    term: request.term,
-                                    categoryId: category
-                                },
-                                success: function (data) {
-                                    response(data);
+                    $(document).ready(function () {
+                        $('#small-searchterms').autocomplete({
+                            delay: 300,
+                            minLength: @(Model.SearchTermMinimumLength.ToString()),
+                            source: function (request, response) {
+                                var category = '';
+                                if ($("#SearchCategoryId").length > 0) {
+                                    category = $("#SearchCategoryId").val();
                                 }
-                            });
-                        },
-                        appendTo: '.search-box',
-                        select: function(event, ui) {
-                            $("#small-searchterms").val(ui.item.label);
-                            setLocation(ui.item.producturl);
-                            return false;
-                        }
-                    })
-                        .data("ui-autocomplete")._renderItem = function(ul, item) {
-                            var t = item.label;
-                            //html encode
-                            t = htmlEncode(t);
-                            return $("<li class=\"list-group-item\"></li>")
-                                .data("item.autocomplete", item)
-                                .append("<a class=\"generalImg row mx-0\">@(Model.ShowProductImagesInSearchAutoComplete ? Html.Raw("<img class='d-inline-flex col-2 col-lg-2 col-md-1 col-sm-2 pl-0' src='\" + item.productpictureurl + \"'>") : null)<span class='d-inline-flex align-items-center col px-0'>" + t + "</span></a>")
-                                .appendTo(ul);
-                        };
-                });
+                                $.ajax({
+                                    url: '@(Url.RouteUrl("ProductSearchAutoComplete"))',
+                                    dataType: "json",
+                                    data: {
+                                        term: request.term,
+                                        categoryId: category
+                                    },
+                                    success: function (data) {
+                                        response(data);
+                                        $(".advanced-search-results").addClass("open");
+                                        $('.advanced-search-results .list-group-item').each(function () {
+                                            $(this).remove();
+                                        });
+                                        $('.list-group-item[data-type="Product"]').each(function () {
+                                            $(this).prependTo(".advanced-search-results .products-container");
+                                        });
+                                        $('.list-group-item[data-type="Category"]').each(function () {
+                                            $(this).prependTo(".advanced-search-results .categories-container ul");
+                                        });
+                                        $('.list-group-item[data-type="Manufacturer"]').each(function () {
+                                            $(this).prependTo(".advanced-search-results .manufacturers-container ul");
+                                        });
+                                        $('.list-group-item[data-type="Blog"]').each(function () {
+                                            $(this).prependTo(".advanced-search-results .blog-container ul");
+                                        });
+                                        if ($(".categories-container ul .list-group-item").length) {
+                                            $(".categories-container .title").css("display", "block");
+                                            $(".categories-container .no-data").css("display", "none");
+                                        }
+                                        else {
+                                            $(".categories-container .no-data").css("display", "block");
+                                        }
+                                        if ($(".products-container .list-group-item").length) {
+                                            $(".products-title").css("display", "block");
+                                            $(".right-side .no-data").css("display", "none");
+                                            $(".right-side").addClass("col-md-6");
+                                            $(".left-side").css("display", "block");
+                                        }
+                                        else {
+                                            $(".right-side .no-data").css("display", "block");
+                                            $(".right-side").removeClass("col-md-6");
+                                            $(".left-side").css("display","none");
+                                        }
+                                        if ($(".blog-container ul .list-group-item").length) {
+                                            $(".blog-container").css("display", "block");
+                                            $(".blog-container .title").css("display", "block");
+                                            $(".blog-container .no-data").css("display", "none");
+                                        }
+                                        else {
+                                            $(".blog-container .no-data").css("display", "block");
+                                            $(".blog-container").css("display", "none");
+                                        }
+                                        if ($(".manufacturers-container ul .list-group-item").length) {
+                                            $(".manufacturers-container .title").css("display", "block");
+                                            $(".manufacturers-container .no-data").css("display", "none");
+                                        }
+                                        else {
+                                            $(".manufacturers-container .no-data").css("display", "block");
+                                        }
+                                    }
+                                });
+                            },
+                            appendTo: '.search-box',
+                            select: function(event, ui) {
+                                $("#small-searchterms").val(ui.item.label);
+                                setLocation(ui.item.producturl);
+                                return false;
+                            }
+                        })
+                            .data("ui-autocomplete")._renderItem = function(ul, item) {
+                                //html encode
+                                var term = this.element.val();
+                                    regex = new RegExp('(' + term + ')', 'gi');
+                                    t = item.Label.replace(regex, "<b>$&</b>");
+                                    desc = item.Desc.replace(regex, "<b>$&</b>");
+                                //t = htmlEncode(t);
+                                return $("<li @(Html.Raw("data-type='\" + item.SearchType + \"'")) class=\"list-group-item\" ></li>")
+                                    .data("item.autocomplete", item)
+                                    .append("<a @(Html.Raw("href='\" + item.Url + \"'")) class=\"generalImg row mx-0\">@(Model.ShowProductImagesInSearchAutoComplete ? Html.Raw("<img class='d-inline-flex' src='\" + item.PictureUrl + \"'>") : null)<div class='d-flex flex-column col px-0'><div class='product-title'>" + t + "</div><div class='product-desc'>" + desc + "</div></div></a>")
+                                    .appendTo(ul);
+                            };
+                    });
+
             </script>
-        </text>
+        </text>        
     }
     @await Component.InvokeAsync("Widget", new { widgetZone = "searchbox" })
 </form>

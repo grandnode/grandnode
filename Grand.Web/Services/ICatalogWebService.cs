@@ -50,6 +50,8 @@ namespace Grand.Web.Services
 
         PopularProductTagsModel PrepareProductTagsAll();
 
+        IList<SearchAutoCompleteModel> PrepareSearchAutoComplete(string term, string categoryId);
+
         SearchBoxModel PrepareSearchBox();
 
         SearchModel PrepareSearch(SearchModel model, CatalogPagingFilteringModel command);

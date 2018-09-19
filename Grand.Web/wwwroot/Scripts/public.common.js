@@ -620,3 +620,32 @@ function resetSelectedAddress() {
         selectElement.val('');
     }
 }
+$(document).ready(function () {
+    $("#small-searchterms").click(function (e) {
+        $(".formSearch").removeClass("col-lg-6");
+        e.stopPropagation();
+    });
+    $(document).click(function () {
+        if ($(".formSearch.col-lg-6").length) {
+        }
+        else {
+            $(".formSearch").addClass("col-lg-6");
+            $(".advanced-search-results").removeClass("open");
+        }
+    });
+
+    $('#small-searchterms').blur(function () {
+        if ($(this).val().length === 0) {
+            $(".advanced-search-results").removeClass("open");
+        }
+    });
+    jQuery(function ($) {
+        var input = $('#small-searchterms');
+        input.on('keydown', function () {
+            var key = event.keyCode || event.charCode;
+
+            if (key == 8 || key == 46)
+                $(".advanced-search-results").removeClass("open");
+        });
+    });
+});

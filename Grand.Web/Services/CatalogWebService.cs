@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Grand.Services.Blogs;
 
 namespace Grand.Web.Services
 {
@@ -58,6 +59,7 @@ namespace Grand.Web.Services
         private readonly IManufacturerTemplateService _manufacturerTemplateService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IAddressWebService _addressWebService;
+        private readonly IBlogService _blogService;
         private readonly CatalogSettings _catalogSettings;
         private readonly BlogSettings _blogSettings;
         private readonly ForumSettings _forumSettings;
@@ -91,6 +93,7 @@ namespace Grand.Web.Services
             IManufacturerTemplateService manufacturerTemplateService,
             IPriceFormatter priceFormatter,
             IAddressWebService addressWebService,
+            IBlogService blogService,
             CatalogSettings catalogSettings,
             BlogSettings blogSettings,
             ForumSettings forumSettings,
@@ -123,6 +126,7 @@ namespace Grand.Web.Services
             this._manufacturerTemplateService = manufacturerTemplateService;
             this._priceFormatter = priceFormatter;
             this._addressWebService = addressWebService;
+            this._blogService = blogService;
             this._catalogSettings = catalogSettings;
             this._blogSettings = blogSettings;
             this._forumSettings = forumSettings;
@@ -1106,6 +1110,115 @@ namespace Grand.Web.Services
         #endregion
 
         #region Search
+
+        public virtual IList<SearchAutoCompleteModel> PrepareSearchAutoComplete(string term, string categoryId)
+        {
+            var model = new List<SearchAutoCompleteModel>();
+            var productNumber = _catalogSettings.ProductSearchAutoCompleteNumberOfProducts > 0 ?
+                _catalogSettings.ProductSearchAutoCompleteNumberOfProducts : 10;
+
+            var categoryIds = new List<string>();
+            if (!string.IsNullOrEmpty(categoryId))
+            {
+                categoryIds.Add(categoryId);
+                if (_catalogSettings.ShowProductsFromSubcategoriesInSearchBox)
+                {
+                    //include subcategories
+                    categoryIds.AddRange(GetChildCategoryIds(categoryId));
+                }
+            }
+
+
+            var products = _productService.SearchProducts(
+                storeId: _storeContext.CurrentStore.Id,
+                keywords: term,
+                categoryIds: categoryIds,
+                searchSku: _catalogSettings.SearchBySku,
+                searchDescriptions: _catalogSettings.SearchByDescription,
+                languageId: _workContext.WorkingLanguage.Id,
+                visibleIndividuallyOnly: true,
+                pageSize: productNumber);
+
+            var categories = new List<string>();
+            var manufacturers = new List<string>();
+
+            foreach (var item in products)
+            {
+                var pictureUrl = "";
+                if(_catalogSettings.ShowProductImagesInSearchAutoComplete)
+                {
+                    var picture = item.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault();
+                    if(picture!=null)
+                        pictureUrl = _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.AutoCompleteSearchThumbPictureSize);
+                }
+                model.Add(new SearchAutoCompleteModel()
+                {
+                    SearchType = "Product",
+                    Label = item.GetLocalized(x => x.Name),
+                    Desc = item.GetLocalized(x=>x.ShortDescription),
+                    PictureUrl = pictureUrl,
+                    Url = item.SeName
+                });
+                foreach (var category in item.ProductCategories)
+                {
+                    categories.Add(category.CategoryId);
+                }
+                foreach (var manufacturer in item.ProductManufacturers)
+                {
+                    manufacturers.Add(manufacturer.ManufacturerId);
+                }
+            }
+
+            foreach (var item in manufacturers.Distinct())
+            {
+                var manufacturer = _manufacturerService.GetManufacturerById(item);
+                if (manufacturer != null)
+                {
+                    model.Add(new SearchAutoCompleteModel()
+                    {
+                        SearchType = "Manufacturer",
+                        Label = manufacturer.GetLocalized(x => x.Name),
+                        Desc = "",
+                        PictureUrl = "",
+                        Url = $"search?q={term}&adv=true&cid={item}"
+                    });
+                }
+            }
+            foreach (var item in categories.Distinct())
+            {
+                var category = _categoryService.GetCategoryById(item);
+                if (category != null)
+                {
+                    model.Add(new SearchAutoCompleteModel()
+                    {
+                        SearchType = "Category",
+                        Label = category.GetLocalized(x => x.Name),
+                        Desc = "",
+                        PictureUrl = "",
+                        Url = $"search?q={term}&adv=true&cid={item}"
+                    });
+                }
+            }
+
+            if(_catalogSettings.ShowBlogPostsInSearchAutoComplete)
+            {
+                var posts = _blogService.GetAllBlogPosts(storeId: _storeContext.CurrentStore.Id, pageSize: productNumber, blogPostName: term);
+                foreach (var item in posts)
+                {
+                    model.Add(new SearchAutoCompleteModel()
+                    {
+                        SearchType = "Blog",
+                        Label = item.GetLocalized(x => x.Title),
+                        Desc = "",
+                        PictureUrl = "",
+                        Url = item.SeName
+                    });
+                }
+            }
+
+            return model;
+        }
+
         public virtual SearchBoxModel PrepareSearchBox()
         {
             string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_ALL_SEARCHBOX,

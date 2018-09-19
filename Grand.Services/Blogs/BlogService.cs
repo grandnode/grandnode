@@ -87,8 +87,12 @@ namespace Grand.Services.Blogs
             var query = _blogPostRepository.Table;
 
             if (!String.IsNullOrWhiteSpace(blogPostName))
-                query = query.Where(b => b.Title != null && b.Title.ToLower().Contains(blogPostName.ToLower()));
-
+            {
+                query = query.Where
+                    (b => (b.Title != null && b.Title.ToLower().Contains(blogPostName.ToLower())) || 
+                    (b.BodyOverview != null && b.BodyOverview.ToLower().Contains(blogPostName.ToLower())));
+                //query = query.Where(b => b.BodyOverview != null && b.BodyOverview.ToLower().Contains(blogPostName.ToLower()));
+            }
             if (dateFrom.HasValue)
                 query = query.Where(b => dateFrom.Value <= b.CreatedOnUtc);
             if (dateTo.HasValue)
