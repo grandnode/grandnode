@@ -1172,31 +1172,57 @@ namespace Grand.Web.Services
             foreach (var item in manufacturers.Distinct())
             {
                 var manufacturer = _manufacturerService.GetManufacturerById(item);
-                if (manufacturer != null)
+                if (manufacturer != null && manufacturer.Published)
                 {
-                    model.Add(new SearchAutoCompleteModel()
+                    var allow = true;
+                    if (!_catalogSettings.IgnoreAcl)
+                        if (!_aclService.Authorize(manufacturer))
+                            allow = false;
+                    if (!_catalogSettings.IgnoreStoreLimitations)
+                        if (!_storeMappingService.Authorize(manufacturer))
+                            allow = false;
+                    if (allow)
                     {
-                        SearchType = "Manufacturer",
-                        Label = manufacturer.GetLocalized(x => x.Name),
-                        Desc = "",
-                        PictureUrl = "",
-                        Url = $"search?q={term}&adv=true&cid={item}"
-                    });
+                        var desc = "";
+                        if (_catalogSettings.SearchByDescription)
+                            desc = "&sid=true";
+                        model.Add(new SearchAutoCompleteModel()
+                        {
+                            SearchType = "Manufacturer",
+                            Label = manufacturer.GetLocalized(x => x.Name),
+                            Desc = "",
+                            PictureUrl = "",
+                            Url = $"search?q={term}&adv=true&mid={item}{desc}"
+                        });
+                    }
                 }
             }
             foreach (var item in categories.Distinct())
             {
                 var category = _categoryService.GetCategoryById(item);
-                if (category != null)
+                if (category != null && category.Published)
                 {
-                    model.Add(new SearchAutoCompleteModel()
+                    var allow = true;
+                    if (!_catalogSettings.IgnoreAcl)
+                        if (!_aclService.Authorize(category))
+                            allow = false;
+                    if (!_catalogSettings.IgnoreStoreLimitations)
+                        if (!_storeMappingService.Authorize(category))
+                            allow = false;
+                    if (allow)
                     {
-                        SearchType = "Category",
-                        Label = category.GetLocalized(x => x.Name),
-                        Desc = "",
-                        PictureUrl = "",
-                        Url = $"search?q={term}&adv=true&cid={item}"
-                    });
+                        var desc = "";
+                        if (_catalogSettings.SearchByDescription)
+                            desc = "&sid=true";
+                        model.Add(new SearchAutoCompleteModel()
+                        {
+                            SearchType = "Category",
+                            Label = category.GetLocalized(x => x.Name),
+                            Desc = "",
+                            PictureUrl = "",
+                            Url = $"search?q={term}&adv=true&cid={item}{desc}"
+                        });
+                    }
                 }
             }
 

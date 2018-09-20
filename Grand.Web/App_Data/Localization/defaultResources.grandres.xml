@@ -18387,6 +18387,15 @@
   <LocaleResource Name="Search.NoResultsText">
     <Value>No products were found that matched your criteria.</Value>
   </LocaleResource>
+  <LocaleResource Name="search.noresultstextblog">
+    <Value>No blog posts were found that matched your criteria.</Value>
+  </LocaleResource>
+  <LocaleResource Name="search.noresultstextcategory">
+    <Value>No categories were found that matched your criteria.</Value>
+  </LocaleResource>
+  <LocaleResource Name="search.noresultstextmanufacturer">
+    <Value>No manufacturers were found that matched your criteria.</Value>
+  </LocaleResource>
   <LocaleResource Name="Search.PriceRange">
     <Value>Price range</Value>
   </LocaleResource>

@@ -383,16 +383,50 @@ span.rotate {
         padding-left: 0;
     }
 
+    .advanced-search-results .categories-container > ul {
+        margin-bottom: 10px;
+    }
+
     .advanced-search-results .title {
         margin-bottom: 10px;
         line-height: 1;
-        font-weight: 300;
+        font-weight: 400;
         font-size: 20px;
         color: #007bff !important;
     }
 
-    .advanced-search-results .blog-container .title {
-        margin-bottom: 5px;
+    .advanced-search-results .products-container .container-off,
+    .advanced-search-results .blog-container .container-off {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .advanced-search-results .products-container .product-in,
+    .advanced-search-results .products-container .in-separator,
+    .advanced-search-results .blog-container .in-separator,
+    .advanced-search-results .blog-container .product-in {
+        display: none;
+    }
+
+    .advanced-search-results .in-separator {
+        color: #117a8b;
+        margin-right: 5px;
+    }
+
+    .advanced-search-results .categories-container .product-in,
+    .advanced-search-results .manufacturers-container .product-in {
+        margin-right: 5px;
+        font-weight: 900;
+    }
+
+    .advanced-search-results .categories-container .product-title,
+    .advanced-search-results .manufacturers-container .product-title {
+        color: #117a8b;
+    }
+
+    .advanced-search-results .categories-container .container-off,
+    .advanced-search-results .manufacturers-container .container-off {
+        display: inline-flex;
     }
 
     .advanced-search-results .product-title b {
@@ -409,7 +443,7 @@ span.rotate {
         margin: 15px 0;
     }
 
-    .advanced-search-results .right-side.col-md-6 {
+    .advanced-search-results .right-side {
         border-left: 1px solid rgba(0,0,0,.2);
     }
 
@@ -434,7 +468,7 @@ span.rotate {
     .advanced-search-results img {
         width: auto;
         height: auto;
-        padding-right: 15px;
+        padding-right: 15px !important;
     }
 
     .advanced-search-results .right-side {
@@ -455,7 +489,8 @@ span.rotate {
         padding: 5px 5px 5px 15px;
     }
 
-    .advanced-search-results .products-container .product-title {
+    .advanced-search-results .products-container .product-title,
+    .advanced-search-results .blog-container .product-title {
         font-weight: 500;
         font-size: 14px;
         color: #212529;
@@ -469,6 +504,16 @@ span.rotate {
         text-overflow: ellipsis;
         white-space: nowrap;
         max-width: 300px;
+    }
+
+    .advanced-search-results .blog-container .product-desc {
+        color: #6c757d;
+        max-height: 21px;
+        font-size: 14px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 100%;
     }
 
 ul.ui-autocomplete li:hover {
@@ -946,7 +991,42 @@ nav .nav-item.list-inline {
     top: -17px;
     right: 0;
     color: #fff;
+    border-radius: 0;
 }
+
+    .mainNav .badge::before {
+        border: 4px solid transparent;
+        position: absolute;
+        content: "";
+        right: 50%;
+        bottom: -8px;
+        z-index: 9999999;
+    }
+
+    .mainNav .badge-danger::before,
+    .mainNav .badge.bg-danger::before {
+        border-top: 5px solid #dc3545;
+    }
+
+    .mainNav .badge-primary::before,
+    .mainNav .badge.bg-primary::before {
+        border-top: 5px solid #007bff;
+    }
+
+    .mainNav .badge-info::before,
+    .mainNav .badge.bg-info::before {
+        border-top: 5px solid #17a2b8;
+    }
+
+    .mainNav .badge-warning::before,
+    .mainNav .badge.bg-warning::before {
+        border-top: 5px solid #ffc107;
+    }
+
+    .mainNav .badge-success::before,
+    .mainNav .badge.bg-success::before {
+        border-top: 5px solid #28a745;
+    }
 
 .mainNav .dropdown-menu .badge {
     bottom: 0;
@@ -2929,6 +3009,10 @@ select.form-control:not([size]):not([multiple]) option {
     min-height: 25px;
 }
 
+.generalImg img {
+    padding-right: 10px;
+}
+
 .cartCounter .btn {
     padding: 11px;
 }
@@ -3884,7 +3968,7 @@ footer .list-group .list-group-item {
 
 @media screen and (max-width: 1200px) {
     .advanced-search-results .products-container .product-desc {
-        max-width: 250px;
+        max-width: 220px;
     }
 
     .order-details-page .quantity {
@@ -4970,7 +5054,7 @@ footer .list-group .list-group-item {
 
 @media (max-width: 767px) {
     .advanced-search-results .products-container .product-desc {
-        max-width: 230px;
+        max-width: 200px;
     }
 
     .advanced-search-results .products-container .list-group-item {
