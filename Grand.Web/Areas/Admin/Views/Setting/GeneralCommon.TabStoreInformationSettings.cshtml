@@ -161,6 +161,16 @@
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.PinterestLink_OverrideForStore, model => model.StoreInformationSettings.PinterestLink, Model.ActiveStoreScopeConfiguration)
+                <admin-label asp-for="StoreInformationSettings.PinterestLink" class="control-label" />
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <admin-input asp-for="StoreInformationSettings.PinterestLink" />
+                <span asp-validation-for="StoreInformationSettings.PinterestLink"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.StoreInDatabaseContactUsForm_OverrideForStore, model => model.StoreInformationSettings.StoreInDatabaseContactUsForm, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="StoreInformationSettings.StoreInDatabaseContactUsForm" class="control-label" />
             </div>

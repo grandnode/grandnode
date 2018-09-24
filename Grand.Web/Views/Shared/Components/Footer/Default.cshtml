@@ -12,7 +12,7 @@
                         @if (!string.IsNullOrEmpty(Model.FacebookLink))
                         {
                             <li class="list-group-item facebook">
-                                <a title="facebook" href="@Model.FacebookLink" target="facebook">
+                                <a title="facebook" href="@Model.FacebookLink" target="_blank">
                                     <span class="sr-only">Facebook</span>
                                     <span class="fab fa-facebook-square fa-2x"></span>
                                 </a>
@@ -21,7 +21,7 @@
                         @if (!string.IsNullOrEmpty(Model.TwitterLink))
                         {
                             <li class="list-group-item twitter">
-                                <a href="@Model.TwitterLink" target="twitter">
+                                <a href="@Model.TwitterLink" target="_blank">
                                     <span class="fab fa-twitter fa-2x"></span>
                                     <span class="sr-only">twitter</span>
                                 </a>
@@ -39,7 +39,7 @@
                         @if (!string.IsNullOrEmpty(Model.YoutubeLink))
                         {
                             <li class="list-group-item youtube">
-                                <a href="@Model.YoutubeLink" target="youtube">
+                                <a href="@Model.YoutubeLink" target="_blank">
                                     <span class="fab fa-youtube fa-2x"></span>
                                     <span class="sr-only">youtube</span>
                                 </a>
@@ -48,19 +48,25 @@
                         @if (!string.IsNullOrEmpty(Model.GooglePlusLink))
                         {
                             <li class="list-group-item google-plus">
-                                <a href="@Model.GooglePlusLink" target="google-plus"><span class="fab fa-google-plus fa-2x"></span><span class="sr-only">google plus</span></a>
+                                <a href="@Model.GooglePlusLink" target="_blank"><span class="fab fa-google-plus fa-2x"></span><span class="sr-only">google plus</span></a>
                             </li>
                         }
                         @if (!string.IsNullOrEmpty(Model.InstagramLink))
                         {
                             <li class="list-group-item instagram">
-                                <a href="@Model.InstagramLink" target="instagram"><span class="fab fa-instagram fa-2x"></span><span class="sr-only">instagram</span></a>
+                                <a href="@Model.InstagramLink" target="_blank"><span class="fab fa-instagram fa-2x"></span><span class="sr-only">instagram</span></a>
                             </li>
                         }
                         @if (!string.IsNullOrEmpty(Model.LinkedInLink))
                         {
                             <li class="list-group-item linkedin">
-                                <a href="@Model.LinkedInLink" target="linkedin"><span class="fab fa-linkedin fa-2x"></span><span class="sr-only">linkedin</span></a>
+                                <a href="@Model.LinkedInLink" target="_blank"><span class="fab fa-linkedin fa-2x"></span><span class="sr-only">linkedin</span></a>
+                            </li>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.PinterestLink))
+                        {
+                            <li class="list-group-item pinterest">
+                                <a href="@Model.PinterestLink" target="_blank"><span class="fab fa-pinterest fa-2x"></span><span class="sr-only">pinterest</span></a>
                             </li>
                         }
                     </ol>

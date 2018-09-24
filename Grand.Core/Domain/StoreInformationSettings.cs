@@ -66,5 +66,10 @@ namespace Grand.Core.Domain
         /// Gets or sets a value of LinkedIn page URL of the site
         /// </summary>
         public string LinkedInLink { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value of Pinterest page URL of the site
+        /// </summary>
+        public string PinterestLink { get; set; }
     }
 }

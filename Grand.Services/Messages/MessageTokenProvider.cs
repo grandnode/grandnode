@@ -762,7 +762,7 @@ namespace Grand.Services.Messages
             tokens.Add(new Token("GooglePlus.URL", _storeInformationSettings.GooglePlusLink));
             tokens.Add(new Token("Instagram.URL", _storeInformationSettings.InstagramLink));
             tokens.Add(new Token("LinkedIn.URL", _storeInformationSettings.LinkedInLink));
-
+            tokens.Add(new Token("Pinterest.URL", _storeInformationSettings.PinterestLink));
             //event notification
             _eventPublisher.EntityTokensAdded(store, tokens);
         }
@@ -1293,6 +1293,7 @@ namespace Grand.Services.Messages
                 "%GooglePlus.URL%",
                 "%Instagram.URL%",
                 "%LinkedIn.URL%",
+                "%Pinterest.URL%",
                 "%Order.OrderNumber%",
                 "%Order.CustomerFullName%",
                 "%Order.CustomerEmail%",
@@ -1434,8 +1435,8 @@ namespace Grand.Services.Messages
                 "%YouTube.URL%",
                 "%GooglePlus.URL%",
                 "%Instagram.URL%",
-                "%LinkedIn.URL%"}
-                );
+                "%LinkedIn.URL%",
+                "%Pinterest.URL%"});
 
             if (rule == CustomerReminderRuleEnum.AbandonedCart)
             {

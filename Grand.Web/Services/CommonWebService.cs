@@ -406,6 +406,7 @@ namespace Grand.Web.Services
                 GooglePlusLink = _storeInformationSettings.GooglePlusLink,
                 InstagramLink = _storeInformationSettings.InstagramLink,
                 LinkedInLink = _storeInformationSettings.LinkedInLink,
+                PinterestLink = _storeInformationSettings.PinterestLink,
                 BlogEnabled = _blogSettings.Enabled,
                 KnowledgebaseEnabled = _knowledgebaseSettings.Enabled,
                 CompareProductsEnabled = _catalogSettings.CompareProductsEnabled,

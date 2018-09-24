@@ -2610,6 +2610,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.StoreInformationSettings.GooglePlusLink = storeInformationSettings.GooglePlusLink;
             model.StoreInformationSettings.InstagramLink = storeInformationSettings.InstagramLink;
             model.StoreInformationSettings.LinkedInLink = storeInformationSettings.LinkedInLink;
+            model.StoreInformationSettings.PinterestLink = storeInformationSettings.PinterestLink;
+
             //contact us
             model.StoreInformationSettings.StoreInDatabaseContactUsForm = commonSettings.StoreInDatabaseContactUsForm;
             model.StoreInformationSettings.SubjectFieldOnContactUsForm = commonSettings.SubjectFieldOnContactUsForm;
@@ -2628,6 +2630,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.StoreInformationSettings.GooglePlusLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.GooglePlusLink, storeScope);
                 model.StoreInformationSettings.InstagramLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.InstagramLink, storeScope);
                 model.StoreInformationSettings.LinkedInLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.LinkedInLink, storeScope);
+                model.StoreInformationSettings.PinterestLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.PinterestLink, storeScope);
                 model.StoreInformationSettings.StoreInDatabaseContactUsForm_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.StoreInDatabaseContactUsForm, storeScope);
                 model.StoreInformationSettings.SubjectFieldOnContactUsForm_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.SubjectFieldOnContactUsForm, storeScope);
                 model.StoreInformationSettings.UseSystemEmailForContactUsForm_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.UseSystemEmailForContactUsForm, storeScope);
@@ -2800,6 +2803,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             storeInformationSettings.GooglePlusLink = model.StoreInformationSettings.GooglePlusLink;
             storeInformationSettings.InstagramLink = model.StoreInformationSettings.InstagramLink;
             storeInformationSettings.LinkedInLink = model.StoreInformationSettings.LinkedInLink;
+            storeInformationSettings.PinterestLink = model.StoreInformationSettings.PinterestLink;
+
             //contact us
             commonSettings.StoreInDatabaseContactUsForm = model.StoreInformationSettings.StoreInDatabaseContactUsForm;
             commonSettings.SubjectFieldOnContactUsForm = model.StoreInformationSettings.SubjectFieldOnContactUsForm;
@@ -2863,6 +2868,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(storeInformationSettings, x => x.LinkedInLink, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(storeInformationSettings, x => x.LinkedInLink, storeScope);
+
+            if (model.StoreInformationSettings.PinterestLink_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(storeInformationSettings, x => x.PinterestLink, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(storeInformationSettings, x => x.PinterestLink, storeScope);
 
             if (model.StoreInformationSettings.StoreInDatabaseContactUsForm_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(commonSettings, x => x.StoreInDatabaseContactUsForm, storeScope, false);

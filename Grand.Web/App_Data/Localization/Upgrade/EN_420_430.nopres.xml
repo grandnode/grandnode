@@ -344,6 +344,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LinkedInLink.Hint">
     <Value>Specify your LinkedIn page URL. Leave empty if you have no such page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PinterestLink">
+    <Value>Pinterest page URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PinterestLink.Hint">
+    <Value>Specify your Pinterest page URL. Leave empty if you have no such page.</Value>
+  </LocaleResource>
   <LocaleResource Name="search.noresultstextblog">
     <Value>No blog posts were found that matched your criteria.</Value>
   </LocaleResource>

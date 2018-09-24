@@ -7113,6 +7113,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PdfSettings">
     <Value>PDF settings</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PinterestLink">
+    <Value>Pinterest page URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PinterestLink.Hint">
+    <Value>Specify your Pinterest page URL. Leave empty if you have no such page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.reCaptchaPrivateKey">
     <Value>reCAPTCHA private key</Value>
   </LocaleResource>

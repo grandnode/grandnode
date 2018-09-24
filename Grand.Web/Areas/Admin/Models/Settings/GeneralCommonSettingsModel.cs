@@ -94,6 +94,10 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             public string LinkedInLink { get; set; }
             public bool LinkedInLink_OverrideForStore { get; set; }
 
+            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PinterestLink")]
+            public string PinterestLink { get; set; }
+            public bool PinterestLink_OverrideForStore { get; set; }
+
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.StoreInDatabaseContactUsForm")]
             public bool StoreInDatabaseContactUsForm { get; set; }
             public bool StoreInDatabaseContactUsForm_OverrideForStore { get; set; }
