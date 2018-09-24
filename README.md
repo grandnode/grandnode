@@ -79,3 +79,7 @@ Demo is restoring every hour to the original state.
 Access to the admin panel:
 Admin email: admin@yourstore.com
 Admin password: 123456
+
+## License ##
+
+GrandNode open source edition is licensed under GrandNode Public License Version 3.0. It's available [here](https://github.com/grandnode/grandnode/blob/develop/LICENSE.md).

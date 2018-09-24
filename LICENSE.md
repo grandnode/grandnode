@@ -1,5 +1,5 @@
 „GrandNode open source edition is licensed under GrandNode Public License Version 3.0. It’s bases on a GPLv3 License with additional nopCommerce terms (The nopCommerce Public License Version 3.0) and the „GrandNode.com Powered by NopCommerce” text requirement on every single page.
-Grand Node (being property of Unisoft sp. z o.o. based in Poland) modifies source code licensed by NopCommerce under “The nopCommerce Public License Version 3.0” and includes original derivative work.
+Grand Node (being property of Unit- Soft sp. z o.o. based in Poland) modifies source code licensed by NopCommerce under “The nopCommerce Public License Version 3.0” and includes original derivative work.
 The GrandNode Public License Version 3.0 ("NPL") consists of the GPL3 License with the following additional terms:
 All copies of the program in Executable and source code must include:
 a) „GrandNode.com Powered by nopCommerce” text,
