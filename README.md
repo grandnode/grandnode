@@ -1,3 +1,5 @@
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=HFRGJMMY9KF7C)
+
 Thank you for choosing GrandNode! It's an open source, free, cross-platform e-commerce software based on ASP.NET Core 2.1 and MongoDB - NoSQL database. You can run it on Linux, Windows and MacOS easily. GrandNode also supports Docker, so you are able to install it just in a seconds with Docker.
 
 It can be used for any kind of online store. GrandNode is a perfect choice for people who want to sell simple products. It's solution dedicated for the most demanding users. You can also create auctions, booking/reservation products or product kits. GrandNode became a mature solution especially for developers who want to develop a modern, functional and high performance e-commerce system. 
