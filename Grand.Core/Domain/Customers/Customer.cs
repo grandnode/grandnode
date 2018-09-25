@@ -124,6 +124,11 @@ namespace Grand.Core.Domain.Customers
         public string LastIpAddress { get; set; }
 
         /// <summary>
+        /// Gets or sets the source Url Referrer
+        /// </summary>
+        public string UrlReferrer { get; set; }
+
+        /// <summary>
         /// Gets or sets the date and time of entity creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }

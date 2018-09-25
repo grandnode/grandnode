@@ -612,6 +612,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     if (customer.LastPurchaseDateUtc.HasValue)
                         model.LastPurchaseDate = _dateTimeHelper.ConvertToUserTime(customer.LastPurchaseDateUtc.Value, DateTimeKind.Utc);
                     model.LastIpAddress = customer.LastIpAddress;
+                    model.UrlReferrer = customer.UrlReferrer;
                     model.LastVisitedPage = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage);
                     model.LastUrlReferrer = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastUrlReferrer);
 

@@ -11184,6 +11184,12 @@
   <LocaleResource Name="Admin.Customers.Customers.Fields.TimeZoneId.Hint">
     <Value>The time zone.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.URLReferrer">
+    <Value>Created from Url</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.URLReferrer.hint">
+    <Value>Customer created from Url Referrer</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.Username">
     <Value>Username</Value>
   </LocaleResource>

@@ -401,7 +401,7 @@ namespace Grand.Services.Customers
         /// Insert a guest customer
         /// </summary>
         /// <returns>Customer</returns>
-        public virtual Customer InsertGuestCustomer()
+        public virtual Customer InsertGuestCustomer(string urlreferrer = "")
         {
             var customer = new Customer
             {
@@ -409,6 +409,7 @@ namespace Grand.Services.Customers
                 Active = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
+                UrlReferrer = urlreferrer
             };
 
             //add to 'Guests' role

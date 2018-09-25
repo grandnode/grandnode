@@ -412,6 +412,15 @@
                 </div>
             </div>
         }
+        @if (!String.IsNullOrEmpty(Model.Id) && !String.IsNullOrEmpty(Model.UrlReferrer))
+        {
+            <div class="form-group">
+                <admin-label asp-for="UrlReferrer" />
+                <div class="col-md-9 col-sm-9">
+                    <label class="control-label">@Model.UrlReferrer</label>
+                </div>
+            </div>
+        }
         @if (!String.IsNullOrEmpty(Model.Id))
         {
             <div class="form-group">

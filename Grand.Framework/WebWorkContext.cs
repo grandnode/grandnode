@@ -17,6 +17,7 @@ using Grand.Services.Localization;
 using Grand.Services.Stores;
 using Grand.Services.Vendors;
 using Grand.Framework.Localization;
+using Microsoft.Net.Http.Headers;
 
 namespace Grand.Framework
 {
@@ -250,7 +251,8 @@ namespace Grand.Framework
                 if (customer == null || customer.Deleted || !customer.Active)
                 {
                     //create guest if not exists
-                    customer = _customerService.InsertGuestCustomer();
+                    string referrer = _httpContextAccessor?.HttpContext?.Request?.Headers[HeaderNames.Referer];
+                    customer = _customerService.InsertGuestCustomer(referrer);
                 }
 
                 if (!customer.Deleted && customer.Active)

@@ -116,7 +116,7 @@ namespace Grand.Services.Customers
         /// Insert a guest customer
         /// </summary>
         /// <returns>Customer</returns>
-        Customer InsertGuestCustomer();
+        Customer InsertGuestCustomer(string urlreferrer = "");
 
         /// <summary>
         /// Insert a customer
