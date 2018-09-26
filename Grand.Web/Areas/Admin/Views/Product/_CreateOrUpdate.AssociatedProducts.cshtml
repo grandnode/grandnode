@@ -78,18 +78,14 @@
                 scrollable: false,
                 columns: [{
                     field: "ProductName",
-                    title: "@T("Admin.Catalog.Products.AssociatedProducts.Fields.Product")"
+                    title: "@T("Admin.Catalog.Products.AssociatedProducts.Fields.Product")",
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Product/Edit/")#=Id#">#=ProductName#</a>'
                 }, {
                     field: "DisplayOrder",
                     title: "@T("Admin.Catalog.Products.AssociatedProducts.Fields.DisplayOrder")",
                     //integer format
                     format: "{0:0}",
                     width: 150
-                }, {
-                    field: "Id",
-                    title: "@T("Admin.Common.View")",
-                    width: 100,
-                    template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=Id#">@T("Admin.Common.View")</a>'
                 }, {
                     command: [{
                         name: "edit",

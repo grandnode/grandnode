@@ -478,8 +478,10 @@
         {
             <div class="form-group">
                 <admin-label asp-for="AssociatedToProductId" />
-                <div class="adminData">
-                    @Html.ActionLink(Model.AssociatedToProductName, "Edit", "Product", new { id = Model.AssociatedToProductId }, new { })
+                <div class="col-md-9 col-sm-9">
+                    <label class="control-label">
+                        @Html.ActionLink(Model.AssociatedToProductName, "Edit", "Product", new { id = Model.AssociatedToProductId }, new { })
+                    </label>
                 </div>
             </div>
         }
