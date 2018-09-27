@@ -1,0 +1,208 @@
+﻿@model CustomerModel
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div id="customernotes-grid"></div>
+    </div>
+</div>            
+<script>
+        $(document).ready(function () {
+            $("#customernotes-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("CustomerNotesSelect", "Customer", new { customerId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        destroy: {
+                            url: "@Html.Raw(Url.Action("CustomerNoteDelete", "Customer", new { customerId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors",
+                        model: {
+                            id: "Id",
+                            fields: {
+                                //do not implicitly specify all fields
+                                //we do it only for fields which implicitly require it
+                                //otherwise, they'll be formatted wrong way
+                                CreatedOn: {type: "date" }
+                            }
+                        }
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    numeric: false,
+                    previousNext: false,
+                    info: false
+                },
+                editable: {
+                    confirmation: true,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "CreatedOn",
+                    title: "@T("Admin.Customers.CustomerNotes.Fields.CreatedOn")",
+                    width: 180,
+                    type: "date",
+                    format: "{0:G}"
+                },{
+                    field: "Title",
+                    title: "@T("Admin.Customers.CustomerNotes.Fields.Title")",
+                    width: 250,
+                }, {
+                    field: "Note",
+                    title: "@T("Admin.Customers.CustomerNotes.Fields.Note")",
+                    width: 350,
+                    encoded: false
+                },{
+                    field: "DownloadId",
+                    title: "@T("Admin.Customers.CustomerNotes.Fields.Download")",
+                    width: 100,
+                    template: '# if(DownloadId != "") {# <a href="@Url.Content("~/Admin/Download/DownloadFile")?downloadGuid=#=DownloadGuid#">@T("Admin.Customers.CustomerNotes.Fields.Download.Link")</a> #} else {# @T("Admin.Customers.CustomerNotes.Fields.Download.Link.No") #} #'
+                },{
+                    field: "DisplayToCustomer",
+                    title: "@T("Admin.Customers.CustomerNotes.Fields.DisplayToCustomer")",
+                    width: 100,
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
+                    template: '# if(DisplayToCustomer) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+                },  {
+                    command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                    title: "@T("Admin.Common.Delete")",
+                    width: 100
+                }]
+            });
+        });
+</script>
+<p>
+    <strong>
+        @T("Admin.Customers.CustomerNotes.AddTitle")
+    </strong>
+</p>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#@Html.FieldIdFor(model => model.AddCustomerNoteHasDownload)").change(toggleAddCustomerNoteHasDownload);
+        toggleAddCustomerNoteHasDownload();
+    });
+    function toggleAddCustomerNoteHasDownload() {
+        if ($('#@Html.FieldIdFor(model => model.AddCustomerNoteHasDownload)').is(':checked')) {
+            $('#pnlAddCustomerNoteDownloadId').show();
+        }
+        else {
+            $('#pnlAddCustomerNoteDownloadId').hide();
+        }
+    }
+
+</script>
+
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            <admin-label asp-for="AddCustomerTitle" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="AddCustomerTitle"/>
+                <span asp-validation-for="AddCustomerTitle"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="AddCustomerNoteMessage" />
+            <div class="col-md-9 col-sm-9">
+                <admin-textarea asp-for="AddCustomerNoteMessage"></admin-textarea>
+                <span asp-validation-for="AddCustomerNoteMessage"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="AddCustomerNoteDownloadId" />
+            <div class="col-md-9 col-sm-9">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    <admin-input asp-for="AddCustomerNoteHasDownload" />  @T("Admin.Customers.CustomerNotes.Fields.Download.HasDownload")
+                    <span></span>
+                </label>
+                <div id="pnlAddCustomerNoteDownloadId">
+                    <admin-input asp-for="AddCustomerNoteDownloadId" />
+                    <span asp-validation-for="AddCustomerNoteDownloadId"></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="AddCustomerNoteDisplayToCustomer" />
+            <div class="col-md-9 col-sm-9">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    <admin-input asp-for="AddCustomerNoteDisplayToCustomer" />
+                    <span></span>
+                </label>
+                <span asp-validation-for="AddCustomerNoteDisplayToCustomer"></span>
+            </div>
+        </div>
+        <div class="form-actions">
+            <div class="col-md-offset-3 col-md-9 col-sm-9">
+                <input type="button" id="addCustomerNote" class="btn green" value="@T("Admin.Customers.CustomerNotes.AddButton")" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#addCustomerNote').click(function () {
+            var customerTitle = $("#@Html.FieldIdFor(model => model.AddCustomerTitle)").val();
+            if (customerTitle.length == 0) {
+                alert('Title is required');
+                return;
+            }
+
+            var customerNoteMessage = $("#@Html.FieldIdFor(model => model.AddCustomerNoteMessage)").val();
+            if (customerNoteMessage.length == 0) {
+                alert('Message text is required');
+                return;
+            }
+            var customerNoteDownloadId = '';
+            if ($('#@Html.FieldIdFor(model => model.AddCustomerNoteHasDownload)').is(':checked')) {
+                customerNoteDownloadId = $("#@Html.FieldIdFor(model => model.AddCustomerNoteDownloadId)").val();
+            }
+            var customerNoteDisplayToCustomer = $("#@Html.FieldIdFor(model => model.AddCustomerNoteDisplayToCustomer)").is(':checked');
+            $('#addCustomerNote').attr('disabled', true);
+            var postData = {
+                DisplayToCustomer: customerNoteDisplayToCustomer,
+                title: customerTitle,
+                message: customerNoteMessage, 
+                downloadId: customerNoteDownloadId, 
+                customerId: '@Model.Id'
+            };
+            addAntiForgeryToken(postData);
+
+            $.ajax({
+                cache:false,
+                type: "POST",
+                url: "@(Url.Action("CustomerNoteAdd", "Customer"))",
+                data: postData,
+                success: function (data) {
+                    var grid = $("#customernotes-grid").data('kendoGrid');
+                    grid.dataSource.read();
+                    $('#addCustomerNote').attr('disabled', false);
+                },
+                error:function (xhr, ajaxOptions, thrownError){
+                    alert('Failed to add customer note.');
+                    $('#addCustomerNote').attr('disabled', false);
+                }  
+            });
+        });
+    });
+</script>

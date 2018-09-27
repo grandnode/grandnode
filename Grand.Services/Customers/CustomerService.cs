@@ -69,6 +69,7 @@ namespace Grand.Services.Customers
         private readonly IRepository<CustomerProductPrice> _customerProductPriceRepository;
         private readonly IRepository<CustomerProduct> _customerProductRepository;
         private readonly IRepository<CustomerHistoryPassword> _customerHistoryPasswordProductRepository;
+        private readonly IRepository<CustomerNote> _customerNoteRepository;
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<ForumPost> _forumPostRepository;
         private readonly IRepository<ForumTopic> _forumTopicRepository;
@@ -92,6 +93,7 @@ namespace Grand.Services.Customers
             IRepository<CustomerProductPrice> customerProductPriceRepository,
             IRepository<CustomerHistoryPassword> customerHistoryPasswordProductRepository,
             IRepository<CustomerRoleProduct> customerRoleProductRepository,
+            IRepository<CustomerNote> customerNoteRepository,
             IRepository<Order> orderRepository,
             IRepository<ForumPost> forumPostRepository,
             IRepository<ForumTopic> forumTopicRepository,
@@ -110,6 +112,7 @@ namespace Grand.Services.Customers
             this._customerProductPriceRepository = customerProductPriceRepository;
             this._customerHistoryPasswordProductRepository = customerHistoryPasswordProductRepository;
             this._customerRoleProductRepository = customerRoleProductRepository;
+            this._customerNoteRepository = customerNoteRepository;
             this._orderRepository = orderRepository;
             this._forumPostRepository = forumPostRepository;
             this._forumTopicRepository = forumTopicRepository;
@@ -1428,6 +1431,73 @@ namespace Grand.Services.Customers
 
         #endregion
 
+        #region Customer note
+
+        // <summary>
+        /// Get note for customer
+        /// </summary>
+        /// <param name="id">Note identifier</param>
+        /// <returns>CustomerNote</returns>
+        public virtual CustomerNote GetCustomerNote(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                throw new ArgumentNullException("id");
+
+            return _customerNoteRepository.Table.Where(x => x.Id == id).FirstOrDefault();
+        }
+
+
+        /// <summary>
+        /// Deletes an customer note
+        /// </summary>
+        /// <param name="customerNote">The customer note</param>
+        public virtual void DeleteCustomerNote(CustomerNote customerNote)
+        {
+            if (customerNote == null)
+                throw new ArgumentNullException("customerNote");
+
+            _customerNoteRepository.Delete(customerNote);
+
+            //event notification
+            _eventPublisher.EntityDeleted(customerNote);
+        }
+
+        /// <summary>
+        /// Insert an customer note
+        /// </summary>
+        /// <param name="customerNote">The customer note</param>
+        public virtual void InsertCustomerNote(CustomerNote customerNote)
+        {
+            if (customerNote == null)
+                throw new ArgumentNullException("customerNote");
+
+            _customerNoteRepository.Insert(customerNote);
+
+            //event notification
+            _eventPublisher.EntityInserted(customerNote);
+        }
+
+        /// <summary>
+        /// Get notes for customer
+        /// </summary>
+        /// <param name="customerId">Customer identifier</param>
+        /// <param name="displaytocustomer">Display to customer</param>
+        /// <returns>OrderNote</returns>
+        public virtual IList<CustomerNote> GetCustomerNotes(string customerId, bool? displaytocustomer = null)
+        {
+            var query = from customerNote in _customerNoteRepository.Table
+                        where customerNote.CustomerId == customerId                        
+                        select customerNote;
+
+            if (displaytocustomer.HasValue)
+                query = query.Where(x => x.DisplayToCustomer == displaytocustomer.Value);
+
+            query = query.OrderByDescending(x => x.CreatedOnUtc);
+
+            return query.ToList();
+        }
+
+        #endregion
 
         #endregion
     }

@@ -650,6 +650,7 @@ namespace Grand.Web.Services
             model.HideDownloadableProducts = _customerSettings.HideDownloadableProductsTab;
             model.HideBackInStockSubscriptions = _customerSettings.HideBackInStockSubscriptionsTab;
             model.HideAuctions = _customerSettings.HideAuctionsTab;
+            model.HideNotes = _customerSettings.HideNotesTab;
             if (_vendorSettings.AllowVendorsToEditInfo && _workContext.CurrentVendor != null)
             {
                 model.ShowVendorInfo = true;
@@ -770,5 +771,23 @@ namespace Grand.Web.Services
             return model;
         }
 
+        public virtual CustomerNotesModel PrepareNotes(Customer customer)
+        {
+            var model = new CustomerNotesModel();
+            model.CustomerId = customer.Id;
+            var customerservice = EngineContext.Current.Resolve<ICustomerService>();
+            var notes = customerservice.GetCustomerNotes(_workContext.CurrentCustomer.Id, true);
+            foreach (var item in notes)
+            {
+                var mm = new Models.Customer.CustomerNote();
+                mm.NoteId = item.Id;
+                mm.CreatedOn = _dateTimeHelper.ConvertToUserTime(item.CreatedOnUtc, DateTimeKind.Utc);
+                mm.Note = item.Note;
+                mm.Title = item.Title;
+                mm.DownloadId = item.DownloadId;
+                model.CustomerNoteList.Add(mm);
+            }
+            return model;
+        }
     }
 }

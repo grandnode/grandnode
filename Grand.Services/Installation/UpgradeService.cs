@@ -994,7 +994,8 @@ namespace Grand.Services.Installation
 
             InstallStringResources("EN_420_430.nopres.xml");
 
-            #region Admin search settings
+            #region Settings
+
             var adminSearchSettings = EngineContext.Current.Resolve<AdminSearchSettings>();
             adminSearchSettings.BlogsDisplayOrder = 0;
             adminSearchSettings.CategoriesDisplayOrder = 0;
@@ -1017,6 +1018,11 @@ namespace Grand.Services.Installation
             adminSearchSettings.SearchInMenu = true;
             adminSearchSettings.MenuDisplayOrder = -1;
             _settingService.SaveSetting(adminSearchSettings);
+
+            var customerSettings = EngineContext.Current.Resolve<CustomerSettings>();
+            customerSettings.HideNotesTab = true;
+            _settingService.SaveSetting(customerSettings);
+
             #endregion
 
             #region Emails
@@ -1031,6 +1037,14 @@ namespace Grand.Services.Installation
                     Name = "Knowledgebase.ArticleComment",
                     Subject = "%Store.Name%. New article comment.",
                     Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />A new article comment has been created for article \"%Article.ArticleTitle%\".</p>",
+                    IsActive = true,
+                    EmailAccountId = emailAccount.Id,
+                },
+                new MessageTemplate
+                {
+                    Name = "Customer.NewCustomerNote",
+                    Subject = "New customer note has been added",
+                    Body = "<p><br />Hello %Customer.FullName%, <br />New customer note has been added to your account:<br />\"%Customer.NewTitleText%\".<br /></p>",
                     IsActive = true,
                     EmailAccountId = emailAccount.Id,
                 },
@@ -1135,6 +1149,13 @@ namespace Grand.Services.Installation
                 //insert new document
                 var newresult = newReturnRequestCollection.Insert(newrr);
             }
+            #endregion
+
+            #region Customer note
+
+            //customer note
+            EngineContext.Current.Resolve<IRepository<CustomerNote>>().Collection.Indexes.CreateOneAsync(new CreateIndexModel<CustomerNote>((Builders<CustomerNote>.IndexKeys.Ascending(x => x.CustomerId).Descending(x => x.CreatedOnUtc)), new CreateIndexOptions() { Name = "CustomerId", Unique = false, Background = true }));
+
             #endregion
         }
 

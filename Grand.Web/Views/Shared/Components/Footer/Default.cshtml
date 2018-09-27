@@ -8,7 +8,7 @@
                     @await Component.InvokeAsync("NewsletterBox")
                 </div>
                 <div class="col-12 col-lg-6 px-0 social d-flex justify-content-center align-items-center">
-                    <ol class="d-flex flex-row list-group justify-content-center justify-content-lg-start list-pad pb-0">
+                    <ol class="d-flex flex-row list-group justify-content-center justify-content-lg-start flex-wrap list-pad pb-0">
                         @if (!string.IsNullOrEmpty(Model.FacebookLink))
                         {
                             <li class="list-group-item facebook">

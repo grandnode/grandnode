@@ -26,6 +26,7 @@ using Grand.Services.Forums;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
+using Grand.Services.Media;
 using Grand.Services.Messages;
 using Grand.Services.Orders;
 using Grand.Services.Security;
@@ -99,6 +100,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
+        private readonly IDownloadService _downloadService;
+
         #endregion
 
         #region Constructors
@@ -150,7 +153,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             ICustomerTagService customerTagService,
             IProductService productService,
             ICategoryService categoryService,
-            IManufacturerService manufacturerService)
+            IManufacturerService manufacturerService,
+            IDownloadService downloadService)
         {
             this._customerService = customerService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
@@ -200,6 +204,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._productService = productService;
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
+            this._downloadService = downloadService;
         }
 
         #endregion
@@ -2424,6 +2429,113 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return Json(gridModel);
         }
+
+        #endregion
+
+        #region Customer note
+
+        [HttpPost]
+        public IActionResult CustomerNotesSelect(string customerId, DataSourceRequest command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            var customer = _customerService.GetCustomerById(customerId);
+            if (customer == null)
+                throw new ArgumentException("No customer found with the specified id");
+
+            //a vendor does not have access to this functionality
+            if (_workContext.CurrentVendor != null)
+                return Content("");
+
+            //order notes
+            var customerNoteModels = new List<CustomerModel.CustomerNote>();
+            foreach (var customerNote in _customerService.GetCustomerNotes(customerId)
+                .OrderByDescending(on => on.CreatedOnUtc))
+            {
+                var download = _downloadService.GetDownloadById(customerNote.DownloadId);
+                customerNoteModels.Add(new CustomerModel.CustomerNote
+                {
+                    Id = customerNote.Id,
+                    CustomerId = customer.Id,
+                    DownloadId = String.IsNullOrEmpty(customerNote.DownloadId) ? "" : customerNote.DownloadId,
+                    DownloadGuid = download != null ? download.DownloadGuid : Guid.Empty,
+                    DisplayToCustomer = customerNote.DisplayToCustomer,
+                    Title = customerNote.Title,
+                    Note = customerNote.FormatCustomerNoteText(),
+                    CreatedOn = _dateTimeHelper.ConvertToUserTime(customerNote.CreatedOnUtc, DateTimeKind.Utc)
+                });
+            }
+
+            var gridModel = new DataSourceResult
+            {
+                Data = customerNoteModels,
+                Total = customerNoteModels.Count
+            };
+
+            return Json(gridModel);
+        }
+
+
+        public IActionResult CustomerNoteAdd(string customerId, string downloadId, bool displayToCustomer, string title, string message)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            var customer = _customerService.GetCustomerById(customerId);
+            if (customer == null)
+                return Json(new { Result = false });
+
+            //a vendor does not have access to this functionality
+            if (_workContext.CurrentVendor != null)
+                return Json(new { Result = false });
+
+            var customerNote = new CustomerNote
+            {
+                DisplayToCustomer = displayToCustomer,
+                Title = title,
+                Note = message,
+                DownloadId = downloadId,
+                CustomerId = customerId,
+                CreatedOnUtc = DateTime.UtcNow,
+            };
+            _customerService.InsertCustomerNote(customerNote);
+
+            //new customer note notification
+            if (displayToCustomer)
+            {
+                //email
+                _workflowMessageService.SendNewCustomerNoteAddedCustomerNotification(
+                    customerNote, _workContext.WorkingLanguage.Id);
+
+            }
+
+            return Json(new { Result = true });
+        }
+
+        [HttpPost]
+        public IActionResult CustomerNoteDelete(string id, string customerId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            var customer = _customerService.GetCustomerById(customerId);
+            if (customer == null)
+                throw new ArgumentException("No customer found with the specified id");
+
+            //a vendor does not have access to this functionality
+            if (_workContext.CurrentVendor != null)
+                throw new ArgumentException("AccessDenied");
+
+            var customerNote = _customerService.GetCustomerNote(id);
+            if (customerNote == null)
+                throw new ArgumentException("No customer note found with the specified id");
+
+            _customerService.DeleteCustomerNote(customerNote);
+
+            return new NullJsonResult();
+        }
+
 
         #endregion
 

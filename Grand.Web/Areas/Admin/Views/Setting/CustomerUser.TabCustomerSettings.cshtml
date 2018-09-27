@@ -201,6 +201,30 @@
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
+                <admin-label asp-for="CustomerSettings.HideAuctionsTab" class="control-label" />
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    <admin-input asp-for="CustomerSettings.HideAuctionsTab" />
+                    <span></span>
+                </label>
+                <span asp-validation-for="CustomerSettings.HideAuctionsTab"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                <admin-label asp-for="CustomerSettings.HideNotesTab" class="control-label" />
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    <admin-input asp-for="CustomerSettings.HideNotesTab" />
+                    <span></span>
+                </label>
+                <span asp-validation-for="CustomerSettings.HideNotesTab"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
                 <admin-label asp-for="CustomerSettings.CustomerNameFormat" class="control-label" />
             </div>
             <div class="col-md-8 col-sm-8">

@@ -1760,6 +1760,11 @@ pagination .pagination a:not([href]) {
         font-family: Font Awesome\ 5 Free;
         font-weight: 900;
     }
+    .block-account-navigation .list .customer-notes a:before {
+        content: "\f249";
+        font-family: Font Awesome\ 5 Free;
+        font-weight: 900;
+    }
 
     .block-account-navigation .list .customer-downloadable a:before {
         content: "\f358";

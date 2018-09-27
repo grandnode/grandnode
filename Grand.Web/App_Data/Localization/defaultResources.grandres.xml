@@ -6369,6 +6369,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.GenderEnabled.Hint">
     <Value>Set if 'Gender' is enabled.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideAuctionsTab">
+    <Value>Hide 'Auctions' tab</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideAuctionsTab.hint">
+    <Value>Check to hide 'Auctions' tab on 'My account' page</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideBackInStockSubscriptionsTab">
     <Value>Hide 'Back in stock subscriptions' tab</Value>
   </LocaleResource>
@@ -6386,6 +6392,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideNewsletterBlock.Hint">
     <Value>Check if you want to hide the newsletter subscription box.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideNotesTab">
+    <Value>Hide 'Customer notes' tab</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideNotesTab.hint">
+    <Value>Check to hide 'Customer notes' tab on 'My account' page</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterBlockAllowToUnsubscribe">
     <Value>Newsletter box. Allow to unsubscribe</Value>
@@ -10952,6 +10964,48 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.CurrentWishlist">
     <Value>Current wishlist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.CustomerNotes">
+    <Value>Customer notes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerNotes.Fields.DisplayToCustomer">
+    <Value>Display to customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerNotes.Fields.DisplayToCustomer.Hint">
+    <Value>A value indicating whether to display this customer note to a customer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerNotes.Fields.Title">
+    <Value>Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerNotes.Fields.Title.Hint">
+    <Value>Enter this customer note title.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerNotes.Fields.Note">
+    <Value>Note</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerNotes.Fields.Note.Hint">
+    <Value>Enter this customer note message.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerNotes.Fields.CreatedOn">
+    <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerNotes.Fields.Download">
+    <Value>Download</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerNotes.AddTitle">
+    <Value>Add customer note</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerNotes.AddButton">
+    <Value>Add customer note</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerNotes.Fields.Download.Link">
+    <Value>Download</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerNotes.Fields.Download.Link.No">
+    <Value>No file attached</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerNotes.Fields.Download.HasDownload">
+    <Value>(check to upload file)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.CustomerRoles">
     <Value>Customer Roles</Value>
@@ -15837,6 +15891,9 @@
   <LocaleResource Name="Currencies">
     <Value>Currencies</Value>
   </LocaleResource>
+  <LocaleResource Name="Customer.Notes.Download">
+    <Value>Download file</Value>
+  </LocaleResource>
   <LocaleResource Name="Customer.Guest">
     <Value>Guest</Value>
   </LocaleResource>
@@ -17261,6 +17318,9 @@
   </LocaleResource>
   <LocaleResource Name="PageTitle.NewsArchive">
     <Value>News Archive</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.Notes">
+    <Value>Customer notes</Value>
   </LocaleResource>
   <LocaleResource Name="PageTitle.OrderDetails">
     <Value>Order Details</Value>
@@ -19370,6 +19430,21 @@
   </LocaleResource>
   <LocaleResource Name="PageTitle.ReturnRequestDetails">
     <Value>Return request details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerNotes">
+    <Value>Customer notes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerNotes.Attachment">
+    <Value>Attachment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerNotes.Createdate">
+    <Value>Create date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerNotes.NoExists">
+    <Value>You don't have any notes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerNotes.Title">
+    <Value>Title</Value>
   </LocaleResource>
   <LocaleResource Name="Account.CustomerReturnRequests.Quantity">
     <Value>Quantity</Value>

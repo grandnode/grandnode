@@ -28,5 +28,6 @@ namespace Grand.Web.Services
         UserAgreementModel PrepareUserAgreement(Guid orderItemId);
         CustomerAvatarModel PrepareAvatar(Customer customer);
         CustomerAuctionsModel PrepareAuctions(Customer customer);
+        CustomerNotesModel PrepareNotes(Customer customer);
     }
 }

@@ -11,6 +11,7 @@ using System.IO;
 using System.IO.Compression;
 using Grand.Core.Domain.Catalog;
 using System.Text.RegularExpressions;
+using Grand.Services.Customers;
 
 namespace Grand.Web.Controllers
 {
@@ -247,5 +248,37 @@ namespace Grand.Web.Controllers
             string contentType = !String.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
             return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
         }
+
+        public virtual IActionResult GetCustomerNoteFile(string customerNoteId, 
+            [FromServices] ICustomerService customerService)
+        {
+            if(string.IsNullOrEmpty(customerNoteId))
+                return Content("Download is not available.");
+
+            var customerNote = customerService.GetCustomerNote(customerNoteId);
+            if (customerNote==null)
+                return InvokeHttp404();
+
+            if (_workContext.CurrentCustomer == null || customerNote.CustomerId != _workContext.CurrentCustomer.Id)
+                return Challenge();
+
+            var download = _downloadService.GetDownloadById(customerNote.DownloadId);
+            if (download == null)
+                return Content("Download is not available any more.");
+
+            if (download.UseDownloadUrl)
+                return new RedirectResult(download.DownloadUrl);
+
+            //binary download
+            if (download.DownloadBinary == null)
+                return Content("Download data is not available any more.");
+
+            //return result
+            string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : customerNote.Id.ToString();
+            string contentType = !String.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
+            return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
+        }
+
+
     }
 }

@@ -281,6 +281,41 @@ namespace Grand.Services.Messages
                 toEmail, toName);
         }
 
+        /// <summary>
+        /// Sends a new customer note added notification to a customer
+        /// </summary>
+        /// <param name="customerNote">Customer note</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual int SendNewCustomerNoteAddedCustomerNotification(CustomerNote customerNote, string languageId)
+        {
+            if (customerNote == null)
+                throw new ArgumentNullException("customerNote");
+
+            var messageTemplate = GetActiveMessageTemplate("Customer.NewCustomerNote", "");
+            if (messageTemplate == null)
+                return 0;
+
+            //email account
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+
+            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(customerNote.CustomerId);
+            //tokens
+            var tokens = new List<Token>();
+            _messageTokenProvider.AddCustomerNoteTokens(tokens, customerNote);
+            if (customer != null)
+                _messageTokenProvider.AddCustomerTokens(tokens, customer);
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+
+            var toEmail = customer.Email;
+            var toName = string.Format("{0} {1}", customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName), customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName));
+            return SendNotification(messageTemplate, emailAccount,
+                languageId, tokens,
+                toEmail, toName);
+        }
+
         #endregion
 
         #region Order workflow

@@ -24,6 +24,7 @@ namespace Grand.Services.Messages
         void AddReturnRequestTokens(IList<Token> tokens, ReturnRequest returnRequest, Order orderItem);
         void AddGiftCardTokens(IList<Token> tokens, GiftCard giftCard);
         void AddCustomerTokens(IList<Token> tokens, Customer customer);
+        void AddCustomerNoteTokens(IList<Token> tokens, CustomerNote customerNote);
         void AddShoppingCartTokens(IList<Token> tokens, Customer customer);
         void AddRecommendedProductsTokens(IList<Token> tokens, Customer customer);
         void AddRecentlyViewedProductsTokens(IList<Token> tokens, Customer customer);

@@ -87,6 +87,7 @@ namespace Grand.Services.Installation
         private readonly IRepository<CustomerProductPrice> _customerProductPriceRepository;
         private readonly IRepository<CustomerTagProduct> _customerTagProductRepository;
         private readonly IRepository<CustomerHistoryPassword> _customerHistoryPasswordRepository;
+        private readonly IRepository<CustomerNote> _customerNoteRepository;
         private readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
         private readonly IRepository<CheckoutAttribute> _checkoutAttributeRepository;
         private readonly IRepository<ProductAttribute> _productAttributeRepository;
@@ -189,6 +190,7 @@ namespace Grand.Services.Installation
             IRepository<CustomerProductPrice> customerProductPriceRepository,
             IRepository<CustomerTagProduct> customerTagProductRepository,
             IRepository<CustomerHistoryPassword> customerHistoryPasswordRepository,
+            IRepository<CustomerNote> customerNoteRepository,
             IRepository<SpecificationAttribute> specificationAttributeRepository,
             IRepository<CheckoutAttribute> checkoutAttributeRepository,
             IRepository<ProductAttribute> productAttributeRepository,
@@ -286,6 +288,7 @@ namespace Grand.Services.Installation
             this._customerRoleProductRepository = customerRoleProductRepository;
             this._customerTagProductRepository = customerTagProductRepository;
             this._customerHistoryPasswordRepository = customerHistoryPasswordRepository;
+            this._customerNoteRepository = customerNoteRepository;
             this._specificationAttributeRepository = specificationAttributeRepository;
             this._checkoutAttributeRepository = checkoutAttributeRepository;
             this._productAttributeRepository = productAttributeRepository;
@@ -4682,6 +4685,14 @@ namespace Grand.Services.Installation
                                        },
                                    new MessageTemplate
                                        {
+                                           Name = "Customer.NewCustomerNote",
+                                           Subject = "New customer note has been added",
+                                           Body = "<p><br />Hello %Customer.FullName%, <br />New customer note has been added to your account:<br />\"%Customer.NewTitleText%\".<br /></p>",
+                                           IsActive = true,
+                                           EmailAccountId = eaGeneral.Id,
+                                       },
+                                   new MessageTemplate
+                                       {
                                            Name = "RecurringPaymentCancelled.StoreOwnerNotification",
                                            Subject = "%Store.Name%. Recurring payment cancelled",
                                            Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />%Customer.FullName% (%Customer.Email%) has just cancelled a recurring payment ID=%RecurringPayment.ID%.</p>",
@@ -5204,6 +5215,7 @@ namespace Grand.Services.Installation
                 HideDownloadableProductsTab = false,
                 HideBackInStockSubscriptionsTab = false,
                 HideAuctionsTab = true,
+                HideNotesTab = true,
                 DownloadableProductsValidateUser = false,
                 CustomerNameFormat = CustomerNameFormat.ShowFirstName,
                 GenderEnabled = true,
@@ -11069,6 +11081,10 @@ namespace Grand.Services.Installation
 
             //customer history password
             _customerHistoryPasswordRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<CustomerHistoryPassword>((Builders<CustomerHistoryPassword>.IndexKeys.Ascending(x => x.CustomerId).Descending(x => x.CreatedOnUtc)), new CreateIndexOptions() { Name = "CustomerId", Unique = false }));
+
+            //customer note
+            _customerNoteRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<CustomerNote>((Builders<CustomerNote>.IndexKeys.Ascending(x => x.CustomerId).Descending(x => x.CreatedOnUtc)), new CreateIndexOptions() { Name = "CustomerId", Unique = false, Background = true }));
+
 
             //specificationAttribute
             _specificationAttributeRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<SpecificationAttribute>((Builders<SpecificationAttribute>.IndexKeys.Ascending(x => x.DisplayOrder)), new CreateIndexOptions() { Name = "DisplayOrder" }));

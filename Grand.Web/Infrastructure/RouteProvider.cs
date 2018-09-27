@@ -341,6 +341,9 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("CustomerAuctions",
                             "customer/auctions",
                             new { controller = "Customer", action = "Auctions" });
+            routeBuilder.MapLocalizedRoute("CustomerNotes",
+                            "customer/notes",
+                            new { controller = "Customer", action = "Notes" });
             routeBuilder.MapLocalizedRoute("AccountActivation",
                             "customer/activation",
                             new { controller = "Customer", action = "AccountActivation" });
@@ -405,6 +408,9 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapRoute("GetOrderNoteFile",
                             "download/ordernotefile/{ordernoteid}",
                             new { controller = "Download", action = "GetOrderNoteFile" });
+            routeBuilder.MapRoute("GetCustomerNoteFile",
+                            "download/customernotefile/{customernoteid}",
+                            new { controller = "Download", action = "GetCustomerNoteFile" });
 
             //contact vendor
             routeBuilder.MapLocalizedRoute("ContactVendor",

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Xml;
 using Grand.Core;
 using Grand.Core.Domain.Customers;
+using Grand.Core.Html;
 using Grand.Core.Infrastructure;
 using Grand.Services.Common;
 using Grand.Services.Localization;
@@ -436,6 +437,26 @@ namespace Grand.Services.Customers
                 currentLifetime = (DateTime.UtcNow - customer.PasswordChangeDateUtc.Value).Days;
 
             return currentLifetime >= customerSettings.PasswordLifetime;
+        }
+
+        /// <summary>
+        /// Formats the customer note text
+        /// </summary>
+        /// <param name="customerNote">Customer note</param>
+        /// <returns>Formatted text</returns>
+        public static string FormatCustomerNoteText(this CustomerNote customerNote)
+        {
+            if (customerNote == null)
+                throw new ArgumentNullException("customerNote");
+
+            string text = customerNote.Note;
+
+            if (String.IsNullOrEmpty(text))
+                return string.Empty;
+
+            text = HtmlHelper.FormatText(text, false, true, false, false, false, false);
+
+            return text;
         }
     }
 }

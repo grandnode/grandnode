@@ -4,12 +4,9 @@ using Grand.Framework.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-
 using FluentValidation.Attributes;
 using Grand.Web.Areas.Admin.Validators.Customers;
 using Grand.Core.Domain.Catalog;
-using Grand.Framework;
-using Grand.Framework.Mvc;
 
 namespace Grand.Web.Areas.Admin.Models.Customers
 {
@@ -214,10 +211,20 @@ namespace Grand.Web.Areas.Admin.Models.Customers
         //re-send the activation message
         public bool AllowReSendingOfActivationMessage { get; set; }
         public bool ShowMessageContactForm { get; set; }
-
+        //external auth
         [GrandResourceDisplayName("Admin.Customers.Customers.AssociatedExternalAuth")]
         public IList<AssociatedExternalAuthModel> AssociatedExternalAuthRecords { get; set; }
-
+        //customer notes
+        [GrandResourceDisplayName("Admin.Customers.CustomerNotes.Fields.DisplayToCustomer")]
+        public bool AddCustomerNoteDisplayToCustomer { get; set; }
+        [GrandResourceDisplayName("Admin.Customers.CustomerNotes.Fields.Title")]
+        public string AddCustomerTitle { get; set; }
+        [GrandResourceDisplayName("Admin.Customers.CustomerNotes.Fields.Note")]
+        public string AddCustomerNoteMessage { get; set; }
+        public bool AddCustomerNoteHasDownload { get; set; }
+        [GrandResourceDisplayName("Admin.Customers.CustomerNotes.Fields.Download")]
+        [UIHint("Download")]
+        public string AddCustomerNoteDownloadId { get; set; }
 
         #region Nested classes
 
@@ -410,6 +417,22 @@ namespace Grand.Web.Areas.Admin.Models.Customers
             public string Name { get; set; }
 
             public bool IsPreSelected { get; set; }
+        }
+
+        public partial class CustomerNote : BaseGrandEntityModel
+        {
+            public string CustomerId { get; set; }
+            [GrandResourceDisplayName("Admin.Customers.CustomerNotes.Fields.DisplayToCustomer")]
+            public bool DisplayToCustomer { get; set; }
+            [GrandResourceDisplayName("Admin.Customers.CustomerNotes.Fields.Title")]
+            public string Title { get; set; }
+            [GrandResourceDisplayName("Admin.Customers.CustomerNotes.Fields.Note")]
+            public string Note { get; set; }
+            [GrandResourceDisplayName("Admin.Customers.CustomerNotes.Fields.Download")]
+            public string DownloadId { get; set; }
+            public Guid DownloadGuid { get; set; }
+            [GrandResourceDisplayName("Admin.Customers.CustomerNotes.Fields.CreatedOn")]
+            public DateTime CreatedOn { get; set; }
         }
 
         #endregion

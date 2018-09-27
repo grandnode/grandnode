@@ -1,0 +1,52 @@
+﻿@model CustomerNotesModel
+@using Grand.Web.Models.Customer;
+@{
+    Layout = "_ColumnsTwo";
+    //title
+    Html.AddTitleParts(T("PageTitle.Notes").Text);
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Notes })
+}
+
+<div class="page account-page auction-list-page pl-lg-3">
+    <h1 class="h2 generalTitle">@T("Account.CustomerNotes")</h1>
+    @if (Model.CustomerNoteList.Any())
+    {
+        foreach (var item in Model.CustomerNoteList)
+        {
+            <div class="card mb-3">
+                <div class="card-header d-sm-inline-flex flex-sm-row d-flex flex-column px-sm-3 px-2">
+                    <div class="pr-3">
+                        <span class="pr-1">@T("Account.CustomerNotes.Title")</span>
+                        <strong>@item.Title</strong>
+                    </div>
+                    <div class="ml-auto">
+                        <span class="pr-1">@T("Account.CustomerNotes.Createdate")</span>
+                        <i class="far fa-clock pr-1 text-muted"></i>
+                        <span class="text-muted">@item.CreatedOn</span>
+                    </div>
+                </div>
+                <div class="card-body px-sm-3 px-2">
+                    @item.Note
+                </div>
+                @if (!string.IsNullOrEmpty(item.DownloadId))
+                {
+                    <div class="d-inline-flex p-sm-3 p-2 border-top">
+                        <span class="mb-2">
+                            @T("Account.CustomerNotes.Attachment"):
+                            <a href="@Url.RouteUrl("GetCustomerNoteFile", new { customerNoteId = item.NoteId})">@T("Customer.Notes.Download")</a>
+                        </span>
+                    </div>
+                } 
+                </div>     
+        }
+    }
+    else
+    {
+        <div class="no-data pt-3">  
+                @T("Account.CustomerNotes.NoExists")
+        </div>
+    }
+</div>

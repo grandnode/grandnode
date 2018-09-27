@@ -993,6 +993,16 @@ namespace Grand.Services.Messages
             _eventPublisher.EntityTokensAdded(customer, tokens);
         }
 
+        public virtual void AddCustomerNoteTokens(IList<Token> tokens, CustomerNote customerNote)
+        {
+            tokens.Add(new Token("Customer.NewNoteText", customerNote.FormatCustomerNoteText(), true));
+            tokens.Add(new Token("Customer.NewTitleText", customerNote.Title, true));
+            tokens.Add(new Token("Customer.CustomerNoteAttachmentUrl", string.Format("{0}download/customernotefile/{1}", GetStoreUrl(""), customerNote.Id), true));
+            //event notification
+            _eventPublisher.EntityTokensAdded(customerNote, tokens);
+        }
+
+
         public virtual void AddShoppingCartTokens(IList<Token> tokens, Customer customer)
         {
             string languageId = _languageService.GetAllLanguages().FirstOrDefault().Id;
@@ -1365,6 +1375,9 @@ namespace Grand.Services.Messages
                 "%Customer.CustomAttributes%",
                 "%Customer.PasswordRecoveryURL%",
                 "%Customer.AccountActivationURL%",
+                "%Customer.NewNoteText%",
+                "%Customer.NewTitleText%",
+                "%Customer.CustomerNoteAttachmentUrl%",
                 "%ContactUs.SenderEmail%",
                 "%ContactUs.SenderName%",
                 "%ContactUs.Body%",

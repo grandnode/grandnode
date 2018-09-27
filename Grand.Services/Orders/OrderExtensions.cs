@@ -30,6 +30,7 @@ namespace Grand.Services.Orders
             return text;
         }
 
+        
         /// <summary>
         /// Gets a total number of items in all shipments
         /// </summary>

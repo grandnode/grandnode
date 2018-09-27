@@ -62,6 +62,10 @@ namespace Grand.Web.Areas.Admin.Models.Settings
 
             [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.HideBackInStockSubscriptionsTab")]
             public bool HideBackInStockSubscriptionsTab { get; set; }
+            [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.HideAuctionsTab")]
+            public bool HideAuctionsTab { get; set; }
+            [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.HideNotesTab")]
+            public bool HideNotesTab { get; set; }
 
             [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AllowUsersToDeleteAccount")]
             public bool AllowUsersToDeleteAccount { get; set; }

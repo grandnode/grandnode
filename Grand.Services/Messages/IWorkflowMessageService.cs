@@ -47,7 +47,15 @@ namespace Grand.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
         int SendCustomerPasswordRecoveryMessage(Customer customer, string languageId);
-        
+
+        /// <summary>
+        /// Sends a new customer note added notification to a customer
+        /// </summary>
+        /// <param name="CustomerNote">Customer note</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        int SendNewCustomerNoteAddedCustomerNotification(CustomerNote customerNote, string languageId);
+
         #endregion
 
         #region Order workflow

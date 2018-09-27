@@ -1368,5 +1368,22 @@ namespace Grand.Web.Controllers
         }
 
         #endregion
+
+        #region My account / Notes
+
+        public virtual IActionResult Notes()
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if (_customerSettings.HideNotesTab)
+                return RedirectToRoute("CustomerInfo");
+
+            var model = _customerWebService.PrepareNotes(_workContext.CurrentCustomer);
+
+            return View(model);
+        }
+
+        #endregion
     }
 }
