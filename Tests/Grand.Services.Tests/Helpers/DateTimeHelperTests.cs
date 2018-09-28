@@ -47,13 +47,6 @@ namespace Grand.Services.Helpers.Tests
         }
 
         [TestMethod()]
-        public void Can_find_systemTimeZone_by_id() {
-            var timeZones = _dateTimeHelper.FindTimeZoneById("E. Europe Standard Time");
-            Assert.IsNotNull(timeZones);
-            Assert.AreEqual("E. Europe Standard Time", timeZones.Id);
-        }
-
-        [TestMethod()]
         public void Can_get_all_systemTimeZones() {
             var systemTimeZones = _dateTimeHelper.GetSystemTimeZones();
             Assert.IsNotNull(systemTimeZones);
