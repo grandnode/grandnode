@@ -71,8 +71,7 @@ namespace Grand.Web.Infrastructure
 
             //vendor service
             builder.RegisterType<VendorViewModelService>().As<IVendorViewModelService>().InstancePerLifetimeScope();
-            //base shipping controller
-            //builder.RegisterType<BaseShippingController>();
+           
         }
 
         public int Order
