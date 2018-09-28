@@ -399,7 +399,7 @@ namespace Grand.Web.Services
             if (lastOrder == null)
                 return true;
 
-            var interval = DateTime.Now - lastOrder.CreatedOnUtc;
+            var interval = DateTime.UtcNow - lastOrder.CreatedOnUtc;
             return interval.TotalSeconds > _orderSettings.MinimumOrderPlacementInterval;
         }
     }
