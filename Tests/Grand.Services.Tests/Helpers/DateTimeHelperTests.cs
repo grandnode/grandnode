@@ -5,6 +5,7 @@ using Grand.Services.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
+using System.Linq;
 
 namespace Grand.Services.Helpers.Tests
 {
@@ -61,38 +62,16 @@ namespace Grand.Services.Helpers.Tests
 
         [TestMethod()]
         public void Can_convert_dateTime_to_userTime() {
-            var sourceDateTime = TimeZoneInfo.FindSystemTimeZoneById("E. Europe Standard Time"); //(GMT+02:00) Minsk;
+            var sourceDateTime = TimeZoneInfo.GetSystemTimeZones().Where(x => x.BaseUtcOffset.Hours == 2).FirstOrDefault(); //(GMT+02:00);
             Assert.IsNotNull(sourceDateTime);
 
-            var destinationDateTime = TimeZoneInfo.FindSystemTimeZoneById("North Asia Standard Time"); //(GMT+07:00) Krasnoyarsk;
+            var destinationDateTime = TimeZoneInfo.GetSystemTimeZones().Where(x => x.BaseUtcOffset.Hours == 7).FirstOrDefault();//(GMT+07:00);
             Assert.IsNotNull(destinationDateTime);
+            var ds = new DateTime(2010, 06, 01, 4, 0, 0);
+            var dt = _dateTimeHelper.ConvertToUserTime(new DateTime(2010, 06, 01, 0, 0, 0), sourceDateTime, destinationDateTime);
 
-            //summer time
-            Assert.AreEqual(new DateTime(2010, 06, 01, 5, 0, 0), 
-                _dateTimeHelper.ConvertToUserTime(new DateTime(2010, 06, 01, 0, 0, 0), sourceDateTime, destinationDateTime));
-
-            //winter time
-            Assert.AreEqual(new DateTime(2010, 01, 01, 5, 0, 0), 
-                _dateTimeHelper.ConvertToUserTime(new DateTime(2010, 01, 01, 0, 0, 0), sourceDateTime, destinationDateTime));
+            Assert.AreEqual(ds,dt);
         }
-
-        [TestMethod()]
-        public void Can_convert_dateTime_to_utc_dateTime() {
-
-            var sourceDateTime = TimeZoneInfo.FindSystemTimeZoneById("E. Europe Standard Time"); //(GMT+02:00) Minsk;
-            Assert.IsNotNull(sourceDateTime);
-
-            //summer time
-            var dateTime1 = new DateTime(2010, 06, 01, 0, 0, 0);
-            var convertedDateTime1 = _dateTimeHelper.ConvertToUtcTime(dateTime1, sourceDateTime);
-            Assert.AreEqual(new DateTime(2010, 05, 31, 21, 0, 0), convertedDateTime1); //31th May 2010, 21:00
-
-            
-            //winter time
-            var dateTime2 = new DateTime(2010, 01, 01, 0, 0, 0);
-            var convertedDateTime2 = _dateTimeHelper.ConvertToUtcTime(dateTime2, sourceDateTime);
-            Assert.AreEqual(new DateTime(2009, 12, 31, 22, 0, 0), convertedDateTime2); //31th December 2009, 22:00
-
-        }
+        
     }
 }
