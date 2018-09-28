@@ -1,0 +1,13 @@
+language: csharp
+solution: GrandNode.sln
+mono: none
+dotnet: 2.1.302
+
+services:
+ - mongodb
+
+script:
+ - dotnet restore GrandNode.sln
+ - dotnet test ./Tests/Grand.Core.Tests/Grand.Core.Tests.csproj
+ - dotnet test ./Tests/Grand.Services.Tests/Grand.Services.Tests.csproj
+ - dotnet publish Grand.Web -c Release
