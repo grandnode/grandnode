@@ -8,14 +8,14 @@ namespace Grand.Web.Controllers
 {
     public partial class NewsletterController : BasePublicController
     {
-        private readonly INewsletterWebService _newsletterWebService;
+        private readonly INewsletterViewModelService _newsletterViewModelService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
 
-        public NewsletterController(INewsletterWebService newsletterWebService,
+        public NewsletterController(INewsletterViewModelService newsletterViewModelService,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             INewsletterCategoryService newsletterCategoryService)
         {
-            this._newsletterWebService = newsletterWebService;
+            this._newsletterViewModelService = newsletterViewModelService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
         }
        
@@ -23,7 +23,7 @@ namespace Grand.Web.Controllers
         [HttpPost]
         public virtual IActionResult SubscribeNewsletter(string email, bool subscribe)
         {
-            var model = _newsletterWebService.SubscribeNewsletter(email, subscribe);
+            var model = _newsletterViewModelService.SubscribeNewsletter(email, subscribe);
             if(model.NewsletterCategory!=null)
             {
                 model.ShowCategories = true;
@@ -91,7 +91,7 @@ namespace Grand.Web.Controllers
             if (subscription == null)
                 return RedirectToRoute("HomePage");
 
-            var model = _newsletterWebService.PrepareSubscriptionActivation(subscription, active);
+            var model = _newsletterViewModelService.PrepareSubscriptionActivation(subscription, active);
 
             return View(model);
         }

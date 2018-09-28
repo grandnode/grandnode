@@ -6,16 +6,16 @@ namespace Grand.Web.Components
 {
     public class CustomerNavigationViewComponent : BaseViewComponent
     {
-        private readonly ICustomerWebService _customerWebService;
+        private readonly ICustomerViewModelService _customerViewModelService;
 
-        public CustomerNavigationViewComponent(ICustomerWebService customerWebService)
+        public CustomerNavigationViewComponent(ICustomerViewModelService customerViewModelService)
         {
-            this._customerWebService = customerWebService;
+            this._customerViewModelService = customerViewModelService;
         }
 
         public IViewComponentResult Invoke(int selectedTabId = 0)
         {
-            var model = _customerWebService.PrepareNavigation(selectedTabId);
+            var model = _customerViewModelService.PrepareNavigation(selectedTabId);
             return View(model);
         }
     }

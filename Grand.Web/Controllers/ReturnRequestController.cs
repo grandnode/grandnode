@@ -22,7 +22,7 @@ namespace Grand.Web.Controllers
     public partial class ReturnRequestController : BasePublicController
     {
         #region Fields
-        private readonly IReturnRequestWebService _returnRequestWebService;
+        private readonly IReturnRequestViewModelService _returnRequestViewModelService;
         private readonly IReturnRequestService _returnRequestService;
         private readonly IOrderService _orderService;
         private readonly IProductService _productService;
@@ -31,7 +31,7 @@ namespace Grand.Web.Controllers
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly ILocalizationService _localizationService;
         private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly IAddressWebService _addressWebService;
+        private readonly IAddressViewModelService _addressViewModelService;
         private readonly LocalizationSettings _localizationSettings;
         private readonly OrderSettings _orderSettings;
         #endregion
@@ -39,7 +39,7 @@ namespace Grand.Web.Controllers
         #region Constructors
 
         public ReturnRequestController(
-            IReturnRequestWebService returnRequestWebService,
+            IReturnRequestViewModelService returnRequestViewModelService,
             IReturnRequestService returnRequestService,
             IOrderService orderService,
             IProductService productService,
@@ -48,11 +48,11 @@ namespace Grand.Web.Controllers
             IOrderProcessingService orderProcessingService,
             ILocalizationService localizationService,
             IWorkflowMessageService workflowMessageService,
-            IAddressWebService addressWebService,
+            IAddressViewModelService addressViewModelService,
             LocalizationSettings localizationSettings,
             OrderSettings orderSettings)
         {
-            this._returnRequestWebService = returnRequestWebService;
+            this._returnRequestViewModelService = returnRequestViewModelService;
             this._returnRequestService = returnRequestService;
             this._orderService = orderService;
             this._workContext = workContext;
@@ -61,7 +61,7 @@ namespace Grand.Web.Controllers
             this._localizationService = localizationService;
             this._workflowMessageService = workflowMessageService;
             this._productService = productService;
-            this._addressWebService = addressWebService;
+            this._addressViewModelService = addressViewModelService;
             this._localizationSettings = localizationSettings;
             this._orderSettings = orderSettings;
         }
@@ -75,7 +75,7 @@ namespace Grand.Web.Controllers
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
 
-            var model = _returnRequestWebService.PrepareCustomerReturnRequests();
+            var model = _returnRequestViewModelService.PrepareCustomerReturnRequests();
 
             return View(model);
         }
@@ -90,7 +90,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("HomePage");
 
             var model = new SubmitReturnRequestModel();
-            model = _returnRequestWebService.PrepareReturnRequest(model, order);
+            model = _returnRequestViewModelService.PrepareReturnRequest(model, order);
             model.Error = errors;
             return View(model);
         }
@@ -125,8 +125,8 @@ namespace Grand.Web.Controllers
             }
             else
             {
-                var customAttributes = _addressWebService.ParseCustomAddressAttributes(form);
-                var customAttributeWarnings = _addressWebService.GetAttributeWarnings(customAttributes);
+                var customAttributes = _addressViewModelService.ParseCustomAddressAttributes(form);
+                var customAttributeWarnings = _addressViewModelService.GetAttributeWarnings(customAttributes);
                 foreach (var error in customAttributeWarnings)
                 {
                     ModelState.AddModelError("", error);
@@ -140,7 +140,7 @@ namespace Grand.Web.Controllers
             if (!ModelState.IsValid && ModelState.ErrorCount > 0)
             {
                 model.Error = string.Join(", ", ModelState.Keys.SelectMany(k => ModelState[k].Errors).Select(m => m.ErrorMessage).ToArray());
-                model = _returnRequestWebService.PrepareReturnRequest(model, order);
+                model = _returnRequestViewModelService.PrepareReturnRequest(model, order);
                 return View(model);
             }
 
@@ -202,7 +202,7 @@ namespace Grand.Web.Controllers
                     }
                 }
             }
-            model = _returnRequestWebService.PrepareReturnRequest(model, order);
+            model = _returnRequestViewModelService.PrepareReturnRequest(model, order);
             if (count > 0)
             {
                 _returnRequestService.InsertReturnRequest(rr);
@@ -233,7 +233,7 @@ namespace Grand.Web.Controllers
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return Challenge();
 
-            var model = _returnRequestWebService.PrepareReturnRequestDetails(rr, order);
+            var model = _returnRequestViewModelService.PrepareReturnRequestDetails(rr, order);
 
             return View(model);
         }

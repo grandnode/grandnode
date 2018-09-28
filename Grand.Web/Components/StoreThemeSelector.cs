@@ -7,12 +7,12 @@ namespace Grand.Web.ViewComponents
 {
     public class StoreThemeSelectorViewComponent : BaseViewComponent
     {
-        private readonly ICommonWebService _commonWebService;
+        private readonly ICommonViewModelService _commonViewModelService;
         private readonly StoreInformationSettings _storeInformationSettings;
-        public StoreThemeSelectorViewComponent(ICommonWebService commonWebService,
+        public StoreThemeSelectorViewComponent(ICommonViewModelService commonViewModelService,
             StoreInformationSettings storeInformationSettings)
         {
-            this._commonWebService = commonWebService;
+            this._commonViewModelService = commonViewModelService;
             this._storeInformationSettings = storeInformationSettings;
         }
 
@@ -20,7 +20,7 @@ namespace Grand.Web.ViewComponents
         {
             if (!_storeInformationSettings.AllowCustomerToSelectTheme)
                 return Content("");
-            var model = _commonWebService.PrepareStoreThemeSelector();
+            var model = _commonViewModelService.PrepareStoreThemeSelector();
             return View(model);
 
 

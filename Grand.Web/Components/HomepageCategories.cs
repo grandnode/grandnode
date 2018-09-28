@@ -8,16 +8,16 @@ namespace Grand.Web.Components
     public class HomePageCategoriesViewComponent : BaseViewComponent
     {
         #region Fields
-        private readonly ICatalogWebService _catalogWebService;
+        private readonly ICatalogViewModelService _catalogViewModelService;
         #endregion
 
         #region Constructors
 
         public HomePageCategoriesViewComponent(
-            ICatalogWebService catalogWebService
+            ICatalogViewModelService catalogViewModelService
 )
         {
-            this._catalogWebService = catalogWebService;
+            this._catalogViewModelService = catalogViewModelService;
         }
 
         #endregion
@@ -26,7 +26,7 @@ namespace Grand.Web.Components
 
         public IViewComponentResult Invoke()
         {
-            var model = _catalogWebService.PrepareHomepageCategory();
+            var model = _catalogViewModelService.PrepareHomepageCategory();
             if (!model.Any())
                 return Content("");
             return View(model);

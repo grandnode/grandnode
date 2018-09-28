@@ -35,7 +35,7 @@ namespace Grand.Web.Controllers
         private readonly IVendorService _vendorService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IPictureService _pictureService;
-        private readonly IAddressWebService _addressWebService;
+        private readonly IAddressViewModelService _addressViewModelService;
         private readonly ICountryService _countryService;
 
         private readonly LocalizationSettings _localizationSettings;
@@ -54,7 +54,7 @@ namespace Grand.Web.Controllers
             IVendorService vendorService,
             IUrlRecordService urlRecordService,
             IPictureService pictureService,
-            IAddressWebService addressWebService,
+            IAddressViewModelService addressViewModelService,
             ICountryService countryService,
             LocalizationSettings localizationSettings,
             VendorSettings vendorSettings,
@@ -69,7 +69,7 @@ namespace Grand.Web.Controllers
             this._vendorService = vendorService;
             this._urlRecordService = urlRecordService;
             this._pictureService = pictureService;
-            this._addressWebService = addressWebService;
+            this._addressViewModelService = addressViewModelService;
             this._countryService = countryService;
             this._localizationSettings = localizationSettings;
             this._vendorSettings = vendorSettings;
@@ -115,7 +115,7 @@ namespace Grand.Web.Controllers
             model.TermsOfServiceEnabled = _vendorSettings.TermsOfServiceEnabled;
             model.TermsOfServicePopup = _commonSettings.PopupForTermsOfServiceLinks;
 
-            _addressWebService.PrepareVendorAddressModel(model: model.Address,
+            _addressViewModelService.PrepareVendorAddressModel(model: model.Address,
                 address: null,
                 excludeProperties: false,
                 prePopulateWithCustomerFields: true,
@@ -202,7 +202,7 @@ namespace Grand.Web.Controllers
             //If we got this far, something failed, redisplay form
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnApplyVendorPage;
 
-            _addressWebService.PrepareVendorAddressModel(model: model.Address,
+            _addressViewModelService.PrepareVendorAddressModel(model: model.Address,
                 address: null,
                 excludeProperties: false,
                 prePopulateWithCustomerFields: true,
@@ -231,7 +231,7 @@ namespace Grand.Web.Controllers
             var pictureSize = _mediaSettings.AvatarPictureSize;
             model.PictureUrl = picture != null ? _pictureService.GetPictureUrl(picture, pictureSize) : string.Empty;
 
-            _addressWebService.PrepareVendorAddressModel(model: model.Address,
+            _addressViewModelService.PrepareVendorAddressModel(model: model.Address,
                 address: vendor.Address,
                 excludeProperties: false,
                 loadCountries: () => _countryService.GetAllCountries(_workContext.WorkingLanguage.Id),
@@ -299,7 +299,7 @@ namespace Grand.Web.Controllers
                 return RedirectToAction("Info");
             }
 
-            _addressWebService.PrepareVendorAddressModel(model: model.Address,
+            _addressViewModelService.PrepareVendorAddressModel(model: model.Address,
                 address: vendor.Address,
                 excludeProperties: false,
                 loadCountries: () => _countryService.GetAllCountries(_workContext.WorkingLanguage.Id),

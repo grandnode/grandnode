@@ -11,12 +11,12 @@ namespace Grand.Web.ViewComponents
 {
     public class OrderSummaryViewComponent : BaseViewComponent
     {
-        private readonly IShoppingCartWebService _shoppingCartWebService;
+        private readonly IShoppingCartViewModelService _shoppingCartViewModelService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
-        public OrderSummaryViewComponent(IShoppingCartWebService shoppingCartWebService, IWorkContext workContext, IStoreContext storeContext)
+        public OrderSummaryViewComponent(IShoppingCartViewModelService shoppingCartViewModelService, IWorkContext workContext, IStoreContext storeContext)
         {
-            this._shoppingCartWebService = shoppingCartWebService;
+            this._shoppingCartViewModelService = shoppingCartViewModelService;
             this._workContext = workContext;
             this._storeContext = storeContext;
         }
@@ -32,7 +32,7 @@ namespace Grand.Web.ViewComponents
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var model = new ShoppingCartModel();
-            _shoppingCartWebService.PrepareShoppingCart(model, cart,
+            _shoppingCartViewModelService.PrepareShoppingCart(model, cart,
                 isEditable: false,
                 prepareAndDisplayOrderReviewData: prepareAndDisplayOrderReviewData.GetValueOrDefault());
             return View(model);

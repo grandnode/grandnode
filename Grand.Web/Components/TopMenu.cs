@@ -6,16 +6,16 @@ namespace Grand.Web.ViewComponents
 {
     public class TopMenuViewComponent : BaseViewComponent
     {
-        private readonly ICatalogWebService _catalogWebService;
+        private readonly ICatalogViewModelService _catalogViewModelService;
 
-        public TopMenuViewComponent(ICatalogWebService catalogWebService)
+        public TopMenuViewComponent(ICatalogViewModelService catalogViewModelService)
         {
-            this._catalogWebService = catalogWebService;
+            this._catalogViewModelService = catalogViewModelService;
         }
 
         public IViewComponentResult Invoke()
         {
-            var model = _catalogWebService.PrepareTopMenu();
+            var model = _catalogViewModelService.PrepareTopMenu();
             return View(model);
 
         }

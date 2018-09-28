@@ -8,15 +8,15 @@ namespace Grand.Web.ViewComponents
 {
     public class FlyoutShoppingCartViewComponent : BaseViewComponent
     {
-        private readonly IShoppingCartWebService _shoppingCartWebService;
+        private readonly IShoppingCartViewModelService _shoppingCartViewModelService;
         private readonly IPermissionService _permissionService;
         private readonly ShoppingCartSettings _shoppingCartSettings;
 
-        public FlyoutShoppingCartViewComponent(IShoppingCartWebService shoppingCartWebService,
+        public FlyoutShoppingCartViewComponent(IShoppingCartViewModelService shoppingCartViewModelService,
             IPermissionService permissionService,
             ShoppingCartSettings shoppingCartSettings)
         {
-            this._shoppingCartWebService = shoppingCartWebService;
+            this._shoppingCartViewModelService = shoppingCartViewModelService;
             this._permissionService = permissionService;
             this._shoppingCartSettings = shoppingCartSettings;
         }
@@ -29,7 +29,7 @@ namespace Grand.Web.ViewComponents
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return Content("");
 
-            var model = _shoppingCartWebService.PrepareMiniShoppingCart();
+            var model = _shoppingCartViewModelService.PrepareMiniShoppingCart();
             return View(model);
         }
     }

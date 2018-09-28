@@ -34,8 +34,8 @@ namespace Grand.Web.Controllers
     {
         #region Fields
 
-        private readonly ICatalogWebService _catalogWebService;
-        private readonly IProductWebService _productWebService;        
+        private readonly ICatalogViewModelService _catalogViewModelService;
+        private readonly IProductViewModelService _productViewModelService;        
         private readonly IVendorService _vendorService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
@@ -47,15 +47,15 @@ namespace Grand.Web.Controllers
         private readonly IPermissionService _permissionService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerActionEventService _customerActionEventService;
-        private readonly IVendorWebService _vendorWebService;
+        private readonly IVendorViewModelService _vendorViewModelService;
         private readonly VendorSettings _vendorSettings;
         
         #endregion
 
         #region Constructors
 
-        public CatalogController(ICatalogWebService catalogWebService,
-            IProductWebService productWebService,
+        public CatalogController(ICatalogViewModelService catalogViewModelService,
+            IProductViewModelService productViewModelService,
             IVendorService vendorService,
             IWorkContext workContext, 
             IStoreContext storeContext,
@@ -67,11 +67,11 @@ namespace Grand.Web.Controllers
             IPermissionService permissionService, 
             ICustomerActivityService customerActivityService,
             ICustomerActionEventService customerActionEventService,
-            IVendorWebService vendorWebService,
+            IVendorViewModelService vendorViewModelService,
             VendorSettings vendorSettings)
         {
-            this._catalogWebService = catalogWebService;
-            this._productWebService = productWebService;
+            this._catalogViewModelService = catalogViewModelService;
+            this._productViewModelService = productViewModelService;
             this._vendorService = vendorService;
             this._workContext = workContext;
             this._storeContext = storeContext;
@@ -83,7 +83,7 @@ namespace Grand.Web.Controllers
             this._permissionService = permissionService;
             this._customerActivityService = customerActivityService;
             this._customerActionEventService = customerActionEventService;
-            this._vendorWebService = vendorWebService;
+            this._vendorViewModelService = vendorViewModelService;
             this._vendorSettings = vendorSettings;
         }
 
@@ -105,7 +105,7 @@ namespace Grand.Web.Controllers
 
         public virtual IActionResult Category(string categoryId, CatalogPagingFilteringModel command)
         {
-            var category = _catalogWebService.GetCategoryById(categoryId);
+            var category = _catalogViewModelService.GetCategoryById(categoryId);
             if (category == null)
                 return InvokeHttp404();
 
@@ -135,10 +135,10 @@ namespace Grand.Web.Controllers
             _customerActivityService.InsertActivity("PublicStore.ViewCategory", category.Id, _localizationService.GetResource("ActivityLog.PublicStore.ViewCategory"), category.Name);
             _customerActionEventService.Viewed(customer, this.HttpContext.Request.Path.ToString(), this.Request.Headers[HeaderNames.Referer].ToString() != null ? Request.Headers["Referer"].ToString() : "");
             //model
-            var model = _catalogWebService.PrepareCategory(category, command);
+            var model = _catalogViewModelService.PrepareCategory(category, command);
 
             //template
-            var templateViewPath = _catalogWebService.PrepareCategoryTemplateViewPath(category.CategoryTemplateId);
+            var templateViewPath = _catalogViewModelService.PrepareCategoryTemplateViewPath(category.CategoryTemplateId);
 
             return View(templateViewPath, model);
         }
@@ -149,7 +149,7 @@ namespace Grand.Web.Controllers
 
         public virtual IActionResult Manufacturer(string manufacturerId, CatalogPagingFilteringModel command)
         {
-            var manufacturer = _catalogWebService.GetManufacturerById(manufacturerId);
+            var manufacturer = _catalogViewModelService.GetManufacturerById(manufacturerId);
             if (manufacturer == null)
                 return InvokeHttp404();
 
@@ -180,17 +180,17 @@ namespace Grand.Web.Controllers
             _customerActionEventService.Viewed(customer, this.HttpContext.Request.Path.ToString(), this.Request.Headers[HeaderNames.Referer].ToString() != null ? Request.Headers[HeaderNames.Referer].ToString() : "");
 
             //model
-            var model = _catalogWebService.PrepareManufacturer(manufacturer, command);
+            var model = _catalogViewModelService.PrepareManufacturer(manufacturer, command);
 
             //template
-            var templateViewPath = _catalogWebService.PrepareManufacturerTemplateViewPath(manufacturer.ManufacturerTemplateId);
+            var templateViewPath = _catalogViewModelService.PrepareManufacturerTemplateViewPath(manufacturer.ManufacturerTemplateId);
 
             return View(templateViewPath, model);
         }
 
         public virtual IActionResult ManufacturerAll()
         {
-            var model = _catalogWebService.PrepareManufacturerAll();
+            var model = _catalogViewModelService.PrepareManufacturerAll();
             return View(model);
         }
 
@@ -217,9 +217,9 @@ namespace Grand.Web.Controllers
             if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel, customer) && _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers, customer))
                 DisplayEditLink(Url.Action("Edit", "Vendor", new { id = vendor.Id, area = "Admin" }));
 
-            var model = _catalogWebService.PrepareVendor(vendor, command);
+            var model = _catalogViewModelService.PrepareVendor(vendor, command);
             //review
-            model.VendorReviewOverview = _vendorWebService.PrepareVendorReviewOverviewModel(vendor);
+            model.VendorReviewOverview = _vendorViewModelService.PrepareVendorReviewOverviewModel(vendor);
 
             return View(model);
         }
@@ -230,7 +230,7 @@ namespace Grand.Web.Controllers
             if (_vendorSettings.VendorsBlockItemsToDisplay == 0)
                 return RedirectToRoute("HomePage");
 
-            var model = _catalogWebService.PrepareVendorAll();
+            var model = _catalogViewModelService.PrepareVendorAll();
             return View(model);
         }
 
@@ -246,7 +246,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("HomePage");
 
             var model = new VendorReviewsModel();
-            _vendorWebService.PrepareVendorReviewsModel(model, vendor);
+            _vendorViewModelService.PrepareVendorReviewsModel(model, vendor);
             //only registered users can leave reviews
             if (_workContext.CurrentCustomer.IsGuest() && !_vendorSettings.AllowAnonymousUsersToReviewVendor)
                 ModelState.AddModelError("", _localizationService.GetResource("VendorReviews.OnlyRegisteredUsersCanWriteReviews"));
@@ -284,7 +284,7 @@ namespace Grand.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var vendorReview = _vendorWebService.InsertVendorReview(vendor, model);
+                var vendorReview = _vendorViewModelService.InsertVendorReview(vendor, model);
                 //activity log
                 _customerActivityService.InsertActivity("PublicStore.AddVendorReview", vendor.Id, _localizationService.GetResource("ActivityLog.PublicStore.AddVendorReview"), vendor.Name);
 
@@ -292,7 +292,7 @@ namespace Grand.Web.Controllers
                 if (vendorReview.IsApproved)
                     eventPublisher.Publish(new VendorReviewApprovedEvent(vendorReview));
 
-                _vendorWebService.PrepareVendorReviewsModel(model, vendor);
+                _vendorViewModelService.PrepareVendorReviewsModel(model, vendor);
                 model.AddVendorReview.Title = null;
                 model.AddVendorReview.ReviewText = null;
 
@@ -306,7 +306,7 @@ namespace Grand.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            _vendorWebService.PrepareVendorReviewsModel(model, vendor);
+            _vendorViewModelService.PrepareVendorReviewsModel(model, vendor);
             return View(model);
         }
 
@@ -388,13 +388,13 @@ namespace Grand.Web.Controllers
             if (productTag == null)
                 return InvokeHttp404();
 
-            var model = _catalogWebService.PrepareProductsByTag(productTag, command);
+            var model = _catalogViewModelService.PrepareProductsByTag(productTag, command);
             return View(model);
         }
 
         public virtual IActionResult ProductTagsAll()
         {
-            var model = _catalogWebService.PrepareProductTagsAll();
+            var model = _catalogViewModelService.PrepareProductTagsAll();
             return View(model);
         }
 
@@ -408,7 +408,7 @@ namespace Grand.Web.Controllers
             SaveLastContinueShoppingPage(_workContext.CurrentCustomer);
             
             //Prepare model
-            var searchmodel = _catalogWebService.PrepareSearch(model, command);
+            var searchmodel = _catalogViewModelService.PrepareSearch(model, command);
 
             return View(searchmodel);
         }
@@ -418,7 +418,7 @@ namespace Grand.Web.Controllers
             if (String.IsNullOrWhiteSpace(term) || term.Length < catalogSettings.ProductSearchTermMinimumLength)
                 return Content("");
 
-            var result = _catalogWebService.PrepareSearchAutoComplete(term, categoryId);
+            var result = _catalogViewModelService.PrepareSearchAutoComplete(term, categoryId);
             
             return Json(result);
         }

@@ -7,18 +7,18 @@ namespace Grand.Web.ViewComponents
 {
     public class PollBlockViewComponent : BaseViewComponent
     {
-        private readonly IPollWebService _pollWebService;
+        private readonly IPollViewModelService _pollViewModelService;
 
-        public PollBlockViewComponent(IPollWebService pollWebService)
+        public PollBlockViewComponent(IPollViewModelService pollViewModelService)
         {
-            this._pollWebService = pollWebService;
+            this._pollViewModelService = pollViewModelService;
         }
 
         public IViewComponentResult Invoke(string systemKeyword)
         {
             if (String.IsNullOrWhiteSpace(systemKeyword))
                 return Content("");
-            var model = _pollWebService.PreparePollBySystemName(systemKeyword);
+            var model = _pollViewModelService.PreparePollBySystemName(systemKeyword);
             if (model == null)
                 return Content("");
 

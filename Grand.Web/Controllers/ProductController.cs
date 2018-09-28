@@ -38,7 +38,7 @@ namespace Grand.Web.Controllers
         #region Fields
 
         private readonly IProductService _productService;
-        private readonly IProductWebService _productWebService;
+        private readonly IProductViewModelService _productViewModelService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly ILocalizationService _localizationService;
@@ -59,7 +59,7 @@ namespace Grand.Web.Controllers
 
         public ProductController(
             IProductService productService,
-            IProductWebService productWebService,
+            IProductViewModelService productViewModelService,
             IWorkContext workContext,
             IStoreContext storeContext,
             ILocalizationService localizationService,
@@ -76,7 +76,7 @@ namespace Grand.Web.Controllers
         )
         {
             this._productService = productService;
-            this._productWebService = productWebService;
+            this._productViewModelService = productViewModelService;
             this._workContext = workContext;
             this._storeContext = storeContext;
             this._localizationService = localizationService;
@@ -156,10 +156,10 @@ namespace Grand.Web.Controllers
             }
 
             //prepare the model
-            var model = _productWebService.PrepareProductDetailsPage(product, updatecartitem, false);
+            var model = _productViewModelService.PrepareProductDetailsPage(product, updatecartitem, false);
 
             //product template
-            var productTemplateViewPath = _productWebService.PrepareProductTemplateViewPath(product.ProductTemplateId);
+            var productTemplateViewPath = _productViewModelService.PrepareProductTemplateViewPath(product.ProductTemplateId);
 
             //save as recently viewed
             _recentlyViewedProductsService.AddProductToRecentlyViewedList(customer.Id, product.Id);
@@ -192,7 +192,7 @@ namespace Grand.Web.Controllers
             if (product == null)
                 return new NullJsonResult();
 
-            var model = _productWebService.PrepareProductDetailsAttributeChangeModel(product, validateAttributeConditions, loadPicture, form);
+            var model = _productViewModelService.PrepareProductDetailsAttributeChangeModel(product, validateAttributeConditions, loadPicture, form);
 
             return Json(new
             {
@@ -363,10 +363,10 @@ namespace Grand.Web.Controllers
             }
 
             //prepare the model
-            var model = _productWebService.PrepareProductDetailsPage(product, null, false);
+            var model = _productViewModelService.PrepareProductDetailsPage(product, null, false);
 
             //product template
-            var productTemplateViewPath = _productWebService.PrepareProductTemplateViewPath(product.ProductTemplateId);
+            var productTemplateViewPath = _productViewModelService.PrepareProductTemplateViewPath(product.ProductTemplateId);
 
             //save as recently viewed
             _recentlyViewedProductsService.AddProductToRecentlyViewedList(customer.Id, product.Id);
@@ -402,7 +402,7 @@ namespace Grand.Web.Controllers
             var products = _recentlyViewedProductsService.GetRecentlyViewedProducts(_workContext.CurrentCustomer.Id, _catalogSettings.RecentlyViewedProductsNumber);
 
             var model = new List<ProductOverviewModel>();
-            model.AddRange(_productWebService.PrepareProductOverviewModels(products));
+            model.AddRange(_productViewModelService.PrepareProductOverviewModels(products));
 
             return View(model);
         }
@@ -423,7 +423,7 @@ namespace Grand.Web.Controllers
                 pageSize: _catalogSettings.NewProductsNumber);
 
             var model = new List<ProductOverviewModel>();
-            model.AddRange(_productWebService.PrepareProductOverviewModels(products));
+            model.AddRange(_productViewModelService.PrepareProductOverviewModels(products));
 
             return View(model);
         }
@@ -469,7 +469,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("HomePage");
 
             var model = new ProductReviewsModel();
-            _productWebService.PrepareProductReviewsModel(model, product);
+            _productViewModelService.PrepareProductReviewsModel(model, product);
             //only registered users can leave reviews
             if (_workContext.CurrentCustomer.IsGuest() && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
                 ModelState.AddModelError("", _localizationService.GetResource("Reviews.OnlyRegisteredUsersCanWriteReviews"));
@@ -506,7 +506,7 @@ namespace Grand.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var productReview = _productWebService.InsertProductReview(product, model);
+                var productReview = _productViewModelService.InsertProductReview(product, model);
                 //activity log
                 _customerActivityService.InsertActivity("PublicStore.AddProductReview", product.Id, _localizationService.GetResource("ActivityLog.PublicStore.AddProductReview"), product.Name);
 
@@ -514,7 +514,7 @@ namespace Grand.Web.Controllers
                 if (productReview.IsApproved)
                     eventPublisher.Publish(new ProductReviewApprovedEvent(productReview));
 
-                _productWebService.PrepareProductReviewsModel(model, product);
+                _productViewModelService.PrepareProductReviewsModel(model, product);
                 model.AddProductReview.Title = null;
                 model.AddProductReview.ReviewText = null;
 
@@ -528,7 +528,7 @@ namespace Grand.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            _productWebService.PrepareProductReviewsModel(model, product);
+            _productViewModelService.PrepareProductReviewsModel(model, product);
             return View(model);
         }
 
@@ -644,7 +644,7 @@ namespace Grand.Web.Controllers
             if (ModelState.IsValid)
             {
                 //email
-                _productWebService.SendProductEmailAFriendMessage(product, model);
+                _productViewModelService.SendProductEmailAFriendMessage(product, model);
 
                 model.ProductId = product.Id;
                 model.ProductName = product.GetLocalized(x => x.Name);
@@ -674,7 +674,7 @@ namespace Grand.Web.Controllers
             if (product == null ||  !product.Published || !_catalogSettings.AskQuestionEnabled)
                 return NotFound();
 
-            var model = _productWebService.PrepareProductAskQuestionModel(product);
+            var model = _productViewModelService.PrepareProductAskQuestionModel(product);
 
             return View(model);
         }
@@ -698,7 +698,7 @@ namespace Grand.Web.Controllers
             if (ModelState.IsValid)
             {
                 // email
-                _productWebService.SendProductAskQuestionMessage(product, model);
+                _productViewModelService.SendProductAskQuestionMessage(product, model);
 
                 //activity log
                 _customerActivityService.InsertActivity("PublicStore.AskQuestion", _workContext.CurrentCustomer.Id, _localizationService.GetResource("ActivityLog.PublicStore.AskQuestion"));
@@ -751,7 +751,7 @@ namespace Grand.Web.Controllers
                     Message = model.AskQuestionMessage
                 };
                 // email
-                _productWebService.SendProductAskQuestionMessage(product, productaskqestionmodel);
+                _productViewModelService.SendProductAskQuestionMessage(product, productaskqestionmodel);
                 //activity log
                 _customerActivityService.InsertActivity("PublicStore.AskQuestion", _workContext.CurrentCustomer.Id, _localizationService.GetResource("ActivityLog.PublicStore.AskQuestion"));
                 //return Json
@@ -848,7 +848,7 @@ namespace Grand.Web.Controllers
             products = products.Where(p => p.IsAvailable()).ToList();
 
             //prepare model
-            _productWebService.PrepareProductOverviewModels(products, prepareSpecificationAttributes: true)
+            _productViewModelService.PrepareProductOverviewModels(products, prepareSpecificationAttributes: true)
                 .ToList()
                 .ForEach(model.Products.Add);
             return View(model);

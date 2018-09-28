@@ -8,13 +8,13 @@ namespace Grand.Web.ViewComponents
 {
     public class ManufacturerNavigationViewComponent : BaseViewComponent
     {
-        private readonly ICatalogWebService _catalogWebService;
+        private readonly ICatalogViewModelService _catalogViewModelService;
         private readonly CatalogSettings _catalogSettings;
 
-        public ManufacturerNavigationViewComponent(ICatalogWebService catalogWebService,
+        public ManufacturerNavigationViewComponent(ICatalogViewModelService catalogViewModelService,
             CatalogSettings catalogSettings)
         {
-            this._catalogWebService = catalogWebService;
+            this._catalogViewModelService = catalogViewModelService;
             this._catalogSettings = catalogSettings;
         }
 
@@ -23,7 +23,7 @@ namespace Grand.Web.ViewComponents
             if (_catalogSettings.ManufacturersBlockItemsToDisplay == 0)
                 return Content("");
 
-            var model = _catalogWebService.PrepareManufacturerNavigation(currentManufacturerId);
+            var model = _catalogViewModelService.PrepareManufacturerNavigation(currentManufacturerId);
             if (!model.Manufacturers.Any())
                 return Content("");
 

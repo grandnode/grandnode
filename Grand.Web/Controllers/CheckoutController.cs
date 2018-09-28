@@ -28,7 +28,7 @@ namespace Grand.Web.Controllers
     public partial class CheckoutController : BasePublicController
     {
         #region Fields
-        private readonly ICheckoutWebService _checkoutWebService;
+        private readonly ICheckoutViewModelService _checkoutViewModelService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly ILocalizationService _localizationService;
@@ -40,7 +40,7 @@ namespace Grand.Web.Controllers
         private readonly ILogger _logger;
         private readonly IOrderService _orderService;
         private readonly IWebHelper _webHelper;
-        private readonly IAddressWebService _addressWebService;
+        private readonly IAddressViewModelService _addressViewModelService;
         private readonly OrderSettings _orderSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly PaymentSettings _paymentSettings;
@@ -50,7 +50,7 @@ namespace Grand.Web.Controllers
 
         #region Constructors
 
-        public CheckoutController(ICheckoutWebService checkoutWebService,
+        public CheckoutController(ICheckoutViewModelService checkoutViewModelService,
             IWorkContext workContext,
             IStoreContext storeContext,            
             ILocalizationService localizationService,
@@ -62,13 +62,13 @@ namespace Grand.Web.Controllers
             ILogger logger,
             IOrderService orderService,
             IWebHelper webHelper,
-            IAddressWebService addressWebService,
+            IAddressViewModelService addressViewModelService,
             OrderSettings orderSettings,
             RewardPointsSettings rewardPointsSettings,
             PaymentSettings paymentSettings,
             ShippingSettings shippingSettings)
         {
-            this._checkoutWebService = checkoutWebService;
+            this._checkoutViewModelService = checkoutViewModelService;
             this._workContext = workContext;
             this._storeContext = storeContext;
             this._localizationService = localizationService;
@@ -80,7 +80,7 @@ namespace Grand.Web.Controllers
             this._logger = logger;
             this._orderService = orderService;
             this._webHelper = webHelper;
-            this._addressWebService = addressWebService;
+            this._addressViewModelService = addressViewModelService;
             this._orderSettings = orderSettings;
             this._rewardPointsSettings = rewardPointsSettings;
             this._paymentSettings = paymentSettings;
@@ -212,7 +212,7 @@ namespace Grand.Web.Controllers
                 return Challenge();
 
             //model
-            var model = _checkoutWebService.PrepareBillingAddress(cart, prePopulateNewAddressWithCustomerFields: true);
+            var model = _checkoutViewModelService.PrepareBillingAddress(cart, prePopulateNewAddressWithCustomerFields: true);
 
             //check whether "billing address" step is enabled
             if (_orderSettings.DisableBillingAddressCheckoutStep)
@@ -283,8 +283,8 @@ namespace Grand.Web.Controllers
                 return Challenge();
 
             //custom address attributes
-            var customAttributes = _addressWebService.ParseCustomAddressAttributes(form);
-            var customAttributeWarnings = _addressWebService.GetAttributeWarnings(customAttributes);
+            var customAttributes = _addressViewModelService.ParseCustomAddressAttributes(form);
+            var customAttributeWarnings = _addressViewModelService.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
                 ModelState.AddModelError("", error);
@@ -333,7 +333,7 @@ namespace Grand.Web.Controllers
 
 
             //If we got this far, something failed, redisplay form
-            model = _checkoutWebService.PrepareBillingAddress(cart,
+            model = _checkoutViewModelService.PrepareBillingAddress(cart,
                 selectedCountryId: model.NewAddress.CountryId,
                 overrideAttributesXml: customAttributes);
             return View(model);
@@ -363,7 +363,7 @@ namespace Grand.Web.Controllers
             }
 
             //model
-            var model = _checkoutWebService.PrepareShippingAddress(prePopulateNewAddressWithCustomerFields: true);
+            var model = _checkoutViewModelService.PrepareShippingAddress(prePopulateNewAddressWithCustomerFields: true);
 
             return View(model);
         }
@@ -459,8 +459,8 @@ namespace Grand.Web.Controllers
             }
 
             //custom address attributes
-            var customAttributes = _addressWebService.ParseCustomAddressAttributes(form);
-            var customAttributeWarnings = _addressWebService.GetAttributeWarnings(customAttributes);
+            var customAttributes = _addressViewModelService.ParseCustomAddressAttributes(form);
+            var customAttributeWarnings = _addressViewModelService.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
                 ModelState.AddModelError("", error);
@@ -493,7 +493,7 @@ namespace Grand.Web.Controllers
 
 
             //If we got this far, something failed, redisplay form
-            model = _checkoutWebService.PrepareShippingAddress(
+            model = _checkoutViewModelService.PrepareShippingAddress(
                 selectedCountryId: model.NewAddress.CountryId,
                 overrideAttributesXml: customAttributes);
             return View(model);
@@ -523,7 +523,7 @@ namespace Grand.Web.Controllers
             }
 
             //model
-            var model = _checkoutWebService.PrepareShippingMethod(cart, _workContext.CurrentCustomer.ShippingAddress);
+            var model = _checkoutViewModelService.PrepareShippingMethod(cart, _workContext.CurrentCustomer.ShippingAddress);
 
             if (_shippingSettings.BypassShippingMethodSelectionIfOnlyOne &&
                 model.ShippingMethods.Count == 1)
@@ -616,7 +616,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("CheckoutPaymentMethod");
             }
 
-            var model = _checkoutWebService.PrepareShippingMethod(cart, customer.ShippingAddress);
+            var model = _checkoutViewModelService.PrepareShippingMethod(cart, customer.ShippingAddress);
             return View(model);
         }
 
@@ -639,7 +639,7 @@ namespace Grand.Web.Controllers
 
             //Check whether payment workflow is required
             //we ignore reward points during cart total calculation
-            bool isPaymentWorkflowRequired = _checkoutWebService.IsPaymentWorkflowRequired(cart, false);
+            bool isPaymentWorkflowRequired = _checkoutViewModelService.IsPaymentWorkflowRequired(cart, false);
             if (!isPaymentWorkflowRequired)
             {
                 _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
@@ -649,7 +649,7 @@ namespace Grand.Web.Controllers
 
             //filter by country
             string filterByCountryId = "";
-            if (_addressWebService.AddressSettings().CountryEnabled &&
+            if (_addressViewModelService.AddressSettings().CountryEnabled &&
                 _workContext.CurrentCustomer.BillingAddress != null &&
                 !String.IsNullOrEmpty(_workContext.CurrentCustomer.BillingAddress.CountryId))
             {
@@ -657,7 +657,7 @@ namespace Grand.Web.Controllers
             }
 
             //model
-            var paymentMethodModel = _checkoutWebService.PreparePaymentMethod(cart, filterByCountryId);
+            var paymentMethodModel = _checkoutViewModelService.PreparePaymentMethod(cart, filterByCountryId);
 
             if (_paymentSettings.BypassPaymentMethodSelectionIfOnlyOne &&
                 paymentMethodModel.PaymentMethods.Count == 1 && !paymentMethodModel.DisplayRewardPoints)
@@ -701,7 +701,7 @@ namespace Grand.Web.Controllers
             }
 
             //Check whether payment workflow is required
-            bool isPaymentWorkflowRequired = _checkoutWebService.IsPaymentWorkflowRequired(cart);
+            bool isPaymentWorkflowRequired = _checkoutViewModelService.IsPaymentWorkflowRequired(cart);
             if (!isPaymentWorkflowRequired)
             {
                 _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
@@ -743,7 +743,7 @@ namespace Grand.Web.Controllers
                 return Challenge();
 
             //Check whether payment workflow is required
-            bool isPaymentWorkflowRequired = _checkoutWebService.IsPaymentWorkflowRequired(cart);
+            bool isPaymentWorkflowRequired = _checkoutViewModelService.IsPaymentWorkflowRequired(cart);
             if (!isPaymentWorkflowRequired)
             {
                 return RedirectToRoute("CheckoutConfirm");
@@ -770,7 +770,7 @@ namespace Grand.Web.Controllers
             }
 
             //model
-            var model = _checkoutWebService.PreparePaymentInfo(paymentMethod);
+            var model = _checkoutViewModelService.PreparePaymentInfo(paymentMethod);
             return View(model);
         }
         [HttpPost, ActionName("PaymentInfo")]
@@ -792,7 +792,7 @@ namespace Grand.Web.Controllers
                 return Challenge();
 
             //Check whether payment workflow is required
-            bool isPaymentWorkflowRequired = _checkoutWebService.IsPaymentWorkflowRequired(cart);
+            bool isPaymentWorkflowRequired = _checkoutViewModelService.IsPaymentWorkflowRequired(cart);
             if (!isPaymentWorkflowRequired)
             {
                 return RedirectToRoute("CheckoutConfirm");
@@ -820,7 +820,7 @@ namespace Grand.Web.Controllers
 
             //If we got this far, something failed, redisplay form
             //model
-            var model = _checkoutWebService.PreparePaymentInfo(paymentMethod);
+            var model = _checkoutViewModelService.PreparePaymentInfo(paymentMethod);
             return View(model);
         }
 
@@ -842,7 +842,7 @@ namespace Grand.Web.Controllers
                 return Challenge();
 
             //model
-            var model = _checkoutWebService.PrepareConfirmOrder(cart);
+            var model = _checkoutViewModelService.PrepareConfirmOrder(cart);
             return View(model);
         }
         [HttpPost, ActionName("Confirm")]
@@ -864,21 +864,21 @@ namespace Grand.Web.Controllers
 
 
             //model
-            var model = _checkoutWebService.PrepareConfirmOrder(cart);
+            var model = _checkoutViewModelService.PrepareConfirmOrder(cart);
             try
             {
                 var processPaymentRequest = this.HttpContext.Session.Get<ProcessPaymentRequest>("OrderPaymentInfo");
                 if (processPaymentRequest == null)
                 {
                     //Check whether payment workflow is required
-                    if (_checkoutWebService.IsPaymentWorkflowRequired(cart))
+                    if (_checkoutViewModelService.IsPaymentWorkflowRequired(cart))
                         return RedirectToRoute("CheckoutPaymentInfo");
 
                     processPaymentRequest = new ProcessPaymentRequest();
                 }
 
                 //prevent 2 orders being placed within an X seconds time frame
-                if (!_checkoutWebService.IsMinimumOrderPlacementIntervalValid(_workContext.CurrentCustomer))
+                if (!_checkoutViewModelService.IsMinimumOrderPlacementIntervalValid(_workContext.CurrentCustomer))
                     throw new Exception(_localizationService.GetResource("Checkout.MinOrderPlacementInterval"));
 
                 //place order
@@ -939,7 +939,7 @@ namespace Grand.Web.Controllers
         [NonAction]
         protected JsonResult OpcLoadStepAfterShippingAddress(List<ShoppingCartItem> cart)
         {
-            var shippingMethodModel = _checkoutWebService.PrepareShippingMethod(cart, _workContext.CurrentCustomer.ShippingAddress);
+            var shippingMethodModel = _checkoutViewModelService.PrepareShippingMethod(cart, _workContext.CurrentCustomer.ShippingAddress);
 
             if (_shippingSettings.BypassShippingMethodSelectionIfOnlyOne &&
                 shippingMethodModel.ShippingMethods.Count == 1)
@@ -971,12 +971,12 @@ namespace Grand.Web.Controllers
         {
             //Check whether payment workflow is required
             //we ignore reward points during cart total calculation
-            bool isPaymentWorkflowRequired = _checkoutWebService.IsPaymentWorkflowRequired(cart, false);
+            bool isPaymentWorkflowRequired = _checkoutViewModelService.IsPaymentWorkflowRequired(cart, false);
             if (isPaymentWorkflowRequired)
             {
                 //filter by country
                 string filterByCountryId = "";
-                if (_addressWebService.AddressSettings().CountryEnabled &&
+                if (_addressViewModelService.AddressSettings().CountryEnabled &&
                     _workContext.CurrentCustomer.BillingAddress != null &&
                     !String.IsNullOrEmpty(_workContext.CurrentCustomer.BillingAddress.CountryId))
                 {
@@ -984,7 +984,7 @@ namespace Grand.Web.Controllers
                 }
 
                 //payment is required
-                var paymentMethodModel = _checkoutWebService.PreparePaymentMethod(cart, filterByCountryId);
+                var paymentMethodModel = _checkoutViewModelService.PreparePaymentMethod(cart, filterByCountryId);
 
                 if (_paymentSettings.BypassPaymentMethodSelectionIfOnlyOne &&
                     paymentMethodModel.PaymentMethods.Count == 1 && !paymentMethodModel.DisplayRewardPoints)
@@ -1022,7 +1022,7 @@ namespace Grand.Web.Controllers
             _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
                 SystemCustomerAttributeNames.SelectedPaymentMethod, null, _storeContext.CurrentStore.Id);
 
-            var confirmOrderModel = _checkoutWebService.PrepareConfirmOrder(cart);
+            var confirmOrderModel = _checkoutViewModelService.PrepareConfirmOrder(cart);
             return Json(new
             {
                 update_section = new UpdateSectionJsonModel
@@ -1046,7 +1046,7 @@ namespace Grand.Web.Controllers
                 //session save
                 this.HttpContext.Session.Set("OrderPaymentInfo", paymentInfo);
 
-                var confirmOrderModel = _checkoutWebService.PrepareConfirmOrder(cart);
+                var confirmOrderModel = _checkoutViewModelService.PrepareConfirmOrder(cart);
                 return Json(new
                 {
                     update_section = new UpdateSectionJsonModel
@@ -1060,7 +1060,7 @@ namespace Grand.Web.Controllers
 
 
             //return payment info page
-            var paymenInfoModel = _checkoutWebService.PreparePaymentInfo(paymentMethod);
+            var paymenInfoModel = _checkoutViewModelService.PreparePaymentInfo(paymentMethod);
             return Json(new
             {
                 update_section = new UpdateSectionJsonModel
@@ -1092,7 +1092,7 @@ namespace Grand.Web.Controllers
             {
                 ShippingRequired = cart.RequiresShipping(),
                 DisableBillingAddressCheckoutStep = _orderSettings.DisableBillingAddressCheckoutStep,
-                BillingAddress = _checkoutWebService.PrepareBillingAddress(cart, prePopulateNewAddressWithCustomerFields: true)
+                BillingAddress = _checkoutViewModelService.PrepareBillingAddress(cart, prePopulateNewAddressWithCustomerFields: true)
             };
             return View(model);
         }
@@ -1135,8 +1135,8 @@ namespace Grand.Web.Controllers
                     TryUpdateModelAsync(model.NewAddress, "BillingNewAddress");
 
                     //custom address attributes
-                    var customAttributes = _addressWebService.ParseCustomAddressAttributes(form);
-                    var customAttributeWarnings = _addressWebService.GetAttributeWarnings(customAttributes);
+                    var customAttributes = _addressViewModelService.ParseCustomAddressAttributes(form);
+                    var customAttributeWarnings = _addressViewModelService.GetAttributeWarnings(customAttributes);
                     foreach (var error in customAttributeWarnings)
                     {
                         ModelState.AddModelError("", error);
@@ -1147,7 +1147,7 @@ namespace Grand.Web.Controllers
                     if (!ModelState.IsValid)
                     {
                         //model is not valid. redisplay the form with errors
-                        var billingAddressModel = _checkoutWebService.PrepareBillingAddress(cart,
+                        var billingAddressModel = _checkoutViewModelService.PrepareBillingAddress(cart,
                                                     selectedCountryId: model.NewAddress.CountryId,
                                                     overrideAttributesXml: customAttributes);
                         billingAddressModel.NewAddressPreselected = true;
@@ -1200,7 +1200,7 @@ namespace Grand.Web.Controllers
                     }
                     else
                     {
-                        var shippingAddressModel = _checkoutWebService.PrepareShippingAddress(prePopulateNewAddressWithCustomerFields: true);
+                        var shippingAddressModel = _checkoutViewModelService.PrepareShippingAddress(prePopulateNewAddressWithCustomerFields: true);
                         if (_shippingSettings.AllowPickUpInStore && _shippingService.LoadActiveShippingRateComputationMethods(_storeContext.CurrentStore.Id).Count == 0)
                         {
                             shippingAddressModel.PickUpInStoreOnly = true;
@@ -1324,8 +1324,8 @@ namespace Grand.Web.Controllers
                     TryUpdateModelAsync(model.NewAddress, "ShippingNewAddress");
 
                     //custom address attributes
-                    var customAttributes = _addressWebService.ParseCustomAddressAttributes(form);
-                    var customAttributeWarnings = _addressWebService.GetAttributeWarnings(customAttributes);
+                    var customAttributes = _addressViewModelService.ParseCustomAddressAttributes(form);
+                    var customAttributeWarnings = _addressViewModelService.GetAttributeWarnings(customAttributes);
                     foreach (var error in customAttributeWarnings)
                     {
                         ModelState.AddModelError("", error);
@@ -1341,7 +1341,7 @@ namespace Grand.Web.Controllers
                             string tt = item.ErrorMessage;
                         }
                         //model is not valid. redisplay the form with errors
-                        var shippingAddressModel = _checkoutWebService.PrepareShippingAddress(selectedCountryId: model.NewAddress.CountryId, overrideAttributesXml: customAttributes);
+                        var shippingAddressModel = _checkoutViewModelService.PrepareShippingAddress(selectedCountryId: model.NewAddress.CountryId, overrideAttributesXml: customAttributes);
                         shippingAddressModel.NewAddressPreselected = true;
                         return Json(new
                         {
@@ -1506,14 +1506,14 @@ namespace Grand.Web.Controllers
                 }
 
                 //Check whether payment workflow is required
-                bool isPaymentWorkflowRequired = _checkoutWebService.IsPaymentWorkflowRequired(cart);
+                bool isPaymentWorkflowRequired = _checkoutViewModelService.IsPaymentWorkflowRequired(cart);
                 if (!isPaymentWorkflowRequired)
                 {
                     //payment is not required
                     _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
                         SystemCustomerAttributeNames.SelectedPaymentMethod, null, _storeContext.CurrentStore.Id);
 
-                    var confirmOrderModel = _checkoutWebService.PrepareConfirmOrder(cart);
+                    var confirmOrderModel = _checkoutViewModelService.PrepareConfirmOrder(cart);
                     return Json(new
                     {
                         update_section = new UpdateSectionJsonModel
@@ -1579,7 +1579,7 @@ namespace Grand.Web.Controllers
                     //session save
                     this.HttpContext.Session.Set("OrderPaymentInfo", paymentInfo);
 
-                    var confirmOrderModel = _checkoutWebService.PrepareConfirmOrder(cart);
+                    var confirmOrderModel = _checkoutViewModelService.PrepareConfirmOrder(cart);
                     return Json(new
                     {
                         update_section = new UpdateSectionJsonModel
@@ -1592,7 +1592,7 @@ namespace Grand.Web.Controllers
                 }
 
                 //If we got this far, something failed, redisplay form
-                var paymenInfoModel = _checkoutWebService.PreparePaymentInfo(paymentMethod);
+                var paymenInfoModel = _checkoutViewModelService.PreparePaymentInfo(paymentMethod);
                 return Json(new
                 {
                     update_section = new UpdateSectionJsonModel
@@ -1628,7 +1628,7 @@ namespace Grand.Web.Controllers
                     throw new Exception("Anonymous checkout is not allowed");
 
                 //prevent 2 orders being placed within an X seconds time frame
-                if (!_checkoutWebService.IsMinimumOrderPlacementIntervalValid(_workContext.CurrentCustomer))
+                if (!_checkoutViewModelService.IsMinimumOrderPlacementIntervalValid(_workContext.CurrentCustomer))
                     throw new Exception(_localizationService.GetResource("Checkout.MinOrderPlacementInterval"));
 
                 //place order
@@ -1636,7 +1636,7 @@ namespace Grand.Web.Controllers
                 if (processPaymentRequest == null)
                 {
                     //Check whether payment workflow is required
-                    if (_checkoutWebService.IsPaymentWorkflowRequired(cart))
+                    if (_checkoutViewModelService.IsPaymentWorkflowRequired(cart))
                     {
                         throw new Exception("Payment information is not entered");
                     }

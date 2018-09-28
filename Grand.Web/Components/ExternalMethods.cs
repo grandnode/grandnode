@@ -6,16 +6,16 @@ namespace Grand.Web.ViewComponents
 {
     public class ExternalMethodsViewComponent : BaseViewComponent
     {
-        private readonly IExternalAuthenticationWebService _externalAuthenticationWebService;
+        private readonly IExternalAuthenticationViewModelService _externalAuthenticationViewModelService;
 
-        public ExternalMethodsViewComponent(IExternalAuthenticationWebService externalAuthenticationWebService)
+        public ExternalMethodsViewComponent(IExternalAuthenticationViewModelService externalAuthenticationViewModelService)
         {
-            this._externalAuthenticationWebService = externalAuthenticationWebService;
+            this._externalAuthenticationViewModelService = externalAuthenticationViewModelService;
         }
 
         public IViewComponentResult Invoke()
         {
-            var model = _externalAuthenticationWebService.PrepereExternalAuthenticationMethodModel();
+            var model = _externalAuthenticationViewModelService.PrepereExternalAuthenticationMethodModel();
             return View(model);
 
         }

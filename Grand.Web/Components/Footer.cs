@@ -6,16 +6,16 @@ namespace Grand.Web.ViewComponents
 {
     public class FooterViewComponent : BaseViewComponent
     {
-        private readonly ICommonWebService _commonWebService;
+        private readonly ICommonViewModelService _commonViewModelService;
 
-        public FooterViewComponent(ICommonWebService commonWebService)
+        public FooterViewComponent(ICommonViewModelService commonViewModelService)
         {
-            this._commonWebService = commonWebService;
+            this._commonViewModelService = commonViewModelService;
         }
 
         public IViewComponentResult Invoke()
         {
-            var model = _commonWebService.PrepareFooter();
+            var model = _commonViewModelService.PrepareFooter();
             return View(model);
 
         }

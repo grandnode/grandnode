@@ -11,16 +11,16 @@ namespace Grand.Web.Controllers
 	{
 		#region Fields
 
-        private readonly ICountryWebService _countryWebService;
+        private readonly ICountryViewModelService _countryViewModelService;
         private readonly ILocalizationService _localizationService;
 
         #endregion
 
         #region Constructors
 
-        public CountryController(ICountryWebService countryWebService, ILocalizationService localizationService)
+        public CountryController(ICountryViewModelService countryViewModelService, ILocalizationService localizationService)
 		{
-            this._countryWebService = countryWebService;
+            this._countryViewModelService = countryViewModelService;
             this._localizationService = localizationService;
 
         }
@@ -38,7 +38,7 @@ namespace Grand.Web.Controllers
             {
                 return Json(new List<dynamic>() { new { id = "", name = _localizationService.GetResource("Address.SelectState") } });
             }
-            var model = _countryWebService.PrepareModel(countryId, addSelectStateItem);
+            var model = _countryViewModelService.PrepareModel(countryId, addSelectStateItem);
             return Json(model);
         }
 

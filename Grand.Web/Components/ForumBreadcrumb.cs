@@ -8,16 +8,16 @@ namespace Grand.Web.ViewComponents
     public class ForumBreadcrumbViewComponent : BaseViewComponent
     {
         private readonly IForumService _forumService;
-        private readonly IBoardsWebService _boardsWebService;
-        public ForumBreadcrumbViewComponent(IForumService forumService, IBoardsWebService boardsWebService)
+        private readonly IBoardsViewModelService _boardsViewModelService;
+        public ForumBreadcrumbViewComponent(IForumService forumService, IBoardsViewModelService boardsViewModelService)
         {
             this._forumService = forumService;
-            this._boardsWebService = boardsWebService;
+            this._boardsViewModelService = boardsViewModelService;
         }
 
         public IViewComponentResult Invoke(string forumGroupId, string forumId, string forumTopicId)
         {
-            var model = _boardsWebService.PrepareForumBreadcrumb(forumGroupId, forumId, forumTopicId);
+            var model = _boardsViewModelService.PrepareForumBreadcrumb(forumGroupId, forumId, forumTopicId);
             return View(model);
         }
     }

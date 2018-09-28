@@ -35,7 +35,7 @@ namespace Grand.Web.Controllers
         private readonly IProductService _productService;
         private readonly IProductReservationService _productReservationService;
         private readonly IShoppingCartService _shoppingCartService;
-        private readonly IShoppingCartWebService _shoppingCartWebService;
+        private readonly IShoppingCartViewModelService _shoppingCartViewModelService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly ILocalizationService _localizationService;
@@ -59,7 +59,7 @@ namespace Grand.Web.Controllers
         public AddToCartController(IProductService productService,
             IProductReservationService productReservationService,
             IShoppingCartService shoppingCartService,
-            IShoppingCartWebService shoppingCartWebService,
+            IShoppingCartViewModelService shoppingCartViewModelService,
             IWorkContext workContext,
             IStoreContext storeContext,
             ILocalizationService localizationService,
@@ -79,7 +79,7 @@ namespace Grand.Web.Controllers
             this._productService = productService;
             this._productReservationService = productReservationService;
             this._shoppingCartService = shoppingCartService;
-            this._shoppingCartWebService = shoppingCartWebService;
+            this._shoppingCartViewModelService = shoppingCartViewModelService;
             this._workContext = workContext;
             this._storeContext = storeContext;
             this._localizationService = localizationService;
@@ -213,7 +213,7 @@ namespace Grand.Web.Controllers
                 });
             }
 
-            var addtoCartModel = _shoppingCartWebService.PrepareAddToCartModel(product, customer, quantity, 0, "", cartType, null, null, "", "", "");
+            var addtoCartModel = _shoppingCartViewModelService.PrepareAddToCartModel(product, customer, quantity, 0, "", cartType, null, null, "", "", "");
 
             //added to the cart/wishlist
             switch (cartType)
@@ -387,14 +387,14 @@ namespace Grand.Web.Controllers
             #endregion
 
             //product and gift card attributes
-            string attributes = _shoppingCartWebService.ParseProductAttributes(product, form);
+            string attributes = _shoppingCartViewModelService.ParseProductAttributes(product, form);
 
             //rental attributes
             DateTime? rentalStartDate = null;
             DateTime? rentalEndDate = null;
             if (product.ProductType == ProductType.Reservation)
             {
-                _shoppingCartWebService.ParseReservationDates(product, form, out rentalStartDate, out rentalEndDate);
+                _shoppingCartViewModelService.ParseReservationDates(product, form, out rentalStartDate, out rentalEndDate);
             }
 
             //product reservation
@@ -528,7 +528,7 @@ namespace Grand.Web.Controllers
                 });
             }
 
-            var addtoCartModel = _shoppingCartWebService.PrepareAddToCartModel(product, _workContext.CurrentCustomer, quantity, customerEnteredPriceConverted, attributes, cartType, rentalStartDate, rentalEndDate, reservationId, parameter, duration);
+            var addtoCartModel = _shoppingCartViewModelService.PrepareAddToCartModel(product, _workContext.CurrentCustomer, quantity, customerEnteredPriceConverted, attributes, cartType, rentalStartDate, rentalEndDate, reservationId, parameter, duration);
 
             //added to the cart/wishlist
             switch (cartType)
@@ -676,7 +676,7 @@ namespace Grand.Web.Controllers
             //activity log
             _customerActivityService.InsertActivity("PublicStore.AddNewBid", product.Id, _localizationService.GetResource("ActivityLog.PublicStore.AddToBid"), product.Name);
 
-            var addtoCartModel = _shoppingCartWebService.PrepareAddToCartModel(product, customer, 1, 0, "", ShoppingCartType.Auctions, null, null, "", "", "");
+            var addtoCartModel = _shoppingCartViewModelService.PrepareAddToCartModel(product, customer, 1, 0, "", ShoppingCartType.Auctions, null, null, "", "", "");
 
             return Json(new
             {

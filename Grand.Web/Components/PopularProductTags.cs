@@ -7,16 +7,16 @@ namespace Grand.Web.ViewComponents
 {
     public class PopularProductTagsViewComponent : BaseViewComponent
     {
-        private readonly ICatalogWebService _catalogWebService;
+        private readonly ICatalogViewModelService _catalogViewModelService;
 
-        public PopularProductTagsViewComponent(ICatalogWebService catalogWebService)
+        public PopularProductTagsViewComponent(ICatalogViewModelService catalogViewModelService)
         {
-            this._catalogWebService = catalogWebService;
+            this._catalogViewModelService = catalogViewModelService;
         }
 
         public IViewComponentResult Invoke(string currentCategoryId, string currentProductId)
         {
-            var model = _catalogWebService.PreparePopularProductTags();
+            var model = _catalogViewModelService.PreparePopularProductTags();
             if (!model.Tags.Any())
                 return Content("");
 

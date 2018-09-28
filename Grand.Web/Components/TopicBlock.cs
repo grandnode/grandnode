@@ -7,16 +7,16 @@ namespace Grand.Web.Components
     public class TopicBlockViewComponent : BaseViewComponent
     {
         #region Fields
-        private readonly ITopicWebService _topicWebService;
+        private readonly ITopicViewModelService _topicViewModelService;
         #endregion
 
         #region Constructors
 
         public TopicBlockViewComponent(
-            ITopicWebService topicWebService
+            ITopicViewModelService topicViewModelService
 )
         {
-            this._topicWebService = topicWebService;
+            this._topicViewModelService = topicViewModelService;
         }
 
         #endregion
@@ -25,7 +25,7 @@ namespace Grand.Web.Components
 
         public IViewComponentResult Invoke(string systemName)
         {
-            var model = _topicWebService.TopicBlock(systemName);
+            var model = _topicViewModelService.TopicBlock(systemName);
             if (model == null)
                 return Content("");
             return View(model);

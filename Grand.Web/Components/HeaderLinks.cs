@@ -12,17 +12,17 @@ namespace Grand.Web.ViewComponents
 {
     public class HeaderLinksViewComponent : BaseViewComponent
     {
-        private readonly ICommonWebService _commonWebService;
+        private readonly ICommonViewModelService _commonViewModelService;
         private readonly IWorkContext _workContext;
         private readonly ILocalizationService _localizationService;
         private readonly IStoreContext _storeContext;
         private readonly ForumSettings _forumSettings;
 
-        public HeaderLinksViewComponent(ICommonWebService commonWebService, IWorkContext workContext,
+        public HeaderLinksViewComponent(ICommonViewModelService commonViewModelService, IWorkContext workContext,
             ILocalizationService localizationService, ForumSettings forumSettings,
             IStoreContext storeContext)
         {
-            this._commonWebService = commonWebService;
+            this._commonViewModelService = commonViewModelService;
             this._workContext = workContext;
             this._localizationService = localizationService;
             this._forumSettings = forumSettings;
@@ -32,10 +32,10 @@ namespace Grand.Web.ViewComponents
         public IViewComponentResult Invoke()
         {
             var customer = _workContext.CurrentCustomer;
-            var model = _commonWebService.PrepareHeaderLinks(customer);
+            var model = _commonViewModelService.PrepareHeaderLinks(customer);
             if (_forumSettings.AllowPrivateMessages)
             {
-                var unreadMessageCount = _commonWebService.GetUnreadPrivateMessages();
+                var unreadMessageCount = _commonViewModelService.GetUnreadPrivateMessages();
                 var unreadMessage = string.Empty;
                 var alertMessage = string.Empty;
                 if (unreadMessageCount > 0)

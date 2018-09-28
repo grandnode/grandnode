@@ -16,61 +16,61 @@ namespace Grand.Web.Infrastructure
             builder.RegisterType<InstallationLocalizationService>().As<IInstallationLocalizationService>().InstancePerLifetimeScope();
 
             //blog service
-            builder.RegisterType<BlogWebService>().As<IBlogWebService>().InstancePerLifetimeScope();
+            builder.RegisterType<BlogViewModelService>().As<IBlogViewModelService>().InstancePerLifetimeScope();
 
             //address service
-            builder.RegisterType<AddressWebService>().As<IAddressWebService>().InstancePerLifetimeScope();
+            builder.RegisterType<AddressViewModelService>().As<IAddressViewModelService>().InstancePerLifetimeScope();
 
             //catalog service
-            builder.RegisterType<CatalogWebService>().As<ICatalogWebService>().InstancePerLifetimeScope();
+            builder.RegisterType<CatalogViewModelService>().As<ICatalogViewModelService>().InstancePerLifetimeScope();
 
             //product service
-            builder.RegisterType<ProductWebService>().As<IProductWebService>().InstancePerLifetimeScope();
+            builder.RegisterType<ProductViewModelService>().As<IProductViewModelService>().InstancePerLifetimeScope();
 
             //news service
-            builder.RegisterType<NewsWebService>().As<INewsWebService>().InstancePerLifetimeScope();
+            builder.RegisterType<NewsViewModelService>().As<INewsViewModelService>().InstancePerLifetimeScope();
 
             //topic service
-            builder.RegisterType<TopicWebService>().As<ITopicWebService>().InstancePerLifetimeScope();
+            builder.RegisterType<TopicViewModelService>().As<ITopicViewModelService>().InstancePerLifetimeScope();
 
             //customer service
-            builder.RegisterType<CustomerWebService>().As<ICustomerWebService>().InstancePerLifetimeScope();
+            builder.RegisterType<CustomerViewModelService>().As<ICustomerViewModelService>().InstancePerLifetimeScope();
 
             //common service
-            builder.RegisterType<CommonWebService>().As<ICommonWebService>().InstancePerLifetimeScope();
+            builder.RegisterType<CommonViewModelService>().As<ICommonViewModelService>().InstancePerLifetimeScope();
 
             //shipping service 
-            builder.RegisterType<ShoppingCartWebService>().As<IShoppingCartWebService>().InstancePerLifetimeScope();
+            builder.RegisterType<ShoppingCartViewModelService>().As<IShoppingCartViewModelService>().InstancePerLifetimeScope();
 
             //externalAuth service
-            builder.RegisterType<ExternalAuthenticationWebService>().As<IExternalAuthenticationWebService>().InstancePerLifetimeScope();
+            builder.RegisterType<ExternalAuthenticationViewModelService>().As<IExternalAuthenticationViewModelService>().InstancePerLifetimeScope();
 
             //widgetZone servie
-            builder.RegisterType<WidgetWebService>().As<IWidgetWebService>().InstancePerLifetimeScope();
+            builder.RegisterType<WidgetViewModelService>().As<IWidgetViewModelService>().InstancePerLifetimeScope();
 
             //order service
-            builder.RegisterType<OrderWebService>().As<IOrderWebService>().InstancePerLifetimeScope();
+            builder.RegisterType<OrderViewModelService>().As<IOrderViewModelService>().InstancePerLifetimeScope();
 
             //country service
-            builder.RegisterType<CountryWebService>().As<ICountryWebService>().InstancePerLifetimeScope();
+            builder.RegisterType<CountryViewModelService>().As<ICountryViewModelService>().InstancePerLifetimeScope();
 
             //checkout service
-            builder.RegisterType<CheckoutWebService>().As<ICheckoutWebService>().InstancePerLifetimeScope();
+            builder.RegisterType<CheckoutViewModelService>().As<ICheckoutViewModelService>().InstancePerLifetimeScope();
 
             //poll service
-            builder.RegisterType<PollWebService>().As<IPollWebService>().InstancePerLifetimeScope();
+            builder.RegisterType<PollViewModelService>().As<IPollViewModelService>().InstancePerLifetimeScope();
 
             //poll service
-            builder.RegisterType<BoardsWebService>().As<IBoardsWebService>().InstancePerLifetimeScope();
+            builder.RegisterType<BoardsViewModelService>().As<IBoardsViewModelService>().InstancePerLifetimeScope();
 
             //ReturnRequest service
-            builder.RegisterType<ReturnRequestWebService>().As<IReturnRequestWebService>().InstancePerLifetimeScope();
+            builder.RegisterType<ReturnRequestViewModelService>().As<IReturnRequestViewModelService>().InstancePerLifetimeScope();
 
             //Newsletter service
-            builder.RegisterType<NewsletterWebService>().As<INewsletterWebService>().InstancePerLifetimeScope();
+            builder.RegisterType<NewsletterViewModelService>().As<INewsletterViewModelService>().InstancePerLifetimeScope();
 
             //vendor service
-            builder.RegisterType<VendorWebService>().As<IVendorWebService>().InstancePerLifetimeScope();
+            builder.RegisterType<VendorViewModelService>().As<IVendorViewModelService>().InstancePerLifetimeScope();
             //base shipping controller
             //builder.RegisterType<BaseShippingController>();
         }

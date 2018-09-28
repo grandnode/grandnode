@@ -40,7 +40,7 @@ namespace Grand.Web.Controllers
         private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly IPermissionService _permissionService;
         private readonly IDownloadService _downloadService;
-        private readonly IShoppingCartWebService _shoppingCartWebService;
+        private readonly IShoppingCartViewModelService _shoppingCartViewModelService;
         private readonly ShoppingCartSettings _shoppingCartSettings;
 
         #endregion
@@ -58,7 +58,7 @@ namespace Grand.Web.Controllers
             ICheckoutAttributeService checkoutAttributeService, 
             IPermissionService permissionService, 
             IDownloadService downloadService,
-            IShoppingCartWebService shoppingCartWebService,
+            IShoppingCartViewModelService shoppingCartViewModelService,
             ShoppingCartSettings shoppingCartSettings)
         {
             this._workContext = workContext;
@@ -71,7 +71,7 @@ namespace Grand.Web.Controllers
             this._checkoutAttributeService = checkoutAttributeService;
             this._permissionService = permissionService;
             this._downloadService = downloadService;
-            this._shoppingCartWebService = shoppingCartWebService;
+            this._shoppingCartViewModelService = shoppingCartViewModelService;
             this._shoppingCartSettings = shoppingCartSettings;
         }
 
@@ -89,7 +89,7 @@ namespace Grand.Web.Controllers
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
-            _shoppingCartWebService.ParseAndSaveCheckoutAttributes(cart, form);
+            _shoppingCartViewModelService.ParseAndSaveCheckoutAttributes(cart, form);
             var attributeXml = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes,
                 _storeContext.CurrentStore.Id);
 
@@ -208,7 +208,7 @@ namespace Grand.Web.Controllers
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var model = new ShoppingCartModel();
-            _shoppingCartWebService.PrepareShoppingCart(model, cart);
+            _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
             return View(model);
         }
 
@@ -251,7 +251,7 @@ namespace Grand.Web.Controllers
                 }
             }
             //parse and save checkout attributes
-            _shoppingCartWebService.ParseAndSaveCheckoutAttributes(cart, form);
+            _shoppingCartViewModelService.ParseAndSaveCheckoutAttributes(cart, form);
 
             //updated cart
             _workContext.CurrentCustomer = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id);
@@ -260,7 +260,7 @@ namespace Grand.Web.Controllers
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var model = new ShoppingCartModel();
-            _shoppingCartWebService.PrepareShoppingCart(model, cart);
+            _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
             //update current warnings
             foreach (var kvp in innerWarnings)
             {
@@ -294,7 +294,7 @@ namespace Grand.Web.Controllers
                 _shoppingCartService.DeleteShoppingCartItem(_workContext.CurrentCustomer.Id, sci, ensureOnlyActiveCheckoutAttributes: true);
             }
             //parse and save checkout attributes
-            _shoppingCartWebService.ParseAndSaveCheckoutAttributes(cart, form);
+            _shoppingCartViewModelService.ParseAndSaveCheckoutAttributes(cart, form);
 
             return RedirectToRoute("HomePage");
 
@@ -324,7 +324,7 @@ namespace Grand.Web.Controllers
                 .ToList();
 
             //parse and save checkout attributes
-            _shoppingCartWebService.ParseAndSaveCheckoutAttributes(cart, form);
+            _shoppingCartViewModelService.ParseAndSaveCheckoutAttributes(cart, form);
 
             //validate attributes
             var checkoutAttributes = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);
@@ -333,7 +333,7 @@ namespace Grand.Web.Controllers
             {
                 //something wrong, redisplay the page with warnings
                 var model = new ShoppingCartModel();
-                _shoppingCartWebService.PrepareShoppingCart(model, cart, validateCheckoutAttributes: true);
+                _shoppingCartViewModelService.PrepareShoppingCart(model, cart, validateCheckoutAttributes: true);
                 return View(model);
             }
 
@@ -359,7 +359,7 @@ namespace Grand.Web.Controllers
                 .ToList();
 
             //parse and save checkout attributes
-            _shoppingCartWebService.ParseAndSaveCheckoutAttributes(cart, form);
+            _shoppingCartViewModelService.ParseAndSaveCheckoutAttributes(cart, form);
             
             var model = new ShoppingCartModel();
             if (!String.IsNullOrWhiteSpace(discountcouponcode))
@@ -431,7 +431,7 @@ namespace Grand.Web.Controllers
                 model.DiscountBox.IsApplied = false;
             }
 
-            _shoppingCartWebService.PrepareShoppingCart(model, cart);
+            _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
             return View(model);
         }
 
@@ -449,7 +449,7 @@ namespace Grand.Web.Controllers
                 .ToList();
 
             //parse and save checkout attributes
-            _shoppingCartWebService.ParseAndSaveCheckoutAttributes(cart, form);
+            _shoppingCartViewModelService.ParseAndSaveCheckoutAttributes(cart, form);
             
             var model = new ShoppingCartModel();
             if (!cart.IsRecurring())
@@ -482,7 +482,7 @@ namespace Grand.Web.Controllers
                 model.GiftCardBox.IsApplied = false;
             }
 
-            _shoppingCartWebService.PrepareShoppingCart(model, cart);
+            _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
             return View(model);
         }
 
@@ -496,8 +496,8 @@ namespace Grand.Web.Controllers
                 .ToList();
 
             //parse and save checkout attributes
-            _shoppingCartWebService.ParseAndSaveCheckoutAttributes(cart, form);
-            var model = _shoppingCartWebService.PrepareEstimateShippingResult(cart, countryId, stateProvinceId, zipPostalCode);
+            _shoppingCartViewModelService.ParseAndSaveCheckoutAttributes(cart, form);
+            var model = _shoppingCartViewModelService.PrepareEstimateShippingResult(cart, countryId, stateProvinceId, zipPostalCode);
 
             return PartialView("_EstimateShippingResult", model);
         }
@@ -529,7 +529,7 @@ namespace Grand.Web.Controllers
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
-            _shoppingCartWebService.PrepareShoppingCart(model, cart);
+            _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
             return View(model);
         }
 
@@ -554,7 +554,7 @@ namespace Grand.Web.Controllers
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
-            _shoppingCartWebService.PrepareShoppingCart(model, cart);
+            _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
             return View(model);
         }
         #endregion
@@ -576,7 +576,7 @@ namespace Grand.Web.Controllers
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var model = new WishlistModel();
-            _shoppingCartWebService.PrepareWishlist(model, cart, !customerGuid.HasValue);
+            _shoppingCartViewModelService.PrepareWishlist(model, cart, !customerGuid.HasValue);
             return View(model);
         }
 
@@ -633,7 +633,7 @@ namespace Grand.Web.Controllers
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var model = new WishlistModel();
-            _shoppingCartWebService.PrepareWishlist(model, cart);
+            _shoppingCartViewModelService.PrepareWishlist(model, cart);
             //update current warnings
             foreach (var kvp in innerWarnings)
             {
@@ -724,7 +724,7 @@ namespace Grand.Web.Controllers
                     .LimitPerStore(_storeContext.CurrentStore.Id)
                     .ToList();
                 var model = new WishlistModel();
-                _shoppingCartWebService.PrepareWishlist(model, cart, !customerGuid.HasValue);
+                _shoppingCartViewModelService.PrepareWishlist(model, cart, !customerGuid.HasValue);
                 return View(model);
             }
         }

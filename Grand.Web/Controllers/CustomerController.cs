@@ -41,7 +41,7 @@ namespace Grand.Web.Controllers
     {
         #region Fields
 
-        private readonly ICustomerWebService _customerWebService;
+        private readonly ICustomerViewModelService _customerViewModelService;
         private readonly IGrandAuthenticationService _authenticationService;
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
@@ -54,7 +54,7 @@ namespace Grand.Web.Controllers
         private readonly ICountryService _countryService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly ICustomerActivityService _customerActivityService;
-        private readonly IAddressWebService _addressWebService;
+        private readonly IAddressViewModelService _addressViewModelService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly CustomerSettings _customerSettings;
@@ -68,7 +68,7 @@ namespace Grand.Web.Controllers
         #region Ctor
 
         public CustomerController(
-            ICustomerWebService customerWebService,
+            ICustomerViewModelService customerViewModelService,
             IGrandAuthenticationService authenticationService,
             ILocalizationService localizationService,
             IWorkContext workContext,
@@ -81,7 +81,7 @@ namespace Grand.Web.Controllers
             ICountryService countryService,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             ICustomerActivityService customerActivityService,
-            IAddressWebService addressWebService,
+            IAddressViewModelService addressViewModelService,
             IEventPublisher eventPublisher,
             IWorkflowMessageService workflowMessageService,
             CaptchaSettings captchaSettings,
@@ -91,7 +91,7 @@ namespace Grand.Web.Controllers
             TaxSettings taxSettings
             )
         {
-            this._customerWebService = customerWebService;
+            this._customerViewModelService = customerViewModelService;
             this._authenticationService = authenticationService;
             this._dateTimeSettings = dateTimeSettings;
             this._taxSettings = taxSettings;
@@ -107,7 +107,7 @@ namespace Grand.Web.Controllers
             this._countryService = countryService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
             this._customerActivityService = customerActivityService;
-            this._addressWebService = addressWebService;
+            this._addressViewModelService = addressViewModelService;
             this._workflowMessageService = workflowMessageService;
             this._localizationSettings = localizationSettings;
             this._captchaSettings = captchaSettings;
@@ -137,7 +137,7 @@ namespace Grand.Web.Controllers
         [CheckAccessPublicStore(true)]
         public virtual IActionResult Login(bool? checkoutAsGuest)
         {
-            var model = _customerWebService.PrepareLogin(checkoutAsGuest);
+            var model = _customerViewModelService.PrepareLogin(checkoutAsGuest);
             return View(model);
         }
 
@@ -260,7 +260,7 @@ namespace Grand.Web.Controllers
         [CheckAccessPublicStore(true)]
         public virtual IActionResult PasswordRecovery()
         {
-            var model = _customerWebService.PreparePasswordRecovery();
+            var model = _customerViewModelService.PreparePasswordRecovery();
             return View(model);
         }
 
@@ -276,7 +276,7 @@ namespace Grand.Web.Controllers
                 var customer = _customerService.GetCustomerByEmail(model.Email);
                 if (customer != null && customer.Active && !customer.Deleted)
                 {
-                    _customerWebService.PasswordRecoverySend(model, customer);
+                    _customerViewModelService.PasswordRecoverySend(model, customer);
                     model.Result = _localizationService.GetResource("Account.PasswordRecovery.EmailHasBeenSent");
                 }
                 else
@@ -299,7 +299,7 @@ namespace Grand.Web.Controllers
             if (customer == null)
                 return RedirectToRoute("HomePage");
 
-            var model = _customerWebService.PreparePasswordRecoveryConfirmModel(customer, token);
+            var model = _customerViewModelService.PreparePasswordRecoveryConfirmModel(customer, token);
 
             return View(model);
         }
@@ -366,7 +366,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled });
 
             var model = new RegisterModel();
-            model = _customerWebService.PrepareRegisterModel(model, false);
+            model = _customerViewModelService.PrepareRegisterModel(model, false);
             //enable newsletter by default
             model.Newsletter = _customerSettings.NewsletterTickedByDefault;
 
@@ -396,7 +396,7 @@ namespace Grand.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             //custom customer attributes
-            var customerAttributesXml = _customerWebService.ParseCustomAttributes(form);
+            var customerAttributesXml = _customerViewModelService.ParseCustomAttributes(form);
             var customerAttributeWarnings = _customerAttributeParser.GetAttributeWarnings(customerAttributesXml);
             foreach (var error in customerAttributeWarnings)
             {
@@ -617,7 +617,7 @@ namespace Grand.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model = _customerWebService.PrepareRegisterModel(model, true, customerAttributesXml);
+            model = _customerViewModelService.PrepareRegisterModel(model, true, customerAttributesXml);
             return View(model);
         }
         //available even when navigation is not allowed
@@ -720,7 +720,7 @@ namespace Grand.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             var model = new CustomerInfoModel();
-            model = _customerWebService.PrepareInfoModel(model, customer, false);
+            model = _customerViewModelService.PrepareInfoModel(model, customer, false);
 
             return View(model);
         }
@@ -735,7 +735,7 @@ namespace Grand.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             //custom customer attributes
-            var customerAttributesXml = _customerWebService.ParseCustomAttributes(form);
+            var customerAttributesXml = _customerViewModelService.ParseCustomAttributes(form);
             var customerAttributeWarnings = _customerAttributeParser.GetAttributeWarnings(customerAttributesXml);
             foreach (var error in customerAttributeWarnings)
             {
@@ -898,7 +898,7 @@ namespace Grand.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model = _customerWebService.PrepareInfoModel(model, customer, true, customerAttributesXml);
+            model = _customerViewModelService.PrepareInfoModel(model, customer, true, customerAttributesXml);
             return View(model);
         }
 
@@ -955,7 +955,7 @@ namespace Grand.Web.Controllers
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
 
-            var model = _customerWebService.PrepareAddressList(_workContext.CurrentCustomer);
+            var model = _customerViewModelService.PrepareAddressList(_workContext.CurrentCustomer);
             return View(model);
         }
 
@@ -990,7 +990,7 @@ namespace Grand.Web.Controllers
                 return Challenge();
 
             var model = new CustomerAddressEditModel();
-            _addressWebService.PrepareModel(model: model.Address,
+            _addressViewModelService.PrepareModel(model: model.Address,
                 address: null,
                 excludeProperties: false,
                 loadCountries: () => _countryService.GetAllCountries(_workContext.WorkingLanguage.Id));
@@ -1008,8 +1008,8 @@ namespace Grand.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             //custom address attributes
-            var customAttributes = _addressWebService.ParseCustomAddressAttributes(form);
-            var customAttributeWarnings = _addressWebService.GetAttributeWarnings(customAttributes);
+            var customAttributes = _addressViewModelService.ParseCustomAddressAttributes(form);
+            var customAttributeWarnings = _addressViewModelService.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
                 ModelState.AddModelError("", error);
@@ -1029,7 +1029,7 @@ namespace Grand.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            _addressWebService.PrepareModel(model: model.Address,
+            _addressViewModelService.PrepareModel(model: model.Address,
                 address: null,
                 excludeProperties: true,
                 loadCountries: () => _countryService.GetAllCountries(_workContext.WorkingLanguage.Id));
@@ -1050,7 +1050,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("CustomerAddresses");
 
             var model = new CustomerAddressEditModel();
-            _addressWebService.PrepareModel(model: model.Address, 
+            _addressViewModelService.PrepareModel(model: model.Address, 
                 address: address,
                 excludeProperties: false,
                 loadCountries: () => _countryService.GetAllCountries(_workContext.WorkingLanguage.Id));
@@ -1073,8 +1073,8 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("CustomerAddresses");
 
             //custom address attributes
-            var customAttributes = _addressWebService.ParseCustomAddressAttributes(form);
-            var customAttributeWarnings = _addressWebService.GetAttributeWarnings(customAttributes);
+            var customAttributes = _addressViewModelService.ParseCustomAddressAttributes(form);
+            var customAttributeWarnings = _addressViewModelService.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
                 ModelState.AddModelError("", error);
@@ -1096,7 +1096,7 @@ namespace Grand.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            _addressWebService.PrepareModel(model: model.Address,
+            _addressViewModelService.PrepareModel(model: model.Address,
                 address: address,
                 excludeProperties: true,
                 loadCountries: () => _countryService.GetAllCountries(_workContext.WorkingLanguage.Id));
@@ -1115,13 +1115,13 @@ namespace Grand.Web.Controllers
             if (_customerSettings.HideDownloadableProductsTab)
                 return RedirectToRoute("CustomerInfo");
 
-            var model = _customerWebService.PrepareDownloadableProducts(_workContext.CurrentCustomer.Id);
+            var model = _customerViewModelService.PrepareDownloadableProducts(_workContext.CurrentCustomer.Id);
             return View(model);
         }
 
         public virtual IActionResult UserAgreement(Guid orderItemId)
         {
-            var model = _customerWebService.PrepareUserAgreement(orderItemId);
+            var model = _customerViewModelService.PrepareUserAgreement(orderItemId);
             if(model == null)
                 return RedirectToRoute("HomePage");
 
@@ -1217,7 +1217,7 @@ namespace Grand.Web.Controllers
                             _customerActivityService.InsertActivity("PublicStore.DeleteAccount", "", _localizationService.GetResource("ActivityLog.DeleteAccount"));
 
                             //delete account 
-                            _customerWebService.DeleteAccount(customer);
+                            _customerViewModelService.DeleteAccount(customer);
 
                             //standard logout 
                             _authenticationService.SignOut();
@@ -1262,7 +1262,7 @@ namespace Grand.Web.Controllers
             if (!_customerSettings.AllowCustomersToUploadAvatars)
                 return RedirectToRoute("CustomerInfo");
 
-            var model = _customerWebService.PrepareAvatar(_workContext.CurrentCustomer);
+            var model = _customerViewModelService.PrepareAvatar(_workContext.CurrentCustomer);
 
             return View(model);
         }
@@ -1362,7 +1362,7 @@ namespace Grand.Web.Controllers
             if (_customerSettings.HideAuctionsTab)
                 return RedirectToRoute("CustomerInfo");
 
-            var model = _customerWebService.PrepareAuctions(_workContext.CurrentCustomer);
+            var model = _customerViewModelService.PrepareAuctions(_workContext.CurrentCustomer);
 
             return View(model);
         }
@@ -1379,7 +1379,7 @@ namespace Grand.Web.Controllers
             if (_customerSettings.HideNotesTab)
                 return RedirectToRoute("CustomerInfo");
 
-            var model = _customerWebService.PrepareNotes(_workContext.CurrentCustomer);
+            var model = _customerViewModelService.PrepareNotes(_workContext.CurrentCustomer);
 
             return View(model);
         }

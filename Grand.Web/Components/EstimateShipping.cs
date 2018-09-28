@@ -10,12 +10,12 @@ namespace Grand.Web.ViewComponents
 {
     public class EstimateShippingViewComponent : BaseViewComponent
     {
-        private readonly IShoppingCartWebService _shoppingCartWebService;
+        private readonly IShoppingCartViewModelService _shoppingCartViewModelService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
-        public EstimateShippingViewComponent(IShoppingCartWebService shoppingCartWebService, IWorkContext workContext, IStoreContext storeContext)
+        public EstimateShippingViewComponent(IShoppingCartViewModelService shoppingCartViewModelService, IWorkContext workContext, IStoreContext storeContext)
         {
-            this._shoppingCartWebService = shoppingCartWebService;
+            this._shoppingCartViewModelService = shoppingCartViewModelService;
             this._workContext = workContext;
             this._storeContext = storeContext;
         }
@@ -27,7 +27,7 @@ namespace Grand.Web.ViewComponents
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
-            var model = _shoppingCartWebService.PrepareEstimateShipping(cart);
+            var model = _shoppingCartViewModelService.PrepareEstimateShipping(cart);
             if (!model.Enabled)
                 return Content("");
 

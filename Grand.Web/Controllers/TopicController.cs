@@ -10,7 +10,7 @@ namespace Grand.Web.Controllers
     public partial class TopicController : BasePublicController
     {
         #region Fields
-        private readonly ITopicWebService _topicWebService;
+        private readonly ITopicViewModelService _topicViewModelService;
         private readonly ITopicService _topicService;
         private readonly ILocalizationService _localizationService;
         private readonly IStoreMappingService _storeMappingService;
@@ -22,14 +22,14 @@ namespace Grand.Web.Controllers
         #region Constructors
 
         public TopicController(ITopicService topicService,
-            ITopicWebService topicWebService,
+            ITopicViewModelService topicViewModelService,
             ILocalizationService localizationService,
             IStoreMappingService storeMappingService,
             IAclService aclService,
             IPermissionService permissionService)
         {
             this._topicService = topicService;
-            this._topicWebService = topicWebService;
+            this._topicViewModelService = topicViewModelService;
             this._localizationService = localizationService;
             this._storeMappingService = storeMappingService;
             this._aclService = aclService;
@@ -42,12 +42,12 @@ namespace Grand.Web.Controllers
 
         public virtual IActionResult TopicDetails(string topicId)
         {
-            var model = _topicWebService.TopicDetails(topicId);
+            var model = _topicViewModelService.TopicDetails(topicId);
             if (model == null)
                 return RedirectToRoute("HomePage");
 
             //template
-            var templateViewPath = _topicWebService.PrepareTopicTemplateViewPath(model.TopicTemplateId);
+            var templateViewPath = _topicViewModelService.PrepareTopicTemplateViewPath(model.TopicTemplateId);
 
             //display "edit" (manage) link
             if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageTopics))
@@ -58,12 +58,12 @@ namespace Grand.Web.Controllers
 
         public virtual IActionResult TopicDetailsPopup(string systemName)
         {
-            var model = _topicWebService.TopicDetailsPopup(systemName);
+            var model = _topicViewModelService.TopicDetailsPopup(systemName);
             if (model == null)
                 return RedirectToRoute("HomePage");
 
             //template
-            var templateViewPath = _topicWebService.PrepareTopicTemplateViewPath(model.TopicTemplateId);
+            var templateViewPath = _topicViewModelService.PrepareTopicTemplateViewPath(model.TopicTemplateId);
 
             ViewBag.IsPopup = true;
             return View(templateViewPath, model);

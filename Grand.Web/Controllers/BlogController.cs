@@ -24,7 +24,7 @@ namespace Grand.Web.Controllers
     {
         #region Fields
 
-        private readonly IBlogWebService _blogWebService;
+        private readonly IBlogViewModelService _blogViewModelService;
         private readonly IBlogService _blogService;
         private readonly IStoreContext _storeContext;
         private readonly ILocalizationService _localizationService;
@@ -36,7 +36,7 @@ namespace Grand.Web.Controllers
 
         #region Constructors
 
-        public BlogController(IBlogWebService blogWebService,
+        public BlogController(IBlogViewModelService blogViewModelService,
             IBlogService blogService, 
             IStoreContext storeContext,
             ILocalizationService localizationService,
@@ -44,7 +44,7 @@ namespace Grand.Web.Controllers
             BlogSettings blogSettings,
             CaptchaSettings captchaSettings)
         {
-            this._blogWebService = blogWebService;
+            this._blogViewModelService = blogViewModelService;
             this._blogService = blogService;
             this._storeContext = storeContext;
             this._localizationService = localizationService;
@@ -62,7 +62,7 @@ namespace Grand.Web.Controllers
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("HomePage");
             
-            var model = _blogWebService.PrepareBlogPostListModel(command);
+            var model = _blogViewModelService.PrepareBlogPostListModel(command);
             return View("List", model);
         }
         public virtual IActionResult BlogByTag(BlogPagingFilteringModel command)
@@ -70,7 +70,7 @@ namespace Grand.Web.Controllers
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("HomePage");
 
-            var model = _blogWebService.PrepareBlogPostListModel(command);
+            var model = _blogViewModelService.PrepareBlogPostListModel(command);
             return View("List", model);
         }
         public virtual IActionResult BlogByMonth(BlogPagingFilteringModel command)
@@ -78,7 +78,7 @@ namespace Grand.Web.Controllers
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("HomePage");
 
-            var model = _blogWebService.PrepareBlogPostListModel(command);
+            var model = _blogViewModelService.PrepareBlogPostListModel(command);
             return View("List", model);
         }
 
@@ -122,7 +122,7 @@ namespace Grand.Web.Controllers
                 return InvokeHttp404();
             
             var model = new BlogPostModel();
-            _blogWebService.PrepareBlogPostModel(model, blogPost, true);
+            _blogViewModelService.PrepareBlogPostModel(model, blogPost, true);
 
             //display "edit" (manage) link
             if (permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && permissionService.Authorize(StandardPermissionProvider.ManageBlog))
@@ -159,7 +159,7 @@ namespace Grand.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                _blogWebService.InsertBlogComment(model, blogPost);
+                _blogViewModelService.InsertBlogComment(model, blogPost);
                 //The text boxes should be cleared after a comment has been posted
                 //That' why we reload the page
                 TempData["Grand.blog.addcomment.result"] = _localizationService.GetResource("Blog.Comments.SuccessfullyAdded");
@@ -167,7 +167,7 @@ namespace Grand.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            _blogWebService.PrepareBlogPostModel(model, blogPost, true);
+            _blogViewModelService.PrepareBlogPostModel(model, blogPost, true);
             return View(model);
         }
         #endregion

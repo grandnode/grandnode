@@ -6,16 +6,16 @@ namespace Grand.Web.ViewComponents
 {
     public class CategoryNavigationViewComponent : BaseViewComponent
     {
-        private readonly ICatalogWebService _catalogWebService;
+        private readonly ICatalogViewModelService _catalogViewModelService;
 
-        public CategoryNavigationViewComponent(ICatalogWebService catalogWebService)
+        public CategoryNavigationViewComponent(ICatalogViewModelService catalogViewModelService)
         {
-            this._catalogWebService = catalogWebService;
+            this._catalogViewModelService = catalogViewModelService;
         }
 
         public IViewComponentResult Invoke(string currentCategoryId, string currentProductId)
         {
-            var model = _catalogWebService.PrepareCategoryNavigation(currentCategoryId, currentProductId);
+            var model = _catalogViewModelService.PrepareCategoryNavigation(currentCategoryId, currentProductId);
             return View(model);
         }
     }

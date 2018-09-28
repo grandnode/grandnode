@@ -10,12 +10,12 @@ namespace Grand.Web.ViewComponents
 {
     public class OrderTotalsViewComponent : BaseViewComponent
     {
-        private readonly IShoppingCartWebService _shoppingCartWebService;
+        private readonly IShoppingCartViewModelService _shoppingCartViewModelService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
-        public OrderTotalsViewComponent(IShoppingCartWebService shoppingCartWebService, IWorkContext workContext, IStoreContext storeContext)
+        public OrderTotalsViewComponent(IShoppingCartViewModelService shoppingCartViewModelService, IWorkContext workContext, IStoreContext storeContext)
         {
-            this._shoppingCartWebService = shoppingCartWebService;
+            this._shoppingCartViewModelService = shoppingCartViewModelService;
             this._workContext = workContext;
             this._storeContext = storeContext;
         }
@@ -26,7 +26,7 @@ namespace Grand.Web.ViewComponents
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
-            var model = _shoppingCartWebService.PrepareOrderTotals(cart, isEditable);
+            var model = _shoppingCartViewModelService.PrepareOrderTotals(cart, isEditable);
             return View(model);
         }
     }

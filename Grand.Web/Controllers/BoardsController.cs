@@ -23,7 +23,7 @@ namespace Grand.Web.Controllers
     {
         #region Fields
 
-        private readonly IBoardsWebService _boardsWebService;
+        private readonly IBoardsViewModelService _boardsViewModelService;
         private readonly IForumService _forumService;
         private readonly ILocalizationService _localizationService;
         private readonly IWebHelper _webHelper;
@@ -35,7 +35,7 @@ namespace Grand.Web.Controllers
 
         #region Constructors
 
-        public BoardsController(IBoardsWebService boardsWebService,
+        public BoardsController(IBoardsViewModelService boardsViewModelService,
             IForumService forumService,
             ILocalizationService localizationService,
             IWebHelper webHelper,
@@ -43,7 +43,7 @@ namespace Grand.Web.Controllers
             IStoreContext storeContext,
             ForumSettings forumSettings)
         {
-            this._boardsWebService = boardsWebService;
+            this._boardsViewModelService = boardsViewModelService;
             this._forumService = forumService;
             this._localizationService = localizationService;
             this._webHelper = webHelper;
@@ -61,7 +61,7 @@ namespace Grand.Web.Controllers
             {
                 return RedirectToRoute("HomePage");
             }
-            var model = _boardsWebService.PrepareBoardsIndex();
+            var model = _boardsViewModelService.PrepareBoardsIndex();
             return View(model);
         }
 
@@ -72,7 +72,7 @@ namespace Grand.Web.Controllers
             {
                 return RedirectToRoute("HomePage");
             }
-            var model = _boardsWebService.PrepareActiveDiscussions(forumId, pageNumber);
+            var model = _boardsViewModelService.PrepareActiveDiscussions(forumId, pageNumber);
             return View(model);
         }
 
@@ -129,7 +129,7 @@ namespace Grand.Web.Controllers
             if (forumGroup == null)
                 return RedirectToRoute("Boards");
 
-            var model = _boardsWebService.PrepareForumGroup(forumGroup);
+            var model = _boardsViewModelService.PrepareForumGroup(forumGroup);
             return View(model);
         }
 
@@ -144,7 +144,7 @@ namespace Grand.Web.Controllers
 
             if (forum != null)
             {
-                var model = _boardsWebService.PrepareForumPage(forum, pageNumber);
+                var model = _boardsViewModelService.PrepareForumPage(forum, pageNumber);
                 return View(model);
             }
             return RedirectToRoute("Boards");
@@ -258,7 +258,7 @@ namespace Grand.Web.Controllers
 
             if (forumTopic != null)
             {
-                var model = _boardsWebService.PrepareForumTopicPage(forumTopic, pageNumber);
+                var model = _boardsViewModelService.PrepareForumTopicPage(forumTopic, pageNumber);
                 if (model == null && pageNumber > 1)
                 {
                     return RedirectToRoute("TopicSlug", new {id = forumTopic.Id, slug = forumTopic.GetSeName()});
@@ -329,7 +329,7 @@ namespace Grand.Web.Controllers
             {
                 return RedirectToRoute("Boards");
             }
-            var model = _boardsWebService.PrepareTopicMove(forumTopic);
+            var model = _boardsViewModelService.PrepareTopicMove(forumTopic);
             return View(model);
         }
 
@@ -413,7 +413,7 @@ namespace Grand.Web.Controllers
             {
                 return new ChallengeResult();
             }
-            var model = _boardsWebService.PrepareEditForumTopic(forum);
+            var model = _boardsViewModelService.PrepareEditForumTopic(forum);
             return View(model);
         }
 
@@ -530,7 +530,7 @@ namespace Grand.Web.Controllers
                 }
             }
             // redisplay form
-            model.TopicPriorities = _boardsWebService.ForumTopicTypesList();
+            model.TopicPriorities = _boardsViewModelService.ForumTopicTypesList();
             model.IsEdit = false;
             model.ForumId = forum.Id;
             model.ForumName = forum.Name;
@@ -568,7 +568,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("Boards");
             }
 
-            var model = _boardsWebService.PrepareEditForumTopic(forum);
+            var model = _boardsViewModelService.PrepareEditForumTopic(forum);
             var firstPost = forumTopic.GetFirstPost(_forumService);
             model.Text = firstPost.Text;
             model.Subject = forumTopic.Subject;
@@ -706,7 +706,7 @@ namespace Grand.Web.Controllers
             }
 
             // redisplay form
-            model.TopicPriorities = _boardsWebService.ForumTopicTypesList();
+            model.TopicPriorities = _boardsViewModelService.ForumTopicTypesList();
             model.IsEdit = true;
             model.ForumName = forum.Name;
             model.ForumSeName = forum.GetSeName();
@@ -791,7 +791,7 @@ namespace Grand.Web.Controllers
             {
                 return RedirectToRoute("Boards");
             }
-            var model = _boardsWebService.PrepareEditForumPost(forum, forumTopic, quote);
+            var model = _boardsViewModelService.PrepareEditForumPost(forum, forumTopic, quote);
             return View(model);
         }
 
@@ -1080,7 +1080,7 @@ namespace Grand.Web.Controllers
             {
                 return RedirectToRoute("HomePage");
             }
-            var model = _boardsWebService.PrepareSearch(searchterms, adv, forumId, within, limitDays, pageNumber);
+            var model = _boardsViewModelService.PrepareSearch(searchterms, adv, forumId, within, limitDays, pageNumber);
             return View(model);
         }
 
@@ -1097,7 +1097,7 @@ namespace Grand.Web.Controllers
             {
                 pageIndex = pageNumber.Value - 1;
             }
-            var model = _boardsWebService.PrepareCustomerForumSubscriptions(pageIndex);
+            var model = _boardsViewModelService.PrepareCustomerForumSubscriptions(pageIndex);
             return View(model);
         }
         [HttpPost, ActionName("CustomerForumSubscriptions")]

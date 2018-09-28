@@ -19,7 +19,7 @@ namespace Grand.Web.Components
         private readonly IWorkContext _workContext;
         private readonly IAclService _aclService;
         private readonly IStoreMappingService _storeMappingService;
-        private readonly IProductWebService _productWebService;
+        private readonly IProductViewModelService _productViewModelService;
         private readonly IRecentlyViewedProductsService _recentlyViewedProductsService;
         private readonly CatalogSettings _catalogSettings;
         #endregion
@@ -31,7 +31,7 @@ namespace Grand.Web.Components
             IWorkContext workContext,
             IAclService aclService,
             IStoreMappingService storeMappingService,
-            IProductWebService productWebService,
+            IProductViewModelService productViewModelService,
             IRecentlyViewedProductsService recentlyViewedProductsService,
             CatalogSettings catalogSettings
 )
@@ -42,7 +42,7 @@ namespace Grand.Web.Components
             this._catalogSettings = catalogSettings;
             this._recentlyViewedProductsService = recentlyViewedProductsService;
             this._storeMappingService = storeMappingService;
-            this._productWebService = productWebService;
+            this._productViewModelService = productViewModelService;
         }
 
         #endregion
@@ -67,7 +67,7 @@ namespace Grand.Web.Components
 
             //prepare model
             var model = new List<ProductOverviewModel>();
-            model.AddRange(_productWebService.PrepareProductOverviewModels(products,
+            model.AddRange(_productViewModelService.PrepareProductOverviewModels(products,
                 preparePriceModel.GetValueOrDefault(),
                 preparePictureModel,
                 productThumbPictureSize));

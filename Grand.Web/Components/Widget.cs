@@ -7,16 +7,16 @@ namespace Grand.Web.ViewComponents
 {
     public class WidgetViewComponent : BaseViewComponent
     {
-        private readonly IWidgetWebService _widgetWebService;
+        private readonly IWidgetViewModelService _widgetViewModelService;
 
-        public WidgetViewComponent(IWidgetWebService widgetWebService)
+        public WidgetViewComponent(IWidgetViewModelService widgetViewModelService)
         {
-            this._widgetWebService = widgetWebService;
+            this._widgetViewModelService = widgetViewModelService;
         }
 
         public IViewComponentResult Invoke(string widgetZone, object additionalData = null)
         {
-            var model = _widgetWebService.PrepareRenderWidget(widgetZone, additionalData);
+            var model = _widgetViewModelService.PrepareRenderWidget(widgetZone, additionalData);
 
             if (!model.Any())
                 return Content("");

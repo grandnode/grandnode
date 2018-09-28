@@ -8,12 +8,12 @@ namespace Grand.Web.ViewComponents
 {
     public class VendorNavigationViewComponent : BaseViewComponent
     {
-        private readonly ICatalogWebService _catalogWebService;
+        private readonly ICatalogViewModelService _catalogViewModelService;
         private readonly VendorSettings _vendorSettings;
-        public VendorNavigationViewComponent(ICatalogWebService catalogWebService,
+        public VendorNavigationViewComponent(ICatalogViewModelService catalogViewModelService,
             VendorSettings vendorSettings)
         {
-            this._catalogWebService = catalogWebService;
+            this._catalogViewModelService = catalogViewModelService;
             this._vendorSettings = vendorSettings;
         }
 
@@ -22,7 +22,7 @@ namespace Grand.Web.ViewComponents
             if (_vendorSettings.VendorsBlockItemsToDisplay == 0)
                 return Content("");
 
-            var model = _catalogWebService.PrepareVendorNavigation();
+            var model = _catalogViewModelService.PrepareVendorNavigation();
             if (!model.Vendors.Any())
                 return Content("");
 

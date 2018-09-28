@@ -7,12 +7,12 @@ namespace Grand.Web.ViewComponents
 {
     public class HomePageNewsViewComponent : BaseViewComponent
     {
-        private readonly INewsWebService _newsWebService;
+        private readonly INewsViewModelService _newsViewModelService;
         private readonly NewsSettings _newsSettings;
-        public HomePageNewsViewComponent(INewsWebService newsWebService,
+        public HomePageNewsViewComponent(INewsViewModelService newsViewModelService,
             NewsSettings newsSettings)
         {
-            this._newsWebService = newsWebService;
+            this._newsViewModelService = newsViewModelService;
             this._newsSettings = newsSettings;
         }
 
@@ -21,7 +21,7 @@ namespace Grand.Web.ViewComponents
             if (!_newsSettings.Enabled || !_newsSettings.ShowNewsOnMainPage)
                 return Content("");
 
-            var model = _newsWebService.PrepareHomePageNewsItems();
+            var model = _newsViewModelService.PrepareHomePageNewsItems();
             return View(model);
         }
     }

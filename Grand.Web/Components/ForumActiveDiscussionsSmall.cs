@@ -6,16 +6,16 @@ namespace Grand.Web.ViewComponents
 {
     public class ForumActiveDiscussionsSmallViewComponent : BaseViewComponent
     {
-        private readonly IBoardsWebService _boardsWebService;
+        private readonly IBoardsViewModelService _boardsViewModelService;
 
-        public ForumActiveDiscussionsSmallViewComponent(IBoardsWebService boardsWebService)
+        public ForumActiveDiscussionsSmallViewComponent(IBoardsViewModelService boardsViewModelService)
         {
-            this._boardsWebService = boardsWebService;
+            this._boardsViewModelService = boardsViewModelService;
         }
 
         public IViewComponentResult Invoke()
         {
-            var model = _boardsWebService.PrepareActiveDiscussions();
+            var model = _boardsViewModelService.PrepareActiveDiscussions();
             if (model == null)
                 return Content("");
 

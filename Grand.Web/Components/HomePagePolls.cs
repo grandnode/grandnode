@@ -7,16 +7,16 @@ namespace Grand.Web.ViewComponents
 {
     public class HomePagePollsViewComponent : BaseViewComponent
     {
-        private readonly IPollWebService _pollWebService;
+        private readonly IPollViewModelService _pollViewModelService;
 
-        public HomePagePollsViewComponent(IPollWebService pollWebService)
+        public HomePagePollsViewComponent(IPollViewModelService pollViewModelService)
         {
-            this._pollWebService = pollWebService;
+            this._pollViewModelService = pollViewModelService;
         }
 
         public IViewComponentResult Invoke()
         {
-            var model = _pollWebService.PrepareHomePagePoll();
+            var model = _pollViewModelService.PrepareHomePagePoll();
             if (!model.Any())
                 Content("");
             return View(model);

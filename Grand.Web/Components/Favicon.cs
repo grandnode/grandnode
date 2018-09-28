@@ -7,16 +7,16 @@ namespace Grand.Web.ViewComponents
 {
     public class FaviconViewComponent : BaseViewComponent
     {
-        private readonly ICommonWebService _commonWebService;
+        private readonly ICommonViewModelService _commonViewModelService;
 
-        public FaviconViewComponent(ICommonWebService commonWebService)
+        public FaviconViewComponent(ICommonViewModelService commonViewModelService)
         {
-            this._commonWebService = commonWebService;
+            this._commonViewModelService = commonViewModelService;
         }
 
         public IViewComponentResult Invoke()
         {
-            var model = _commonWebService.PrepareFavicon();
+            var model = _commonViewModelService.PrepareFavicon();
             if (String.IsNullOrEmpty(model.FaviconUrl))
                 return Content("");
 

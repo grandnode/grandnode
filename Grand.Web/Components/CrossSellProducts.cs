@@ -19,7 +19,7 @@ namespace Grand.Web.Components
         private readonly IWorkContext _workContext;
         private readonly IAclService _aclService;
         private readonly IStoreMappingService _storeMappingService;
-        private readonly IProductWebService _productWebService;
+        private readonly IProductViewModelService _productViewModelService;
         private readonly IStoreContext _storeContext;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         #endregion
@@ -31,7 +31,7 @@ namespace Grand.Web.Components
             IWorkContext workContext,
             IAclService aclService,
             IStoreMappingService storeMappingService,
-            IProductWebService productWebService,
+            IProductViewModelService productViewModelService,
             IStoreContext storeContext,
             ShoppingCartSettings shoppingCartSettings
 )
@@ -40,7 +40,7 @@ namespace Grand.Web.Components
             this._workContext = workContext;
             this._aclService = aclService;
             this._shoppingCartSettings = shoppingCartSettings;
-            this._productWebService = productWebService;
+            this._productViewModelService = productViewModelService;
             this._storeMappingService = storeMappingService;
             this._storeContext = storeContext;
         }
@@ -65,7 +65,7 @@ namespace Grand.Web.Components
             if (!products.Any())
                 return Content("");
 
-            var model = _productWebService.PrepareProductOverviewModels(products,
+            var model = _productViewModelService.PrepareProductOverviewModels(products,
                 productThumbPictureSize: productThumbPictureSize, forceRedirectionAfterAddingToCart: true)
                 .ToList();
 

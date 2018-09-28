@@ -22,7 +22,7 @@ namespace Grand.Web.Controllers
     {
         #region Fields
 
-        private readonly IOrderWebService _orderWebService;
+        private readonly IOrderViewModelService _orderViewModelService;
         private readonly IOrderService _orderService;
         private readonly IWorkContext _workContext;
         private readonly IOrderProcessingService _orderProcessingService;
@@ -32,13 +32,13 @@ namespace Grand.Web.Controllers
 
 		#region Constructors
 
-        public OrderController(IOrderWebService orderWebService,
+        public OrderController(IOrderViewModelService orderViewModelService,
             IOrderService orderService,
             IWorkContext workContext,
             IOrderProcessingService orderProcessingService, 
             IPaymentService paymentService)
         {
-            this._orderWebService = orderWebService;
+            this._orderViewModelService = orderViewModelService;
             this._orderService = orderService;
             this._workContext = workContext;
             this._orderProcessingService = orderProcessingService;
@@ -55,7 +55,7 @@ namespace Grand.Web.Controllers
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
 
-            var model = _orderWebService.PrepareCustomerOrderList();
+            var model = _orderViewModelService.PrepareCustomerOrderList();
             return View(model);
         }
 
@@ -84,7 +84,7 @@ namespace Grand.Web.Controllers
             {
                 var errors = _orderProcessingService.CancelRecurringPayment(recurringPayment);
 
-                var model = _orderWebService.PrepareCustomerOrderList();
+                var model = _orderViewModelService.PrepareCustomerOrderList();
                 model.CancelRecurringPaymentErrors = errors;
 
                 return View(model);
@@ -106,7 +106,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("CustomerInfo");
 
             var customer = _workContext.CurrentCustomer;
-            var model = _orderWebService.PrepareCustomerRewardPoints(customer);
+            var model = _orderViewModelService.PrepareCustomerRewardPoints(customer);
             return View(model);
         }
 
@@ -117,7 +117,7 @@ namespace Grand.Web.Controllers
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return Challenge();
 
-            var model = _orderWebService.PrepareOrderDetails(order);
+            var model = _orderViewModelService.PrepareOrderDetails(order);
 
             return View(model);
         }
@@ -129,7 +129,7 @@ namespace Grand.Web.Controllers
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return Challenge();
 
-            var model = _orderWebService.PrepareOrderDetails(order);
+            var model = _orderViewModelService.PrepareOrderDetails(order);
             model.PrintMode = true;
 
             return View("Details", model);
@@ -223,7 +223,7 @@ namespace Grand.Web.Controllers
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return Challenge();
 
-            var model = _orderWebService.PrepareShipmentDetails(shipment);
+            var model = _orderViewModelService.PrepareShipmentDetails(shipment);
 
             return View(model);
         }

@@ -6,16 +6,16 @@ namespace Grand.Web.ViewComponents
 {
     public class NewsletterBoxViewComponent : BaseViewComponent
     {
-        private readonly INewsletterWebService _newsletterWebService;
+        private readonly INewsletterViewModelService _newsletterViewModelService;
 
-        public NewsletterBoxViewComponent(INewsletterWebService newsletterWebService)
+        public NewsletterBoxViewComponent(INewsletterViewModelService newsletterViewModelService)
         {
-            this._newsletterWebService = newsletterWebService;
+            this._newsletterViewModelService = newsletterViewModelService;
         }
 
         public IViewComponentResult Invoke()
         {
-            var model = _newsletterWebService.PrepareNewsletterBox();
+            var model = _newsletterViewModelService.PrepareNewsletterBox();
             if (model == null)
                 return Content("");
 

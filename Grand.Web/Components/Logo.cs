@@ -6,16 +6,16 @@ namespace Grand.Web.ViewComponents
 {
     public class LogoViewComponent : BaseViewComponent
     {
-        private readonly ICommonWebService _commonWebService;
+        private readonly ICommonViewModelService _commonViewModelService;
 
-        public LogoViewComponent(ICommonWebService commonWebService)
+        public LogoViewComponent(ICommonViewModelService commonViewModelService)
         {
-            this._commonWebService = commonWebService;
+            this._commonViewModelService = commonViewModelService;
         }
 
         public IViewComponentResult Invoke()
         {
-            var model = _commonWebService.PrepareLogo();
+            var model = _commonViewModelService.PrepareLogo();
             return View(model);
         }
     }

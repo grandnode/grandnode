@@ -6,16 +6,16 @@ namespace Grand.Web.ViewComponents
 {
     public class SearchBoxViewComponent : BaseViewComponent
     {
-        private readonly ICatalogWebService _catalogWebService;
+        private readonly ICatalogViewModelService _catalogViewModelService;
 
-        public SearchBoxViewComponent(ICatalogWebService catalogWebService)
+        public SearchBoxViewComponent(ICatalogViewModelService catalogViewModelService)
         {
-            this._catalogWebService = catalogWebService;
+            this._catalogViewModelService = catalogViewModelService;
         }
 
         public IViewComponentResult Invoke()
         {
-            var model = _catalogWebService.PrepareSearchBox();
+            var model = _catalogViewModelService.PrepareSearchBox();
             return View(model);
         }
     }

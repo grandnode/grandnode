@@ -7,12 +7,12 @@ namespace Grand.Web.ViewComponents
 {
     public class HomePageBlogViewComponent : BaseViewComponent
     {
-        private readonly IBlogWebService _blogWebService;
+        private readonly IBlogViewModelService _blogViewModelService;
         private readonly BlogSettings _blogSettings;
-        public HomePageBlogViewComponent(IBlogWebService blogWebService,
+        public HomePageBlogViewComponent(IBlogViewModelService blogViewModelService,
             BlogSettings blogSettings)
         {
-            this._blogWebService = blogWebService;
+            this._blogViewModelService = blogViewModelService;
             this._blogSettings = blogSettings;
         }
 
@@ -21,7 +21,7 @@ namespace Grand.Web.ViewComponents
             if (!_blogSettings.Enabled || !_blogSettings.ShowBlogOnHomePage)
                 return Content("");
 
-            var model = _blogWebService.PrepareHomePageBlogItems();
+            var model = _blogViewModelService.PrepareHomePageBlogItems();
             return View(model);
         }
     }

@@ -7,16 +7,16 @@ namespace Grand.Web.ViewComponents
 {
     public class HomePageManufacturersViewComponent : BaseViewComponent
     {
-        private readonly ICatalogWebService _catalogWebService;
+        private readonly ICatalogViewModelService _catalogViewModelService;
 
-        public HomePageManufacturersViewComponent(ICatalogWebService catalogWebService)
+        public HomePageManufacturersViewComponent(ICatalogViewModelService catalogViewModelService)
         {
-            this._catalogWebService = catalogWebService;
+            this._catalogViewModelService = catalogViewModelService;
         }
 
         public IViewComponentResult Invoke()
         {
-            var model = _catalogWebService.PrepareHomepageManufacturers();
+            var model = _catalogViewModelService.PrepareHomepageManufacturers();
             if (!model.Any())
                 return Content("");
 

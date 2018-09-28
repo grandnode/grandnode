@@ -6,16 +6,16 @@ namespace Grand.Web.ViewComponents
 {
     public class CurrencySelectorViewComponent : BaseViewComponent
     {
-        private readonly ICommonWebService _commonWebService;
+        private readonly ICommonViewModelService _commonViewModelService;
 
-        public CurrencySelectorViewComponent(ICommonWebService commonWebService)
+        public CurrencySelectorViewComponent(ICommonViewModelService commonViewModelService)
         {
-            this._commonWebService = commonWebService;
+            this._commonViewModelService = commonViewModelService;
         }
 
         public IViewComponentResult Invoke()
         {
-            var model = _commonWebService.PrepareCurrencySelector();
+            var model = _commonViewModelService.PrepareCurrencySelector();
             if (model.AvailableCurrencies.Count == 1)
                 Content("");
 

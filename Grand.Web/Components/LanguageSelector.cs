@@ -6,16 +6,16 @@ namespace Grand.Web.ViewComponents
 {
     public class LanguageSelectorViewComponent : BaseViewComponent
     {
-        private readonly ICommonWebService _commonWebService;
+        private readonly ICommonViewModelService _commonViewModelService;
 
-        public LanguageSelectorViewComponent(ICommonWebService commonWebService)
+        public LanguageSelectorViewComponent(ICommonViewModelService commonViewModelService)
         {
-            this._commonWebService = commonWebService;
+            this._commonViewModelService = commonViewModelService;
         }
 
         public IViewComponentResult Invoke()
         {
-            var model = _commonWebService.PrepareLanguageSelector();
+            var model = _commonViewModelService.PrepareLanguageSelector();
             if (model.AvailableLanguages.Count == 1)
                 Content("");
 

@@ -25,7 +25,7 @@ namespace Grand.Web.Controllers
     {
         #region Fields
 
-        private readonly INewsWebService _newsWebService;
+        private readonly INewsViewModelService _newsViewModelService;
         private readonly INewsService _newsService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
@@ -42,7 +42,7 @@ namespace Grand.Web.Controllers
 
 		#region Constructors
 
-        public NewsController(INewsWebService newsWebService, INewsService newsService, 
+        public NewsController(INewsViewModelService newsViewModelService, INewsService newsService, 
             IWorkContext workContext, IStoreContext storeContext, 
             ILocalizationService localizationService,
             IWebHelper webHelper, ICustomerActivityService customerActivityService,
@@ -51,7 +51,7 @@ namespace Grand.Web.Controllers
             NewsSettings newsSettings,
             CaptchaSettings captchaSettings)
         {
-            this._newsWebService = newsWebService;
+            this._newsViewModelService = newsViewModelService;
             this._newsService = newsService;
             this._workContext = workContext;
             this._storeContext = storeContext;
@@ -77,7 +77,7 @@ namespace Grand.Web.Controllers
             if (!_newsSettings.Enabled)
                 return RedirectToRoute("HomePage");
 
-            var model = _newsWebService.PrepareNewsItemList(command);
+            var model = _newsViewModelService.PrepareNewsItemList(command);
 
             return View(model);
         }
@@ -119,7 +119,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("HomePage");
 
             var model = new NewsItemModel();
-            _newsWebService.PrepareNewsItemModel(model, newsItem, true);
+            _newsViewModelService.PrepareNewsItemModel(model, newsItem, true);
 
             //display "edit" (manage) link
             if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageNews))
@@ -154,7 +154,7 @@ namespace Grand.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                _newsWebService.InsertNewsComment(newsItem, model);
+                _newsViewModelService.InsertNewsComment(newsItem, model);
                 //activity log
                 _customerActivityService.InsertActivity("PublicStore.AddNewsComment", newsItem.Id, _localizationService.GetResource("ActivityLog.PublicStore.AddNewsComment"));
 
@@ -165,7 +165,7 @@ namespace Grand.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            _newsWebService.PrepareNewsItemModel(model, newsItem, true);
+            _newsViewModelService.PrepareNewsItemModel(model, newsItem, true);
             return View(model);
         }
         #endregion

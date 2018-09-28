@@ -6,16 +6,16 @@ namespace Grand.Web.ViewComponents
 {
     public class StoreSelectorViewComponent : BaseViewComponent
     {
-        private readonly ICommonWebService _commonWebService;
+        private readonly ICommonViewModelService _commonViewModelService;
 
-        public StoreSelectorViewComponent(ICommonWebService commonWebService)
+        public StoreSelectorViewComponent(ICommonViewModelService commonViewModelService)
         {
-            this._commonWebService = commonWebService;
+            this._commonViewModelService = commonViewModelService;
         }
 
         public IViewComponentResult Invoke()
         {
-            var model = _commonWebService.PrepareStoreSelector();
+            var model = _commonViewModelService.PrepareStoreSelector();
             if(model == null || model.AvailableStores.Count == 1)
                 Content("");
 

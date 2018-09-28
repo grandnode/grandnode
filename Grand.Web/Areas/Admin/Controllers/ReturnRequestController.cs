@@ -1,34 +1,33 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Grand.Framework.Mvc.Filters;
-using System;
-using System.Collections.Generic;
-using Grand.Web.Areas.Admin.Models.Orders;
-using Grand.Core;
+﻿using Grand.Core;
+using Grand.Core.Data;
+using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
+using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Orders;
+using Grand.Framework.Controllers;
+using Grand.Framework.Extensions;
+using Grand.Framework.Kendoui;
+using Grand.Framework.Mvc.Filters;
+using Grand.Services.Catalog;
+using Grand.Services.Common;
 using Grand.Services.Customers;
+using Grand.Services.Directory;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Messages;
 using Grand.Services.Orders;
 using Grand.Services.Security;
-using Grand.Framework.Controllers;
-using Grand.Framework.Kendoui;
-using System.Linq;
-using Grand.Core.Data;
-using Grand.Services.Catalog;
-using Grand.Services.Directory;
 using Grand.Web.Areas.Admin.Extensions;
-using Grand.Core.Domain.Common;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Grand.Web.Services;
 using Grand.Web.Areas.Admin.Models.Common;
-using Grand.Core.Domain.Directory;
-using Grand.Services.Common;
-using Grand.Framework.Extensions;
+using Grand.Web.Areas.Admin.Models.Orders;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -54,7 +53,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly OrderSettings _orderSettings;
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
-        private readonly IAddressWebService _addressWebService;
         private readonly IAddressAttributeService _addressAttributeService;
         private readonly IAddressAttributeParser _addressAttributeParser;
         #endregion Fields
@@ -74,7 +72,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             AddressSettings addressSettings,
             ICountryService countryService,
             IStateProvinceService stateProvinceService,
-            IAddressWebService addressWebService,
             IAddressAttributeService addressAttributeService,
             IAddressAttributeParser addressAttributeParser,
             OrderSettings orderSettings)
@@ -96,7 +93,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._addressSettings = addressSettings;
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
-            this._addressWebService = addressWebService;
             this._addressAttributeService = addressAttributeService;
             this._addressAttributeParser = addressAttributeParser;
             this._orderSettings = orderSettings;

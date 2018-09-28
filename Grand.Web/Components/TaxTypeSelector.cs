@@ -6,16 +6,16 @@ namespace Grand.Web.ViewComponents
 {
     public class TaxTypeSelectorViewComponent : BaseViewComponent
     {
-        private readonly ICommonWebService _commonWebService;
+        private readonly ICommonViewModelService _commonViewModelService;
 
-        public TaxTypeSelectorViewComponent(ICommonWebService commonWebService)
+        public TaxTypeSelectorViewComponent(ICommonViewModelService commonViewModelService)
         {
-            this._commonWebService = commonWebService;
+            this._commonViewModelService = commonViewModelService;
         }
 
         public IViewComponentResult Invoke()
         {
-            var model = _commonWebService.PrepareTaxTypeSelector();
+            var model = _commonViewModelService.PrepareTaxTypeSelector();
             if (model == null)
                 return Content("");
 

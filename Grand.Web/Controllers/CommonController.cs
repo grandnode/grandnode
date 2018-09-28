@@ -38,7 +38,7 @@ namespace Grand.Web.Controllers
     public partial class CommonController : BasePublicController
     {
         #region Fields
-        private readonly ICommonWebService _commonWebService;
+        private readonly ICommonViewModelService _commonViewModelService;
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
@@ -55,7 +55,7 @@ namespace Grand.Web.Controllers
         #region Constructors
 
         public CommonController(
-            ICommonWebService commonWebService,
+            ICommonViewModelService commonViewModelService,
             ILocalizationService localizationService,
             IWorkContext workContext,
             IStoreContext storeContext,
@@ -68,7 +68,7 @@ namespace Grand.Web.Controllers
             VendorSettings vendorSettings
             )
         {
-            this._commonWebService = commonWebService;
+            this._commonViewModelService = commonViewModelService;
             this._localizationService = localizationService;
             this._workContext = workContext;
             this._storeContext = storeContext;
@@ -176,7 +176,7 @@ namespace Grand.Web.Controllers
         [CheckAccessPublicStore(true)]
         public virtual IActionResult SetCurrency(string customerCurrency, string returnUrl = "")
         {
-            _commonWebService.SetCurrency(customerCurrency);
+            _commonViewModelService.SetCurrency(customerCurrency);
 
             //home page
             if (String.IsNullOrEmpty(returnUrl))
@@ -197,7 +197,7 @@ namespace Grand.Web.Controllers
         {
             var currentstoreid = _storeContext.CurrentStore.Id;
             if (currentstoreid != store)
-                _commonWebService.SetStore(store);
+                _commonViewModelService.SetStore(store);
 
             var prevStore = storeService.GetStoreById(currentstoreid);
             var currStore = storeService.GetStoreById(store);
@@ -225,7 +225,7 @@ namespace Grand.Web.Controllers
         [CheckAccessPublicStore(true)]
         public virtual IActionResult SetTaxType(int customerTaxType, string returnUrl = "")
         {
-            _commonWebService.SetTaxType(customerTaxType);
+            _commonViewModelService.SetTaxType(customerTaxType);
 
             //home page
             if (String.IsNullOrEmpty(returnUrl))
@@ -243,7 +243,7 @@ namespace Grand.Web.Controllers
         [CheckAccessClosedStore(true)]
         public virtual IActionResult ContactUs()
         {
-            var model = _commonWebService.PrepareContactUs();
+            var model = _commonViewModelService.PrepareContactUs();
             return View(model);
         }
 
@@ -262,8 +262,8 @@ namespace Grand.Web.Controllers
             }
 
             //parse contact attributes
-            var attributeXml = _commonWebService.ParseContactAttributes(form);
-            var contactAttributeWarnings = _commonWebService.GetContactAttributesWarnings(attributeXml);
+            var attributeXml = _commonViewModelService.ParseContactAttributes(form);
+            var contactAttributeWarnings = _commonViewModelService.GetContactAttributesWarnings(attributeXml);
             if (contactAttributeWarnings.Any())
             {
                 foreach (var item in contactAttributeWarnings)
@@ -276,14 +276,14 @@ namespace Grand.Web.Controllers
             {
                 model.ContactAttributeXml = attributeXml;
                 model.ContactAttributeInfo = contactAttributeFormatter.FormatAttributes(attributeXml, _workContext.CurrentCustomer);
-                model = _commonWebService.SendContactUs(model);
+                model = _commonViewModelService.SendContactUs(model);
                 //activity log
                 _customerActivityService.InsertActivity("PublicStore.ContactUs", "", _localizationService.GetResource("ActivityLog.PublicStore.ContactUs"));
                 return View(model);
             }
 
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage;
-            model.ContactAttributes = _commonWebService.PrepareContactAttributeModel(attributeXml);
+            model.ContactAttributes = _commonViewModelService.PrepareContactAttributeModel(attributeXml);
 
             return View(model);
         }
@@ -297,7 +297,7 @@ namespace Grand.Web.Controllers
             if (vendor == null || !vendor.Active || vendor.Deleted)
                 return RedirectToRoute("HomePage");
 
-            var model = _commonWebService.PrepareContactVendor(vendor);
+            var model = _commonViewModelService.PrepareContactVendor(vendor);
 
             return View(model);
         }
@@ -323,7 +323,7 @@ namespace Grand.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                model = _commonWebService.SendContactVendor(model, vendor);
+                model = _commonViewModelService.SendContactVendor(model, vendor);
                 return View(model);
             }
 
@@ -337,7 +337,7 @@ namespace Grand.Web.Controllers
             if (!_commonSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
 
-            var model = _commonWebService.PrepareSitemap();
+            var model = _commonViewModelService.PrepareSitemap();
             return View(model);
         }
 
@@ -347,7 +347,7 @@ namespace Grand.Web.Controllers
         {
             if (!_commonSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
-            var siteMap = _commonWebService.SitemapXml(id, this.Url);
+            var siteMap = _commonViewModelService.SitemapXml(id, this.Url);
 
             return Content(siteMap, "text/xml");
         }
@@ -391,7 +391,7 @@ namespace Grand.Web.Controllers
         [CheckAccessPublicStore(true)]
         public virtual IActionResult RobotsTextFile()
         {
-            var sb = _commonWebService.PrepareRobotsTextFile();
+            var sb = _commonViewModelService.PrepareRobotsTextFile();
             return Content(sb, "text/plain");
         }
 
@@ -413,7 +413,7 @@ namespace Grand.Web.Controllers
         public virtual IActionResult ContactAttributeChange(IFormCollection form,
             [FromServices] IContactAttributeParser contactAttributeParser)
         {
-            var attributeXml = _commonWebService.ParseContactAttributes(form);
+            var attributeXml = _commonViewModelService.ParseContactAttributes(form);
 
             var enabledAttributeIds = new List<string>();
             var disabledAttributeIds = new List<string>();
