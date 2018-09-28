@@ -25,6 +25,7 @@ namespace Grand.Services.Customers.Tests
         private IRepository<CustomerRole> _customerRoleRepo;
         private IRepository<CustomerProductPrice> _customerProductPriceRepo;
         private IRepository<CustomerProduct> _customerProductRepo;
+        private IRepository<CustomerNote> _customerNoteRepo;
         private IRepository<CustomerRoleProduct> _customerRoleProductRepo;
         private IRepository<Order> _orderRepo;
         private IRepository<ForumPost> _forumPostRepo;
@@ -143,6 +144,7 @@ namespace Grand.Services.Customers.Tests
             _customerProductPriceRepo = new Mock<IRepository<CustomerProductPrice>>().Object;
             _customerProductRepo = new Mock<IRepository<CustomerProduct>>().Object;
             _customerHistoryRepo = new Mock<IRepository<CustomerHistoryPassword>>().Object;
+            _customerNoteRepo = new Mock<IRepository<CustomerNote>>().Object;
 
             _genericAttributeService = new Mock<IGenericAttributeService>().Object;
             _newsLetterSubscriptionService = new Mock<INewsLetterSubscriptionService>().Object;
@@ -153,9 +155,7 @@ namespace Grand.Services.Customers.Tests
             _customerSettings = new CustomerSettings();
             _commonSettings = new CommonSettings();
             _customerService = new CustomerService(new GrandNullCache(), _customerRepo, _customerRoleRepo, _customerProductRepo, _customerProductPriceRepo,
-                _customerHistoryRepo,
-                _customerRoleProductRepo, _orderRepo, _forumPostRepo, _forumTopicRepo,
-                null, null, _genericAttributeService, null,
+                _customerHistoryRepo, _customerRoleProductRepo, _customerNoteRepo, _orderRepo, _forumPostRepo, _forumTopicRepo, null, null, _genericAttributeService, null,
                 _eventPublisher, _customerSettings, _commonSettings);
 
             _customerRegistrationService = new CustomerRegistrationService(
