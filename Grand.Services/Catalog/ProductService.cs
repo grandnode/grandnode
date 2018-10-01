@@ -2441,7 +2441,7 @@ namespace Grand.Services.Catalog
         /// <returns>Reviews</returns>
         public virtual IList<ProductReview> GetAllProductReviews(string customerId, bool? approved,
             DateTime? fromUtc = null, DateTime? toUtc = null,
-            string message = null, string storeId = "", string productId = "")
+            string message = null, string storeId = "", string productId = "", int size = 0)
         {
             var query = from p in _productReviewRepository.Table
                         select p;
@@ -2462,6 +2462,10 @@ namespace Grand.Services.Catalog
                 query = query.Where(c => c.ProductId == productId);
 
             query = query.OrderByDescending(c => c.CreatedOnUtc);
+
+            if (size != 0)
+                query = query.Take(size);
+
             var content = query.ToList();
             return content;
         }

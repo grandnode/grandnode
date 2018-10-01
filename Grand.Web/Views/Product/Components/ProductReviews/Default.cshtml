@@ -1,0 +1,82 @@
+﻿@model ProductReviewsModel
+
+<div class="mb-4">
+    <a class="btn btn-sm btn-warning" href="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductId })">@T("Reviews.Overview.AddNew")</a>
+</div>
+
+@if (Model.Items.Any())
+{
+    <div class="product-review-list">
+        <h5><strong>@T("Reviews.ExistingReviews")</strong></h5>
+        @foreach (var review in Model.Items)
+        {
+            int ratingPercent = review.Rating * 20;
+            <div class="card comment product-review-item pb-3">
+                <div class="card-header review-item-head">
+                    <div class="rating rating_@review.Id float-right">
+                    </div>
+                    <script>
+                        $(document).ready(function () {
+                            productStarProgress5('@(ratingPercent)', 'rating_@review.Id');
+                        });
+                    </script>
+                    <div class="review-info">
+                        <span class="user">
+                            <span>@T("Reviews.From"):</span>
+                            @if (review.AllowViewingProfiles)
+                            {
+                                <a href="@Url.RouteUrl("CustomerProfile", new { id = review.CustomerId })">@(review.CustomerName)</a>
+                            }
+                            else
+                            {
+                                @review.CustomerName
+                            }
+                        </span>
+                        <span class="separator">|</span>
+                        <span class="date">
+                            <span>@T("Reviews.Date"):</span>
+                            <span>@review.WrittenOnStr</span>
+                        </span>
+                    </div>
+                </div>
+                <div class="card-body mb-3">
+                    <div class="review-title">
+                        <strong>@review.Title</strong>
+                    </div>
+                    <div class="review-content">
+                        <div class="review-text">
+                            @Html.Raw(Grand.Core.Html.HtmlHelper.FormatText(review.ReviewText, false, true, false, false, false, false))
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrEmpty(review.ReplyText))
+                    {
+                        <div class="reply-content">
+                            <blockquote class="blockquote-footer">
+                                @Html.Raw(Grand.Core.Html.HtmlHelper.FormatText(review.ReplyText, false, true, false, false, false, false))
+                                <p>@review.Signature</p>
+                            </blockquote>
+                        </div>
+                    }
+                </div>
+                <div class="card-footer text-right">
+                    <partial name="_ProductReviewHelpfulness" model="review.Helpfulness" />
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p class="text-muted">@T("Products.Reviews.Empty")</p>
+}
+
+<script>
+    $(document).ready(function () {
+        $(".rating-options .custom-radio").click(function () {
+            $(".custom-radio").removeClass("full-star");
+            $(".custom-radio").removeClass("empty-star");
+            $(this).prevAll(".custom-radio").addClass("full-star");
+            $(this).nextAll(".custom-radio").addClass("empty-star");
+        });
+    });
+</script>

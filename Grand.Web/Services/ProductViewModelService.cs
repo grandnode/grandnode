@@ -1384,7 +1384,7 @@ namespace Grand.Web.Services
             return model;
         }
 
-        public virtual void PrepareProductReviewsModel(ProductReviewsModel model, Product product)
+        public virtual void PrepareProductReviewsModel(ProductReviewsModel model, Product product, int size = 0)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -1395,16 +1395,16 @@ namespace Grand.Web.Services
             model.ProductId = product.Id;
             model.ProductName = product.GetLocalized(x => x.Name);
             model.ProductSeName = product.GetSeName();
-
-            var productReviews = _productService.GetAllProductReviews("", true, null, null, "", _catalogSettings.ShowProductReviewsPerStore ? _storeContext.CurrentStore.Id : "", product.Id);
+            var customerService = EngineContext.Current.Resolve<ICustomerService>();
+            var productReviews = _productService.GetAllProductReviews("", true, null, null, "", _catalogSettings.ShowProductReviewsPerStore ? _storeContext.CurrentStore.Id : "", product.Id, size);
             foreach (var pr in productReviews)
             {
-                var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(pr.CustomerId);
+                var customer = customerService.GetCustomerById(pr.CustomerId);
                 model.Items.Add(new ProductReviewModel
                 {
                     Id = pr.Id,
-                    CustomerId = pr.CustomerId,
-                    CustomerName = customer.FormatUserName(),
+                    CustomerId = pr?.CustomerId,
+                    CustomerName = customer?.FormatUserName(),
                     AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !customer.IsGuest(),
                     Title = pr.Title,
                     ReviewText = pr.ReviewText,

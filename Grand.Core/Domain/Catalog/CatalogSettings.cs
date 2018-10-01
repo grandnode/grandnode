@@ -248,6 +248,11 @@ namespace Grand.Core.Domain.Catalog
         public int NumberOfBestsellersOnHomepage { get; set; }
 
         /// <summary>
+        /// Gets or sets a number of review on product page
+        /// </summary>
+        public int NumberOfReview { get; set; }
+
+        /// <summary>
         /// Gets or sets a number of products per page on the search products page
         /// </summary>
         public int SearchPageProductsPerPage { get; set; }

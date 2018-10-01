@@ -10,9 +10,8 @@
 @if (Model.AllowCustomerReviews)
 {
     <div class="product-reviews-overview" @if (Model.TotalReviews > 0) { <text> itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" </text> }>
-        <div class="product-review-box pb-1">
-            <div class="rating">
-            </div>
+        <div class="product-review-box pb-1 d-inline-block">
+            <div class="rating"></div>
         </div>
         <script>
             $(document).ready(function () {
@@ -21,12 +20,12 @@
         </script>
         @if (Model.TotalReviews > 0)
         {
-            <div class="product-review-links">
-                <a class="btn btn-secondary btn-sm" href="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductId })">
+            <span class="product-review-links">
+                <a class="btn btn-sm pr-0" href="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductId })">
                     @Model.TotalReviews
                     @T("Reviews.Overview.Reviews")
-                </a> <span class="separator">|</span> <a class="btn btn-secondary btn-sm" href="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductId })">@T("Reviews.Overview.AddNew")</a>
-            </div>
+                </a> <span class="separator">|</span> <a class="btn btn-sm pl-0" href="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductId })">@T("Reviews.Overview.AddNew")</a>
+            </span>
             @*hidden microdata info*@
         decimal ratingValue = ratingPercent / (decimal)20;
         <span itemprop="ratingValue" style="display: none;">@ratingValue.ToString("0.0", new CultureInfo("en-US"))</span>
@@ -34,9 +33,9 @@
         }
         else
         { 
-            <div class="product-no-reviews">
-                <a class="btn btn-secondary btn-sm" href="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductId })">@T("Reviews.Overview.First")</a>
-            </div>
+            <span class="product-no-reviews">
+                <a class="btn btn-sm" href="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductId })">@T("Reviews.Overview.First")</a>
+            </span>
         }
     </div>
 }

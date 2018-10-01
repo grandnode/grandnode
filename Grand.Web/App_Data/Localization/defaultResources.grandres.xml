@@ -18201,6 +18201,12 @@
   <LocaleResource Name="Products.ReservationStartDate">
     <Value>Start date</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.Reviews">
+    <Value>Reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Reviews.Empty">
+    <Value>There are no reviews yet</Value>
+  </LocaleResource>
   <LocaleResource Name="Products.Sku">
     <Value>SKU</Value>
   </LocaleResource>

@@ -48,7 +48,7 @@
 <div class="page product-details-page">
         @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_top", additionalData = Model.Id })
         <form asp-route="Product" asp-route-sename="@Model.SeName" method="post" id="product-details-form">
-            <div  itemscope itemtype="http://schema.org/Product" data-productid="@Model.Id">
+            <div itemscope itemtype="http://schema.org/Product" data-productid="@Model.Id">
                 <div class="item-container col d-md-inline-flex d-md-flex px-0">
                     @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_before_pictures", additionalData = Model.Id })
                     <!--product pictures-->
@@ -106,8 +106,7 @@
                                     @{
                                         var dataDictPrice = new ViewDataDictionary(ViewData);
                                         dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", Model.Id);
-                                        <partial name="_ProductTierPrices" model="Model.TierPrices" />
-                                        
+                                        <partial name="_ProductTierPrices" model="Model.TierPrices" />                                        
                                     }
                                 </div>
                                 <div class="col-lg-12 px-0">
@@ -168,10 +167,16 @@
                                 <a class="nav-link" id="spec-tab" data-toggle="tab" href="#spec" role="tab" aria-controls="spec" aria-selected="false"><span class="d-none d-md-block">@T("Products.Specs")</span><i class="fa fa-puzzle-piece d-md-none"></i></a>
                             </li>
                         }
+                        @if (Model.ProductReviewOverview.AllowCustomerReviews)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" id="review-tab" data-toggle="tab" href="#review" role="tab" aria-controls="spec" aria-selected="false"><span class="d-none d-md-block">@T("Products.Reviews")</span><i class="fa fa-comments d-md-none"></i></a>
+                            </li>
+                        }
                         @if (Model.AskQuestionOnProduct)
                         {
                             <li class="nav-item">
-                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false"><span class="d-none d-md-block">@T("Products.ContactUs")</span><i class="fa fa-puzzle-piece d-md-none"></i></a>
+                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false"><span class="d-none d-md-block">@T("Products.ContactUs")</span><i class="fa fa-envelope d-md-none"></i></a>
                             </li>
                         }
                     </ul>
@@ -184,6 +189,12 @@
                         @if (Model.ProductSpecifications.Any())
                         {
                             <div class="tab-pane fade" id="spec" role="tabpanel" aria-labelledby="spec-tab"><partial name="_ProductSpecifications" model="Model.ProductSpecifications" /></div>
+                        }
+                        @if (Model.ProductReviewOverview.AllowCustomerReviews)
+                        {
+                            <div class="tab-pane fade" id="review" role="tabpanel" aria-labelledby="review-tab">
+                                @await Component.InvokeAsync("ProductReviews", new { productId = Model.Id })
+                            </div>
                         }
                         @if (Model.AskQuestionOnProduct)
                         {

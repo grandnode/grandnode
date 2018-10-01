@@ -440,4 +440,10 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideNotesTab.hint">
     <Value>Check to hide 'Customer notes' tab on 'My account' page</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.Reviews">
+    <Value>Reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Reviews.Empty">
+    <Value>There are no reviews yet</Value>
+  </LocaleResource>
 </Language>

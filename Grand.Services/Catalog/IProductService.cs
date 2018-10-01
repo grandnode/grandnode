@@ -499,7 +499,7 @@ namespace Grand.Services.Catalog
         /// <returns>Reviews</returns>
         IList<ProductReview> GetAllProductReviews(string customerId, bool? approved,
             DateTime? fromUtc = null, DateTime? toUtc = null,
-            string message = null, string storeId = "", string productId = "");
+            string message = null, string storeId = "", string productId = "", int size = 0);
 
         /// <summary>
         /// Get rating sum for product

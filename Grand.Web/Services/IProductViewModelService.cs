@@ -20,7 +20,7 @@ namespace Grand.Web.Services
         string PrepareProductTemplateViewPath(string productTemplateId);
         ProductDetailsModel PrepareProductDetailsPage(Product product,
             ShoppingCartItem updatecartitem = null, bool isAssociatedProduct = false);
-        void PrepareProductReviewsModel(ProductReviewsModel model, Product product);
+        void PrepareProductReviewsModel(ProductReviewsModel model, Product product, int size = 0);
         ProductReview InsertProductReview(Product product, ProductReviewsModel model);
 
         void SendProductEmailAFriendMessage(Product product, ProductEmailAFriendModel model);
