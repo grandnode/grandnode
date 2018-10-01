@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 
 namespace Grand.Core
@@ -69,11 +70,14 @@ namespace Grand.Core
         /// <returns>Result string</returns>
         public static string GenerateRandomDigitCode(int length)
         {
-            var random = new Random();
             string str = string.Empty;
+            RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
+            var byteArray = new byte[length];
+            provider.GetBytes(byteArray);
             for (int i = 0; i < length; i++)
-                str = String.Concat(str, random.Next(10).ToString());
-            return str;
+                str = String.Concat(str, byteArray[i].ToString());
+
+            return str.Substring(0, length);
         }
 
         /// <summary>
