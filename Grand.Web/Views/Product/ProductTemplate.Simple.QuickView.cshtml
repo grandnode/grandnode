@@ -2,8 +2,8 @@
 @inject SeoSettings seoSettings
 @{
     Layout = "";
-    <script src="~/Scripts/public.reservation.js"></script>
-    <link href="~/Content/jquery-ui-themes/smoothness/jquery-ui.calendar.min.css" rel="stylesheet" type="text/css" />
+    <script src="~/scripts/public.reservation.js"></script>
+    <link href="~/content/jquery-ui-themes/smoothness/jquery-ui.calendar.min.css" rel="stylesheet" type="text/css" />
 }
 @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_after_breadcrumb", additionalData = Model.Id })
 <div class="product-quickview">

@@ -17,7 +17,7 @@
                     <li class="list-inline-item">
                         <a  href="@webHelper.ModifyQueryString(Url.RouteUrl("ChangeLanguage", new {langid = lang.Id}), "returnurl=" + WebUtility.UrlEncode(rawUrl), null)" title="@lang.Name">
                             <img title='@lang.Name' alt='@lang.Name' @(lang.Id == Model.CurrentLanguageId ? " class=selected" : null)
-                                 src="@Url.Content("~/Content/Images/flags/" + @lang.FlagImageFileName) " />
+                                 src="@Url.Content("~/content/images/flags/" + @lang.FlagImageFileName) " />
                         </a>
                     </li>
                 }
@@ -31,7 +31,7 @@
                     <li class="flag-lang">
                         <a class="nav-link d-flex d-lg-none p-0" href="@webHelper.ModifyQueryString(Url.RouteUrl("ChangeLanguage", new {langid = lang.Id}), "returnurl=" + WebUtility.UrlEncode(rawUrl), null)" title="@lang.Name">
                             <img title='@lang.Name' alt='@lang.Name' @(lang.Id == Model.CurrentLanguageId ? " class=selected" : null)
-                                 src="@Url.Content("~/Content/Images/flags/" + @lang.FlagImageFileName) " />
+                                 src="@Url.Content("~/content/images/flags/" + @lang.FlagImageFileName) " />
                         </a>
                     </li>
 

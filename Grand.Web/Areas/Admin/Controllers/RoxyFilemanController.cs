@@ -30,17 +30,17 @@ namespace Grand.Web.Areas.Admin.Controllers
         /// <summary>
         /// Default path to root directory of uploaded files (if appropriate settings are not specified)
         /// </summary>
-        private const string DEFAULT_ROOT_DIRECTORY = "/Content/Images/uploaded";
+        private const string DEFAULT_ROOT_DIRECTORY = "/content/images/uploaded";
 
         /// <summary>
         /// Path to directory of language files
         /// </summary>
-        private const string LANGUAGE_DIRECTORY = "/Content/Roxy_Fileman/lang";
+        private const string LANGUAGE_DIRECTORY = "/content/roxy_fileman/lang";
 
         /// <summary>
         /// Path to configuration file
         /// </summary>
-        private const string CONFIGURATION_FILE = "/Content/Roxy_Fileman/conf.json";
+        private const string CONFIGURATION_FILE = "/content/roxy_fileman/conf.json";
 
         #endregion
 
@@ -131,7 +131,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //create configuration
             var configuration = new
             {
-                FILES_ROOT = existingConfiguration?.FILES_ROOT ?? "Content/Images/uploaded",
+                FILES_ROOT = existingConfiguration?.FILES_ROOT ?? "content/images/uploaded",
                 SESSION_PATH_KEY = existingConfiguration?.SESSION_PATH_KEY ?? string.Empty,
                 THUMBS_VIEW_WIDTH = existingConfiguration?.THUMBS_VIEW_WIDTH ?? "140",
                 THUMBS_VIEW_HEIGHT = existingConfiguration?.THUMBS_VIEW_HEIGHT ?? "120",

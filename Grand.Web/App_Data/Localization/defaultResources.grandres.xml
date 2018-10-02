@@ -7323,9 +7323,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Note">
     <Value>NOTE: Do not forget to backup your database before changing this option</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Media.PingoNotFound">
-    <Value>Pingo.exe not found inside \Content\Images\Thumbs</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.ProductDetailsPictureSize">
     <Value>Product detail image size</Value>
   </LocaleResource>

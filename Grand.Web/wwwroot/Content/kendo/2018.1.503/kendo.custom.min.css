@@ -3773,10 +3773,10 @@ td.k-state-focused.k-state-selected,
     margin-bottom: 0;
 }
 .k-i-expand, .k-plus, .k-plus-disabled {
-    background-image: url(/Content/kendo/2018.1.503/Bootstrap/sprite.png);
+    background-image: url(/content/kendo/2018.1.503/Bootstrap/sprite.png);
     background-position: 0 -192px;
 }
 .k-i-collapse, .k-minus, .k-minus-disabled {
-    background-image: url(/Content/kendo/2018.1.503/Bootstrap/sprite.png);
+    background-image: url(/content/kendo/2018.1.503/Bootstrap/sprite.png);
     background-position: 0 -224px;
 }

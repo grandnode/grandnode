@@ -66,7 +66,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 throw new ArgumentNullException("model");
 
             model.FlagFileNames = Directory
-                .EnumerateFiles(CommonHelper.MapPath("~/wwwroot/Content/Images/flags/"), "*.png", SearchOption.TopDirectoryOnly)
+                .EnumerateFiles(CommonHelper.MapPath("~/wwwroot/content/images/flags/"), "*.png", SearchOption.TopDirectoryOnly)
                 .Select(Path.GetFileName)
                 .ToList();
         }

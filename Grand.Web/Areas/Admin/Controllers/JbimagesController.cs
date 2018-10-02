@@ -58,7 +58,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return View();
             }
 
-            var directory = "~/wwwroot/Content/Images/uploaded/";
+            var directory = "~/wwwroot/content/images/uploaded/";
             var filePath = Path.Combine(CommonHelper.MapPath(directory), fileName);
 
             var fileExtension = Path.GetExtension(filePath);

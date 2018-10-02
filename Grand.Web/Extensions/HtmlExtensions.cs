@@ -30,9 +30,9 @@ namespace Grand.Web.Extensions
             var sb = new StringBuilder();
 
             var storeLocation = EngineContext.Current.Resolve<IWebHelper>().GetStoreLocation();
-            string bbEditorWebRoot = String.Format("{0}Content/", storeLocation);
+            string bbEditorWebRoot = String.Format("{0}content/", storeLocation);
 
-            sb.AppendFormat("<script src=\"{0}Content/BBEditor/ed.js\" ></script>", storeLocation);
+            sb.AppendFormat("<script src=\"{0}content/bbeditor/ed.js\" ></script>", storeLocation);
             sb.Append(Environment.NewLine);
             sb.Append("<script language=\"javascript\" type=\"text/javascript\">");
             sb.Append(Environment.NewLine);

@@ -923,8 +923,8 @@ namespace Grand.Web.Services
                 {
                     "/admin",
                     "/bin/",
-                    "/Content/files/",
-                    "/Content/files/ExportImport/",
+                    "/content/files/",
+                    "/content/files/exportimport/",
                     "/country/getstatesbycountryid",
                     "/install",
                     "/upgrade",

@@ -59,7 +59,7 @@ namespace Grand.Framework
 
                     tabStrip.AppendLine("<li>");
                     var urlHelper = new UrlHelper(helper.ViewContext);
-                    var iconUrl = urlHelper.Content("~/Content/Images/flags/" + language.FlagImageFileName);
+                    var iconUrl = urlHelper.Content("~/content/images/flags/" + language.FlagImageFileName);
                     tabStrip.AppendLine(string.Format("<img class='k-image' alt='' src='{0}'>", iconUrl));
                     tabStrip.AppendLine(WebUtility.HtmlEncode(language.Name));
                     tabStrip.AppendLine("</li>");

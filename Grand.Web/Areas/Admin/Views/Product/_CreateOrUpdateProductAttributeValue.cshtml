@@ -1,8 +1,8 @@
 ﻿@using Grand.Core.Domain.Catalog
 @model ProductModel.ProductAttributeValueModel
 @{
-    Html.AddScriptParts("~/Scripts/farbtastic.js", excludeFromBundle: true);
-    Html.AddCssFileParts("~/Content/farbtastic/farbtastic.css", excludeFromBundle: true);
+    Html.AddScriptParts("~/scripts/farbtastic.js", excludeFromBundle: true);
+    Html.AddCssFileParts("~/content/farbtastic/farbtastic.css", excludeFromBundle: true);
 }
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />

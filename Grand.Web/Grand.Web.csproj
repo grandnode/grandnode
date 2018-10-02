@@ -20,7 +20,7 @@
     <Content Include="Plugins\**" CopyToPublishDirectory="PreserveNewest" Exclude="Plugins\**\*.cshtml;Plugins\**\*.json;Plugins\bin\**" />
     <Content Include="Roslyn\**" CopyToPublishDirectory="PreserveNewest" Exclude="Roslyn\**\*.dll" />
     <Content Include="logs\**" CopyToPublishDirectory="PreserveNewest" />
-    <Content Remove="wwwroot\Content\Images\Thumbs\*.jpeg;wwwroot\Content\Images\Thumbs\*.jpg;wwwroot\Content\Images\Thumbs\*.png" />
+    <Content Remove="wwwroot\content\images\thumbs\*.jpeg;wwwroot\content\images\thumbs\*.jpg;wwwroot\content\images\thumbs\*.png" />
     <Content Remove="wwwroot\bundles\*.css;wwwroot\bundles\*.js" />
   </ItemGroup>  
 </Project>

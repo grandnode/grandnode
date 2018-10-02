@@ -18,7 +18,7 @@
             {
                 <li>
                     <a href="@webHelper.ModifyQueryString(Url.Action("SetLanguage", "Common", new { langid = lang.Id , area = "Admin"}), "returnurl=" + System.Net.WebUtility.UrlEncode(webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request)), null)">
-                        <img src="/Content/Images/flags/@(lang.FlagImageFileName)" alt="@lang.Name">
+                        <img src="/content/images/flags/@(lang.FlagImageFileName)" alt="@lang.Name">
                         @lang.Name
                     </a>
                 </li>
