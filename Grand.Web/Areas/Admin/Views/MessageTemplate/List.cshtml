@@ -26,6 +26,12 @@
                                 <admin-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
                             </div>
                         </div>
+                        <div class="form-group">
+                            <admin-label asp-for="Name" />
+                            <div class="col-md-9 col-sm-6">
+                                <admin-input asp-for="Name" />
+                            </div>
+                        </div>
                     </div>
                     <div class="form-actions">
                         <div class="row">
@@ -111,11 +117,20 @@
             var grid = $('#templates-grid').data('kendoGrid');
             grid.dataSource.read();
         });
+
+        $("#@Html.FieldIdFor(model => model.Name)").keydown(function (event) {
+            if (event.keyCode == 13) {
+                $("#search-templates").click();
+                return false;
+            }
+        });
+
     });
 
     function additionalData() {
         var data = {
-            SearchStoreId: $('#SearchStoreId').val()
+            SearchStoreId: $('#SearchStoreId').val(),
+            Name: $('#@Html.FieldIdFor(model => model.Name)').val()
         };
         addAntiForgeryToken(data);
         return data;

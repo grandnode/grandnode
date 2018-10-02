@@ -14,7 +14,8 @@ namespace Grand.Web.Areas.Admin.Models.Messages
         {
             AvailableStores = new List<SelectListItem>();
         }
-
+        [GrandResourceDisplayName("Admin.ContentManagement.MessageTemplates.List.Name")]
+        public string Name { get; set; }
         [GrandResourceDisplayName("Admin.ContentManagement.MessageTemplates.List.SearchStore")]
         public string SearchStoreId { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }

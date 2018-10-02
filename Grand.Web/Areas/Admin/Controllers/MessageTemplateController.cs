@@ -155,6 +155,14 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             var messageTemplates = _messageTemplateService.GetAllMessageTemplates(model.SearchStoreId);
+
+            if (!string.IsNullOrEmpty(model.Name))
+            {
+                messageTemplates = messageTemplates.Where
+                    (x => x.Name.ToLowerInvariant().Contains(model.Name.ToLowerInvariant()) ||
+                    x.Subject.ToLowerInvariant().Contains(model.Name.ToLowerInvariant())).ToList();
+            }
+
             var gridModel = new DataSourceResult
             {
                 Data = messageTemplates.Select(x =>

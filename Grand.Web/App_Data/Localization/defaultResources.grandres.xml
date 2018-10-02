@@ -9438,6 +9438,12 @@
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Info">
     <Value>Info</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.Name.Hint">
+    <Value>Search by a name.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.SearchStore">
     <Value>Store</Value>
   </LocaleResource>

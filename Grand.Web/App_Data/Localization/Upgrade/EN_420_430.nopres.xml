@@ -452,4 +452,10 @@
   <LocaleResource Name="Admin.ContentManagement.Topics.List.Name.hint">
     <Value>Search by topic name or systemname</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.Name.Hint">
+    <Value>Search by a name.</Value>
+  </LocaleResource>
 </Language>
