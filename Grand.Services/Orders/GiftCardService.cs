@@ -85,9 +85,6 @@ namespace Grand.Services.Orders
         {
             var query = _giftCardRepository.Table;
 
-            //TO DO
-            //if (!String.IsNullOrEmpty(purchasedWithOrderId))
-            //    query = query.Where(gc => gc.PurchasedWithOrderItem != null && gc.PurchasedWithOrderItem.OrderId == purchasedWithOrderId);
             if (createdFromUtc.HasValue)
                 query = query.Where(gc => createdFromUtc.Value <= gc.CreatedOnUtc);
             if (createdToUtc.HasValue)

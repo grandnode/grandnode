@@ -96,7 +96,7 @@ namespace Grand.Services.Orders
                 {
                     if (!String.IsNullOrEmpty(valueStr))
                     {
-                        var value = attribute.CheckoutAttributeValues.Where(x => x.Id == valueStr).FirstOrDefault(); //_checkoutAttributeService.GetCheckoutAttributeValueById(id);
+                        var value = attribute.CheckoutAttributeValues.Where(x => x.Id == valueStr).FirstOrDefault(); 
                         if (value != null)
                             values.Add(value);
                     }

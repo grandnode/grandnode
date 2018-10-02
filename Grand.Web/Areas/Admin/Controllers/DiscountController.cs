@@ -301,7 +301,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                     && discount.DiscountType != DiscountType.AssignedToSkus)
                 {
                     //applied to products
-                    //var products = discount.AppliedToProducts.ToList();
                     var products = _productService.GetProductsByDiscount(discount.Id);
 
                     foreach (var p in products)

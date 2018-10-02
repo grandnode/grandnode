@@ -265,11 +265,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
                     var product = _productService.GetProductById(idProduct);
                     var productReview = _productService.GetProductReviewById(idReview);
-                    //var product = _productService.GetProductById(productReview.ProductId);
                     if (productReview != null)
                     {
                         productReview.IsApproved = false;
-                        //_productService.UpdateProduct(product);
                         _productService.UpdateProductReview(productReview);
                         //update product totals
                         _productService.UpdateProductReviewTotals(product);

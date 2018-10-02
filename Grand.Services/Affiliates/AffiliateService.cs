@@ -50,9 +50,6 @@ namespace Grand.Services.Affiliates
         /// <returns>Affiliate</returns>
         public virtual Affiliate GetAffiliateById(string affiliateId)
         {
-            //if (affiliateId == 0)
-            //    return null;
-            
             return _affiliateRepository.GetById(affiliateId);
         }
         

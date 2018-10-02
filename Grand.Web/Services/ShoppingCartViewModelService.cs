@@ -1193,7 +1193,7 @@ namespace Grand.Web.Services
                     case AttributeControlType.ReadonlyCheckboxes:
                         {
                             //load read-only (already server-side selected) values
-                            var attributeValues = attribute.CheckoutAttributeValues; //_checkoutAttributeService.GetCheckoutAttributeValues(attribute.Id);
+                            var attributeValues = attribute.CheckoutAttributeValues; 
                             foreach (var selectedAttributeId in attributeValues
                                 .Where(v => v.IsPreSelected)
                                 .Select(v => v.Id)
@@ -1267,7 +1267,7 @@ namespace Grand.Web.Services
             string attributesXml = "";
 
             #region Product attributes
-            var productAttributes = product.ProductAttributeMappings; //_productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+            var productAttributes = product.ProductAttributeMappings; 
             foreach (var attribute in productAttributes)
             {
                 string controlId = string.Format("product_attribute_{0}", attribute.Id);
@@ -1303,7 +1303,7 @@ namespace Grand.Web.Services
                     case AttributeControlType.ReadonlyCheckboxes:
                         {
                             //load read-only (already server-side selected) values
-                            var attributeValues = attribute.ProductAttributeValues; //_productAttributeService.GetProductAttributeValues(attribute.Id);
+                            var attributeValues = attribute.ProductAttributeValues; 
                             foreach (var selectedAttributeId in attributeValues
                                 .Where(v => v.IsPreSelected)
                                 .Select(v => v.Id)

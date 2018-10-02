@@ -21,9 +21,6 @@ namespace Grand.Core.Plugins
             if (String.IsNullOrEmpty(text))
                 return new List<string>();
             
-            //Old way of file reading. This leads to unexpected behavior when a user's FTP program transfers these files as ASCII (\r\n becomes \n).
-            //var lines = text.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-            
             var lines = new List<string>();
             using (var reader = new StringReader(text))
             {
@@ -65,9 +62,6 @@ namespace Grand.Core.Plugins
                     settings.Add(str.Trim());
                 }
             }
-
-            //Old way of file reading. This leads to unexpected behavior when a user's FTP program transfers these files as ASCII (\r\n becomes \n).
-            //var settings = text.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (var setting in settings)
             {

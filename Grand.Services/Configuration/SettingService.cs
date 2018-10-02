@@ -8,7 +8,6 @@ using Grand.Core.Caching;
 using Grand.Core.Configuration;
 using Grand.Core.Data;
 using Grand.Core.Domain.Configuration;
-using Grand.Core.ComponentModel;
 using Grand.Services.Events;
 using System.ComponentModel;
 using MongoDB.Driver;
@@ -141,9 +140,6 @@ namespace Grand.Services.Configuration
             if (clearCache)
                 _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
 
-            //event notification
-            //Removed because of write performance settings
-            //_eventPublisher.EntityInserted(setting);
         }
 
         /// <summary>
@@ -162,10 +158,6 @@ namespace Grand.Services.Configuration
             if (clearCache)
                 _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
 
-            //event notification
-            //Removed because of write performance settings
-            //_eventPublisher.EntityUpdated(setting);
-
         }
 
         /// <summary>
@@ -182,9 +174,6 @@ namespace Grand.Services.Configuration
             //cache
             _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
 
-            //event notification
-            //Removed because of write performance settings
-            //_eventPublisher.EntityDeleted(setting);
         }
 
         /// <summary>

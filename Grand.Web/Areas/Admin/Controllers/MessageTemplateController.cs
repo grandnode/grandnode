@@ -4,7 +4,6 @@ using Grand.Framework.Mvc.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Messages;
 using Grand.Core.Domain.Messages;
@@ -382,8 +381,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //filter them to the current template
             var subject = messageTemplate.GetLocalized(mt => mt.Subject, languageId);
             var body = messageTemplate.GetLocalized(mt => mt.Body, languageId);
-            //subject = messageTemplate.Subject;
-            //body = messageTemplate.Body;
+
             tokens = tokens.Where(x => subject.Contains(x) || body.Contains(x)).ToList();
             model.Tokens = tokens;
 

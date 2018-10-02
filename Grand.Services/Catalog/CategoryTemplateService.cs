@@ -60,8 +60,7 @@ namespace Grand.Services.Catalog
         /// <returns>Category templates</returns>
         public virtual IList<CategoryTemplate> GetAllCategoryTemplates()
         {
-            //return templates;
-            return _categoryTemplateRepository.Collection.Find(new BsonDocument()).SortBy(x => x.DisplayOrder).ToList();
+            return _categoryTemplateRepository.Collection.AsQueryable().OrderBy(x => x.DisplayOrder).ToList();
         }
  
         /// <summary>

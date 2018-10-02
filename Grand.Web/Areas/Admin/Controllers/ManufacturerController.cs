@@ -354,8 +354,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
                 _urlRecordService.SaveSlug(manufacturer, model.SeName, "");
                
-                //update "HasDiscountsApplied" property
-                //_manufacturerService.UpdateHasDiscountsApplied(manufacturer);
                 //update picture seo file name
                 UpdatePictureSeoNames(manufacturer);
                 

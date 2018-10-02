@@ -1089,7 +1089,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 product.SeName = model.SeName;
                 product.Locales = UpdateLocales(product, model);
 
-                //_productService.UpdateProduct(product);
                 //search engine name
                 _urlRecordService.SaveSlug(product, model.SeName, "");
                 //tags
@@ -5114,7 +5113,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                     .ToList();
                 foreach (var attribute in attributes)
                 {
-                    //string controlId = string.Format("product_attribute_{0}_{1}", attribute.ProductAttributeId, attribute.Id);
                     attribute.ProductId = productId;
                     string controlId = string.Format("product_attribute_{0}", attribute.Id);
                     switch (attribute.AttributeControlType)

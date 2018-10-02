@@ -1399,8 +1399,6 @@ namespace Grand.Services.Messages
 
             //tokens
             var tokens = new List<Token>();
-            //var _forumTopic = EngineContext.Current.Resolve<IForumService>().GetTopicById(forumPost.TopicId);
-
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             _messageTokenProvider.AddForumPostTokens(tokens, forumPost);
             _messageTokenProvider.AddForumTopicTokens(tokens, forumTopic,

@@ -110,7 +110,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 string formKey = "allow_" + cr.Id;
                 var permissionRecordSystemNamesToRestrict = form[formKey].ToString() != null ? form[formKey].ToString().Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>();
-                //cr.PermissionRecords.Clear();
                 foreach (var pr in permissionRecords)
                 {
 

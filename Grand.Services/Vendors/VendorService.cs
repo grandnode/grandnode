@@ -290,7 +290,6 @@ namespace Grand.Services.Vendors
             if (vendorreview == null)
                 throw new ArgumentNullException("vendorreview");
 
-            //_vendorPictureRepository.Update(vendorPicture);
             var builder = Builders<VendorReview>.Filter;
             var filter = builder.Eq(x => x.Id, vendorreview.Id);
             var update = Builders<VendorReview>.Update

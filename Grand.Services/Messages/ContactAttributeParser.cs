@@ -96,7 +96,7 @@ namespace Grand.Services.Messages
                 {
                     if (!String.IsNullOrEmpty(valueStr))
                     {
-                        var value = attribute.ContactAttributeValues.Where(x => x.Id == valueStr).FirstOrDefault(); //_contactAttributeService.GetContactAttributeValueById(id);
+                        var value = attribute.ContactAttributeValues.Where(x => x.Id == valueStr).FirstOrDefault(); 
                         if (value != null)
                             values.Add(value);
                     }

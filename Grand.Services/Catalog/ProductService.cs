@@ -1339,7 +1339,6 @@ namespace Grand.Services.Catalog
                             //event notification
                             _eventPublisher.EntityUpdated(product);
 
-                            //UpdateProduct(product);
                             break;
                         case LowStockActivity.Unpublish:
                             product.Published = false;
@@ -1885,7 +1884,6 @@ namespace Grand.Services.Catalog
             }
             //cache
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
-            //_cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityUpdated(product);
@@ -2049,7 +2047,6 @@ namespace Grand.Services.Catalog
 
             //cache
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, crossSellProduct.ProductId1));
-            //_crossSellProductRepository.Delete(crossSellProduct);
 
             //event notification
             _eventPublisher.EntityDeleted(crossSellProduct);
@@ -2065,7 +2062,6 @@ namespace Grand.Services.Catalog
             if (crossSellProduct == null)
                 throw new ArgumentNullException("crossSellProduct");
 
-            //_crossSellProductRepository.Insert(crossSellProduct);
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.AddToSet(p => p.CrossSellProduct, crossSellProduct.ProductId2);
             _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", crossSellProduct.ProductId1), update);
@@ -2105,7 +2101,7 @@ namespace Grand.Services.Catalog
             foreach (var sci in cart)
             {
                 var product = GetProductById(sci.ProductId);
-                var crossSells = product.CrossSellProduct; //GetCrossSellProductsByProductId1(sci.ProductId);
+                var crossSells = product.CrossSellProduct;
                 foreach (var crossSell in crossSells)
                 {
                     //validate that this product is not added to result yet
@@ -2140,7 +2136,6 @@ namespace Grand.Services.Catalog
             if (tierPrice == null)
                 throw new ArgumentNullException("tierPrice");
 
-            //_tierPriceRepository.Delete(tierPrice);
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.Pull(p => p.TierPrices, tierPrice);
             _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", tierPrice.ProductId), update);
@@ -2161,8 +2156,6 @@ namespace Grand.Services.Catalog
             if (tierPrice == null)
                 throw new ArgumentNullException("tierPrice");
 
-            //_tierPriceRepository.Insert(tierPrice);
-            
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.AddToSet(p => p.TierPrices, tierPrice);
             _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", tierPrice.ProductId), update);
@@ -2238,7 +2231,6 @@ namespace Grand.Services.Catalog
             if (productPicture == null)
                 throw new ArgumentNullException("productPicture");
 
-            //_productPictureRepository.Insert(productPicture);
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.AddToSet(p => p.ProductPictures, productPicture);
             _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productPicture.ProductId), update);
@@ -2309,7 +2301,6 @@ namespace Grand.Services.Catalog
             if (productPicture == null)
                 throw new ArgumentNullException("productPicture");
 
-            //_productPictureRepository.Update(productPicture);
             var builder = Builders<Product>.Filter;
             var filter = builder.Eq(x => x.Id, productPicture.ProductId);
             filter = filter & builder.ElemMatch(x => x.ProductPictures, y => y.Id == productPicture.Id);
@@ -2547,7 +2538,6 @@ namespace Grand.Services.Catalog
             if (pwi == null)
                 throw new ArgumentNullException("pwi");
 
-            //_productWarehouseInventoryRepository.Delete(pwi);
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.Pull(p => p.ProductWarehouseInventory, pwi);
             _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", pwi.ProductId), update);

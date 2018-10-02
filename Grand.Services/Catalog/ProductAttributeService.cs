@@ -248,8 +248,6 @@ namespace Grand.Services.Catalog
             if (productAttributeMapping == null)
                 throw new ArgumentNullException("productAttributeMapping");
 
-            //_productAttributeMappingRepository.Delete(productAttributeMapping);
-
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.PullFilter(p => p.ProductAttributeMappings, y=>y.Id == productAttributeMapping.Id);
             _productRepository.Collection.UpdateManyAsync(new BsonDocument("_id", productAttributeMapping.ProductId), update);
@@ -270,7 +268,6 @@ namespace Grand.Services.Catalog
             if (productAttributeMapping == null)
                 throw new ArgumentNullException("productAttributeMapping");
 
-            //_productAttributeMappingRepository.Insert(productAttributeMapping);
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.AddToSet(p => p.ProductAttributeMappings, productAttributeMapping);
             _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productAttributeMapping.ProductId), update);
@@ -290,8 +287,6 @@ namespace Grand.Services.Catalog
         {
             if (productAttributeMapping == null)
                 throw new ArgumentNullException("productAttributeMapping");
-
-            //_productAttributeMappingRepository.Update(productAttributeMapping);
 
             var builder = Builders<Product>.Filter;
             var filter = builder.Eq(x => x.Id, productAttributeMapping.ProductId);
@@ -368,7 +363,6 @@ namespace Grand.Services.Catalog
             if (productAttributeValue == null)
                 throw new ArgumentNullException("productAttributeValue");
 
-            //_productAttributeValueRepository.Insert(productAttributeValue);
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.AddToSet(p => p.ProductAttributeMappings.ElementAt(-1).ProductAttributeValues, productAttributeValue);
 
@@ -469,8 +463,6 @@ namespace Grand.Services.Catalog
         {
             if (combination == null)
                 throw new ArgumentNullException("combination");
-
-            //_productAttributeCombinationRepository.Delete(combination);
 
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.Pull(p => p.ProductAttributeCombinations, combination);

@@ -50,11 +50,6 @@ namespace Grand.Core.Domain.Orders
         public int DisplayOrder { get; set; }
 
         /// <summary>
-        /// Gets or sets the checkout attribute
-        /// </summary>
-        //public virtual CheckoutAttribute CheckoutAttribute { get; set; }
-
-        /// <summary>
         /// Gets or sets the collection of locales
         /// </summary>
         public IList<LocalizedProperty> Locales { get; set; }

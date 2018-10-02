@@ -80,8 +80,7 @@ namespace Grand.Services.Catalog
             //store
             if (!String.IsNullOrEmpty(storeId))
                 query = query.Where(biss => biss.StoreId == storeId);
-            //product
-            //query = query.Where(biss => !biss.Product.Deleted);
+
             query = query.OrderByDescending(biss => biss.CreatedOnUtc);
 
             return new PagedList<BackInStockSubscription>(query, pageIndex, pageSize);

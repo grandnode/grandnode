@@ -393,7 +393,7 @@ namespace Grand.Web.Services
             else if (!String.IsNullOrEmpty(currentProductId))
             {
                 //product details page
-                var productCategories = _productService.GetProductById(currentProductId).ProductCategories; //_categoryService.GetProductCategoriesByProductId(currentProductId);
+                var productCategories = _productService.GetProductById(currentProductId).ProductCategories; 
                 if (productCategories.Any())
                     activeCategoryId = productCategories.FirstOrDefault().CategoryId;
             }
@@ -1449,7 +1449,6 @@ namespace Grand.Web.Services
                             vendorId = model.vid;
                     }
 
-                    //var searchInProductTags = false;
                     var searchInProductTags = searchInDescriptions;
 
                     //products

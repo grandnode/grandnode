@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc;
 using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Domain.Catalog;
@@ -10,7 +9,6 @@ using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Framework.Mvc.Models;
 using Grand.Framework.UI.Paging;
-using Grand.Core.Infrastructure;
 using Grand.Web.Infrastructure.Cache;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -282,8 +280,6 @@ namespace Grand.Web.Models.Catalog
 
                 foreach (var spec in alreadyFilteredSpecsStr.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    //string specId;
-                    //int.TryParse(spec.Trim(), out specId);
                     if (!result.Contains(spec))
                         result.Add(spec);
                 }

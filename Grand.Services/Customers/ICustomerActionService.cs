@@ -41,7 +41,6 @@ namespace Grand.Services.Customers
         /// <param name="customerTag">Customer tag</param>
         void UpdateCustomerAction(CustomerAction customerAction);
 
-        //CustomerActionConditionType GetCustomerActionConditionTypeById(string id);
         IList<CustomerActionType> GetCustomerActionType();
         CustomerActionType GetCustomerActionTypeById(string id);
 

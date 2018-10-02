@@ -2475,7 +2475,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     case AttributeControlType.ReadonlyCheckboxes:
                         {
                             //load read-only (already server-side selected) values
-                            var attributeValues = attribute.ProductAttributeValues; //_productAttributeService.GetProductAttributeValues(attribute.Id);
+                            var attributeValues = attribute.ProductAttributeValues; 
                             foreach (var selectedAttributeId in attributeValues
                                 .Where(v => v.IsPreSelected)
                                 .Select(v => v.Id)
@@ -2696,7 +2696,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (order.ShippingAddress.Id == addressId)
                     address = order.ShippingAddress;
 
-            //var address = order.BillingAddress!=null == addressId ? order.BillingAddress : order.ShippingAddress;  //_addressService.GetAddressById(addressId);
             if (address == null)
                 throw new ArgumentException("No address found with the specified id", "addressId");
 
@@ -2771,7 +2770,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (order.ShippingAddress != null)
                 if (order.ShippingAddress.Id == model.Address.Id)
                     address = order.ShippingAddress;
-            //var address = order.BillingAddressId == model.Address.Id ? order.BillingAddress : order.ShippingAddress; //_addressService.GetAddressById(model.Address.Id);
+
             if (address == null)
                 throw new ArgumentException("No address found with the specified id");
 

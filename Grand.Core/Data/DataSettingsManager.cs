@@ -24,8 +24,6 @@ namespace Grand.Core.Data
             if (String.IsNullOrEmpty(text))
                 return shellSettings;
 
-            //Old way of file reading. This leads to unexpected behavior when a user's FTP program transfers these files as ASCII (\r\n becomes \n).
-            //var settings = text.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             var settings = new List<string>();
             using (var reader = new StringReader(text))
             {

@@ -77,7 +77,6 @@ namespace Grand.Services.Catalog
         private readonly IRepository<Manufacturer> _manufacturerRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<AclRecord> _aclRepository;
-        //private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly IEventPublisher _eventPublisher;
@@ -95,7 +94,6 @@ namespace Grand.Services.Catalog
         /// <param name="manufacturerRepository">Category repository</param>
         /// <param name="productRepository">Product repository</param>
         /// <param name="aclRepository">ACL record repository</param>
-        /// <param name="storeMappingRepository">Store mapping repository</param>
         /// <param name="workContext">Work context</param>
         /// <param name="storeContext">Store context</param>
         /// <param name="catalogSettings">Catalog settings</param>
@@ -104,7 +102,6 @@ namespace Grand.Services.Catalog
             IRepository<Manufacturer> manufacturerRepository,
             IRepository<Product> productRepository,
             IRepository<AclRecord> aclRepository,
-            //IRepository<StoreMapping> storeMappingRepository,
             IWorkContext workContext,
             IStoreContext storeContext,
             CatalogSettings catalogSettings,
@@ -114,7 +111,6 @@ namespace Grand.Services.Catalog
             this._manufacturerRepository = manufacturerRepository;
             this._productRepository = productRepository;
             this._aclRepository = aclRepository;
-            //this._storeMappingRepository = storeMappingRepository;
             this._workContext = workContext;
             this._storeContext = storeContext;
             this._catalogSettings = catalogSettings;
@@ -248,7 +244,6 @@ namespace Grand.Services.Catalog
             if (productManufacturer == null)
                 throw new ArgumentNullException("productManufacturer");
 
-            //_productManufacturerRepository.Delete(productManufacturer);
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.Pull(p => p.ProductManufacturers, productManufacturer);
             _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productManufacturer.ProductId), update);
@@ -346,7 +341,6 @@ namespace Grand.Services.Catalog
             if (productManufacturer == null)
                 throw new ArgumentNullException("productManufacturer");
 
-            //_productManufacturerRepository.Insert(productManufacturer);
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.AddToSet(p => p.ProductManufacturers, productManufacturer);
             _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productManufacturer.ProductId), update);
@@ -368,8 +362,6 @@ namespace Grand.Services.Catalog
         {
             if (productManufacturer == null)
                 throw new ArgumentNullException("productManufacturer");
-
-            //_productManufacturerRepository.Update(productManufacturer);
 
             var builder = Builders<Product>.Filter;
             var filter = builder.Eq(x => x.Id, productManufacturer.ProductId);

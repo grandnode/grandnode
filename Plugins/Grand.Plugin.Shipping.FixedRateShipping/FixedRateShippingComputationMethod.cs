@@ -8,7 +8,6 @@ using Grand.Services.Shipping;
 using Grand.Services.Shipping.Tracking;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using System;
 using System.Collections.Generic;
 
@@ -184,7 +183,6 @@ namespace Grand.Plugin.Shipping.FixedRateShipping
             get
             {
                 //uncomment a line below to return a general shipment tracker (finds an appropriate tracker by tracking number)
-                //return new GeneralShipmentTracker(EngineContext.Current.Resolve<ITypeFinder>());
                 return null;
             }
         }

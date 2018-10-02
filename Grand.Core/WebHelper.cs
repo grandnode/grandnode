@@ -487,7 +487,6 @@ namespace Grand.Core
             get
             {
                 var response = _httpContextAccessor.HttpContext.Response;
-                //ASP.NET 4 style - return response.IsRequestBeingRedirected;
                 int[] redirectionStatusCodes = { 301, 302 };
                 return redirectionStatusCodes.Contains(response.StatusCode);
             }

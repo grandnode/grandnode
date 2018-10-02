@@ -737,7 +737,7 @@ namespace Grand.Web.Areas.Admin.Extensions
                 if (attribute.ShouldHaveValues())
                 {
                     //values
-                    var attributeValues = attribute.AddressAttributeValues; //addressAttributeService.GetAddressAttributeValues(attribute.Id);
+                    var attributeValues = attribute.AddressAttributeValues; 
                     foreach (var attributeValue in attributeValues)
                     {
                         var attributeValueModel = new AddressModel.AddressAttributeValueModel

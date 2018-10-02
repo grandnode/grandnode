@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-
 using Grand.Core.Domain.Catalog;
 using Grand.Services.Common;
 using Microsoft.AspNetCore.Http;
@@ -54,7 +53,7 @@ namespace Grand.Web.Areas.Admin.Extensions
                     case AttributeControlType.ReadonlyCheckboxes:
                         {
                             //load read-only (already server-side selected) values
-                            var attributeValues = attribute.AddressAttributeValues; //addressAttributeService.GetAddressAttributeValues(attribute.Id);
+                            var attributeValues = attribute.AddressAttributeValues; 
                             foreach (var selectedAttributeId in attributeValues
                                 .Where(v => v.IsPreSelected)
                                 .Select(v => v.Id)

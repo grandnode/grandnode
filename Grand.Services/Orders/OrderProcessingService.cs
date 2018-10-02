@@ -1825,7 +1825,6 @@ namespace Grand.Services.Orders
                 //only products with "use multiple warehouses"
                 foreach (var shipment in _shipmentService.GetShipmentsByOrder(order.Id))
                 {
-                    //var order = _orderService.GetOrderById(shipment.OrderId);
                     foreach (var shipmentItem in shipment.ShipmentItems)
                     {
                         var product = _productService.GetProductById(shipmentItem.ProductId);
@@ -2894,7 +2893,6 @@ namespace Grand.Services.Orders
 
             //update order info
             order.RefundedAmount = totalAmountRefunded;
-            //if (order.OrderTotal == totalAmountRefunded), then set order.PaymentStatus = PaymentStatus.Refunded;
             order.PaymentStatus = PaymentStatus.PartiallyRefunded;
             _orderService.UpdateOrder(order);
 

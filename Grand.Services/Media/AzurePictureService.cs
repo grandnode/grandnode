@@ -62,7 +62,6 @@ namespace Grand.Services.Media
             blobClient = _storageAccount.CreateCloudBlobClient();
             BlobContainerPermissions containerPermissions = new BlobContainerPermissions();
             containerPermissions.PublicAccess = BlobContainerPublicAccessType.Blob;
-            //container.SetPermissions(containerPermissions);
             container_thumb = blobClient.GetContainerReference(_config.AzureBlobStorageContainerName);
             container_thumb.CreateIfNotExistsAsync();
             container_thumb.SetPermissionsAsync(containerPermissions);

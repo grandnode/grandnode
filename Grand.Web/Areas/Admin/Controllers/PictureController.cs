@@ -21,9 +21,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [AdminAntiForgery(true)]
         public virtual IActionResult AsyncUpload()
         {
-            //if (!_permissionService.Authorize(StandardPermissionProvider.UploadPictures))
-            //    return Json(new { success = false, error = "You do not have required permissions" }, "text/plain");
-
             var httpPostedFile = Request.Form.Files.FirstOrDefault();
             if (httpPostedFile == null)
             {

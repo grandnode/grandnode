@@ -190,7 +190,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _currencyService.UpdateCurrency(currency);
             }
             return Json(new { result = true });
-            //return RedirectToAction("List","Currency", new { liveRates = true });
         }
 
         [HttpPost]

@@ -19,7 +19,6 @@ namespace Grand.Services.News
         #region Fields
 
         private readonly IRepository<NewsItem> _newsItemRepository;
-        //private readonly IRepository<NewsComment> _newsCommentRepository;
         private readonly CatalogSettings _catalogSettings;
         private readonly IEventPublisher _eventPublisher;
         private readonly IWorkContext _workContext;
@@ -29,13 +28,11 @@ namespace Grand.Services.News
         #region Ctor
 
         public NewsService(IRepository<NewsItem> newsItemRepository, 
-            //IRepository<NewsComment> newsCommentRepository,
             CatalogSettings catalogSettings,
             IEventPublisher eventPublisher,
             IWorkContext workContext)
         {
             this._newsItemRepository = newsItemRepository;
-            //this._newsCommentRepository = newsCommentRepository;
             this._catalogSettings = catalogSettings;
             this._eventPublisher = eventPublisher;
             this._workContext = workContext;

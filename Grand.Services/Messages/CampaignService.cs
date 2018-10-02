@@ -253,7 +253,6 @@ namespace Grand.Services.Messages
         {
             public CampaignCustomerHelp()
             {
-                //CustomerTags = new List<string>();
                 CustomerRoles = new List<CustomerRole>();
             }
             public string CustomerId { get; set; }

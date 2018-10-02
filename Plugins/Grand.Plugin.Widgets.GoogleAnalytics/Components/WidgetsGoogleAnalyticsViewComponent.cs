@@ -125,7 +125,7 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics.Components
                     string category = "";
                     if (product.ProductCategories.FirstOrDefault() != null)
                     {
-                        var defaultProductCategory = _categoryService.GetCategoryById(product.ProductCategories.FirstOrDefault().CategoryId); //_categoryService.GetProductCategoriesByProductId(item.ProductId).FirstOrDefault();
+                        var defaultProductCategory = _categoryService.GetCategoryById(product.ProductCategories.FirstOrDefault().CategoryId); 
                         if (defaultProductCategory != null)
                             category = defaultProductCategory.Name;
                     }

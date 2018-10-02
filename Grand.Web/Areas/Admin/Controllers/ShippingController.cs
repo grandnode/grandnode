@@ -840,7 +840,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No pickup pint found with the specified id
                 return RedirectToAction("PickupPoints");
 
-            //var address = _addressService.GetAddressByIdSettings(pickuppoint.AddressId);
             var model = new PickupPointModel
             {
                 Id = pickuppoint.Id,

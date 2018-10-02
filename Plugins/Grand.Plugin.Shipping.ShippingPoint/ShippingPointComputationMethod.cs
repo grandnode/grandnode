@@ -299,8 +299,6 @@ namespace Grand.Plugin.Shipping.ShippingPoint
         {
             get
             {
-                //uncomment a line below to return a general shipment tracker (finds an appropriate tracker by tracking number)
-                //return new GeneralShipmentTracker(EngineContext.Current.Resolve<ITypeFinder>());
                 return null;
             }
         }

@@ -276,7 +276,6 @@ namespace Grand.Plugin.Feed.GoogleShopping
                         //google product category [google_product_category] - Google's category of the item
                         //the category of the product according to Google’s product taxonomy. http://www.google.com/support/merchants/bin/answer.py?answer=160081
                         string googleProductCategory = "";
-                        //var googleProduct = _googleService.GetByProductId(product.Id);
                         var googleProduct = allGoogleProducts.FirstOrDefault(x => x.ProductId == product.Id);
                         if (googleProduct != null)
                             googleProductCategory = googleProduct.Taxonomy;

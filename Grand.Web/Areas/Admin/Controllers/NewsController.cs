@@ -467,8 +467,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (comment == null)
                 throw new ArgumentException("No comment found with the specified id");
 
-            //var newsItem = _newsService.GetNewsById(comment.NewsItemId);
-            //_newsService.(comment);
             newsItem.NewsComments.Remove(comment);
             //update totals
             newsItem.CommentCount = newsItem.NewsComments.Count;

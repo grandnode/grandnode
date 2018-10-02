@@ -87,8 +87,6 @@ namespace Grand.Framework.Seo
             //performance optimization, we load a cached verion here. It reduces number of SQL requests for each page load
             var urlRecordService = EngineContext.Current.Resolve<IUrlRecordService>();
             var urlRecord = urlRecordService.GetBySlugCached(slug);
-            //comment the line above and uncomment the line below in order to disable this performance "workaround"
-            //var urlRecord = urlRecordService.GetBySlug(slug);
 
             //no URL record found
             if (urlRecord == null)

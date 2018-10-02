@@ -33,11 +33,6 @@ namespace Grand.Core.Domain.Customers
         public int DisplayOrder { get; set; }
 
         /// <summary>
-        /// Gets or sets the customer attribute
-        /// </summary>
-        //public virtual CustomerAttribute CustomerAttribute { get; set; }
-
-        /// <summary>
         /// Gets or sets the collection of locales
         /// </summary>
         public IList<LocalizedProperty> Locales { get; set; }

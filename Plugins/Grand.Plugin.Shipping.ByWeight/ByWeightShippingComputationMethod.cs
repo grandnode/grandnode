@@ -11,7 +11,6 @@ using Grand.Services.Localization;
 using Grand.Plugin.Shipping.ByWeight.Services;
 using Grand.Services.Catalog;
 using Grand.Core.Infrastructure;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 
 namespace Grand.Plugin.Shipping.ByWeight
@@ -248,7 +247,6 @@ namespace Grand.Plugin.Shipping.ByWeight
             get
             {
                 //uncomment a line below to return a general shipment tracker (finds an appropriate tracker by tracking number)
-                //return new GeneralShipmentTracker(EngineContext.Current.Resolve<ITypeFinder>());
                 return null;
             }
         }

@@ -100,7 +100,7 @@ namespace Grand.Services.Customers
                 {
                     if (!String.IsNullOrEmpty(valueStr))
                     {
-                        var value = attribute.CustomerAttributeValues.FirstOrDefault(x => x.Id == valueStr); //_customerAttributeService.GetCustomerAttributeValueById(id);
+                        var value = attribute.CustomerAttributeValues.FirstOrDefault(x => x.Id == valueStr); 
                         if (value != null)
                             values.Add(value);
                     }

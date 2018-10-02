@@ -122,9 +122,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                         });
                 }
                 _addressAttributeService.InsertAddressAttribute(addressAttribute);
-                //locales
-                //UpdateAttributeLocales(addressAttribute, model);
-
 
                 SuccessNotification(_localizationService.GetResource("Admin.Address.AddressAttributes.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = addressAttribute.Id }) : RedirectToAction("List");

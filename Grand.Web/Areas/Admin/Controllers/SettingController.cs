@@ -861,7 +861,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 else
                     _addressService.InsertAddressSettings(originAddress);
 
-                //model.ShippingOriginAddress.Id = addressId;
                 shippingSettings.ShippingOriginAddressId = originAddress.Id;
 
                 _settingService.SaveSetting(shippingSettings, x => x.ShippingOriginAddressId, storeScope, false);
@@ -1918,10 +1917,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                     if (model.OrderIdent > maxOrderNumber)
                     {
                         orderRepository.Insert(new Order() { OrderNumber = model.OrderIdent.Value, Deleted = true, CreatedOnUtc = DateTime.UtcNow });
-                        /* another solution
-                        string command = "{ insert: \"Order\", documents: [  { \"_id\": \"" + ObjectId.GenerateNewId().ToString() + "\", \"OrderNumber\" : NumberInt(" + model.OrderIdent + "), \"Deleted\" : true } ]}";
-                        var result = orderRepository.Database.RunCommand<BsonDocument>(command);
-                        */
                     }
                 }
 

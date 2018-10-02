@@ -55,7 +55,6 @@ namespace Grand.Services.Common
         #region Fields
 
         private readonly IRepository<AddressAttribute> _addressAttributeRepository;
-        //private readonly IRepository<AddressAttributeValue> _addressAttributeValueRepository;
         private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
         
@@ -68,16 +67,13 @@ namespace Grand.Services.Common
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="addressAttributeRepository">Address attribute repository</param>
-        /// <param name="addressAttributeValueRepository">Address attribute value repository</param>
         /// <param name="eventPublisher">Event published</param>
         public AddressAttributeService(ICacheManager cacheManager,
             IRepository<AddressAttribute> addressAttributeRepository,
-            //IRepository<AddressAttributeValue> addressAttributeValueRepository,
             IEventPublisher eventPublisher)
         {
             this._cacheManager = cacheManager;
             this._addressAttributeRepository = addressAttributeRepository;
-            //this._addressAttributeValueRepository = addressAttributeValueRepository;
             this._eventPublisher = eventPublisher;
         }
 

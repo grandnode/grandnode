@@ -437,7 +437,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return Json(new DataSourceResult { Errors = _localizationService.GetResource("Admin.Configuration.Countries.States.CantDeleteWithAddresses") });
             }
 
-            //int countryId = state.CountryId;
             _stateProvinceService.DeleteStateProvince(state);
 
             return new NullJsonResult();

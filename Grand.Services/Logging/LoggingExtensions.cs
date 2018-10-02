@@ -29,11 +29,6 @@ namespace Grand.Services.Logging
 
         private static void FilteredLog(ILogger logger, LogLevel level, string message, Exception exception = null, Customer customer = null)
         {
-            //don't log thread abort exception
-            //TO DO
-            //if (exception is System.Threading.ThreadAbortException)
-            //    return;
-
             if (logger.IsEnabled(level))
             {
                 string fullMessage = exception == null ? string.Empty : exception.ToString();

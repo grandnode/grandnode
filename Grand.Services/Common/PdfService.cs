@@ -443,9 +443,6 @@ namespace Grand.Services.Common
                 doc.Add(productsHeader);
                 doc.Add(new Paragraph(" "));
 
-
-                //var orderItems = _orderService.GetAllOrderItems(order.Id, null, null, null, null, null, null);
-
                 var productsTable = new PdfPTable(_catalogSettings.ShowSkuOnProductDetailsPage ? 5 : 4);
                 productsTable.RunDirection = GetDirection(lang);
                 productsTable.WidthPercentage = 100f;

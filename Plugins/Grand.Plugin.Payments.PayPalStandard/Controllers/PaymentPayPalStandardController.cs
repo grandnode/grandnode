@@ -422,7 +422,6 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
                                     }
                                 }
 
-                                //this.OrderService.InsertOrderNote(newOrder.OrderId, sb.ToString(), DateTime.UtcNow);
                                 _logger.Information("PayPal IPN. Recurring info", new GrandException(sb.ToString()));
                             }
                             else 

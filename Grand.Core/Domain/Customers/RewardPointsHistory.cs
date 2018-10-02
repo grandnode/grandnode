@@ -42,12 +42,7 @@ namespace Grand.Core.Domain.Customers
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
 
-        /// <summary>
-        /// Gets or sets the order for which points were redeemed as a payment
-        /// </summary>
-        //public virtual Order UsedWithOrder { get; set; }
         public virtual string UsedWithOrderId { get; set; }
-
        
     }
 }
