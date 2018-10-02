@@ -13,23 +13,14 @@ namespace Grand.Core.Domain.Catalog.Tests
             Assert.AreNotSame(product01, product02);
         }
 
-        [TestMethod()]
-        public void Two_references_with_the_same_id_should_be_equal() {
-            string tempID = "123";
-            Product product01 = new Product { Id = tempID };
-            Product product02 = new Product { Id = tempID };
-            
-            Assert.AreEqual(product01, product02, "Encje z tym samym ID powinny byc równe");
-            Assert.AreNotSame(product01, product02, "Encje z tym samym ID nie mogą być tym samym obiektem");
-        }
+        
 
         [TestMethod()]
         public void Two_references_with_the_different_id_should_not_be_equal() {
             Product product01 = new Product { Id = "123" };
             Product product02 = new Product { Id = "321" };
 
-            Assert.AreNotEqual(product01, product02, "Encje z tym różnym ID nie mogą byc równe");
-            Assert.AreNotSame(product01, product02, "Encje z tym samym ID nie mogą być tym samym obiektem");
+            Assert.AreNotEqual(product01, product02, "Entities with different ids should not be equal");
         }
 
         [TestMethod()]
@@ -38,18 +29,9 @@ namespace Grand.Core.Domain.Catalog.Tests
             Product product01 = new Product { Id = tempID };
             Category product02 = new Category { Id = tempID };
 
-            Assert.AreNotEqual(product01, product02, "Encje z tym samym ID ale o innym typie (Product i Category) nie mogą byc równe");
+            Assert.AreNotEqual(product01, product02, "Entities of different types should not be equal, even if they have the same id");
         }
 
-        [TestMethod()]
-        public void Overloaded_operators_work_fine() {
-            string tempID = "123";
-            Product product01 = new Product { Id = tempID };
-            Product product02 = new Product { Id = tempID };
-            Product product03 = new Product { Id = "4444" };
-
-            Assert.IsTrue(product01 == product02);
-            Assert.IsTrue(product01 != product03);
-        }
+        
     }
 }
