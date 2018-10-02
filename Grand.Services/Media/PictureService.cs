@@ -790,7 +790,7 @@ namespace Grand.Services.Media
                         byteArray = ApplyResize(byteArray, _mediaSettings.MaximumImageSize, new Size(image.Width, image.Height));
                 }
                 return byteArray;
-            };
+            }
         }
 
         protected byte[] ApplyResize(byte[] byteArray, int targetSize, Size originalSize = default(Size))

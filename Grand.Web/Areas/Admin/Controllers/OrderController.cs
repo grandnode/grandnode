@@ -520,7 +520,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.BillingAddress.FaxEnabled = _addressSettings.FaxEnabled;
             model.BillingAddress.FaxRequired = _addressSettings.FaxRequired;
 
-            model.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext); ;
+            model.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);
             if (order.ShippingStatus != ShippingStatus.ShippingNotRequired)
             {
                 model.IsShippable = true;

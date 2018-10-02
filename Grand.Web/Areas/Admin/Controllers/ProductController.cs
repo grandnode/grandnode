@@ -5009,7 +5009,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                                 warehouseInventoryModel.StockQuantity = _winv.StockQuantity;
                                 warehouseInventoryModel.ReservedQuantity = _winv.ReservedQuantity;
                                 warehouseInventoryModel.PlannedQuantity = _shipmentService.GetQuantityInShipments(product, combination.AttributesXml, _winv.WarehouseId, true, true);
-                                ;
                             }
                         }
                     }
@@ -5745,7 +5744,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                             });
                         }
                     }
-                    catch { };
+                    catch { }
                 }
             }
 

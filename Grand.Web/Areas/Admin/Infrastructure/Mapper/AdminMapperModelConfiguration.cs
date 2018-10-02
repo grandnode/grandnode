@@ -269,7 +269,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.AppliedDiscounts, mo => mo.Ignore());
-            ;
 
             //vendors
             CreateMap<Vendor, VendorModel>()

@@ -689,7 +689,6 @@ namespace Grand.Web.Services
                 else
                 {
                     //sub total
-                    ;
                     decimal shoppingCartItemDiscountBase;
                     decimal taxRate;
                     decimal shoppingCartItemSubTotalWithDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetSubTotal(sci, true, out shoppingCartItemDiscountBase, out List<AppliedDiscount> scDiscounts), out taxRate);
