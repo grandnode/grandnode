@@ -10,14 +10,15 @@
 
   <ItemGroup>
     <PackageReference Include="BundlerMinifier.Core" Version="2.8.391" />
-    <PackageReference Include="FluentValidation" Version="7.6.104" />
-    <PackageReference Include="FluentValidation.AspNetCore" Version="7.6.104" />
+    <PackageReference Include="FluentValidation" Version="8.0.100" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="8.0.100" />
+    <PackageReference Include="FluentValidation.ValidatorAttribute" Version="8.0.100" />
     <PackageReference Include="Microsoft.AspNetCore.HttpsPolicy" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Rewrite" Version="2.1.1" />
-    <PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.0.119" />
+    <PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.0.138" />
     <PackageReference Include="System.IO.FileSystem.AccessControl" Version="4.5.0" />
     <PackageReference Include="System.Reflection.Extensions" Version="4.3.0" />
-    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.5.0" />
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.5.1" />
     <PackageReference Include="System.Security.AccessControl" Version="4.5.0" />
   </ItemGroup>
 
