@@ -14,6 +14,8 @@ namespace Grand.Web.Areas.Admin.Models.Topics
         {
             AvailableStores = new List<SelectListItem>();
         }
+        [GrandResourceDisplayName("Admin.ContentManagement.Topics.List.Name")]
+        public string Name { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.Topics.List.SearchStore")]
         public string SearchStoreId { get; set; }

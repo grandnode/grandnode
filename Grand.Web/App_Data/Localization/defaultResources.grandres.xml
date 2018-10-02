@@ -9963,6 +9963,12 @@
   <LocaleResource Name="Admin.ContentManagement.Topics.Info">
     <Value>Info</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.List.Name">
+    <Value>Topic name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.List.Name.hint">
+    <Value>Search by topic name or systemname</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.List.SearchStore">
     <Value>Store</Value>
   </LocaleResource>

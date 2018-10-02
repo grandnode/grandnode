@@ -446,4 +446,10 @@
   <LocaleResource Name="Products.Reviews.Empty">
     <Value>There are no reviews yet</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.List.Name">
+    <Value>Topic name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.List.Name.hint">
+    <Value>Search by topic name or systemname</Value>
+  </LocaleResource>
 </Language>

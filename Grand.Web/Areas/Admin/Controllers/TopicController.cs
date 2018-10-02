@@ -217,6 +217,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             var topicModels = _topicService.GetAllTopics(model.SearchStoreId, true)
                 .Select(x =>x.ToModel())
                 .ToList();
+
+            if(!string.IsNullOrEmpty(model.Name))
+            {
+                topicModels = topicModels.Where
+                    (x => x.SystemName.ToLowerInvariant().Contains(model.Name.ToLowerInvariant()) ||
+                    x.Title.ToLowerInvariant().Contains(model.Name.ToLowerInvariant())).ToList();
+            }
+
             //little hack here:
             //we don't have paging supported for topic list page
             //now ensure that topic bodies are not returned. otherwise, we can get the following error:
