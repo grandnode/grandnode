@@ -20,7 +20,6 @@ namespace Grand.Services.Messages
 
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<NewsLetterSubscription> _subscriptionRepository;
-        private readonly IRepository<Customer> _customerRepository;
         private readonly ICustomerService _customerService;
 
         #endregion
@@ -29,12 +28,10 @@ namespace Grand.Services.Messages
 
         public NewsLetterSubscriptionService(
             IRepository<NewsLetterSubscription> subscriptionRepository,
-            IRepository<Customer> customerRepository,
             IEventPublisher eventPublisher,
             ICustomerService customerService)
         {
             this._subscriptionRepository = subscriptionRepository;
-            this._customerRepository = customerRepository;
             this._eventPublisher = eventPublisher;
             this._customerService = customerService;
         }

@@ -17,7 +17,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         public string Ids {
             get
             {
-                return Id.ToString() + ":" + ProductId.ToString();
+                return Id + ":" + ProductId;
             }
         }
 

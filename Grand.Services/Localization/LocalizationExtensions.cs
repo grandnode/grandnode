@@ -174,8 +174,7 @@ namespace Grand.Services.Localization
 
             //localized value
             string resourceName = string.Format("Enums.{0}.{1}", 
-                typeof(T).ToString(), 
-                //Convert.ToInt32(enumValue)
+                typeof(T),
                 enumValue.ToString());
             string result = localizationService.GetResource(resourceName, languageId, false, "", true);
 

@@ -17,7 +17,6 @@ namespace Grand.Plugin.Payments.CashOnDelivery.Controllers
         private readonly IWorkContext _workContext;
         private readonly IStoreService _storeService;
         private readonly ISettingService _settingService;
-        private readonly IStoreContext _storeContext;
         private readonly ILocalizationService _localizationService;
         private readonly ILanguageService _languageService;
 
@@ -25,14 +24,12 @@ namespace Grand.Plugin.Payments.CashOnDelivery.Controllers
         public PaymentCashOnDeliveryController(IWorkContext workContext,
             IStoreService storeService, 
             ISettingService settingService,
-            IStoreContext storeContext,
             ILocalizationService localizationService,
             ILanguageService languageService)
         {
             this._workContext = workContext;
             this._storeService = storeService;
             this._settingService = settingService;
-            this._storeContext = storeContext;
             this._localizationService = localizationService;
             this._languageService = languageService;
         }
