@@ -42,7 +42,6 @@ namespace Grand.Services.Logging
         private readonly IWorkContext _workContext;
         private readonly IWebHelper _webHelper;
         private readonly IActivityKeywordsProvider _activityKeywordsProvider;
-        private readonly CommonSettings _commonSettings;
         #endregion
 
         #region Ctor
@@ -55,14 +54,12 @@ namespace Grand.Services.Logging
         /// <param name="workContext">Work context</param>
         /// <param name="webHelper">Web helper</param>
         /// <param name="activityKeywordsProvider">Activity Keywords provider</param>
-        /// <param name="commonSettings">Common settings</param>
         public CustomerActivityService(ICacheManager cacheManager,
             IRepository<ActivityLog> activityLogRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
             IWorkContext workContext,
             IWebHelper webHelper,
-            IActivityKeywordsProvider activityKeywordsProvider,
-            CommonSettings commonSettings)
+            IActivityKeywordsProvider activityKeywordsProvider)
         {
             this._cacheManager = cacheManager;
             this._activityLogRepository = activityLogRepository;
@@ -70,7 +67,6 @@ namespace Grand.Services.Logging
             this._workContext = workContext;
             this._webHelper = webHelper;
             this._activityKeywordsProvider = activityKeywordsProvider;
-            this._commonSettings = commonSettings;
         }
 
         #endregion

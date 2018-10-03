@@ -32,7 +32,6 @@ namespace Grand.Framework.Mvc.Filters
         {
             #region Fields
 
-            private readonly ILanguageService _languageService;
             private readonly IWebHelper _webHelper;
             private readonly IWorkContext _workContext;
             private readonly LocalizationSettings _localizationSettings;
@@ -41,12 +40,10 @@ namespace Grand.Framework.Mvc.Filters
 
             #region Ctor
 
-            public CheckLanguageSeoCodeFilter(ILanguageService languageService,
-                IWebHelper webHelper,
+            public CheckLanguageSeoCodeFilter(IWebHelper webHelper,
                 IWorkContext workContext,
                 LocalizationSettings localizationSettings)
             {
-                this._languageService = languageService;
                 this._webHelper = webHelper;
                 this._workContext = workContext;
                 this._localizationSettings = localizationSettings;

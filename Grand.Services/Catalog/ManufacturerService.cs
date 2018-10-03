@@ -39,16 +39,7 @@ namespace Grand.Services.Catalog
         /// {5} : store ID
         /// </remarks>
         private const string PRODUCTMANUFACTURERS_ALLBYMANUFACTURERID_KEY = "Grand.productmanufacturer.allbymanufacturerid-{0}-{1}-{2}-{3}-{4}-{5}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : show hidden records?
-        /// {1} : product ID
-        /// {2} : current customer ID
-        /// {3} : store ID
-        /// </remarks>
-        private const string PRODUCTMANUFACTURERS_ALLBYPRODUCTID_KEY = "Grand.productmanufacturer.allbyproductid-{0}-{1}-{2}-{3}";
+        
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>

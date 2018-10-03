@@ -21,7 +21,6 @@ namespace Grand.Web.Components
         private readonly IProductViewModelService _productViewModelService;
         private readonly ICacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
-        private readonly CatalogSettings _catalogSettings;
         #endregion
 
         #region Constructors
@@ -32,13 +31,10 @@ namespace Grand.Web.Components
             IStoreMappingService storeMappingService,
             IProductViewModelService productViewModelService,
             ICacheManager cacheManager,
-            IStoreContext storeContext,
-            CatalogSettings catalogSettings
-)
+            IStoreContext storeContext)
         {
             this._productService = productService;
             this._aclService = aclService;
-            this._catalogSettings = catalogSettings;
             this._productViewModelService = productViewModelService;
             this._storeMappingService = storeMappingService;
             this._cacheManager = cacheManager;

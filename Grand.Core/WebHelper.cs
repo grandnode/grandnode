@@ -242,9 +242,11 @@ namespace Grand.Core
             //if host is empty (it is possible only when HttpContext is not available), use URL of a store entity configured in admin area
             if (string.IsNullOrEmpty(storeHost) && DataSettingsHelper.DatabaseIsInstalled())
             {
-                //do not inject IWorkContext via constructor because it'll cause circular references
-                storeLocation = EngineContext.Current.Resolve<IStoreContext>().CurrentStore?.Url
-                    ?? throw new Exception("Current store cannot be loaded");
+                var currentStore = EngineContext.Current.Resolve<IStoreContext>().CurrentStore;
+                if (currentStore != null)
+                    storeLocation = currentStore.Url;
+                else
+                    throw new Exception("Current store cannot be loaded");
             }
 
             //ensure that URL is ended with slash

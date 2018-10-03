@@ -74,7 +74,7 @@ namespace Grand.Services.Logging.Tests
             _customerActivityService = new CustomerActivityService(
                 _cacheManager, _activityLogRepository,
                 _activityLogTypeRepository, _workContext, 
-                null, null, null);
+                null, null);
         }
 
         [TestMethod()]

@@ -177,8 +177,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                         });
                 }
                 _addressAttributeService.UpdateAddressAttribute(addressAttribute);
-                //locales
-                //UpdateAttributeLocales(addressAttribute, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Address.AddressAttributes.Updated"));
                 if (continueEditing)

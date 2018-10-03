@@ -14,28 +14,21 @@ namespace Grand.Web.Components
     {
         #region Fields
         private readonly IProductService _productService;
-        private readonly IWorkContext _workContext;
         private readonly IAclService _aclService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IProductViewModelService _productViewModelService;
-        private readonly CatalogSettings _catalogSettings;
         #endregion
 
         #region Constructors
 
         public HomePageProductsViewComponent(
             IProductService productService,
-            IWorkContext workContext,
             IAclService aclService,
             IStoreMappingService storeMappingService,
-            IProductViewModelService productViewModelService,
-            CatalogSettings catalogSettings
-)
+            IProductViewModelService productViewModelService)
         {
             this._productService = productService;
-            this._workContext = workContext;
             this._aclService = aclService;
-            this._catalogSettings = catalogSettings;
             this._productViewModelService = productViewModelService;
             this._storeMappingService = storeMappingService;
         }

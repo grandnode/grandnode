@@ -826,7 +826,7 @@ namespace Grand.Services.Media
                     resized.Save(ms2, image.RawFormat);
                     return ms2.ToArray();
                 }
-            };
+            }
         }
         #endregion
 
