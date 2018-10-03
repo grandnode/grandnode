@@ -4418,7 +4418,9 @@ namespace Grand.Web.Areas.Admin.Controllers
                     {
                         associatedProduct = _productService.GetProductById(x.AssociatedProductId);
                     }
-                    var pictureThumbnailUrl = _pictureService.GetPictureUrl(x.PictureId, 75, false);
+
+                    var pictureThumbnailUrl = _pictureService.GetPictureUrl(string.IsNullOrEmpty(x.PictureId) ? x.ImageSquaresPictureId:x.PictureId, 75, false);
+
                     //little hack here. Grid is rendered wrong way with <inmg> without "src" attribute
                     if (String.IsNullOrEmpty(pictureThumbnailUrl))
                         pictureThumbnailUrl = _pictureService.GetPictureUrl("", 1, true);

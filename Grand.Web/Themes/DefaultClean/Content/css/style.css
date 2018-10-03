@@ -2969,6 +2969,17 @@ table th.latest-post {
 .toolbar {
     text-align: right;
 }
+.tooltip-inner {
+    max-width: 204px;
+    color: #fff;
+    text-align: center;
+    background-color: #000;
+    border-radius: .25rem;
+    padding: 2px;
+}
+.tooltip-inner img {
+    width: 200px;
+}
 /*one page checkout*/
 
 .opc .allow .card-grey {

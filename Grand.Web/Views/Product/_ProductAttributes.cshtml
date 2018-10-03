@@ -237,23 +237,26 @@
 
                             case AttributeControlType.ImageSquares:
                                 {
-                                    <ul class="option-list color-squares pl-0" id="color-squares-@(attribute.Id)">
+                                    <ul class="option-list color-squares d-inline-flex align-items-center pl-0" id="color-squares-@(attribute.Id)">
                                         @foreach (var attributeValue in attribute.Values)
                                         {
                                             var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                                 attributeValue.Name :
                                                 T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment).Text;
-                                            <li @(attributeValue.IsPreSelected ? @Html.Raw(" class=\"selected-value\"") : null)>
-                                                <label>
+                                            <li class="mr-2" @(attributeValue.IsPreSelected ? @Html.Raw(" class=\"selected-value mr-2\"") : null)>
+                                                <label class="mb-0" data-toggle="tooltip" title="<img src='@(attributeValue.ImageSquaresPictureModel.FullSizeImageUrl)' alt='@attributeName' />">
                                                     <span class="color-container">
                                                         <span class="color" style="background: url('@(attributeValue.ImageSquaresPictureModel.ImageUrl)') 50% 50% no-repeat;">&nbsp;</span>
                                                     </span>
                                                     <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
                                                 </label>
-                                                <div class="tooltip-container">
-                                                    <div class="tooltip-header">@attributeName</div>
-                                                    <div class="tooltip-body"><img src="@(attributeValue.ImageSquaresPictureModel.FullSizeImageUrl)" alt="@attributeName" /></div>
-                                                </div>
+                                                <script>
+                                                    $('[data-toggle="tooltip"]').tooltip({
+                                                        animated: 'fade',
+                                                        placement: 'right',
+                                                        html: true
+                                                    });
+                                                </script>
                                             </li>
                                         }
                                     </ul>
