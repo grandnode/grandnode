@@ -191,7 +191,7 @@ namespace Grand.Data
         /// <param name="entity">Entity</param>
         public virtual void Delete(T entity)
         {
-            this._collection.FindOneAndDeleteAsync(e => e.Id == entity.Id);           
+            this._collection.FindOneAndDelete(e => e.Id == entity.Id); 
         }
 
         /// <summary>
