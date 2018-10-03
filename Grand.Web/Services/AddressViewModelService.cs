@@ -345,7 +345,7 @@ namespace Grand.Web.Services
                 if (attribute.ShouldHaveValues())
                 {
                     //values
-                    var attributeValues = attribute.AddressAttributeValues; //addressAttributeService.GetAddressAttributeValues(attribute.Id);
+                    var attributeValues = attribute.AddressAttributeValues; 
                     foreach (var attributeValue in attributeValues)
                     {
                         var attributeValueModel = new AddressAttributeValueModel

@@ -10,7 +10,7 @@ namespace Grand.Core
     /// <summary>
     /// Xml helper class
     /// </summary>
-    public partial class XmlHelper
+    public static class XmlHelper
     {
         #region Methods
 

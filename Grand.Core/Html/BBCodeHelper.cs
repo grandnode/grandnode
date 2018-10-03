@@ -7,7 +7,7 @@ namespace Grand.Core.Html
     /// <summary>
     /// Represents a BBCode helper
     /// </summary>
-    public partial class BBCodeHelper
+    public static class BBCodeHelper
     {
         #region Fields
         private static readonly Regex regexBold = new Regex(@"\[b\](.+?)\[/b\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);

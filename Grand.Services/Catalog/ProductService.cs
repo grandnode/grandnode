@@ -1356,7 +1356,6 @@ namespace Grand.Services.Catalog
                             //event notification
                             _eventPublisher.EntityUpdated(product);
 
-                            //UpdateProduct(product);
                             break;
                         default:
                             break;

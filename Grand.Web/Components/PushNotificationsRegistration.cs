@@ -9,8 +9,8 @@ namespace Grand.Web.Components
 {
     public class PushNotificationsRegistration : BaseViewComponent
     {
-        private PushNotificationsSettings _pushNotificationsSettings;
-        private IWorkContext _workContext;
+        private readonly PushNotificationsSettings _pushNotificationsSettings;
+        private readonly IWorkContext _workContext;
 
         public PushNotificationsRegistration(PushNotificationsSettings pushNotificationsSettings, IWorkContext workContext)
         {

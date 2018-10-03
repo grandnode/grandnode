@@ -689,9 +689,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 throw new ArgumentException("No product found with the specified id");
 
             var order = _orderService.GetOrderById(orderId);
-            var customer = _customerService.GetCustomerById(order.CustomerId);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
+
+            var customer = _customerService.GetCustomerById(order.CustomerId);
 
             var presetQty = 1;
             var presetPrice = _priceCalculationService.GetFinalPrice(product, customer, decimal.Zero, true, presetQty);

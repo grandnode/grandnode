@@ -5,8 +5,6 @@ namespace Grand.Web.Areas.Admin.Models.Settings
 {
     public partial class MediaSettingsModel : BaseGrandModel
     {
-        public MediaSettingsModel() { }
-
         #region Standard Media Settings
         public string ActiveStoreScopeConfiguration { get; set; }
 

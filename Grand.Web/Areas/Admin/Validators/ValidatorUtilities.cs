@@ -3,7 +3,7 @@ using Grand.Web.Areas.Admin.Models.Settings;
 
 namespace Grand.Web.Areas.Admin.Validators
 {
-    public class ValidatorUtilities
+    public static class ValidatorUtilities
     {
         public static bool PageSizeOptionsValidator(string value)
         {

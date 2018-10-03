@@ -743,9 +743,9 @@ namespace Grand.Web.Areas.Admin.Controllers
                      .FirstOrDefault(c=>c.SystemName==SystemCustomerRoleNames.Registered).Id };
             }
 
-            //reward points history
             if (customer != null)
             {
+                //reward points history
                 model.DisplayRewardPointsHistory = _rewardPointsSettings.Enabled;
                 model.AddRewardPointsValue = 0;
                 model.AddRewardPointsMessage = "Some comment here...";
@@ -760,17 +760,16 @@ namespace Grand.Web.Areas.Admin.Controllers
                         Selected = (store.Id == _storeContext.CurrentStore.Id)
                     });
                 }
+
+                //external authentication records
+                model.AssociatedExternalAuthRecords = GetAssociatedExternalAuthRecords(customer);
+
             }
             else
             {
                 model.DisplayRewardPointsHistory = false;
             }
 
-            //external authentication records
-            if (customer != null)
-            {
-                model.AssociatedExternalAuthRecords = GetAssociatedExternalAuthRecords(customer);
-            }
             //sending of the welcome message:
             //1. "admin approval" registration method
             //2. already created customer

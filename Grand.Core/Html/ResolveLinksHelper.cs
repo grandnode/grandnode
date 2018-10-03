@@ -7,7 +7,7 @@ namespace Grand.Core.Html
     /// <summary>
     /// Represents a ResolveLinks helper
     /// </summary>
-    public partial class ResolveLinksHelper
+    public static class ResolveLinksHelper
     {
         #region Fields
         /// <summary>

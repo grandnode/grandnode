@@ -6,10 +6,6 @@ namespace Grand.Web.ViewComponents
 {
     public class CheckoutProgressViewComponent : BaseViewComponent
     {
-        public CheckoutProgressViewComponent()
-        {
-        }
-
         public IViewComponentResult Invoke(CheckoutProgressStep step)
         {
             var model = new CheckoutProgressModel { CheckoutProgressStep = step };

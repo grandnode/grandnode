@@ -502,30 +502,24 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (model == null)
                 throw new ArgumentNullException("model");
 
+            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+            model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
+            model.BaseDimensionIn = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId).Name;
+
             if (product != null)
             {
+                //date
+                model.CreatedOn = _dateTimeHelper.ConvertToUserTime(product.CreatedOnUtc, DateTimeKind.Utc);
+                model.UpdatedOn = _dateTimeHelper.ConvertToUserTime(product.UpdatedOnUtc, DateTimeKind.Utc);
+
+                //parent grouped product
                 var parentGroupedProduct = _productService.GetProductById(product.ParentGroupedProductId);
                 if (parentGroupedProduct != null)
                 {
                     model.AssociatedToProductId = product.ParentGroupedProductId;
                     model.AssociatedToProductName = parentGroupedProduct.Name;
                 }
-            }
 
-            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
-            model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
-            model.BaseDimensionIn = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId).Name;
-            if (product != null)
-            {
-                model.CreatedOn = _dateTimeHelper.ConvertToUserTime(product.CreatedOnUtc, DateTimeKind.Utc);
-                model.UpdatedOn = _dateTimeHelper.ConvertToUserTime(product.UpdatedOnUtc, DateTimeKind.Utc);
-            }
-
-            //little performance hack here
-            //there's no need to load attributes, categories, manufacturers when creating a new product
-            //anyway they're not used (you need to save a product before you map add them)
-            if (product != null)
-            {
                 //reservation
                 model.CalendarModel.Interval = product.Interval;
                 model.CalendarModel.IntervalUnit = product.IntervalUnitId;
@@ -1208,7 +1202,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 product.SeName = model.SeName;
                 product.Locales = UpdateLocales(product, model);
 
-                //_productService.UpdateProduct(product);
                 //search engine name
                 _urlRecordService.SaveSlug(product, model.SeName, "");
                 //tags

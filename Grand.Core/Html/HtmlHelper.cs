@@ -8,7 +8,7 @@ namespace Grand.Core.Html
     /// <summary>
     /// Represents a HTML helper
     /// </summary>
-    public partial class HtmlHelper
+    public static class HtmlHelper
     {
         #region Fields
         private readonly static Regex paragraphStartRegex = new Regex("<p>", RegexOptions.IgnoreCase);
