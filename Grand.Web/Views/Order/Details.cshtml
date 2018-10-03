@@ -716,7 +716,7 @@
                                         @if (item.HasDownload)
                                         {
                                             <p class="download">
-                                                <a href="@Url.RouteUrl("GetOrderNoteFile", new { orderid = item.OrderId, ordernoteid = item.Id })">@T("Order.Notes.Download")</a>
+                                                <a href="@Url.RouteUrl("GetOrderNoteFile", new { ordernoteid = item.Id })">@T("Order.Notes.Download")</a>
                                             </p>
                                         }
                                     </td>

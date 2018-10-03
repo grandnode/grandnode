@@ -221,12 +221,14 @@ namespace Grand.Web.Controllers
             return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
         }
 
-        public virtual IActionResult GetOrderNoteFile(string orderId, string orderNoteId)
+        public virtual IActionResult GetOrderNoteFile(string orderNoteId)
         {
-            var order = _orderService.GetOrderById(orderId);
-
-            var orderNote = _orderService.GetOrderNotes(order.Id).FirstOrDefault(x=>x.Id == orderNoteId);
+            var orderNote = _orderService.GetOrderNote(orderNoteId);
             if (orderNote == null)
+                return InvokeHttp404();
+
+            var order = _orderService.GetOrderById(orderNote.OrderId);
+            if (order == null)
                 return InvokeHttp404();
 
             if (_workContext.CurrentCustomer == null || order.CustomerId != _workContext.CurrentCustomer.Id)

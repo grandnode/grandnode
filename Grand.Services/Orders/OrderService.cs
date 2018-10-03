@@ -533,6 +533,17 @@ namespace Grand.Services.Orders
             return query.ToList();
         }
 
+        /// <summary>
+        /// Get ordernote by id
+        /// </summary>
+        /// <param name="ordernoteId">Order note identifier</param>
+        /// <returns>OrderNote</returns>
+        public virtual OrderNote GetOrderNote(string ordernoteId)
+        {
+            return _orderNoteRepository.Table.Where(x => x.Id == ordernoteId).FirstOrDefault();
+        }
+
+
         #endregion
 
         #region Recurring payments

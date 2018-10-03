@@ -170,6 +170,12 @@ namespace Grand.Services.Orders
         /// <returns>OrderNote</returns>
         IList<OrderNote> GetOrderNotes(string orderId);
 
+        /// <summary>
+        /// Get ordernote by id
+        /// </summary>
+        /// <param name="ordernoteId">Order note identifier</param>
+        /// <returns>OrderNote</returns>
+        OrderNote GetOrderNote(string ordernoteId);
 
         #endregion
 
