@@ -7,7 +7,7 @@ It can be used for any kind of online store. GrandNode is a perfect choice for p
 ## How to install GrandNode ##
 
 You can install GrandNode in two different ways.
-1. Download the GrandNode package from our GitHub and install it: [Installation Guide](http://docs.grandnode.com/display/grandnode/Installing+GrandNode)
+1. Download the GrandNode package from our GitHub and install it: [Installation Guide](http://docs.grandnode.com/how-to-install-grandnode)
 2. Second way is to install GrandNode with Docker: [Docker installation guide](https://grandnode.com/weekly-tips-4-build-and-run-the-grandnode-with-docker-for-linux-containers)
 
 All GrandNode releases, which support Docker are available here: https://hub.docker.com/u/grandnode/
@@ -56,7 +56,7 @@ To start with us, you should do this few steps:
 
 And that's all, you are GrandNode official contributor!
 
-[Coding standards and guides](http://docs.grandnode.com/display/grandnode/Developer+Guide)
+[Coding standards and guides](http://docs.grandnode.com/developer-guides)
 
 ## How to report issues ##
 
