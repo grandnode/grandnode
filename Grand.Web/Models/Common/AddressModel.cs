@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
 using FluentValidation.Attributes;
-using Grand.Framework;
 using Grand.Framework.Mvc.Models;
 using Grand.Web.Validators.Common;
 using Microsoft.AspNetCore.Mvc.Rendering;

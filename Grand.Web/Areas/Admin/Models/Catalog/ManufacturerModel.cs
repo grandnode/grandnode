@@ -3,15 +3,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Grand.Framework.Mvc.ModelBinding;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-
 using FluentValidation.Attributes;
 using Grand.Web.Areas.Admin.Models.Customers;
 using Grand.Web.Areas.Admin.Models.Discounts;
 using Grand.Web.Areas.Admin.Models.Stores;
 using Grand.Web.Areas.Admin.Validators.Catalog;
-using Grand.Framework;
 using Grand.Framework.Localization;
-using Grand.Framework.Mvc;
 using System;
 
 namespace Grand.Web.Areas.Admin.Models.Catalog

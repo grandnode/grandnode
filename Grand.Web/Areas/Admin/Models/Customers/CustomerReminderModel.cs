@@ -3,15 +3,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Grand.Framework.Mvc.ModelBinding;
 using FluentValidation.Attributes;
 using Grand.Web.Areas.Admin.Validators.Customers;
-using Grand.Core.Domain.Customers;
-using Grand.Framework;
-using Grand.Framework.Mvc;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-
-
 
 namespace Grand.Web.Areas.Admin.Models.Customers
 {

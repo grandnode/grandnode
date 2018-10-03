@@ -1,15 +1,14 @@
-﻿using Grand.Framework.Mvc.Models;
-using Grand.Framework.Mvc.ModelBinding;
-using System.Collections.Generic;
-using FluentValidation.Attributes;
-using Grand.Web.Areas.Admin.Validators.Vendors;
-using Grand.Web.Areas.Admin.Models.Discounts;
+﻿using FluentValidation.Attributes;
 using Grand.Framework.Localization;
-using System.ComponentModel.DataAnnotations;
-using System;
+using Grand.Framework.Mvc.ModelBinding;
+using Grand.Framework.Mvc.Models;
 using Grand.Web.Areas.Admin.Models.Common;
+using Grand.Web.Areas.Admin.Models.Discounts;
+using Grand.Web.Areas.Admin.Validators.Vendors;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Grand.Web.Areas.Admin.Models.Stores;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Areas.Admin.Models.Vendors
 {

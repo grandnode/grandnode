@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-
+﻿using System.Collections.Generic;
 using FluentValidation.Attributes;
 using Grand.Web.Areas.Admin.Validators.Messages;
-using Grand.Framework;
-using Grand.Framework.Mvc;
 using Grand.Framework.Localization;
 using Grand.Framework.Mvc.Models;
 using Grand.Framework.Mvc.ModelBinding;
