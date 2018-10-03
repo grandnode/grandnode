@@ -4,7 +4,7 @@ namespace Grand.Core
 {
     public abstract class ParentEntity
     {
-        public ParentEntity()
+        protected ParentEntity()
         {
             _id = ObjectId.GenerateNewId().ToString();
         }

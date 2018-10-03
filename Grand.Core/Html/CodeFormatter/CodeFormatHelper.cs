@@ -7,7 +7,7 @@ namespace Grand.Core.Html.CodeFormatter
 	/// <summary>
 	/// Represents a code format helper
 	/// </summary>
-    public partial class CodeFormatHelper
+    public static class CodeFormatHelper
     {
         #region Fields
         private readonly static Regex regexHtml = new Regex("<[^>]*>", RegexOptions.Compiled);

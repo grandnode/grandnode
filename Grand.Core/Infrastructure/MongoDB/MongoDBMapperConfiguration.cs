@@ -19,7 +19,7 @@ using System;
 
 namespace Grand.Core.Infrastructure.MongoDB
 {
-    public class MongoDBMapperConfiguration
+    public static class MongoDBMapperConfiguration
     {
 
         /// <summary>

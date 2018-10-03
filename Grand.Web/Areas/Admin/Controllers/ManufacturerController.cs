@@ -453,8 +453,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //search engine name
                 _urlRecordService.SaveSlug(manufacturer, model.SeName, "");
                 
-                //update "HasDiscountsApplied" property
-                //_manufacturerService.UpdateHasDiscountsApplied(manufacturer);
                 //delete an old picture (if deleted or updated)
                 if (!String.IsNullOrEmpty(prevPictureId) && prevPictureId != manufacturer.PictureId)
                 {

@@ -8,7 +8,7 @@ namespace Grand.Core
     /// </summary>
     public abstract partial class BaseEntity: ParentEntity
     {
-        public BaseEntity()
+        protected BaseEntity()
         {
             GenericAttributes = new List<GenericAttribute>();
         }

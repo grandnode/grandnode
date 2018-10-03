@@ -5,7 +5,7 @@ namespace Grand.Core.Infrastructure
     /// <summary>
     /// Provides access to the singleton instance of the Grand engine.
     /// </summary>
-    public class EngineContext
+    public static class EngineContext
     {
         #region Methods
 

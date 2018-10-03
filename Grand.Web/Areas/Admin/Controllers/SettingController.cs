@@ -1691,14 +1691,15 @@ namespace Grand.Web.Areas.Admin.Controllers
                     _settingService.DeleteSetting(rewardPointsSettings, x => x.PointsForRegistration, storeScope);
 
                 if (model.PointsForPurchases_OverrideForStore || storeScope == "")
+                {
                     _settingService.SaveSetting(rewardPointsSettings, x => x.PointsForPurchases_Amount, storeScope, false);
-                else if (!String.IsNullOrEmpty(storeScope))
-                    _settingService.DeleteSetting(rewardPointsSettings, x => x.PointsForPurchases_Amount, storeScope);
-
-                if (model.PointsForPurchases_OverrideForStore || storeScope == "")
                     _settingService.SaveSetting(rewardPointsSettings, x => x.PointsForPurchases_Points, storeScope, false);
+                }
                 else if (!String.IsNullOrEmpty(storeScope))
+                {
+                    _settingService.DeleteSetting(rewardPointsSettings, x => x.PointsForPurchases_Amount, storeScope);
                     _settingService.DeleteSetting(rewardPointsSettings, x => x.PointsForPurchases_Points, storeScope);
+                }
 
                 if (model.PointsForPurchases_Awarded_OverrideForStore || storeScope == "")
                     _settingService.SaveSetting(rewardPointsSettings, x => x.PointsForPurchases_Awarded, storeScope, false);

@@ -2552,7 +2552,6 @@ namespace Grand.Services.Catalog
             if (pwi == null)
                 throw new ArgumentNullException("productWarehouse");
 
-            //_productPictureRepository.Insert(productPicture);
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.AddToSet(p => p.ProductWarehouseInventory, pwi);
             _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", pwi.ProductId), update);
@@ -2569,7 +2568,6 @@ namespace Grand.Services.Catalog
             if (pwi == null)
                 throw new ArgumentNullException("productWarehouseInventory");
 
-            //_productPictureRepository.Update(productPicture);
             var builder = Builders<Product>.Filter;
             var filter = builder.Eq(x => x.Id, pwi.ProductId);
             filter = filter & builder.ElemMatch(x => x.ProductWarehouseInventory, y => y.Id == pwi.Id);

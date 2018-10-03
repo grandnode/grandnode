@@ -13,7 +13,7 @@ using System.Runtime.Loader;
 
 namespace Grand.Core.Roslyn
 {
-    public class RoslynCompiler
+    public static class RoslynCompiler
     {
         #region Const
 

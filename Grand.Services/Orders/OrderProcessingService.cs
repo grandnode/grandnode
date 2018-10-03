@@ -1979,7 +1979,7 @@ namespace Grand.Services.Orders
             {
                 if (result == null)
                     result = new CancelRecurringPaymentResult();
-                result.AddError(string.Format("Error: {0}. Full exception: {1}", exc.Message, exc.ToString()));
+                result.AddError(string.Format("Error: {0}. Full exception: {1}", exc.Message, exc));
             }
 
 

@@ -12,9 +12,6 @@ namespace Grand.Web.Areas.Admin.Models.Customers
     [Validator(typeof(CustomerReminderValidator))]
     public partial class CustomerReminderModel : BaseGrandEntityModel
     {
-        public CustomerReminderModel()
-        {
-        }
 
         [GrandResourceDisplayName("Admin.Customers.CustomerReminder.Fields.Name")]
         public string Name { get; set; }

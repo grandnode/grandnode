@@ -16,13 +16,13 @@ namespace Grand.Web.Services
 {
     public partial class TopicViewModelService: ITopicViewModelService
     {
-        public readonly ITopicService _topicService;
-        public readonly IWorkContext _workContext;
-        public readonly IStoreContext _storeContext;
-        public readonly ICacheManager _cacheManager;
-        public readonly ITopicTemplateService _topicTemplateService;
-        public readonly IStoreMappingService _storeMappingService;
-        public readonly IAclService _aclService;
+        private readonly ITopicService _topicService;
+        private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
+        private readonly ICacheManager _cacheManager;
+        private readonly ITopicTemplateService _topicTemplateService;
+        private readonly IStoreMappingService _storeMappingService;
+        private readonly IAclService _aclService;
 
         public TopicViewModelService(ITopicService topicService,
             IWorkContext workContext,

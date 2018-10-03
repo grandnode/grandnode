@@ -15,7 +15,7 @@ namespace Grand.Core.Plugins
     /// <summary>
     /// Sets the application up for the plugin referencing
     /// </summary>
-    public class PluginManager
+    public static class PluginManager
     {
         #region Const
 
