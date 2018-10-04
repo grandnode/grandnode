@@ -1266,10 +1266,7 @@ pagination .pagination a:not([href]) {
         justify-content: center;
         color: #17a2b8;
         transition: all .3s;
-        padding-left: 15px;
-        padding-right: 15px;
-        padding-top: 10px;
-        padding-bottom: 10px;
+        padding:10px 15px 10px 15px; 
     }
 
     #mobile-collapsing-menu.show .nav-item.dropdown .fa-times {
