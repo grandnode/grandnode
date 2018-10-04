@@ -45,7 +45,7 @@
 }
 
 @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_after_breadcrumb", additionalData = Model.Id })
-<div class="page product-details-page">
+<div class="page product-details-page product-standard">
         @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_top", additionalData = Model.Id })
         <form asp-route="Product" asp-route-sename="@Model.SeName" method="post" id="product-details-form">
             <div itemscope itemtype="http://schema.org/Product" data-productid="@Model.Id">
@@ -170,7 +170,7 @@
                         @if (Model.ProductReviewOverview.AllowCustomerReviews)
                         {
                             <li class="nav-item">
-                                <a class="nav-link" id="review-tab" data-toggle="tab" href="#review" role="tab" aria-controls="spec" aria-selected="false"><span class="d-none d-md-block">@T("Products.Reviews")</span><i class="fa fa-comments d-md-none"></i></a>
+                                <a class="nav-link" id="review-tab" data-toggle="tab" href="#review" role="tab" aria-controls="spec" aria-selected="false"><span class="d-none d-md-block">@T("Products.Reviews") (@Model.ProductReviewOverview.TotalReviews)</span><i class="fa fa-comments d-md-none"></i></a>
                             </li>
                         }
                         @if (Model.AskQuestionOnProduct)

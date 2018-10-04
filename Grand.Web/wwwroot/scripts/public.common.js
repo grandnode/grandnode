@@ -648,4 +648,13 @@ $(document).ready(function () {
                 $(".advanced-search-results").removeClass("open");
         });
     });
+
+    $('.product-standard .review-scroll-button').on('click', function (e) {
+        e.preventDefault();
+        $('html, body').animate({
+            scrollTop: $($(this).attr('href')).offset().top - 120
+        }, 300, 'linear');
+        $("#review-tab").click();
+    });
 });
+
