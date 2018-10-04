@@ -886,7 +886,7 @@ namespace Grand.Services.Messages
                     }
                 }
             }
-
+            tokens.Add(new Token("Shipment.TrackingNumberURL",trackingNumberUrl));
             tokens.Add(new Token("Shipment.Product(s)", ProductListToHtmlTable(shipment, languageId), true));
             var order = EngineContext.Current.Resolve<IOrderService>().GetOrderById(shipment.OrderId);
             tokens.Add(new Token("Shipment.URLForCustomer", string.Format("{0}orderdetails/shipment/{1}", GetStoreUrl(order.StoreId), shipment.Id), true));
