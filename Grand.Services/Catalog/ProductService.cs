@@ -706,22 +706,6 @@ namespace Grand.Services.Catalog
         {
             filterableSpecificationAttributeOptionIds = new List<string>();
             
-            //search by keyword
-            bool searchLocalizedValue = false;
-            if (!String.IsNullOrEmpty(languageId))
-            {
-                if (showHidden)
-                {
-                    searchLocalizedValue = true;
-                }
-                else
-                {
-                    //ensure that we have at least two published languages
-                    var totalPublishedLanguages = _languageService.GetAllLanguages().Count;
-                    searchLocalizedValue = totalPublishedLanguages >= 2;
-                }
-            }
-
             //validate "categoryIds" parameter
             if (categoryIds !=null && categoryIds.Contains(""))
                 categoryIds.Remove("");
