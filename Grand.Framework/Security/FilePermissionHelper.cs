@@ -162,11 +162,12 @@ namespace Grand.Framework.Security
             var dirsToCheck = new List<string>();
             dirsToCheck.Add(Path.Combine(rootDir, "App_Data"));
             dirsToCheck.Add(Path.Combine(rootDir, "bin"));
-            dirsToCheck.Add(Path.Combine(rootDir, "content"));
-            dirsToCheck.Add(Path.Combine(rootDir, "content\\images"));
-            dirsToCheck.Add(Path.Combine(rootDir, "content\\images\\thumbs"));
-            dirsToCheck.Add(Path.Combine(rootDir, "content\\images\\uploaded"));
-            dirsToCheck.Add(Path.Combine(rootDir, "content\\files\\Exportimport"));
+            dirsToCheck.Add(Path.Combine(rootDir, "logs"));
+            dirsToCheck.Add(Path.Combine(rootDir, "wwwroot\\content"));
+            dirsToCheck.Add(Path.Combine(rootDir, "wwwroot\\content\\images"));
+            dirsToCheck.Add(Path.Combine(rootDir, "wwwroot\\content\\images\\thumbs"));
+            dirsToCheck.Add(Path.Combine(rootDir, "wwwroot\\content\\images\\uploaded"));
+            dirsToCheck.Add(Path.Combine(rootDir, "wwwroot\\content\\files\\exportimport"));
             dirsToCheck.Add(Path.Combine(rootDir, "plugins"));
             dirsToCheck.Add(Path.Combine(rootDir, "plugins\\bin"));
             return dirsToCheck;
