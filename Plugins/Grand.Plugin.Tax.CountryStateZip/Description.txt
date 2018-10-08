@@ -2,7 +2,7 @@
 FriendlyName: Tax By Country & State & Zip
 SystemName: Tax.CountryStateZip
 Version: 1.44
-SupportedVersions: 4.20
+SupportedVersions: 4.30
 Author: grandnode team
 DisplayOrder: 1
 FileName: Grand.Plugin.Tax.CountryStateZip.dll

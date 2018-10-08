@@ -10,7 +10,7 @@ namespace Grand.Core
         {
             get
             {
-                return "4.20";
+                return "4.30";
             }
         }
     }

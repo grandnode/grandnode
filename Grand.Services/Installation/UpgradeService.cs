@@ -52,6 +52,7 @@ namespace Grand.Services.Installation
         private const string version_400 = "4.00";
         private const string version_410 = "4.10";
         private const string version_420 = "4.20";
+        private const string version_430 = "4.30";
 
         #endregion
 
@@ -100,6 +101,11 @@ namespace Grand.Services.Installation
             {
                 From410To420();
                 fromversion = version_420;
+            }
+            if (fromversion == version_420)
+            {
+                From420To430();
+                fromversion = version_430;
             }
             if (fromversion == toversion)
             {
