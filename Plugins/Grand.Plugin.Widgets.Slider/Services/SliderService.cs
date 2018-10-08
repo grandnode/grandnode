@@ -1,4 +1,5 @@
-﻿using Grand.Core.Caching;
+﻿using Grand.Core;
+using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Plugin.Widgets.Slider.Domain;
 using Grand.Services.Stores;
@@ -14,24 +15,27 @@ namespace Grand.Plugin.Widgets.Slider.Services
 
         private readonly IRepository<PictureSlider> _reporistoryPictureSlider;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly IStoreContext _storeContext;
         private readonly ICacheManager _cacheManager;
 
         /// <summary>
         /// Key for sliders
         /// </summary>
         /// <remarks>
-        /// {0} : Slider type
-        /// {1} : Object entry / categoryId || manufacturerId
+        /// {0} : Store id
+        /// {1} : Slider type
+        /// {2} : Object entry / categoryId || manufacturerId
         /// </remarks>
-        public const string SLIDERS_MODEL_KEY = "Grand.slider-{0}-{1}";
+        public const string SLIDERS_MODEL_KEY = "Grand.slider-{0}-{1}-{2}";
         public const string SLIDERS_PATTERN_KEY = "Grand.slider";
 
         #endregion
-        public SliderService(IRepository<PictureSlider> reporistoryPictureSlider, 
-            IStoreMappingService storeMappingService,
+        public SliderService(IRepository<PictureSlider> reporistoryPictureSlider,
+            IStoreContext storeContext, IStoreMappingService storeMappingService,
             ICacheManager cacheManager)
         {
             this._reporistoryPictureSlider = reporistoryPictureSlider;
+            this._storeContext = storeContext;
             this._storeMappingService = storeMappingService;
             this._cacheManager = cacheManager;
         }
@@ -66,7 +70,7 @@ namespace Grand.Plugin.Widgets.Slider.Services
         public virtual IList<PictureSlider> GetPictureSliders(SliderType sliderType, string objectEntry = "")
         {
 
-            string cacheKey = string.Format(SLIDERS_MODEL_KEY, sliderType.ToString(), objectEntry);
+            string cacheKey = string.Format(SLIDERS_MODEL_KEY, _storeContext.CurrentStore.Id, sliderType.ToString(), objectEntry);
             return _cacheManager.Get(cacheKey, () =>
             {
                 var query = from s in _reporistoryPictureSlider.Table
