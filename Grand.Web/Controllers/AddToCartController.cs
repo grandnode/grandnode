@@ -511,7 +511,7 @@ namespace Grand.Web.Controllers
                 if (otherCartItemWithSameParameters != null && !addToCartWarnings.Any())
                 {
                     //delete the same shopping cart item (the other one)
-                    _shoppingCartService.DeleteShoppingCartItem(_workContext.CurrentCustomer.Id, otherCartItemWithSameParameters);
+                    _shoppingCartService.DeleteShoppingCartItem(_workContext.CurrentCustomer, otherCartItemWithSameParameters);
                 }
             }
 

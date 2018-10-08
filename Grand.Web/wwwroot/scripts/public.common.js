@@ -654,5 +654,6 @@ $(document).ready(function () {
         }, 300, 'linear');
         $("#review-tab").click();
     });
+    
 });
 

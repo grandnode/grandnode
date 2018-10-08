@@ -28,7 +28,7 @@ namespace Grand.Web.Controllers
 {
     public partial class ShoppingCartController : BasePublicController
     {
-		#region Fields
+        #region Fields
 
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
@@ -50,13 +50,13 @@ namespace Grand.Web.Controllers
         public ShoppingCartController(
             IStoreContext storeContext,
             IWorkContext workContext,
-            IShoppingCartService shoppingCartService, 
-            ILocalizationService localizationService, 
+            IShoppingCartService shoppingCartService,
+            ILocalizationService localizationService,
             IDiscountService discountService,
-            ICustomerService customerService, 
+            ICustomerService customerService,
             IGiftCardService giftCardService,
-            ICheckoutAttributeService checkoutAttributeService, 
-            IPermissionService permissionService, 
+            ICheckoutAttributeService checkoutAttributeService,
+            IPermissionService permissionService,
             IDownloadService downloadService,
             IShoppingCartViewModelService shoppingCartViewModelService,
             ShoppingCartSettings shoppingCartSettings)
@@ -78,10 +78,10 @@ namespace Grand.Web.Controllers
         #endregion
 
         #region Shopping cart
-        
-        
+
+
         [HttpPost]
-        public virtual IActionResult CheckoutAttributeChange(IFormCollection form, 
+        public virtual IActionResult CheckoutAttributeChange(IFormCollection form,
             [FromServices] ICheckoutAttributeParser checkoutAttributeParser)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -115,7 +115,7 @@ namespace Grand.Web.Controllers
             });
         }
 
-        
+
         [HttpPost]
         public virtual IActionResult UploadFileCheckoutAttribute(string attributeId)
         {
@@ -224,7 +224,7 @@ namespace Grand.Web.Controllers
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
-            var allIdsToRemove = !string.IsNullOrEmpty(form["removefromcart"].ToString()) ? form["removefromcart"].ToString().Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x).ToList() : new List<string>();
+            var allIdsToRemove = !string.IsNullOrEmpty(form["removefromcart"].ToString()) ? form["removefromcart"].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x).ToList() : new List<string>();
 
             //current warnings <cart item identifier, warnings>
             var innerWarnings = new Dictionary<string, IList<string>>();
@@ -232,7 +232,7 @@ namespace Grand.Web.Controllers
             {
                 bool remove = allIdsToRemove.Contains(sci.Id);
                 if (remove)
-                    _shoppingCartService.DeleteShoppingCartItem(_workContext.CurrentCustomer.Id, sci, ensureOnlyActiveCheckoutAttributes: true);
+                    _shoppingCartService.DeleteShoppingCartItem(_workContext.CurrentCustomer, sci, ensureOnlyActiveCheckoutAttributes: true);
                 else
                 {
                     foreach (string formKey in form.Keys)
@@ -291,7 +291,7 @@ namespace Grand.Web.Controllers
             var innerWarnings = new Dictionary<string, IList<string>>();
             foreach (var sci in cart)
             {
-                _shoppingCartService.DeleteShoppingCartItem(_workContext.CurrentCustomer.Id, sci, ensureOnlyActiveCheckoutAttributes: true);
+                _shoppingCartService.DeleteShoppingCartItem(_workContext.CurrentCustomer, sci, ensureOnlyActiveCheckoutAttributes: true);
             }
             //parse and save checkout attributes
             _shoppingCartViewModelService.ParseAndSaveCheckoutAttributes(cart, form);
@@ -299,6 +299,30 @@ namespace Grand.Web.Controllers
             return RedirectToRoute("HomePage");
 
         }
+
+        [HttpPost, ActionName("DeleteCartItem")]
+        public virtual IActionResult DeleteCartItem(string id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
+                return RedirectToRoute("HomePage");
+
+            var item = _workContext.CurrentCustomer.ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart && sci.Id == id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
+                .FirstOrDefault();
+
+            if (item != null)
+            {
+                _shoppingCartService.DeleteShoppingCartItem(_workContext.CurrentCustomer, item, ensureOnlyActiveCheckoutAttributes: true);
+            }
+
+
+            var model = _shoppingCartViewModelService.PrepareMiniShoppingCart();
+
+            return PartialView("Components/FlyoutShoppingCart/Default", model);
+
+        }
+
         [HttpPost, ActionName("Cart")]
         [FormValueRequired("continueshopping")]
         public virtual IActionResult ContinueShopping()
@@ -313,7 +337,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("HomePage");
             }
         }
-        
+
         [HttpPost, ActionName("Cart")]
         [FormValueRequired("checkout")]
         public virtual IActionResult StartCheckout(IFormCollection form, [FromServices] OrderSettings orderSettings)
@@ -343,9 +367,9 @@ namespace Grand.Web.Controllers
                 if (!orderSettings.AnonymousCheckoutAllowed)
                     return Challenge();
 
-                return RedirectToRoute("LoginCheckoutAsGuest", new {returnUrl = Url.RouteUrl("ShoppingCart")});
+                return RedirectToRoute("LoginCheckoutAsGuest", new { returnUrl = Url.RouteUrl("ShoppingCart") });
             }
-            
+
             return RedirectToRoute("Checkout");
         }
 
@@ -360,7 +384,7 @@ namespace Grand.Web.Controllers
 
             //parse and save checkout attributes
             _shoppingCartViewModelService.ParseAndSaveCheckoutAttributes(cart, form);
-            
+
             var model = new ShoppingCartModel();
             if (!String.IsNullOrWhiteSpace(discountcouponcode))
             {
@@ -450,7 +474,7 @@ namespace Grand.Web.Controllers
 
             //parse and save checkout attributes
             _shoppingCartViewModelService.ParseAndSaveCheckoutAttributes(cart, form);
-            
+
             var model = new ShoppingCartModel();
             if (!cart.IsRecurring())
             {
@@ -505,7 +529,7 @@ namespace Grand.Web.Controllers
         [HttpPost, ActionName("Cart")]
         [FormValueRequired(FormValueRequirement.StartsWith, "removediscount-")]
         public virtual IActionResult RemoveDiscountCoupon(IFormCollection form)
-        {          
+        {
             var model = new ShoppingCartModel();
             string discountId = string.Empty;
             foreach (var formValue in form.Keys)
@@ -519,7 +543,7 @@ namespace Grand.Web.Controllers
                 foreach (var item in coupons)
                 {
                     var dd = _discountService.GetDiscountByCouponCode(item);
-                    if(dd.Id == discount.Id)
+                    if (dd.Id == discount.Id)
                         _workContext.CurrentCustomer.RemoveDiscountCouponCode(item);
                 }
             }
@@ -566,7 +590,7 @@ namespace Grand.Web.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
                 return RedirectToRoute("HomePage");
 
-            Customer customer = customerGuid.HasValue ? 
+            Customer customer = customerGuid.HasValue ?
                 _customerService.GetCustomerByGuid(customerGuid.Value)
                 : _workContext.CurrentCustomer;
             if (customer == null)
@@ -594,10 +618,10 @@ namespace Grand.Web.Controllers
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
-            var allIdsToRemove = !string.IsNullOrEmpty(form["removefromcart"].ToString()) 
-                ? form["removefromcart"].ToString().Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(x=>x)
-                .ToList() 
+            var allIdsToRemove = !string.IsNullOrEmpty(form["removefromcart"].ToString())
+                ? form["removefromcart"].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => x)
+                .ToList()
                 : new List<string>();
 
             //current warnings <cart item identifier, warnings>
@@ -606,7 +630,7 @@ namespace Grand.Web.Controllers
             {
                 bool remove = allIdsToRemove.Contains(sci.Id);
                 if (remove)
-                    _shoppingCartService.DeleteShoppingCartItem(customer.Id, sci);
+                    _shoppingCartService.DeleteShoppingCartItem(customer, sci);
                 else
                 {
                     foreach (string formKey in form.Keys)
@@ -649,7 +673,7 @@ namespace Grand.Web.Controllers
             }
             return View(model);
         }
-       
+
         [HttpPost, ActionName("Wishlist")]
         [FormValueRequired("addtocartbutton")]
         public virtual IActionResult AddItemsToCartFromWishlist(Guid? customerGuid, IFormCollection form)
@@ -673,9 +697,9 @@ namespace Grand.Web.Controllers
 
             var allWarnings = new List<string>();
             var numberOfAddedItems = 0;
-            var allIdsToAdd = form.ContainsKey("addtocart") ? form["addtocart"].ToString().Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(x=>x)
-                .ToList() 
+            var allIdsToAdd = form.ContainsKey("addtocart") ? form["addtocart"].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => x)
+                .ToList()
                 : new List<string>();
             foreach (var sci in pageCart)
             {
@@ -693,7 +717,7 @@ namespace Grand.Web.Controllers
                         !warnings.Any()) //no warnings ( already in the cart)
                     {
                         //let's remove the item from wishlist
-                        _shoppingCartService.DeleteShoppingCartItem(_workContext.CurrentCustomer.Id, sci);
+                        _shoppingCartService.DeleteShoppingCartItem(_workContext.CurrentCustomer, sci);
                     }
                     allWarnings.AddRange(warnings);
                 }

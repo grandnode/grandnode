@@ -2103,7 +2103,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return Content("No customer found with the specified cart id");
 
             EngineContext.Current.Resolve<IShoppingCartService>()
-                .DeleteShoppingCartItem(_workContext.CurrentCustomer.Id, cart, ensureOnlyActiveCheckoutAttributes: true);
+                .DeleteShoppingCartItem(_workContext.CurrentCustomer, cart, ensureOnlyActiveCheckoutAttributes: true);
 
             _customerService.UpdateCustomerinAdminPanel(customer);
 

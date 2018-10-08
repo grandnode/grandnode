@@ -126,7 +126,7 @@ namespace Grand.Services.Orders
         /// <param name="shoppingCartItem">Shopping cart item</param>
         /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
         /// <param name="ensureOnlyActiveCheckoutAttributes">A value indicating whether to ensure that only active checkout attributes are attached to the current customer</param>
-        public virtual void DeleteShoppingCartItem(string customerId, ShoppingCartItem shoppingCartItem, bool resetCheckoutData = true,
+        public virtual void DeleteShoppingCartItem(Customer customer, ShoppingCartItem shoppingCartItem, bool resetCheckoutData = true,
             bool ensureOnlyActiveCheckoutAttributes = false)
         {
             if (shoppingCartItem == null)
@@ -143,7 +143,6 @@ namespace Grand.Services.Orders
                     }
                 }
             }
-            var customer = _customerService.GetCustomerById(customerId);
             var storeId = shoppingCartItem.StoreId;
 
             //reset checkout data
@@ -154,7 +153,7 @@ namespace Grand.Services.Orders
 
             //delete item
             customer.ShoppingCartItems.Remove(customer.ShoppingCartItems.Where(x => x.Id == shoppingCartItem.Id).FirstOrDefault());
-            _customerService.DeleteShoppingCartItem(customerId, shoppingCartItem);
+            _customerService.DeleteShoppingCartItem(customer.Id, shoppingCartItem);
 
             //validate checkout attributes
             if (ensureOnlyActiveCheckoutAttributes &&
@@ -1388,7 +1387,7 @@ namespace Grand.Services.Orders
                 else
                 {
                     //delete a shopping cart item
-                    DeleteShoppingCartItem(customer.Id, shoppingCartItem, resetCheckoutData, true);
+                    DeleteShoppingCartItem(customer, shoppingCartItem, resetCheckoutData, true);
                 }
             }
 
@@ -1423,7 +1422,7 @@ namespace Grand.Services.Orders
             for (int i = 0; i < fromCart.Count; i++)
             {
                 var sci = fromCart[i];
-                DeleteShoppingCartItem(fromCustomer.Id, sci);
+                DeleteShoppingCartItem(fromCustomer, sci);
             }
 
             //copy discount and gift card coupon codes
