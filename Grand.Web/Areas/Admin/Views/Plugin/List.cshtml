@@ -103,7 +103,7 @@
                 event.preventDefault();
                 showThrobber('@Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(T("Admin.Configuration.Plugins.Fields.Reload.List").Text))')
                 $("html, body").animate({ scrollTop: 0 }, 400);
-                $(this).submit();
+                $.get($(this).attr("href"), function (data) { });
                 setTimeout(function () {
                     location.reload();
                 }, 10000);
