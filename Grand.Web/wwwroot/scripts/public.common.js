@@ -29,27 +29,25 @@ function displayPopupNotification(message, messagetype, modal) {
     var container;
     if (messagetype == 'success') {
         //success
-        container = $('#dialog-error');
-    }
-    else if (messagetype == 'error') {
-        //error
-        container = $('#dialog-error');
+        container = $('#dialog_success');
+        $('#dialog_error').html('');
     }
     else {
-        //other
-        container = $('#dialog-error');
+        //error
+        container = $('#dialog_error');
+        $('#dialog_success').html('');
     }
 
     //we do not encode displayed message
     var htmlcode = '';
     if ((typeof message) == 'string') {
-        htmlcode = '<p>' + message + '</p>';
+        htmlcode = '<div class="p-3"><h5 class="text-white text-center">' + message + '</h5></div>';
     } else {
         for (var i = 0; i < message.length; i++) {
             htmlcode = htmlcode + '<p>' + message[i] + '</p>';
         }
     }
-    container.append(htmlcode);
+    container.html(htmlcode);
     $('#generalModal').modal('show');
 }
 
