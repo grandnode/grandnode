@@ -58,7 +58,8 @@
                                 type: "POST",
                                 url: href,
                                 success: function (data) {
-                                    $('.fly-cart-container').html(data);
+                                    $(AjaxCart.flyoutcartselector).replaceWith(data.html);
+                                    $(AjaxCart.topcartselector).html(data.totalproducts);
                                 },
                                 error: function (xhr, ajaxOptions, thrownError) {
                                     alert('Failed to retrieve Flyout Shopping Cart.');

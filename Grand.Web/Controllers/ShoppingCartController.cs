@@ -319,7 +319,11 @@ namespace Grand.Web.Controllers
 
             var model = _shoppingCartViewModelService.PrepareMiniShoppingCart();
 
-            return PartialView("Components/FlyoutShoppingCart/Default", model);
+            return Json(new
+            {
+                totalproducts = string.Format(_localizationService.GetResource("ShoppingCart.HeaderQuantity"), model.TotalProducts),
+                html = this.RenderPartialViewToString("Components/FlyoutShoppingCart/Default", model)
+            });
 
         }
 
