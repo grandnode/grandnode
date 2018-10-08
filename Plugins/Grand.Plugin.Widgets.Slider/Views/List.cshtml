@@ -1,0 +1,116 @@
+﻿
+@inject AdminAreaSettings adminAreaSettings
+@{
+    Layout = "_ConfigurePlugin";
+}
+@{
+    //page title
+    ViewBag.Title = T("Plugins.Widgets.Slider.Manage").Text;
+}
+<antiforgery-token />
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light form-fit">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-sitemap"></i>
+                    @T("Plugins.Widgets.Slider.Manage")
+                </div>
+                <div class="actions btn-group btn-group-devided util-btn-margin-bottom-5">
+                    <a href="@Url.Action("Create", "WidgetsSlider")" class="btn green"><i class="fa fa-plus"></i><span class="hidden-xs"> @T("Admin.Common.AddNew") </span></a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div id="slider-grid"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#slider-grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("List", "WidgetsSlider"))",
+                        type: "POST",
+                        dataType: "json"
+                    },
+                    destroy: {
+                        url: "@Html.Raw(Url.Action("Delete", "WidgetsSlider"))",
+                        type: "POST",
+                        dataType: "json",
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors",
+                    model: {
+                        id: "Id",
+                    }
+                },
+                error: function(e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                pageSize: @(adminAreaSettings.DefaultGridPageSize),
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: [@(adminAreaSettings.GridPageSizes)]
+            },
+            editable: {
+                confirmation: true,
+                mode: "inline"
+            },
+            scrollable: false,
+            columns: [{
+                    field: "PictureUrl",
+                    title: "@T("Plugins.Widgets.Slider.Fields.Picture")",
+                    template: '#if(PictureUrl) {#<a href="#=PictureUrl#" target="_blank"><img src="#=PictureUrl#" width="150" /><a/># } #',
+                    width: 200
+                    }, {
+                    field: "Name",
+                    title: "@T("Plugins.Widgets.Slider.Fields.Title")",
+                    width: 300,
+                    template: '<a class="k-link" href="Edit/#=Id#">#=Name#</a>'
+                    }, {
+                    field: "Link",
+                    title: "@T("Plugins.Widgets.Slider.Fields.Link")",
+                    width: 150
+                    }, {
+                    field: "ObjectType",
+                    title: "@T("Plugins.Widgets.Slider.Fields.ObjectType")",
+                    width: 150
+                    }, {
+                    field: "DisplayOrder",
+                    title: "@T("Plugins.Widgets.Slider.Fields.DisplayOrder")",
+                    attributes: { style: "text-align:center" },
+                    width: 100
+                    }, {
+                    field: "Published",
+                    title: "@T("Plugins.Widgets.Slider.Fields.Published")",
+                    width: 100,
+                    minScreenWidth: 500,
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
+                    template: '# if(Published) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+                    }, 
+                    {
+                    command: [
+                    {
+                        name: "destroy",
+                        text: "@T("Admin.Common.Delete")"
+                            }
+                        ],
+                        width: 200
+                    }
+            ]});
+    });
+</script>
+

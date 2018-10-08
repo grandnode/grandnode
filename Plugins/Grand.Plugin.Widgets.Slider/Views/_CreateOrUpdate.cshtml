@@ -1,0 +1,45 @@
+﻿@model SlideModel
+@inject IEventPublisher eventPublisher
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+<script>
+    $(document).ready(function () {
+        $('#slide-edit').show();
+        $("#slide-edit").kendoTabStrip({
+            animation: {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
+<div id="slide-edit" style="display:none">
+    <ul>
+        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+            @T("Plugins.Widgets.Slider.Info")
+        </li>
+        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+            @T("Plugins.Widgets.Slider.Stores")
+        </li>
+    </ul>
+    <div>
+        @Html.Partial("~/Plugins/Widgets.Slider/Views/_CreateOrUpdate.TabInfo.cshtml", Model)
+    </div>
+    <div>
+        @Html.Partial("~/Plugins/Widgets.Slider/Views/_CreateOrUpdate.TabStores.cshtml", Model)
+    </div>
+</div>
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "slide-edit");
+    eventPublisher.Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+@*save selected tab index*@
+<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">

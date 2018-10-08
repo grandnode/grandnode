@@ -1,0 +1,118 @@
+﻿@model SlideModel
+<script>
+        $(document).ready(function () {
+            $("#@Html.FieldIdFor(model => model.SliderTypeId)").change(toggleSliderType);
+            toggleSliderType();
+        });
+        function toggleSliderType() {
+            var sliderTypeId = $("#@Html.FieldIdFor(model => model.SliderTypeId)").val();
+            if (sliderTypeId == @(((int) SliderType.HomePage).ToString())) {
+                $('#pnlCategory').hide();
+                $('#pnlManufacturer').hide();
+            } else if (sliderTypeId == @(((int) SliderType.Category).ToString())) {
+                $('#pnlCategory').show();
+                $('#pnlManufacturer').hide();
+            }else if (sliderTypeId == @(((int) SliderType.Manufacturer).ToString())) {
+                $('#pnlCategory').hide();
+                $('#pnlManufacturer').show();
+            }
+        }
+</script>
+
+@(Html.LocalizedEditor<SlideModel, SlideLocalizedModel>("slide-info-localized",
+        @<div class="form-horizontal">
+            <div class="form-body">
+                <div class="form-group">
+                    <admin-label asp-for="@Model.Locales[item].Name" />
+                    <div class="col-md-9 col-sm-9">
+                        <admin-input asp-for="@Model.Locales[item].Name" />
+                        <span asp-validation-for="@Model.Locales[item].Name"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <admin-label asp-for="@Model.Locales[item].Description" />
+                    <div class="col-md-9 col-sm-9">
+                        <admin-input asp-for="@Model.Locales[item].Description" asp-template="RichEditor" />
+                        <span asp-validation-for="@Model.Locales[item].Description"></span>
+                    </div>
+                </div>
+                <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+            </div>
+        </div>
+            ,
+            @<div class="form-horizontal">
+                <div class="form-body">
+                    <div class="form-group">
+                        <admin-label asp-for="Name" />
+                        <div class="col-md-9 col-sm-9">
+                            <admin-input asp-for="Name" />
+                            <span asp-validation-for="Name"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <admin-label asp-for="Description" />
+                        <div class="col-md-9 col-sm-9">
+                            <admin-input asp-for="Description" asp-template="RichEditor" />
+                            <span asp-validation-for="Description"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                ))
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            <admin-label asp-for="PictureId" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="PictureId" />
+                <span asp-validation-for="PictureId"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="Link" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="Link" />
+                <span asp-validation-for="Link"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="Published" />
+            <div class="col-md-9 col-sm-9">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    <admin-input asp-for="Published" />
+                    <span></span>
+                </label>
+                <span asp-validation-for="Published"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="SliderTypeId" />
+            <div class="col-md-9 col-sm-9">
+                <admin-select asp-for="SliderTypeId" asp-items="((SliderType)Model.SliderTypeId).ToSelectList()" />
+                <span asp-validation-for="SliderTypeId"></span>
+            </div>
+        </div>
+        <div class="form-group" id="pnlCategory">
+            <admin-label asp-for="CategoryId" />
+            <div class="col-md-9 col-sm-9">
+                <admin-select asp-for="CategoryId" asp-items="Model.AvailableCategories" />
+                <span asp-validation-for="CategoryId"></span>
+            </div>
+        </div>
+        <div class="form-group" id="pnlManufacturer">
+            <admin-label asp-for="ManufacturerId" />
+            <div class="col-md-9 col-sm-9">
+                <admin-select asp-for="ManufacturerId" asp-items="Model.AvailableManufacturers" />
+                <span asp-validation-for="ManufacturerId"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <admin-label asp-for="DisplayOrder" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="DisplayOrder" />
+                <span asp-validation-for="DisplayOrder"></span>
+            </div>
+        </div>
+    </div>
+</div>

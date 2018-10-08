@@ -34,6 +34,16 @@
         @RenderSection("Breadcrumb")
     }
 }
+
+@if (!string.IsNullOrEmpty(currentCategoryId))
+{
+    @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_category", additionalData = Model.Id })
+}
+@if (!string.IsNullOrEmpty(currentManufacturerId))
+{
+    @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_manufacturer", additionalData = Model.Id })
+}
+
 <div class="d-lg-flex d-grid flex-md-row mx-0">
 
     <div class="col-lg-3 col-md-12 generalLeftSide pl-0">

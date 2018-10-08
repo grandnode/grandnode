@@ -1,49 +1,38 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Plugin.Widgets.Slider.Infrastructure.Cache;
 using Grand.Plugin.Widgets.Slider.Models;
-using Grand.Services.Configuration;
 using Grand.Services.Localization;
 using Grand.Services.Media;
-using Grand.Services.Stores;
 using System.Linq;
+using Grand.Plugin.Widgets.Slider.Services;
+using Grand.Plugin.Widgets.Slider.Domain;
+using System.Collections.Generic;
 
 namespace Grand.Plugin.Widgets.Slider.ViewComponents
 {
     [ViewComponent(Name = "Grand.Plugin.Widgets.Slider")]
     public class SliderViewComponent : ViewComponent
     {
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly IStoreService _storeService;
         private readonly IPictureService _pictureService;
-        private readonly ISettingService _settingService;
         private readonly ICacheManager _cacheManager;
-        private readonly ILocalizationService _localizationService;
+        private readonly ISliderService _sliderService;
 
-        public SliderViewComponent(IWorkContext workContext,
-            IStoreContext storeContext,
-            IStoreService storeService,
+        public const string PICTURE_URL_MODEL_KEY = "Grand.plugins.widgets.slider.pictureurl-{0}";
+
+        public SliderViewComponent(
             IPictureService pictureService,
-            ISettingService settingService,
             ICacheManager cacheManager,
-            ILocalizationService localizationService)
+            ISliderService sliderService)
         {
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._storeService = storeService;
             this._pictureService = pictureService;
-            this._settingService = settingService;
             this._cacheManager = cacheManager;
-            this._localizationService = localizationService;
+            this._sliderService = sliderService;
         }
 
         protected string GetPictureUrl(string pictureId)
         {
 
-            string cacheKey = string.Format(ModelCacheEventConsumer.PICTURE_URL_MODEL_KEY, pictureId);
+            string cacheKey = string.Format(PICTURE_URL_MODEL_KEY, pictureId);
             return _cacheManager.Get(cacheKey, () =>
             {
                 var url = _pictureService.GetPictureUrl(pictureId, showDefaultPicture: false);
@@ -54,52 +43,45 @@ namespace Grand.Plugin.Widgets.Slider.ViewComponents
             });
         }
 
+        protected void PrepareModel(IList<PictureSlider> sliders, PublicInfoModel model)
+        {
+            int i = 1;
+            foreach (var item in sliders)
+            {
+                model.Slide.Add(new PublicInfoModel.Slider()
+                {
+                    Link = item.Link,
+                    PictureUrl = GetPictureUrl(item.PictureId),
+                    Name = item.GetLocalized(x => x.Name),
+                    Description = item.GetLocalized(x => x.Description),
+                    CssClass = i == 1 ? "active" : ""
+                });
+                i++;
+            }
+
+        }
+
         public IViewComponentResult Invoke(string widgetZone, object additionalData = null)
         {
 
-            var sliderSettings = _settingService.LoadSetting<SliderSettings>(_storeContext.CurrentStore.Id);
-
             var model = new PublicInfoModel();
-            model.Slide.Add(new PublicInfoModel.Slider()
+            if (widgetZone == SliderDefaults.WidgetZoneHomePage)
             {
-                PictureUrl = GetPictureUrl(sliderSettings.Picture1Id),
-                Text = sliderSettings.Text1,
-                Link = sliderSettings.Link1,
-                CssClass = "active",
-            });
-
-            model.Slide.Add(new PublicInfoModel.Slider()
+                var slides = _sliderService.GetPictureSliders(SliderType.HomePage);
+                PrepareModel(slides, model);
+            }
+            if (widgetZone == SliderDefaults.WidgetZoneCategoryPage)
             {
-                PictureUrl = GetPictureUrl(sliderSettings.Picture2Id),
-                Text = sliderSettings.Text2,
-                Link = sliderSettings.Link2,
-                CssClass = "",
-            });
-
-            model.Slide.Add(new PublicInfoModel.Slider()
+                var slides = _sliderService.GetPictureSliders(SliderType.Category, additionalData.ToString());
+                PrepareModel(slides, model);
+            }
+            if (widgetZone == SliderDefaults.WidgetZoneManufacturerPage)
             {
-                PictureUrl = GetPictureUrl(sliderSettings.Picture3Id),
-                Text = sliderSettings.Text3,
-                Link = sliderSettings.Link3,
-                CssClass = "",
-            });
+                var slides = _sliderService.GetPictureSliders(SliderType.Manufacturer, additionalData.ToString());
+                PrepareModel(slides, model);
+            }
 
-            model.Slide.Add(new PublicInfoModel.Slider()
-            {
-                PictureUrl = GetPictureUrl(sliderSettings.Picture4Id),
-                Text = sliderSettings.Text4,
-                Link = sliderSettings.Link4,
-                CssClass = "",
-            });
-
-            model.Slide.Add(new PublicInfoModel.Slider()
-            {
-                PictureUrl = GetPictureUrl(sliderSettings.Picture5Id),
-                Text = sliderSettings.Text5,
-                Link = sliderSettings.Link5,
-            });
-
-            if(model.Slide.Where(x=> string.IsNullOrEmpty(x.PictureUrl)).Count() ==0 )
+            if (!model.Slide.Any())
                 return Content("");
 
             return View("/Plugins/Widgets.Slider/Views/PublicInfo.cshtml", model);

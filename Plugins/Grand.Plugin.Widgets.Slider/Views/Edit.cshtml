@@ -1,0 +1,32 @@
+﻿@using Grand.Plugin.Widgets.Slider.Models
+@model SlideModel
+@{
+    //page title
+    ViewBag.Title = T("Plugins.Widgets.Slider.Edit").Text;
+    Layout = "_ConfigurePlugin";
+}
+<form asp-controller="WidgetsSlider" asp-action="Edit" method="post" id="slider-form">
+    <antiforgery-token />
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-sitemap"></i>
+                        @T("Plugins.Widgets.Slider.Edit")
+                        <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Plugins.Widgets.Slider.BackToList").Text, "Configure")</small>
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group btn-group-devided util-btn-margin-bottom-5">
+                            <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                            <button class="btn btn-success" type="submit" name="save-continue"><i class="fa fa-check-circle"></i> @T("Admin.Common.SaveContinue") </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    @Html.Partial("~/Plugins/Widgets.Slider/Views/_CreateOrUpdate.cshtml", Model)
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
