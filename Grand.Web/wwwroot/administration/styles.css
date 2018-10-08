@@ -42,6 +42,15 @@
     overflow-x: auto;
 }
 
+/* tooltip */
+
+.ui-widget-content {
+    border: 1px solid #aaa;
+    background: #fff !important;
+    color: #222;
+    opacity: 1 !important;
+}
+
 /* end Kedno*/
 
 /* spinner */
