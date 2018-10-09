@@ -1,11 +1,9 @@
 ﻿using FluentValidation;
-using FluentValidation.Results;
-using Grand.Web.Areas.Admin.Models.Customers;
 using Grand.Core.Domain.Customers;
+using Grand.Framework.Validators;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
-using Grand.Framework.Validators;
-using System;
+using Grand.Web.Areas.Admin.Models.Customers;
 using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Validators.Customers

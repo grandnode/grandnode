@@ -1,11 +1,7 @@
-﻿using System;
-
-using Grand.Framework;
-using Grand.Framework.Mvc;
+﻿using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
+using System;
 
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Grand.Framework.Mvc.ModelBinding;
 namespace Grand.Web.Areas.Admin.Models.Blogs
 {
     public partial class BlogCommentModel : BaseGrandEntityModel

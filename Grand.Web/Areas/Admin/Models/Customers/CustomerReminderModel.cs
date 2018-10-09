@@ -1,8 +1,8 @@
-﻿using Grand.Framework.Mvc.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using FluentValidation.Attributes;
 using Grand.Framework.Mvc.ModelBinding;
-using FluentValidation.Attributes;
+using Grand.Framework.Mvc.Models;
 using Grand.Web.Areas.Admin.Validators.Customers;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

@@ -1,10 +1,5 @@
-﻿using Grand.Framework.Mvc.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Grand.Framework.Mvc.ModelBinding;
-using FluentValidation.Attributes;
-using Grand.Web.Areas.Admin.Validators.Localization;
-using Grand.Framework;
-using Grand.Framework.Mvc;
+﻿using Grand.Framework.Mvc.ModelBinding;
+using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Areas.Admin.Models.Localization
 {

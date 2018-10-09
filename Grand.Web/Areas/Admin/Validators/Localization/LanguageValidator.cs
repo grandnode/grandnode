@@ -1,8 +1,8 @@
-﻿using System.Globalization;
-using FluentValidation;
-using Grand.Web.Areas.Admin.Models.Localization;
-using Grand.Services.Localization;
+﻿using FluentValidation;
 using Grand.Framework.Validators;
+using Grand.Services.Localization;
+using Grand.Web.Areas.Admin.Models.Localization;
+using System.Globalization;
 
 namespace Grand.Web.Areas.Admin.Validators.Localization
 {

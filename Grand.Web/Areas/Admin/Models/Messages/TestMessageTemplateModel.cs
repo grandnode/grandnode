@@ -1,8 +1,8 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using FluentValidation.Attributes;
 using Grand.Framework.Mvc.ModelBinding;
-using System.Collections.Generic;
-using FluentValidation.Attributes;
+using Grand.Framework.Mvc.Models;
 using Grand.Web.Areas.Admin.Validators.Messages;
+using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Messages
 {

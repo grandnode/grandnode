@@ -1,12 +1,8 @@
-﻿using System;
+﻿using Grand.Framework.Mvc.ModelBinding;
+using Grand.Framework.Mvc.Models;
+using System;
 using System.ComponentModel.DataAnnotations;
 
-using Grand.Framework;
-using Grand.Framework.Mvc;
-using Grand.Framework.Mvc.Models;
-
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Grand.Framework.Mvc.ModelBinding;
 namespace Grand.Web.Areas.Admin.Models.Affiliates
 {
     public partial class AffiliateListModel : BaseGrandModel

@@ -1,11 +1,11 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using FluentValidation.Attributes;
+using Grand.Framework.Localization;
 using Grand.Framework.Mvc.ModelBinding;
-using System;
-using System.Collections.Generic;
-using FluentValidation.Attributes;
+using Grand.Framework.Mvc.Models;
 using Grand.Web.Areas.Admin.Models.Stores;
 using Grand.Web.Areas.Admin.Validators.Directory;
-using Grand.Framework.Localization;
+using System;
+using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Directory
 {
