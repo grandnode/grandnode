@@ -1,12 +1,9 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using Grand.Framework.Mvc.ModelBinding;
+using Grand.Framework.Mvc.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Grand.Framework.Mvc.ModelBinding;
 using System;
-using System.ComponentModel.DataAnnotations;
-
-using Grand.Framework;
-using Grand.Framework.Mvc;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Areas.Admin.Models.Catalog
 {

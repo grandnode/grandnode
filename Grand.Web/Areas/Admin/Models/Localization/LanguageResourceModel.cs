@@ -1,6 +1,6 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using FluentValidation.Attributes;
 using Grand.Framework.Mvc.ModelBinding;
-using FluentValidation.Attributes;
+using Grand.Framework.Mvc.Models;
 using Grand.Web.Areas.Admin.Validators.Localization;
 
 namespace Grand.Web.Areas.Admin.Models.Localization

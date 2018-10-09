@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
-using Grand.Web.Areas.Admin.Models.Catalog;
 using Grand.Core.Domain.Catalog;
-using Grand.Services.Localization;
 using Grand.Framework.Validators;
+using Grand.Services.Localization;
+using Grand.Web.Areas.Admin.Models.Catalog;
 
 namespace Grand.Web.Areas.Admin.Validators.Catalog
 {

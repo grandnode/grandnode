@@ -1,11 +1,11 @@
-﻿using Grand.Framework.Mvc.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using FluentValidation.Attributes;
 using Grand.Framework.Mvc.ModelBinding;
+using Grand.Framework.Mvc.Models;
+using Grand.Web.Areas.Admin.Validators.Discounts;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using FluentValidation.Attributes;
-using Grand.Web.Areas.Admin.Validators.Discounts;
 
 namespace Grand.Web.Areas.Admin.Models.Discounts
 {
