@@ -221,7 +221,8 @@ namespace Grand.Services.Orders
             string customerId = "", string initialOrderId = "", OrderStatus? initialOrderStatus = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
 
-        #endregion
 
+
+        #endregion
     }
 }

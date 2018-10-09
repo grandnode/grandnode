@@ -398,6 +398,9 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("CancelOrder",
                             "orderdetails/cancel/{orderId}",
                             new { controller = "Order", action = "CancelOrder" });
+            routeBuilder.MapLocalizedRoute("AddOrderNote",
+                            "orderdetails/ordernote/{orderId}",
+                            new { controller = "Order", action = "AddOrderNote" });
 
             //order downloads
             routeBuilder.MapRoute("GetDownload",

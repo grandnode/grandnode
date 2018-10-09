@@ -116,5 +116,9 @@ namespace Grand.Web.Areas.Admin.Models.Settings
         [GrandResourceDisplayName("Admin.Configuration.Settings.Order.UserCanCancelUnpaidOrder")]
         public bool UserCanCancelUnpaidOrder { get; set; }
         public bool UserCanCancelUnpaidOrder_OverrideForStore { get; set; }
+
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Order.AllowCustomerToAddOrderNote")]
+        public bool AllowCustomerToAddOrderNote { get; set; }
+        public bool AllowCustomerToAddOrderNote_OverrideForStore { get; set; }
     }
 }

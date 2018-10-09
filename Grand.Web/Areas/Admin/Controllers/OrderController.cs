@@ -3743,7 +3743,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                     DownloadGuid = download != null ? download.DownloadGuid : Guid.Empty,
                     DisplayToCustomer = orderNote.DisplayToCustomer,
                     Note = orderNote.FormatOrderNoteText(),
-                    CreatedOn = _dateTimeHelper.ConvertToUserTime(orderNote.CreatedOnUtc, DateTimeKind.Utc)
+                    CreatedOn = _dateTimeHelper.ConvertToUserTime(orderNote.CreatedOnUtc, DateTimeKind.Utc),
+                    CreatedByCustomer = orderNote.CreatedByCustomer
                 });
             }
 

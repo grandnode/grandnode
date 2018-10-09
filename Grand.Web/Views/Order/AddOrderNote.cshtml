@@ -1,0 +1,29 @@
+﻿@model AddOrderNoteModel
+
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.OrderDetails").Text);
+}
+<div class="page order-details-page mb-3">
+    <h2 class="generalTitle text-center">@T("Order.AddOrdernote")</h2>
+
+    <div class="write-review" id="review-form">
+        <form asp-route="ProductReviews" method="post">
+            <div asp-validation-summary="ModelOnly" class="message-error"></div>
+            <fieldset>
+                <div class="form-fields">
+                    <div class="form-group">
+                        <label asp-for="Note" class="col-form-label">@T("OrderNote.Fields.Title"):</label>
+                        <textarea asp-for="Note" class="form-control review-title"></textarea>
+                        <span asp-validation-for="Note"></span>
+                    </div>
+                </div>
+            </fieldset>
+            <div class="buttons text-left my-3">
+                <input type="submit" name="add-review" class="btn btn-info write-product-review-button" value="@T("OrderNote.SubmitButton")" />
+            </div>
+        </form>
+    </div>
+</div>

@@ -254,5 +254,18 @@
                 <admin-input asp-for="OrderIdent" />
             </div>
         </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.AllowCustomerToAddOrderNote_OverrideForStore, model => model.AllowCustomerToAddOrderNote, Model.ActiveStoreScopeConfiguration)
+                <admin-label asp-for="AllowCustomerToAddOrderNote" class="control-label" />
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    <admin-input asp-for="AllowCustomerToAddOrderNote" />
+                    <span></span>
+                </label>
+                <span asp-validation-for="AllowCustomerToAddOrderNote"></span>
+            </div>
+        </div>
     </div>
 </div>

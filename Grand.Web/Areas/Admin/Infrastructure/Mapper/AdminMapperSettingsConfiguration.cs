@@ -276,6 +276,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.AttachPdfInvoiceToOrderPaidEmail_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.AttachPdfInvoiceToOrderCompletedEmail_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.UserCanCancelUnpaidOrder_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.AllowCustomerToAddOrderNote_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
 
             CreateMap<OrderSettingsModel, OrderSettings>()

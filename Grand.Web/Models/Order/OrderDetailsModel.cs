@@ -33,7 +33,7 @@ namespace Grand.Web.Models.Order
         public bool IsReOrderAllowed { get; set; }
 
         public bool IsReturnRequestAllowed { get; set; }
-        
+
         public bool IsShippable { get; set; }
         public bool PickUpInStore { get; set; }
         public AddressModel PickupAddress { get; set; }
@@ -69,15 +69,17 @@ namespace Grand.Web.Models.Order
         public int RedeemedRewardPoints { get; set; }
         public string RedeemedRewardPointsAmount { get; set; }
         public string OrderTotal { get; set; }
-        
+
         public IList<GiftCard> GiftCards { get; set; }
 
         public bool ShowSku { get; set; }
         public IList<OrderItemModel> Items { get; set; }
-        
+
         public IList<OrderNote> OrderNotes { get; set; }
 
-		#region Nested Classes
+        public bool ShowAddOrderNote { get; set; }
+
+        #region Nested Classes
 
         public partial class OrderItemModel : BaseGrandEntityModel
         {
@@ -124,6 +126,6 @@ namespace Grand.Web.Models.Order
             public DateTime? ShippedDate { get; set; }
             public DateTime? DeliveryDate { get; set; }
         }
-		#endregion
+        #endregion
     }
 }

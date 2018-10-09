@@ -24,7 +24,7 @@ namespace Grand.Core.Domain.Orders
         /// Gets or sets a minimum order total amount
         /// </summary>
         public decimal MinOrderTotalAmount { get; set; }
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether anonymous checkout allowed
         /// </summary>
@@ -72,7 +72,7 @@ namespace Grand.Core.Domain.Orders
         /// Gets or sets a value indicating we should attach PDF invoice to "Order completed" email
         /// </summary>
         public bool AttachPdfInvoiceToOrderCompletedEmail { get; set; }
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether "Return requests" are allowed
         /// </summary>
@@ -131,5 +131,10 @@ namespace Grand.Core.Domain.Orders
         /// Gets or sets a value indicating whether unpublish auction product after made order.
         /// </summary>
         public bool UnpublishAuctionProduct { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether customers can add order notes
+        /// </summary>
+        public bool AllowCustomerToAddOrderNote { get; set; }
     }
 }

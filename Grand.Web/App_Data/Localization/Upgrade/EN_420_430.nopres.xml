@@ -458,4 +458,25 @@
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.Name.Hint">
     <Value>Search by a name.</Value>
   </LocaleResource>
+  <LocaleResource Name="OrderNote.Fields.Title.Required">
+    <Value>Title is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="OrderNote.Fields.Title">
+    <Value>Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="OrderNote.SubmitButton">
+    <Value>Submit order note</Value>
+  </LocaleResource>
+  <LocaleResource Name="OrderNote.Added">
+    <Value>Order note has been added.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderNotes.Fields.CreatedByCustomer">
+    <Value>Created by customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AllowCustomerToAddOrderNote">
+    <Value>Allow customer to add order note</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AllowCustomerToAddOrderNote.Hint">
+    <Value>Check if you want to allow customers to add order notes from order details page.</Value>
+  </LocaleResource>
 </Language>

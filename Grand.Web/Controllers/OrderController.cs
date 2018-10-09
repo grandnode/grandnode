@@ -6,9 +6,11 @@ using Grand.Core.Infrastructure;
 using Grand.Framework.Controllers;
 using Grand.Framework.Security;
 using Grand.Services.Common;
+using Grand.Services.Localization;
 using Grand.Services.Orders;
 using Grand.Services.Payments;
 using Grand.Services.Shipping;
+using Grand.Web.Models.Order;
 using Grand.Web.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,22 +29,28 @@ namespace Grand.Web.Controllers
         private readonly IWorkContext _workContext;
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly IPaymentService _paymentService;
+        private readonly ILocalizationService _localizationService;
+        private readonly OrderSettings _orderSettings;
 
         #endregion
 
-		#region Constructors
+        #region Constructors
 
         public OrderController(IOrderViewModelService orderViewModelService,
             IOrderService orderService,
             IWorkContext workContext,
-            IOrderProcessingService orderProcessingService, 
-            IPaymentService paymentService)
+            IOrderProcessingService orderProcessingService,
+            IPaymentService paymentService,
+            ILocalizationService localizationService,
+            OrderSettings orderSettings)
         {
             this._orderViewModelService = orderViewModelService;
             this._orderService = orderService;
             this._workContext = workContext;
             this._orderProcessingService = orderProcessingService;
             this._paymentService = paymentService;
+            this._localizationService = localizationService;
+            this._orderSettings = orderSettings;
         }
 
         #endregion
@@ -169,6 +177,43 @@ namespace Grand.Web.Controllers
                 bytes = stream.ToArray();
             }
             return File(bytes, "application/pdf", string.Format("order_{0}.pdf", order.Id));
+        }
+
+        //My account / Order details page / Add order note
+        public virtual IActionResult AddOrderNote(string orderId)
+        {
+            var model = new AddOrderNoteModel();
+            return View("AddOrderNote", model);
+        }
+
+        //My account / Order details page / Add order note
+        [HttpPost]
+        [PublicAntiForgery]
+        public virtual IActionResult AddOrderNote(string orderId, AddOrderNoteModel model)
+        {
+            if (!_orderSettings.AllowCustomerToAddOrderNote)
+                return RedirectToRoute("HomePage");
+
+            if(!ModelState.IsValid)
+            {
+                return View("AddOrderNote", model);
+            }
+
+            var order = _orderService.GetOrderById(orderId);
+            if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
+                return Challenge();
+
+            _orderService.InsertOrderNote(new OrderNote
+            {
+                CreatedOnUtc = DateTime.UtcNow,
+                DisplayToCustomer = true,
+                Note = model.Note,
+                OrderId = orderId,
+                CreatedByCustomer = true
+            });
+
+            AddNotification(Framework.UI.NotifyType.Success, _localizationService.GetResource("OrderNote.Added"), true);
+            return RedirectToRoute("OrderDetails", orderId);
         }
 
         //My account / Order details page / re-order

@@ -21,7 +21,7 @@ using System.Linq;
 
 namespace Grand.Web.Services
 {
-    public partial class OrderViewModelService: IOrderViewModelService
+    public partial class OrderViewModelService : IOrderViewModelService
     {
         private readonly IOrderService _orderService;
         private readonly IStoreContext _storeContext;
@@ -163,6 +163,7 @@ namespace Grand.Web.Services
             model.IsReOrderAllowed = _orderSettings.IsReOrderAllowed;
             model.IsReturnRequestAllowed = _orderProcessingService.IsReturnRequestAllowed(order);
             model.PdfInvoiceDisabled = _pdfSettings.DisablePdfInvoicesForPendingOrders && order.OrderStatus == OrderStatus.Pending;
+            model.ShowAddOrderNote = _orderSettings.AllowCustomerToAddOrderNote;
 
             //shipping info
             model.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);
@@ -392,7 +393,7 @@ namespace Grand.Web.Services
                     Quantity = orderItem.Quantity,
                     AttributeInfo = orderItem.AttributeDescription,
                 };
-                
+
                 model.Items.Add(orderItemModel);
 
                 //unit price, subtotal
@@ -497,7 +498,7 @@ namespace Grand.Web.Services
                     QuantityOrdered = orderItem.Quantity,
                     QuantityShipped = shipmentItem.Quantity,
                 };
-                
+
                 model.Items.Add(shipmentItemModel);
             }
 

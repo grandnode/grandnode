@@ -3,8 +3,8 @@
     <div class="panel-body">
         <div id="ordernotes-grid"></div>
     </div>
-</div>            
-    <script>
+</div>
+<script>
         $(document).ready(function () {
             $("#ordernotes-grid").kendoGrid({
                 dataSource: {
@@ -67,26 +67,33 @@
                     title: "@T("Admin.Orders.OrderNotes.Fields.Note")",
                     width: 350,
                     encoded: false
-                },{
+                }, {
                     field: "DownloadId",
                     title: "@T("Admin.Orders.OrderNotes.Fields.Download")",
                     width: 100,
                     template: '# if(DownloadId != "") {# <a href="@Url.Content("~/Admin/Download/DownloadFile")?downloadGuid=#=DownloadGuid#">@T("Admin.Orders.OrderNotes.Fields.Download.Link")</a> #} else {# @T("Admin.Orders.OrderNotes.Fields.Download.Link.No") #} #'
-                },{
+                }, {
+                    field: "CreatedByCustomer",
+                    title: "@T("Admin.Orders.OrderNotes.Fields.CreatedByCustomer")",
+                    width: 100,
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
+                    template: '# if(CreatedByCustomer) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+                }, {
                     field: "DisplayToCustomer",
                     title: "@T("Admin.Orders.OrderNotes.Fields.DisplayToCustomer")",
                     width: 100,
                     headerAttributes: { style: "text-align:center" },
                     attributes: { style: "text-align:center" },
                     template: '# if(DisplayToCustomer) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
-                },  {
+                }, {
                     command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                     title: "@T("Admin.Common.Delete")",
                     width: 100
                 }]
             });
         });
-    </script>
+</script>
 <p>
     <strong>
         @T("Admin.Orders.OrderNotes.AddTitle")
@@ -164,8 +171,8 @@
             $('#addOrderNote').attr('disabled', true);
             var postData = {
                 DisplayToCustomer: orderNoteDisplayToCustomer,
-                message: orderNoteMessage, 
-                downloadId: orderNoteDownloadId, 
+                message: orderNoteMessage,
+                downloadId: orderNoteDownloadId,
                 orderId: '@Model.Id'
             };
             addAntiForgeryToken(postData);
@@ -183,7 +190,7 @@
                 error:function (xhr, ajaxOptions, thrownError){
                     alert('Failed to add order note.');
                     $('#addOrderNote').attr('disabled', false);
-                }  
+                }
             });
         });
     });

@@ -23,6 +23,8 @@
     @if (!Model.PrintMode)
     {
         <h1 class="generalTitle">@T("Order.OrderInformation")</h1>
+        <div asp-validation-summary="All"></div>
+
         <div class="btn-group btn-group-sm">
             <a href="@Url.RouteUrl("PrintOrderDetails", new { orderId = Model.Id })" target="_blank" class="btn btn-outline-secondary print-order-button">@T("Order.Print")</a>
 
@@ -30,8 +32,14 @@
             {
                 <a href="@Url.RouteUrl("GetOrderPdfInvoice", new { orderId = Model.Id })" class="btn btn-outline-secondary pdf-invoice-button">@T("Order.GetPDFInvoice")</a>
             }
+
+            @if (Model.ShowAddOrderNote)
+            {
+                <a href="@Url.RouteUrl("AddOrderNote", new { orderId = Model.Id })" class="btn btn-outline-secondary">Add order note</a>
+            }
         </div>
     }
+
     @if (Model.UserCanCancelUnpaidOrder)
     {
         <a href="@Url.RouteUrl("CancelOrder", new { orderId = Model.Id })" class="btn btn-danger btn-sm cancel-unpaid-order-button float-right" onclick="return confirm('@T("Admin.Common.AreYouSure")');">@T("Order.CancelOrder")</a>
@@ -104,8 +112,8 @@
                             </li>
                         }
                         @if (Model.BillingAddress.CityEnabled ||
-                   Model.BillingAddress.StateProvinceEnabled ||
-                   Model.BillingAddress.ZipPostalCodeEnabled)
+Model.BillingAddress.StateProvinceEnabled ||
+Model.BillingAddress.ZipPostalCodeEnabled)
                         {
                             <li class="city-state-zip">
                                 @if (Model.BillingAddress.CityEnabled)
@@ -214,9 +222,9 @@
                                 <li class="name">
                                     @Model.ShippingAddress.FirstName @Model.ShippingAddress.LastName
                                 </li>
-                                    <li class="email">
-                                        @T("Order.Email"): @Model.ShippingAddress.Email
-                                    </li>
+                                <li class="email">
+                                    @T("Order.Email"): @Model.ShippingAddress.Email
+                                </li>
                                 if (Model.ShippingAddress.PhoneEnabled)
                                 {
                                     <li class="phone">
@@ -695,11 +703,11 @@
                             <col />
                         </colgroup>
                         <thead class="table-inverse">
-                            <tr>
-                                <th class="created-on">
+                            <tr class="row mx-0">
+                                <th class="created-on col-4">
                                     @T("Order.Notes.CreatedOn")
                                 </th>
-                                <th class="note">
+                                <th class="note col-8">
                                     @T("Order.Notes.Note")
                                 </th>
                             </tr>
@@ -707,11 +715,11 @@
                         <tbody>
                             @foreach (var item in Model.OrderNotes)
                             {
-                                <tr>
-                                    <td class="created-on">
+                                <tr class="row mx-0">
+                                    <td class="created-on col-4">
                                         @item.CreatedOn.ToString()
                                     </td>
-                                    <td class="note">
+                                    <td class="note col-8">
                                         @Html.Raw(item.Note)
                                         @if (item.HasDownload)
                                         {

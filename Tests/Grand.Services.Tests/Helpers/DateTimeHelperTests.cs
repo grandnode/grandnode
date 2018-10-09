@@ -65,6 +65,5 @@ namespace Grand.Services.Helpers.Tests
 
             Assert.AreEqual(ds,dt);
         }
-        
     }
 }

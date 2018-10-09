@@ -311,6 +311,8 @@ namespace Grand.Web.Areas.Admin.Models.Orders
             public Guid DownloadGuid { get; set; }
             [GrandResourceDisplayName("Admin.Orders.OrderNotes.Fields.CreatedOn")]
             public DateTime CreatedOn { get; set; }
+            [GrandResourceDisplayName("Admin.Orders.OrderNotes.Fields.CreatedByCustomer")]
+            public bool CreatedByCustomer { get; set; }
         }
 
         public partial class UploadLicenseModel : BaseGrandModel
