@@ -3435,7 +3435,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 System.IO.File.WriteAllLines(jsFilePath, lines);
             }
 
-            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
+            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return PushNotifications();
         }
 
@@ -3504,7 +3504,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             _settingService.SaveSetting(settings);
 
-            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
+            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return AdminSearch();
         }
 
