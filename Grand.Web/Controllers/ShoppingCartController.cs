@@ -82,7 +82,8 @@ namespace Grand.Web.Controllers
 
         [HttpPost]
         public virtual IActionResult CheckoutAttributeChange(IFormCollection form,
-            [FromServices] ICheckoutAttributeParser checkoutAttributeParser)
+            [FromServices] ICheckoutAttributeParser checkoutAttributeParser, 
+            [FromServices] ICheckoutAttributeFormatter checkoutAttributeFormatter)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
@@ -111,7 +112,9 @@ namespace Grand.Web.Controllers
             return Json(new
             {
                 enabledattributeids = enabledAttributeIds.ToArray(),
-                disabledattributeids = disabledAttributeIds.ToArray()
+                disabledattributeids = disabledAttributeIds.ToArray(),
+                htmlordertotal = this.RenderPartialViewToString("Components/OrderTotals/Default", _shoppingCartViewModelService.PrepareOrderTotals(cart, true)),
+                checkoutattributeinfo = checkoutAttributeFormatter.FormatAttributes(attributeXml, _workContext.CurrentCustomer),
             });
         }
 

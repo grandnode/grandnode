@@ -275,6 +275,12 @@
                             $('#checkout_attribute_input_' + data.disabledattributeids[i]).hide();
                         }
                     }
+                    if (data.htmlordertotal) {
+                        $('.total-info').replaceWith(data.htmlordertotal);
+                    }
+                    if (data.checkoutattributeinfo) {
+                        $('.selected-checkout-attributes').html(data.checkoutattributeinfo);
+                    }
                 }
             });
         }
