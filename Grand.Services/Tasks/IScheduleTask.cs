@@ -1,6 +1,6 @@
-﻿using System;
-using FluentScheduler;
+﻿using FluentScheduler;
 using Grand.Core.Domain.Tasks;
+using System;
 
 namespace Grand.Services.Tasks
 {

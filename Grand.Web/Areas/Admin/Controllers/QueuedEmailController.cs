@@ -1,22 +1,22 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Grand.Framework.Mvc.Filters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Grand.Web.Areas.Admin.Extensions;
-using Grand.Web.Areas.Admin.Models.Messages;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Core.Domain.Messages;
+using Grand.Framework.Controllers;
+using Grand.Framework.Kendoui;
+using Grand.Framework.Mvc.Filters;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
 using Grand.Services.Security;
-using Grand.Framework.Controllers;
-using Grand.Framework.Kendoui;
+using Grand.Web.Areas.Admin.Extensions;
+using Grand.Web.Areas.Admin.Models.Messages;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
-	public partial class QueuedEmailController : BaseAdminController
+    public partial class QueuedEmailController : BaseAdminController
 	{
 		private readonly IQueuedEmailService _queuedEmailService;
         private readonly IEmailAccountService _emailAccountService;

@@ -1,5 +1,4 @@
-﻿
-namespace Grand.Core.Domain.Logging
+﻿namespace Grand.Core.Domain.Logging
 {
     /// <summary>
     /// Represents an activity log type record

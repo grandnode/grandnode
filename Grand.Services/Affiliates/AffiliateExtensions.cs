@@ -1,8 +1,8 @@
-﻿using System;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Core.Domain.Affiliates;
 using Grand.Core.Infrastructure;
 using Grand.Services.Seo;
+using System;
 
 namespace Grand.Services.Affiliates
 {

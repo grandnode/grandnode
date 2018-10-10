@@ -1,5 +1,5 @@
-﻿using System;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Framework.Mvc.Models;
+using System;
 using System.Collections.Generic;
 
 namespace Grand.Web.Models.Customer

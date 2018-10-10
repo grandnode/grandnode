@@ -1,23 +1,22 @@
-﻿using Grand.Core.Data;
+﻿using Grand.Core;
+using Grand.Core.Caching;
+using Grand.Core.Data;
+using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
-using Grand.Services.Events;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using MongoDB.Driver;
-using MongoDB.Driver.Linq;
+using Grand.Core.Domain.Logging;
+using Grand.Core.Domain.Messages;
 using Grand.Core.Domain.Orders;
 using Grand.Services.Catalog;
-using Grand.Core.Domain.Catalog;
-using Grand.Core;
-using Grand.Core.Domain.Messages;
-using Grand.Services.Messages;
-using Grand.Services.Localization;
-using Grand.Core.Domain.Logging;
-using System.Threading.Tasks;
-using Grand.Core.Caching;
+using Grand.Services.Events;
 using Grand.Services.Helpers;
+using Grand.Services.Localization;
+using Grand.Services.Messages;
 using Microsoft.AspNetCore.Http;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Grand.Services.Customers
 {

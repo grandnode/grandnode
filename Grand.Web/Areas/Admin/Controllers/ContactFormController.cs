@@ -1,21 +1,21 @@
-﻿using System;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Grand.Web.Areas.Admin.Extensions;
-using Grand.Web.Areas.Admin.Models.Messages;
-using Grand.Core;
+﻿using Grand.Core;
+using Grand.Framework.Controllers;
+using Grand.Framework.Kendoui;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
 using Grand.Services.Security;
-using Grand.Framework.Controllers;
-using Grand.Framework.Kendoui;
 using Grand.Services.Stores;
+using Grand.Web.Areas.Admin.Extensions;
+using Grand.Web.Areas.Admin.Models.Messages;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
+using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
-	public partial class ContactFormController : BaseAdminController
+    public partial class ContactFormController : BaseAdminController
 	{
 		private readonly IContactUsService _contactUsService;
         private readonly IDateTimeHelper _dateTimeHelper;

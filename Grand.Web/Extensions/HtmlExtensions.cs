@@ -1,18 +1,18 @@
-﻿using System;
-using System.Text;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Infrastructure;
+using Grand.Framework;
+using Grand.Framework.UI.Paging;
 using Grand.Services.Localization;
 using Grand.Services.Seo;
 using Grand.Services.Topics;
-using Grand.Framework.UI.Paging;
 using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Models.Boards;
 using Grand.Web.Models.Common;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Grand.Framework;
+using System;
+using System.Text;
 
 namespace Grand.Web.Extensions
 {

@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using FluentValidation.Attributes;
+﻿using FluentValidation.Attributes;
+using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
 using Grand.Web.Validators.Common;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Grand.Framework.Mvc.ModelBinding;
+using System.Collections.Generic;
 
 namespace Grand.Web.Models.Vendors
 {

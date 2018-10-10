@@ -1,12 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Grand.Core.Caching;
 using Grand.Core.Data;
+using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Tax;
 using Grand.Services.Events;
 using MongoDB.Driver;
-using Grand.Core.Domain.Catalog;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Grand.Services.Tax
 {

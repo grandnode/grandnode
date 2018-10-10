@@ -1,7 +1,7 @@
-﻿using System;
-using FluentValidation.Attributes;
+﻿using FluentValidation.Attributes;
 using Grand.Framework.Mvc.Models;
 using Grand.Web.Validators.PrivateMessages;
+using System;
 
 namespace Grand.Web.Models.PrivateMessages
 {

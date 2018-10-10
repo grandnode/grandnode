@@ -1,8 +1,8 @@
-using System;
-using System.Collections.Generic;
 using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Shipping;
+using System;
+using System.Collections.Generic;
 
 namespace Grand.Services.Shipping
 {

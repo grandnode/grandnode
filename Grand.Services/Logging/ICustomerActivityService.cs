@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Logging;
+using System;
+using System.Collections.Generic;
 
 namespace Grand.Services.Logging
 {

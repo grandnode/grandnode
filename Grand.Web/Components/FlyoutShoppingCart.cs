@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Grand.Web.Services;
-using Grand.Core.Domain.Orders;
-using Grand.Services.Security;
+﻿using Grand.Core.Domain.Orders;
 using Grand.Framework.Components;
+using Grand.Services.Security;
+using Grand.Web.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Grand.Web.ViewComponents
 {

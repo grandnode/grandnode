@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Grand.Core.Infrastructure.Mapper
+﻿namespace Grand.Core.Infrastructure.Mapper
 {
     public interface IMapperProfile
     {

@@ -1,6 +1,6 @@
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
 using Grand.Core.Domain.Customers;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace Grand.Services.Authentication.External
 {

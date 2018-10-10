@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.AspNetCore.Routing.Template;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Core.Data;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Infrastructure;
+using Grand.Framework.Localization;
 using Grand.Services.Events;
 using Grand.Services.Seo;
-using Grand.Framework.Localization;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Routing.Template;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Framework.Seo
 {

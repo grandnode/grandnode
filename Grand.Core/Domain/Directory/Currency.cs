@@ -1,6 +1,6 @@
-using System;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Stores;
+using System;
 using System.Collections.Generic;
 
 namespace Grand.Core.Domain.Directory

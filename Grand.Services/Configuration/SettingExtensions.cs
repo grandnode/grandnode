@@ -1,7 +1,7 @@
+using Grand.Core.Configuration;
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
-using Grand.Core.Configuration;
 
 namespace Grand.Services.Configuration
 {

@@ -1,9 +1,9 @@
+using Grand.Core.Domain.Orders;
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Xml;
-using Grand.Core.Domain.Orders;
 
 namespace Grand.Services.Orders
 {

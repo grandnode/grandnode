@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Grand.Web.Areas.Admin.Extensions;
-using Grand.Web.Areas.Admin.Models.Affiliates;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Core.Domain.Affiliates;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Payments;
 using Grand.Core.Domain.Shipping;
+using Grand.Framework.Controllers;
+using Grand.Framework.Kendoui;
+using Grand.Framework.Mvc.Filters;
 using Grand.Services.Affiliates;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;
@@ -17,11 +15,13 @@ using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
 using Grand.Services.Security;
-using Grand.Framework.Controllers;
-using Grand.Framework.Kendoui;
+using Grand.Web.Areas.Admin.Extensions;
+using Grand.Web.Areas.Admin.Models.Affiliates;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Grand.Framework.Mvc.Filters;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {

@@ -1,5 +1,3 @@
-using System;
-using System.Globalization;
 using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Directory;
@@ -7,6 +5,8 @@ using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Tax;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
+using System;
+using System.Globalization;
 
 namespace Grand.Services.Catalog
 {

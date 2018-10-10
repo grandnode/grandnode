@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Grand.Framework.Components;
 using Grand.Web.Models.Checkout;
-using Grand.Framework.Components;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Grand.Web.ViewComponents
 {

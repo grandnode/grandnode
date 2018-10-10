@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Data;
@@ -8,6 +5,9 @@ using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Seo;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Grand.Services.Seo
 {

@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using Grand.Core.Domain.Catalog;
+﻿using Grand.Core.Domain.Catalog;
+using Grand.Framework.Mvc.Models;
 using Grand.Web.Models.Common;
 using Grand.Web.Models.Media;
-using Grand.Framework.Mvc.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
 
 namespace Grand.Web.Models.ShoppingCart
 {

@@ -1,7 +1,7 @@
-﻿using System.IO;
-using Microsoft.AspNetCore.Hosting;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Core.Infrastructure;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace Grand.Web.Areas.Admin.Helpers
 {
@@ -16,7 +16,7 @@ namespace Grand.Web.Areas.Admin.Helpers
         /// <returns>tinyMCE language name</returns>
         public static string GetTinyMceLanguage()
         {
-            //GrandCommerce supports TinyMCE's localization for 10 languages:
+            //GrandNode supports TinyMCE's localization for 10 languages:
             //Chinese, Spanish, Arabic, Portuguese, Russian, German, French, Italian, Dutch and English out-of-the-box.
             //Additional languages can be downloaded from the website TinyMCE(https://www.tinymce.com/download/language-packages/)
 

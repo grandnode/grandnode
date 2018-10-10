@@ -1,8 +1,8 @@
+using Grand.Core.Domain.Catalog;
+using Grand.Core.Domain.Orders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Orders;
 
 namespace Grand.Services.Orders
 {

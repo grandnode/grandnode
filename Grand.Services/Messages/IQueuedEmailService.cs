@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Core.Domain.Messages;
+using System;
+using System.Collections.Generic;
 
 namespace Grand.Services.Messages
 {

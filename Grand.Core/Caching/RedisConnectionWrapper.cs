@@ -1,10 +1,10 @@
 ﻿using Grand.Core.Configuration;
+using RedLockNet.SERedis;
+using RedLockNet.SERedis.Configuration;
 using StackExchange.Redis;
 using System;
-using System.Net;
-using RedLockNet.SERedis;
 using System.Linq;
-using RedLockNet.SERedis.Configuration;
+using System.Net;
 
 namespace Grand.Core.Caching
 {

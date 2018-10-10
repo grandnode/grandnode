@@ -1,5 +1,4 @@
-﻿
-namespace Grand.Core.Plugins
+﻿namespace Grand.Core.Plugins
 {
     /// <summary>
     /// Theme uploaded event

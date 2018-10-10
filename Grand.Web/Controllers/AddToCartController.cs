@@ -4,10 +4,8 @@ using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Orders;
-using Grand.Framework.Mvc;
 using Grand.Services.Catalog;
 using Grand.Services.Directory;
-using Grand.Services.Discounts;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Media;
@@ -15,15 +13,12 @@ using Grand.Services.Orders;
 using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Tax;
-using Grand.Web.Infrastructure.Cache;
-using Grand.Web.Models.Media;
 using Grand.Web.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 
 namespace Grand.Web.Controllers

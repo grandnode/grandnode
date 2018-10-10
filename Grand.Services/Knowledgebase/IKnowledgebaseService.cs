@@ -1,8 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Core.Domain.Knowledgebase;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Grand.Services.Knowledgebase
 {

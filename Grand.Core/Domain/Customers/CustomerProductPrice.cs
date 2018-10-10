@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Grand.Core.Domain.Customers
+﻿namespace Grand.Core.Domain.Customers
 {
     public class CustomerProductPrice: BaseEntity
     {

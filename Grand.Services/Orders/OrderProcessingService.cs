@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
 using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
@@ -16,6 +11,7 @@ using Grand.Core.Domain.Payments;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Tax;
 using Grand.Core.Domain.Vendors;
+using Grand.Core.Infrastructure;
 using Grand.Services.Affiliates;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
@@ -23,6 +19,7 @@ using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Discounts;
 using Grand.Services.Events;
+using Grand.Services.Events.Web;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Messages;
@@ -31,8 +28,11 @@ using Grand.Services.Security;
 using Grand.Services.Shipping;
 using Grand.Services.Tax;
 using Grand.Services.Vendors;
-using Grand.Core.Infrastructure;
-using Grand.Services.Events.Web;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Text;
 
 namespace Grand.Services.Orders
 {

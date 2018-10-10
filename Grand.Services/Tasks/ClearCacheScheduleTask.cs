@@ -1,7 +1,6 @@
 ﻿using Grand.Core.Caching;
 using Grand.Core.Domain.Tasks;
 using Grand.Core.Infrastructure;
-using Grand.Services.Logging;
 
 namespace Grand.Services.Tasks
 {

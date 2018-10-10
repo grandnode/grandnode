@@ -1,9 +1,9 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Core.Data;
 using Grand.Core.Domain.Customers;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using System;
 using System.Linq;
 
 namespace Grand.Framework.Mvc.Filters

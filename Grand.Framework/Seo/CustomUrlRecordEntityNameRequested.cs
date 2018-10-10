@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Routing;
-using Grand.Services.Seo;
+﻿using Grand.Services.Seo;
+using Microsoft.AspNetCore.Routing;
 
 namespace Grand.Framework.Seo
 {

@@ -1,9 +1,7 @@
-﻿using System;
-using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Forums;
+﻿using Grand.Core.Domain.Forums;
 using Grand.Core.Html;
 using Grand.Core.Infrastructure;
-using Grand.Services.Customers;
+using System;
 
 namespace Grand.Services.Forums
 {

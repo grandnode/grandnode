@@ -1,6 +1,6 @@
-using System.Collections.Generic;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Plugins;
+using System.Collections.Generic;
 
 namespace Grand.Services.Directory
 {

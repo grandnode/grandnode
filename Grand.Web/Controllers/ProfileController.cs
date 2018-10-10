@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
-using Grand.Core.Domain.Customers;
+﻿using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Forums;
 using Grand.Core.Domain.Media;
 using Grand.Services.Customers;
@@ -9,8 +7,10 @@ using Grand.Services.Forums;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Media;
-using Grand.Web.Models.Profile;
 using Grand.Services.Security;
+using Grand.Web.Models.Profile;
+using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace Grand.Web.Controllers
 {

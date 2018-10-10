@@ -1,11 +1,11 @@
 ﻿using Grand.Core.Domain.Catalog;
+using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
 using Grand.Web.Models.Media;
 using Grand.Web.Models.ShoppingCart;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
-using Grand.Core.Domain.Customers;
 
 namespace Grand.Web.Services
 {

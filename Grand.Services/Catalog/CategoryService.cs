@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Data;
@@ -10,9 +7,12 @@ using Grand.Services.Customers;
 using Grand.Services.Events;
 using Grand.Services.Security;
 using Grand.Services.Stores;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using MongoDB.Bson;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Grand.Services.Catalog
 {

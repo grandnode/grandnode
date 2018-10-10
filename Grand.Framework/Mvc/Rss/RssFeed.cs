@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Grand.Core;
+using Grand.Core.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
-using Grand.Core.Extensions;
-using Grand.Core;
 
 namespace Grand.Framework.Mvc.Rss
 {

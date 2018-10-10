@@ -1,8 +1,8 @@
-using System.Collections.Generic;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
 using Grand.Services.Payments;
+using System.Collections.Generic;
 
 namespace Grand.Services.Orders
 {

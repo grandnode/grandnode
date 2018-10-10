@@ -1,5 +1,4 @@
-﻿
-namespace Grand.Web.Areas.Admin.Helpers
+﻿namespace Grand.Web.Areas.Admin.Helpers
 {
     public enum AdminLayout
     {

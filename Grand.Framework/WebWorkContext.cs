@@ -1,13 +1,10 @@
-﻿using System;
-using System.Linq;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Localization;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Tax;
 using Grand.Core.Domain.Vendors;
+using Grand.Framework.Localization;
 using Grand.Services.Authentication;
 using Grand.Services.Common;
 using Grand.Services.Customers;
@@ -16,8 +13,11 @@ using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Stores;
 using Grand.Services.Vendors;
-using Grand.Framework.Localization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Net.Http.Headers;
+using System;
+using System.Linq;
 
 namespace Grand.Framework
 {

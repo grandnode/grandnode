@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using FluentValidation.Attributes;
 using Grand.Framework.Mvc.Models;
 using Grand.Web.Models.Common;
-using FluentValidation.Attributes;
 using Grand.Web.Validators.Customer;
+using System.Collections.Generic;
 
 namespace Grand.Web.Models.Checkout
 {

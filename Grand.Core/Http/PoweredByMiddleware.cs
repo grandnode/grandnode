@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 
 namespace Grand.Core.Http
-{ 
+{
     /// <summary>
     /// Adds the X-Powered-By header with values grandnode.
     /// </summary>

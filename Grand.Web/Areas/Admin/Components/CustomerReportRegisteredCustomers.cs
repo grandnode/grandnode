@@ -1,5 +1,4 @@
 ﻿using Grand.Framework.Components;
-using Grand.Services.Localization;
 using Grand.Services.Security;
 using Microsoft.AspNetCore.Mvc;
 

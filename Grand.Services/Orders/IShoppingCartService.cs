@@ -1,8 +1,8 @@
-using System;
-using System.Collections.Generic;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
+using System;
+using System.Collections.Generic;
 
 namespace Grand.Services.Orders
 {

@@ -1,8 +1,8 @@
-﻿using System;
-using System.Linq;
-using Grand.Core.Infrastructure;
+﻿using Grand.Core.Infrastructure;
 using Grand.Core.Plugins;
 using Grand.Services.Logging;
+using System;
+using System.Linq;
 using System.Reflection;
 
 namespace Grand.Services.Events

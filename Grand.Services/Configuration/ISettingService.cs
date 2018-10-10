@@ -1,8 +1,8 @@
+using Grand.Core.Configuration;
+using Grand.Core.Domain.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Grand.Core.Configuration;
-using Grand.Core.Domain.Configuration;
 
 namespace Grand.Services.Configuration
 {

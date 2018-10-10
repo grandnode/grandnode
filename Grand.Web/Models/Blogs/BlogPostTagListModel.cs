@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Grand.Framework.Mvc.Models;
+using System;
 using System.Collections.Generic;
-using Grand.Framework.Mvc.Models;
 
 namespace Grand.Web.Models.Blogs
 {

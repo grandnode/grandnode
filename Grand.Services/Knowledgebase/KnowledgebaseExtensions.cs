@@ -1,11 +1,10 @@
 ﻿using Grand.Core.Domain.Knowledgebase;
+using Grand.Services.Localization;
 using Grand.Services.Security;
+using Grand.Services.Stores;
 using System;
 using System.Collections.Generic;
-using Grand.Services.Localization;
-using System.Text;
 using System.Linq;
-using Grand.Services.Stores;
 
 namespace Grand.Services.Knowledgebase
 {

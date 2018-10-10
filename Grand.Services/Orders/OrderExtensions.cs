@@ -1,10 +1,10 @@
-﻿using System;
-using System.Linq;
-using Grand.Core.Domain.Orders;
+﻿using Grand.Core.Domain.Orders;
 using Grand.Core.Html;
 using Grand.Core.Infrastructure;
-using Grand.Services.Shipping;
 using Grand.Services.Catalog;
+using Grand.Services.Shipping;
+using System;
+using System.Linq;
 
 namespace Grand.Services.Orders
 {

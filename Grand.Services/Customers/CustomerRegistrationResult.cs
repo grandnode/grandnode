@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Grand.Services.Customers 
+namespace Grand.Services.Customers
 {
     /// <summary>
     /// Customerregistration result

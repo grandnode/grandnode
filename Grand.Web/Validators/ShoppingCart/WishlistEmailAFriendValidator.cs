@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
-using Grand.Services.Localization;
 using Grand.Framework.Validators;
+using Grand.Services.Localization;
 using Grand.Web.Models.ShoppingCart;
 
 namespace Grand.Web.Validators.ShoppingCart

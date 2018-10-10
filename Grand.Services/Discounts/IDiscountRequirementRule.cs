@@ -1,6 +1,4 @@
-﻿using Grand.Core.Plugins;
-
-namespace Grand.Services.Discounts
+﻿namespace Grand.Services.Discounts
 {
     /// <summary>
     /// Represents a discount requirement rule

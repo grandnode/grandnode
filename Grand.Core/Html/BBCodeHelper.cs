@@ -1,6 +1,6 @@
+using Grand.Core.Html.CodeFormatter;
 using System;
 using System.Text.RegularExpressions;
-using Grand.Core.Html.CodeFormatter;
 
 namespace Grand.Core.Html
 {

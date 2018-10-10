@@ -1,5 +1,4 @@
 ﻿using System;
-using Grand.Core.Domain.Customers;
 
 namespace Grand.Core.Domain.Forums
 {

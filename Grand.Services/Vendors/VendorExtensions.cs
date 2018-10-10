@@ -1,6 +1,6 @@
-﻿using System;
-using Grand.Core.Domain.Vendors;
+﻿using Grand.Core.Domain.Vendors;
 using Grand.Core.Html;
+using System;
 
 namespace Grand.Services.Vendors
 {

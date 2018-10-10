@@ -1,9 +1,9 @@
-using System;
-using System.Collections.Generic;
 using Grand.Core.Domain.Localization;
+using Grand.Core.Domain.Security;
 using Grand.Core.Domain.Seo;
 using Grand.Core.Domain.Stores;
-using Grand.Core.Domain.Security;
+using System;
+using System.Collections.Generic;
 
 namespace Grand.Core.Domain.News
 {

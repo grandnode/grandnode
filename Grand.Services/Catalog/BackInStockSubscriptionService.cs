@@ -1,15 +1,15 @@
-using System;
-using System.Linq;
 using Grand.Core;
 using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
+using Grand.Core.Infrastructure;
 using Grand.Services.Common;
+using Grand.Services.Customers;
 using Grand.Services.Events;
 using Grand.Services.Messages;
-using Grand.Core.Infrastructure;
-using Grand.Services.Customers;
 using MongoDB.Driver.Linq;
+using System;
+using System.Linq;
 
 namespace Grand.Services.Catalog
 {

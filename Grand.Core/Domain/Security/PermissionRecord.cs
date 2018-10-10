@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Grand.Core.Domain.Customers;
 
 namespace Grand.Core.Domain.Security
 {

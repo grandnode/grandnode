@@ -1,17 +1,17 @@
-﻿using System;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc;
-using Grand.Core;
+﻿using Grand.Core;
+using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
 using Grand.Services.Catalog;
+using Grand.Services.Customers;
 using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Orders;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.IO;
 using System.IO.Compression;
-using Grand.Core.Domain.Catalog;
+using System.Linq;
 using System.Text.RegularExpressions;
-using Grand.Services.Customers;
 
 namespace Grand.Web.Controllers
 {

@@ -1,10 +1,10 @@
+using Grand.Core.Data;
+using Grand.Core.Domain.Catalog;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Data;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 
 namespace Grand.Services.Catalog
 {

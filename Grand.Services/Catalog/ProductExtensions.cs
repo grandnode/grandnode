@@ -1,11 +1,11 @@
+using Grand.Core;
+using Grand.Core.Domain.Catalog;
+using Grand.Core.Domain.Customers;
+using Grand.Services.Directory;
+using Grand.Services.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Services.Directory;
-using Grand.Services.Localization;
-using Grand.Core.Domain.Customers;
 
 namespace Grand.Services.Catalog
 {

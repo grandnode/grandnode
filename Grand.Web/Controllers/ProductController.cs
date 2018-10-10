@@ -11,7 +11,6 @@ using Grand.Framework.Mvc.Rss;
 using Grand.Framework.Security;
 using Grand.Framework.Security.Captcha;
 using Grand.Services.Catalog;
-using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Events;
 using Grand.Services.Localization;

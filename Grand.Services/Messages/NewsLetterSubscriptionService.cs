@@ -1,13 +1,12 @@
-using System;
-using System.Linq;
 using Grand.Core;
 using Grand.Core.Data;
-using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Messages;
 using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Events;
 using MongoDB.Driver.Linq;
+using System;
+using System.Linq;
 
 namespace Grand.Services.Messages
 {

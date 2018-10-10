@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
-using Grand.Framework.Mvc;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Framework.Mvc.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
 
 namespace Grand.Web.Models.Boards
 {

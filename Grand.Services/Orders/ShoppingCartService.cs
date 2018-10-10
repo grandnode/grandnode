@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
@@ -15,6 +12,9 @@ using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Stores;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Grand.Services.Orders
 {

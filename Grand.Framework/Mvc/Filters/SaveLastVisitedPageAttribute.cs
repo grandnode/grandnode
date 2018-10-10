@@ -1,15 +1,14 @@
-﻿using System;
-using System.Net;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Core.Data;
 using Grand.Core.Domain.Customers;
-using Grand.Services.Common;
 using Grand.Core.Infrastructure;
+using Grand.Services.Common;
 using Grand.Services.Logging;
-using Microsoft.Net.Http.Headers;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Net.Http.Headers;
+using System;
 
 namespace Grand.Framework.Mvc.Filters
 {

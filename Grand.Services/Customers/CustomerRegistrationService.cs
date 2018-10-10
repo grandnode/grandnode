@@ -1,14 +1,14 @@
-using System;
-using System.Linq;
 using Grand.Core;
 using Grand.Core.Domain.Customers;
-using Grand.Services.Localization;
-using Grand.Services.Messages;
-using Grand.Services.Security;
-using Grand.Services.Stores;
-using Grand.Services.Orders;
 using Grand.Services.Events;
 using Grand.Services.Events.Web;
+using Grand.Services.Localization;
+using Grand.Services.Messages;
+using Grand.Services.Orders;
+using Grand.Services.Security;
+using Grand.Services.Stores;
+using System;
+using System.Linq;
 
 namespace Grand.Services.Customers
 {

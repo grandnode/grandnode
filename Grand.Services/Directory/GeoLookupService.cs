@@ -1,11 +1,11 @@
 ﻿//This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com
 
-using System;
+using Grand.Core;
+using Grand.Services.Logging;
 using MaxMind.GeoIP2;
 using MaxMind.GeoIP2.Exceptions;
 using MaxMind.GeoIP2.Responses;
-using Grand.Core;
-using Grand.Services.Logging;
+using System;
 
 namespace Grand.Services.Directory
 {

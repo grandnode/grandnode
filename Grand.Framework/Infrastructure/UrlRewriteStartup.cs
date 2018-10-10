@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Grand.Core.Configuration;
+using Grand.Core.Infrastructure;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Grand.Core.Infrastructure;
-using Grand.Core.Data;
-using Microsoft.AspNetCore.Rewrite;
 using System.IO;
-using Grand.Core.Configuration;
 
 namespace Grand.Framework.Infrastructure
 {

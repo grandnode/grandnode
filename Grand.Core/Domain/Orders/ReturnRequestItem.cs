@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Grand.Core.Domain.Orders
+﻿namespace Grand.Core.Domain.Orders
 {
     public class ReturnRequestItem : BaseEntity
     {

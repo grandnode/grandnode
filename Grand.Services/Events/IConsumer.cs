@@ -1,5 +1,4 @@
-﻿
-namespace Grand.Services.Events
+﻿namespace Grand.Services.Events
 {
     public interface IConsumer<T>
     {

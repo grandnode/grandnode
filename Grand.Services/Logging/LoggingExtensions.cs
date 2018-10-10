@@ -1,6 +1,6 @@
-using System;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Logging;
+using System;
 
 namespace Grand.Services.Logging
 {

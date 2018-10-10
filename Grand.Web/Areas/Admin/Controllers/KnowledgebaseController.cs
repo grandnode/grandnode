@@ -1,27 +1,24 @@
 ﻿using Grand.Core.Domain.Knowledgebase;
+using Grand.Core.Domain.Localization;
+using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
+using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
+using Grand.Services.Customers;
+using Grand.Services.Helpers;
 using Grand.Services.Knowledgebase;
 using Grand.Services.Localization;
+using Grand.Services.Logging;
 using Grand.Services.Security;
+using Grand.Services.Seo;
+using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Knowledgebase;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Grand.Core.Domain.Localization;
-using Grand.Services.Logging;
-using Grand.Services.Customers;
-using Grand.Web.Areas.Admin.Models.Catalog;
-using Grand.Services.Helpers;
-using Grand.Services.Seo;
-using Grand.Core;
-using Grand.Framework.Controllers;
-using Grand.Framework.Mvc;
-using Grand.Services.Stores;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {

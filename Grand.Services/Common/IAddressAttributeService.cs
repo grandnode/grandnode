@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using Grand.Core.Domain.Common;
+using System.Collections.Generic;
 
 namespace Grand.Services.Common
 {

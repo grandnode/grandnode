@@ -1,5 +1,5 @@
-﻿using System;
-using StackExchange.Redis;
+﻿using StackExchange.Redis;
+using System;
 using System.Net;
 
 namespace Grand.Core.Caching

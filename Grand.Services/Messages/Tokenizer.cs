@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Grand.Core.Domain.Messages;
+using System;
 using System.Collections.Generic;
-using Grand.Core.Domain.Messages;
 using System.Net;
 
 namespace Grand.Services.Messages

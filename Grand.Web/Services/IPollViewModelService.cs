@@ -1,8 +1,6 @@
 ﻿using Grand.Core.Domain.Polls;
 using Grand.Web.Models.Polls;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Grand.Web.Services
 {

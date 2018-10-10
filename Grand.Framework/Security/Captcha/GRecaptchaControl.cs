@@ -1,9 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Grand.Core;
-using Grand.Core.Infrastructure;
-using Grand.Framework.Extensions;
 
 namespace Grand.Framework.Security.Captcha
 {

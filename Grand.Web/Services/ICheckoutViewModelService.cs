@@ -3,9 +3,7 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
 using Grand.Services.Payments;
 using Grand.Web.Models.Checkout;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Grand.Web.Services
 {

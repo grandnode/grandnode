@@ -1,21 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using Grand.Web.Models.Profile;
-using Grand.Services.Forums;
+﻿using Grand.Core.Domain.Forums;
+using Grand.Framework.Components;
 using Grand.Services.Customers;
-using Grand.Services.Logging;
-using Grand.Services.Localization;
-using Grand.Core;
+using Grand.Services.Forums;
 using Grand.Services.Helpers;
-using Grand.Core.Domain.Forums;
-using Grand.Core.Domain.Customers;
-using Grand.Services.Media;
-using Grand.Core.Domain.Media;
-using Grand.Services.Directory;
-using System.Collections.Generic;
 using Grand.Services.Seo;
 using Grand.Web.Models.Common;
-using Grand.Framework.Components;
+using Grand.Web.Models.Profile;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 
 namespace Grand.Web.ViewComponents
 {

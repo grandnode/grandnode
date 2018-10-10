@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using Grand.Core.Domain.Tax;
+using System.Collections.Generic;
 
 namespace Grand.Services.Tax
 {

@@ -1,9 +1,9 @@
+using Grand.Core.Domain.Catalog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Xml;
-using Grand.Core.Domain.Catalog;
 
 namespace Grand.Services.Catalog
 {

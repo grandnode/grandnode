@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using AutoMapper;
+﻿using AutoMapper;
 
 namespace Grand.Core.Infrastructure.Mapper
 {

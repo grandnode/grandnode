@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Xml;
 using Grand.Core;
 using Grand.Core.Domain.Blogs;
 using Grand.Core.Domain.Catalog;
@@ -14,8 +8,13 @@ using Grand.Core.Domain.News;
 using Grand.Core.Domain.Security;
 using Grand.Services.Catalog;
 using Grand.Services.Topics;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Xml;
 
 namespace Grand.Services.Seo
 {

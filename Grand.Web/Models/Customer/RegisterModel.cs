@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using FluentValidation.Attributes;
+﻿using FluentValidation.Attributes;
+using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
+using Grand.Web.Models.Newsletter;
 using Grand.Web.Validators.Customer;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Web.Models.Newsletter;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Models.Customer
 {

@@ -1,5 +1,3 @@
-using Grand.Core.Domain.Orders;
-
 namespace Grand.Services.Discounts
 {
     /// <summary>

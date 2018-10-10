@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Forums;
+using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Seo;
 using Grand.Core.Infrastructure;
 using Grand.Services.Localization;
-using Grand.Core.Domain.Localization;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace Grand.Services.Seo
 {

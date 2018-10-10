@@ -2,15 +2,11 @@
 using Google.Apis.AnalyticsReporting.v4.Data;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Services;
-using Grand.Core;
 using Grand.Core.Domain.Seo;
 using Grand.Services.Localization;
+using Grand.Services.Logging;
 using System;
 using System.Collections.Generic;
-using Grand.Services.Logging;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Grand.Services.Configuration
 {

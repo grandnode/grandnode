@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Claims;
+﻿using Grand.Core.Domain.Customers;
+using Grand.Services.Customers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using Grand.Core.Domain.Customers;
-using Grand.Services.Customers;
+using System;
+using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace Grand.Services.Authentication
 {

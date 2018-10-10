@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
@@ -12,6 +7,9 @@ using Grand.Core.Domain.Knowledgebase;
 using Grand.Services.Customers;
 using Grand.Services.Events;
 using MongoDB.Driver;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Grand.Services.Knowledgebase
 {

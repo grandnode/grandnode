@@ -1,6 +1,6 @@
-using System.Collections.Generic;
 using Grand.Core;
 using Grand.Core.Domain.Catalog;
+using System.Collections.Generic;
 
 namespace Grand.Services.Catalog
 {

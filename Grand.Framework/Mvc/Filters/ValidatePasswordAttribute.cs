@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Grand.Core;
+using Grand.Core.Data;
+using Grand.Services.Customers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Routing;
-using Grand.Core;
-using Grand.Core.Data;
-using Grand.Services.Customers;
+using System;
 
 namespace Grand.Framework.Mvc.Filters
 {

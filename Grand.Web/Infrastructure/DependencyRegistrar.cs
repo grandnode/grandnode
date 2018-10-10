@@ -2,7 +2,6 @@ using Autofac;
 using Grand.Core.Configuration;
 using Grand.Core.Infrastructure;
 using Grand.Core.Infrastructure.DependencyManagement;
-using Grand.Framework.Controllers;
 using Grand.Web.Infrastructure.Installation;
 using Grand.Web.Services;
 

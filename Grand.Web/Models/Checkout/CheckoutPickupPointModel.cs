@@ -1,8 +1,5 @@
 ﻿using Grand.Core.Domain.Common;
 using Grand.Framework.Mvc.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Grand.Web.Models.Checkout
 {

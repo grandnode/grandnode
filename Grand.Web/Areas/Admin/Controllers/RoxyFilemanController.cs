@@ -1,20 +1,19 @@
-﻿using System;
+﻿using Grand.Core;
+using Grand.Framework.Security;
+using Grand.Services.Security;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Primitives;
-using Newtonsoft.Json;
-using Grand.Core;
-using Grand.Services.Security;
-using Grand.Framework.Security;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {

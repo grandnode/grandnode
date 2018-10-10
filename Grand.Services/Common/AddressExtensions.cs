@@ -1,7 +1,6 @@
+using Grand.Core.Domain.Common;
 using System;
 using System.Collections.Generic;
-using Grand.Core;
-using Grand.Core.Domain.Common;
 
 namespace Grand.Services.Common
 {

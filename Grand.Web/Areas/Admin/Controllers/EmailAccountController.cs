@@ -1,21 +1,21 @@
-﻿using System;
-using System.Linq;
-using Grand.Web.Areas.Admin.Extensions;
-using Grand.Web.Areas.Admin.Models.Messages;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Core.Domain.Messages;
+using Grand.Framework.Controllers;
+using Grand.Framework.Kendoui;
+using Grand.Framework.Mvc.Filters;
 using Grand.Services.Configuration;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
 using Grand.Services.Security;
-using Grand.Framework.Controllers;
-using Grand.Framework.Kendoui;
-using Grand.Framework.Mvc.Filters;
+using Grand.Web.Areas.Admin.Extensions;
+using Grand.Web.Areas.Admin.Models.Messages;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
-	public partial class EmailAccountController : BaseAdminController
+    public partial class EmailAccountController : BaseAdminController
 	{
         private readonly IEmailAccountService _emailAccountService;
         private readonly ILocalizationService _localizationService;

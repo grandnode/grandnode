@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
 using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
@@ -9,12 +5,16 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Tax;
+using Grand.Core.Infrastructure;
 using Grand.Core.Plugins;
 using Grand.Services.Common;
 using Grand.Services.Directory;
-using Grand.Core.Infrastructure;
-using Grand.Services.Orders;
 using Grand.Services.Logging;
+using Grand.Services.Orders;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Grand.Services.Tax
 {

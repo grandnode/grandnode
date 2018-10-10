@@ -2,9 +2,9 @@
 // Contributor(s): oskar.kjellin 
 //------------------------------------------------------------------------------
 
+using Grand.Core.Infrastructure;
 using System.Collections.Generic;
 using System.Linq;
-using Grand.Core.Infrastructure;
 
 namespace Grand.Services.Shipping.Tracking
 {

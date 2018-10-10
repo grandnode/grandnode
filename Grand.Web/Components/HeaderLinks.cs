@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Grand.Web.Services;
-using Grand.Core.Infrastructure;
-using Grand.Core;
-using Grand.Services.Localization;
-using Grand.Core.Domain.Forums;
-using Grand.Services.Common;
+﻿using Grand.Core;
 using Grand.Core.Domain.Customers;
+using Grand.Core.Domain.Forums;
+using Grand.Core.Infrastructure;
 using Grand.Framework.Components;
+using Grand.Services.Common;
+using Grand.Services.Localization;
+using Grand.Web.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Grand.Web.ViewComponents
 {

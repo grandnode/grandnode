@@ -1,11 +1,11 @@
-﻿using System;
-using Grand.Core.Domain.Catalog;
+﻿using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
 using Grand.Services.Localization;
 using Grand.Services.Seo;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Common;
 using Grand.Web.Models.Vendors;
+using System;
 
 namespace Grand.Web.Extensions
 {

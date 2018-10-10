@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Grand.Core.Domain.Catalog
+﻿namespace Grand.Core.Domain.Catalog
 {
     /// <summary>
     /// Represents a customer reservation helper to the product
