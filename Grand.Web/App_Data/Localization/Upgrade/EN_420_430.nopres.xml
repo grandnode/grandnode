@@ -137,7 +137,7 @@
   <LocaleResource Name="AdminSearch.Fields.MenuDisplayOrder">
     <Value>Display order of results for this search, e.g. if you want found categories to be shown before products, set 0 for categories and 1 for products.</Value>
   </LocaleResource>
-  <LocaleResource Name="AdminSearch.Menu">
+  <LocaleResource Name="Admin.AdminSearch.Menu">
     <Value>Menu</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.AskQuestionOnProduct">

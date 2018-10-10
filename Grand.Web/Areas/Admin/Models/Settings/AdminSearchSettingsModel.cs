@@ -4,64 +4,64 @@ namespace Grand.Web.Areas.Admin.Models.Settings
 {
     public class AdminSearchSettingsModel
     {
-        [GrandResourceDisplayName("AdminSearch.Fields.SearchInProducts")]
+        [GrandResourceDisplayName("Admin.Configuration.Settings.AdminSearch.Fields.SearchInProducts")]
         public bool SearchInProducts { get; set; }
 
-        [GrandResourceDisplayName("AdminSearch.Fields.ProductsDisplayOrder")]
+        [GrandResourceDisplayName("Admin.Configuration.Settings.AdminSearch.Fields.ProductsDisplayOrder")]
         public int ProductsDisplayOrder { get; set; }
 
-        [GrandResourceDisplayName("AdminSearch.Fields.SearchInCategories")]
+        [GrandResourceDisplayName("Admin.Configuration.Settings.AdminSearch.Fields.SearchInCategories")]
         public bool SearchInCategories { get; set; }
 
-        [GrandResourceDisplayName("AdminSearch.Fields.CategoriesDisplayOrder")]
+        [GrandResourceDisplayName("Admin.Configuration.Settings.AdminSearch.Fields.CategoriesDisplayOrder")]
         public int CategoriesDisplayOrder { get; set; }
 
-        [GrandResourceDisplayName("AdminSearch.Fields.SearchInManufacturers")]
+        [GrandResourceDisplayName("Admin.Configuration.Settings.AdminSearch.Fields.SearchInManufacturers")]
         public bool SearchInManufacturers { get; set; }
 
-        [GrandResourceDisplayName("AdminSearch.Fields.ManufacturersDisplayOrder")]
+        [GrandResourceDisplayName("Admin.Configuration.Settings.AdminSearch.Fields.ManufacturersDisplayOrder")]
         public int ManufacturersDisplayOrder { get; set; }
 
-        [GrandResourceDisplayName("AdminSearch.Fields.SearchInTopics")]
+        [GrandResourceDisplayName("Admin.Configuration.Settings.AdminSearch.Fields.SearchInTopics")]
         public bool SearchInTopics { get; set; }
 
-        [GrandResourceDisplayName("AdminSearch.Fields.TopicsDisplayOrder")]
+        [GrandResourceDisplayName("Admin.Configuration.Settings.AdminSearch.Fields.TopicsDisplayOrder")]
         public int TopicsDisplayOrder { get; set; }
 
-        [GrandResourceDisplayName("AdminSearch.Fields.SearchInNews")]
+        [GrandResourceDisplayName("Admin.Configuration.Settings.AdminSearch.Fields.SearchInNews")]
         public bool SearchInNews { get; set; }
 
-        [GrandResourceDisplayName("AdminSearch.Fields.NewsDisplayOrder")]
+        [GrandResourceDisplayName("Admin.Configuration.Settings.AdminSearch.Fields.NewsDisplayOrder")]
         public int NewsDisplayOrder { get; set; }
 
-        [GrandResourceDisplayName("AdminSearch.Fields.SearchInBlogs")]
+        [GrandResourceDisplayName("Admin.Configuration.Settings.AdminSearch.Fields.SearchInBlogs")]
         public bool SearchInBlogs { get; set; }
 
-        [GrandResourceDisplayName("AdminSearch.Fields.BlogsDisplayOrder")]
+        [GrandResourceDisplayName("Admin.Configuration.Settings.AdminSearch.Fields.BlogsDisplayOrder")]
         public int BlogsDisplayOrder { get; set; }
 
-        [GrandResourceDisplayName("AdminSearch.Fields.SearchInCustomers")]
+        [GrandResourceDisplayName("Admin.Configuration.Settings.AdminSearch.Fields.SearchInCustomers")]
         public bool SearchInCustomers { get; set; }
 
-        [GrandResourceDisplayName("AdminSearch.Fields.CustomersDisplayOrder")]
+        [GrandResourceDisplayName("Admin.Configuration.Settings.AdminSearch.Fields.CustomersDisplayOrder")]
         public int CustomersDisplayOrder { get; set; }
 
-        [GrandResourceDisplayName("AdminSearch.Fields.SearchInOrders")]
+        [GrandResourceDisplayName("Admin.Configuration.Settings.AdminSearch.Fields.SearchInOrders")]
         public bool SearchInOrders { get; set; }
 
-        [GrandResourceDisplayName("AdminSearch.Fields.OrdersDisplayOrder")]
+        [GrandResourceDisplayName("Admin.Configuration.Settings.AdminSearch.Fields.OrdersDisplayOrder")]
         public int OrdersDisplayOrder { get; set; }
 
-        [GrandResourceDisplayName("AdminSearch.Fields.MinSearchTermLength")]
+        [GrandResourceDisplayName("Admin.Configuration.Settings.AdminSearch.Fields.MinSearchTermLength")]
         public int MinSearchTermLength { get; set; }
 
-        [GrandResourceDisplayName("AdminSearch.Fields.MaxSearchResultsCount")]
+        [GrandResourceDisplayName("Admin.Configuration.Settings.AdminSearch.Fields.MaxSearchResultsCount")]
         public int MaxSearchResultsCount { get; set; }
 
-        [GrandResourceDisplayName("AdminSearch.Fields.SearchInMenu")]
+        [GrandResourceDisplayName("Admin.Configuration.Settings.AdminSearch.Fields.SearchInMenu")]
         public bool SearchInMenu { get; set; }
 
-        [GrandResourceDisplayName("AdminSearch.Fields.MenuDisplayOrder")]
+        [GrandResourceDisplayName("Admin.Configuration.Settings.AdminSearch.Fields.MenuDisplayOrder")]
         public int MenuDisplayOrder { get; set; }
     }
 }
