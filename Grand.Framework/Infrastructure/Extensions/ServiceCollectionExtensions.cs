@@ -244,6 +244,14 @@ namespace Grand.Framework.Infrastructure.Extensions
                 });
             }
 
+            if (config.UseHttpsRedirection)
+            {
+                services.AddHttpsRedirection(options =>
+                {
+                    options.RedirectStatusCode = config.HttpsRedirectionRedirect;
+                    options.HttpsPort = config.HttpsRedirectionHttpsPort;
+                });
+            }
             //use session-based temp data provider
             if (config.UseSessionStateTempDataProvider)
             {
