@@ -636,13 +636,6 @@ ul.ui-autocomplete li {
     font-size: 14px;
 }
 
-.at-share-btn-elements .at-share-btn span {
-    height: 32px;
-    width: 32px;
-    min-width: 32px;
-    min-height: 32px;
-}
-
 .terms-of-service label,
 .select-boxes label {
     margin: 0;
