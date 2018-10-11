@@ -1162,6 +1162,13 @@ namespace Grand.Services.Installation
             EngineContext.Current.Resolve<IRepository<CustomerNote>>().Collection.Indexes.CreateOneAsync(new CreateIndexModel<CustomerNote>((Builders<CustomerNote>.IndexKeys.Ascending(x => x.CustomerId).Descending(x => x.CreatedOnUtc)), new CreateIndexOptions() { Name = "CustomerId", Unique = false, Background = true }));
 
             #endregion
+
+            #region Category index
+
+            var _categoryRepository = EngineContext.Current.Resolve<IRepository<Category>>();
+            _categoryRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<Category>((Builders<Category>.IndexKeys.Ascending(x => x.FeaturedProductsOnHomaPage).Ascending(x => x.Published).Ascending(x => x.DisplayOrder)), new CreateIndexOptions() { Name = "FeaturedProductsOnHomaPage_DisplayOrder_1", Unique = false }));
+
+            #endregion
         }
 
         private void InstallStringResources(string filenames)

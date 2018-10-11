@@ -2274,6 +2274,12 @@
   <LocaleResource Name="Admin.Catalog.Categories.Fields.DisplayOrder.Hint">
     <Value>Set the category's display order. 1 represents the top of the list.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.FeaturedProductsOnHomaPage">
+    <Value>Show featured products on home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.FeaturedProductsOnHomaPage.hint">
+    <Value>Check if you want to show a featured product on home page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.Flag">
     <Value>Flag</Value>
   </LocaleResource>
@@ -2540,6 +2546,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.DisplayOrder.Hint">
     <Value>Set the manufacturer's display order. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.FeaturedProductsOnHomaPage">
+    <Value>Show featured products on home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.FeaturedProductsOnHomaPage.hint">
+    <Value>Check if you want to show a featured product on home page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.IncludeInTopMenu">
     <Value>Include in top menu</Value>

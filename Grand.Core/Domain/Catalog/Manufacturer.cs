@@ -86,6 +86,11 @@ namespace Grand.Core.Domain.Catalog
         public bool ShowOnHomePage { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to show featured products on home page
+        /// </summary>
+        public bool FeaturedProductsOnHomaPage { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to include this manufacturer in the top menu
         /// </summary>
         public bool IncludeInTopMenu { get; set; }

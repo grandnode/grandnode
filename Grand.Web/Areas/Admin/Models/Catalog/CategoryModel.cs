@@ -78,6 +78,9 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.ShowOnHomePage")]
         public bool ShowOnHomePage { get; set; }
 
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.FeaturedProductsOnHomaPage")]
+        public bool FeaturedProductsOnHomaPage { get; set; }
+
         [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.IncludeInTopMenu")]
         public bool IncludeInTopMenu { get; set; }
 

@@ -304,6 +304,28 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Categories</returns>
+        public virtual IList<Category> GetAllCategoriesFeaturedProductsOnHomePage(bool showHidden = false)
+        {
+            var builder = Builders<Category>.Filter;
+            var filter = builder.Eq(x => x.Published, true);
+            filter = filter & builder.Eq(x => x.FeaturedProductsOnHomaPage, true);
+            var query = _categoryRepository.Collection.Find(filter).SortBy(x => x.DisplayOrder);
+
+            var categories = query.ToList();
+            if (!showHidden)
+            {
+                categories = categories
+                    .Where(c => _aclService.Authorize(c) && _storeMappingService.Authorize(c))
+                    .ToList();
+            }
+            return categories;
+        }
+
+        /// <summary>
+        /// Gets all categories displayed on the home page
+        /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Categories</returns>
         public virtual IList<Category> GetAllCategoriesSearchBox()
         {
             var builder = Builders<Category>.Filter;

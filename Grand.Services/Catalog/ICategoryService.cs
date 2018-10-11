@@ -44,6 +44,12 @@ namespace Grand.Services.Catalog
         IList<Category> GetAllCategoriesDisplayedOnHomePage(bool showHidden = false);
 
         /// <summary>
+        /// Gets all categories displayed on the home page - featured products
+        /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        IList<Category> GetAllCategoriesFeaturedProductsOnHomePage(bool showHidden = false);
+
+        /// <summary>
         /// Gets all categories displayed search box
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>

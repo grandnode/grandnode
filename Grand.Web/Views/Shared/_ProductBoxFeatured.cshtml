@@ -1,0 +1,177 @@
+﻿@model ProductOverviewModel
+@{
+    //prepare "Add to cart" AJAX link
+    string addtocartlink = "";
+    string addtowishlistlink = "";
+    string quickviewurl = Url.RouteUrl("QuickView-Product", new { productId = Model.Id });
+
+    var shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart;
+    var quantity = 1;
+    if (!Model.ShowQty)
+    {
+        if (Model.ProductPrice.ForceRedirectionAfterAddingToCart)
+        {
+            addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity, forceredirection = Model.ProductPrice.ForceRedirectionAfterAddingToCart });
+        }
+        else
+        {
+            addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity });
+        }
+        addtowishlistlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = (int)ShoppingCartType.Wishlist, quantity = quantity });
+    }
+    else
+    {
+        if (Model.ProductPrice.ForceRedirectionAfterAddingToCart)
+        {
+            addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, forceredirection = Model.ProductPrice.ForceRedirectionAfterAddingToCart });
+        }
+        else
+        {
+            addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId });
+        }
+        addtowishlistlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = (int)ShoppingCartType.Wishlist });
+    }
+    var addtocomparelink = Url.RouteUrl("AddProductToCompare", new { productId = Model.Id });
+}
+<div class="card rowHelper col-12 mb-0 pb-0 featured-product" data-productid="@Model.Id">
+    <div class="row flex-row prod-list">
+        <div class="col-md-5 col-6">
+            <div class="row">
+                <a class="m-2" href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
+                    <img class="img-fluid" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
+                </a>
+                @if (!string.IsNullOrEmpty(Model.Flag))
+                {
+                    <span class="new-product-label bg-info text-white">@Model.Flag</span>
+                }
+                @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
+                {
+                    <span class="change-percent bg-success text-white"></span>
+                }
+            </div>
+        </div>
+        <div class="col-md-7 col-6 px-0">
+            <div class="card-body text-left p-2">
+                <h2 class="h6 card-title mt-0">
+                    <strong><a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">@Model.Name</a></strong>
+                    @if (Model.ShowSku && !string.IsNullOrEmpty(Model.Sku))
+                    {
+                        <span class="d-block py-1">@Model.Sku</span>
+                    }
+                </h2>
+                <p class="card-text d-none">
+                    @Html.Raw(Model.ShortDescription)
+                </p>
+                @if (Model.ReviewOverviewModel.AllowCustomerReviews)
+                {
+                    int ratingPercent = 0;
+                    if (Model.ReviewOverviewModel.TotalReviews != 0)
+                    {
+                        ratingPercent = ((Model.ReviewOverviewModel.RatingSum * 100) / Model.ReviewOverviewModel.TotalReviews) / 5;
+                    }
+                    <div class="product-rating-box list-group" title="@string.Format(T("Reviews.TotalReviews").Text, Model.ReviewOverviewModel.TotalReviews)">
+                        <div class="rating rating_@Model.Id">
+                        </div>
+                        <script>
+                            $(document).ready(function () {
+                                productStarProgress10('@(ratingPercent)', 'rating_@Model.Id');
+                            });
+                        </script>
+                    </div>
+                }
+                @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_before", additionalData = Model.Id })
+                <ul class="pl-0 mb-2">
+
+                    @if (Model.ProductType != ProductType.Auction)
+                    {
+                        <li class="price actual-price d-inline-flex">@Model.ProductPrice.Price</li>
+                    }
+                    else
+                    {
+                        <li class="price actual-price d-inline-flex">@(Model.ProductPrice.HighestBidValue > 0 ? Model.ProductPrice.HighestBid : Model.ProductPrice.StartPrice)</li>
+                    }
+                    @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
+                    {
+                        <li class="d-inline-flex ml-2">
+                            <span class="price old-price">@Model.ProductPrice.OldPrice</span>
+                        </li>
+                    }
+
+                    @if (Model.ProductPrice.DisplayTaxShippingInfo)
+                    {
+                        var inclTax = Model.TaxDisplayType == TaxDisplayType.IncludingTax;
+                        //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
+                        //of course, you can modify appropriate locales to include VAT info there
+                        <li class="">
+                            <span class="tax-shipping-info">
+                                @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("shippinginfo") }))
+                            </span>
+                        </li>
+                    }
+                    @if (!String.IsNullOrEmpty(Model.ProductPrice.BasePricePAngV))
+                    {
+                        <li class="base-price-pangv">
+                            @Model.ProductPrice.BasePricePAngV
+                        </li>
+                    }
+
+                </ul>
+                @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_middle", additionalData = Model.Id })
+                <div class="btn-group list">
+                    @if (Model.ShowQty)
+                    {
+                        var qtyId = "addtocart_" + @Model.Id + "_EnteredQuantity";
+                        <input class="form-control input-group-addon catalog-quantity"
+                               type="text" id="@qtyId" name="@qtyId" value="1">
+                    }
+                    @if (!Model.ProductPrice.DisableBuyButton)
+                    {
+                        var addToCartText = T("ShoppingCart.AddToCart").Text;
+                        if (Model.ProductType == ProductType.Reservation)
+                        {
+                            addToCartText = T("ShoppingCart.Reservation").Text;
+                        }
+                        if (Model.ProductPrice.AvailableForPreOrder)
+                        {
+                            addToCartText = T("ShoppingCart.PreOrder").Text;
+                        }
+                        <button type="button" class="btn btn-primary" onclick="AjaxCart.addproducttocart_catalog('@addtocartlink', '@Model.ShowQty', '@Model.Id');return false;">
+                            <span class="fa fa fa-shopping-cart"></span>
+                        </button>
+                    }
+                    else
+                    {
+                        if (Model.ProductType == ProductType.Auction)
+                        {
+                            var addToCartText = T("ShoppingCart.Bids").Text;
+                            <button type="button" class="btn btn-primary" onclick="AjaxCart.addproducttocart_catalog('@addtocartlink', 'false', '@Model.Id');return false;">
+                                <span class="fa fa fa-shopping-cart"></span>
+                            </button>
+                        }
+
+                    }
+                    <button type="button" value="Quick View" title="Quick View" class="btn btn-secondary" onclick="AjaxCart.quickview_product('@quickviewurl')">
+                        <span class="sr-only">Quick View</span>
+                        <span class="fas fa-search"></span>
+                    </button>
+                    @if (!Model.ProductPrice.DisableAddToCompareListButton && Model.ProductType == ProductType.SimpleProduct)
+                    {
+                        <button type="button" value="@T("ShoppingCart.AddToCompareList")" title="@T("ShoppingCart.AddToCompareList")" class="btn btn-secondary" onclick="AjaxCart.addproducttocomparelist('@addtocomparelink');return false;">
+                            <span class="fa fa-retweet"></span>
+                            <span class="sr-only">@T("ShoppingCart.AddToCompareList")</span>
+                        </button>
+                    }
+                    @if (!Model.ProductPrice.DisableWishlistButton && Model.ProductType == ProductType.SimpleProduct)
+                    {
+                        <button type="button" value="@T("ShoppingCart.AddToWishlist")" title="@T("ShoppingCart.AddToWishlist")" class="btn btn-secondary" onclick="AjaxCart.addproducttocart_catalog('@addtowishlistlink', '@Model.ShowQty', '@Model.Id');return false;">
+                            <span class="far fa-heart"></span>
+                            <span class="sr-only">@T("ShoppingCart.AddToWishlist")</span>
+                        </button>
+                    }
+
+                </div>
+                @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_after", additionalData = Model.Id })
+            </div>
+        </div>
+    </div>
+</div>

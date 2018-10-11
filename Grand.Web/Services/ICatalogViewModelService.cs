@@ -28,10 +28,12 @@ namespace Grand.Web.Services
         TopMenuModel PrepareTopMenu();
 
         List<CategoryModel> PrepareHomepageCategory();
+        List<CategoryModel> PrepareCategoryFeaturedProducts();
 
         Manufacturer GetManufacturerById(string manufacturerId);
         string PrepareManufacturerTemplateViewPath(string templateId);
         ManufacturerModel PrepareManufacturer(Manufacturer manufacturer, CatalogPagingFilteringModel command);
+        List<ManufacturerModel> PrepareManufacturerFeaturedProducts();
         List<ManufacturerModel> PrepareManufacturerAll();
 
         List<ManufacturerModel> PrepareHomepageManufacturers();

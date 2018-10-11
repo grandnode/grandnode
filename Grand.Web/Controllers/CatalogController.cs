@@ -147,7 +147,7 @@ namespace Grand.Web.Controllers
 
         public virtual IActionResult Manufacturer(string manufacturerId, CatalogPagingFilteringModel command)
         {
-            var manufacturer = _catalogViewModelService.GetManufacturerById(manufacturerId);
+            var manufacturer =  _catalogViewModelService.GetManufacturerById(manufacturerId);
             if (manufacturer == null)
                 return InvokeHttp404();
 

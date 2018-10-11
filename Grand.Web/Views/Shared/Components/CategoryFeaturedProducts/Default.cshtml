@@ -1,0 +1,28 @@
+﻿@model IList<CategoryModel>
+    <div class="flex-grid row">
+        @foreach (var item in Model)
+        {
+            <div class="col-lg-4 col-md-6 mx-lg-0 mx-md-auto mx-0 col-12 pb-0 mb-0">
+                <div class="card category-card pb-0">
+                    <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                        <div class="img-holder">
+                            <img class="img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
+                        </div>
+                    </a>
+                        <h3 class="h5 card-title m-0 p-sm-3 p-2">
+                            @item.Name
+                        </h3>
+                </div>
+            </div>
+            <div class="col-lg-8 col-md-12">
+                <div class="row px-lg-3 px-0 mx-0 w-100">
+                    @foreach (var product in item.FeaturedProducts)
+                    {
+                        <div class="col-md-6 col-sm-6 col-12 px-0 featured-product-container">
+                            <partial name="_ProductBoxFeatured" model="product" />
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>

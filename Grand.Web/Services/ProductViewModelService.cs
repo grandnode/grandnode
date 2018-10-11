@@ -156,8 +156,9 @@ namespace Grand.Web.Services
                 { "Media.Product.ImageLinkTitleFormat", _localizationService.GetResource("Media.Product.ImageLinkTitleFormat", currentLanguageId.Id) },
                 { "Media.Product.ImageAlternateTextFormat", _localizationService.GetResource("Media.Product.ImageAlternateTextFormat", currentLanguageId.Id) }
             };
-
+            
             var models = new List<ProductOverviewModel>();
+
             foreach (var product in products)
             {
                 var model = new ProductOverviewModel
