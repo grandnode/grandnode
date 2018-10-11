@@ -493,6 +493,7 @@ function sendcontactusform(urladd) {
             AskQuestionFullName: $('#AskQuestionFullName').val(),
             AskQuestionPhone: $('#AskQuestionPhone').val(),
             AskQuestionMessage: $('#AskQuestionMessage').val(),
+            Id: $('#AskQuestionProductId').val(),
             'g-recaptcha-response': $('#g-recaptcha-response').val()
         };
         addAntiForgeryToken(contactData);

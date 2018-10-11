@@ -8,8 +8,6 @@ namespace Grand.Web.Models.Catalog
     [Validator(typeof(ProductAskQuestionSimpleValidator))]
     public partial class ProductAskQuestionSimpleModel: BaseGrandEntityModel
     {
-        public string ProductId { get; set; }
-
         [GrandResourceDisplayName("Products.AskQuestion.Email")]
         public string AskQuestionEmail { get; set; }
 

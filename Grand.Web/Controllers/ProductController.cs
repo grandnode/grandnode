@@ -723,8 +723,8 @@ namespace Grand.Web.Controllers
         [ValidateCaptcha]
         public virtual IActionResult AskQuestionOnProduct(ProductAskQuestionSimpleModel model, bool captchaValid)
         {
-            var product = _productService.GetProductById(model.ProductId);
-            if (product == null || !product.Published || !_catalogSettings.AskQuestionEnabled)
+            var product = _productService.GetProductById(model.Id);
+            if (product == null || !product.Published || !_catalogSettings.AskQuestionOnProduct)
                 return Json(new
                 {
                     success = false,
