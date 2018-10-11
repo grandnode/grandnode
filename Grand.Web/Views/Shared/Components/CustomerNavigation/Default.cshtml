@@ -58,15 +58,6 @@
                                                                                    {<text>inactive</text>}">@T("Account.DownloadableProducts")</a>
                                                                             </li>
                                                                         }
-            @if (!Model.HideDownloadableProducts)
-            {
-                <li class="customer-downloadable">
-                    <a href="@Url.RouteUrl("CustomerDownloadableProducts")" class="@if (Model.SelectedTab == CustomerNavigationEnum.DownloadableProducts)
-                                                                                   {<text>active</text>}
-                                                                                   else
-                                                                                   {<text>inactive</text>}">@T("Account.DownloadableProducts")</a>
-                                                                            </li>
-                                                                        }
             @if (!Model.HideBackInStockSubscriptions)
             {
                 <li class="customer-back">
