@@ -49,6 +49,15 @@
                                                                              {<text>inactive</text>}">@T("Account.CustomerNotes")</a>
                                                                         </li>
                                                                     }
+            @if (!Model.HideReturnRequests)
+            {
+                <li class="customer-returns">
+                    <a href="@Url.RouteUrl("CustomerReturnRequests")" class="@if (Model.SelectedTab == CustomerNavigationEnum.ReturnRequests)
+                                                                             {<text>active</text>}
+                                                                             else
+                                                                             {<text>inactive</text>}">@T("Account.CustomerReturnRequests")</a>
+                                                                        </li>
+                                                                    }
             @if (!Model.HideDownloadableProducts)
             {
                 <li class="customer-downloadable">
