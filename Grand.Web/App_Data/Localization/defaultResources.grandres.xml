@@ -19545,4 +19545,7 @@
   <LocaleResource Name="Order.AddOrderNote">
     <Value>Add order note</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.CurrentCartWishlists">
+    <Value>Current shopping carts and wishlists</Value>
+  </LocaleResource>
 </Language>

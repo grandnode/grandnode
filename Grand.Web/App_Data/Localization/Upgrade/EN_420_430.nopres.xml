@@ -482,7 +482,6 @@
   <LocaleResource Name="Order.AddOrderNote">
     <Value>Add order note</Value>
   </LocaleResource>
-
   <LocaleResource Name="Admin.Catalog.Categories.Fields.FeaturedProductsOnHomaPage">
     <Value>Show featured products on home page</Value>
   </LocaleResource>
@@ -495,5 +494,7 @@
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.FeaturedProductsOnHomaPage.hint">
     <Value>Check if you want to show a featured product on home page.</Value>
   </LocaleResource>
-
+  <LocaleResource Name="Admin.CurrentCartWishlists">
+    <Value>Current shopping carts and wishlists</Value>
+  </LocaleResource>
 </Language>
