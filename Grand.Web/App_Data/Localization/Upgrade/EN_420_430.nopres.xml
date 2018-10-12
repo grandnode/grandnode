@@ -225,7 +225,7 @@
     <Value>Specify pickup date</Value>
   </LocaleResource>
   <LocaleResource Name="ReturnRequests.Submitted">
-    <Value><![CDATA[<p>Your return request has been submitted successfully. <a class="text-white" href="{1}">Return number: {0} </a></p>]]></Value>
+    <Value><![CDATA[<p>Your return request has been submitted successfully. </p><a style="width:160px" class="btn btn-secondary" href="{1}">Return number: {0} </a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="PageTitle.ReturnRequestDetails">
     <Value>Return request details</Value>

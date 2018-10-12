@@ -1723,7 +1723,38 @@ pagination .pagination a:not([href]) {
     background: #fff;
     min-height: 650px;
 }
-
+.return-request-table table {
+    width: 100%;
+}
+.return-request-table thead {
+    background-color: #ececec;
+}
+.return-request-table thead th {
+    padding: 5px;
+}
+.return-request-table thead .product {
+    min-width: 220px;
+}
+.return-request-table thead .quantity {
+    max-width: 80px;
+    min-width: unset;
+}
+.return-request-table thead .reason {
+    min-width: 220px;
+}
+.return-request-table tbody td {
+    padding: 15px;
+}
+.return-request-table tbody tr {
+    border: 1px solid #ececec;
+}
+.return-request-table tbody tr td {
+    border-right: 1px solid #ececec;
+    border-bottom: 1px solid #ececec;
+}
+.return-request-table tbody tr td:last-child {
+    border-right: 2px solid #ececec;
+}
 .block-account-navigation .list li a {
     display: block;
     white-space: nowrap;
@@ -2646,6 +2677,9 @@ ul.opc .order-summary-content h5 {
 @media (min-width: 768px) {
     .product-quickview .modal-dialog.container {
         max-width: 720px;
+    }
+    .return-request-table thead th {
+        min-width: 140px;
     }
 }
 
@@ -4017,6 +4051,10 @@ footer .list-group .list-group-item {
 }
 
 @media screen and (max-width: 1200px) {
+    .return-product-container {
+        width: calc(100% - 30px);
+        margin-left: 15px;
+    }
     .featured-product .card-title {
         font-size: 12px;
     }
@@ -4599,7 +4637,10 @@ footer .list-group .list-group-item {
         top: -38px;
         position: static;
     }
-
+    .return-request-table thead .product,
+    .return-request-table thead .reason {
+        min-width: 165px;
+    }
     body.fly-in {
         padding-right: unset;
     }
@@ -5433,6 +5474,13 @@ footer .list-group .list-group-item {
         position: relative;
         top: -7px;
     }
+    table .quantity {
+        position: static;
+        top: unset;
+    }
+    .custom-select {
+        padding: .275rem 1.55rem .275rem .55rem;
+    }
 
     .product {
         margin-bottom: 10px;
@@ -5602,6 +5650,10 @@ footer .list-group .list-group-item {
 }
 
 @media (max-width: 575px) {
+    .return-product-container {
+        width: calc(100% - 30px);
+        margin-left: 15px;
+    }
     .featured-product-container:first-child .prod-list {
         border: 1px solid rgba(0, 0, 0, .2) !important;
         border-top: 1px solid rgba(0, 0, 0, .2) !important;
