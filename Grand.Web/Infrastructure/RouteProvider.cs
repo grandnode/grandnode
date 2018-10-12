@@ -40,6 +40,15 @@ namespace Grand.Web.Infrastructure
                             "cart/",
                             new { controller = "ShoppingCart", action = "Cart" });
 
+            routeBuilder.MapLocalizedRoute("ApplyDiscountCoupon",
+                            "applydiscountcoupon/",
+                            new { controller = "ShoppingCart", action = "ApplyDiscountCoupon" });
+
+
+            routeBuilder.MapLocalizedRoute("ApplyGiftCard",
+                            "applygiftcard/",
+                            new { controller = "ShoppingCart", action = "ApplyGiftCard" });
+
             //get state list by country ID  (AJAX link)
             routeBuilder.MapRoute("DeleteCartItem",
                             "deletecartitem/{id}",

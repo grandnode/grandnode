@@ -1,7 +1,7 @@
 @model ShoppingCartModel
 @inject IWebHelper webHelper
 @inject IWorkContext workContext
-<div class="order-summary-content mt-3">
+<div class="order-summary-content mt-3" id="ordersummarypagecart">
     @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_content_before" })
     <partial name="_OrderReviewData" model="Model.OrderReviewData" />
     @if (Model.Items.Any())
@@ -64,10 +64,10 @@
                             <tr class="item-container">
                                 @if (Model.IsEditable)
                                 {
-                                    <td class="remove-from-cart remove-os">
-                                        <input type="checkbox" id="checkbox_@(item.Id)" name="removefromcart" class="d-none checkbox-u" value="@(item.Id)">
-                                        <label for="checkbox_@(item.Id)">Checkbox 21</label>
-                                        <p class="remove">@T("Remove")</p>
+                                    <td class="remove-from-cart text-center">
+                                        <button type="button" class="btn btn-link text-danger deleteshoppingcartitem" data-href="@Url.RouteUrl("DeleteCartItem", new { id = item.Id, shoppingcartpage = true })">
+                                            <i class="fas fa-times-circle"></i>
+                                        </button>
                                     </td>
                                 }
                                 @if (Model.ShowProductImages)
@@ -363,10 +363,25 @@
         </div>
     }
     @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_content_after" })
+    <script>
+        $(document).ready(function () {
+            $(".deleteshoppingcartitem").click(function () {
+                var href = $(this).closest('[data-href]').data('href');
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: href,
+                    success: function (data) {
+                        $(AjaxCart.flyoutcartselector).replaceWith(data.flyoutshoppingcart);
+                        $(AjaxCart.topcartselector).html(data.totalproducts);
+                        $('#ordersummarypagecart').replaceWith(data.cart);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve Shopping Cart Page.');
+                    }
+                });
+            });
+        });
+    </script>
 </div>
-<script>
-    $(".removeAll-cart-button").click(function () {
-        $("td.remove-from-cart .checkbox-u").trigger("click");
-        $(".update-cart-button").trigger("click");
-    });
-</script>
+

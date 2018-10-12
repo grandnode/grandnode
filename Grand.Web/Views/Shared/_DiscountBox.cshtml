@@ -14,7 +14,8 @@
                     <input type="text" id="discountcouponcode" name="discountcouponcode" class="form-control discount-coupon-code">
                     <label for="discountcouponcode" class="sr-only">@T("ShoppingCart.GiftCardCouponCode.Button")</label>
                     <span class="input-group-append">
-                        <button type="submit" name="applydiscountcouponcode" id="applydiscountcouponcode" class="btn btn-secondary apply-discount-coupon-code-button">
+                        <button type="button" name="applydiscountcouponcode" id="applydiscountcouponcode" class="btn btn-secondary apply-discount-coupon-code-button"
+                                data-href="@Url.RouteUrl("ApplyDiscountCoupon")">
                             @T("ShoppingCart.DiscountCouponCode.Button")
                         </button>
                     </span>
@@ -58,5 +59,28 @@
         }
     </div>
 
+    <script>
+        $(document).ready(function () {
+            $("#applydiscountcouponcode").click(function () {
+                var href = $(this).closest('[data-href]').data('href');
+                var couponCodeData = {
+                    discountcouponcode: $('#discountcouponcode').val(),
+                };
+                addAntiForgeryToken(couponCodeData);
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    data: couponCodeData,
+                    url: href,
+                    success: function (data) {
+                        $('#ordersummarypagecart').replaceWith(data.cart);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve Shopping Cart Page.');
+                    }
+                });
+            });
+        });
+    </script>
 
 }

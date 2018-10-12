@@ -82,7 +82,7 @@ namespace Grand.Web.Controllers
 
         [HttpPost]
         public virtual IActionResult CheckoutAttributeChange(IFormCollection form,
-            [FromServices] ICheckoutAttributeParser checkoutAttributeParser, 
+            [FromServices] ICheckoutAttributeParser checkoutAttributeParser,
             [FromServices] ICheckoutAttributeFormatter checkoutAttributeFormatter)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -215,6 +215,21 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
+        public virtual IActionResult AjaxCart()
+        {
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .LimitPerStore(_storeContext.CurrentStore.Id).ToList();
+
+            var shoppingcartmodel = new ShoppingCartModel();
+            _shoppingCartViewModelService.PrepareShoppingCart(shoppingcartmodel, cart);
+
+            return Json(new
+            {
+                cart = this.RenderViewComponentToString("OrderSummary", new { overriddenModel = shoppingcartmodel })
+            });
+        }
+
         [HttpPost, ActionName("Cart")]
         [FormValueRequired("updatecart")]
         public virtual IActionResult UpdateCart(IFormCollection form)
@@ -279,6 +294,7 @@ namespace Grand.Web.Controllers
             }
             return View(model);
         }
+
         [HttpPost, ActionName("Cart")]
         [FormValueRequired("clearcart")]
         public virtual IActionResult ClearCart(IFormCollection form)
@@ -304,7 +320,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost, ActionName("DeleteCartItem")]
-        public virtual IActionResult DeleteCartItem(string id)
+        public virtual IActionResult DeleteCartItem(string id, bool shoppingcartpage = false)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return RedirectToRoute("HomePage");
@@ -321,12 +337,30 @@ namespace Grand.Web.Controllers
 
 
             var model = _shoppingCartViewModelService.PrepareMiniShoppingCart();
-
-            return Json(new
+            if (!shoppingcartpage)
             {
-                totalproducts = string.Format(_localizationService.GetResource("ShoppingCart.HeaderQuantity"), model.TotalProducts),
-                html = this.RenderPartialViewToString("Components/FlyoutShoppingCart/Default", model)
-            });
+                return Json(new
+                {
+                    totalproducts = string.Format(_localizationService.GetResource("ShoppingCart.HeaderQuantity"), model.TotalProducts),
+                    flyoutshoppingcart = this.RenderViewComponentToString("FlyoutShoppingCart", model)
+                });
+            }
+            else
+            {
+                var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .LimitPerStore(_storeContext.CurrentStore.Id).ToList();
+
+                var shoppingcartmodel = new ShoppingCartModel();
+                _shoppingCartViewModelService.PrepareShoppingCart(shoppingcartmodel, cart);
+
+                return Json(new
+                {
+                    totalproducts = string.Format(_localizationService.GetResource("ShoppingCart.HeaderQuantity"), model.TotalProducts),
+                    flyoutshoppingcart = this.RenderViewComponentToString("FlyoutShoppingCart", model),
+                    cart = this.RenderViewComponentToString("OrderSummary", new { overriddenModel = shoppingcartmodel })
+                });
+            }
 
         }
 
@@ -380,17 +414,12 @@ namespace Grand.Web.Controllers
             return RedirectToRoute("Checkout");
         }
 
-        [HttpPost, ActionName("Cart")]
-        [FormValueRequired("applydiscountcouponcode")]
-        public virtual IActionResult ApplyDiscountCoupon(string discountcouponcode, IFormCollection form)
+        public virtual IActionResult ApplyDiscountCoupon(string discountcouponcode)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
-
-            //parse and save checkout attributes
-            _shoppingCartViewModelService.ParseAndSaveCheckoutAttributes(cart, form);
 
             var model = new ShoppingCartModel();
             if (!String.IsNullOrWhiteSpace(discountcouponcode))
@@ -463,12 +492,16 @@ namespace Grand.Web.Controllers
             }
 
             _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
-            return View(model);
+
+            return Json(new
+            {
+                cart = this.RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
+            });
+
         }
 
-        [HttpPost, ActionName("Cart")]
-        [FormValueRequired("applygiftcardcouponcode")]
-        public virtual IActionResult ApplyGiftCard(string giftcardcouponcode, IFormCollection form)
+       
+        public virtual IActionResult ApplyGiftCard(string giftcardcouponcode)
         {
             //trim
             if (giftcardcouponcode != null)
@@ -478,9 +511,6 @@ namespace Grand.Web.Controllers
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
-
-            //parse and save checkout attributes
-            _shoppingCartViewModelService.ParseAndSaveCheckoutAttributes(cart, form);
 
             var model = new ShoppingCartModel();
             if (!cart.IsRecurring())
@@ -514,7 +544,10 @@ namespace Grand.Web.Controllers
             }
 
             _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
-            return View(model);
+            return Json(new
+            {
+                cart = this.RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
+            });
         }
 
         [PublicAntiForgery]
