@@ -215,23 +215,6 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        public virtual IActionResult AjaxCart()
-        {
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .LimitPerStore(_storeContext.CurrentStore.Id).ToList();
-
-            var shoppingcartmodel = new ShoppingCartModel();
-            _shoppingCartViewModelService.PrepareShoppingCart(shoppingcartmodel, cart);
-
-            return Json(new
-            {
-                cart = this.RenderViewComponentToString("OrderSummary", new { overriddenModel = shoppingcartmodel })
-            });
-        }
-
-        [HttpPost, ActionName("Cart")]
-        [FormValueRequired("updatecart")]
         public virtual IActionResult UpdateCart(IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
@@ -242,17 +225,10 @@ namespace Grand.Web.Controllers
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
-            var allIdsToRemove = !string.IsNullOrEmpty(form["removefromcart"].ToString()) ? form["removefromcart"].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x).ToList() : new List<string>();
-
             //current warnings <cart item identifier, warnings>
             var innerWarnings = new Dictionary<string, IList<string>>();
             foreach (var sci in cart)
             {
-                bool remove = allIdsToRemove.Contains(sci.Id);
-                if (remove)
-                    _shoppingCartService.DeleteShoppingCartItem(_workContext.CurrentCustomer, sci, ensureOnlyActiveCheckoutAttributes: true);
-                else
-                {
                     foreach (string formKey in form.Keys)
                         if (formKey.Equals(string.Format("itemquantity{0}", sci.Id), StringComparison.OrdinalIgnoreCase))
                         {
@@ -266,10 +242,7 @@ namespace Grand.Web.Controllers
                             }
                             break;
                         }
-                }
             }
-            //parse and save checkout attributes
-            _shoppingCartViewModelService.ParseAndSaveCheckoutAttributes(cart, form);
 
             //updated cart
             _workContext.CurrentCustomer = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id);
@@ -292,7 +265,10 @@ namespace Grand.Web.Controllers
                         if (!sciModel.Warnings.Contains(w))
                             sciModel.Warnings.Add(w);
             }
-            return View(model);
+            return Json(new
+            {
+                cart = this.RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
+            });
         }
 
         [HttpPost, ActionName("Cart")]
@@ -497,7 +473,6 @@ namespace Grand.Web.Controllers
             {
                 cart = this.RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
             });
-
         }
 
        
