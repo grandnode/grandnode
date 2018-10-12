@@ -369,7 +369,7 @@
                 $.ajax({
                     cache: false,
                     type: "POST",
-                    data: $('form').serialize(),
+                    data: $('#shopping-cart-form').serialize(),
                     url: '@Url.RouteUrl("UpdateCart")',
                     success: function (data) {
                         $(AjaxCart.flyoutcartselector).replaceWith(data.flyoutshoppingcart);
@@ -399,8 +399,6 @@
                     }
                 });
             });
-
-            
         });
     </script>
 </div>

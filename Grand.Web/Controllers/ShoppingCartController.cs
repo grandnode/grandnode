@@ -118,7 +118,6 @@ namespace Grand.Web.Controllers
             });
         }
 
-
         [HttpPost]
         public virtual IActionResult UploadFileCheckoutAttribute(string attributeId)
         {
@@ -200,7 +199,6 @@ namespace Grand.Web.Controllers
             });
         }
 
-
         public virtual IActionResult Cart()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
@@ -215,6 +213,8 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
+        [PublicAntiForgery]
+        [HttpPost]
         public virtual IActionResult UpdateCart(IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
@@ -390,6 +390,8 @@ namespace Grand.Web.Controllers
             return RedirectToRoute("Checkout");
         }
 
+        [PublicAntiForgery]
+        [HttpPost]
         public virtual IActionResult ApplyDiscountCoupon(string discountcouponcode)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -475,7 +477,8 @@ namespace Grand.Web.Controllers
             });
         }
 
-       
+        [PublicAntiForgery]
+        [HttpPost]
         public virtual IActionResult ApplyGiftCard(string giftcardcouponcode)
         {
             //trim
@@ -541,16 +544,11 @@ namespace Grand.Web.Controllers
             return PartialView("_EstimateShippingResult", model);
         }
 
-        [HttpPost, ActionName("Cart")]
-        [FormValueRequired(FormValueRequirement.StartsWith, "removediscount-")]
-        public virtual IActionResult RemoveDiscountCoupon(IFormCollection form)
+        [PublicAntiForgery]
+        [HttpPost]
+        public virtual IActionResult RemoveDiscountCoupon(string discountId)
         {
             var model = new ShoppingCartModel();
-            string discountId = string.Empty;
-            foreach (var formValue in form.Keys)
-                if (formValue.StartsWith("removediscount-", StringComparison.OrdinalIgnoreCase))
-                    discountId = formValue.Substring("removediscount-".Length);
-
             var discount = _discountService.GetDiscountById(discountId);
             if (discount != null)
             {
@@ -569,20 +567,19 @@ namespace Grand.Web.Controllers
                 .ToList();
 
             _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
-            return View(model);
+            return Json(new
+            {
+                cart = this.RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
+            });
         }
 
-        [HttpPost, ActionName("Cart")]
-        [FormValueRequired(FormValueRequirement.StartsWith, "removegiftcard-")]
-        public virtual IActionResult RemoveGiftCardCode(IFormCollection form)
+        [PublicAntiForgery]
+        [HttpPost]
+        public virtual IActionResult RemoveGiftCardCode(string giftCardId)
         {
             var model = new ShoppingCartModel();
 
             //get gift card identifier
-            string giftCardId = "";
-            foreach (var formValue in form.Keys)
-                if (formValue.StartsWith("removegiftcard-", StringComparison.OrdinalIgnoreCase))
-                    giftCardId = formValue.Substring("removegiftcard-".Length);
             var gc = _giftCardService.GetGiftCardById(giftCardId);
             if (gc != null)
             {
@@ -594,7 +591,11 @@ namespace Grand.Web.Controllers
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
-            return View(model);
+            return Json(new
+            {
+                cart = this.RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
+            });
+
         }
         #endregion
 
