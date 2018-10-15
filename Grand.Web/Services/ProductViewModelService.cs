@@ -627,6 +627,9 @@ namespace Grand.Web.Services
             }
             //additional shipping charge
             model.AdditionalShippingCharge = product.AdditionalShippingCharge;
+            if (model.AdditionalShippingCharge > 0)
+                model.AdditionalShippingChargeStr = _priceFormatter.FormatPrice(_taxService.GetShippingPrice(model.AdditionalShippingCharge, _workContext.CurrentCustomer));
+
             //is product returnable
             model.NotReturnable = product.NotReturnable;
             //email a friend

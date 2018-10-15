@@ -57,6 +57,7 @@ namespace Grand.Web.Models.Catalog
         public bool NotReturnable { get; set; }
         public bool IsFreeShipping { get; set; }
         public decimal AdditionalShippingCharge { get; set; }
+        public string AdditionalShippingChargeStr { get; set; }
         public bool FreeShippingNotificationEnabled { get; set; }
         public string DeliveryDate { get; set; }
         public string DeliveryColorSquaresRgb { get; set; }
