@@ -101,6 +101,7 @@ namespace Grand.Plugin.Widgets.Slider
             this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.Slider.Name", "Name");
             this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.Slider.Name.Hint", "Enter the name of the slider");
             this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.Slider.Name.Required", "Name is required");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.Slider.Picture", "Picture");
             this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.Slider.Picture.Required", "Picture is required");
             this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.Slider.Published", "Published");
             this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.Slider.Published.Hint", "Specify it should be visible or not");
@@ -154,6 +155,7 @@ namespace Grand.Plugin.Widgets.Slider
             this.DeletePluginLocaleResource("Plugins.Widgets.Slider.Name");
             this.DeletePluginLocaleResource("Plugins.Widgets.Slider.Name.Hint");
             this.DeletePluginLocaleResource("Plugins.Widgets.Slider.Name.Required");
+            this.DeletePluginLocaleResource("Plugins.Widgets.Slider.Picture");
             this.DeletePluginLocaleResource("Plugins.Widgets.Slider.Picture.Required");
             this.DeletePluginLocaleResource("Plugins.Widgets.Slider.Published");
             this.DeletePluginLocaleResource("Plugins.Widgets.Slider.Published.Hint");
