@@ -18084,7 +18084,7 @@
   <LocaleResource Name="Products.FreeShipping">
     <Value>Free shipping</Value>
   </LocaleResource>
-    <LocaleResource Name="Admin.Orders.Products.GiftCard.Message">
+  <LocaleResource Name="Admin.Orders.Products.GiftCard.Message">
     <Value>Message</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Products.GiftCard.RecipientEmail">
@@ -19547,5 +19547,8 @@
   </LocaleResource>
   <LocaleResource Name="Admin.CurrentCartWishlists">
     <Value>Current shopping carts and wishlists</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.NotReturnable">
+    <Value>Product is not returnable</Value>
   </LocaleResource>
 </Language>

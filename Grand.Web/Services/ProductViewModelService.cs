@@ -625,7 +625,8 @@ namespace Grand.Web.Services
                     model.DeliveryColorSquaresRgb = deliveryDate.ColorSquaresRgb;
                 }
             }
-
+            //is product returnable
+            model.NotReturnable = product.NotReturnable;
             //email a friend
             model.EmailAFriendEnabled = _catalogSettings.EmailAFriendEnabled;
             //ask question product
