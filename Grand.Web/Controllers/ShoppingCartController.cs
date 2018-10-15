@@ -199,7 +199,7 @@ namespace Grand.Web.Controllers
             });
         }
 
-        public virtual IActionResult Cart()
+        public virtual IActionResult Cart(bool checkoutAttributes)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return RedirectToRoute("HomePage");
@@ -209,7 +209,7 @@ namespace Grand.Web.Controllers
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var model = new ShoppingCartModel();
-            _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
+            _shoppingCartViewModelService.PrepareShoppingCart(model, cart, validateCheckoutAttributes: checkoutAttributes);
             return View(model);
         }
 

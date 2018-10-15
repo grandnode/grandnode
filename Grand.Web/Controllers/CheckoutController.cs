@@ -135,7 +135,7 @@ namespace Grand.Web.Controllers
             var checkoutAttributesXml = customer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);
             var scWarnings = shoppingCartService.GetShoppingCartWarnings(cart, checkoutAttributesXml, true);
             if (scWarnings.Any())
-                return RedirectToRoute("ShoppingCart");
+                return RedirectToRoute("ShoppingCart", new { checkoutAttributes = true });
 
             //validation (each shopping cart item)
             foreach (ShoppingCartItem sci in cart)
@@ -143,7 +143,7 @@ namespace Grand.Web.Controllers
                 var product = productService.GetProductById(sci.ProductId);
                 var sciWarnings = shoppingCartService.GetShoppingCartItemWarnings(customer, sci, product, false);
                 if (sciWarnings.Any())
-                    return RedirectToRoute("ShoppingCart");
+                    return RedirectToRoute("ShoppingCart", new { checkoutAttributes = true });
             }
 
             if (_orderSettings.OnePageCheckoutEnabled)
@@ -306,6 +306,8 @@ namespace Grand.Web.Controllers
                     address.CustomAttributes = customAttributes;
                     address.CreatedOnUtc = DateTime.UtcNow;
                     _workContext.CurrentCustomer.Addresses.Add(address);
+                    address.CustomerId = _workContext.CurrentCustomer.Id;
+                    _customerService.InsertAddress(address);
                 }
                 _workContext.CurrentCustomer.BillingAddress = address;
                 address.CustomerId = _workContext.CurrentCustomer.Id;
