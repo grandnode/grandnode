@@ -44,9 +44,17 @@ namespace Grand.Web.Infrastructure
                             "applydiscountcoupon/",
                             new { controller = "ShoppingCart", action = "ApplyDiscountCoupon" });
 
+            routeBuilder.MapLocalizedRoute("RemoveDiscountCoupon",
+                            "removediscountcoupon/",
+                            new { controller = "ShoppingCart", action = "RemoveDiscountCoupon" });
+
             routeBuilder.MapLocalizedRoute("ApplyGiftCard",
                             "applygiftcard/",
                             new { controller = "ShoppingCart", action = "ApplyGiftCard" });
+
+            routeBuilder.MapLocalizedRoute("RemoveGiftCardCode",
+                "removegiftcardcode/",
+                new { controller = "ShoppingCart", action = "RemoveGiftCardCode" });
 
             routeBuilder.MapLocalizedRoute("UpdateCart",
                 "updatecart/",

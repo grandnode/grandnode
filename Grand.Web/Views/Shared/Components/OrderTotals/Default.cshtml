@@ -34,11 +34,11 @@
                     {
                         if (!String.IsNullOrEmpty(Model.Shipping))
                         {
-                        <span class="value-summary">@Model.Shipping</span>
+                            <span class="value-summary">@Model.Shipping</span>
                         }
                         else
                         {
-                        <span>@T("ShoppingCart.Totals.CalculatedDuringCheckout")</span>
+                            <span>@T("ShoppingCart.Totals.CalculatedDuringCheckout")</span>
                         }
                     }
                     else
@@ -62,14 +62,14 @@
             {
                 foreach (var taxRate in Model.TaxRates)
                 {
-                <tr class="col-12 pr-0 tax-rate d-flex justify-content-start">
-                    <td class="col-6 cart-total-left">
-                        <span>@string.Format(T("ShoppingCart.Totals.TaxRateLine").Text, taxRate.Rate):</span>
-                    </td>
-                    <td class="col-6 cart-total-right text-right">
-                        <span>@taxRate.Value</span>
-                    </td>
-                </tr>
+                    <tr class="col-12 pr-0 tax-rate d-flex justify-content-start">
+                        <td class="col-6 cart-total-left">
+                            <span>@string.Format(T("ShoppingCart.Totals.TaxRateLine").Text, taxRate.Rate):</span>
+                        </td>
+                        <td class="col-6 cart-total-right text-right">
+                            <span>@taxRate.Value</span>
+                        </td>
+                    </tr>
                 }
             }
             @if (Model.DisplayTax)
@@ -98,23 +98,25 @@
             {
                 foreach (var gc in Model.GiftCards)
                 {
-                <tr class="col-12 pr-0 giftcard-summary d-flex justify-content-start">
-                    <td class="col-6 cart-total-left">
-                        <span>@T("ShoppingCart.Totals.GiftCardInfo"):</span>
-                        <span>@T("ShoppingCart.Totals.GiftCardInfo.Code", gc.CouponCode)</span>
-                        <span class="giftcard-remaining">@string.Format(T("ShoppingCart.Totals.GiftCardInfo.Remaining").Text, gc.Remaining)</span>
-                    </td>
-                    <td class="col-6 cart-total-right  text-right">
-                        <span class="value-summary">@gc.Amount</span>
-                        @if (Model.IsEditable)
-                        {
-                            //little hack here with empty "value" element
-                            <button type="submit" name="removegiftcard-@gc.Id" title="@T("Common.Remove")" class="btn btn-sm btn-secondary remove-gift-card-button">
-                                <i class="fa fa-times" aria-hidden="true"></i>
-                            </button>
-                        }
-                    </td>
-                </tr>
+                    <tr class="col-12 pr-0 giftcard-summary d-flex justify-content-start">
+                        <td class="col-6 cart-total-left">
+                            <span>@T("ShoppingCart.Totals.GiftCardInfo"):</span>
+                            <span>@T("ShoppingCart.Totals.GiftCardInfo.Code", gc.CouponCode)</span>
+                            <span class="giftcard-remaining">@string.Format(T("ShoppingCart.Totals.GiftCardInfo.Remaining").Text, gc.Remaining)</span>
+                        </td>
+                        <td class="col-6 cart-total-right  text-right">
+                            <span class="value-summary">@gc.Amount</span>
+                            @if (Model.IsEditable)
+                            {
+                                //little hack here with empty "value" element
+                                <button type="button" name="removegiftcard"
+                                        data-href="@Url.RouteUrl("RemoveGiftCardCode", new { giftCardId = gc.Id})"
+                                        title="@T("Common.Remove")" class="btn btn-sm btn-secondary remove-gift-card-button">
+                                    <i class="fa fa-times" aria-hidden="true"></i>
+                                </button>
+                            }
+                        </td>
+                    </tr>
                 }
             }
             @if (Model.RedeemedRewardPoints > 0)
@@ -158,3 +160,25 @@
         </tbody>
     </table>
 </div>
+@if (Model.GiftCards.Any() && Model.IsEditable)
+{
+    <script>
+        $(document).ready(function () {
+            $(".remove-gift-card-button").click(function () {
+                var href = $(this).closest('[data-href]').data('href');
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    data: addAntiForgeryToken(),
+                    url: href,
+                    success: function (data) {
+                        $('#ordersummarypagecart').replaceWith(data.cart);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve Shopping Cart Page.');
+                    }
+                });
+            });
+        });
+    </script>
+}
