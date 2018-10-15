@@ -54,7 +54,9 @@ namespace Grand.Web.Models.Catalog
         public bool HasSampleDownload { get; set; }
         public GiftCardModel GiftCard { get; set; }
         public bool IsShipEnabled { get; set; }
+        public bool NotReturnable { get; set; }
         public bool IsFreeShipping { get; set; }
+        public decimal AdditionalShippingCharge { get; set; }
         public bool FreeShippingNotificationEnabled { get; set; }
         public string DeliveryDate { get; set; }
         public string DeliveryColorSquaresRgb { get; set; }

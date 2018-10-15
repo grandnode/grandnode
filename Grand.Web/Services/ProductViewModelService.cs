@@ -625,7 +625,10 @@ namespace Grand.Web.Services
                     model.DeliveryColorSquaresRgb = deliveryDate.ColorSquaresRgb;
                 }
             }
-
+            //additional shipping charge
+            model.AdditionalShippingCharge = product.AdditionalShippingCharge;
+            //is product returnable
+            model.NotReturnable = product.NotReturnable;
             //email a friend
             model.EmailAFriendEnabled = _catalogSettings.EmailAFriendEnabled;
             //ask question product
