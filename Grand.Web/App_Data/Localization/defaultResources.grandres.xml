@@ -19551,4 +19551,7 @@
   <LocaleResource Name="Products.NotReturnable">
     <Value>Product is not returnable</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.AdditionalShippingCharge">
+    <Value>Additional Shipping Charge:</Value>
+  </LocaleResource>
 </Language>
