@@ -6105,3 +6105,9 @@ footer .list-group .list-group-item {
         left: 0;
     }
 }
+
+
+/* TOOLTIP */
+.tooltip .tooltip-inner {
+    padding: 10px 15px;
+}
