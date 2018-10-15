@@ -440,9 +440,6 @@ namespace Grand.Web.Services
                     if (!string.IsNullOrEmpty(sci.Parameter))
                     {
                         cartItemModel.ReservationInfo += "<br>" + string.Format(_localizationService.GetResource("ShoppingCart.Reservation.Option"), sci.Parameter);
-                    }
-                    if (!string.IsNullOrEmpty(sci.Parameter))
-                    {
                         cartItemModel.Parameter = sci.Parameter;
                     }
                     if (!string.IsNullOrEmpty(sci.Duration))
@@ -460,6 +457,7 @@ namespace Grand.Web.Services
                 if (product.CallForPrice)
                 {
                     cartItemModel.UnitPrice = _localizationService.GetResource("Products.CallForPrice");
+                    cartItemModel.SubTotal = _localizationService.GetResource("Products.CallForPrice");
                 }
                 else
                 {
@@ -467,16 +465,9 @@ namespace Grand.Web.Services
                     decimal shoppingCartUnitPriceWithDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetUnitPrice(sci), out taxRate);
                     decimal shoppingCartUnitPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartUnitPriceWithDiscountBase, _workContext.WorkingCurrency);
                     cartItemModel.UnitPrice = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount);
-                }
-                //subtotal, discount
-                if (product.CallForPrice)
-                {
-                    cartItemModel.SubTotal = _localizationService.GetResource("Products.CallForPrice");
-                }
-                else
-                {
+               
                     //sub total
-                    decimal shoppingCartItemSubTotalWithDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetSubTotal(sci, true, out decimal shoppingCartItemDiscountBase, out List<AppliedDiscount> scDiscounts), out decimal taxRate);
+                    decimal shoppingCartItemSubTotalWithDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetSubTotal(sci, true, out decimal shoppingCartItemDiscountBase, out List<AppliedDiscount> scDiscounts), out taxRate);
                     decimal shoppingCartItemSubTotalWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartItemSubTotalWithDiscountBase, _workContext.WorkingCurrency);
                     cartItemModel.SubTotal = _priceFormatter.FormatPrice(shoppingCartItemSubTotalWithDiscount);
 

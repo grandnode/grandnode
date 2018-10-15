@@ -10,14 +10,7 @@ namespace Grand.Services.Tasks
     public partial class ClearCacheScheduleTask : ScheduleTask, IScheduleTask
     {
         private readonly object _lock = new object();
-
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        public ClearCacheScheduleTask() {
-            
-        }
-
+        
         /// <summary>
         /// Executes a task
         /// </summary>
