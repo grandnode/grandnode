@@ -55,7 +55,7 @@ $('#ModalAddToCart .modal-dialog').on('click tap', function (e) {
     if ($(e.target).hasClass('modal-dialog')) {
         $('.modal').modal('hide');
     }
-})
+});
 
 function displayPopupAddToCart(html) {
     $('#ModalAddToCart').html(html).modal('show');
@@ -66,8 +66,9 @@ function displayPopupQuickView(html) {
     $('#ModalQuickView').html(html).modal('show');
     $("body.modal-open").removeAttr("style");
     $(".navUp").removeAttr("style");
-    $('.sp-wrap').smoothproducts();
+    $('.sp-wrap').smoothproducts('.product-quickview');
 }
+
 
 var barNotificationTimeout;
 function displayBarNotification(message, messagetype, timeout) {
