@@ -1,5 +1,4 @@
 ﻿@model StoreSelectorModel
-@using System.Net;
 @using Microsoft.AspNetCore.Http;
 @inject IWebHelper webHelper
 @inject IHttpContextAccessor httpContextAccessor
@@ -29,7 +28,7 @@
     </div>
 
     <div class="col px-0 store-list-mobile option-list-mobile text-center">
-        <h6 class="store-button mobile-option-button mb-0">Stores</h6>
+        <h6 class="store-button mobile-option-button mb-0">@T("Stores")</h6>
         <ul class="">
             @foreach (var item in stores)
             {

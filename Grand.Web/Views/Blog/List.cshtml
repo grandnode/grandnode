@@ -17,9 +17,9 @@
     <h1 class="h2 generalTitle">
         <a href="@Url.RouteUrl("BlogRSS", new { languageId = Model.WorkingLanguageId })" class="btn btn-sm btn-outline-info link-rss" title="@T("Blog.RSS.Hint")">@T("Blog.RSS")</a>
         @if (String.IsNullOrEmpty(Model.PagingFilteringContext.Tag))
+        {
+            if (Model.PagingFilteringContext.GetParsedMonth().HasValue)
             {
-                if (Model.PagingFilteringContext.GetParsedMonth().HasValue)
-                {
                 @String.Format(T("Blog.FilteredByMonth").Text, Model.PagingFilteringContext.GetParsedMonth().Value.Year, Model.PagingFilteringContext.GetParsedMonth().Value.ToString("MMMM"))
             }
             else
@@ -35,51 +35,49 @@
     @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_before_posts" })
     <div class="blog-posts row">
         @foreach (var item in Model.BlogPosts)
-            {
+        {
             @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_before_post", additionalData = item.Id })
             <div class="col-xl-6 col-12">
                 <div class="card mb-3">
-                <a class="post-title pt-3 px-3" href="@Url.RouteUrl("BlogPost", new {SeName = item.SeName})">
-                    @if (!string.IsNullOrEmpty(item.PictureModel.ImageUrl))
-                    {
-                    <div class="img-container">
-                        <img class="card-img-top img-fluid rounded-0" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title">
-                    </div>
-                    }
-                    <h4 class="card-header">@item.Title</h4>
-                </a>
-                <div class="card-body pt-2">
-                    <h6 class="card-subtitle text-muted"><i class="far fa-clock mr-2"></i>@item.CreatedOn.ToString("D")</h6>
-                    @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_before_post_body", additionalData = item.Id })
-                    @*//post content*@
-                    @Html.Raw(!String.IsNullOrEmpty(item.BodyOverview) ? item.BodyOverview : item.Body)
-                    @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_after_post_body", additionalData = item.Id })
-                    @if (item.Tags.Any())
-                    {
-                        <div class="tags pb-3">
-                            <span>@T("Blog.Tags"):</span>
-
-                            @for (int i = 0; i < item.Tags.Count; i++)
-                            {
-                                var tag = item.Tags[i];
-
-                                <a class="btn btn-sm btn-secondary my-2" href="@Url.RouteUrl("BlogByTag", new {tag = tag})">@tag</a>
-                            }
-                        </div>
-                    }
-                    <div class="buttons mt-3">
-                        @if (item.AllowComments)
+                    <a class="post-title pt-3 px-3" href="@Url.RouteUrl("BlogPost", new {SeName = item.SeName})">
+                        @if (!string.IsNullOrEmpty(item.PictureModel.ImageUrl))
                         {
-                            <a href="@Url.RouteUrl("BlogPost", new {SeName = item.SeName})#comments" class="btn btn-secondary read-comments">@string.Format(T("Blog.CommentsLink").Text, item.NumberOfComments)</a>
+                            <div class="img-container">
+                                <img class="card-img-top img-fluid rounded-0" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title">
+                            </div>
                         }
-                        <a href="@Url.RouteUrl("BlogPost", new {SeName = item.SeName})" class="btn btn-secondary read-more">@T("Blog.MoreInfo")</a>
+                        <h4 class="card-header">@item.Title</h4>
+                    </a>
+                    <div class="card-body pt-2">
+                        <h6 class="card-subtitle text-muted"><i class="far fa-clock mr-2"></i>@item.CreatedOn.ToString("D")</h6>
+                        @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_before_post_body", additionalData = item.Id })
+                        @*//post content*@
+                        @Html.Raw(!String.IsNullOrEmpty(item.BodyOverview) ? item.BodyOverview : item.Body)
+                        @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_after_post_body", additionalData = item.Id })
+                        @if (item.Tags.Any())
+                        {
+                            <div class="tags pb-3">
+                                <span>@T("Blog.Tags"):</span>
+
+                                @for (int i = 0; i < item.Tags.Count; i++)
+                                {
+                                    var tag = item.Tags[i];
+                                    <a class="btn btn-sm btn-secondary my-2" href="@Url.RouteUrl("BlogByTag", new {tag = tag})">@tag</a>
+                                }
+                            </div>
+                        }
+                        <div class="buttons mt-3">
+                            @if (item.AllowComments)
+                            {
+                                <a href="@Url.RouteUrl("BlogPost", new {SeName = item.SeName})#comments" class="btn btn-secondary read-comments">@string.Format(T("Blog.CommentsLink").Text, item.NumberOfComments)</a>
+                            }
+                            <a href="@Url.RouteUrl("BlogPost", new {SeName = item.SeName})" class="btn btn-secondary read-more">@T("Blog.MoreInfo")</a>
+                        </div>
                     </div>
+                    @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_inside_post", additionalData = item.Id })
                 </div>
-                @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_inside_post", additionalData = item.Id })
             </div>
-            </div>
-                
-                @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_after_post", additionalData = item.Id })
+            @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_after_post", additionalData = item.Id })
         }
     </div>
     @{

@@ -18921,6 +18921,9 @@
   <LocaleResource Name="StoreTheme">
     <Value>Select store theme</Value>
   </LocaleResource>
+  <LocaleResource Name="Stores">
+    <Value>Select store</Value>
+  </LocaleResource>
   <LocaleResource Name="Tax.Exclusive">
     <Value>Show prices tax exclusive</Value>
   </LocaleResource>

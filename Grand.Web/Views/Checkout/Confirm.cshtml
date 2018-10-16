@@ -39,10 +39,10 @@
             <h2 class="text-center generalTitle">@T("Checkout.ConfirmYourOrder")</h2>
             <div class="page-body checkout-data">
                 @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_confirm_top" })
-                @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_confirm_bottom" })
                 <div class="order-summary">
                     @await Component.InvokeAsync("OrderSummary", new { prepareAndDisplayOrderReviewData = true })
                 </div>
+                @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_confirm_bottom" })
             </div>
 
             @if (!String.IsNullOrEmpty(Model.MinOrderTotalWarning))
