@@ -57,11 +57,18 @@ $('#ModalAddToCart .modal-dialog').on('click tap', function (e) {
     }
 });
 
+$(document).ready(function () {
+    $('#ModalQuickView').on('hide.bs.modal', function (e) {
+        $('#ModalQuickView').html('');
+    });
+});
+
 function displayPopupAddToCart(html) {
     $('#ModalAddToCart').html(html).modal('show');
     $("body.modal-open").removeAttr("style");
     $(".navUp").removeAttr("style");
 }
+
 function displayPopupQuickView(html) {
     $('#ModalQuickView').html(html).modal('show');
     $("body.modal-open").removeAttr("style");
@@ -307,30 +314,7 @@ $(document).ready(function () {
     $("#mobile-collapsing-menu .fa-times").click(function () {
         $(this).parent().removeClass("show");
     });
-
-    // mobile: currency, language, tax
-
-    if ($(".tax-list-mobile").length > 0) {
-    }
-    else {
-        $(".tax-button").hide();
-    }
-    if ($(".currency-list-mobile").length > 0) {
-    }
-    else {
-        $(".currency-button").hide();
-    }
-    if ($(".language-list-mobile").length > 0) {
-    }
-    else {
-        $(".language-button").hide();
-    }
-    if ($(".store-list-mobile").length > 0) {
-    }
-    else {
-        $(".store-button").hide();
-    }
-
+    
     $(".currency-button").click(function () {
         $(".currency-list-mobile ul").toggleClass("show");
         $(".language-list-mobile ul").removeClass("show");
