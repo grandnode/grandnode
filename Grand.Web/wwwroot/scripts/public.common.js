@@ -649,12 +649,20 @@ $(document).ready(function () {
     });
 
     $('.product-standard .review-scroll-button').on('click', function (e) {
-        e.preventDefault();
-        $('html, body').animate({
-            scrollTop: $($(this).attr('href')).offset().top - 120
-        }, 300, 'linear');
+        var el = $("#review-tab");
+        var elOffset = el.offset().top;
+        var elHeight = el.height();
+        var windowHeight = $(window).height();
+        var offset;
+        if (elHeight < windowHeight) {
+            offset = elOffset - ((windowHeight / 2) - (elHeight / 2));
+        }
+        else {
+            offset = elOffset;
+        }
+        $.smoothScroll({ speed: 300 }, offset);
         $("#review-tab").click();
+        return false;
     });
-    
 });
 

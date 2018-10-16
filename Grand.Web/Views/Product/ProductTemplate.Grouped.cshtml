@@ -23,6 +23,7 @@
         Html.AddHeadCustomParts("<meta property=\"og:title\" content=\"" + Html.Encode(Model.Name) + "\" />");
         Html.AddHeadCustomParts("<meta property=\"og:description\" content=\"" + Html.Encode(Model.MetaDescription) + "\" />");
         Html.AddHeadCustomParts("<meta property=\"og:image\" content=\"" + Model.DefaultPictureModel.ImageUrl + "\" />");
+        Html.AddHeadCustomParts("<meta property=\"og:image:url\" content=\"" + Model.DefaultPictureModel.ImageUrl + "\" />");
         Html.AddHeadCustomParts("<meta property=\"og:url\" content=\"" + this.Url.ActionContext.HttpContext.Request.GetEncodedUrl() + "\" />");
         Html.AddHeadCustomParts("<meta property=\"og:site_name\" content=\"" + Html.Encode(Model.CurrentStoreName) + "\" />");
     }
@@ -103,6 +104,18 @@
                                 <a class="nav-link" id="spec-tab" data-toggle="tab" href="#spec" role="tab" aria-controls="spec" aria-selected="false"><span class="d-none d-md-block">@T("Products.Specs")</span><i class="fa fa-puzzle-piece d-md-none"></i></a>
                             </li>
                         }
+                        @if (Model.ProductReviewOverview.AllowCustomerReviews)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" id="review-tab" data-toggle="tab" href="#review" role="tab" aria-controls="spec" aria-selected="false"><span class="d-none d-md-block">@T("Products.Reviews") (@Model.ProductReviewOverview.TotalReviews)</span><i class="fa fa-comments d-md-none"></i></a>
+                            </li>
+                        }
+                        @if (Model.AskQuestionOnProduct)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false"><span class="d-none d-md-block">@T("Products.ContactUs")</span><i class="fa fa-envelope d-md-none"></i></a>
+                            </li>
+                        }
                     </ul>
                     <div class="tab-content" id="product_tab_content">
                         <div class="tab-pane fade show active" id="desc" role="tabpanel" aria-labelledby="desc-tab">@Html.Raw(Model.FullDescription)</div>
@@ -117,6 +130,16 @@
                             <div class="tab-pane fade" id="spec" role="tabpanel" aria-labelledby="spec-tab">
                                 <partial name="_ProductSpecifications" model="Model.ProductSpecifications" />
                             </div>
+                        }
+                        @if (Model.ProductReviewOverview.AllowCustomerReviews)
+                        {
+                            <div class="tab-pane fade" id="review" role="tabpanel" aria-labelledby="review-tab">
+                                @await Component.InvokeAsync("ProductReviews", new { productId = Model.Id })
+                            </div>
+                        }
+                        @if (Model.AskQuestionOnProduct)
+                        {
+                            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab"><partial name="_AskQuestionOnProduct" model="Model.ProductAskQuestion" /></div>
                         }
                     </div>
                 </div>
