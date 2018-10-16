@@ -12234,7 +12234,7 @@
   <LocaleResource Name="Admin.Orders.Fields.Id">
     <Value>Id</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Orders.Fields.ID.Hint">
+  <LocaleResource Name="Admin.Orders.Fields.ID.Hint">Gif
     <Value>The unique ID of this order.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.MarkAsPaid">
@@ -19553,5 +19553,20 @@
   </LocaleResource>
   <LocaleResource Name="Products.AdditionalShippingCharge">
     <Value>Additional Shipping Charge:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.GiftCard.Message">
+    <Value>Message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.GiftCard.RecipientEmail">
+    <Value>Recipient's Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.GiftCard.RecipientName">
+    <Value>Recipient's Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.GiftCard.SenderEmail">
+    <Value>Your Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.GiftCard.SenderName">
+    <Value>Your Name</Value>
   </LocaleResource>
 </Language>
