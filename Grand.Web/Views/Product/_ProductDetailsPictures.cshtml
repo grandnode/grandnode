@@ -168,6 +168,29 @@
                         $('.zoom').zoom({
                             url: $('#main-product-img-lightbox-anchor-@Model.Id img').attr('data-fullsize')
                         });
+                        $('.product-standard #main-product-img-lightbox-anchor-@Model.Id').attr('href', "@Model.DefaultPictureModel.FullSizeImageUrl");
+                        $('.product-standard #main-product-img-lightbox-anchor-@Model.Id').magnificPopup({
+                            type: 'image',
+                            removalDelay: 300,
+                            gallery: {
+                                enabled: true,
+                                tPrev: '@T("Media.MagnificPopup.Previous")',
+                                tNext: '@T("Media.MagnificPopup.Next")',
+                                tCounter: '@T("Media.MagnificPopup.Counter")'
+                            },
+                            tClose: '@T("Media.MagnificPopup.Close")',
+                            tLoading: '@T("Media.MagnificPopup.Loading")',
+                            zoom: {
+                                enabled: true,
+                                duration: 300,
+                                opener: function (element) {
+                                    return element.find('img');
+                                }
+                            }
+                        });
+                        $('.product-standard .picture-@Model.Id').on('click', function () {
+                            $(".product-standard #main-product-img-lightbox-anchor-@Model.Id").click();
+                        });
                     });
                 </script>
             }
