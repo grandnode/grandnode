@@ -59,7 +59,7 @@ $('#ModalAddToCart .modal-dialog').on('click tap', function (e) {
 
 $(document).ready(function () {
     $('#ModalQuickView').on('hide.bs.modal', function (e) {
-        $('#ModalQuickView').html('');
+        $('#ModalQuickView').empty();
     });
 });
 
@@ -73,7 +73,6 @@ function displayPopupQuickView(html) {
     $('#ModalQuickView').html(html).modal('show');
     $("body.modal-open").removeAttr("style");
     $(".navUp").removeAttr("style");
-    $('.sp-wrap').smoothproducts('.product-quickview');
 }
 
 

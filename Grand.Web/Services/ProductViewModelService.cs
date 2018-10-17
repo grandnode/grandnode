@@ -807,7 +807,8 @@ namespace Grand.Web.Services
                 {
                     var pictureModel = new PictureModel
                     {
-                        ImageUrl = _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductThumbPictureSizeOnProductDetailsPage),
+                        ThumbImageUrl = _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductThumbPictureSizeOnProductDetailsPage),
+                        ImageUrl = _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductDetailsPictureSize),
                         FullSizeImageUrl = _pictureService.GetPictureUrl(picture.PictureId),
                         Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), model.Name),
                         AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), model.Name),

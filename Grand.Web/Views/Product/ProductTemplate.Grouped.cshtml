@@ -45,7 +45,7 @@
     <partial name="_ProductBreadcrumb" model="Model.Breadcrumb" />
 }
 @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_after_breadcrumb", additionalData = Model.Id })
-<div class="page product-details-page">
+<div class="page product-details-page product-standard">
         @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_top", additionalData = Model.Id })
         <form asp-route="Product" asp-route-sename="@Model.SeName" method="post" id="product-details-form">
             <div itemscope itemtype="http://schema.org/Product" data-productid="@Model.Id">

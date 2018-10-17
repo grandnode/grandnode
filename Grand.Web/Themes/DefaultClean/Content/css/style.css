@@ -762,11 +762,11 @@ ul.ui-autocomplete li {
 }
 
 .mfp-wrap {
-    z-index: 1043 !important;
+    z-index: 1051 !important;
 }
 
 .mfp-bg {
-    z-index: 1042 !important;
+    z-index: 1051 !important;
 }
 
 .modal-padding-off {

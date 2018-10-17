@@ -6,7 +6,10 @@
         {
             <div class="stock">
                 <span class="label">@T("Products.Availability"):</span>
-                <span class="value" id="stock-availability-value-@Model.Id">@Model.StockAvailability</span>
+                <span class="value" id="stock-availability-value-@Model.Id">
+                    <link itemprop="availability" href="http://schema.org/InStock" />
+                    @Model.StockAvailability
+                </span>
             </div>
         }
         <partial name="_BackInStockSubscription" model="Model" />

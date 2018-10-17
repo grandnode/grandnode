@@ -1,85 +1,176 @@
 ﻿@model ProductDetailsModel
 <div class="gallery col-12 col-md-6">
-    <span class="change-percent bg-success text-white"></span>
-    @if (!string.IsNullOrEmpty(Model.Flag))
-    {
-        <span class="new-product-label bg-info text-white">@Model.Flag</span>
-    }
     <div class="row">
-        @if (Model.DefaultPictureZoomEnabled)
+        <div class="zoom picture-@Model.Id mb-1">
+            <a title="@Model.DefaultPictureModel.Title"
+               id="main-product-img-lightbox-anchor-@Model.Id">
+                <img class="img-fluid"
+                     alt="@Model.DefaultPictureModel.AlternateText"
+                     src="@Model.DefaultPictureModel.ImageUrl"
+                     data-fullsize="@Model.DefaultPictureModel.FullSizeImageUrl"
+                     title="@Model.DefaultPictureModel.Title"
+                     itemprop="image"
+                     id="main-product-img-@Model.Id" />
+            </a>
+        </div>
+        @if (Model.PictureModels.Count > 1)
         {
-            <div class="picture sp-wrap mb-1">
-                @if (Model.PictureModels.Count > 1)
+            <div class="picture-thumbs-@Model.Id thumbnails">
+                @foreach (var picture in Model.PictureModels)
                 {
-
-                    @foreach (var picture in Model.PictureModels)
-                    {
-                        <a class="thumb-popup-link" href="@picture.FullSizeImageUrl" title="@picture.Title">
-                            <img class="img-thumbnail" src="@picture.FullSizeImageUrl" alt="@picture.AlternateText" title="@picture.Title" />
-                        </a>
-                    }
-
-                }
-                else
-                {
-                    <a href="@Model.DefaultPictureModel.FullSizeImageUrl" title="@Model.DefaultPictureModel.Title" id="main-product-img-lightbox-anchor-@Model.Id">
-                        <img class="img-fluid" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" itemprop="image" id="main-product-img-@Model.Id" />
+                    <a class="thumb-popup-link" data-mfp-src="@picture.FullSizeImageUrl"
+                       title="@picture.Title">
+                        <img class="img-thumbnail"
+                             data-size="@picture.ImageUrl"
+                             data-fullsize="@picture.FullSizeImageUrl"
+                             src="@picture.ThumbImageUrl"
+                             alt="@picture.AlternateText"
+                             title="@picture.Title" />
                     </a>
                 }
             </div>
-        }
-        else
-        {
 
-            @if (Model.PictureModels.Count > 1)
+            @if (!Model.DefaultPictureZoomEnabled)
             {
-                <div class="picture">
-                    <a title="@Model.DefaultPictureModel.Title" id="main-product-img-lightbox-anchor-@Model.Id">
-                        <img class="img-fluid" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.FullSizeImageUrl" title="@Model.DefaultPictureModel.Title" itemprop="image" id="main-product-img-@Model.Id" />
-                    </a>
-                </div>
-
-                <div class="thumbnails">
-                    @foreach (var picture in Model.PictureModels)
-                    {
-                        <a class="thumb-popup-link" href="@picture.FullSizeImageUrl" title="@picture.Title">
-                            <img class="img-thumbnail" src="@picture.FullSizeImageUrl" alt="@picture.AlternateText" title="@picture.Title" />
-                        </a>
-                    }
-                </div>
                 <script>
-                        $(document).ready(function () {
-                            $('.thumb-popup-link').magnificPopup(
-                            {
-                                type: 'image',
-                                removalDelay: 300,
-                                gallery: {
-                                    enabled: true,
-                                    tPrev: '@T("Media.MagnificPopup.Previous")',
-                                    tNext: '@T("Media.MagnificPopup.Next")',
-                                    tCounter: '@T("Media.MagnificPopup.Counter")'
-                                },
-                                tClose: '@T("Media.MagnificPopup.Close")',
-                                tLoading: '@T("Media.MagnificPopup.Loading")'
-                            });
+                    $(document).ready(function () {
+                        $('.product-standard .picture-thumbs-@Model.Id').magnificPopup({
+                            delegate: 'a',
+                            type: 'image',
+                            closeOnContentClick: false,
+                            closeBtnInside: false,
+                            mainClass: 'mfp-with-zoom mfp-img-mobile',
+                            image: {
+                            verticalFit: true,
+                                titleSrc: function (item) {
+                                    $('#main-product-img-@Model.Id').attr('src', item.el.attr('href'));
+                                    $('#main-product-img-@Model.Id').attr('title', item.el.attr('title'));
+                                    $('#main-product-img-@Model.Id').attr('alt', item.el.attr('alt'));
+                                    return item.el.attr('title');
+                                }
+                            },
+                            callbacks: {
+                                change:
+                                    function (item) {
+                                        $('.picture-@Model.Id .img-fluid').attr("src", item.src);
+                                    }
+                            },
+                            gallery: {
+                            enabled: true
+                            },
+                            zoom: {
+                                enabled: true,
+                                duration: 300,
+                                opener: function (element) {
+                                    return element.find('img');
+                                }
+                            }
                         });
+                        $('#main-product-img-lightbox-anchor-@Model.Id img').on('click', function () {
+                            var href = $(this).attr('data-fullsize');
+                            $("a[data-mfp-src$='" + href + "']").click();
+                        });
+                        $('#ModalQuickView .thumb-popup-link img').on('click', function () {
+                            var href2 = $(this).attr('data-size');
+                            $("#ModalQuickView #main-product-img-lightbox-anchor-@Model.Id img").attr("src", href2);
+                        });
+                    });
                 </script>
             }
             else
             {
-                <div class="picture">
-                    <img class="img-fluid img-solo" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" itemprop="image" id="main-product-img-@Model.Id" />
-                </div>
+                <script>
+                    $(document).ready(function () {
+                        $('.zoom').zoom({
+                            url: $('#main-product-img-lightbox-anchor-@Model.Id img').attr('data-fullsize')
+                        });
+                        $('.product-standard  .picture-thumbs-@Model.Id').magnificPopup({
+                            delegate: 'a',
+                            type: 'image',
+                            closeOnContentClick: false,
+                            closeBtnInside: false,
+                            mainClass: 'mfp-with-zoom mfp-img-mobile',
+                            image: {
+                            verticalFit: true,
+                                titleSrc: function (item) {
+                                    $('#main-product-img-@Model.Id').attr('src', item.el.attr('href'));
+                                    $('#main-product-img-@Model.Id').attr('title', item.el.attr('title'));
+                                    $('#main-product-img-@Model.Id').attr('alt', item.el.attr('alt'));
+                                    return item.el.attr('title');
+                                }
+                            },
+                            callbacks: {
+                                change:
+                                    function (item) {
+                                        $('.picture-@Model.Id .zoomImg').remove();
+                                        $('.picture-@Model.Id .img-fluid').attr("src", item.src);
+                                        $('.picture-@Model.Id').zoom({
+                                            url: item.src
+                                        });
+                                    },
+
+                            },
+                            gallery: {
+                            enabled: true
+                            },
+                            zoom: {
+                                enabled: true,
+                                duration: 300,
+                                opener: function (element) {
+                                    return element.find('img');
+                                }
+                            }
+                        });
+                        $('.product-standard .picture-@Model.Id').on('click', function () {
+                            var href = $(this).find("#main-product-img-lightbox-anchor-@Model.Id img").attr('data-fullsize');
+                            $("a[data-mfp-src$='" + href + "']").click();
+                        });
+                        
+                        $('#ModalQuickView .thumb-popup-link').on('click', function () {
+                                var href2 = $(this).attr('data-mfp-src');
+                                $("#ModalQuickView #main-product-img-lightbox-anchor-@Model.Id > img").attr("src", href2);
+                                $('#ModalQuickView .picture-@Model.Id .zoomImg').remove();
+                                $('#ModalQuickView .zoom').zoom({
+                                    url: $('#ModalQuickView #main-product-img-lightbox-anchor-@Model.Id a img').attr("src")
+                                });
+                        });
+                    });
+                </script>
+            }
+        }
+        else
+        {
+            @if (!Model.DefaultPictureZoomEnabled)
+            {
+
+                <script>
+                $(document).ready(function () {
+                    $('.product-standard #main-product-img-lightbox-anchor-@Model.Id').attr('href', "@Model.DefaultPictureModel.FullSizeImageUrl");
+                    $('.product-standard #main-product-img-lightbox-anchor-@Model.Id').magnificPopup({
+                            type: 'image',
+                            removalDelay: 300,
+                            gallery: {
+                                enabled: true,
+                                tPrev: '@T("Media.MagnificPopup.Previous")',
+                                tNext: '@T("Media.MagnificPopup.Next")',
+                                tCounter: '@T("Media.MagnificPopup.Counter")'
+                            },
+                            tClose: '@T("Media.MagnificPopup.Close")',
+                            tLoading: '@T("Media.MagnificPopup.Loading")'
+                    });
+               });
+                </script>
+            }
+            else
+            {
+                <script>
+                    $(document).ready(function () {
+                        $('.zoom').zoom({
+                            url: $('#main-product-img-lightbox-anchor-@Model.Id img').attr('data-fullsize')
+                        });
+                    });
+                </script>
             }
         }
     </div>
 </div>
-
-<script>
-    $(window).on('load', function () {
-        $('.sp-wrap').smoothproducts();
-    });
-    $(".sp-lightbox").ready(function () {
-        $("<span class='close'></span>").appendTo(".sp-lightbox");
-    });
-</script>

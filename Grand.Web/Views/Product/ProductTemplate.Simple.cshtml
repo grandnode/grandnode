@@ -182,7 +182,7 @@
                         }
                     </ul>
                     <div class="tab-content" id="product_tab_content">
-                        <div class="tab-pane fade show active" id="desc" role="tabpanel" aria-labelledby="desc-tab">@Html.Raw(Model.FullDescription)</div>
+                        <div class="tab-pane fade show active" id="desc" role="tabpanel" aria-labelledby="desc-tab" itemprop="description">@Html.Raw(Model.FullDescription)</div>
                         @if (Model.ProductTags.Any())
                         {
                             <div class="tab-pane fade" id="tags" role="tabpanel" aria-labelledby="tags-tab"><partial name="_ProductTags" model="Model.ProductTags" /></div>
