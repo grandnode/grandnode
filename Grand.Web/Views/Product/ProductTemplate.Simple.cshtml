@@ -129,7 +129,7 @@
                                         var dataDictAddToCart = new ViewDataDictionary(ViewData);
                                         dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
                                     }
-                                    <div class="btn-group product-simple-share my-2 d-inline-flex flex-wrap">
+                                    <div class="btn-group product-simple-share my-2 d-inline-flex flex-wrap w-100">
                                         <partial name="_AddToCart" model="Model.AddToCart" view-data="dataDictAddToCart" />
                                         @if (Model.ProductType == ProductType.SimpleProduct)
                                         {
