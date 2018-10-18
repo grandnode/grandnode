@@ -27,7 +27,7 @@ namespace Grand.Framework.Seo
 
         #region Ctor
 
-        public GenericPathRoute(IRouter target, string routeName, string routeTemplate, RouteValueDictionary defaults, 
+        public GenericPathRoute(IRouter target, string routeName, string routeTemplate, RouteValueDictionary defaults,
             IDictionary<string, object> constraints, RouteValueDictionary dataTokens, IInlineConstraintResolver inlineConstraintResolver)
             : base(target, routeName, routeTemplate, defaults, constraints, dataTokens, inlineConstraintResolver)
         {
@@ -45,8 +45,14 @@ namespace Grand.Framework.Seo
         /// <returns>Route values</returns>
         protected RouteValueDictionary GetRouteValues(RouteContext context)
         {
-            //remove language code from the path if it's localized URL
+
             var path = context.HttpContext.Request.Path.Value;
+            if (this.SeoFriendlyUrlsForPathEnabled && !this.SeoFriendlyUrlsForLanguagesEnabled)
+            {
+                string lastpath = path.Split('/').Where(x => !string.IsNullOrEmpty(x)).LastOrDefault();
+                path = $"/{lastpath}";
+            }
+            //remove language code from the path if it's localized URL
             if (this.SeoFriendlyUrlsForLanguagesEnabled && path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, out Language language))
                 path = path.RemoveLanguageSeoCodeFromUrl(context.HttpContext.Request.PathBase, false);
 
