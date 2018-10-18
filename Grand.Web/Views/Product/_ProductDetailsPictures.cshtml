@@ -81,7 +81,7 @@
             {
                 <script>
                     $(document).ready(function () {
-                        $('.zoom').zoom({
+                        $('.picture-@Model.Id').zoom({
                             url: $('#main-product-img-lightbox-anchor-@Model.Id img').attr('data-fullsize')
                         });
                         $('.product-standard  .picture-thumbs-@Model.Id').magnificPopup({
@@ -165,7 +165,7 @@
             {
                 <script>
                     $(document).ready(function () {
-                        $('.zoom').zoom({
+                        $('.picture-@Model.Id').zoom({
                             url: $('#main-product-img-lightbox-anchor-@Model.Id img').attr('data-fullsize')
                         });
                         $('.product-standard #main-product-img-lightbox-anchor-@Model.Id').attr('href', "@Model.DefaultPictureModel.FullSizeImageUrl");
