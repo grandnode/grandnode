@@ -2784,6 +2784,17 @@ ul.opc .order-summary-content h5 {
 .vote.up {
     margin-top: 24px;
 }
+
+/* Sitemap */
+.sitemap-products-group {
+    display: block;
+    column-count: 3;
+    -moz-column-count: 3;
+    -webkit-column-count: 3;
+    column-fill: balance;
+    line-height: 2;
+}
+
 /*table - topic*/
 
 .topic,
