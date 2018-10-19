@@ -1,5 +1,4 @@
-﻿
-namespace Grand.Core.Domain.Common
+﻿namespace Grand.Core.Domain.Common
 {
     public partial class GrandNodeVersion: BaseEntity
     {

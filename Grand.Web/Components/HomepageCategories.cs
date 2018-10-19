@@ -1,7 +1,7 @@
-﻿using System.Linq;
-using Grand.Framework.Components;
+﻿using Grand.Framework.Components;
 using Grand.Web.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace Grand.Web.Components
 {

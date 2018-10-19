@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Autofac;
+using FluentScheduler;
+using Grand.Core.Configuration;
+using Grand.Core.Domain.Tasks;
+using Grand.Core.Infrastructure;
+using Grand.Services.Infrastructure;
+using Grand.Services.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentScheduler;
-using Grand.Services.Logging;
-using Grand.Core.Infrastructure;
-using Autofac;
-using Grand.Core.Configuration;
-using Grand.Services.Infrastructure;
-using Grand.Core.Domain.Tasks;
 
 namespace Grand.Services.Tasks
 {

@@ -1,7 +1,7 @@
 @model ShoppingCartModel
 @inject IWebHelper webHelper
 @inject IWorkContext workContext
-<div class="order-summary-content mt-3">
+<div class="order-summary-content mt-3" id="ordersummarypagecart">
     @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_content_before" })
     <partial name="_OrderReviewData" model="Model.OrderReviewData" />
     @if (Model.Items.Any())
@@ -64,10 +64,10 @@
                             <tr class="item-container">
                                 @if (Model.IsEditable)
                                 {
-                                    <td class="remove-from-cart remove-os">
-                                        <input type="checkbox" id="checkbox_@(item.Id)" name="removefromcart" class="d-none checkbox-u" value="@(item.Id)">
-                                        <label for="checkbox_@(item.Id)">Checkbox 21</label>
-                                        <p class="remove">@T("Remove")</p>
+                                    <td class="remove-from-cart text-center">
+                                        <button type="button" class="btn btn-link text-danger deleteshoppingcartitem" data-href="@Url.RouteUrl("DeleteCartItem", new { id = item.Id, shoppingcartpage = true })">
+                                            <i class="fas fa-times-circle"></i>
+                                        </button>
                                     </td>
                                 }
                                 @if (Model.ShowProductImages)
@@ -136,7 +136,7 @@
                                     if (item.AllowedQuantities.Count > 0)
                                     {
                                         <td class="quantity">
-                                            <select id="itemqty@(item.Id)" name="itemqty@(item.Id)" class="custom-select form-control qty-dropdown">
+                                            <select id="itemquantity@(item.Id)" name="itemquantity@(item.Id)" class="custom-select form-control qty-dropdown" onchange="ChangeShoppingCart()">
                                                 @foreach (var qty in item.AllowedQuantities)
                                                 {
                                                     <option id="itemqty@(item.Id)" selected="@qty.Selected" value="@qty.Value">@qty.Value</option>
@@ -148,9 +148,9 @@
                                     {
                                         <td class="quantity">
                                             <div class="d-inline-flex">
-                                                <div class="minus" onclick="$(this).parent().find('.qty-input').val(function (i, oldval) {if(oldval>1){ return --oldval; } else { return oldval}})"></div>
-                                                <input id="itemquantity@(item.Id)" name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input form-control text-center" />
-                                                <div class="plus" onclick="$(this).parent().find('.qty-input').val(function (i, oldval) {return ++oldval;})"></div>
+                                                <div class="minus" onclick="$(this).parent().find('.qty-input').attr('value', function (i, oldval) {if(oldval>1){ return --oldval; } else { return oldval}}).trigger('change')"></div>
+                                                <input id="itemquantity@(item.Id)" name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" onchange="ChangeShoppingCart()"  class="qty-input form-control text-center" />
+                                                <div class="plus" onclick="$(this).parent().find('.qty-input').attr('value',function (i, oldval) {return ++oldval;}).trigger('change')"></div>
                                             </div>
                                         </td>
                                     }
@@ -190,24 +190,23 @@
             @if (Model.IsEditable)
             {
                 <div class="common-buttons btn-group btn-group-sm text-sm-right d-flex justify-content-end">
-                    <button type="submit" name="updatecart" class="btn btn-info d-flex justify-content-center update-cart-button"><i class="fas fa-sync-alt pr-1"></i><span class="d-sm-block">@T("ShoppingCart.UpdateCart")</span></button>
                     <button type="submit" name="clearcart" class="btn btn-danger d-flex justify-content-center removeAll-cart-button ml-sm-1"><i class="fa fa-trash pr-1"></i><span class="d-sm-block">@T("shoppingcart.clearcart")</span></button>
                     <button type="submit" name="continueshopping" class="btn btn-secondary d-flex justify-content-center continue-shopping-button ml-sm-1"><i class="fas fa-reply pr-1"></i><span class="d-sm-block">@T("ShoppingCart.ContinueShopping")</span></button>
                 </div>
             }
-            <div class="row px-3 cart-options cart-options">
+            <div class="row px-3 cart-options">
                 @if (Model.IsEditable)
                 {
                     <div class="col-12 col-md-6 checkoutAttributes">
                         <partial name="_CheckoutAttributes" model="Model.CheckoutAttributes" />
                     </div>
                 }
-                @if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo))
-                {
-                    <div class="col-sm-3 col-md-6 col-12 d-flex selected-checkout-attributes ml-auto justify-content-end text-right mt-3">
+                <div class="selected-checkout-attributes col-sm-3 col-md-6 col-12 d-flex ml-auto justify-content-end text-right mt-3">
+                    @if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo))
+                    {
                         @Html.Raw(Model.CheckoutAttributeInfo)
-                    </div>
-                }
+                    }
+                </div>
             </div>
             @if (Model.IsEditable && Model.Items.Any() && Model.DisplayTaxShippingInfo)
             {
@@ -363,10 +362,43 @@
         </div>
     }
     @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_content_after" })
+    <script>
+
+        function ChangeShoppingCart() {
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    data: $('#shopping-cart-form').serialize(),
+                    url: '@Url.RouteUrl("UpdateCart")',
+                    success: function (data) {
+                        $(AjaxCart.flyoutcartselector).replaceWith(data.flyoutshoppingcart);
+                        $(AjaxCart.topcartselector).html(data.totalproducts);
+                        $('#ordersummarypagecart').replaceWith(data.cart);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve Shopping Cart Page.');
+                    }
+                });
+            }
+
+        $(document).ready(function () {
+            $(".deleteshoppingcartitem").click(function () {
+                var href = $(this).closest('[data-href]').data('href');
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: href,
+                    success: function (data) {
+                        $(AjaxCart.flyoutcartselector).replaceWith(data.flyoutshoppingcart);
+                        $(AjaxCart.topcartselector).html(data.totalproducts);
+                        $('#ordersummarypagecart').replaceWith(data.cart);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve Shopping Cart Page.');
+                    }
+                });
+            });
+        });
+    </script>
 </div>
-<script>
-    $(".removeAll-cart-button").click(function () {
-        $("td.remove-from-cart .checkbox-u").trigger("click");
-        $(".update-cart-button").trigger("click");
-    });
-</script>
+

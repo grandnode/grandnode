@@ -5,7 +5,7 @@ namespace Grand.Core.Data
     /// <summary>
     /// Data settings helper
     /// </summary>
-    public partial class DataSettingsHelper
+    public static class DataSettingsHelper
     {
         private static bool? _databaseIsInstalled;
         private static string _connectionString;

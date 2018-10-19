@@ -1,7 +1,7 @@
-using System.Collections.Generic;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Stores;
+using System.Collections.Generic;
 
 namespace Grand.Core.Domain.Directory
 {

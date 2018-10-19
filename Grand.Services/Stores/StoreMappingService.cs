@@ -1,10 +1,10 @@
-using System;
-using System.Linq;
 using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Stores;
 using Grand.Services.Events;
+using System;
+using System.Linq;
 
 namespace Grand.Services.Stores
 {

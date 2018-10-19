@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Grand.Core.Domain.Messages;
+﻿using Grand.Core.Domain.Messages;
+using System.Collections.Generic;
 
 namespace Grand.Services.Messages
 {

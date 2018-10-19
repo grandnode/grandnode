@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Framework.Mvc.Models;
 using Grand.Web.Models.Common;
+using System.Collections.Generic;
 
 namespace Grand.Web.Models.Customer
 {

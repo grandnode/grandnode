@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Grand.Web.Services;
+﻿using Grand.Framework.Components;
 using Grand.Services.Forums;
-using Grand.Framework.Components;
+using Grand.Web.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Grand.Web.ViewComponents
 {

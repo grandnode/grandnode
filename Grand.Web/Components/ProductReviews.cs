@@ -1,9 +1,9 @@
-﻿using Grand.Web.Services;
-using Microsoft.AspNetCore.Mvc;
-using Grand.Core.Domain.Catalog;
-using Grand.Services.Catalog;
+﻿using Grand.Core.Domain.Catalog;
 using Grand.Framework.Components;
+using Grand.Services.Catalog;
 using Grand.Web.Models.Catalog;
+using Grand.Web.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Grand.Web.Components
 {

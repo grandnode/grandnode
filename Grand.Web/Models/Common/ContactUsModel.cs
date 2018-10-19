@@ -1,9 +1,9 @@
 ﻿using FluentValidation.Attributes;
+using Grand.Core.Domain.Catalog;
+using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
 using Grand.Web.Validators.Common;
-using Grand.Framework.Mvc.ModelBinding;
 using System.Collections.Generic;
-using Grand.Core.Domain.Catalog;
 
 namespace Grand.Web.Models.Common
 {

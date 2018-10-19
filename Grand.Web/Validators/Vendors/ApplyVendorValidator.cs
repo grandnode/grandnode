@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
-using Grand.Services.Localization;
+using Grand.Core.Domain.Vendors;
 using Grand.Framework.Validators;
+using Grand.Services.Directory;
+using Grand.Services.Localization;
 using Grand.Web.Models.Vendors;
 using Grand.Web.Validators.Common;
-using Grand.Core.Domain.Vendors;
-using Grand.Services.Directory;
 
 namespace Grand.Web.Validators.Vendors
 {

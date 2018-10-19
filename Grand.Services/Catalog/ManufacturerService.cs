@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Data;
@@ -8,9 +5,14 @@ using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Security;
 using Grand.Services.Customers;
 using Grand.Services.Events;
+using Grand.Services.Security;
+using Grand.Services.Stores;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using MongoDB.Bson;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Grand.Services.Catalog
 {
@@ -72,6 +74,9 @@ namespace Grand.Services.Catalog
         private readonly IStoreContext _storeContext;
         private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
+        private readonly IStoreMappingService _storeMappingService;
+        private readonly IAclService _aclService;
+
         private readonly CatalogSettings _catalogSettings;
 
         #endregion
@@ -89,6 +94,8 @@ namespace Grand.Services.Catalog
         /// <param name="storeContext">Store context</param>
         /// <param name="catalogSettings">Catalog settings</param>
         /// <param name="eventPublisher">Event published</param>
+        /// <param name="storeMappingService">Store mapping service</param>
+        /// <param name="aclService">Acl service </param>
         public ManufacturerService(ICacheManager cacheManager,
             IRepository<Manufacturer> manufacturerRepository,
             IRepository<Product> productRepository,
@@ -96,7 +103,9 @@ namespace Grand.Services.Catalog
             IWorkContext workContext,
             IStoreContext storeContext,
             CatalogSettings catalogSettings,
-            IEventPublisher eventPublisher)
+            IEventPublisher eventPublisher,
+            IStoreMappingService storeMappingService,
+            IAclService aclService)
         {
             this._cacheManager = cacheManager;
             this._manufacturerRepository = manufacturerRepository;
@@ -106,6 +115,8 @@ namespace Grand.Services.Catalog
             this._storeContext = storeContext;
             this._catalogSettings = catalogSettings;
             this._eventPublisher = eventPublisher;
+            this._storeMappingService = storeMappingService;
+            this._aclService = aclService;
         }
         #endregion
 
@@ -176,6 +187,30 @@ namespace Grand.Services.Catalog
 
             return new PagedList<Manufacturer>(query, pageIndex, pageSize);
         }
+
+
+        /// <summary>
+        /// Gets all manufacturers displayed on the home page
+        /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Manufacturers</returns>
+        public virtual IList<Manufacturer> GetAllManufacturerFeaturedProductsOnHomePage(bool showHidden = false)
+        {
+            var builder = Builders<Manufacturer>.Filter;
+            var filter = builder.Eq(x => x.Published, true);
+            filter = filter & builder.Eq(x => x.FeaturedProductsOnHomaPage, true);
+            var query = _manufacturerRepository.Collection.Find(filter).SortBy(x => x.DisplayOrder);
+
+            var manufacturers = query.ToList();
+            if (!showHidden)
+            {
+                manufacturers = manufacturers
+                    .Where(c => _aclService.Authorize(c) && _storeMappingService.Authorize(c))
+                    .ToList();
+            }
+            return manufacturers;
+        }
+
 
         /// <summary>
         /// Gets a manufacturer

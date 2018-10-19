@@ -1,8 +1,8 @@
-﻿using System;
-using Grand.Services.Logging;
+﻿using Grand.Core.Domain.Tasks;
 using Grand.Core.Infrastructure;
-using Grand.Core.Domain.Tasks;
+using Grand.Services.Logging;
 using Grand.Services.Messages;
+using System;
 
 namespace Grand.Services.Tasks
 {

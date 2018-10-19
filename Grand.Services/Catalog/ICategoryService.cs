@@ -1,6 +1,6 @@
-using System.Collections.Generic;
 using Grand.Core;
 using Grand.Core.Domain.Catalog;
+using System.Collections.Generic;
 
 namespace Grand.Services.Catalog
 {
@@ -42,6 +42,12 @@ namespace Grand.Services.Catalog
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Categories</returns>
         IList<Category> GetAllCategoriesDisplayedOnHomePage(bool showHidden = false);
+
+        /// <summary>
+        /// Gets all categories displayed on the home page - featured products
+        /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        IList<Category> GetAllCategoriesFeaturedProductsOnHomePage(bool showHidden = false);
 
         /// <summary>
         /// Gets all categories displayed search box

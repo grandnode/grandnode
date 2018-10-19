@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
 using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
@@ -16,6 +11,7 @@ using Grand.Core.Domain.Payments;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Tax;
 using Grand.Core.Domain.Vendors;
+using Grand.Core.Infrastructure;
 using Grand.Services.Affiliates;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
@@ -23,6 +19,7 @@ using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Discounts;
 using Grand.Services.Events;
+using Grand.Services.Events.Web;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Messages;
@@ -31,8 +28,11 @@ using Grand.Services.Security;
 using Grand.Services.Shipping;
 using Grand.Services.Tax;
 using Grand.Services.Vendors;
-using Grand.Core.Infrastructure;
-using Grand.Services.Events.Web;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Text;
 
 namespace Grand.Services.Orders
 {
@@ -210,31 +210,26 @@ namespace Grand.Services.Orders
             if (affiliate != null && affiliate.Active && !affiliate.Deleted)
                 details.AffiliateId = affiliate.Id;
 
-            //customer currency
             if (!processPaymentRequest.IsRecurringPayment)
             {
+                //customer currency
                 var currencyTmp = _currencyService.GetCurrencyById(details.Customer.GetAttribute<string>(SystemCustomerAttributeNames.CurrencyId, processPaymentRequest.StoreId));
                 var customerCurrency = (currencyTmp != null && currencyTmp.Published) ? currencyTmp : _workContext.WorkingCurrency;
                 details.CustomerCurrencyCode = customerCurrency.CurrencyCode;
                 var primaryStoreCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
                 details.CustomerCurrencyRate = customerCurrency.Rate / primaryStoreCurrency.Rate;
+
+                //customer language
+                details.CustomerLanguage = _languageService.GetLanguageById(details.Customer.GetAttribute<string>(
+                   SystemCustomerAttributeNames.LanguageId, processPaymentRequest.StoreId));
             }
             else
             {
                 details.CustomerCurrencyCode = details.InitialOrder.CustomerCurrencyCode;
                 details.CustomerCurrencyRate = details.InitialOrder.CurrencyRate;
-            }
-
-            //customer language
-            if (!processPaymentRequest.IsRecurringPayment)
-            {
-                details.CustomerLanguage = _languageService.GetLanguageById(details.Customer.GetAttribute<string>(
-                    SystemCustomerAttributeNames.LanguageId, processPaymentRequest.StoreId));
-            }
-            else
-            {
                 details.CustomerLanguage = _languageService.GetLanguageById(details.InitialOrder.CustomerLanguageId);
             }
+            
             if (details.CustomerLanguage == null || !details.CustomerLanguage.Published)
                 details.CustomerLanguage = _workContext.WorkingLanguage;
 
@@ -965,10 +960,7 @@ namespace Grand.Services.Orders
                 {
                     SetOrderStatus(order, OrderStatus.Processing, false, false);
                 }
-            }
 
-            if (order.OrderStatus == OrderStatus.Pending)
-            {
                 if (order.ShippingStatus == ShippingStatus.PartiallyShipped ||
                     order.ShippingStatus == ShippingStatus.Shipped ||
                     order.ShippingStatus == ShippingStatus.Delivered)
@@ -2384,7 +2376,7 @@ namespace Grand.Services.Orders
             {
                 if (result == null)
                     result = new CapturePaymentResult();
-                result.AddError(string.Format("Error: {0}. Full exception: {1}", exc.Message, exc.ToString()));
+                result.AddError(string.Format("Error: {0}. Full exception: {1}", exc.Message, exc));
             }
 
 

@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
-using Grand.Services.Localization;
 using Grand.Framework.Validators;
+using Grand.Services.Localization;
 using Grand.Web.Models.PrivateMessages;
 
 namespace Grand.Web.Validators.PrivateMessages

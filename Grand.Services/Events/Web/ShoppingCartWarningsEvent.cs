@@ -7,8 +7,8 @@ namespace Grand.Services.Events.Web
     {
         private readonly IList<T> _warnings;
         private readonly IList<U> _shoppingCartItems;
-        private string _checkoutAttributesXml;
-        private bool _validateCheckoutAttributes;
+        private readonly string _checkoutAttributesXml;
+        private readonly bool _validateCheckoutAttributes;
 
         public ShoppingCartWarningsEvent(IList<T> warnings, IList<U> shoppingCartItems, string checkoutAttributesXml, bool validateCheckoutAttributes)
         {

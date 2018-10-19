@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Grand.Core;
 using Grand.Core.Domain.News;
-using Grand.Core;
 using Grand.Framework.Components;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Grand.Web.ViewComponents
 {

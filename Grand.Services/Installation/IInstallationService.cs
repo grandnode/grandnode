@@ -1,4 +1,3 @@
-
 namespace Grand.Services.Installation
 {
     public partial interface IInstallationService

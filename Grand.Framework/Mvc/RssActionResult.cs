@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Grand.Framework.Mvc.Rss;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
-using Microsoft.AspNetCore.Mvc;
-using Grand.Framework.Mvc.Rss;
 
 namespace Grand.Framework.Mvc
 {

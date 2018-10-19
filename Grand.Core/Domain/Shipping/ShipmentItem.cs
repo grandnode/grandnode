@@ -1,5 +1,3 @@
-
-
 namespace Grand.Core.Domain.Shipping
 {
     /// <summary>

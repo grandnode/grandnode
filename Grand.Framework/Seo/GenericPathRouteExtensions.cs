@@ -1,6 +1,6 @@
-﻿using System;
-using Microsoft.AspNetCore.Routing;
+﻿using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace Grand.Framework.Seo
 {

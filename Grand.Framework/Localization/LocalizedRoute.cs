@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Routing;
-using Grand.Core.Data;
+﻿using Grand.Core.Data;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Infrastructure;
+using Microsoft.AspNetCore.Routing;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Framework.Localization
 {
@@ -17,7 +17,7 @@ namespace Grand.Framework.Localization
 
         private readonly IRouter _target;
         private bool? _seoFriendlyUrlsForLanguagesEnabled;
-
+        private bool? _seoFriendlyUrlsForPathEnabled;
         #endregion
 
         #region Ctor
@@ -108,7 +108,20 @@ namespace Grand.Framework.Localization
                 return _seoFriendlyUrlsForLanguagesEnabled.Value;
             }
         }
-        
+
+        /// <summary>
+        /// Gets value of _seoFriendlyUrlsForPathEnabled settings
+        /// </summary>
+        protected bool SeoFriendlyUrlsForPathEnabled
+        {
+            get
+            {
+                if (!_seoFriendlyUrlsForPathEnabled.HasValue)
+                    _seoFriendlyUrlsForPathEnabled = EngineContext.Current.Resolve<LocalizationSettings>().SeoFriendlyUrlsForPathEnabled;
+
+                return _seoFriendlyUrlsForPathEnabled.Value;
+            }
+        }
         #endregion
     }
 }

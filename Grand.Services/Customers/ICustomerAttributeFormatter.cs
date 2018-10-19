@@ -1,5 +1,4 @@
-﻿
-namespace Grand.Services.Customers
+﻿namespace Grand.Services.Customers
 {
     public partial interface ICustomerAttributeFormatter
     {

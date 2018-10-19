@@ -1,18 +1,18 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Grand.Core;
 using Grand.Core.Data;
 using Grand.Core.Domain;
+using Grand.Core.Domain.AdminSearch;
+using Grand.Core.Domain.Affiliates;
 using Grand.Core.Domain.Blogs;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Cms;
 using Grand.Core.Domain.Common;
+using Grand.Core.Domain.Configuration;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Discounts;
 using Grand.Core.Domain.Forums;
+using Grand.Core.Domain.Knowledgebase;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Logging;
 using Grand.Core.Domain.Media;
@@ -21,6 +21,7 @@ using Grand.Core.Domain.News;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Payments;
 using Grand.Core.Domain.Polls;
+using Grand.Core.Domain.PushNotifications;
 using Grand.Core.Domain.Security;
 using Grand.Core.Domain.Seo;
 using Grand.Core.Domain.Shipping;
@@ -30,6 +31,7 @@ using Grand.Core.Domain.Tax;
 using Grand.Core.Domain.Topics;
 using Grand.Core.Domain.Vendors;
 using Grand.Core.Infrastructure;
+using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Configuration;
 using Grand.Services.Customers;
@@ -37,20 +39,12 @@ using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Seo;
-using Grand.Services.Catalog;
-using MongoDB.Bson;
-using MongoDB.Driver;
-using Grand.Core.Domain.Affiliates;
-using Grand.Core.Domain.Configuration;
-using Grand.Data;
-using Grand.Services.Tasks;
-using Grand.Services.Security;
-using Grand.Core.Caching;
-using Grand.Services.Events;
 using Microsoft.AspNetCore.Hosting;
-using Grand.Core.Domain.Knowledgebase;
-using Grand.Core.Domain.PushNotifications;
-using Grand.Core.Domain.AdminSearch;
+using MongoDB.Driver;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace Grand.Services.Installation
 {
@@ -5008,7 +5002,7 @@ namespace Grand.Services.Installation
                 CartThumbPictureSize = 80,
                 MiniCartThumbPictureSize = 100,
                 AddToCartThumbPictureSize = 200,
-                AutoCompleteSearchThumbPictureSize = 20,
+                AutoCompleteSearchThumbPictureSize = 50,
                 ImageSquarePictureSize = 32,
                 MaximumImageSize = 1980,
                 DefaultPictureZoomEnabled = true,
@@ -5118,8 +5112,8 @@ namespace Grand.Services.Installation
                 ShowCategoryProductNumber = false,
                 ShowCategoryProductNumberIncludingSubcategories = false,
                 CategoryBreadcrumbEnabled = true,
-                ShowShareButton = true,
-                PageShareCode = "<!-- AddThis Button BEGIN --><div class=\"addthis_toolbox addthis_default_style \"><a class=\"addthis_button_preferred_1\"></a><a class=\"addthis_button_preferred_2\"></a><a class=\"addthis_button_preferred_3\"></a><a class=\"addthis_button_preferred_4\"></a><a class=\"addthis_button_compact\"></a><a class=\"addthis_counter addthis_bubble_style\"></a></div><script src=\"http://s7.addthis.com/js/250/addthis_widget.js#pubid=grandnode\"></script><!-- AddThis Button END -->",
+                ShowShareButton = false,
+                PageShareCode = "<!-- AddThis Button BEGIN --><div class=\"addthis_inline_share_toolbox\"></div><script type=\"text/javascript\" src=\"//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5bbf4b026e74abf6\"></script><!-- AddThis Button END -->",
                 ProductReviewsMustBeApproved = false,
                 DefaultProductRatingValue = 5,
                 AllowAnonymousUsersToReviewProduct = false,
@@ -5143,7 +5137,7 @@ namespace Grand.Services.Installation
                 ProductSearchAutoCompleteEnabled = true,
                 ProductSearchAutoCompleteNumberOfProducts = 10,
                 ProductSearchTermMinimumLength = 3,
-                ShowProductImagesInSearchAutoComplete = false,
+                ShowProductImagesInSearchAutoComplete = true,
                 ShowBestsellersOnHomepage = false,
                 NumberOfBestsellersOnHomepage = 4,
                 SearchPageProductsPerPage = 6,
@@ -11093,8 +11087,9 @@ namespace Grand.Services.Installation
             _checkoutAttributeRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<CheckoutAttribute>((Builders<CheckoutAttribute>.IndexKeys.Ascending(x => x.DisplayOrder)), new CreateIndexOptions() { Name = "DisplayOrder" }));
 
             //category
-            _categoryRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<Category>((Builders<Category>.IndexKeys.Ascending(x => x.DisplayOrder).Ascending(x => x.ShowOnHomePage)), new CreateIndexOptions() { Name = "DisplayOrder_1", Unique = false }));
-            _categoryRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<Category>((Builders<Category>.IndexKeys.Ascending(x => x.ParentCategoryId).Ascending(x => x.DisplayOrder)), new CreateIndexOptions() { Name = "ParentCategoryId_1_DisplayOrder_1", Unique = false }));
+            _categoryRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<Category>((Builders<Category>.IndexKeys.Ascending(x => x.ShowOnHomePage).Ascending(x => x.Published).Ascending(x => x.DisplayOrder)), new CreateIndexOptions() { Name = "ShowOnHomePage_DisplayOrder_1", Unique = false }));
+            _categoryRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<Category>((Builders<Category>.IndexKeys.Ascending(x => x.ParentCategoryId).Ascending(x => x.Published).Ascending(x => x.DisplayOrder)), new CreateIndexOptions() { Name = "ParentCategoryId_1_DisplayOrder_1", Unique = false }));
+            _categoryRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<Category>((Builders<Category>.IndexKeys.Ascending(x => x.FeaturedProductsOnHomaPage).Ascending(x => x.Published).Ascending(x => x.DisplayOrder)), new CreateIndexOptions() { Name = "FeaturedProductsOnHomaPage_DisplayOrder_1", Unique = false }));
 
             //manufacturer
             _manufacturerRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<Manufacturer>((Builders<Manufacturer>.IndexKeys.Ascending(x => x.DisplayOrder)), new CreateIndexOptions() { Name = "DisplayOrder_1", Unique = false }));

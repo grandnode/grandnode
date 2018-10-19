@@ -1,6 +1,6 @@
-﻿using System.Linq;
+﻿using Grand.Core;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
-using Grand.Core;
+using System.Linq;
 
 namespace Grand.Framework.Mvc.ModelBinding
 {

@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Routing;
-using Grand.Framework.Localization;
+﻿using Grand.Framework.Localization;
 using Grand.Framework.Mvc.Routing;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Routing;
 
 namespace Grand.Web.Infrastructure
 {
@@ -39,6 +39,26 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("ShoppingCart",
                             "cart/",
                             new { controller = "ShoppingCart", action = "Cart" });
+
+            routeBuilder.MapLocalizedRoute("ApplyDiscountCoupon",
+                            "applydiscountcoupon/",
+                            new { controller = "ShoppingCart", action = "ApplyDiscountCoupon" });
+
+            routeBuilder.MapLocalizedRoute("RemoveDiscountCoupon",
+                            "removediscountcoupon/",
+                            new { controller = "ShoppingCart", action = "RemoveDiscountCoupon" });
+
+            routeBuilder.MapLocalizedRoute("ApplyGiftCard",
+                            "applygiftcard/",
+                            new { controller = "ShoppingCart", action = "ApplyGiftCard" });
+
+            routeBuilder.MapLocalizedRoute("RemoveGiftCardCode",
+                "removegiftcardcode/",
+                new { controller = "ShoppingCart", action = "RemoveGiftCardCode" });
+
+            routeBuilder.MapLocalizedRoute("UpdateCart",
+                "updatecart/",
+                new { controller = "ShoppingCart", action = "UpdateCart" });
 
             //get state list by country ID  (AJAX link)
             routeBuilder.MapRoute("DeleteCartItem",
@@ -200,7 +220,7 @@ namespace Grand.Web.Infrastructure
 
             //product ask question on product page
             routeBuilder.MapLocalizedRoute("AskQuestionOnProduct",
-                            "askquestiononproduct/{productId}",
+                            "askquestiononproduct",
                             new { controller = "Product", action = "AskQuestionOnProduct" });
 
             //reviews

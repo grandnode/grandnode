@@ -1,6 +1,6 @@
-using System.Collections.Generic;
 using Grand.Core;
 using Grand.Core.Domain.News;
+using System.Collections.Generic;
 
 namespace Grand.Services.News
 {

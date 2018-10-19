@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Grand.Core.Configuration;
 using Newtonsoft.Json;
-using Grand.Core.Configuration;
 using StackExchange.Redis;
+using System;
 
 namespace Grand.Core.Caching
 {

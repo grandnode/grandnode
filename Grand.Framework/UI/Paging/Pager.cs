@@ -1,16 +1,15 @@
+using Grand.Core;
+using Grand.Core.Infrastructure;
+using Grand.Services.Localization;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Routing;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
-using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Routing;
-using Grand.Core;
-using Grand.Core.Infrastructure;
-using Grand.Services.Localization;
-using Grand.Framework.Extensions;
 
 namespace Grand.Framework.UI.Paging
 {

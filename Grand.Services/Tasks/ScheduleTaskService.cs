@@ -1,12 +1,9 @@
 using Grand.Core.Data;
+using Grand.Core.Domain.Tasks;
+using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using MongoDB.Driver.Linq;
-using Grand.Core.Domain.Tasks;
 
 namespace Grand.Services.Tasks
 {

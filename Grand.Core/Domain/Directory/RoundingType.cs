@@ -1,5 +1,4 @@
-﻿
-namespace Grand.Core.Domain.Directory
+﻿namespace Grand.Core.Domain.Directory
 {
     public enum RoundingType
     {

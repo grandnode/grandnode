@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Data;
@@ -9,6 +6,9 @@ using Grand.Core.Plugins;
 using Grand.Services.Events;
 using Grand.Services.Stores;
 using MongoDB.Driver.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Grand.Services.Directory
 {

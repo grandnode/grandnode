@@ -1,11 +1,11 @@
-﻿using System;
-using FluentValidation;
+﻿using FluentValidation;
 using Grand.Core;
 using Grand.Core.Domain.Customers;
+using Grand.Framework.Validators;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
-using Grand.Framework.Validators;
 using Grand.Web.Models.Customer;
+using System;
 
 namespace Grand.Web.Validators.Customer
 {

@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using Grand.Framework.Mvc;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Framework.Mvc.Models;
+using System.Collections.Generic;
 
 namespace Grand.Web.Models.Catalog
 {

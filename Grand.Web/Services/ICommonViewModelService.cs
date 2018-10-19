@@ -1,9 +1,9 @@
 ﻿using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Vendors;
 using Grand.Web.Models.Common;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace Grand.Web.Services
 {

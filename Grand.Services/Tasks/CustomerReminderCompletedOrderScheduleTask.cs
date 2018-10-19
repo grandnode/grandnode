@@ -1,5 +1,5 @@
-﻿using Grand.Services.Customers;
-using Grand.Core.Domain.Tasks;
+﻿using Grand.Core.Domain.Tasks;
+using Grand.Services.Customers;
 
 namespace Grand.Services.Tasks
 {

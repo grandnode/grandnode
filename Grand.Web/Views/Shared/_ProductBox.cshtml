@@ -87,8 +87,8 @@
                             }
 
                         }
-                        <button type="button" value="Quick View" title="Quick View" class="btn btn-secondary" onclick="AjaxCart.quickview_product('@quickviewurl')">
-                            <span class="sr-only">Quick View</span>
+                        <button type="button" value="@T("Products.QuickView")" title="@T("Products.QuickView")" class="btn btn-secondary" onclick="AjaxCart.quickview_product('@quickviewurl')">
+                            <span class="sr-only">@T("Products.QuickView")</span>
                             <span class="fas fa-search"></span>
                         </button>
                         @if (!Model.ProductPrice.DisableAddToCompareListButton && Model.ProductType == ProductType.SimpleProduct)

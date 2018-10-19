@@ -1,8 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Core.Configuration;
 using Grand.Core.Data;
 using Grand.Core.Domain.Media;
@@ -10,6 +6,10 @@ using Grand.Services.Configuration;
 using Grand.Services.Events;
 using Grand.Services.Logging;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
+using System;
+using System.Diagnostics;
 
 namespace Grand.Services.Media
 {

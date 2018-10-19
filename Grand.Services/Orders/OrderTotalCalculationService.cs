@@ -1,22 +1,22 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
+using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Discounts;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Tax;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
+using Grand.Services.Directory;
 using Grand.Services.Discounts;
 using Grand.Services.Payments;
 using Grand.Services.Shipping;
 using Grand.Services.Tax;
-using Grand.Services.Directory;
-using Grand.Core.Domain.Directory;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Grand.Services.Orders
 {

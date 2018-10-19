@@ -1,16 +1,16 @@
-﻿using System;
+﻿using Grand.Core;
+using Grand.Core.Caching;
+using Grand.Core.Domain.Catalog;
+using Grand.Framework.Mvc.Models;
+using Grand.Framework.UI.Paging;
+using Grand.Services.Catalog;
+using Grand.Services.Localization;
+using Grand.Web.Infrastructure.Cache;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Grand.Core;
-using Grand.Core.Caching;
-using Grand.Core.Domain.Catalog;
-using Grand.Services.Catalog;
-using Grand.Services.Localization;
-using Grand.Framework.Mvc.Models;
-using Grand.Framework.UI.Paging;
-using Grand.Web.Infrastructure.Cache;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Grand.Web.Models.Catalog
 {

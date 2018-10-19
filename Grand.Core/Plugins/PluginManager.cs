@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Grand.Core.ComponentModel;
+using Grand.Core.Configuration;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Grand.Core.ComponentModel;
-using Grand.Core.Configuration;
 using System.Runtime.Loader;
+using System.Threading;
 
 namespace Grand.Core.Plugins
 {

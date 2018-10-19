@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Grand.Core.Domain.Customers;
-using Grand.Services.Localization;
 using Grand.Framework.Validators;
+using Grand.Services.Localization;
 using Grand.Web.Models.Customer;
 
 namespace Grand.Web.Validators.Customer

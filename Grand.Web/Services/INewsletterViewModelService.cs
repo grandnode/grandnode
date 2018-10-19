@@ -1,7 +1,6 @@
 ﻿using Grand.Core.Domain.Messages;
 using Grand.Web.Models.Newsletter;
 
-
 namespace Grand.Web.Services
 {
     public partial interface INewsletterViewModelService

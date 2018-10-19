@@ -42,9 +42,9 @@
                                 <div class="quantity"><span>@T("ShoppingCart.Mini.Quantity"):</span> <strong>@item.Quantity</strong></div>
                             </div>
                             <div class="ml-auto text-nowrap">
-                                <a class="deletecartitem" title="Remove" href="#" rel="nofollow" data-href="@Url.RouteUrl("DeleteCartItem", new { id = item.Id })">
+                                <button class="btn btn-link text-danger deletecartitem" title="Remove" data-href="@Url.RouteUrl("DeleteCartItem", new { id = item.Id })">
                                     <i class="fas fa-times-circle"></i>
-                                </a>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -58,13 +58,14 @@
                                 type: "POST",
                                 url: href,
                                 success: function (data) {
-                                    $(AjaxCart.flyoutcartselector).replaceWith(data.html);
+                                    $(AjaxCart.flyoutcartselector).replaceWith(data.flyoutshoppingcart);
                                     $(AjaxCart.topcartselector).html(data.totalproducts);
                                 },
                                 error: function (xhr, ajaxOptions, thrownError) {
                                     alert('Failed to retrieve Flyout Shopping Cart.');
                                 }
                             });
+                            return false;
                         });
                     });
                 </script>

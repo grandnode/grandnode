@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Directory;
@@ -14,6 +7,7 @@ using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Tax;
 using Grand.Core.Html;
+using Grand.Core.Infrastructure;
 using Grand.Services.Catalog;
 using Grand.Services.Configuration;
 using Grand.Services.Directory;
@@ -23,7 +17,13 @@ using Grand.Services.Media;
 using Grand.Services.Orders;
 using Grand.Services.Payments;
 using Grand.Services.Stores;
-using Grand.Core.Infrastructure;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
 
 namespace Grand.Services.Common
 {

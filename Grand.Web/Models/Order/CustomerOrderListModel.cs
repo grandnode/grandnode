@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Grand.Core.Domain.Orders;
+﻿using Grand.Core.Domain.Orders;
 using Grand.Framework.Mvc.Models;
+using System;
+using System.Collections.Generic;
 
 namespace Grand.Web.Models.Order
 {

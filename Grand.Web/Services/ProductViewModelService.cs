@@ -8,9 +8,12 @@ using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Seo;
 using Grand.Core.Domain.Vendors;
 using Grand.Core.Infrastructure;
+using Grand.Framework.Security.Captcha;
 using Grand.Services.Catalog;
+using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
+using Grand.Services.Discounts;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Media;
@@ -22,20 +25,17 @@ using Grand.Services.Stores;
 using Grand.Services.Tax;
 using Grand.Services.Vendors;
 using Grand.Web.Extensions;
-using Grand.Framework.Security.Captcha;
 using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Media;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Net;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Http;
-using Grand.Services.Discounts;
-using Grand.Services.Common;
 
 namespace Grand.Web.Services
 {
@@ -156,8 +156,9 @@ namespace Grand.Web.Services
                 { "Media.Product.ImageLinkTitleFormat", _localizationService.GetResource("Media.Product.ImageLinkTitleFormat", currentLanguageId.Id) },
                 { "Media.Product.ImageAlternateTextFormat", _localizationService.GetResource("Media.Product.ImageAlternateTextFormat", currentLanguageId.Id) }
             };
-
+            
             var models = new List<ProductOverviewModel>();
+
             foreach (var product in products)
             {
                 var model = new ProductOverviewModel
@@ -624,7 +625,13 @@ namespace Grand.Web.Services
                     model.DeliveryColorSquaresRgb = deliveryDate.ColorSquaresRgb;
                 }
             }
+            //additional shipping charge
+            model.AdditionalShippingCharge = product.AdditionalShippingCharge;
+            if (model.AdditionalShippingCharge > 0)
+                model.AdditionalShippingChargeStr = _priceFormatter.FormatPrice(_taxService.GetShippingPrice(model.AdditionalShippingCharge, _workContext.CurrentCustomer));
 
+            //is product returnable
+            model.NotReturnable = product.NotReturnable;
             //email a friend
             model.EmailAFriendEnabled = _catalogSettings.EmailAFriendEnabled;
             //ask question product
@@ -800,7 +807,8 @@ namespace Grand.Web.Services
                 {
                     var pictureModel = new PictureModel
                     {
-                        ImageUrl = _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductThumbPictureSizeOnProductDetailsPage),
+                        ThumbImageUrl = _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductThumbPictureSizeOnProductDetailsPage),
+                        ImageUrl = _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductDetailsPictureSize),
                         FullSizeImageUrl = _pictureService.GetPictureUrl(picture.PictureId),
                         Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), model.Name),
                         AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), model.Name),

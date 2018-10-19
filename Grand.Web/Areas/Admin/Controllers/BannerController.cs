@@ -1,21 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Grand.Web.Areas.Admin.Extensions;
-using Grand.Web.Areas.Admin.Models.Messages;
+﻿using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Messages;
+using Grand.Framework.Controllers;
+using Grand.Framework.Kendoui;
+using Grand.Framework.Mvc.Filters;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
 using Grand.Services.Security;
-using Grand.Framework.Controllers;
-using Grand.Framework.Kendoui;
-using Grand.Core.Domain.Localization;
+using Grand.Web.Areas.Admin.Extensions;
+using Grand.Web.Areas.Admin.Models.Messages;
 using Microsoft.AspNetCore.Mvc;
-using Grand.Framework.Mvc.Filters;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
-	public partial class BannerController : BaseAdminController
+    public partial class BannerController : BaseAdminController
 	{
         private readonly IBannerService _bannerService;
         private readonly IPermissionService _permissionService;

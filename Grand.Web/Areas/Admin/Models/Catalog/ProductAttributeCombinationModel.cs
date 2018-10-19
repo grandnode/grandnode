@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using Grand.Core.Domain.Catalog;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Domain.Catalog;
 using Grand.Framework.Mvc.ModelBinding;
+using Grand.Framework.Mvc.Models;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Areas.Admin.Models.Catalog
 {

@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using Grand.Core.Domain.Catalog;
+﻿using Grand.Core;
 using Grand.Core.Data;
+using Grand.Core.Domain.Catalog;
 using Grand.Services.Events;
 using MongoDB.Driver;
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using Grand.Core;
 
 namespace Grand.Services.Catalog
 {

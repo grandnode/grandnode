@@ -13,7 +13,7 @@ namespace Grand.Core
     /// <summary>
     /// Represents a common helper
     /// </summary>
-    public partial class CommonHelper
+    public static class CommonHelper
     {
         /// <summary>
         /// Ensures the subscriber email or throw.

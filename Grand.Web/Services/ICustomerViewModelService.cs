@@ -1,8 +1,8 @@
 ﻿using Grand.Core.Domain.Customers;
 using Grand.Web.Models.Customer;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
 
 namespace Grand.Web.Services
 {

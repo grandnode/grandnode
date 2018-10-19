@@ -1,15 +1,13 @@
 ﻿using FluentValidation.Attributes;
+using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
 using Grand.Web.Validators.Catalog;
-using Grand.Framework.Mvc.ModelBinding;
 
 namespace Grand.Web.Models.Catalog
 {
     [Validator(typeof(ProductAskQuestionSimpleValidator))]
     public partial class ProductAskQuestionSimpleModel: BaseGrandEntityModel
     {
-        public string ProductId { get; set; }
-
         [GrandResourceDisplayName("Products.AskQuestion.Email")]
         public string AskQuestionEmail { get; set; }
 

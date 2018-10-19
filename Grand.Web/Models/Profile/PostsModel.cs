@@ -1,5 +1,4 @@
-﻿
-namespace Grand.Web.Models.Profile
+﻿namespace Grand.Web.Models.Profile
 {
     public partial class PostsModel
     {

@@ -1,15 +1,15 @@
-﻿using Grand.Framework.Mvc.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using FluentValidation.Attributes;
+using Grand.Framework.Localization;
 using Grand.Framework.Mvc.ModelBinding;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using FluentValidation.Attributes;
+using Grand.Framework.Mvc.Models;
 using Grand.Web.Areas.Admin.Models.Customers;
 using Grand.Web.Areas.Admin.Models.Discounts;
 using Grand.Web.Areas.Admin.Models.Stores;
 using Grand.Web.Areas.Admin.Validators.Catalog;
-using Grand.Framework.Localization;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Areas.Admin.Models.Catalog
 {
@@ -73,6 +73,9 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
 
         [GrandResourceDisplayName("Admin.Catalog.Manufacturers.Fields.ShowOnHomePage")]
         public bool ShowOnHomePage { get; set; }
+
+        [GrandResourceDisplayName("Admin.Catalog.Manufacturers.Fields.FeaturedProductsOnHomaPage")]
+        public bool FeaturedProductsOnHomaPage { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Manufacturers.Fields.IncludeInTopMenu")]
         public bool IncludeInTopMenu { get; set; }

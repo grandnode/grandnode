@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using Grand.Web.Models.Media;
-using Grand.Core.Domain.Catalog;
-using Grand.Framework.Mvc.Models;
+﻿using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Tax;
+using Grand.Framework.Mvc.Models;
+using Grand.Web.Models.Media;
+using System;
+using System.Collections.Generic;
 
 namespace Grand.Web.Models.Catalog
 {

@@ -1,6 +1,6 @@
-using System.Collections.Generic;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Security;
+using System.Collections.Generic;
 
 namespace Grand.Services.Security
 {

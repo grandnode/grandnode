@@ -55,19 +55,26 @@ $('#ModalAddToCart .modal-dialog').on('click tap', function (e) {
     if ($(e.target).hasClass('modal-dialog')) {
         $('.modal').modal('hide');
     }
-})
+});
+
+$(document).ready(function () {
+    $('#ModalQuickView').on('hide.bs.modal', function (e) {
+        $('#ModalQuickView').empty();
+    });
+});
 
 function displayPopupAddToCart(html) {
     $('#ModalAddToCart').html(html).modal('show');
     $("body.modal-open").removeAttr("style");
     $(".navUp").removeAttr("style");
 }
+
 function displayPopupQuickView(html) {
     $('#ModalQuickView').html(html).modal('show');
     $("body.modal-open").removeAttr("style");
     $(".navUp").removeAttr("style");
-    $('.sp-wrap').smoothproducts();
 }
+
 
 var barNotificationTimeout;
 function displayBarNotification(message, messagetype, timeout) {
@@ -306,30 +313,7 @@ $(document).ready(function () {
     $("#mobile-collapsing-menu .fa-times").click(function () {
         $(this).parent().removeClass("show");
     });
-
-    // mobile: currency, language, tax
-
-    if ($(".tax-list-mobile").length > 0) {
-    }
-    else {
-        $(".tax-button").hide();
-    }
-    if ($(".currency-list-mobile").length > 0) {
-    }
-    else {
-        $(".currency-button").hide();
-    }
-    if ($(".language-list-mobile").length > 0) {
-    }
-    else {
-        $(".language-button").hide();
-    }
-    if ($(".store-list-mobile").length > 0) {
-    }
-    else {
-        $(".store-button").hide();
-    }
-
+    
     $(".currency-button").click(function () {
         $(".currency-list-mobile ul").toggleClass("show");
         $(".language-list-mobile ul").removeClass("show");
@@ -493,6 +477,7 @@ function sendcontactusform(urladd) {
             AskQuestionFullName: $('#AskQuestionFullName').val(),
             AskQuestionPhone: $('#AskQuestionPhone').val(),
             AskQuestionMessage: $('#AskQuestionMessage').val(),
+            Id: $('#AskQuestionProductId').val(),
             'g-recaptcha-response': $('#g-recaptcha-response').val()
         };
         addAntiForgeryToken(contactData);
@@ -648,12 +633,20 @@ $(document).ready(function () {
     });
 
     $('.product-standard .review-scroll-button').on('click', function (e) {
-        e.preventDefault();
-        $('html, body').animate({
-            scrollTop: $($(this).attr('href')).offset().top - 120
-        }, 300, 'linear');
+        var el = $("#review-tab");
+        var elOffset = el.offset().top;
+        var elHeight = el.height();
+        var windowHeight = $(window).height();
+        var offset;
+        if (elHeight < windowHeight) {
+            offset = elOffset - ((windowHeight / 2) - (elHeight / 2));
+        }
+        else {
+            offset = elOffset;
+        }
+        $.smoothScroll({ speed: 300 }, offset);
         $("#review-tab").click();
+        return false;
     });
-    
 });
 

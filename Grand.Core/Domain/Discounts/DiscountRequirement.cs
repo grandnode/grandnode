@@ -1,5 +1,4 @@
-﻿
-namespace Grand.Core.Domain.Discounts
+﻿namespace Grand.Core.Domain.Discounts
 {
     /// <summary>
     /// Represents a discount requirement

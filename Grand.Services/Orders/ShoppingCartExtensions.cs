@@ -1,13 +1,11 @@
-using System.Collections.Generic;
-using System.Linq;
 using Grand.Core;
 using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
-using Grand.Services.Localization;
-using Grand.Services.Catalog;
-using Grand.Services.Customers;
 using Grand.Core.Infrastructure;
+using Grand.Services.Catalog;
+using Grand.Services.Localization;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Grand.Services.Orders
 {

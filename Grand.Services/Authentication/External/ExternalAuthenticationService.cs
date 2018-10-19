@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Grand.Core;
 using Grand.Core.Data;
 using Grand.Core.Domain.Customers;
@@ -15,6 +10,11 @@ using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Messages;
 using Grand.Services.Orders;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Grand.Services.Authentication.External
 {

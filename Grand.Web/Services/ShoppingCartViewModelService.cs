@@ -8,6 +8,7 @@ using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Tax;
+using Grand.Core.Http;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Customers;
@@ -25,13 +26,12 @@ using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Models.Common;
 using Grand.Web.Models.Media;
 using Grand.Web.Models.ShoppingCart;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Grand.Core.Http;
 
 namespace Grand.Web.Services
 {
@@ -440,9 +440,6 @@ namespace Grand.Web.Services
                     if (!string.IsNullOrEmpty(sci.Parameter))
                     {
                         cartItemModel.ReservationInfo += "<br>" + string.Format(_localizationService.GetResource("ShoppingCart.Reservation.Option"), sci.Parameter);
-                    }
-                    if (!string.IsNullOrEmpty(sci.Parameter))
-                    {
                         cartItemModel.Parameter = sci.Parameter;
                     }
                     if (!string.IsNullOrEmpty(sci.Duration))
@@ -460,6 +457,7 @@ namespace Grand.Web.Services
                 if (product.CallForPrice)
                 {
                     cartItemModel.UnitPrice = _localizationService.GetResource("Products.CallForPrice");
+                    cartItemModel.SubTotal = _localizationService.GetResource("Products.CallForPrice");
                 }
                 else
                 {
@@ -467,16 +465,9 @@ namespace Grand.Web.Services
                     decimal shoppingCartUnitPriceWithDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetUnitPrice(sci), out taxRate);
                     decimal shoppingCartUnitPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartUnitPriceWithDiscountBase, _workContext.WorkingCurrency);
                     cartItemModel.UnitPrice = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount);
-                }
-                //subtotal, discount
-                if (product.CallForPrice)
-                {
-                    cartItemModel.SubTotal = _localizationService.GetResource("Products.CallForPrice");
-                }
-                else
-                {
+               
                     //sub total
-                    decimal shoppingCartItemSubTotalWithDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetSubTotal(sci, true, out decimal shoppingCartItemDiscountBase, out List<AppliedDiscount> scDiscounts), out decimal taxRate);
+                    decimal shoppingCartItemSubTotalWithDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetSubTotal(sci, true, out decimal shoppingCartItemDiscountBase, out List<AppliedDiscount> scDiscounts), out taxRate);
                     decimal shoppingCartItemSubTotalWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartItemSubTotalWithDiscountBase, _workContext.WorkingCurrency);
                     cartItemModel.SubTotal = _priceFormatter.FormatPrice(shoppingCartItemSubTotalWithDiscount);
 

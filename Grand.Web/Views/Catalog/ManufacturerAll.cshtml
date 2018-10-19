@@ -10,19 +10,19 @@
     <h2 class="generalTitle">@T("Manufacturers.List")</h2>
     <div class="row flex-row d-flex">
         @foreach (var item in Model)
-    {
-        <div class="col-12 col-md-6 col-lg-4">
-            <div class="card">
-                <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })" title="@item.PictureModel.Title">
-                    <img class="img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
-                </a>
-                <h4 class="h6 p-3 mb-0 card-title">
+        {
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card">
                     <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })" title="@item.PictureModel.Title">
-                        @item.Name
+                        <img class="img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
                     </a>
-                </h4>
+                    <h4 class="h6 p-3 mb-0 card-title">
+                        <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                            @item.Name
+                        </a>
+                    </h4>
+                </div>
             </div>
-        </div>
-    }
+        }
     </div>
 </div>

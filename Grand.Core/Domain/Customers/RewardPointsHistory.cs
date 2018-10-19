@@ -1,5 +1,4 @@
 using System;
-using Grand.Core.Domain.Orders;
 
 namespace Grand.Core.Domain.Customers
 {

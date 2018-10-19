@@ -1,4 +1,3 @@
-
 namespace Grand.Core.Domain.Common
 {
     /// <summary>

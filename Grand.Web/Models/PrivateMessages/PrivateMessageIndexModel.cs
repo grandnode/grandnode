@@ -1,5 +1,4 @@
-﻿
-namespace Grand.Web.Models.PrivateMessages
+﻿namespace Grand.Web.Models.PrivateMessages
 {
     public partial class PrivateMessageIndexModel
     {

@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Grand.Core.Domain.Messages;
+using Grand.Services.Media;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using Grand.Core.Domain.Messages;
-using Grand.Services.Media;
 
 namespace Grand.Services.Messages
 {

@@ -1,6 +1,6 @@
-using System.Collections.Generic;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Localization;
+using System.Collections.Generic;
 
 namespace Grand.Core.Domain.Common
 {

@@ -1,11 +1,8 @@
-﻿using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Orders;
+﻿using Grand.Core.Domain.Orders;
 using Grand.Framework.Mvc.Models;
 using Grand.Web.Models.Common;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Grand.Web.Models.Order
 {

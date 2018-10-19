@@ -7,13 +7,11 @@
 }
 <script>
     $(document).ready(function () {
-
         $("#@Html.IdFor(model => model.adv)").click(toggleAdvancedSearch);
         toggleAdvancedSearch();
     });
 
     function toggleAdvancedSearch() {
-
         if ($('#@Html.IdFor(model => model.adv)').is(':checked')) {
             $('#advanced-search-block').show();
         }
@@ -24,7 +22,6 @@
 </script>
 
 <div class="col-12">
-
     <h2 class="generalTitle">@T("Search")</h2>
     <div class="search-input">
         <form asp-route="ProductSearch" method="get">

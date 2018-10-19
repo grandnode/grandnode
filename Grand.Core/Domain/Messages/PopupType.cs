@@ -1,5 +1,4 @@
-﻿
-namespace Grand.Core.Domain.Messages
+﻿namespace Grand.Core.Domain.Messages
 {
     public enum PopupType
     {

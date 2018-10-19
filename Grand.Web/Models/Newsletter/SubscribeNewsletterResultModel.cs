@@ -1,7 +1,4 @@
 ﻿using Grand.Framework.Mvc.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Grand.Web.Models.Newsletter
 {

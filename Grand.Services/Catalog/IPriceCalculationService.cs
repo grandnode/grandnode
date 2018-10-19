@@ -1,10 +1,9 @@
-using System;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Discounts;
 using Grand.Core.Domain.Orders;
-using System.Collections.Generic;
 using Grand.Services.Discounts;
+using System;
+using System.Collections.Generic;
 
 namespace Grand.Services.Catalog
 {

@@ -1,7 +1,7 @@
-﻿using System;
-using Grand.Services.Customers;
+﻿using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Tasks;
-using Grand.Core.Domain.Common;
+using Grand.Services.Customers;
+using System;
 
 namespace Grand.Services.Tasks
 {

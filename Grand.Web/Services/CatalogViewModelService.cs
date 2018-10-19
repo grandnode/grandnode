@@ -6,6 +6,8 @@ using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Forums;
 using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Vendors;
+using Grand.Framework.Events;
+using Grand.Services.Blogs;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Customers;
@@ -19,20 +21,18 @@ using Grand.Services.Stores;
 using Grand.Services.Topics;
 using Grand.Services.Vendors;
 using Grand.Web.Extensions;
-using Grand.Framework.Events;
 using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Media;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Grand.Services.Blogs;
 
 namespace Grand.Web.Services
 {
-    public partial class CatalogViewModelService: ICatalogViewModelService
+    public partial class CatalogViewModelService : ICatalogViewModelService
     {
         private readonly IWebHelper _webHelper;
         private readonly IProductViewModelService _productViewModelService;
@@ -393,7 +393,7 @@ namespace Grand.Web.Services
             else if (!String.IsNullOrEmpty(currentProductId))
             {
                 //product details page
-                var productCategories = _productService.GetProductById(currentProductId).ProductCategories; 
+                var productCategories = _productService.GetProductById(currentProductId).ProductCategories;
                 if (productCategories.Any())
                     activeCategoryId = productCategories.FirstOrDefault().CategoryId;
             }
@@ -486,7 +486,7 @@ namespace Grand.Web.Services
                 storeId,
                 languageId,
                 connectionSecured);
-            model.SubCategories = _cacheManager.Get(subCategoriesCacheKey, () => _categoryService.GetAllCategoriesByParentCategoryId(category.Id).Where(x=>!x.HideOnCatalog)
+            model.SubCategories = _cacheManager.Get(subCategoriesCacheKey, () => _categoryService.GetAllCategoriesByParentCategoryId(category.Id).Where(x => !x.HideOnCatalog)
                 .Select(x =>
                 {
                     var subCatModel = new CategoryModel.SubCategoryModel
@@ -615,6 +615,72 @@ namespace Grand.Web.Services
             return model;
         }
 
+
+        public virtual List<CategoryModel> PrepareCategoryFeaturedProducts()
+        {
+            string categoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_FEATURED_PRODUCTS_HOMEPAGE_KEY,
+                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), _storeContext.CurrentStore.Id,
+                _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured());
+
+            var model = _cacheManager.Get(categoriesCacheKey, () =>
+                _categoryService.GetAllCategoriesFeaturedProductsOnHomePage()
+                .Select(x =>
+                {
+                    var catModel = x.ToModel();
+                    //prepare picture model
+                    int pictureSize = _mediaSettings.CategoryThumbPictureSize;
+                    var picture = _pictureService.GetPictureById(x.PictureId);
+                    catModel.PictureModel = new PictureModel
+                    {
+                        FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
+                        ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
+                        Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), catModel.Name),
+                        AlternateText = string.Format(_localizationService.GetResource("Media.Category.ImageAlternateTextFormat"), catModel.Name)
+                    };
+                    return catModel;
+                })
+                .ToList()
+            );
+
+            foreach (var item in model)
+            {
+                //We cache a value indicating whether we have featured products
+                IPagedList<Product> featuredProducts = null;
+                string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HAS_FEATURED_PRODUCTS_KEY, item.Id,
+                    string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), _storeContext.CurrentStore.Id);
+                var hasFeaturedProductsCache = _cacheManager.Get<bool?>(cacheKey);
+                if (!hasFeaturedProductsCache.HasValue)
+                {
+                    //no value in the cache yet
+                    //let's load products and cache the result (true/false)
+                    featuredProducts = _productService.SearchProducts(
+                       pageSize: _catalogSettings.LimitOfFeaturedProducts,
+                       categoryIds: new List<string> { item.Id },
+                       storeId: _storeContext.CurrentStore.Id,
+                       visibleIndividuallyOnly: true,
+                       featuredProducts: true);
+                    hasFeaturedProductsCache = featuredProducts.Any();
+                    _cacheManager.Set(cacheKey, hasFeaturedProductsCache, 60);
+                }
+                if (hasFeaturedProductsCache.Value && featuredProducts == null)
+                {
+                    //cache indicates that the category has featured products
+                    //let's load them
+                    featuredProducts = _productService.SearchProducts(
+                       pageSize: _catalogSettings.LimitOfFeaturedProducts,
+                       categoryIds: new List<string> { item.Id },
+                       storeId: _storeContext.CurrentStore.Id,
+                       visibleIndividuallyOnly: true,
+                       featuredProducts: true);
+                }
+                if (featuredProducts != null)
+                {
+                    item.FeaturedProducts = _productViewModelService.PrepareProductOverviewModels(featuredProducts).ToList();
+                }
+            }
+
+            return model;
+        }
         #endregion
 
         #region Top menu
@@ -683,7 +749,7 @@ namespace Grand.Web.Services
 
         #region Manufacturer
 
-        public Manufacturer GetManufacturerById(string manufacturerId)
+        public virtual Manufacturer GetManufacturerById(string manufacturerId)
         {
             return _manufacturerService.GetManufacturerById(manufacturerId);
         }
@@ -785,6 +851,75 @@ namespace Grand.Web.Services
             });
             return cacheModel;
         }
+        public virtual List<ManufacturerModel> PrepareManufacturerFeaturedProducts()
+        {
+            string manufCacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_FEATURED_PRODUCT_HOMEPAGE_KEY,
+                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), _storeContext.CurrentStore.Id,
+                _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured());
+
+            var model = _cacheManager.Get(manufCacheKey, () =>
+                _manufacturerService.GetAllManufacturerFeaturedProductsOnHomePage()
+                .Select(x =>
+                {
+                    var catModel = x.ToModel();
+                    //prepare picture model
+                    int pictureSize = _mediaSettings.CategoryThumbPictureSize;
+                    var picture = _pictureService.GetPictureById(x.PictureId);
+                    catModel.PictureModel = new PictureModel
+                    {
+                        FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
+                        ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
+                        Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), catModel.Name),
+                        AlternateText = string.Format(_localizationService.GetResource("Media.Category.ImageAlternateTextFormat"), catModel.Name)
+                    };
+                    return catModel;
+                })
+                .ToList()
+            );
+
+            foreach (var item in model)
+            {
+                //We cache a value indicating whether we have featured products
+                IPagedList<Product> featuredProducts = null;
+
+                string cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_HAS_FEATURED_PRODUCTS_KEY,
+                    item.Id,
+                    string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                    _storeContext.CurrentStore.Id);
+                var hasFeaturedProductsCache = _cacheManager.Get<bool?>(cacheKey);
+                if (!hasFeaturedProductsCache.HasValue)
+                {
+                    //no value in the cache yet
+                    //let's load products and cache the result (true/false)
+                    featuredProducts = _productService.SearchProducts(
+                       pageSize: _catalogSettings.LimitOfFeaturedProducts,
+                       manufacturerId: item.Id,
+                       storeId: _storeContext.CurrentStore.Id,
+                       visibleIndividuallyOnly: true,
+                       featuredProducts: true);
+                    hasFeaturedProductsCache = featuredProducts.Any();
+                    _cacheManager.Set(cacheKey, hasFeaturedProductsCache, 60);
+                }
+                if (hasFeaturedProductsCache.Value && featuredProducts == null)
+                {
+                    //cache indicates that the manufacturer has featured products
+                    //let's load them
+                    featuredProducts = _productService.SearchProducts(
+                       pageSize: _catalogSettings.LimitOfFeaturedProducts,
+                       manufacturerId: item.Id,
+                       storeId: _storeContext.CurrentStore.Id,
+                       visibleIndividuallyOnly: true,
+                       featuredProducts: true);
+                }
+                if (featuredProducts != null)
+                {
+                    item.FeaturedProducts = _productViewModelService.PrepareProductOverviewModels(featuredProducts).ToList();
+                }
+            }
+            return model;
+        }
+
+
         public virtual ManufacturerModel PrepareManufacturer(Manufacturer manufacturer, CatalogPagingFilteringModel command)
         {
             var model = manufacturer.ToModel();
@@ -814,8 +949,6 @@ namespace Grand.Web.Services
                 if (selectedPriceRange.To.HasValue)
                     maxPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.To.Value, currency);
             }
-
-
 
             //featured products
             if (!_catalogSettings.IgnoreFeaturedProducts)
@@ -1145,17 +1278,17 @@ namespace Grand.Web.Services
             foreach (var item in products)
             {
                 var pictureUrl = "";
-                if(_catalogSettings.ShowProductImagesInSearchAutoComplete)
+                if (_catalogSettings.ShowProductImagesInSearchAutoComplete)
                 {
                     var picture = item.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault();
-                    if(picture!=null)
+                    if (picture != null)
                         pictureUrl = _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.AutoCompleteSearchThumbPictureSize);
                 }
                 model.Add(new SearchAutoCompleteModel()
                 {
                     SearchType = "Product",
                     Label = item.GetLocalized(x => x.Name),
-                    Desc = item.GetLocalized(x=>x.ShortDescription),
+                    Desc = item.GetLocalized(x => x.ShortDescription),
                     PictureUrl = pictureUrl,
                     Url = item.SeName
                 });
@@ -1226,7 +1359,7 @@ namespace Grand.Web.Services
                 }
             }
 
-            if(_catalogSettings.ShowBlogPostsInSearchAutoComplete)
+            if (_catalogSettings.ShowBlogPostsInSearchAutoComplete)
             {
                 var posts = _blogService.GetAllBlogPosts(storeId: _storeContext.CurrentStore.Id, pageSize: productNumber, blogPostName: term);
                 foreach (var item in posts)
@@ -1252,7 +1385,7 @@ namespace Grand.Web.Services
                 _storeContext.CurrentStore.Id);
 
             return _cacheManager.Get(cacheKey, () =>
-            {   
+            {
                 var searchbocategories = _categoryService.GetAllCategoriesSearchBox();
                 searchbocategories = searchbocategories
                     .Where(c => _aclService.Authorize(c) && _storeMappingService.Authorize(c))

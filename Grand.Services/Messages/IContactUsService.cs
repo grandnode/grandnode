@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Grand.Core;
 using Grand.Core.Domain.Messages;
-using Grand.Core;
+using System;
 
 namespace Grand.Services.Messages
 {

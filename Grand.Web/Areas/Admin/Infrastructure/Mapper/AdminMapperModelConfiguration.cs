@@ -26,6 +26,7 @@ using Grand.Services.Payments;
 using Grand.Services.Seo;
 using Grand.Services.Shipping;
 using Grand.Services.Tax;
+using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Blogs;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Grand.Web.Areas.Admin.Models.Cms;
@@ -51,7 +52,6 @@ using Grand.Web.Areas.Admin.Models.Tax;
 using Grand.Web.Areas.Admin.Models.Templates;
 using Grand.Web.Areas.Admin.Models.Topics;
 using Grand.Web.Areas.Admin.Models.Vendors;
-using Grand.Web.Areas.Admin.Extensions;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
 {

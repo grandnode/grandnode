@@ -1,9 +1,8 @@
 ﻿using FluentValidation;
-using FluentValidation.Results;
 using Grand.Core.Domain.Common;
+using Grand.Framework.Validators;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
-using Grand.Framework.Validators;
 using Grand.Web.Models.Common;
 using System;
 

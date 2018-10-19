@@ -1,4 +1,3 @@
-
 using System;
 
 namespace Grand.Core.Domain.Catalog

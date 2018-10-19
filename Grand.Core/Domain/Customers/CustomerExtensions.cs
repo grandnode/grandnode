@@ -1,9 +1,6 @@
+using Grand.Core.Domain.Common;
 using System;
 using System.Linq;
-using Grand.Core.Domain.Common;
-using Grand.Core.Domain.Orders;
-using MongoDB.Bson;
-using Grand.Core.Infrastructure;
 
 namespace Grand.Core.Domain.Customers
 {

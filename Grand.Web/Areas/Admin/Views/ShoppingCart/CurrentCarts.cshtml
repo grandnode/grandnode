@@ -1,7 +1,9 @@
 ﻿@inject AdminAreaSettings adminAreaSettings
+@model ShoppingCartModel
+@inject IEventPublisher eventPublisher
 @{
     //page title
-    ViewBag.Title = T("Admin.CurrentCarts").Text;
+    ViewBag.Title = T("Admin.CurrentCartsWishlists").Text;
 }
 <antiforgery-token />
 <div class="row">
@@ -10,135 +12,45 @@
             <div class="portlet-title">
                 <div class="caption">
                     <i class="fa fa-cart-plus"></i>
-                    @T("Admin.CurrentCarts")
+                    @T("Admin.CurrentCartWishlists")
                 </div>
             </div>
             <div class="portlet-body form">
-                <div class="form-horizontal">
-                    <div class="form-body">
-                        <div class="portlet-body">
-                            <div id="carts-grid"></div>
-                        </div>
+                <div id="shoppingcarts-list" style="display:none">
+                    <ul>
+                        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                            @T("Admin.CurrentCarts")
+                        </li>
+                        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                            @T("Admin.CurrentWishlists")
+                        </li>
+                    </ul>
+                    <div>
+                        @Html.Partial("_CurrentCarts.TabCurrentCarts", Model)
+                    </div>
+                    <div>
+                        @Html.Partial("_CurrentCarts.TabCurrentWishlists", Model)
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 <script>
-$(document).ready(function() {
-    $("#carts-grid").kendoGrid({
-        dataSource: {
-            transport: {
-                read: {
-                    url: "@Html.Raw(Url.Action("CurrentCarts", "ShoppingCart"))",
-                    type: "POST",
-                    dataType: "json",
-                    data: addAntiForgeryToken
-                }
-            },
-            schema: {
-                data: "Data",
-                total: "Total",
-                errors: "Errors"
-            },
-            error: function(e) {
-                display_kendoui_grid_error(e);
-                // Cancel the changes
-                this.cancelChanges();
-            },
-            pageSize: @(adminAreaSettings.DefaultGridPageSize),
-            serverPaging: true,
-            serverFiltering: true,
-            serverSorting: true
-        },
-        pageable: {
-            refresh: true,
-            pageSizes: [@(adminAreaSettings.GridPageSizes)]
-        },
-        //details grid
-        detailInit: detailInit,
-        scrollable: false,
-        columns: [
-            {
-                field: "CustomerId",
-                title: "@T("Admin.CurrentCarts.Customer")",
-                template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerEmail#</a>'
-            }, {
-                field: "TotalItems",
-                title: "@T("Admin.CurrentCarts.TotalItems")",
-                width: 150
-            }
-        ]
-    });
-});
+    $(document).ready(function () {
+        var tabPos = 'top';
+        if (window.devicePixelRatio == 2)
+            tabPos = 'top';
 
-//details grid
-function detailInit(e) {
-    $("<div/>").appendTo(e.detailCell).kendoGrid({
-        dataSource: {
-            transport: {
-                read: {
-                    url: "@Html.Raw(Url.Action("GetCartDetails", "ShoppingCart"))?customerId="+e.data.CustomerId,
-                    type: "POST",
-                    dataType: "json",
-                    data: addAntiForgeryToken
+        $('#shoppingcarts-list').show();
+        $("#shoppingcarts-list").kendoTabStrip({
+            animation: {
+                open: {
+                    effects: "fadeIn"
                 }
             },
-            schema: {
-                data: "Data",
-                total: "Total",
-                errors: "Errors"
-            },
-            error: function(e) {
-                display_kendoui_grid_error(e);
-                // Cancel the changes
-                this.cancelChanges();
-            },
-            serverPaging: true,
-            serverFiltering: true,
-            serverSorting: true
-        },
-        scrollable: false,
-        sortable: true,
-        pageable: {
-            refresh: true,
-            numeric: false,
-            previousNext: false,
-            info: false
-        },
-        columns: [
-            {
-                field: "ProductName",
-                title: "@T("Admin.CurrentCarts.Product")",
-                template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:ProductName#</a>' +
-                    '# if(AttributeInfo && AttributeInfo.length > 0) {# <br />#=AttributeInfo# #} #',
-                width: 400
-            },{
-                field: "Quantity",
-                title: "@T("Admin.CurrentCarts.Quantity")",
-                width: 150
-            },{
-                field: "UnitPrice",
-                title: "@T("Admin.CurrentCarts.UnitPrice")",
-                width: 150
-            },{
-                field: "Total",
-                title: "@T("Admin.CurrentCarts.Total")",
-                width: 150
-            },{
-                field: "Store",
-                title: "@T("Admin.CurrentCarts.Store")",
-                width: 150
-            },{
-                field: "UpdatedOn",
-                title: "@T("Admin.CurrentCarts.UpdatedOn")",
-                width: 150,
-                type: "date",
-                format: "{0:G}"
-            }
-        ]
+            tabPosition: tabPos,
+            select: tabstrip_on_tab_select
+        });
     });
-}
 </script>

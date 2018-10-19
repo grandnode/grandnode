@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Amazon;
+using Amazon.Runtime;
+using Amazon.S3;
+using Amazon.S3.Model;
 using Grand.Core;
 using Grand.Core.Configuration;
 using Grand.Core.Data;
@@ -6,13 +9,10 @@ using Grand.Core.Domain.Media;
 using Grand.Services.Configuration;
 using Grand.Services.Events;
 using Grand.Services.Logging;
+using Microsoft.AspNetCore.Hosting;
+using System;
 using System.IO;
 using System.Net;
-using Amazon.S3;
-using Amazon.S3.Model;
-using Amazon;
-using Amazon.Runtime;
-using Microsoft.AspNetCore.Hosting;
 
 namespace Grand.Services.Media
 {

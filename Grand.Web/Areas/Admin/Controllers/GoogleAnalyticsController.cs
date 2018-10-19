@@ -1,14 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using Grand.Core.Caching;
+using Grand.Services.Configuration;
 using Grand.Services.Localization;
 using Grand.Services.Security;
-using Grand.Core.Caching;
-using Grand.Services.Configuration;
+using Microsoft.AspNetCore.Mvc;
+using System;
 
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
-	public partial class GoogleAnalyticsController : BaseAdminController
+    public partial class GoogleAnalyticsController : BaseAdminController
 	{
         private readonly ICacheManager _cacheManager;
         private readonly IPermissionService _permissionService;

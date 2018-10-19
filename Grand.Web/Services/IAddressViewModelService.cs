@@ -1,12 +1,12 @@
 ﻿using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Directory;
+using Grand.Core.Domain.Vendors;
 using Grand.Web.Models.Common;
+using Grand.Web.Models.Vendors;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
-using Grand.Core.Domain.Vendors;
-using Grand.Web.Models.Vendors;
 
 namespace Grand.Web.Services
 {

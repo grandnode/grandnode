@@ -1,8 +1,8 @@
 ﻿using Grand.Core;
 using Grand.Core.Infrastructure;
-using Grand.Services.Localization;
 using Grand.Framework.Localization;
 using Grand.Framework.Themes;
+using Grand.Services.Localization;
 
 namespace Grand.Framework.Mvc.Razor
 {

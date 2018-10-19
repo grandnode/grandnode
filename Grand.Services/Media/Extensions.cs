@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Grand.Core.Domain.Catalog;
+using Grand.Core.Domain.Media;
+using Grand.Core.Infrastructure;
+using Grand.Services.Catalog;
+using Microsoft.AspNetCore.Http;
+using System;
 using System.IO;
 using System.Linq;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Media;
-using Grand.Services.Catalog;
-using Grand.Core.Infrastructure;
-using Microsoft.AspNetCore.Http;
 
 namespace Grand.Services.Media
 {

@@ -1,6 +1,3 @@
-using System;
-using System.Linq;
-using System.Text;
 using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
@@ -10,7 +7,10 @@ using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Tax;
+using System;
+using System.Linq;
 using System.Net;
+using System.Text;
 
 namespace Grand.Services.Orders
 {

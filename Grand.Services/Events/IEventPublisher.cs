@@ -1,5 +1,4 @@
-﻿
-namespace Grand.Services.Events
+﻿namespace Grand.Services.Events
 {
     /// <summary>
     /// Evnt publisher

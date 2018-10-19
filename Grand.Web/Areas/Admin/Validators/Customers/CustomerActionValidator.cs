@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using Grand.Web.Areas.Admin.Models.Customers;
-using Grand.Services.Localization;
 using Grand.Framework.Validators;
+using Grand.Services.Localization;
+using Grand.Web.Areas.Admin.Models.Customers;
 
 namespace Grand.Web.Areas.Admin.Validators.Customers
 {

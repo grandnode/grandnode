@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Data;
-using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Logging;
-using MongoDB.Driver.Linq;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Grand.Services.Logging

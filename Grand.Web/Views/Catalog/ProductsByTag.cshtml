@@ -18,47 +18,45 @@
 @using Grand.Web.Models.Catalog;
 <div class="page product-tag-page">
     <h2 class="generalTitle">@String.Format(T("Products.Tags.ProductsTaggedWith").Text, Model.TagName)</h2>
-        @await Component.InvokeAsync("Widget", new { widgetZone = "productsbytag_top", additionalData = Model.Id })
-        @if (Model.Products.Any())
-        {
-            <partial name="_CatalogSelectors" model="Model.PagingFilteringContext" />
-        }
+    @await Component.InvokeAsync("Widget", new { widgetZone = "productsbytag_top", additionalData = Model.Id })
+
+    @if (Model.Products.Any())
+    {
+        <partial name="_CatalogSelectors" model="Model.PagingFilteringContext" />
         @await Component.InvokeAsync("Widget", new { widgetZone = "productsbytag_before_product_list", additionalData = Model.Id })
-            @if (Model.Products.Any())
-            {
-                if (Model.PagingFilteringContext.ViewMode == "grid")
+        if (Model.PagingFilteringContext.ViewMode == "grid")
+        {
+            <div class="row flex-grid">
+                @foreach (var product in Model.Products)
                 {
-                    <div class="row flex-grid">
-                        @foreach (var product in Model.Products)
-                        {
-                                <div class="col-6 col-sm-6  col-md-6 col-lg-4 product-container">
-                                    <partial name="_ProductBox" model="product" />
-                                </div>
-                        }
+                    <div class="col-6 col-sm-6  col-md-6 col-lg-4 product-container">
+                        <partial name="_ProductBox" model="product" />
                     </div>
                 }
-                else
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                @foreach (var product in Model.Products)
                 {
-                    <div class="row">
-                        @foreach (var product in Model.Products)
-                        {
-                            <div class="col-12 Boxlist pb-1">
-                                <partial name="_ProductBoxList" model="product" />
-                            </div>
-                        }
+                    <div class="col-12 Boxlist pb-1">
+                        <partial name="_ProductBoxList" model="product" />
                     </div>
                 }
-            }
-            @{
-                var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
-            }
-            @if (!pager.IsEmpty())
-            {
-                <div class="pager">
-                    @pager
-                </div>
-            }
-    </div>
-    @await Component.InvokeAsync("Widget", new { widgetZone = "productsbytag_bottom", additionalData = Model.Id })
+            </div>
+        }
+    }
+    @{
+        var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
+    }
+    @if (!pager.IsEmpty())
+    {
+        <div class="pager">
+            @pager
+        </div>
+    }
+</div>
+@await Component.InvokeAsync("Widget", new { widgetZone = "productsbytag_bottom", additionalData = Model.Id })
 
 

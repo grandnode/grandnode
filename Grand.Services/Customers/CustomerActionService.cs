@@ -1,13 +1,13 @@
-﻿using Grand.Core.Data;
+﻿using Grand.Core;
+using Grand.Core.Caching;
+using Grand.Core.Data;
 using Grand.Core.Domain.Customers;
 using Grand.Services.Events;
-using System;
-using System.Linq;
-using System.Collections.Generic;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using Grand.Core;
-using Grand.Core.Caching;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Grand.Services.Customers
 {

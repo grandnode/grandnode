@@ -1,21 +1,21 @@
-﻿using Grand.Core.Data;
+﻿using Grand.Core;
+using Grand.Core.Data;
 using Grand.Core.Domain.Customers;
-using Grand.Services.Events;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using MongoDB.Driver;
-using MongoDB.Driver.Linq;
-using Grand.Services.Messages;
 using Grand.Core.Domain.Messages;
-using Grand.Core;
-using Grand.Services.Stores;
-using Grand.Services.Catalog;
-using Grand.Services.Logging;
-using Grand.Services.Localization;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Payments;
+using Grand.Services.Catalog;
+using Grand.Services.Events;
 using Grand.Services.Helpers;
+using Grand.Services.Localization;
+using Grand.Services.Logging;
+using Grand.Services.Messages;
+using Grand.Services.Stores;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Grand.Services.Customers
 {

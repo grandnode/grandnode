@@ -1,8 +1,8 @@
+using Grand.Core.Domain.Catalog;
+using Grand.Core.Domain.Customers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
 
 namespace Grand.Services.Catalog
 {

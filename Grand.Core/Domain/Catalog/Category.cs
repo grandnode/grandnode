@@ -1,9 +1,9 @@
-using System;
-using System.Collections.Generic;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Security;
 using Grand.Core.Domain.Seo;
 using Grand.Core.Domain.Stores;
+using System;
+using System.Collections.Generic;
 
 namespace Grand.Core.Domain.Catalog
 {
@@ -84,6 +84,11 @@ namespace Grand.Core.Domain.Catalog
         /// Gets or sets a value indicating whether to show the category on home page
         /// </summary>
         public bool ShowOnHomePage { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to show featured products on home page
+        /// </summary>
+        public bool FeaturedProductsOnHomaPage { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to show the category on search box

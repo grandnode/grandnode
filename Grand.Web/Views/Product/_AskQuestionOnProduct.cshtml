@@ -1,5 +1,5 @@
 ﻿@model ProductAskQuestionSimpleModel
-
+<input value="@Model.Id" type="hidden" id="AskQuestionProductId" name="AskQuestionProductId"/>
 <div id="contact-us-product">
     <fieldset class="form-group">
         <label asp-for="AskQuestionEmail" class="col-form-label">@T("Products.AskQuestion.Email"):</label>
@@ -27,7 +27,7 @@
             <captcha />
         </div>
     }
-
+    
     <div class="buttons generalMarginSupporter pt-1 pb-1">
         <input type="button" name="send-email" class="btn btn-info send-ask-question-button" value="@T("Products.AskQuestion.Button")"
                onclick="sendcontactusform('@Url.RouteUrl("AskQuestionOnProduct")')" />

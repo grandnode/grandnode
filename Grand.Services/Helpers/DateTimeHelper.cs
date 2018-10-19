@@ -1,10 +1,10 @@
-using System;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 using Grand.Core;
 using Grand.Core.Domain.Customers;
 using Grand.Services.Common;
 using Grand.Services.Configuration;
+using System;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace Grand.Services.Helpers
 {

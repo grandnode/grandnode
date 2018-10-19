@@ -1,5 +1,5 @@
-using System;
 using Grand.Core.Domain.Customers;
+using System;
 
 namespace Grand.Services.Authentication.External
 {

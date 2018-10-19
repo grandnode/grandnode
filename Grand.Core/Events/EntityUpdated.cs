@@ -1,5 +1,4 @@
-﻿
-namespace Grand.Core.Events
+﻿namespace Grand.Core.Events
 {
     /// <summary>
     /// A container for entities that are updated.

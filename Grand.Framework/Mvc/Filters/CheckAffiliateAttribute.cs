@@ -1,11 +1,11 @@
-﻿using System.Linq;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Grand.Core;
+﻿using Grand.Core;
+using Grand.Core.Data;
 using Grand.Core.Domain.Affiliates;
 using Grand.Services.Affiliates;
 using Grand.Services.Customers;
-using Grand.Core.Data;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using System.Linq;
 
 namespace Grand.Framework.Mvc.Filters
 {

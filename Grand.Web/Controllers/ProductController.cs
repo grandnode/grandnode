@@ -11,7 +11,6 @@ using Grand.Framework.Mvc.Rss;
 using Grand.Framework.Security;
 using Grand.Framework.Security.Captcha;
 using Grand.Services.Catalog;
-using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Events;
 using Grand.Services.Localization;
@@ -724,8 +723,8 @@ namespace Grand.Web.Controllers
         [ValidateCaptcha]
         public virtual IActionResult AskQuestionOnProduct(ProductAskQuestionSimpleModel model, bool captchaValid)
         {
-            var product = _productService.GetProductById(model.ProductId);
-            if (product == null || !product.Published || !_catalogSettings.AskQuestionEnabled)
+            var product = _productService.GetProductById(model.Id);
+            if (product == null || !product.Published || !_catalogSettings.AskQuestionOnProduct)
                 return Json(new
                 {
                     success = false,

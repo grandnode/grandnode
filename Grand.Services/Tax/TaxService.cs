@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
 using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
@@ -9,12 +5,16 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Tax;
+using Grand.Core.Infrastructure;
 using Grand.Core.Plugins;
 using Grand.Services.Common;
 using Grand.Services.Directory;
-using Grand.Core.Infrastructure;
-using Grand.Services.Orders;
 using Grand.Services.Logging;
+using Grand.Services.Orders;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Grand.Services.Tax
 {
@@ -480,64 +480,21 @@ namespace Grand.Services.Tax
                 {
                     productPrice.UnitPriceInclTax = unitPrice;
                     productPrice.UnitPriceExclTax = CalculatePrice(unitPrice, taxRate, false);
-                }
-                else
-                {
-                    productPrice.UnitPriceInclTax = CalculatePrice(unitPrice, taxRate, false);
-                    productPrice.UnitPriceExclTax = CalculatePrice(unitPrice, taxRate, false);
-                }
-            }
-            else
-            {
-                if (isTaxable)
-                {
-                    productPrice.UnitPriceInclTax = CalculatePrice(unitPrice, taxRate, true);
-                    productPrice.UnitPriceExclTax = unitPrice;
-                }
-                else
-                {
-                    productPrice.UnitPriceInclTax = unitPrice;
-                    productPrice.UnitPriceExclTax = unitPrice;
-                }
-            }
-            //----------------------------------------------------------------------------------------------------
-            if (priceIncludesTax)
-            {
-                if (isTaxable)
-                {
-                    productPrice.SubTotalInclTax = subTotal;
-                    productPrice.SubTotalExclTax = CalculatePrice(subTotal, taxRate, false);
-                }
-                else
-                {
-                    productPrice.SubTotalInclTax = CalculatePrice(subTotal, taxRate, false);
-                    productPrice.SubTotalExclTax = CalculatePrice(subTotal, taxRate, false);
-                }
-            }
-            else
-            {
-                if (isTaxable)
-                {
-                    productPrice.SubTotalInclTax = CalculatePrice(subTotal, taxRate, true);
-                    productPrice.SubTotalExclTax = subTotal;
-                }
-                else
-                {
-                    productPrice.SubTotalInclTax = subTotal;
-                    productPrice.SubTotalExclTax = subTotal;
-                }
-            }
 
-            //----------------------------------------------------------------------------------------------------
-            if (priceIncludesTax)
-            {
-                if (isTaxable)
-                {
+                    productPrice.SubTotalInclTax = subTotal;
+                    productPrice.SubTotalExclTax = CalculatePrice(subTotal, taxRate, false);
+
                     productPrice.discountAmountInclTax = discountAmount;
                     productPrice.discountAmountExclTax = CalculatePrice(discountAmount, taxRate, false);
                 }
                 else
                 {
+                    productPrice.UnitPriceInclTax = CalculatePrice(unitPrice, taxRate, false);
+                    productPrice.UnitPriceExclTax = CalculatePrice(unitPrice, taxRate, false);
+
+                    productPrice.SubTotalInclTax = CalculatePrice(subTotal, taxRate, false);
+                    productPrice.SubTotalExclTax = CalculatePrice(subTotal, taxRate, false);
+
                     productPrice.discountAmountInclTax = CalculatePrice(discountAmount, taxRate, false);
                     productPrice.discountAmountExclTax = CalculatePrice(discountAmount, taxRate, false);
                 }
@@ -546,16 +503,28 @@ namespace Grand.Services.Tax
             {
                 if (isTaxable)
                 {
+                    productPrice.UnitPriceInclTax = CalculatePrice(unitPrice, taxRate, true);
+                    productPrice.UnitPriceExclTax = unitPrice;
+
+                    productPrice.SubTotalInclTax = CalculatePrice(subTotal, taxRate, true);
+                    productPrice.SubTotalExclTax = subTotal;
+
                     productPrice.discountAmountInclTax = CalculatePrice(discountAmount, taxRate, true);
                     productPrice.discountAmountExclTax = discountAmount;
                 }
                 else
                 {
+                    productPrice.UnitPriceInclTax = unitPrice;
+                    productPrice.UnitPriceExclTax = unitPrice;
+
+                    productPrice.SubTotalInclTax = subTotal;
+                    productPrice.SubTotalExclTax = subTotal;
+
                     productPrice.discountAmountInclTax = discountAmount;
                     productPrice.discountAmountExclTax = discountAmount;
                 }
             }
-
+           
             if (!isTaxable)
             {
                 //we return 0% tax rate in case a request is not taxable

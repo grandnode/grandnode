@@ -1,5 +1,4 @@
-﻿
-namespace Grand.Framework.UI
+﻿namespace Grand.Framework.UI
 {
     public enum ResourceLocation
     {

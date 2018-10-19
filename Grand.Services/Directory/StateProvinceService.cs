@@ -1,11 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Core.Domain.Directory;
 using Grand.Services.Events;
 using Grand.Services.Localization;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Grand.Services.Directory
 {

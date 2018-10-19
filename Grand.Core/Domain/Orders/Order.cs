@@ -1,10 +1,10 @@
-using System;
-using System.Collections.Generic;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Payments;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Tax;
+using System;
+using System.Collections.Generic;
 
 namespace Grand.Core.Domain.Orders
 {

@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Grand.Web.Services;
-using System.Linq;
-using Grand.Core.Domain.Catalog;
+﻿using Grand.Core.Domain.Catalog;
 using Grand.Framework.Components;
+using Grand.Web.Services;
+using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace Grand.Web.ViewComponents
 {

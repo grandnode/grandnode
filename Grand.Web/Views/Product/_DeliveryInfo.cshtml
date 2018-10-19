@@ -1,16 +1,29 @@
 ﻿@model ProductDetailsModel
-@if ((Model.FreeShippingNotificationEnabled && Model.IsFreeShipping) || !string.IsNullOrWhiteSpace(Model.DeliveryDate))
+@if ((Model.FreeShippingNotificationEnabled && Model.IsFreeShipping) || !string.IsNullOrWhiteSpace(Model.DeliveryDate)
+    || Model.NotReturnable || Model.AdditionalShippingCharge > 0) 
 {
     <div class="delivery generalMarginSupporter">
         @if (Model.FreeShippingNotificationEnabled && Model.IsFreeShipping)
         {
-            <div class="btn btn-sm btn-secondary free-shipping"><i class="fa fa-truck"></i> @T("Products.FreeShipping")</div>
+            <div class="btn btn-sm btn-secondary free-shipping"><i class="fas fa-truck"></i> @T("Products.FreeShipping")</div>
         }
         @if (!string.IsNullOrWhiteSpace(Model.DeliveryDate))
         {
             <div class="delivery-date" style="color:@(Model.DeliveryColorSquaresRgb)">
                 <span class="label">@T("Products.DeliveryDate"):</span>
                 <span class="value">@Model.DeliveryDate</span>
+            </div>
+        }
+        @if (Model.NotReturnable)
+        {
+            <div class="btn btn-sm btn-secondary free-shipping"><i class="fas fa-ban"></i> @T("Products.NotReturnable")</div>
+        }
+        @if (Model.AdditionalShippingCharge > 0 && !Model.IsFreeShipping)
+        {
+            <div class="additional-shipping-charge btn btn-sm btn-secondary">
+                <i class="fas fa-truck"></i>
+                <span class="label">@T("Products.AdditionalShippingCharge")</span>
+                <span class="value">@Model.AdditionalShippingChargeStr</span>
             </div>
         }
     </div>

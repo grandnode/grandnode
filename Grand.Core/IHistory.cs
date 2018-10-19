@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Grand.Core
+﻿namespace Grand.Core
 {
     /// <summary>
     /// Interface for History of changes object

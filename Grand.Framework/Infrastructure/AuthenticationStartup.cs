@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Grand.Core.Data;
 using Grand.Core.Infrastructure;
 using Grand.Framework.Infrastructure.Extensions;
-using Grand.Core.Data;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Grand.Framework.Infrastructure
 {

@@ -183,13 +183,14 @@ namespace Grand.Web.Infrastructure.Cache
         public const string MANUFACTURER_NAVIGATION_MENU = "Grand.pres.manufacturer.navigation.menu-{0}-{1}";
 
         /// <summary>
-        /// Key for caching of categories displayed on home page
+        /// Key for caching of manufacturer displayed on home page
         /// </summary>
         /// <remarks>
         /// {0} : current store ID
         /// {1} : language ID
         /// </remarks>
         public const string MANUFACTURER_HOMEPAGE_KEY = "Grand.pres.manufacturer.navigation.homepage-{0}-{1}";
+        public const string MANUFACTURER_FEATURED_PRODUCT_HOMEPAGE_KEY = "Grand.pres.manufacturer.navigation.homepage-fp-{0}-{1}";
 
 
         /// <summary>
@@ -299,6 +300,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// </remarks>
         public const string CATEGORY_HOMEPAGE_KEY = "Grand.pres.category.homepage-{0}-{1}-{2}-{3}";
         public const string CATEGORY_HOMEPAGE_PATTERN_KEY = "Grand.pres.category.homepage";
+        public const string CATEGORY_FEATURED_PRODUCTS_HOMEPAGE_KEY = "Grand.pres.category.homepage-fp-{0}-{1}-{2}-{3}";
 
         /// <summary>
         /// Key for GetChildCategoryIds method results caching
@@ -953,9 +955,9 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(CATEGORY_ALL_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_SUBCATEGORIES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CATEGORY_HOMEPAGE_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_HOMEPAGE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
+
             
         }
         public void HandleEvent(EntityUpdated<Category> eventMessage)
@@ -966,7 +968,6 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_BREADCRUMB_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_SUBCATEGORIES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CATEGORY_HOMEPAGE_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_HOMEPAGE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
         }
@@ -989,7 +990,6 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(CATEGORY_ALL_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_SUBCATEGORIES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CATEGORY_HOMEPAGE_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_HOMEPAGE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
         }

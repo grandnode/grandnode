@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Grand.Core.Infrastructure;
+﻿using Grand.Core.Infrastructure;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Grand.Services.Events

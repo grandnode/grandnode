@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Data;
@@ -10,9 +7,12 @@ using Grand.Services.Customers;
 using Grand.Services.Events;
 using Grand.Services.Security;
 using Grand.Services.Stores;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using MongoDB.Bson;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Grand.Services.Catalog
 {
@@ -296,6 +296,28 @@ namespace Grand.Services.Catalog
                     .ToList();
             }
 
+            return categories;
+        }
+
+        /// <summary>
+        /// Gets all categories displayed on the home page
+        /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Categories</returns>
+        public virtual IList<Category> GetAllCategoriesFeaturedProductsOnHomePage(bool showHidden = false)
+        {
+            var builder = Builders<Category>.Filter;
+            var filter = builder.Eq(x => x.Published, true);
+            filter = filter & builder.Eq(x => x.FeaturedProductsOnHomaPage, true);
+            var query = _categoryRepository.Collection.Find(filter).SortBy(x => x.DisplayOrder);
+
+            var categories = query.ToList();
+            if (!showHidden)
+            {
+                categories = categories
+                    .Where(c => _aclService.Authorize(c) && _storeMappingService.Authorize(c))
+                    .ToList();
+            }
             return categories;
         }
 

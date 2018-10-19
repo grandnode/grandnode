@@ -1,7 +1,7 @@
-﻿using System.ComponentModel;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Core.Infrastructure;
 using Grand.Services.Localization;
+using System.ComponentModel;
 
 namespace Grand.Framework.Mvc.ModelBinding
 {

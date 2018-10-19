@@ -1,5 +1,4 @@
-﻿
-namespace Grand.Core.Domain.Catalog
+﻿namespace Grand.Core.Domain.Catalog
 {
     /// <summary>
     /// Represents a interval unit type for product

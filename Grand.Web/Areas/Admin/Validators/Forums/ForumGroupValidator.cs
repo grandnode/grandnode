@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using Grand.Web.Areas.Admin.Models.Forums;
-using Grand.Services.Localization;
 using Grand.Framework.Validators;
+using Grand.Services.Localization;
+using Grand.Web.Areas.Admin.Models.Forums;
 
 namespace Grand.Web.Areas.Admin.Validators.Forums
 {

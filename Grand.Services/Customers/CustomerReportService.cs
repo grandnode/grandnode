@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using Grand.Core;
 using Grand.Core.Data;
 using Grand.Core.Domain.Customers;
@@ -7,9 +5,11 @@ using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Payments;
 using Grand.Core.Domain.Shipping;
 using Grand.Services.Helpers;
-using MongoDB.Driver.Linq;
-using System.Collections.Generic;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Grand.Services.Customers
 {

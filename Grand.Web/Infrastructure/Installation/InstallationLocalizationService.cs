@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Grand.Core;
+using Grand.Core.Extensions;
+using Grand.Core.Infrastructure;
+using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
-using Grand.Core;
-using Grand.Core.Infrastructure;
-using Microsoft.AspNetCore.Http;
-using Grand.Core.Extensions;
 
 namespace Grand.Web.Infrastructure.Installation
 {

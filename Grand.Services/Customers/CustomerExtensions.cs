@@ -1,14 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Xml;
 using Grand.Core;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Html;
 using Grand.Core.Infrastructure;
 using Grand.Services.Common;
 using Grand.Services.Localization;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Xml;
 namespace Grand.Services.Customers
 {
     public static class CustomerExtensions

@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Data;
-using Grand.Services.Events;
-using MongoDB.Driver;
-using System.Linq;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Core.Caching;
+using Grand.Core.Data;
+using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
-using Grand.Core.Infrastructure;
-using Grand.Services.Messages;
-using Grand.Core.Domain.Stores;
 using Grand.Core.Domain.Localization;
+using Grand.Core.Domain.Stores;
+using Grand.Core.Infrastructure;
+using Grand.Services.Events;
+using Grand.Services.Messages;
+using MongoDB.Driver;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Grand.Services.Catalog
 {

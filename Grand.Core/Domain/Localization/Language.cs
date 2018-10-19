@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using Grand.Core.Domain.Stores;
+using System.Collections.Generic;
 
 namespace Grand.Core.Domain.Localization
 {

@@ -1,6 +1,6 @@
+using Grand.Core.Domain.Customers;
 using System;
 using System.Collections.ObjectModel;
-using Grand.Core.Domain.Customers;
 
 namespace Grand.Services.Helpers
 {

@@ -1,4 +1,3 @@
-
 namespace Grand.Core.Configuration
 {
     /// <summary>
@@ -123,6 +122,9 @@ namespace Grand.Core.Configuration
         /// Enforce HTTPS in ASP.NET Core
         /// </summary>
         public bool UseHttpsRedirection { get; set; }
+
+        public int HttpsRedirectionRedirect { get; set; }
+        public int? HttpsRedirectionHttpsPort { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether ignore InstallUrlMiddleware

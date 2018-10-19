@@ -1,6 +1,6 @@
-using System;
 using Grand.Core;
 using Grand.Core.Domain.Affiliates;
+using System;
 
 namespace Grand.Services.Affiliates
 {

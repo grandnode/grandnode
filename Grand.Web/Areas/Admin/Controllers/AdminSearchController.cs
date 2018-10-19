@@ -176,7 +176,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         if (result.Count() >= _adminSearchSettings.MaxSearchResultsCount)
                             break;
 
-                        string formatted = _localizationService.GetResource("AdminSearch.Menu") + " > ";
+                        string formatted = _localizationService.GetResource("Admin.AdminSearch.Menu") + " > ";
                         if (string.IsNullOrEmpty(menuItem.grandParent))
                         {
                             formatted += menuItem.parent;

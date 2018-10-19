@@ -1,7 +1,7 @@
-﻿using System;
-using FluentValidation;
+﻿using FluentValidation;
 using FluentValidation.Attributes;
 using Grand.Core.Infrastructure;
+using System;
 using System.Reflection;
 
 namespace Grand.Framework.FluentValidation

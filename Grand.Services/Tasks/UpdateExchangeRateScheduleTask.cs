@@ -1,7 +1,7 @@
-﻿using System;
-using Grand.Core.Domain.Directory;
+﻿using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Tasks;
 using Grand.Services.Directory;
+using System;
 
 namespace Grand.Services.Tasks
 {

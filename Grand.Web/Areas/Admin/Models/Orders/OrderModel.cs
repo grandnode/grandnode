@@ -1,15 +1,12 @@
-﻿using Grand.Framework.Mvc.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using Grand.Core.Domain.Catalog;
+using Grand.Core.Domain.Tax;
 using Grand.Framework.Mvc.ModelBinding;
+using Grand.Framework.Mvc.Models;
+using Grand.Web.Areas.Admin.Models.Common;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-
-using Grand.Web.Areas.Admin.Models.Common;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Tax;
-using Grand.Framework;
-using Grand.Framework.Mvc;
 
 namespace Grand.Web.Areas.Admin.Models.Orders
 {
@@ -436,19 +433,19 @@ namespace Grand.Web.Areas.Admin.Models.Orders
             {
                 public bool IsGiftCard { get; set; }
 
-                [GrandResourceDisplayName("Products.GiftCard.RecipientName")]
+                [GrandResourceDisplayName("Admin.Orders.Products.GiftCard.RecipientName")]
                 
                 public string RecipientName { get; set; }
-                [GrandResourceDisplayName("Products.GiftCard.RecipientEmail")]
+                [GrandResourceDisplayName("Admin.Orders.Products.GiftCard.RecipientEmail")]
                 
                 public string RecipientEmail { get; set; }
-                [GrandResourceDisplayName("Products.GiftCard.SenderName")]
+                [GrandResourceDisplayName("Admin.Orders.Products.GiftCard.SenderName")]
                 
                 public string SenderName { get; set; }
-                [GrandResourceDisplayName("Products.GiftCard.SenderEmail")]
+                [GrandResourceDisplayName("Admin.Orders.Products.GiftCard.SenderEmail")]
                 
                 public string SenderEmail { get; set; }
-                [GrandResourceDisplayName("Products.GiftCard.Message")]
+                [GrandResourceDisplayName("Admin.Orders.Products.GiftCard.Message")]
                 
                 public string Message { get; set; }
 

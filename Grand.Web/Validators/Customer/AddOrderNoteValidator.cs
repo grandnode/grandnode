@@ -2,10 +2,6 @@
 using Grand.Framework.Validators;
 using Grand.Services.Localization;
 using Grand.Web.Models.Order;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Grand.Web.Validators.Customer
 {

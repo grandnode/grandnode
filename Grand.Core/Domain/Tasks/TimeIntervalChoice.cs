@@ -1,5 +1,4 @@
-﻿
-namespace Grand.Core.Domain.Tasks
+﻿namespace Grand.Core.Domain.Tasks
 {
     /// <summary>
     /// Time interval choice

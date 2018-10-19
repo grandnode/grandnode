@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using Grand.Core.Domain.Shipping;
+﻿using Grand.Core.Domain.Shipping;
 using Grand.Framework.Mvc.Models;
+using System.Collections.Generic;
 
 namespace Grand.Web.Models.Checkout
 {

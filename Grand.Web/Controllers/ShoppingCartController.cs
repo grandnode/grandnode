@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Orders;
+using Grand.Framework.Controllers;
+using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security;
+using Grand.Framework.Security.Captcha;
 using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Discounts;
@@ -16,13 +15,14 @@ using Grand.Services.Media;
 using Grand.Services.Messages;
 using Grand.Services.Orders;
 using Grand.Services.Security;
-using Grand.Framework.Controllers;
-using Grand.Framework.Security;
-using Grand.Framework.Security.Captcha;
 using Grand.Web.Models.ShoppingCart;
 using Grand.Web.Services;
 using Microsoft.AspNetCore.Http;
-using Grand.Framework.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace Grand.Web.Controllers
 {
@@ -82,7 +82,8 @@ namespace Grand.Web.Controllers
 
         [HttpPost]
         public virtual IActionResult CheckoutAttributeChange(IFormCollection form,
-            [FromServices] ICheckoutAttributeParser checkoutAttributeParser)
+            [FromServices] ICheckoutAttributeParser checkoutAttributeParser,
+            [FromServices] ICheckoutAttributeFormatter checkoutAttributeFormatter)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
@@ -111,10 +112,11 @@ namespace Grand.Web.Controllers
             return Json(new
             {
                 enabledattributeids = enabledAttributeIds.ToArray(),
-                disabledattributeids = disabledAttributeIds.ToArray()
+                disabledattributeids = disabledAttributeIds.ToArray(),
+                htmlordertotal = this.RenderPartialViewToString("Components/OrderTotals/Default", _shoppingCartViewModelService.PrepareOrderTotals(cart, true)),
+                checkoutattributeinfo = checkoutAttributeFormatter.FormatAttributes(attributeXml, _workContext.CurrentCustomer),
             });
         }
-
 
         [HttpPost]
         public virtual IActionResult UploadFileCheckoutAttribute(string attributeId)
@@ -197,8 +199,7 @@ namespace Grand.Web.Controllers
             });
         }
 
-
-        public virtual IActionResult Cart()
+        public virtual IActionResult Cart(bool checkoutAttributes)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return RedirectToRoute("HomePage");
@@ -208,12 +209,12 @@ namespace Grand.Web.Controllers
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var model = new ShoppingCartModel();
-            _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
+            _shoppingCartViewModelService.PrepareShoppingCart(model, cart, validateCheckoutAttributes: checkoutAttributes);
             return View(model);
         }
 
-        [HttpPost, ActionName("Cart")]
-        [FormValueRequired("updatecart")]
+        [PublicAntiForgery]
+        [HttpPost]
         public virtual IActionResult UpdateCart(IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
@@ -224,17 +225,10 @@ namespace Grand.Web.Controllers
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
-            var allIdsToRemove = !string.IsNullOrEmpty(form["removefromcart"].ToString()) ? form["removefromcart"].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x).ToList() : new List<string>();
-
             //current warnings <cart item identifier, warnings>
             var innerWarnings = new Dictionary<string, IList<string>>();
             foreach (var sci in cart)
             {
-                bool remove = allIdsToRemove.Contains(sci.Id);
-                if (remove)
-                    _shoppingCartService.DeleteShoppingCartItem(_workContext.CurrentCustomer, sci, ensureOnlyActiveCheckoutAttributes: true);
-                else
-                {
                     foreach (string formKey in form.Keys)
                         if (formKey.Equals(string.Format("itemquantity{0}", sci.Id), StringComparison.OrdinalIgnoreCase))
                         {
@@ -248,10 +242,7 @@ namespace Grand.Web.Controllers
                             }
                             break;
                         }
-                }
             }
-            //parse and save checkout attributes
-            _shoppingCartViewModelService.ParseAndSaveCheckoutAttributes(cart, form);
 
             //updated cart
             _workContext.CurrentCustomer = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id);
@@ -274,8 +265,12 @@ namespace Grand.Web.Controllers
                         if (!sciModel.Warnings.Contains(w))
                             sciModel.Warnings.Add(w);
             }
-            return View(model);
+            return Json(new
+            {
+                cart = this.RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
+            });
         }
+
         [HttpPost, ActionName("Cart")]
         [FormValueRequired("clearcart")]
         public virtual IActionResult ClearCart(IFormCollection form)
@@ -301,7 +296,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost, ActionName("DeleteCartItem")]
-        public virtual IActionResult DeleteCartItem(string id)
+        public virtual IActionResult DeleteCartItem(string id, bool shoppingcartpage = false)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return RedirectToRoute("HomePage");
@@ -318,12 +313,30 @@ namespace Grand.Web.Controllers
 
 
             var model = _shoppingCartViewModelService.PrepareMiniShoppingCart();
-
-            return Json(new
+            if (!shoppingcartpage)
             {
-                totalproducts = string.Format(_localizationService.GetResource("ShoppingCart.HeaderQuantity"), model.TotalProducts),
-                html = this.RenderPartialViewToString("Components/FlyoutShoppingCart/Default", model)
-            });
+                return Json(new
+                {
+                    totalproducts = string.Format(_localizationService.GetResource("ShoppingCart.HeaderQuantity"), model.TotalProducts),
+                    flyoutshoppingcart = this.RenderViewComponentToString("FlyoutShoppingCart", model)
+                });
+            }
+            else
+            {
+                var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .LimitPerStore(_storeContext.CurrentStore.Id).ToList();
+
+                var shoppingcartmodel = new ShoppingCartModel();
+                _shoppingCartViewModelService.PrepareShoppingCart(shoppingcartmodel, cart);
+
+                return Json(new
+                {
+                    totalproducts = string.Format(_localizationService.GetResource("ShoppingCart.HeaderQuantity"), model.TotalProducts),
+                    flyoutshoppingcart = this.RenderViewComponentToString("FlyoutShoppingCart", model),
+                    cart = this.RenderViewComponentToString("OrderSummary", new { overriddenModel = shoppingcartmodel })
+                });
+            }
 
         }
 
@@ -377,17 +390,14 @@ namespace Grand.Web.Controllers
             return RedirectToRoute("Checkout");
         }
 
-        [HttpPost, ActionName("Cart")]
-        [FormValueRequired("applydiscountcouponcode")]
-        public virtual IActionResult ApplyDiscountCoupon(string discountcouponcode, IFormCollection form)
+        [PublicAntiForgery]
+        [HttpPost]
+        public virtual IActionResult ApplyDiscountCoupon(string discountcouponcode)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
-
-            //parse and save checkout attributes
-            _shoppingCartViewModelService.ParseAndSaveCheckoutAttributes(cart, form);
 
             var model = new ShoppingCartModel();
             if (!String.IsNullOrWhiteSpace(discountcouponcode))
@@ -460,12 +470,16 @@ namespace Grand.Web.Controllers
             }
 
             _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
-            return View(model);
+
+            return Json(new
+            {
+                cart = this.RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
+            });
         }
 
-        [HttpPost, ActionName("Cart")]
-        [FormValueRequired("applygiftcardcouponcode")]
-        public virtual IActionResult ApplyGiftCard(string giftcardcouponcode, IFormCollection form)
+        [PublicAntiForgery]
+        [HttpPost]
+        public virtual IActionResult ApplyGiftCard(string giftcardcouponcode)
         {
             //trim
             if (giftcardcouponcode != null)
@@ -475,9 +489,6 @@ namespace Grand.Web.Controllers
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
-
-            //parse and save checkout attributes
-            _shoppingCartViewModelService.ParseAndSaveCheckoutAttributes(cart, form);
 
             var model = new ShoppingCartModel();
             if (!cart.IsRecurring())
@@ -511,7 +522,10 @@ namespace Grand.Web.Controllers
             }
 
             _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
-            return View(model);
+            return Json(new
+            {
+                cart = this.RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
+            });
         }
 
         [PublicAntiForgery]
@@ -530,16 +544,11 @@ namespace Grand.Web.Controllers
             return PartialView("_EstimateShippingResult", model);
         }
 
-        [HttpPost, ActionName("Cart")]
-        [FormValueRequired(FormValueRequirement.StartsWith, "removediscount-")]
-        public virtual IActionResult RemoveDiscountCoupon(IFormCollection form)
+        [PublicAntiForgery]
+        [HttpPost]
+        public virtual IActionResult RemoveDiscountCoupon(string discountId)
         {
             var model = new ShoppingCartModel();
-            string discountId = string.Empty;
-            foreach (var formValue in form.Keys)
-                if (formValue.StartsWith("removediscount-", StringComparison.OrdinalIgnoreCase))
-                    discountId = formValue.Substring("removediscount-".Length);
-
             var discount = _discountService.GetDiscountById(discountId);
             if (discount != null)
             {
@@ -558,20 +567,19 @@ namespace Grand.Web.Controllers
                 .ToList();
 
             _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
-            return View(model);
+            return Json(new
+            {
+                cart = this.RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
+            });
         }
 
-        [HttpPost, ActionName("Cart")]
-        [FormValueRequired(FormValueRequirement.StartsWith, "removegiftcard-")]
-        public virtual IActionResult RemoveGiftCardCode(IFormCollection form)
+        [PublicAntiForgery]
+        [HttpPost]
+        public virtual IActionResult RemoveGiftCardCode(string giftCardId)
         {
             var model = new ShoppingCartModel();
 
             //get gift card identifier
-            string giftCardId = "";
-            foreach (var formValue in form.Keys)
-                if (formValue.StartsWith("removegiftcard-", StringComparison.OrdinalIgnoreCase))
-                    giftCardId = formValue.Substring("removegiftcard-".Length);
             var gc = _giftCardService.GetGiftCardById(giftCardId);
             if (gc != null)
             {
@@ -583,7 +591,11 @@ namespace Grand.Web.Controllers
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             _shoppingCartViewModelService.PrepareShoppingCart(model, cart);
-            return View(model);
+            return Json(new
+            {
+                cart = this.RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
+            });
+
         }
         #endregion
 

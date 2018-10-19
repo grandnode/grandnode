@@ -1,19 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Linq;
-using Grand.Web.Areas.Admin.Models.ShoppingCart;
-using Grand.Core.Domain.Customers;
+﻿using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
+using Grand.Core.Infrastructure;
+using Grand.Framework.Kendoui;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
-using Grand.Services.Orders;
 using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Services.Tax;
-using Grand.Framework.Kendoui;
-using Grand.Core.Infrastructure;
+using Grand.Web.Areas.Admin.Models.ShoppingCart;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -39,9 +38,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             IDateTimeHelper dateTimeHelper,
             IPriceFormatter priceFormatter,
             IStoreService storeService,
-            ITaxService taxService, 
+            ITaxService taxService,
             IPriceCalculationService priceCalculationService,
-            IPermissionService permissionService, 
+            IPermissionService permissionService,
             ILocalizationService localizationService,
             IProductAttributeFormatter productAttributeFormatter)
         {
@@ -57,7 +56,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         #endregion
-        
+
         #region Methods
 
         //shopping carts
@@ -87,7 +86,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     CustomerId = x.Id,
                     CustomerEmail = x.IsRegistered() ? x.Email : _localizationService.GetResource("Admin.Customers.Guest"),
-                    TotalItems = x.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).Sum(y=>y.Quantity)
+                    TotalItems = x.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).Sum(y => y.Quantity)
                 }),
                 Total = customers.TotalCount
             };
@@ -131,19 +130,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-
-
-
-
         //wishlists
-        public IActionResult CurrentWishlists()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
-                return AccessDeniedView();
-
-            return View();
-        }
-
         [HttpPost]
         public IActionResult CurrentWishlists(DataSourceRequest command)
         {
@@ -162,7 +149,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     CustomerId = x.Id,
                     CustomerEmail = x.IsRegistered() ? x.Email : _localizationService.GetResource("Admin.Customers.Guest"),
-                    TotalItems = x.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).Sum(y=>y.Quantity)
+                    TotalItems = x.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).Sum(y => y.Quantity)
                 }),
                 Total = customers.TotalCount
             };
@@ -185,7 +172,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     decimal taxRate;
                     var store = _storeService.GetStoreById(sci.StoreId);
-                    var product = EngineContext.Current.Resolve<IProductService>().GetProductById(sci.ProductId);                    
+                    var product = EngineContext.Current.Resolve<IProductService>().GetProductById(sci.ProductId);
                     var sciModel = new ShoppingCartItemModel
                     {
                         Id = sci.Id,

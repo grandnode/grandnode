@@ -1,4 +1,3 @@
-
 using Grand.Core.Domain.Catalog;
 
 namespace Grand.Services.Catalog

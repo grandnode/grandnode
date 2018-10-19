@@ -1,6 +1,6 @@
-using System.Collections.Generic;
 using Grand.Core;
 using Grand.Core.Domain.Catalog;
+using System.Collections.Generic;
 
 namespace Grand.Services.Catalog
 {
@@ -29,6 +29,13 @@ namespace Grand.Services.Catalog
             int pageSize = int.MaxValue,
             bool showHidden = false);
 
+        /// <summary>
+        /// Gets all manufacturers displayed on the home page
+        /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Manufacturers</returns>
+        IList<Manufacturer> GetAllManufacturerFeaturedProductsOnHomePage(bool showHidden = false);
+        
         /// <summary>
         /// Gets a manufacturer
         /// </summary>

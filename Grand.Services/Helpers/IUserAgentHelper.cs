@@ -1,4 +1,3 @@
-
 namespace Grand.Services.Helpers
 {
     /// <summary>

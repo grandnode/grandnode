@@ -2,7 +2,6 @@
 using Grand.Core.Domain.Seo;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Grand.Core.Domain.Knowledgebase
 {

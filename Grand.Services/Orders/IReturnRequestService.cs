@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Core.Domain.Orders;
+using System.Collections.Generic;
 
 namespace Grand.Services.Orders
 {

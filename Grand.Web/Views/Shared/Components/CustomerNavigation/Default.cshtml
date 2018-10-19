@@ -49,15 +49,15 @@
                                                                              {<text>inactive</text>}">@T("Account.CustomerNotes")</a>
                                                                         </li>
                                                                     }
-            @if (!Model.HideDownloadableProducts)
+            @if (!Model.HideReturnRequests)
             {
-                <li class="customer-downloadable">
-                    <a href="@Url.RouteUrl("CustomerDownloadableProducts")" class="@if (Model.SelectedTab == CustomerNavigationEnum.DownloadableProducts)
-                                                                                   {<text>active</text>}
-                                                                                   else
-                                                                                   {<text>inactive</text>}">@T("Account.DownloadableProducts")</a>
-                                                                            </li>
-                                                                        }
+                <li class="customer-returns">
+                    <a href="@Url.RouteUrl("CustomerReturnRequests")" class="@if (Model.SelectedTab == CustomerNavigationEnum.ReturnRequests)
+                                                                             {<text>active</text>}
+                                                                             else
+                                                                             {<text>inactive</text>}">@T("Account.CustomerReturnRequests")</a>
+                                                                        </li>
+                                                                    }
             @if (!Model.HideDownloadableProducts)
             {
                 <li class="customer-downloadable">

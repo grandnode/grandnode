@@ -1,9 +1,9 @@
-using System;
-using System.Collections.Generic;
 using Grand.Core;
+using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Common;
+using System;
+using System.Collections.Generic;
 
 namespace Grand.Services.Customers
 {

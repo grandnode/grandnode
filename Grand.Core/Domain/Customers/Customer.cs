@@ -1,7 +1,7 @@
-using System;
-using System.Collections.Generic;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Orders;
+using System;
+using System.Collections.Generic;
 
 namespace Grand.Core.Domain.Customers
 {

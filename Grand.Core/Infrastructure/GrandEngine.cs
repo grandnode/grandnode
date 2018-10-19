@@ -1,21 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Autofac;
+﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
+using Grand.Core.Configuration;
+using Grand.Core.Extensions;
+using Grand.Core.Infrastructure.DependencyManagement;
+using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Infrastructure.MongoDB;
+using Grand.Core.Plugins;
+using Grand.Core.Roslyn;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Grand.Core.Configuration;
-using Grand.Core.Extensions;
-using Grand.Core.Infrastructure.DependencyManagement;
-using Grand.Core.Infrastructure.Mapper;
-using Grand.Core.Plugins;
-using Grand.Core.Infrastructure.MongoDB;
-using Grand.Core.Roslyn;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Grand.Core.Infrastructure
 {

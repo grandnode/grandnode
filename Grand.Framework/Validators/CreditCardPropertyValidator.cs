@@ -1,6 +1,6 @@
+using FluentValidation.Validators;
 using System;
 using System.Linq;
-using FluentValidation.Validators;
 
 namespace Grand.Framework.Validators
 {

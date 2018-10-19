@@ -1,8 +1,5 @@
-﻿using Grand.Services.Logging;
+﻿using Grand.Core.Domain.Tasks;
 using Grand.Services.Customers;
-using Grand.Core.Caching;
-using Grand.Core.Infrastructure;
-using Grand.Core.Domain.Tasks;
 
 namespace Grand.Services.Tasks
 {

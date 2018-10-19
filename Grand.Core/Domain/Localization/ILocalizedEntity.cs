@@ -1,4 +1,3 @@
-
 using System.Collections.Generic;
 
 namespace Grand.Core.Domain.Localization

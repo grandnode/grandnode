@@ -1,8 +1,8 @@
-﻿using System;
-using System.Linq;
-using Grand.Core.Data;
+﻿using Grand.Core.Data;
 using Grand.Core.Domain.Messages;
 using Grand.Services.Events;
+using System;
+using System.Linq;
 
 namespace Grand.Services.Messages
 {

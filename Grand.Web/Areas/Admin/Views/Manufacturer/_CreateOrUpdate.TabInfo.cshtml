@@ -90,6 +90,16 @@
             </div>
         </div>
         <div class="form-group">
+            <admin-label asp-for="FeaturedProductsOnHomaPage" />
+            <div class="col-md-9 col-sm-9">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    <admin-input asp-for="FeaturedProductsOnHomaPage" />
+                    <span></span>
+                </label>
+                <span asp-validation-for="FeaturedProductsOnHomaPage"></span>
+            </div>
+        </div>
+        <div class="form-group">
             <admin-label asp-for="IncludeInTopMenu" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">

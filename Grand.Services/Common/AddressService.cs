@@ -1,10 +1,10 @@
-using System;
-using System.Linq;
 using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Core.Domain.Common;
 using Grand.Services.Directory;
 using Grand.Services.Events;
+using System;
+using System.Linq;
 
 namespace Grand.Services.Common
 {

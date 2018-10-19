@@ -1,5 +1,4 @@
-﻿
-namespace Grand.Framework.Mvc.ModelBinding
+﻿namespace Grand.Framework.Mvc.ModelBinding
 {
     /// <summary>
     /// Represents custom model attribute

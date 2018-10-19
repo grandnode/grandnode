@@ -1,6 +1,6 @@
+using Grand.Core.Domain.Catalog;
 using System;
 using System.Collections.Generic;
-using Grand.Core.Domain.Catalog;
 
 namespace Grand.Core.Domain.Orders
 {

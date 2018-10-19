@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Core.Data;
+using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Messages;
 using Grand.Services.Customers;
 using Grand.Services.Events;
-using Grand.Core.Domain.Customers;
-using Grand.Services.Logging;
 using Grand.Services.Localization;
+using Grand.Services.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Grand.Services.Messages
 {
