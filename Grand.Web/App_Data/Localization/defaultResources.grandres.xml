@@ -19572,4 +19572,7 @@
   <LocaleResource Name="Products.GiftCard.SenderName">
     <Value>Your Name</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.QuickView">
+    <Value>Quick View</Value>
+  </LocaleResource>
 </Language>
