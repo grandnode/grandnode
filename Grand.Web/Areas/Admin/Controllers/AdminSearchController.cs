@@ -53,7 +53,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (string.IsNullOrEmpty(searchTerm))
                 return Json("error");
 
-            if(!_workContext.CurrentCustomer.IsAdmin())
+            if (!_workContext.CurrentCustomer.IsAdmin())
             {
                 return Json("Access Denied");
             }
@@ -64,7 +64,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 if (result.Count() < _adminSearchSettings.MaxSearchResultsCount && _adminSearchSettings.SearchInProducts)
                 {
-                    var products = _productService.SearchProducts(keywords: searchTerm, pageSize: _adminSearchSettings.MaxSearchResultsCount - result.Count());
+                    var products = _productService.SearchProducts(keywords: searchTerm, pageSize: _adminSearchSettings.MaxSearchResultsCount - result.Count(), showHidden: true);
                     foreach (var product in products)
                     {
                         result.Add(new Tuple<object, int>(new
@@ -78,7 +78,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
                 if (result.Count() < _adminSearchSettings.MaxSearchResultsCount && _adminSearchSettings.SearchInCategories)
                 {
-                    var categories = _categoryService.GetAllCategories(searchTerm, pageSize: _adminSearchSettings.MaxSearchResultsCount - result.Count());
+                    var categories = _categoryService.GetAllCategories(searchTerm, pageSize: _adminSearchSettings.MaxSearchResultsCount - result.Count(), showHidden: true);
                     foreach (var category in categories)
                     {
                         result.Add(new Tuple<object, int>(new
@@ -92,7 +92,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
                 if (result.Count() < _adminSearchSettings.MaxSearchResultsCount && _adminSearchSettings.SearchInManufacturers)
                 {
-                    var manufacturers = _manufacturerService.GetAllManufacturers(searchTerm, pageSize: _adminSearchSettings.MaxSearchResultsCount - result.Count());
+                    var manufacturers = _manufacturerService.GetAllManufacturers(searchTerm, pageSize: _adminSearchSettings.MaxSearchResultsCount - result.Count(), showHidden: true);
                     foreach (var manufacturer in manufacturers)
                     {
                         result.Add(new Tuple<object, int>(new
@@ -121,7 +121,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
                 if (result.Count() < _adminSearchSettings.MaxSearchResultsCount && _adminSearchSettings.SearchInNews)
                 {
-                    var news = _newsService.GetAllNews(newsTitle: searchTerm, pageSize: _adminSearchSettings.MaxSearchResultsCount - result.Count());
+                    var news = _newsService.GetAllNews(newsTitle: searchTerm, pageSize: _adminSearchSettings.MaxSearchResultsCount - result.Count(), showHidden: true);
                     foreach (var signleNews in news)
                     {
                         result.Add(new Tuple<object, int>(new
@@ -135,7 +135,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
                 if (result.Count() < _adminSearchSettings.MaxSearchResultsCount && _adminSearchSettings.SearchInBlogs)
                 {
-                    var blogPosts = _blogService.GetAllBlogPosts(blogPostName: searchTerm, pageSize: _adminSearchSettings.MaxSearchResultsCount - result.Count());
+                    var blogPosts = _blogService.GetAllBlogPosts(blogPostName: searchTerm, pageSize: _adminSearchSettings.MaxSearchResultsCount - result.Count(), showHidden: true);
                     foreach (var blogPost in blogPosts)
                     {
                         result.Add(new Tuple<object, int>(new
