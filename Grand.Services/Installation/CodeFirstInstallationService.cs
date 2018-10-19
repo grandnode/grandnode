@@ -5112,7 +5112,7 @@ namespace Grand.Services.Installation
                 ShowCategoryProductNumber = false,
                 ShowCategoryProductNumberIncludingSubcategories = false,
                 CategoryBreadcrumbEnabled = true,
-                ShowShareButton = true,
+                ShowShareButton = false,
                 PageShareCode = "<!-- AddThis Button BEGIN --><div class=\"addthis_inline_share_toolbox\"></div><script type=\"text/javascript\" src=\"//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5bbf4b026e74abf6\"></script><!-- AddThis Button END -->",
                 ProductReviewsMustBeApproved = false,
                 DefaultProductRatingValue = 5,
