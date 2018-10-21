@@ -34,6 +34,16 @@ namespace Grand.Core.Domain.Orders
         public int Quantity { get; set; }
 
         /// <summary>
+        /// Gets or sets the unit price without discount in primary store currency (incl tax)
+        /// </summary>
+        public decimal UnitPriceWithoutDiscInclTax { get; set; }
+
+        /// <summary>
+        /// Gets or sets the unit price without discount in primary store currency (excl tax)
+        /// </summary>
+        public decimal UnitPriceWithoutDiscExclTax { get; set; }
+
+        /// <summary>
         /// Gets or sets the unit price in primary store currency (incl tax)
         /// </summary>
         public decimal UnitPriceInclTax { get; set; }

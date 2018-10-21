@@ -59,7 +59,10 @@ namespace Grand.Web.Models.ShoppingCart
             public string ProductId { get; set; }
             public string ProductName { get; set; }
             public string ProductSeName { get; set; }
+            public string UnitPriceWithoutDiscount { get; set; }
+            public decimal UnitPriceWithoutDiscountValue { get; set; }
             public string UnitPrice { get; set; }
+            public decimal UnitPriceValue { get; set; }
             public string SubTotal { get; set; }
             public string Discount { get; set; }
             public int Quantity { get; set; }
@@ -72,7 +75,6 @@ namespace Grand.Web.Models.ShoppingCart
             public string AuctionInfo { get; set; }
             public string Parameter { get; set; }
             public IList<string> Warnings { get; set; }
-
         }
 
         public partial class CheckoutAttributeModel : BaseGrandEntityModel

@@ -130,6 +130,10 @@
                                 <td class="unit-price">
                                     <span class="unit-price-text">@T("ShoppingCart.UnitPrice"):</span>
                                     <span class="product-unit-price price">@item.UnitPrice</span>
+                                    @if (item.UnitPriceWithoutDiscountValue != item.UnitPriceValue)
+                                    {
+                                        <div class="text-center"><del class="small text-danger">(@item.UnitPriceWithoutDiscount)</del></div>
+                                    }
                                 </td>
                                 @if (Model.IsEditable)
                                 {
@@ -149,7 +153,7 @@
                                         <td class="quantity">
                                             <div class="d-inline-flex">
                                                 <div class="minus" onclick="$(this).parent().find('.qty-input').attr('value', function (i, oldval) {if(oldval>1){ return --oldval; } else { return oldval}}).trigger('change')"></div>
-                                                <input id="itemquantity@(item.Id)" name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" onchange="ChangeShoppingCart()"  class="qty-input form-control text-center" />
+                                                <input id="itemquantity@(item.Id)" name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" onchange="ChangeShoppingCart()" class="qty-input form-control text-center" />
                                                 <div class="plus" onclick="$(this).parent().find('.qty-input').attr('value',function (i, oldval) {return ++oldval;}).trigger('change')"></div>
                                             </div>
                                         </td>

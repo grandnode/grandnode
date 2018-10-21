@@ -455,6 +455,7 @@ namespace Grand.Services.Tax
             Customer customer,
             out decimal taxRate,
             decimal unitPrice,
+            decimal unitPricewithoutDisc,
             decimal subTotal,
             decimal discountAmount,
             bool priceIncludesTax
@@ -471,6 +472,9 @@ namespace Grand.Services.Tax
             {
                 if (isTaxable)
                 {
+                    productPrice.UnitPriceWihoutDiscInclTax = unitPricewithoutDisc;
+                    productPrice.UnitPriceWihoutDiscExclTax = CalculatePrice(unitPricewithoutDisc, taxRate, false);
+
                     productPrice.UnitPriceInclTax = unitPrice;
                     productPrice.UnitPriceExclTax = CalculatePrice(unitPrice, taxRate, false);
 
@@ -482,6 +486,9 @@ namespace Grand.Services.Tax
                 }
                 else
                 {
+                    productPrice.UnitPriceWihoutDiscInclTax = CalculatePrice(unitPricewithoutDisc, taxRate, false);
+                    productPrice.UnitPriceWihoutDiscExclTax = CalculatePrice(unitPricewithoutDisc, taxRate, false);
+
                     productPrice.UnitPriceInclTax = CalculatePrice(unitPrice, taxRate, false);
                     productPrice.UnitPriceExclTax = CalculatePrice(unitPrice, taxRate, false);
 
@@ -496,6 +503,9 @@ namespace Grand.Services.Tax
             {
                 if (isTaxable)
                 {
+                    productPrice.UnitPriceWihoutDiscInclTax = CalculatePrice(unitPricewithoutDisc, taxRate, false);
+                    productPrice.UnitPriceWihoutDiscExclTax = unitPricewithoutDisc;
+
                     productPrice.UnitPriceInclTax = CalculatePrice(unitPrice, taxRate, true);
                     productPrice.UnitPriceExclTax = unitPrice;
 
@@ -507,6 +517,9 @@ namespace Grand.Services.Tax
                 }
                 else
                 {
+                    productPrice.UnitPriceWihoutDiscInclTax = unitPricewithoutDisc;
+                    productPrice.UnitPriceWihoutDiscExclTax = unitPricewithoutDisc;
+
                     productPrice.UnitPriceInclTax = unitPrice;
                     productPrice.UnitPriceExclTax = unitPrice;
 

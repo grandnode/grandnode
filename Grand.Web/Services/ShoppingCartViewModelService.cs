@@ -458,12 +458,17 @@ namespace Grand.Web.Services
                 {
                     cartItemModel.UnitPrice = _localizationService.GetResource("Products.CallForPrice");
                     cartItemModel.SubTotal = _localizationService.GetResource("Products.CallForPrice");
+                    cartItemModel.UnitPriceWithoutDiscount = _localizationService.GetResource("Products.CallForPrice");
                 }
                 else
                 {
                     decimal taxRate;
                     decimal shoppingCartUnitPriceWithDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetUnitPrice(sci), out taxRate);
                     decimal shoppingCartUnitPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartUnitPriceWithDiscountBase, _workContext.WorkingCurrency);
+
+                    cartItemModel.UnitPriceWithoutDiscountValue = _priceCalculationService.GetUnitPrice(sci, false);
+                    cartItemModel.UnitPriceWithoutDiscount = _priceFormatter.FormatPrice(cartItemModel.UnitPriceWithoutDiscountValue);
+                    cartItemModel.UnitPriceValue = shoppingCartUnitPriceWithDiscount;
                     cartItemModel.UnitPrice = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount);
                
                     //sub total

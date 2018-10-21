@@ -2,6 +2,8 @@
 {
     public class TaxProductPrice
     {
+        public decimal UnitPriceWihoutDiscInclTax { get; set; }
+        public decimal UnitPriceWihoutDiscExclTax { get; set; }
         public decimal UnitPriceInclTax { get; set; }
         public decimal UnitPriceExclTax { get; set; }
         public decimal SubTotalInclTax { get; set; }

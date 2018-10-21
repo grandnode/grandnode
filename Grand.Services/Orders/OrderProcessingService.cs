@@ -1199,10 +1199,14 @@ namespace Grand.Services.Orders
                             List<AppliedDiscount> scDiscounts;
                             decimal discountAmount;
                             decimal scUnitPrice = _priceCalculationService.GetUnitPrice(sc);
+                            decimal scUnitPriceWithoutDisc = _priceCalculationService.GetUnitPrice(sc, false);
+
                             var product = _productService.GetProductById(sc.ProductId);
                             decimal scSubTotal = _priceCalculationService.GetSubTotal(sc, true, out discountAmount, out scDiscounts);
 
-                            var prices = _taxService.GetTaxProductPrice(product, details.Customer, out taxRate, scUnitPrice, scSubTotal, discountAmount, _taxSettings.PricesIncludeTax);
+                            var prices = _taxService.GetTaxProductPrice(product, details.Customer, out taxRate, scUnitPrice, scUnitPriceWithoutDisc, scSubTotal, discountAmount, _taxSettings.PricesIncludeTax);
+                            decimal scUnitPriceWithoutDiscInclTax = prices.UnitPriceWihoutDiscInclTax;
+                            decimal scUnitPriceWithoutDiscExclTax = prices.UnitPriceWihoutDiscExclTax;
                             decimal scUnitPriceInclTax = prices.UnitPriceInclTax;
                             decimal scUnitPriceExclTax = prices.UnitPriceExclTax;
                             decimal scSubTotalInclTax = prices.SubTotalInclTax;
@@ -1247,6 +1251,8 @@ namespace Grand.Services.Orders
                                 ProductId = sc.ProductId,
                                 VendorId = product.VendorId,
                                 WarehouseId = warehouseId,
+                                UnitPriceWithoutDiscInclTax = scUnitPriceWithoutDiscInclTax,
+                                UnitPriceWithoutDiscExclTax = scUnitPriceWithoutDiscExclTax,
                                 UnitPriceInclTax = scUnitPriceInclTax,
                                 UnitPriceExclTax = scUnitPriceExclTax,
                                 PriceInclTax = scSubTotalInclTax,
@@ -1483,6 +1489,8 @@ namespace Grand.Services.Orders
                                 ProductId = orderItem.ProductId,
                                 VendorId = orderItem.VendorId,
                                 WarehouseId = orderItem.WarehouseId,
+                                UnitPriceWithoutDiscInclTax = orderItem.UnitPriceWithoutDiscInclTax,
+                                UnitPriceWithoutDiscExclTax = orderItem.UnitPriceWithoutDiscExclTax,
                                 UnitPriceInclTax = orderItem.UnitPriceInclTax,
                                 UnitPriceExclTax = orderItem.UnitPriceExclTax,
                                 PriceInclTax = orderItem.PriceInclTax,
