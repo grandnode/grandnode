@@ -461,13 +461,6 @@ namespace Grand.Services.Tax
             )
         {
 
-            //no need to calculate tax rate if passed "price" is 0
-            if (unitPrice == decimal.Zero)
-            {
-                taxRate = decimal.Zero;
-                return new TaxProductPrice();
-            }
-
             string taxCategoryId = ""; //it seems to be strange, but this way was used above
             var productPrice = new TaxProductPrice();
 
