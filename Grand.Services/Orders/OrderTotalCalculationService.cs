@@ -151,7 +151,7 @@ namespace Grand.Services.Orders
                     }
                 }
 
-            appliedDiscounts = _discountService.GetPreferredDiscount(allowedDiscounts, orderSubTotal, out discountAmount);
+            appliedDiscounts = _discountService.GetPreferredDiscount(allowedDiscounts, customer, orderSubTotal, out discountAmount);
 
             if (discountAmount < decimal.Zero)
                 discountAmount = decimal.Zero;
@@ -191,7 +191,7 @@ namespace Grand.Services.Orders
                         });
                     }
                 }
-            appliedDiscounts = _discountService.GetPreferredDiscount(allowedDiscounts, shippingTotal, out shippingDiscountAmount);
+            appliedDiscounts = _discountService.GetPreferredDiscount(allowedDiscounts, customer, shippingTotal, out shippingDiscountAmount);
 
             if (shippingDiscountAmount < decimal.Zero)
                 shippingDiscountAmount = decimal.Zero;
@@ -236,7 +236,7 @@ namespace Grand.Services.Orders
                         });
                     }
                 }
-            appliedDiscounts = _discountService.GetPreferredDiscount(allowedDiscounts, orderTotal, out discountAmount);
+            appliedDiscounts = _discountService.GetPreferredDiscount(allowedDiscounts, customer, orderTotal, out discountAmount);
 
             if (discountAmount < decimal.Zero)
                 discountAmount = decimal.Zero;

@@ -1,4 +1,5 @@
 ﻿using Grand.Core;
+using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Discounts;
 using System.Collections.Generic;
@@ -202,25 +203,40 @@ namespace Grand.Services.Discounts
         /// <param name="discount"></param>
         /// <param name="amount"></param>
         /// <returns></returns>
-        decimal GetDiscountAmount(Discount discount, decimal amount);
+        decimal GetDiscountAmount(Discount discount, Customer customer, Product product, decimal amount);
 
         /// <summary>
         /// Get preferred discount
         /// </summary>
         /// <param name="discounts"></param>
         /// <param name="amount"></param>
+        /// <param name="customer"></param>
+        /// <param name="product"></param>
         /// <param name="discountAmount"></param>
         /// <returns></returns>
         List<AppliedDiscount> GetPreferredDiscount(IList<AppliedDiscount> discounts,
-            decimal amount, out decimal discountAmount);
-        
+            Customer customer, Product product, decimal amount, out decimal discountAmount);
+
         /// <summary>
-        /// 
+        /// Get preferred discount
+        /// </summary>
+        /// <param name="discounts"></param>
+        /// <param name="amount"></param>
+        /// <param name="customer"></param>
+        /// <param name="discountAmount"></param>
+        /// <returns></returns>
+        List<AppliedDiscount> GetPreferredDiscount(IList<AppliedDiscount> discounts,
+            Customer customer, decimal amount, out decimal discountAmount);
+
+        /// <summary>
+        /// GetDiscountAmountProvider
         /// </summary>
         /// <param name="discount"></param>
+        /// <param name="customer"></param>
+        /// <param name="product"></param>
         /// <param name="amount"></param>
         /// <returns></returns>
-        decimal GetDiscountAmountProvider(Discount discount, decimal amount);
+        decimal GetDiscountAmountProvider(Discount discount, Customer customer, Product product, decimal amount);
 
         /// <summary>
         /// Load discount amount provider by systemName

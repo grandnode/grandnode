@@ -391,7 +391,7 @@ namespace Grand.Services.Catalog
             if (!allowedDiscounts.Any())
                 return appliedDiscountAmount;
 
-            appliedDiscounts = _discountService.GetPreferredDiscount(allowedDiscounts, productPriceWithoutDiscount, out appliedDiscountAmount);
+            appliedDiscounts = _discountService.GetPreferredDiscount(allowedDiscounts, customer, product, productPriceWithoutDiscount, out appliedDiscountAmount);
             return appliedDiscountAmount;
         }
 

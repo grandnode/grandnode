@@ -805,7 +805,7 @@ namespace Grand.Services.Discounts
         /// <param name="discount"></param>
         /// <param name="amount"></param>
         /// <returns></returns>
-        public decimal GetDiscountAmount(Discount discount, decimal amount)
+        public decimal GetDiscountAmount(Discount discount, Customer customer, Product product, decimal amount)
         {
             if (discount == null)
                 throw new ArgumentNullException("discount");
@@ -821,7 +821,7 @@ namespace Grand.Services.Discounts
             }
             else
             {
-                result = GetDiscountAmountProvider(discount, amount);
+                result = GetDiscountAmountProvider(discount, customer, product, amount);
             }
 
             //validate maximum disocunt amount
@@ -840,9 +840,13 @@ namespace Grand.Services.Discounts
         /// Get preferred discount (with maximum discount value)
         /// </summary>
         /// <param name="discounts">A list of discounts to check</param>
+        /// <param name="customer"
+        /// <param name="product"></param>
         /// <param name="amount">Amount</param>
+        /// <param name="discountAmount"></param>
         /// <returns>Preferred discount</returns>
         public List<AppliedDiscount> GetPreferredDiscount(IList<AppliedDiscount> discounts,
+            Customer customer, Product product,
             decimal amount, out decimal discountAmount)
         {
             if (discounts == null)
@@ -857,7 +861,7 @@ namespace Grand.Services.Discounts
             foreach (var applieddiscount in discounts)
             {
                 var discount = GetDiscountById(applieddiscount.DiscountId);
-                decimal currentDiscountValue = GetDiscountAmount(discount, amount);
+                decimal currentDiscountValue = GetDiscountAmount(discount,customer, product, amount);
                 if (currentDiscountValue > discountAmount)
                 {
                     discountAmount = currentDiscountValue;
@@ -871,7 +875,7 @@ namespace Grand.Services.Discounts
             var cumulativeDiscounts = discounts.Where(x => x.IsCumulative).ToList();
             if (cumulativeDiscounts.Count > 1)
             {
-                var cumulativeDiscountAmount = cumulativeDiscounts.Sum(d => GetDiscountAmount(GetDiscountById(d.DiscountId), amount));
+                var cumulativeDiscountAmount = cumulativeDiscounts.Sum(d => GetDiscountAmount(GetDiscountById(d.DiscountId),customer, product, amount));
                 if (cumulativeDiscountAmount > discountAmount)
                 {
                     discountAmount = cumulativeDiscountAmount;
@@ -883,7 +887,20 @@ namespace Grand.Services.Discounts
 
             return result;
         }
-
+        /// <summary>
+        /// Get preferred discount (with maximum discount value)
+        /// </summary>
+        /// <param name="discounts">A list of discounts to check</param>
+        /// <param name="customer"
+        /// <param name="amount">Amount</param>
+        /// <param name="discountAmount"></param>
+        /// <returns>Preferred discount</returns>
+        public List<AppliedDiscount> GetPreferredDiscount(IList<AppliedDiscount> discounts,
+            Customer customer,
+            decimal amount, out decimal discountAmount)
+        {
+            return GetPreferredDiscount(discounts, customer, null, amount, out discountAmount);
+        }
 
         /// <summary>
         /// Get amount from discount amount provider 
@@ -891,12 +908,12 @@ namespace Grand.Services.Discounts
         /// <param name="discount"></param>
         /// <param name="amount"></param>
         /// <returns></returns>
-        public virtual decimal GetDiscountAmountProvider(Discount discount, decimal amount)
+        public virtual decimal GetDiscountAmountProvider(Discount discount, Customer customer, Product product, decimal amount)
         {
             var discountAmountProvider = LoadDiscountAmountProviderBySystemName(discount.DiscountPluginName);
             if (discountAmountProvider == null)
                 return 0;
-            return discountAmountProvider.DiscountAmount(discount, amount);
+            return discountAmountProvider.DiscountAmount(discount, customer, product, amount);
         }
 
 
