@@ -37,7 +37,7 @@
         if (document.getElementById("reservationDatepickerTo") != null) {
             this.fillAvailableDatesTo(startDateYear, startDateMonth);
         }
-
+        var defdate = new Date(this.startDate);
         $("#reservationDatepicker").datepicker({
             onSelect: this.onDatePickerDateChange,
             firstDay: 1,
@@ -47,33 +47,28 @@
                 Reservation.fillAvailableDates(year, month, Reservation._parameter, false);
                 Reservation.onDatePickerDateChange();
             },
-            defaultDate: this.startDate
-        }
-        );
+            defaultDate: defdate
+        });
 
         $("#reservationDatepickerFrom").datepicker({
             firstDay: 1,
-            defaultDate: this.startDate,
+            defaultDate: defdate,
             onSelect: this.onDatePickerSelect,
             beforeShowDay: this.daysToMarkFrom,
             onChangeMonthYear: function (year, month, inst) {
                 Reservation.fillAvailableDatesFrom(year, month);
             },
-            defaultDate: this.startDate
-        }
-        );
+        });
 
         $("#reservationDatepickerTo").datepicker({
             firstDay: 1,
-            defaultDate: this.startDate,
+            defaultDate: defdate,
             onSelect: this.onDatePickerSelect,
             beforeShowDay: this.daysToMarkTo,
             onChangeMonthYear: function (year, month, inst) {
                 Reservation.fillAvailableDatesTo(year, month);
             },
-            defaultDate: this.startDate
-        }
-        );
+        });
 
         this.onDatePickerDateChange();
         var dropdown = document.getElementById("parameterDropdown");
