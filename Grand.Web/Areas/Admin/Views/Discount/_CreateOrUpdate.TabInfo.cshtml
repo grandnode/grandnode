@@ -75,6 +75,14 @@
             $('#pnlMaximumDiscountedQuantity').show();
             $('#tab-applied-to-vendors').hide();
             $('#tab-applied-to-stores').show();
+            }
+        else if(selectedDiscountTypeId == @(((int)DiscountType.AssignedToAllProducts).ToString())){
+            $('#tab-applied-to-categories').hide();
+            $('#tab-applied-to-manufacturers').hide();
+            $('#tab-applied-to-products').hide();
+            $('#pnlMaximumDiscountedQuantity').show();
+            $('#tab-applied-to-vendors').hide();
+            $('#tab-applied-to-stores').hide();
         }
         else {
             $('#tab-applied-to-categories').hide();
