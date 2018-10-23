@@ -18594,6 +18594,12 @@
   <LocaleResource Name="ShoppingCart.CustomerEnteredPrice.RangeError">
     <Value>The price must be from {0} to {1}</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Discount">
+    <Value>Discount</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.DiscountedQty">
+    <Value>Discounted qty</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart.Discount.CannotBeUsedAnymore">
     <Value>Sorry, you've used this discount already</Value>
   </LocaleResource>

@@ -521,4 +521,10 @@
   <LocaleResource Name="Products.QuickView">
     <Value>Quick View</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Discount">
+    <Value>Discount</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.DiscountedQty">
+    <Value>Discounted qty</Value>
+  </LocaleResource>
 </Language>
