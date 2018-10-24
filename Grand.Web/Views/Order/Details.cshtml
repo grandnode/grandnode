@@ -432,6 +432,10 @@ Model.BillingAddress.ZipPostalCodeEnabled)
                                     <td class="unit-price text-center">
                                         <span class="unit-price-text">@T("ShoppingCart.UnitPrice"):</span>
                                         <span class="product-unit-price price">@item.UnitPrice</span>
+                                        @if (item.UnitPriceWithoutDiscountValue != item.UnitPriceValue && item.UnitPriceWithoutDiscountValue > 0)
+                                        {
+                                            <div class="text-center"><del class="small text-danger">(@item.UnitPriceWithoutDiscount)</del></div>
+                                        }
                                     </td>
 
                                     <td class="quantity text-center">
@@ -441,6 +445,13 @@ Model.BillingAddress.ZipPostalCodeEnabled)
                                     <td class="subtotal text-center">
                                         <span class="subtotal-text">@T("ShoppingCart.ItemTotal"):</span>
                                         <span class="product-subtotal price">@item.SubTotal</span>
+                                        @if (!string.IsNullOrEmpty(item.Discount))
+                                        {
+                                            <div class="discount text-success text-center">
+                                                <span>@T("ShoppingCart.Discount"): </span>
+                                                <span>@item.Discount</span>
+                                            </div>
+                                        }
                                     </td>
                                 </tr>
                             }

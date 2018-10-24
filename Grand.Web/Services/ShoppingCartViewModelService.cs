@@ -35,7 +35,7 @@ using System.Linq;
 
 namespace Grand.Web.Services
 {
-    public partial class ShoppingCartViewModelService: IShoppingCartViewModelService
+    public partial class ShoppingCartViewModelService : IShoppingCartViewModelService
     {
         private readonly ICacheManager _cacheManager;
         private readonly IWorkContext _workContext;
@@ -266,7 +266,7 @@ namespace Grand.Web.Services
                 if (attribute.ShouldHaveValues())
                 {
                     //values
-                    var attributeValues = attribute.CheckoutAttributeValues; 
+                    var attributeValues = attribute.CheckoutAttributeValues;
                     foreach (var attributeValue in attributeValues)
                     {
                         var attributeValueModel = new ShoppingCartModel.CheckoutAttributeValueModel
@@ -463,14 +463,24 @@ namespace Grand.Web.Services
                 else
                 {
                     decimal taxRate;
-                    decimal shoppingCartUnitPriceWithDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetUnitPrice(sci), out taxRate);
+                    decimal shoppingCartUnitPriceWithDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetUnitPrice(sci, true, out decimal discountAmount, appliedDiscounts: out List<AppliedDiscount> appliedDiscounts), out taxRate);
                     decimal shoppingCartUnitPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartUnitPriceWithDiscountBase, _workContext.WorkingCurrency);
 
                     cartItemModel.UnitPriceWithoutDiscountValue = _priceCalculationService.GetUnitPrice(sci, false);
                     cartItemModel.UnitPriceWithoutDiscount = _priceFormatter.FormatPrice(cartItemModel.UnitPriceWithoutDiscountValue);
                     cartItemModel.UnitPriceValue = shoppingCartUnitPriceWithDiscount;
                     cartItemModel.UnitPrice = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount);
-               
+                    if (appliedDiscounts != null && appliedDiscounts.Any())
+                    {
+                        var discount = _discountService.GetDiscountById(appliedDiscounts.FirstOrDefault().DiscountId);
+                        if (discount != null && discount.MaximumDiscountedQuantity.HasValue)
+                            cartItemModel.DiscountedQty =  discount.MaximumDiscountedQuantity.Value;
+
+                        foreach (var disc in appliedDiscounts)
+                        {
+                            cartItemModel.Discounts.Add(disc.DiscountId);
+                        }
+                    }
                     //sub total
                     decimal shoppingCartItemSubTotalWithDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetSubTotal(sci, true, out decimal shoppingCartItemDiscountBase, out List<AppliedDiscount> scDiscounts), out taxRate);
                     decimal shoppingCartItemSubTotalWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartItemSubTotalWithDiscountBase, _workContext.WorkingCurrency);
@@ -779,7 +789,7 @@ namespace Grand.Web.Services
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
                     .LimitPerStore(storeId)
                     .ToList();
-                model.TotalProducts = cart.Sum(x=>x.Quantity);
+                model.TotalProducts = cart.Sum(x => x.Quantity);
                 if (cart.Any())
                 {
                     //subtotal
@@ -799,7 +809,8 @@ namespace Grand.Web.Services
                     var checkoutAttributesExistCacheKey = string.Format(ModelCacheEventConsumer.CHECKOUTATTRIBUTES_EXIST_KEY,
                         storeId, requiresShipping);
                     var checkoutAttributesExist = _cacheManager.Get(checkoutAttributesExistCacheKey,
-                        () => {
+                        () =>
+                        {
                             var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(storeId, !requiresShipping);
                             return checkoutAttributes.Any();
                         });
@@ -825,7 +836,7 @@ namespace Grand.Web.Services
                             Quantity = sci.Quantity,
                             AttributeInfo = _productAttributeFormatter.FormatAttributes(product, sci.AttributesXml)
                         };
-                        if(product.ProductType == ProductType.Reservation)
+                        if (product.ProductType == ProductType.Reservation)
                         {
                             var reservation = "";
                             if (sci.RentalEndDateUtc == default(DateTime) || sci.RentalEndDateUtc == null)
@@ -1064,7 +1075,7 @@ namespace Grand.Web.Services
                     model.ReservationInfo += "<br>" + string.Format(_localizationService.GetResource("ShoppingCart.Reservation.Duration"), duration);
                 }
             }
-            
+
             if (cartType != ShoppingCartType.Auctions)
             {
                 var sci = customer.ShoppingCartItems.FirstOrDefault(x => x.ProductId == product.Id && (string.IsNullOrEmpty(x.AttributesXml) ? "" : x.AttributesXml) == attributesXml);
@@ -1081,7 +1092,7 @@ namespace Grand.Web.Services
                     decimal shoppingCartUnitPriceWithDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetUnitPrice(sci), out taxRate);
                     decimal shoppingCartUnitPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartUnitPriceWithDiscountBase, _workContext.WorkingCurrency);
                     model.Price = customerEnteredPrice == 0 ? _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount) : _priceFormatter.FormatPrice(customerEnteredPrice);
-                    model.DecimalPrice = customerEnteredPrice == 0 ? shoppingCartUnitPriceWithDiscount: customerEnteredPrice;
+                    model.DecimalPrice = customerEnteredPrice == 0 ? shoppingCartUnitPriceWithDiscount : customerEnteredPrice;
                     model.TotalPrice = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount * sci.Quantity);
                 }
 
@@ -1188,7 +1199,7 @@ namespace Grand.Web.Services
                     case AttributeControlType.ReadonlyCheckboxes:
                         {
                             //load read-only (already server-side selected) values
-                            var attributeValues = attribute.CheckoutAttributeValues; 
+                            var attributeValues = attribute.CheckoutAttributeValues;
                             foreach (var selectedAttributeId in attributeValues
                                 .Where(v => v.IsPreSelected)
                                 .Select(v => v.Id)
@@ -1262,7 +1273,7 @@ namespace Grand.Web.Services
             string attributesXml = "";
 
             #region Product attributes
-            var productAttributes = product.ProductAttributeMappings; 
+            var productAttributes = product.ProductAttributeMappings;
             foreach (var attribute in productAttributes)
             {
                 string controlId = string.Format("product_attribute_{0}", attribute.Id);
@@ -1298,7 +1309,7 @@ namespace Grand.Web.Services
                     case AttributeControlType.ReadonlyCheckboxes:
                         {
                             //load read-only (already server-side selected) values
-                            var attributeValues = attribute.ProductAttributeValues; 
+                            var attributeValues = attribute.ProductAttributeValues;
                             foreach (var selectedAttributeId in attributeValues
                                 .Where(v => v.IsPreSelected)
                                 .Select(v => v.Id)

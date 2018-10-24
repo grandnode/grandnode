@@ -130,7 +130,7 @@
                                 <td class="unit-price">
                                     <span class="unit-price-text">@T("ShoppingCart.UnitPrice"):</span>
                                     <span class="product-unit-price price">@item.UnitPrice</span>
-                                    @if (item.UnitPriceWithoutDiscountValue != item.UnitPriceValue)
+                                    @if (item.UnitPriceWithoutDiscountValue != item.UnitPriceValue && item.UnitPriceWithoutDiscountValue > 0)
                                     {
                                         <div class="text-center"><del class="small text-danger">(@item.UnitPriceWithoutDiscount)</del></div>
                                     }
@@ -176,6 +176,11 @@
                                             <div class="discount text-success text-center">
                                                 <span>@T("ShoppingCart.ItemYouSave"): </span>
                                                 <span>@item.Discount</span>
+                                                @if (item.DiscountedQty > 0)
+                                                {
+                                                    <span class="font-weight-light font-italic">@T("ShoppingCart.DiscountedQty"): </span>
+                                                    <span class="font-weight-light font-italic">@item.DiscountedQty</span>
+                                                }
                                             </div>
                                         </div>
                                     }
