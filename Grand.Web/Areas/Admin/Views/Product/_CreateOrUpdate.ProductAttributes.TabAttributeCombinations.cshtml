@@ -92,7 +92,7 @@
                 {
                     field: "AttributesXml",
                     title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Attributes")",
-                    width: 200,
+                    width: 340,
                     //template: "#=AttributesXml#<br /> # if(Warnings !== null) {# <span style=\"color: red\">#=Warnings#</span> #}  #",
                     encoded: false,
                     template: "<a class='k-link' href='javascript:OpenWindow(\"@Url.Content("~/Admin/Product/AttributeCombinationPopup/")?productId=@(Model.Id)&Id=#=Id#&btnId=btnRefreshCombinations&formId=product-form\", 800, 600, true);'>#=AttributesXml#<br /> # if(Warnings !== null) {# <span style=\"color: red\">#=Warnings#</span> #}  #</a>"
@@ -145,7 +145,7 @@
                             text: "@T("Admin.Common.Delete")"
                         }
                     ],
-                    width: 200
+                    width: 50
                 }
             ]
         });
