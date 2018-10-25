@@ -32,7 +32,7 @@
                 <div class="btn-group my-3">
                     <input type="submit" name="run-upgrade" class="btn btn-success upgrade-page" value="@T("UpgradeSystem.RunUpgrade")">
                 </div>
-                <script asp-location="Footer">
+                <script>
                     $(document).ready(function () {
                         $('#upgrade-form').submit(function () {
                             $('html,body').animate({
@@ -68,7 +68,5 @@
                 </div>
             </div>
         </div>
-
-
     </div>
 </div>
