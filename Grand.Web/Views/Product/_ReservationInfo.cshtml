@@ -43,7 +43,7 @@
         }
     </div>
 
-<script>
+<script asp-location="Footer">
     $(document).ready(function () {
         Reservation.init("@Model.StartDate.ToString("d", CultureInfo.CreateSpecificCulture("en-US"))", "@Model.StartDate.Year", "@Model.StartDate.Month", "@T("Products.Noavailablereservations")",
             "@(Url.Action("GetDatesForMonth", "Product"))", "@Model.Id",

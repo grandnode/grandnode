@@ -1,4 +1,9 @@
 ﻿@model OrderTotalsModel
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor _httpContextAccessor
+@{
+    bool isAjaxCall = _httpContextAccessor.HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest";
+}
 <div class="total-info table-responsive pl-0 pr-0">
     <table class="table table-hover">
         <tbody>
@@ -162,7 +167,7 @@
 </div>
 @if (Model.GiftCards.Any() && Model.IsEditable)
 {
-    <script>
+    <script asp-location="Footer">
         $(document).ready(function () {
             $(".remove-gift-card-button").click(function () {
                 var href = $(this).closest('[data-href]').data('href');
@@ -181,4 +186,8 @@
             });
         });
     </script>
+}
+@if (isAjaxCall)
+{
+    <resources asp-type="ScriptFooter" />
 }

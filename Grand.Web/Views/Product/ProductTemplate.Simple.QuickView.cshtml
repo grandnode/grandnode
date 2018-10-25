@@ -6,6 +6,7 @@
     <link href="~/content/jquery-ui-themes/smoothness/jquery-ui.calendar.min.css" rel="stylesheet" type="text/css" />
 }
 @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_after_breadcrumb", additionalData = Model.Id })
+<resources asp-type="ScriptHeader" />
 <div class="product-quickview">
     <div class="modal-dialog container" role="document">
         <div class="modal-content rounded-0">
@@ -176,9 +177,6 @@
     </div>
 </div>
 <script>
-    $(".sp-large a").click(function () {
-        $(".sp-lightbox:not(:first)").remove();
-    });
     $(document).ready(function () {
         if ($(window).width() > 768) {
             $('.product-quickview .review-scroll-button').on('click', function (e) {
@@ -200,3 +198,4 @@
         }
     });
 </script>
+<resources asp-type="ScriptFooter" />

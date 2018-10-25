@@ -9,7 +9,7 @@
     @await Component.InvokeAsync("CheckoutProgress", new { step = CheckoutProgressStep.Confirm })
     <div class="confirm-order">
         <form asp-route="CheckoutConfirm" method="post" id="confirm-order-form">
-            <script>
+            <script asp-location="Footer">
                 $(document).ready(function () {
                     $('.confirm-order-next-step-button').click(function () {
                         //terms of service
@@ -88,7 +88,7 @@
                             </div>
                         </div>
                     </div>
-                <script>
+                <script asp-location="Footer">
                     $('#confirm-order-form').on('submit', function () {
                         var button = $(this).find('input[type="submit"][name="nextstep"]');
                         setTimeout(function () {

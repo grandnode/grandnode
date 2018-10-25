@@ -20,7 +20,7 @@
                 </div>
             </div>
         </div>
-        <script>
+        <script asp-location="Footer">
             $(document).ready(function () {
                 $('#giftcardcouponcode').keydown(function (event) {
                     if (event.keyCode == 13) {
@@ -41,7 +41,7 @@
             </div>
         }
     </div>
-    <script>
+    <script asp-location="Footer">
         $(document).ready(function () {
             $("#applygiftcardcouponcode").click(function () {
                 var href = $(this).closest('[data-href]').data('href');

@@ -47,7 +47,7 @@
                     }
                     @if (Model.TermsOfServiceEnabled)
                     {
-                        <script>
+                        <script asp-location="Footer">
                                 $(document).ready(function() {
                                     $('#apply-vendor').click(function() {
                                         if ($('#accept-terms-of-service').is(':checked')) {

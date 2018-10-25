@@ -5,7 +5,7 @@
     //title
     Html.AddTitleParts(T("PageTitle.Search").Text);
 }
-<script>
+<script asp-location="Footer">
     $(document).ready(function () {
         $("#@Html.IdFor(model => model.adv)").click(toggleAdvancedSearch);
         toggleAdvancedSearch();

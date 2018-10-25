@@ -1,6 +1,7 @@
 ﻿@inject CommonSettings commonSettings
 @inject SeoSettings seoSettings
 @inject StoreInformationSettings storeInformationSettings
+@inject Grand.Framework.TagHelpers.IResourceManager resourceManager
 @{
     var displayMiniProfiler = storeInformationSettings.DisplayMiniProfilerInPublicStore;
     //X-UA-Compatible tag
@@ -45,5 +46,6 @@
     @RenderBody()
     @Html.GrandCssFiles(this.Url, ResourceLocation.Footer)
     @Html.GrandScripts(this.Url, ResourceLocation.Footer)
+    <resources asp-type="ScriptFooter" />
 </body>
 </html>

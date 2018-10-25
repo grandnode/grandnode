@@ -47,7 +47,7 @@
             </div>
         </div>
         
-        <script>
+        <script asp-location="Footer">
             $(document).ready(function () {
                 $('#vote-poll-@(Model.Id)').click(function () {
                 var pollAnswerId = $("input:radio[name=pollanswers-@(Model.Id)]:checked").val();
@@ -86,7 +86,7 @@
         </script>
     }
 
-    <script>
+    <script asp-location="Footer">
         $(".poll .poll-item .list-group-item").each(function (index, value) {
             var putter = $(this).text();
             putter = putter.split('(s) - ');

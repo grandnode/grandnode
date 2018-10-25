@@ -1,4 +1,5 @@
 ﻿@model ShoppingCartModel.DiscountBoxModel
+
 @if (Model.Display)
 {
     <div class="coupon-box">
@@ -22,7 +23,7 @@
                 </div>
             </div>
         </div>
-        <script>
+        <script asp-location="Footer">
             $(document).ready(function () {
                 $('#discountcouponcode').keydown(function (event) {
                     if (event.keyCode == 13) {
@@ -60,8 +61,7 @@
             </div>
         }
     </div>
-
-    <script>
+    <script asp-location="Footer">
         $(document).ready(function () {
             $("#applydiscountcouponcode").click(function () {
                 var href = $(this).closest('[data-href]').data('href');

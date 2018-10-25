@@ -131,7 +131,7 @@
                         @*fine uploader container*@
                         <div id="@(controlId)uploader"></div>
                         @*fine uploader template (keep it synchronized to \Content\fineuploader\templates\default.html)*@
-                        <script type="text/template" id="@(controlId)-qq-template">
+                        <script asp-location="Footer" id="@(controlId)-qq-template">
                             <div class="qq-uploader-selector qq-uploader">
                                 <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
                                     <span>@T("Common.FileUploader.DropFiles")</span>
@@ -151,7 +151,7 @@
                                         <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
                                         <span class="qq-edit-filename-icon-selector qq-edit-filename-icon"></span>
                                         <span class="qq-upload-file-selector qq-upload-file"></span>
-                                        <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
+                                        <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text"/>
                                         <span class="qq-upload-size-selector qq-upload-size"></span>
                                         <a class="qq-upload-cancel-selector qq-upload-cancel" href="#">@T("Common.FileUploader.Cancel")</a>
                                         <a class="qq-upload-retry-selector qq-upload-retry" href="#">@T("Common.FileUploader.Retry")</a>
@@ -161,7 +161,7 @@
                                 </ul>
                             </div>
                         </script>
-                        <script>
+                        <script asp-location="Footer">
                                 $(document).ready(function() {
                                     $("#@(controlId)uploader").fineUploader({
                                         request: {
@@ -225,7 +225,7 @@
                                 attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').click(function(){{contactAttributeChange();}});\n", controlId, attributeValue.Id);
                             }
                         </ul>
-                        <script>
+                        <script asp-location="Footer">
                                     $(document).ready(function() {
                                         $('.contact-attributes #color-squares-@(attribute.Id)').delegate('input', 'click', function (event) {
                                             $('.contact-attributes #color-squares-@(attribute.Id)').find('li').removeClass('selected-value border border-primary');
@@ -245,7 +245,7 @@
     }
 </div>
 
-    <script>
+    <script asp-location="Footer">
         $(document).ready(function() {
             contactAttributeChange();
             @Html.Raw(attributeChangeScriptsBuilder.ToString())

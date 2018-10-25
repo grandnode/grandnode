@@ -32,7 +32,7 @@
 
             @if (!Model.DefaultPictureZoomEnabled)
             {
-                <script>
+                <script asp-location="Footer">
                     $(document).ready(function () {
                         $('.product-standard .picture-thumbs-@Model.Id').magnificPopup({
                             delegate: 'a',
@@ -79,7 +79,7 @@
             }
             else
             {
-                <script>
+                <script asp-location="Footer">
                     $(document).ready(function () {
                         $('.picture-@Model.Id').zoom({
                             url: $('#main-product-img-lightbox-anchor-@Model.Id img').attr('data-fullsize')
@@ -143,7 +143,7 @@
             @if (!Model.DefaultPictureZoomEnabled)
             {
 
-                <script>
+                <script asp-location="Footer">
                 $(document).ready(function () {
                     $('.product-standard #main-product-img-lightbox-anchor-@Model.Id').attr('href', "@Model.DefaultPictureModel.FullSizeImageUrl");
                     $('.product-standard #main-product-img-lightbox-anchor-@Model.Id').magnificPopup({
@@ -163,7 +163,7 @@
             }
             else
             {
-                <script>
+                <script asp-location="Footer">
                     $(document).ready(function () {
                         $('.picture-@Model.Id').zoom({
                             url: $('#main-product-img-lightbox-anchor-@Model.Id img').attr('data-fullsize')

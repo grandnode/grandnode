@@ -15,7 +15,7 @@
 
 @if (Model.CountryEnabled && Model.StateProvinceEnabled)
 {
-    <script>
+    <script asp-location="Footer">
         $(function () {
             $("#@Html.IdFor(model => model.CountryId)").change(function () {
                 var selectedItem = $(this).val();
@@ -43,7 +43,7 @@
         });
     </script>
 }
-<script>
+<script asp-location="Footer">
     $(function () {
         $("#@Html.IdFor(model => model.Newsletter)").click(toggleNewsletterCat);
         toggleNewsletterCat();
@@ -429,7 +429,7 @@
     </form>
 </div>
 
-<script>
+<script asp-location="Footer">
     function removeexternalassociation(itemId) {
         if (confirm('@T("Common.AreYouSure")')) {
             var postData = {

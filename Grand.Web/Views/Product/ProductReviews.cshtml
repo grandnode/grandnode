@@ -86,7 +86,7 @@
                         <div class="card-header review-item-head">
                             <div class="rating rating_@review.Id float-right">
                             </div>
-                            <script>
+                            <script asp-location="Footer">
                                 $(document).ready(function () {
                                     productStarProgress5('@(ratingPercent)', 'rating_@review.Id');
                                 });
@@ -140,7 +140,7 @@
         @await Component.InvokeAsync("Widget", new { widgetZone = "productreviews_page_bottom", additionalData = Model.ProductId })
 </div>
 
-<script>
+<script asp-location="Footer">
     $(document).ready(function () {
         $(".rating-options .custom-radio").click(function () {
             $(".custom-radio").removeClass("full-star");

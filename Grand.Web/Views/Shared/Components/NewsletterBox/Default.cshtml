@@ -31,7 +31,7 @@
             <span asp-validation-for="NewsletterEmail"></span>
         </div>
     </div>
-    <script>
+    <script asp-location="Footer">
             function newsletter_subscribe(subscribe) {
                 var subscribeProgress = $("#subscribe-loading-progress");
                 subscribeProgress.show();

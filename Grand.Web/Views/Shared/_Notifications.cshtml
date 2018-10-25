@@ -3,9 +3,6 @@
 @using System.Text.Encodings.Web;
 @inject IHttpContextAccessor httpContextAccessor
 @{
-    Html.AddScriptParts("~/scripts/public.actions.js");
-    Html.AddScriptParts("~/scripts/jquery.magnific-popup.min.js");
-    Html.AddCssFileParts("~/content/magnific-popup/magnific-popup.css");
 
     //success messages
     var successMessages = new List<string>();
@@ -31,7 +28,7 @@
 }
 @foreach (var message in successMessages)
 {
-    <script>
+    <script asp-location="Footer">
         $(document).ready(function () {
             displayPopupNotification('@Html.Raw(JavaScriptEncoder.Default.Encode(message))', 'success', false);
         });
@@ -39,7 +36,7 @@
 }
 @foreach (var message in errorMessages)
 {
-    <script>
+    <script asp-location="Footer">
         $(document).ready(function () {
             displayPopupNotification('@Html.Raw(JavaScriptEncoder.Default.Encode(message))', 'error', false);
         });
@@ -90,7 +87,7 @@
       </div>
   </div>
 </div>
-<script>
+<script asp-location="Footer">
     $(document).ready(function () {
         CustomerAction.init('@Url.Action("CustomerActionEventUrl", "Common")', '@Url.Action("GetActivePopup", "Common")', '@Url.Action("RemovePopup", "Common")');
         CustomerAction.checkActiveUrl('@httpContextAccessor.HttpContext.Request.Path.ToString()', '@httpContextAccessor.HttpContext.Request.Headers[HeaderNames.Referer]');

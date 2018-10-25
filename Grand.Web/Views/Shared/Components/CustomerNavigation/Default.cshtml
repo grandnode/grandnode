@@ -133,7 +133,7 @@
             @await Component.InvokeAsync("Widget", new { widgetZone = "account_navigation_after" })
         </ul>
 </div>
-<script>
+<script asp-location="Footer">
     $(document).ready(function () {
         $(".generalLeftSide").css("padding-right", "0");
     });

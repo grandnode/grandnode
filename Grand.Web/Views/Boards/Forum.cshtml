@@ -31,7 +31,7 @@
             @if (Model.IsCustomerAllowedToSubscribe)
             {
                 <a class="btn btn-secondary watch-forum" href="#" id="watch-forum">@Model.WatchForumText</a>
-                <script>
+                <script asp-location="Footer">
                     $(function () {
                         $('#watch-forum').click(function () {
                             $.ajax({

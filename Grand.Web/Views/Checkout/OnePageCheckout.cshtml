@@ -3,8 +3,8 @@
 @{
     Layout = "_ColumnsOne";
 
-    Html.AddScriptParts("~/scripts/public.accordion.js");
-    Html.AddScriptParts("~/scripts/public.onepagecheckout.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/scripts/public.accordion.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/scripts/public.onepagecheckout.js");
 
     var storeLocation = webHelper.GetStoreLocation();
 
@@ -34,6 +34,10 @@
         confirmOrderStepNumber--;
     }
 }
+<script asp-location="Footer">
+    $(".opc li.active").prev("li").removeClass("dontGo");
+    $(".opc li.active").nextAll("li").addClass("dontGo");
+</script>
 <div class="page checkout-page">
     <h1 class="generalTitle h2">@T("Checkout")</h1>
     @await Component.InvokeAsync("Widget", new { widgetZone = "opc_content_before" })
@@ -53,7 +57,7 @@
                         @*billing address content will be loaded here*@
                     </div>
                 </form>
-                <script>
+                <script asp-location="Footer">
                         Billing.init('#co-billing-form', '@(storeLocation)checkout/OpcSaveBilling/', @(Model.DisableBillingAddressCheckoutStep.ToString().ToLowerInvariant()));
                         if ($("#billing-address-select").length > 0) {
                             Billing.newAddress(!$('#billing-address-select').val());
@@ -81,7 +85,7 @@
                             @*shipping address content will be loaded here*@
                         </div>
                     </form>
-                    <script>
+                    <script asp-location="Footer">
                             Shipping.init('#co-shipping-form', '@(storeLocation)checkout/OpcSaveShipping/');
                             if ($("#shipping-address-select").length > 0) {
                                 Shipping.newAddress(!$('#shipping-address-select').val());
@@ -112,7 +116,7 @@
                             <div id="checkout-shipping-method-load">
                                 @*shipping methods content will be loaded here*@
                             </div>
-                            <script>
+                            <script asp-location="Footer">
                                 ShippingMethod.init('#co-shipping-method-form', '@(storeLocation)checkout/OpcSaveShippingMethod/');
                             </script>
                             <div class="col-12 buttons pt-1 pb-1 px-0 my-3" id="shipping-method-buttons-container">
@@ -138,7 +142,7 @@
                         @*payment methods content will be loaded here*@ Payment is not required
                     </div>
                 </form>
-                <script>
+                <script asp-location="Footer">
                         PaymentMethod.init('#co-payment-method-form', '@(storeLocation)checkout/OpcSavePaymentMethod/');
                 </script>
                 <div class="col-12 buttons pt-1 pb-1 my-3 px-0" id="payment-method-buttons-container">
@@ -165,7 +169,7 @@
                         @*payment info content will be loaded here*@ Payment is not required
                     </div>
                 </form>
-                <script>
+                <script asp-location="Footer">
                         PaymentInfo.init('#co-payment-info-form', '@(storeLocation)checkout/OpcSavePaymentInfo/');
                 </script>
                 <div class="col-12 buttons pt-1 pb-1 my-3 px-0" id="payment-info-buttons-container">
@@ -187,7 +191,7 @@
                 <div id="checkout-confirm-order-load">
                     @*confirm order content will be loaded here*@
                 </div>
-                <script>
+                <script asp-location="Footer">
                         ConfirmOrder.init('@(storeLocation)checkout/OpcConfirmOrder/', '@(storeLocation)checkout/completed/');
                 </script>
                 <div class="col-12 buttons pt-1 pb-1 px-0 my-3" id="confirm-order-buttons-container">
@@ -200,7 +204,7 @@
     </ol>
     @await Component.InvokeAsync("Widget", new { widgetZone = "opc_content_after" })
 </div>
-<script>
+<script asp-location="Footer">
         Accordion.init('checkout-steps', '.step-title', true);
         Accordion.openSection('#opc-billing');
         Checkout.init('@(storeLocation)cart/');

@@ -89,7 +89,7 @@
                                                 <label>@T("ShoppingCart.Auctionends"): @Model.EndTime.Value.ToLocalTime()</label>
                                             }
                                         </div>
-                                        <script>
+                                        <script asp-location="Footer">
                                             $(document).ready(function () {
                                                 var cd = $('#popupEndTime');
                                                 var finalDate = cd.data('countdown');

@@ -11,6 +11,7 @@ using Grand.Core.Infrastructure.DependencyManagement;
 using Grand.Core.Plugins;
 using Grand.Data;
 using Grand.Framework.Mvc.Routing;
+using Grand.Framework.TagHelpers;
 using Grand.Framework.Themes;
 using Grand.Framework.UI;
 using Grand.Services.Affiliates;
@@ -317,6 +318,8 @@ namespace Grand.Framework.Infrastructure
                     }, typeof(IConsumer<>)))
                     .InstancePerLifetimeScope();
             }
+
+            builder.RegisterType<ResourceManager>().As<IResourceManager>().InstancePerLifetimeScope();
 
             builder.RegisterType<EventPublisher>().As<IEventPublisher>().SingleInstance();
             builder.RegisterType<SubscriptionService>().As<ISubscriptionService>().SingleInstance();

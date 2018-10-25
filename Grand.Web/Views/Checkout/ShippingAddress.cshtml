@@ -25,7 +25,7 @@
                 <div class="description">
                     @T("Checkout.PickupPoints.Description")
                 </div>
-                <script>
+                <script asp-location="Footer">
                     $(document).ready(function () {
                         $("#@Html.IdFor(model => model.PickUpInStore)").on('change', togglePickUpInStore);
                         togglePickUpInStore();

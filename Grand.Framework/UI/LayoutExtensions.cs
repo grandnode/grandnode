@@ -1,7 +1,10 @@
 ﻿using Grand.Core.Infrastructure;
+using Grand.Framework.TagHelpers;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Text;
+using System.Text.Encodings.Web;
 
 namespace Grand.Framework.UI
 {
@@ -182,6 +185,7 @@ namespace Grand.Framework.UI
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             return new HtmlString(pageHeadBuilder.GenerateScripts(urlHelper, location, bundleFiles));
         }
+
 
         /// <summary>
         /// Add CSS element

@@ -1,6 +1,11 @@
 @model ShoppingCartModel
 @inject IWebHelper webHelper
 @inject IWorkContext workContext
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor _httpContextAccessor
+@{
+    bool isAjaxCall = _httpContextAccessor.HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest";
+}
 <div class="order-summary-content mt-3" id="ordersummarypagecart">
     @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_content_before" })
     <partial name="_OrderReviewData" model="Model.OrderReviewData" />
@@ -298,7 +303,7 @@
                             <div class="checkout-buttons text-center float-sm-right">
                                 @if (String.IsNullOrEmpty(Model.MinOrderSubtotalWarning))
                                 {
-                                    <script>
+                                    <script asp-location="Footer">
                                             $(document).ready(function () {
                                                 function checkTermOfService() {
                                                     var termOfServiceOk = true;
@@ -371,7 +376,7 @@
         </div>
     }
     @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_content_after" })
-    <script>
+    <script asp-location="Footer">
 
         function ChangeShoppingCart() {
                 $.ajax({
@@ -411,3 +416,7 @@
     </script>
 </div>
 
+@if (isAjaxCall)
+{
+    <resources asp-type="ScriptFooter" />
+}

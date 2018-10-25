@@ -15,20 +15,24 @@
         Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/style.rtl.css", themeName));
     }
 
+    Html.AddCssFileParts("~/content/magnific-popup/magnific-popup.css");
     Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/style.css", themeName));
-    Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/fontawesome-all.min.css", themeName));
     Html.AppendCssFileParts("~/content/bootstrap/bootstrap.min.css");
-    Html.AppendScriptParts("~/content/bootstrap/bootstrap.min.js");
-    Html.AppendScriptParts("~/content/bootstrap/popper.min.js");
-    Html.AppendScriptParts("~/scripts/public.ajaxcart.js");
-    Html.AppendScriptParts("~/scripts/jquery.countdown.min.js");
-    Html.AppendScriptParts("~/scripts/public.common.js");
-    Html.AppendScriptParts("~/scripts/jquery.zoom.min.js");
-    Html.AppendScriptParts("~/scripts/jquery.smooth-scroll.min.js");
-    Html.AppendScriptParts("~/scripts/jquery-migrate-3.0.1.min.js");
-    Html.AppendScriptParts("~/scripts/jquery-ui-1.12.1.custom/jquery-ui.min.js");
-    Html.AppendScriptParts("~/scripts/jquery.validate.unobtrusive.min.js");
-    Html.AppendScriptParts("~/scripts/jquery.validate.min.js");
-    Html.AppendScriptParts("~/scripts/jquery-3.3.1.min.js");
+    Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/fontawesome-all.min.css", themeName));
 
+    Html.AddScriptParts(ResourceLocation.Footer, "~/scripts/jquery-3.3.1.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/scripts/jquery.validate.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/scripts/jquery.validate.unobtrusive.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/scripts/jquery-ui-1.12.1.custom/jquery-ui.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/scripts/jquery-migrate-3.0.1.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/scripts/jquery.smooth-scroll.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/scripts/jquery.zoom.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/scripts/public.common.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/scripts/jquery.countdown.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/scripts/public.ajaxcart.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/content/bootstrap/popper.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/content/bootstrap/bootstrap.min.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/scripts/public.actions.js");
+    Html.AddScriptParts(ResourceLocation.Footer, "~/scripts/jquery.magnific-popup.min.js");
+    
 }

@@ -21,7 +21,7 @@
                     </label>
                     @if (Model.RewardPointsEnoughToPayForOrder)
                     {
-                        <script>
+                        <script asp-location="Footer">
                             $(document).ready(function () {
                                 $("#@Html.IdFor(model => model.UseRewardPoints)").on('change', toggleUseRewardPoints);
                                 toggleUseRewardPoints();

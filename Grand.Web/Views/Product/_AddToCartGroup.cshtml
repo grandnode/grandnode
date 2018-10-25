@@ -51,7 +51,7 @@
             }
         }
 
-        <script>
+        <script asp-location="Footer">
                     $(document).ready(function () {
                         $("#@Html.IdFor(model => model.EnteredQuantity)").keydown(function (event) {
                             if (event.keyCode == 13) {

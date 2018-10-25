@@ -5,7 +5,7 @@
     Html.AddScriptParts(ResourceLocation.Footer, "~/scripts/jquery.push.notifications.js");
 }
 
-<script>
+<script asp-location="Footer">
     $(document).ready(function () {
         PushNotifications.init("@Model.PublicApiKey", "@Model.SenderId", "@Model.ProjectId", "@Model.AuthDomain", "@Model.StorageBucket",
             "@Model.DatabaseUrl", "@Url.Action("ProcessRegistration", "PushNotifications")");

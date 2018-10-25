@@ -24,7 +24,7 @@
     @await Component.InvokeAsync("Widget", new { widgetZone = "content_after" })
 </div>
 @await Component.InvokeAsync("Footer")
-<script>
+<script asp-location="Footer">
     AjaxCart.init('.header-links .cart-qty', '.header-links .wishlist-qty', '.flyout-cart');
 </script>
 @await Component.InvokeAsync("EuCookieLaw")
