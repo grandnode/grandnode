@@ -1,9 +1,5 @@
 ﻿@model OrderTotalsModel
-@using Microsoft.AspNetCore.Http
-@inject IHttpContextAccessor _httpContextAccessor
-@{
-    bool isAjaxCall = _httpContextAccessor.HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest";
-}
+
 <div class="total-info table-responsive pl-0 pr-0">
     <table class="table table-hover">
         <tbody>
@@ -186,8 +182,4 @@
             });
         });
     </script>
-}
-@if (isAjaxCall)
-{
-    <resources asp-type="ScriptFooter" />
 }

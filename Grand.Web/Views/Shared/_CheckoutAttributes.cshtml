@@ -3,11 +3,7 @@
 @using Grand.Core.Domain.Media
 @using Grand.Core.Infrastructure;
 @using System.Text;
-@using Microsoft.AspNetCore.Http
-@inject IHttpContextAccessor _httpContextAccessor
-@{
-    bool isAjaxCall = _httpContextAccessor.HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest";
-}
+
 @if (Model.Any())
 {
     var attributeChangeScriptsBuilder = new StringBuilder();
@@ -183,6 +179,7 @@
                                             if (responseJSON.success) {
                                                 $("#@(controlId + "downloadurl")").html("<a href='" + responseJSON.downloadUrl + "'>@T("Common.FileUploader.DownloadUploadedFile")</a>");
                                                 $("#@(controlId + "remove")").show();
+                                                checkoutAttributeChange();
                                             }
                                             if (responseJSON.message) {
                                                 alert(responseJSON.message);
@@ -193,6 +190,7 @@
                                             $("#@(controlId + "downloadurl")").html("");
                                             $("#@(controlId)").val('');
                                             $(this).hide();
+                                            checkoutAttributeChange();
                                         });
                                     });
                             </script>
@@ -290,8 +288,4 @@
             });
         }
     </script>
-}
-@if (isAjaxCall)
-{
-    <resources asp-type="ScriptFooter" />
 }
