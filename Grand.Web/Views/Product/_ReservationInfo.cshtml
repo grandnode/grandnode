@@ -2,7 +2,7 @@
 @using System.Globalization
 @inject CatalogSettings catalogSettings
 @{
-    Html.AppendScriptParts("~/scripts/public.reservation.js");
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/public.reservation.js");
     Html.AddCssFileParts("~/content/jquery-ui-themes/smoothness/jquery-ui.calendar.min.css");
 }
     <div style="margin-top:10px">

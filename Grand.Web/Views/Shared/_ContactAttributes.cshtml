@@ -114,7 +114,7 @@
 
                         //register CSS and JS
                         Html.AddCssFileParts("~/scripts/fineuploader/fineuploader-4.2.2.min.css");
-                        Html.AddScriptParts("~/scripts/fineuploader/jquery.fineuploader-4.2.2.min.js");
+                        Html.AddScriptParts(ResourceLocation.Footer, "~/scripts/fineuploader/jquery.fineuploader-4.2.2.min.js");
 
                         //ex. ['jpg', 'jpeg', 'png', 'gif'] or []
                         var allowedFileExtensions = string.Join(", ", attribute.AllowedFileExtensions.Select(x => "'" + x.Trim() + "'").ToList());
