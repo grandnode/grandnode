@@ -1,4 +1,9 @@
 ﻿@model AddressModel
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor _httpContextAccessor
+@{
+    bool isAjaxCall = _httpContextAccessor.HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest";
+}
 @if (Model.CountryEnabled && Model.StateProvinceEnabled)
 {
     <script asp-location="Footer">
@@ -134,3 +139,7 @@
         <partial name="_AddressAttributes" model="Model.CustomAddressAttributes" />
     }
 </div>
+@if (isAjaxCall)
+{
+    <resources asp-type="ScriptFooter" />
+}

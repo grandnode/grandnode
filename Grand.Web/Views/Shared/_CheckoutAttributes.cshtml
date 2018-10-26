@@ -1,8 +1,13 @@
-﻿@model IList<Grand.Web.Models.ShoppingCart.ShoppingCartModel.CheckoutAttributeModel>
+﻿@model IList<ShoppingCartModel.CheckoutAttributeModel>
 @using Grand.Core.Domain.Catalog;
 @using Grand.Core.Domain.Media
 @using Grand.Core.Infrastructure;
 @using System.Text;
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor _httpContextAccessor
+@{
+    bool isAjaxCall = _httpContextAccessor.HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest";
+}
 @if (Model.Any())
 {
     var attributeChangeScriptsBuilder = new StringBuilder();
@@ -21,7 +26,7 @@
                     case AttributeControlType.TextBox:
                         {
                             <label for="@(controlId)" class="sr-only">"@(controlId)</label>
-                            <input name="@(controlId)" type="text" class="form-control textbox" id="@(controlId)" value="@attribute.DefaultValue" onchange="checkoutAttributeChange()" />
+                            <input name="@(controlId)" type="text" class="form-control textbox" id="@(controlId)" value="@attribute.DefaultValue" />
                         }
                         break;
                     case AttributeControlType.DropdownList:
@@ -96,12 +101,12 @@
 
                     case AttributeControlType.MultilineTextbox:
                         {
-                            <textarea id="@(controlId)" name="@(controlId)" onchange="checkoutAttributeChange()">@attribute.DefaultValue</textarea>
+                            <textarea id="@(controlId)" name="@(controlId)">@attribute.DefaultValue</textarea>
                         }
                         break;
                     case AttributeControlType.Datepicker:
                         {
-                            @Html.DatePickerDropDowns(controlId + "_day", controlId + "_month", controlId + "_year", DateTime.Now.Year, DateTime.Now.Year + 1, attribute.SelectedDay, attribute.SelectedMonth, attribute.SelectedYear, htmlAttributes: new { @class = "form-control", @onchange = "checkoutAttributeChange()" })
+                            @Html.DatePickerDropDowns(controlId + "_day", controlId + "_month", controlId + "_year", DateTime.Now.Year, DateTime.Now.Year + 1, attribute.SelectedDay, attribute.SelectedMonth, attribute.SelectedYear, htmlAttributes: new { @class = "form-control" })
                         }
                         break;
                     case AttributeControlType.FileUpload:
@@ -115,7 +120,7 @@
 
                             //register CSS and JS
                             Html.AddCssFileParts("~/scripts/fineuploader/fineuploader-4.2.2.min.css");
-                            Html.AddScriptParts("~/scripts/fineuploader/jquery.fineuploader-4.2.2.min.js");
+                            Html.AddScriptParts(ResourceLocation.Footer, "~/scripts/fineuploader/jquery.fineuploader-4.2.2.min.js");
 
                             //ex. ['jpg', 'jpeg', 'png', 'gif'] or []
                             var allowedFileExtensions = string.Join(", ", attribute.AllowedFileExtensions.Select(x => "'" + x.Trim() + "'").ToList());
@@ -132,7 +137,7 @@
                             @*fine uploader container*@
                             <div id="@(controlId)uploader"></div>
                             @*fine uploader template (keep it synchronized to \Content\fineuploader\templates\default.html)*@
-                            <script asp-location="Footer" id="@(controlId)-qq-template">
+                            <script type="text/template" id="@(controlId)-qq-template">
                                 <div class="qq-uploader-selector qq-uploader">
                                     <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
                                         <span>@T("Common.FileUploader.DropFiles")</span>
@@ -152,7 +157,7 @@
                                             <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
                                             <span class="qq-edit-filename-icon-selector qq-edit-filename-icon"></span>
                                             <span class="qq-upload-file-selector qq-upload-file"></span>
-                                            <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text" />
+                                            <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
                                             <span class="qq-upload-size-selector qq-upload-size"></span>
                                             <a class="qq-upload-cancel-selector qq-upload-cancel" href="#">@T("Common.FileUploader.Cancel")</a>
                                             <a class="qq-upload-retry-selector qq-upload-retry" href="#">@T("Common.FileUploader.Retry")</a>
@@ -178,7 +183,6 @@
                                             if (responseJSON.success) {
                                                 $("#@(controlId + "downloadurl")").html("<a href='" + responseJSON.downloadUrl + "'>@T("Common.FileUploader.DownloadUploadedFile")</a>");
                                                 $("#@(controlId + "remove")").show();
-                                                checkoutAttributeChange();
                                             }
                                             if (responseJSON.message) {
                                                 alert(responseJSON.message);
@@ -189,7 +193,6 @@
                                             $("#@(controlId + "downloadurl")").html("");
                                             $("#@(controlId)").val('');
                                             $(this).hide();
-                                            checkoutAttributeChange();
                                         });
                                     });
                             </script>
@@ -287,4 +290,8 @@
             });
         }
     </script>
+}
+@if (isAjaxCall)
+{
+    <resources asp-type="ScriptFooter" />
 }
