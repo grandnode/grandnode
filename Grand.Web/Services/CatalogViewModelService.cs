@@ -25,6 +25,7 @@ using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Media;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -1261,7 +1262,6 @@ namespace Grand.Web.Services
                 }
             }
 
-
             var products = _productService.SearchProducts(
                 storeId: _storeContext.CurrentStore.Id,
                 keywords: term,
@@ -1275,6 +1275,8 @@ namespace Grand.Web.Services
             var categories = new List<string>();
             var manufacturers = new List<string>();
 
+            var storeurl = _webHelper.GetStoreLocation();
+
             foreach (var item in products)
             {
                 var pictureUrl = "";
@@ -1287,10 +1289,10 @@ namespace Grand.Web.Services
                 model.Add(new SearchAutoCompleteModel()
                 {
                     SearchType = "Product",
-                    Label = item.GetLocalized(x => x.Name),
-                    Desc = item.GetLocalized(x => x.ShortDescription),
+                    Label = item.GetLocalized(x => x.Name) ?? "",
+                    Desc = item.GetLocalized(x => x.ShortDescription) ?? "",
                     PictureUrl = pictureUrl,
-                    Url = item.SeName
+                    Url = $"{storeurl}{item.SeName}"
                 });
                 foreach (var category in item.ProductCategories)
                 {
@@ -1325,7 +1327,7 @@ namespace Grand.Web.Services
                             Label = manufacturer.GetLocalized(x => x.Name),
                             Desc = "",
                             PictureUrl = "",
-                            Url = $"search?q={term}&adv=true&mid={item}{desc}"
+                            Url = $"{storeurl}search?q={term}&adv=true&mid={item}{desc}"
                         });
                     }
                 }
@@ -1353,7 +1355,7 @@ namespace Grand.Web.Services
                             Label = category.GetLocalized(x => x.Name),
                             Desc = "",
                             PictureUrl = "",
-                            Url = $"search?q={term}&adv=true&cid={item}{desc}"
+                            Url = $"{storeurl}search?q={term}&adv=true&cid={item}{desc}"
                         });
                     }
                 }
@@ -1370,7 +1372,7 @@ namespace Grand.Web.Services
                         Label = item.GetLocalized(x => x.Title),
                         Desc = "",
                         PictureUrl = "",
-                        Url = item.SeName
+                        Url = $"{storeurl}{item.SeName}"
                     });
                 }
             }
