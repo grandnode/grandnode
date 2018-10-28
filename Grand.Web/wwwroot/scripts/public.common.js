@@ -650,3 +650,20 @@ $(document).ready(function () {
     });
 });
 
+function deletecartitem(href) {
+    var flyoutcartselector = AjaxCart.flyoutcartselector;
+    var topcartselector = AjaxCart.topcartselector;
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url: href,
+            success: function (data) {
+                $(flyoutcartselector).replaceWith(data.flyoutshoppingcart);
+                $(topcartselector).html(data.totalproducts);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert('Failed to retrieve Flyout Shopping Cart.');
+            }
+        });
+        return false;
+}
