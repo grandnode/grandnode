@@ -156,7 +156,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         customersByUsername = _customerService.GetAllCustomers(username: searchTerm, pageSize: _adminSearchSettings.MaxSearchResultsCount
                             - result.Count() - customersByEmail.Count());
                     }
-                    var combined = customersByEmail.Intersect(customersByUsername);
+                    var combined = customersByEmail.Union(customersByUsername).GroupBy(x => x.Email).Select(x => x.First());
 
                     foreach (var customer in combined)
                     {
