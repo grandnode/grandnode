@@ -776,6 +776,9 @@ ul.ui-autocomplete li {
 #ModalAddToCart {
     z-index: 9999;
 }
+#ModalAddToCart .modal-content {
+    overflow: auto;
+}
 
     #ModalAddToCart .btn-group .btn {
         font-weight: 500;
