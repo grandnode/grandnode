@@ -70,13 +70,8 @@
                         ratingPercent = ((Model.ReviewOverviewModel.RatingSum * 100) / Model.ReviewOverviewModel.TotalReviews) / 5;
                     }
                     <div class="product-rating-box list-group" title="@string.Format(T("Reviews.TotalReviews").Text, Model.ReviewOverviewModel.TotalReviews)">
-                        <div class="rating rating_@Model.Id">
+                        <div class="rating box-progress10 rating_@Model.Id" data-rating="@(ratingPercent)" data-id="rating_@Model.Id">
                         </div>
-                        <script asp-location="Footer">
-                            $(document).ready(function () {
-                                productStarProgress10('@(ratingPercent)', 'rating_@Model.Id');
-                            });
-                        </script>
                     </div>
                 }
                 @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_before", additionalData = Model.Id })

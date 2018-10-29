@@ -35,7 +35,9 @@
                                 }
                                 @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_overview_top", additionalData = Model.Id })
                                 <!--product reviews-->
-                                <partial name="_ProductReviewOverview" model="Model.ProductReviewOverview" />
+                                <div class="quickview-reviews">
+                                    <partial name="_ProductReviewOverview" model="Model.ProductReviewOverview" />
+                                </div>
                                 <!--manufacturers-->
                                 <partial name="_ProductManufacturers" model="Model.ProductManufacturers" />
                                 <!--availability-->
@@ -196,6 +198,14 @@
                 $("#review-tab").click();
             });
         }
+        var rating_percent = $('.progress10').attr("data-rating");
+        productStarProgress10(rating_percent, 'progress10');
+
+        $('.box-progress10').each(function () {
+            var rating_id = $(this).attr("data-id");
+            var rating_percent = $(this).attr("data-rating");
+            productStarProgress10(rating_percent, rating_id);
+        });
     });
 </script>
 <resources asp-type="ScriptFooter" />

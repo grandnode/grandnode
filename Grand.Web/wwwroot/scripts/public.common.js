@@ -235,7 +235,21 @@ function productRatingStarFinal(whole, half, empty, elem) {
     $("." + elem + "").html(stars);
 
 };
+$(document).ready(function () {
+    $('.progress10').each(function () {
+        var rating_id = $(this).attr("data-id");
+        var rating_percent = $(this).attr("data-rating");
+        productStarProgress10(rating_percent, rating_id);
+    });
+});
 
+$(document).ready(function () {
+    $('.box-progress10').each(function () {
+        var rating_id = $(this).attr("data-id");
+        var rating_percent = $(this).attr("data-rating");
+        productStarProgress10(rating_percent, rating_id);
+    });
+});
 // required asterisk position
 $(".form-group .required").each(function () {
     var label_req = $(this).siblings("label");
@@ -384,7 +398,7 @@ $(document).ready(function () {
 
     $(".general-opener").on('click', function () {
         $("#generalDropDown").toggle();
-    });
+    });   
 });
 
 $(document).ready(function () {
