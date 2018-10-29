@@ -12,6 +12,7 @@ namespace Grand.Web.Areas.Admin.Controllers
     [AuthorizeAdmin]
     [AdminAntiForgery]
     [Area("Admin")]
+    [ValidateVendor]
     public abstract partial class BaseAdminController : BaseController
     {
         /// <summary>
