@@ -267,6 +267,7 @@ namespace Grand.Web.Controllers
             }
             return Json(new
             {
+                totalproducts = string.Format(_localizationService.GetResource("ShoppingCart.HeaderQuantity"), model.Items.Sum(x => x.Quantity)),
                 cart = this.RenderViewComponentToString("OrderSummary", new { overriddenModel = model })
             });
         }
