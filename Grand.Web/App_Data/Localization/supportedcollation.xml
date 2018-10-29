@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Collations>
+  <Collation Name="Afrikaans">
+    <Value>af</Value>
+  </Collation>
+  <Collation Name="Albanian">
+    <Value>sq</Value>
+  </Collation>
+  <Collation Name="Amharic">
+    <Value>am</Value>
+  </Collation>
+  <Collation Name="Arabic">
+    <Value>ar</Value>
+  </Collation>
+  <Collation Name="Armenian">
+    <Value>hy</Value>
+  </Collation>
+  <Collation Name="Assamese">
+    <Value>as</Value>
+  </Collation>
+  <Collation Name="Azeri">
+    <Value>az</Value>
+  </Collation>
+  <Collation Name="Bengali">
+    <Value>bn</Value>
+  </Collation>
+  <Collation Name="Belarusian">
+    <Value>be</Value>
+  </Collation>
+  <Collation Name="Bengali">
+    <Value>bn</Value>
+  </Collation>
+  <Collation Name="Bosnian">
+    <Value>bs</Value>
+  </Collation>
+  <Collation Name="Bosnian (Cyrillic)">
+    <Value>bs_Cyrl</Value>
+  </Collation>
+  <Collation Name="Bulgarian">
+    <Value>bg</Value>
+  </Collation>
+  <Collation Name="Burmese">
+    <Value>my</Value>
+  </Collation>
+  <Collation Name="Catalan">
+    <Value>ca</Value>
+  </Collation>
+  <Collation Name="Cherokee">
+    <Value>chr</Value>
+  </Collation>
+  <Collation Name="Chinese">
+    <Value>zh</Value>
+  </Collation>
+  <Collation Name="Chinese (Traditional)">
+    <Value>zh_Hant</Value>
+  </Collation>
+  <Collation Name="Croatian">
+    <Value>hr</Value>
+  </Collation>
+  <Collation Name="Dutch">
+    <Value>nl</Value>
+  </Collation>
+  <Collation Name="Dzongkha">
+    <Value>dz</Value>
+  </Collation>
+  <Collation Name="English">
+    <Value>en</Value>
+  </Collation>
+  <Collation Name="English (United States)">
+    <Value>en_US</Value>
+  </Collation>
+  <Collation Name="English (United States, Computer)">
+    <Value>en_US_POSIX</Value>
+  </Collation>
+  <Collation Name="Esperanto">
+    <Value>eo</Value>
+  </Collation>
+  <Collation Name="Estonian">
+    <Value>et</Value>
+  </Collation>
+  <Collation Name="Ewe">
+    <Value>ee</Value>
+  </Collation>
+  <Collation Name="Filipino">
+    <Value>fil</Value>
+  </Collation>
+  <Collation Name="Finnish">
+    <Value>fi_FI</Value>
+  </Collation>
+  <Collation Name="French">
+    <Value>fr</Value>
+  </Collation>
+  <Collation Name="French (Canada)">
+    <Value>fr_CA</Value>
+  </Collation>
+  <Collation Name="Galician">
+    <Value>gl</Value>
+  </Collation>
+  <Collation Name="Georgian">
+    <Value>ka</Value>
+  </Collation>
+  <Collation Name="German (Austria)	">
+    <Value>de_AT</Value>
+  </Collation>
+  <Collation Name="Greek">
+    <Value>el</Value>
+  </Collation>
+  <Collation Name="Gujarati">
+    <Value>gu</Value>
+  </Collation>
+  <Collation Name="Hausa">
+    <Value>ha</Value>
+  </Collation>
+  <Collation Name="Hawaiian">
+    <Value>haw</Value>
+  </Collation>
+  <Collation Name="Hebrew">
+    <Value>he</Value>
+  </Collation>
+  <Collation Name="Hindi">
+    <Value>hi</Value>
+  </Collation>
+  <Collation Name="Hungarian">
+    <Value>hu</Value>
+  </Collation>
+  <Collation Name="Icelandic">
+    <Value>is</Value>
+  </Collation>
+  <Collation Name="Igbo">
+    <Value>ig</Value>
+  </Collation>
+  <Collation Name="Inari Sami">
+    <Value>smn</Value>
+  </Collation>
+  <Collation Name="Indonesian">
+    <Value>id</Value>
+  </Collation>
+  <Collation Name="Irish">
+    <Value>ga</Value>
+  </Collation>
+  <Collation Name="Italian">
+    <Value>it</Value>
+  </Collation>
+  <Collation Name="Japanese">
+    <Value>ja</Value>
+  </Collation>
+  <Collation Name="Kalaallisut">
+    <Value>kl</Value>
+  </Collation>
+  <Collation Name="Kannada">
+    <Value>kn</Value>
+  </Collation>
+  <Collation Name="Kazakh">
+    <Value>kk</Value>
+  </Collation>
+  <Collation Name="Khmer">
+    <Value>km</Value>
+  </Collation>
+  <Collation Name="Konkani">
+    <Value>kok</Value>
+  </Collation>
+  <Collation Name="Korean">
+    <Value>ko</Value>
+  </Collation>
+  <Collation Name="Kyrgyz">
+    <Value>ky</Value>
+  </Collation>
+  <Collation Name="Lakota">
+    <Value>lk</Value>
+  </Collation>
+  <Collation Name="Lao">
+    <Value>lo</Value>
+  </Collation>
+  <Collation Name="Latvian">
+    <Value>lv</Value>
+  </Collation>
+  <Collation Name="Lingala">
+    <Value>li</Value>
+  </Collation>
+  <Collation Name="Lithuanian">
+    <Value>lt</Value>
+  </Collation>
+  <Collation Name="Lower Sorbian">
+    <Value>dsb</Value>
+  </Collation>
+  <Collation Name="Luxembourgish">
+    <Value>lb</Value>
+  </Collation>
+  <Collation Name="Macedonian">
+    <Value>mk</Value>
+  </Collation>
+  <Collation Name="Malay">
+    <Value>ms</Value>
+  </Collation>
+  <Collation Name="Malayalam">
+    <Value>ml</Value>
+  </Collation>
+  <Collation Name="Maltese">
+    <Value>mt</Value>
+  </Collation>
+  <Collation Name="Marathi">
+    <Value>mr</Value>
+  </Collation>
+  <Collation Name="Mongolian">
+    <Value>mn</Value>
+  </Collation>
+  <Collation Name="Nepali">
+    <Value>ne</Value>
+  </Collation>
+  <Collation Name="Northern Sami">
+    <Value>se</Value>
+  </Collation>
+  <Collation Name="Norwegian Bokmål">
+    <Value>nb</Value>
+  </Collation>
+  <Collation Name="Norwegian Nynorsk">
+    <Value>nn</Value>
+  </Collation>
+  <Collation Name="Oriya">
+    <Value>or</Value>
+  </Collation>
+  <Collation Name="Oromo">
+    <Value>om</Value>
+  </Collation>
+  <Collation Name="Pashto">
+    <Value>ps</Value>
+  </Collation>
+  <Collation Name="Persian">
+    <Value>fa</Value>
+  </Collation>
+  <Collation Name="Persian (Afghanistan)">
+    <Value>fa_AF</Value>
+  </Collation>
+  <Collation Name="Polish">
+    <Value>pl</Value>
+  </Collation>
+  <Collation Name="Portuguese">
+    <Value>pt</Value>
+  </Collation>
+  <Collation Name="Punjabi">
+    <Value>pa</Value>
+  </Collation>
+  <Collation Name="Romanian">
+    <Value>ro</Value>
+  </Collation>
+  <Collation Name="Russian">
+    <Value>ru</Value>
+  </Collation>
+  <Collation Name="Serbian">
+    <Value>sr</Value>
+  </Collation>
+  <Collation Name="Serbian (Latin)">
+    <Value>sr_Latn</Value>
+  </Collation>
+  <Collation Name="Sinhala">
+    <Value>si</Value>
+  </Collation>
+  <Collation Name="Slovak">
+    <Value>sk</Value>
+  </Collation>
+  <Collation Name="Slovenian">
+    <Value>sl</Value>
+  </Collation>
+  <Collation Name="Spanish">
+    <Value>es</Value>
+  </Collation>
+  <Collation Name="Swahili">
+    <Value>sw</Value>
+  </Collation>
+  <Collation Name="Swedish">
+    <Value>sv</Value>
+  </Collation>
+  <Collation Name="Tamil">
+    <Value>ta</Value>
+  </Collation>
+  <Collation Name="Telugu">
+    <Value>te</Value>
+  </Collation>
+  <Collation Name="Thai">
+    <Value>th</Value>
+  </Collation>
+  <Collation Name="Tibetan">
+    <Value>bo</Value>
+  </Collation>
+  <Collation Name="Tongan">
+    <Value>to</Value>
+  </Collation>
+  <Collation Name="Turkish">
+    <Value>tr</Value>
+  </Collation>
+  <Collation Name="Ukrainian">
+    <Value>uk</Value>
+  </Collation>
+  <Collation Name="Upper Sorbian">
+    <Value>hsb</Value>
+  </Collation>
+  <Collation Name="Urdu">
+    <Value>ur</Value>
+  </Collation>
+  <Collation Name="Uyghur">
+    <Value>ug</Value>
+  </Collation>
+  <Collation Name="Vietnamese">
+    <Value>vi</Value>
+  </Collation>
+  <Collation Name="Walser">
+    <Value>wae</Value>
+  </Collation>
+  <Collation Name="Welsh">
+    <Value>cy</Value>
+  </Collation>
+  <Collation Name="Yiddish">
+    <Value>yi</Value>
+  </Collation>
+  <Collation Name="Yoruba">
+    <Value>yo</Value>
+  </Collation>
+  <Collation Name="Zulu">
+    <Value>zu</Value>
+  </Collation>
+</Collations>

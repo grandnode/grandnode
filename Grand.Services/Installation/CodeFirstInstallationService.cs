@@ -31,6 +31,7 @@ using Grand.Core.Domain.Tax;
 using Grand.Core.Domain.Topics;
 using Grand.Core.Domain.Vendors;
 using Grand.Core.Infrastructure;
+using Grand.Data;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Configuration;
@@ -11225,17 +11226,45 @@ namespace Grand.Services.Installation
             _customerReminderHistoryRepository.Collection.Indexes.CreateOne(new CreateIndexModel<CustomerReminderHistory>((Builders<CustomerReminderHistory>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x => x.CustomerReminderId)), new CreateIndexOptions() { Name = "CustomerId", Unique = false }));
         }
 
+        private void CreateTables(string local)
+        {
+            if (string.IsNullOrEmpty(local))
+                local = "en";
+
+            try
+            {
+                var options = new CreateCollectionOptions();
+                var collation = new Collation(local);
+                options.Collation = collation;
+                var dataSettingsManager = new DataSettingsManager();
+                var connectionString = dataSettingsManager.LoadSettings().DataConnectionString;
+                var mongoDBContext = new MongoDBContext(connectionString);
+                var typeFinder = EngineContext.Current.Resolve<ITypeFinder>();
+                var q = typeFinder.GetAssemblies().FirstOrDefault(x => x.GetName().Name == "Grand.Core");
+                foreach (var item in q.GetTypes().Where(x => x.Namespace != null && x.Namespace.StartsWith("Grand.Core.Domain")))
+                {
+                    if (item.BaseType != null)
+                        if (item.IsClass && item.BaseType == typeof(BaseEntity))
+                            mongoDBContext.Database().CreateCollection(item.Name, options);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new GrandException(ex.Message);
+            }
+        }
+
         #endregion
 
         #region Methods
 
 
         public virtual void InstallData(string defaultUserEmail,
-            string defaultUserPassword, bool installSampleData = true)
+            string defaultUserPassword, string collation, bool installSampleData = true)
         {
 
             defaultUserEmail = defaultUserEmail.ToLower();
-
+            CreateTables(collation);
             CreateIndexes();
             InstallVersion();
             InstallStores();

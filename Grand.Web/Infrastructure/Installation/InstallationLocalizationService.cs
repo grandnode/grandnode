@@ -27,6 +27,11 @@ namespace Grand.Web.Infrastructure.Installation
         private IList<InstallationLanguage> _availableLanguages;
 
         /// <summary>
+        /// Available collation
+        /// </summary>
+        private IList<InstallationCollation> _availableCollation;
+
+        /// <summary>
         /// Get locale resource value
         /// </summary>
         /// <param name="resourceName">Resource name</param>
@@ -190,6 +195,40 @@ namespace Grand.Web.Infrastructure.Installation
 
             }
             return _availableLanguages;
+        }
+
+        /// <summary>
+        /// Get a list of available collactions
+        /// </summary>
+        /// <returns>Available collations mongodb</returns>
+        public virtual IList<InstallationCollation> GetAvailableCollations()
+        {
+            if (_availableCollation != null)
+                return _availableCollation;
+
+            _availableCollation = new List<InstallationCollation>();
+            var filePath = CommonHelper.MapPath("~/App_Data/Localization/supportedcollation.xml");
+            var xmlDocument = new XmlDocument();
+            xmlDocument.Load(File.OpenRead(filePath));
+
+            var collation = xmlDocument.SelectNodes(@"//Collations/Collation");
+
+            foreach (XmlNode resNode in collation)
+            {
+                var resNameAttribute = resNode.Attributes["Name"];
+                var resValueNode = resNode.SelectSingleNode("Value");
+
+                var resourceName = resNameAttribute.Value.Trim();
+                var resourceValue = resValueNode.InnerText.Trim();
+
+                _availableCollation.Add(new InstallationCollation()
+                {
+                    Name = resourceName,
+                    Value = resourceValue,
+                });
+            }
+
+            return _availableCollation;
         }
     }
 }

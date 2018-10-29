@@ -24,4 +24,10 @@ namespace Grand.Web.Infrastructure.Installation
         public string Name { get; set; }
         public string Value { get; set; }
     }
+
+    public partial class InstallationCollation
+    {
+        public string Name { get; set; }
+        public string Value { get; set; }
+    }
 }

@@ -13,6 +13,7 @@ namespace Grand.Web.Models.Install
         public InstallModel()
         {
             this.AvailableLanguages = new List<SelectListItem>();
+            this.AvailableCollation = new List<SelectListItem>();
         }
         public string AdminEmail { get; set; }
         [DataType(DataType.Password)]
@@ -30,6 +31,8 @@ namespace Grand.Web.Models.Install
         public bool DisableSampleDataOption { get; set; }
         public bool InstallSampleData { get; set; }
         public bool Installed { get; set; }
+        public string Collation { get; set; }
         public List<SelectListItem> AvailableLanguages { get; set; }
+        public List<SelectListItem> AvailableCollation { get; set; }
     }
 }

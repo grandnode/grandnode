@@ -101,7 +101,7 @@ namespace Grand.Services.Catalog
         private readonly CatalogSettings _catalogSettings;
 
         #endregion
-        
+
         #region Ctor
 
         /// <summary>
@@ -215,7 +215,7 @@ namespace Grand.Services.Catalog
                 }
             }
 
-            query = query.OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder);
+            query = query.OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder).ThenBy(c => c.Name);
             var unsortedCategories = query.ToList();
             //sort categories
             var sortedCategories = unsortedCategories.SortCategoriesForTree();
@@ -259,7 +259,7 @@ namespace Grand.Services.Catalog
                         var currentStoreId = new List<string> { storeId };
                         filter = filter & (builder.AnyIn(x => x.Stores, currentStoreId) | builder.Where(x => !x.LimitedToStores));
                     }
-                    
+
                 }
                 var categories = _categoryRepository.Collection.Find(filter).SortBy(x => x.DisplayOrder).ToList();
                 if (includeAllLevels)
@@ -275,14 +275,14 @@ namespace Grand.Services.Catalog
                 return categories;
             });
         }
-        
+
         /// <summary>
         /// Gets all categories displayed on the home page
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Categories</returns>
         public virtual IList<Category> GetAllCategoriesDisplayedOnHomePage(bool showHidden = false)
-        {            
+        {
             var builder = Builders<Category>.Filter;
             var filter = builder.Eq(x => x.Published, true);
             filter = filter & builder.Eq(x => x.ShowOnHomePage, true);
@@ -343,7 +343,7 @@ namespace Grand.Services.Catalog
         public virtual IList<Category> GetAllCategoriesByDiscount(string discountId)
         {
             var query = from c in _categoryRepository.Table
-                        where c.AppliedDiscounts.Any(x=>x == discountId)
+                        where c.AppliedDiscounts.Any(x => x == discountId)
                         select c;
 
             var categories = query.ToList();
@@ -414,7 +414,7 @@ namespace Grand.Services.Catalog
             //event notification
             _eventPublisher.EntityUpdated(category);
         }
-        
+
         /// <summary>
         /// Deletes a product category mapping
         /// </summary>
@@ -435,7 +435,7 @@ namespace Grand.Services.Catalog
 
             //event notification
             _eventPublisher.EntityDeleted(productCategory);
-            
+
         }
 
         /// <summary>
@@ -477,30 +477,30 @@ namespace Grand.Services.Catalog
 
                     }
 
-                    
+
                 }
                 var query_productCategories = from prod in query
-                             from pc in prod.ProductCategories
-                             select new SerializeProductCategory
-                             {
-                                 CategoryId = pc.CategoryId,
-                                 DisplayOrder = pc.DisplayOrder,
-                                 Id = pc.Id,
-                                 ProductId = prod.Id,
-                                 IsFeaturedProduct = pc.IsFeaturedProduct,
-                             };
+                                              from pc in prod.ProductCategories
+                                              select new SerializeProductCategory
+                                              {
+                                                  CategoryId = pc.CategoryId,
+                                                  DisplayOrder = pc.DisplayOrder,
+                                                  Id = pc.Id,
+                                                  ProductId = prod.Id,
+                                                  IsFeaturedProduct = pc.IsFeaturedProduct,
+                                              };
 
                 query_productCategories = from pm in query_productCategories
                                           where pm.CategoryId == categoryId
                                           orderby pm.DisplayOrder
                                           select pm;
-                                          
+
                 var productCategories = new PagedList<ProductCategory>(query_productCategories, pageIndex, pageSize);
                 return productCategories;
             });
         }
 
-       
+
         /// <summary>
         /// Inserts a product category mapping
         /// </summary>
@@ -552,7 +552,7 @@ namespace Grand.Services.Catalog
         }
         #endregion
 
-        public class SerializeProductCategory: ProductCategory
+        public class SerializeProductCategory : ProductCategory
         {
 
         }

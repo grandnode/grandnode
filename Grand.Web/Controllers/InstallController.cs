@@ -78,7 +78,16 @@ namespace Grand.Web.Controllers
                     Selected = _locService.GetCurrentLanguage().Code == lang.Code,
                 });
             }
-
+            //prepare collation list
+            foreach (var col in _locService.GetAvailableCollations())
+            {
+                model.AvailableCollation.Add(new SelectListItem
+                {
+                    Value = col.Value,
+                    Text = col.Name,
+                    Selected = _locService.GetCurrentLanguage().Code == col.Value,
+                });
+            }
             return View(model);
         }
 
@@ -179,7 +188,7 @@ namespace Grand.Web.Controllers
                     var dataProviderSettings = dataSettingsManager.LoadSettings(reloadSettings: true);
 
                     var installationService = EngineContext.Current.Resolve<IInstallationService>();
-                    installationService.InstallData(model.AdminEmail, model.AdminPassword, model.InstallSampleData);
+                    installationService.InstallData(model.AdminEmail, model.AdminPassword, model.Collation, model.InstallSampleData);
 
                     //reset cache
                     DataSettingsHelper.ResetCache();
@@ -258,6 +267,17 @@ namespace Grand.Web.Controllers
                     Value = Url.Action("ChangeLanguage", "Install", new { language = lang.Code }),
                     Text = lang.Name,
                     Selected = _locService.GetCurrentLanguage().Code == lang.Code,
+                });
+            }
+
+            //prepare collation list
+            foreach (var col in _locService.GetAvailableCollations())
+            {
+                model.AvailableCollation.Add(new SelectListItem
+                {
+                    Value = col.Value,
+                    Text = col.Name,
+                    Selected = _locService.GetCurrentLanguage().Code == col.Value,
                 });
             }
 

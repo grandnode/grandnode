@@ -31,5 +31,11 @@ namespace Grand.Web.Infrastructure.Installation
         /// </summary>
         /// <returns>Available installation languages</returns>
         IList<InstallationLanguage> GetAvailableLanguages();
+
+        /// <summary>
+        /// Get a list of available collactions
+        /// </summary>
+        /// <returns>Available collations mongodb</returns>
+        IList<InstallationCollation> GetAvailableCollations();
     }
 }
