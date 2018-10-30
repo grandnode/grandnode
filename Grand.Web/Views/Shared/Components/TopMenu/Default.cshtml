@@ -22,14 +22,20 @@
     }
     @if (Model.Manufacturers.Any())
     {
-        <li class="nav-item dropdown">
-            <span class="fa fa-angle-down d-lg-none text-white" aria-hidden="true"></span>
+        <li class="nav-item dropdown manufacturer-dropdown">
+            <span class="fa fa-angle-down d-lg-none" aria-hidden="true"></span>
             <a class="pr-3 pl-3 nav-link dropdown-toggle" href="@Url.RouteUrl("ManufacturerList")">@T("Manufacturers.Menu")</a>
             <ul class="dropdown-menu first-level">
+                <li class="fa fa-times d-lg-none"></li>
+                <li class="nav-item d-lg-none sub-cat-name-container"><a class="nav-link sub-cat-name d-flex justify-content-center">Sub Category</a></li>
                 @foreach (var manuf in Model.Manufacturers)
                 {
                     <li class="nav-item">
                         <a class="pr-3 pl-3 nav-link" href="@Url.RouteUrl("Manufacturer", new { SeName = manuf.SeName })">
+                            @if (!string.IsNullOrEmpty(manuf.Icon))
+                            {
+                                <span class="category-icon @manuf.Icon"></span>
+                            }
                             @manuf.Name
                         </a>
                     </li>

@@ -10,7 +10,13 @@
                 @foreach (var manufacturer in Model.Manufacturers)
                 {
                     <li class="@(manufacturer.IsActive ? "active" : "inactive")">
-                        <a href="@Url.RouteUrl("Manufacturer", new { SeName = manufacturer.SeName })">@manufacturer.Name</a>
+                        <a href="@Url.RouteUrl("Manufacturer", new { SeName = manufacturer.SeName })">
+                            @if (!string.IsNullOrEmpty(manufacturer.Icon))
+                            {
+                                <span class="category-icon @manufacturer.Icon"></span>
+                            }
+                            @manufacturer.Name
+                        </a>
                     </li>
                 }
             </ul>

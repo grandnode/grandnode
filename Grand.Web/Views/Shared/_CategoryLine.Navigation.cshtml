@@ -30,6 +30,10 @@
 }
 <li class="@liClass">
     <a href="@Url.RouteUrl("Category", new { SeName = Model.Category.SeName })">
+        @if (!string.IsNullOrEmpty(Model.Category.Icon))
+        {
+            <span class="category-icon @Model.Category.Icon"></span>
+        }
         @Model.Category.Name
         @if (Model.Category.NumberOfProducts.HasValue)
         {

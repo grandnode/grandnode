@@ -27,7 +27,8 @@ namespace Grand.Web.Extensions
                 MetaTitle = entity.GetLocalized(x => x.MetaTitle),
                 SeName = entity.GetSeName(),
                 Flag = entity.Flag,
-                FlagStyle = entity.FlagStyle
+                FlagStyle = entity.FlagStyle,
+                Icon = entity.Icon
             };
             return model;
         }
@@ -47,6 +48,7 @@ namespace Grand.Web.Extensions
                 MetaDescription = entity.GetLocalized(x => x.MetaDescription),
                 MetaTitle = entity.GetLocalized(x => x.MetaTitle),
                 SeName = entity.GetSeName(),
+                Icon = entity.Icon
             };
             return model;
         }

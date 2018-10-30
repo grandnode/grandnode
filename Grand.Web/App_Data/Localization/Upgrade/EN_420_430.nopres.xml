@@ -527,4 +527,16 @@
   <LocaleResource Name="ShoppingCart.DiscountedQty">
     <Value>Discounted qty</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.Icon">
+    <Value>Icon</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.Icon.Hint">
+    <Value>Display icon in the top menu</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.Icon">
+    <Value>Icon</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.Icon.Hint">
+    <Value>Display icon in the top menu</Value>
+  </LocaleResource>
 </Language>

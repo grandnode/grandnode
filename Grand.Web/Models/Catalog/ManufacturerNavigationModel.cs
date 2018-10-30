@@ -18,9 +18,8 @@ namespace Grand.Web.Models.Catalog
     public partial class ManufacturerBriefInfoModel : BaseGrandEntityModel
     {
         public string Name { get; set; }
-
         public string SeName { get; set; }
-        
+        public string Icon { get; set; }
         public bool IsActive { get; set; }
     }
 }

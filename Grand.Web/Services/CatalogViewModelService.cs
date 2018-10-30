@@ -350,7 +350,8 @@ namespace Grand.Web.Services
                     SeName = category.GetSeName(langid),
                     IncludeInTopMenu = category.IncludeInTopMenu,
                     Flag = category.Flag,
-                    FlagStyle = category.FlagStyle
+                    FlagStyle = category.FlagStyle,
+                    Icon = category.Icon
                 };
 
                 //product number for each category
@@ -719,6 +720,7 @@ namespace Grand.Web.Services
                     {
                         Id = t.Id,
                         Name = t.GetLocalized(x => x.Name, languageId),
+                        Icon = t.Icon,
                         SeName = t.GetSeName(languageId)
                     })
                     .ToList()
@@ -843,6 +845,7 @@ namespace Grand.Web.Services
                     {
                         Id = manufacturer.Id,
                         Name = manufacturer.GetLocalized(x => x.Name, languageId),
+                        Icon = manufacturer.Icon,
                         SeName = manufacturer.GetSeName(languageId),
                         IsActive = currentManufacturer != null && currentManufacturer.Id == manufacturer.Id,
                     };

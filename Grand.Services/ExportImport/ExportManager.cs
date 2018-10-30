@@ -101,7 +101,7 @@ namespace Grand.Services.ExportImport
                     xmlWriter.WriteElementString("Published", null, category.Published.ToString());
                     xmlWriter.WriteElementString("Flag", null, category.Flag);
                     xmlWriter.WriteElementString("FlagStyle", null, category.FlagStyle);
-
+                    xmlWriter.WriteElementString("Icon", null, category.Icon);
                     xmlWriter.WriteElementString("DisplayOrder", null, category.DisplayOrder.ToString());
                     xmlWriter.WriteElementString("CreatedOnUtc", null, category.CreatedOnUtc.ToString());
                     xmlWriter.WriteElementString("UpdatedOnUtc", null, category.UpdatedOnUtc.ToString());
@@ -288,6 +288,7 @@ namespace Grand.Services.ExportImport
                 new PropertyByName<Category>("Published", p => p.Published),
                 new PropertyByName<Category>("Flag", p => p.Flag),
                 new PropertyByName<Category>("FlagStyle", p => p.FlagStyle),
+                new PropertyByName<Category>("Icon", p => p.Icon),
                 new PropertyByName<Category>("DisplayOrder", p => p.DisplayOrder)
             };
             return ExportToXlsx(properties, categories);

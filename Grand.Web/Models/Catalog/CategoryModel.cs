@@ -24,6 +24,7 @@ namespace Grand.Web.Models.Catalog
         public string SeName { get; set; }
         public string Flag { get; set; }
         public string FlagStyle { get; set; }
+        public string Icon { get; set; }
         public PictureModel PictureModel { get; set; }
         public CatalogPagingFilteringModel PagingFilteringContext { get; set; }
         public bool DisplayCategoryBreadcrumb { get; set; }

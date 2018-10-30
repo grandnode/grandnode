@@ -143,6 +143,11 @@ namespace Grand.Core.Domain.Catalog
         public string FlagStyle { get; set; }
 
         /// <summary>
+        /// Gets or sets the Icon
+        /// </summary>
+        public string Icon { get; set; }
+
+        /// <summary>
         /// Gets or sets the hide on catalog page (subcategories)
         /// </summary>
         public bool HideOnCatalog { get; set; }

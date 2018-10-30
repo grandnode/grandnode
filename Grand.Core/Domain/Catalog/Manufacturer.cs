@@ -96,6 +96,11 @@ namespace Grand.Core.Domain.Catalog
         public bool IncludeInTopMenu { get; set; }
 
         /// <summary>
+        /// Gets or sets the Icon
+        /// </summary>
+        public string Icon { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the entity is subject to ACL
  	    /// </summary>
         public bool SubjectToAcl { get; set; }

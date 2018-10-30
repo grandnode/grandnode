@@ -2298,6 +2298,12 @@
   <LocaleResource Name="Admin.Catalog.Categories.Fields.HideOnCatalog.hint">
     <Value>Allow store owner to hide some categories on category page (subcategories before the list of products).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.Icon">
+    <Value>Icon</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.Icon.Hint">
+    <Value>Display icon in the top menu</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.IncludeInTopMenu">
     <Value>Include in top menu</Value>
   </LocaleResource>
@@ -2552,6 +2558,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.FeaturedProductsOnHomaPage.hint">
     <Value>Check if you want to show a featured product on home page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.Icon">
+    <Value>Icon</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.Icon.Hint">
+    <Value>Display icon in the top menu</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.IncludeInTopMenu">
     <Value>Include in top menu</Value>
