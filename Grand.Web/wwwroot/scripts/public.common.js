@@ -327,7 +327,7 @@ $(document).ready(function () {
     $("#mobile-collapsing-menu .fa-times").click(function () {
         $(this).parent().removeClass("show");
     });
-    
+
     $(".currency-button").click(function () {
         $(".currency-list-mobile ul").toggleClass("show");
         $(".language-list-mobile ul").removeClass("show");
@@ -398,7 +398,7 @@ $(document).ready(function () {
 
     $(".general-opener").on('click', function () {
         $("#generalDropDown").toggle();
-    });   
+    });
 });
 
 $(document).ready(function () {
@@ -664,20 +664,85 @@ $(document).ready(function () {
     });
 });
 
-function deletecartitem(href) {
-    var flyoutcartselector = AjaxCart.flyoutcartselector;
-    var topcartselector = AjaxCart.topcartselector;
+//newsletter
+
+
+
+
+$(document).ready(function () {
+
+    function newsletter_subscribe(subscribe) {
+        var subscribeProgress = $("#subscribe-loading-progress");
+        subscribeProgress.show();
+        var postData = {
+            subscribe: subscribe,
+            email: $("#newsletter-email").val()
+        };
+        var href = $("#newsletterbox").closest('[data-href]').data('href');
         $.ajax({
             cache: false,
             type: "POST",
             url: href,
+            data: postData,
             success: function (data) {
-                $(flyoutcartselector).replaceWith(data.flyoutshoppingcart);
-                $(topcartselector).html(data.totalproducts);
+                subscribeProgress.hide();
+                $("#newsletter-result-block").html(data.Result);
+                if (data.Success) {
+                    $('#newsletter-subscribe-block').hide();
+                    $('#newsletter-result-block').show();
+                    if (data.Showcategories) {
+                        $('#action_modal_form').html(data.ResultCategory);
+                        window.setTimeout(function () {
+                            $('.popup-action-form').magnificPopup('open');
+                        }, 100);
+                    }
+                } else {
+                    $('#newsletter-result-block').fadeIn("slow").delay(2000).fadeOut("slow");
+                }
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                alert('Failed to retrieve Flyout Shopping Cart.');
+                alert('Failed to subscribe.');
+                subscribeProgress.hide();
             }
         });
-        return false;
+    }
+    $('#newsletter-subscribe-button').click(function () {
+        var allowToUnsubscribe = $("#newsletterbox").data('allowtounsubscribe').toLowerCase();
+        if (allowToUnsubscribe == 'true') { 
+            if ($('#newsletter_subscribe').is(':checked')) {
+                newsletter_subscribe('true');
+            }
+            else {
+                newsletter_subscribe('false');
+            }
+        }
+        else {
+            newsletter_subscribe('true');
+        }
+    });
+
+    $("#newsletter-email").keydown(function (event) {
+        if (event.keyCode == 13) {
+            $("#newsletter-subscribe-button").trigger("click")
+            return false;
+        }
+    });
+});
+
+function deletecartitem(href) {
+    var flyoutcartselector = AjaxCart.flyoutcartselector;
+    var topcartselector = AjaxCart.topcartselector;
+    $.ajax({
+        cache: false,
+        type: "POST",
+        url: href,
+        success: function (data) {
+            $(flyoutcartselector).replaceWith(data.flyoutshoppingcart);
+            $(topcartselector).html(data.totalproducts);
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert('Failed to retrieve Flyout Shopping Cart.');
+        }
+    });
+    return false;
 }

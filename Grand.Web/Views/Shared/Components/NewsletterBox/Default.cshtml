@@ -16,7 +16,7 @@
             <div class="custom-controls-stacked d-flex justify-content-center col-lg-9 offset-lg-3 col-12 pt-1 px-0">
                 <fieldset>
                     <label for="newsletter_subscribe" class="custom-control custom-radio float-left">
-                        <input value="newsletter_unsubscribe" id="newsletter_subscribe" name="newsletter_block" type="radio" class="custom-control-input">
+                        <input value="newsletter_unsubscribe" id="newsletter_subscribe" name="newsletter_block" type="radio" class="custom-control-input" checked="checked">
                         <span class="custom-control-label" for="newsletter_subscribe">@T("Newsletter.Options.Subscribe")</span>
                     </label>
                     <label for="newsletter_unsubscribe" class="custom-control custom-radio float-left ml-3">
@@ -30,67 +30,8 @@
             <span id="subscribe-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
             <span asp-validation-for="NewsletterEmail"></span>
         </div>
+        <input type="hidden" id="newsletterbox" data-href="@(Url.RouteUrl("SubscribeNewsletter"))" data-allowtounsubscribe=@Model.AllowToUnsubscribe />
     </div>
-    <script asp-location="Footer">
-            function newsletter_subscribe(subscribe) {
-                var subscribeProgress = $("#subscribe-loading-progress");
-                subscribeProgress.show();
-                var postData = {
-                    subscribe: subscribe,
-                    email: $("#newsletter-email").val()
-                };
-                $.ajax({
-                    cache: false,
-                    type: "POST",
-                    url: "@(Url.RouteUrl("SubscribeNewsletter"))",
-                    data: postData,
-                    success: function (data) {
-                        subscribeProgress.hide();
-                        $("#newsletter-result-block").html(data.Result);
-                        if (data.Success) {
-                            $('#newsletter-subscribe-block').hide();
-                            $('#newsletter-result-block').show();
-                            if (data.Showcategories) {
-                                $('#action_modal_form').html(data.ResultCategory);
-                                window.setTimeout(function () {
-                                    $('.popup-action-form').magnificPopup('open');
-                                }, 100);
-
-                            }
-
-                        } else {
-                            $('#newsletter-result-block').fadeIn("slow").delay(2000).fadeOut("slow");
-                        }
-                    },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        alert('Failed to subscribe.');
-                        subscribeProgress.hide();
-                    }
-                });
-            }
-
-            $(document).ready(function () {
-                $('#newsletter-subscribe-button').click(function () {
-                    @if (Model.AllowToUnsubscribe)
-                {
-                    <text>if ($('#newsletter_subscribe').is(':checked')) {
-                        newsletter_subscribe('true');
-                    } else {
-                        newsletter_subscribe('false');
-                    }</text>
-                }
-                else
-                {
-                    <text>newsletter_subscribe('true');</text>
-                }
-                });
-                $("#newsletter-email").keydown(function (event) {
-                    if (event.keyCode == 13) {
-                        $("#newsletter-subscribe-button").trigger("click")
-                        return false;
-                    }
-                });
-            });
-    </script>
+    
 </div>
 <div class="newsletter-result" id="newsletter-result-block"></div>
