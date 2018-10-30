@@ -41,7 +41,7 @@ namespace Grand.Services.Catalog
         /// {5} : store ID
         /// </remarks>
         private const string PRODUCTMANUFACTURERS_ALLBYMANUFACTURERID_KEY = "Grand.productmanufacturer.allbymanufacturerid-{0}-{1}-{2}-{3}-{4}-{5}";
-        
+
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
@@ -137,7 +137,7 @@ namespace Grand.Services.Catalog
 
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
-                        
+
             _manufacturerRepository.Delete(manufacturer);
 
         }
@@ -153,7 +153,7 @@ namespace Grand.Services.Catalog
         public virtual IPagedList<Manufacturer> GetAllManufacturers(string manufacturerName = "",
             string storeId = "",
             int pageIndex = 0,
-            int pageSize = int.MaxValue, 
+            int pageSize = int.MaxValue,
             bool showHidden = false)
         {
             var query = from m in _manufacturerRepository.Table
@@ -163,9 +163,9 @@ namespace Grand.Services.Catalog
                 query = query.Where(m => m.Published);
             if (!String.IsNullOrWhiteSpace(manufacturerName))
                 query = query.Where(m => m.Name != null && m.Name.ToLower().Contains(manufacturerName.ToLower()));
-            
+
             if ((!_catalogSettings.IgnoreAcl || (!String.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations)))
-            { 
+            {
                 if (!_catalogSettings.IgnoreAcl)
                 {
                     //ACL (access control list)
@@ -183,7 +183,7 @@ namespace Grand.Services.Catalog
                             select p;
                 }
             }
-            query = query.OrderBy(m => m.DisplayOrder);
+            query = query.OrderBy(m => m.DisplayOrder).ThenBy(m => m.Name);
 
             return new PagedList<Manufacturer>(query, pageIndex, pageSize);
         }
@@ -322,21 +322,21 @@ namespace Grand.Services.Catalog
                 }
 
                 var query_ProductManufacturer = from prod in query
-                             from pm in prod.ProductManufacturers
-                             select new SerializeProductManufacturer
-                                {
-                                    Id = pm.Id,
-                                    ProductId = prod.Id,
-                                    DisplayOrder = pm.DisplayOrder,
-                                    IsFeaturedProduct = pm.IsFeaturedProduct,
-                                    ManufacturerId = pm.ManufacturerId    
-                                };
+                                                from pm in prod.ProductManufacturers
+                                                select new SerializeProductManufacturer
+                                                {
+                                                    Id = pm.Id,
+                                                    ProductId = prod.Id,
+                                                    DisplayOrder = pm.DisplayOrder,
+                                                    IsFeaturedProduct = pm.IsFeaturedProduct,
+                                                    ManufacturerId = pm.ManufacturerId
+                                                };
 
                 query_ProductManufacturer = from pm in query_ProductManufacturer
                                             where pm.ManufacturerId == manufacturerId
                                             orderby pm.DisplayOrder
                                             select pm;
-                
+
                 var productManufacturers = new PagedList<ProductManufacturer>(query_ProductManufacturer, pageIndex, pageSize);
                 return productManufacturers;
             });
@@ -350,7 +350,7 @@ namespace Grand.Services.Catalog
         public virtual IList<Manufacturer> GetAllManufacturersByDiscount(string discountId)
         {
             var query = from c in _manufacturerRepository.Table
-                        where c.AppliedDiscounts.Any(x=>x == discountId)
+                        where c.AppliedDiscounts.Any(x => x == discountId)
                         select c;
 
             var manufacturers = query.ToList();
