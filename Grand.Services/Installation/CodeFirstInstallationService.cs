@@ -10005,23 +10005,29 @@ namespace Grand.Services.Installation
             };
             poll1.PollAnswers.Add(new PollAnswer
             {
-                Name = "Excellent",
+                Name = "Like very much",
                 DisplayOrder = 1,
             });
             poll1.PollAnswers.Add(new PollAnswer
             {
-                Name = "Good",
+                Name = "Like",
                 DisplayOrder = 2,
             });
             poll1.PollAnswers.Add(new PollAnswer
             {
-                Name = "Poor",
+                Name = "Neither Like nor Dislike",
                 DisplayOrder = 3,
             });
             poll1.PollAnswers.Add(new PollAnswer
             {
-                Name = "Very bad",
+                Name = "Dislike",
                 DisplayOrder = 4,
+
+            });
+            poll1.PollAnswers.Add(new PollAnswer
+            {
+                Name = "Dislike very much",
+                DisplayOrder = 5,
 
             });
             _pollRepository.Insert(poll1);
