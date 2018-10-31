@@ -37,7 +37,7 @@ $(document).ready(function() {
             pageSizes: [@(adminAreaSettings.GridPageSizes)]
         },
         //details grid
-        detailInit: detailInit,
+        detailInit: detailInitCart,
         scrollable: false,
         columns: [
             {
@@ -54,7 +54,7 @@ $(document).ready(function() {
 });
 
 //details grid
-function detailInit(e) {
+function detailInitCart(e) {
     $("<div/>").appendTo(e.detailCell).kendoGrid({
         dataSource: {
             transport: {

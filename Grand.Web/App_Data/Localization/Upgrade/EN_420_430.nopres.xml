@@ -545,4 +545,7 @@
   <LocaleResource Name="Admin.ReturnRequests.View">
     <Value>View</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.CurrentCartWishlists">
+    <Value>Current shopping carts and wishlists</Value>
+  </LocaleResource>
 </Language>

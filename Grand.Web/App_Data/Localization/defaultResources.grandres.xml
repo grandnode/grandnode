@@ -10068,6 +10068,9 @@
   <LocaleResource Name="Admin.CurrentCarts.UpdatedOn">
     <Value>Updated on</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.CurrentCartWishlists">
+    <Value>Current shopping carts and wishlists</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.CurrentWishlists">
     <Value>Current wishlists</Value>
   </LocaleResource>
