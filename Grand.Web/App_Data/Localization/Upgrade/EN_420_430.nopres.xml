@@ -542,4 +542,7 @@
   <LocaleResource Name="Admin.GiftCards.Fields.GiftCardCouponCode.Required">
     <Value>Coupon code is required</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.View">
+    <Value>View</Value>
+  </LocaleResource>
 </Language>

@@ -14046,6 +14046,9 @@
   <LocaleResource Name="Admin.ReturnRequests.Updated">
     <Value>The return request has been updated successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.View">
+    <Value>View</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Sales">
     <Value>Sales</Value>
   </LocaleResource>

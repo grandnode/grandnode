@@ -136,7 +136,7 @@
                                             @T("Admin.Orders.Products.ReturnRequests")<text>:</text>
                                             @for (int i = 0; i < item.ReturnRequestIds.Count; i++)
                                             {
-                                                <a href="@Url.Action("Edit", "ReturnRequest", new { id = item.ReturnRequestIds[i] })">@item.ReturnRequestIds[i]</a>
+                                                <a href="@Url.Action("Edit", "ReturnRequest", new { id = item.ReturnRequestIds[i] })">@T("Admin.ReturnRequests.View")</a>
                                                 if (i != item.ReturnRequestIds.Count - 1)
                                                 {
                                                     <text>,</text>
