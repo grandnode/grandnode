@@ -539,4 +539,7 @@
   <LocaleResource Name="Admin.Catalog.Categories.Fields.Icon.Hint">
     <Value>Display icon in the top menu</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GiftCards.Fields.GiftCardCouponCode.Required">
+    <Value>Coupon code is required</Value>
+  </LocaleResource>
 </Language>

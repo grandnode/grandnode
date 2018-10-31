@@ -11868,6 +11868,9 @@
   <LocaleResource Name="Admin.GiftCards.Fields.GiftCardCouponCode.Hint">
     <Value>The gift card coupon code (used during checkout).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GiftCards.Fields.GiftCardCouponCode.Required">
+    <Value>Coupon code is required</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.GiftCards.Fields.GiftCardType">
     <Value>Gift card type</Value>
   </LocaleResource>
