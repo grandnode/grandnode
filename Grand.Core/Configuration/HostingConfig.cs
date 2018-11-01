@@ -16,5 +16,10 @@
         /// Gets or sets a value indicating whether to use HTTP_X_FORWARDED_PROTO
         /// </summary>
         public bool UseHttpXForwardedProto { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to use Forwards proxied headers onto current request
+        /// </summary>
+        public bool UseForwardedHeaders { get; set; }
     }
 }
