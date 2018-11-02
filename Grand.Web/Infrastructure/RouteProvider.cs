@@ -40,6 +40,21 @@ namespace Grand.Web.Infrastructure
                             "cart/",
                             new { controller = "ShoppingCart", action = "Cart" });
 
+            //Continue shopping
+            routeBuilder.MapLocalizedRoute("ContinueShopping",
+                "cart/continueshopping/",
+                new { controller = "ShoppingCart", action = "ContinueShopping" });
+
+            //clear cart
+            routeBuilder.MapLocalizedRoute("ClearCart",
+                "cart/clear/",
+                new { controller = "ShoppingCart", action = "ClearCart" });
+
+            //start checkout
+            routeBuilder.MapLocalizedRoute("StartCheckout",
+                "cart/checkout/",
+                new { controller = "ShoppingCart", action = "StartCheckout" });
+
             routeBuilder.MapLocalizedRoute("ApplyDiscountCoupon",
                             "applydiscountcoupon/",
                             new { controller = "ShoppingCart", action = "ApplyDiscountCoupon" });

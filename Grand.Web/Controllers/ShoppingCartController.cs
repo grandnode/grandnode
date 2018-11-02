@@ -79,7 +79,6 @@ namespace Grand.Web.Controllers
 
         #region Shopping cart
 
-
         [HttpPost]
         public virtual IActionResult CheckoutAttributeChange(IFormCollection form,
             [FromServices] ICheckoutAttributeParser checkoutAttributeParser,
@@ -272,9 +271,7 @@ namespace Grand.Web.Controllers
             });
         }
 
-        [HttpPost, ActionName("Cart")]
-        [FormValueRequired("clearcart")]
-        public virtual IActionResult ClearCart(IFormCollection form)
+        public virtual IActionResult ClearCart()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return RedirectToRoute("HomePage");
@@ -289,14 +286,12 @@ namespace Grand.Web.Controllers
             {
                 _shoppingCartService.DeleteShoppingCartItem(_workContext.CurrentCustomer, sci, ensureOnlyActiveCheckoutAttributes: true);
             }
-            //parse and save checkout attributes
-            _shoppingCartViewModelService.ParseAndSaveCheckoutAttributes(cart, form);
 
             return RedirectToRoute("HomePage");
 
         }
 
-        [HttpPost, ActionName("DeleteCartItem")]
+        [HttpPost]
         public virtual IActionResult DeleteCartItem(string id, bool shoppingcartpage = false)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
@@ -338,11 +333,8 @@ namespace Grand.Web.Controllers
                     cart = this.RenderViewComponentToString("OrderSummary", new { overriddenModel = shoppingcartmodel })
                 });
             }
-
         }
 
-        [HttpPost, ActionName("Cart")]
-        [FormValueRequired("continueshopping")]
         public virtual IActionResult ContinueShopping()
         {
             var returnUrl = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LastContinueShoppingPage, _storeContext.CurrentStore.Id);
@@ -356,8 +348,7 @@ namespace Grand.Web.Controllers
             }
         }
 
-        [HttpPost, ActionName("Cart")]
-        [FormValueRequired("checkout")]
+        [HttpPost]
         public virtual IActionResult StartCheckout(IFormCollection form, [FromServices] OrderSettings orderSettings)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
