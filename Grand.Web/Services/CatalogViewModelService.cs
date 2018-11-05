@@ -351,7 +351,8 @@ namespace Grand.Web.Services
                     IncludeInTopMenu = category.IncludeInTopMenu,
                     Flag = category.Flag,
                     FlagStyle = category.FlagStyle,
-                    Icon = category.Icon
+                    Icon = category.Icon,
+                    ImageUrl = _pictureService.GetPictureUrl(category.PictureId, _mediaSettings.CategoryThumbPictureSize)
                 };
 
                 //product number for each category
