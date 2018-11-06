@@ -1,7 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Directory;
-using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Orders;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
@@ -15,6 +14,7 @@ using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Services.Tax;
 using Grand.Web.Areas.Admin.Extensions;
+using Grand.Web.Areas.Admin.Helpers;
 using Grand.Web.Areas.Admin.Models.Orders;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -87,56 +87,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         #endregion
         
         #region Utilities
-
-        [NonAction]
-        protected virtual List<LocalizedProperty> UpdateAttributeLocales(CheckoutAttribute checkoutAttribute, CheckoutAttributeModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-            foreach (var local in model.Locales)
-            {
-
-                if (!(String.IsNullOrEmpty(local.Name)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "Name",
-                        LocaleValue = local.Name,
-
-                    });
-
-                if (!(String.IsNullOrEmpty(local.TextPrompt)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "TextPrompt",
-                        LocaleValue = local.TextPrompt,
-                    });
-
-            }
-            return localized;
-            
-
-        }
-
-        [NonAction]
-        protected virtual List<LocalizedProperty> UpdateValueLocales(CheckoutAttributeValue checkoutAttributeValue, CheckoutAttributeValueModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-            foreach (var local in model.Locales)
-            {
-
-                if (!(String.IsNullOrEmpty(local.Name)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "Name",
-                        LocaleValue = local.Name,
-                    });
-            }
-            return localized;
-
-          
-        }
 
         [NonAction]
         protected virtual void PrepareTaxCategories(CheckoutAttributeModel model, CheckoutAttribute checkoutAttribute, bool excludeProperties)
@@ -217,7 +167,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                             Id = x.Id,
                             Name = x.Name,
                             AttributeControlType = x.AttributeControlType,
-                            Values = x.CheckoutAttributeValues //_checkoutAttributeService.GetCheckoutAttributeValues(x.Id)
+                            Values = x.CheckoutAttributeValues
                                 .Select(v => new SelectListItem()
                                 {
                                     Text = v.Name,
@@ -349,7 +299,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 var checkoutAttribute = model.ToEntity();
                 checkoutAttribute.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
-                checkoutAttribute.Locales = UpdateAttributeLocales(checkoutAttribute, model);
+                checkoutAttribute.Locales = model.Locales.ToLocalizedProperty();
                 checkoutAttribute.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
                 _checkoutAttributeService.InsertCheckoutAttribute(checkoutAttribute);
                
@@ -418,7 +368,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 checkoutAttribute = model.ToEntity(checkoutAttribute);
                 SaveConditionAttributes(checkoutAttribute, model);
                 checkoutAttribute.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
-                checkoutAttribute.Locales = UpdateAttributeLocales(checkoutAttribute, model);
+                checkoutAttribute.Locales = model.Locales.ToLocalizedProperty();
                 checkoutAttribute.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
                 _checkoutAttributeService.UpdateCheckoutAttribute(checkoutAttribute);
                
@@ -558,7 +508,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     IsPreSelected = model.IsPreSelected,
                     DisplayOrder = model.DisplayOrder,
                 };
-                cav.Locales = UpdateValueLocales(cav, model);
+                cav.Locales = model.Locales.ToLocalizedProperty();
                 checkoutAttribute.CheckoutAttributeValues.Add(cav);
                 _checkoutAttributeService.UpdateCheckoutAttribute(checkoutAttribute);
                 
@@ -635,7 +585,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 cav.WeightAdjustment = model.WeightAdjustment;
                 cav.IsPreSelected = model.IsPreSelected;
                 cav.DisplayOrder = model.DisplayOrder;
-                cav.Locales = UpdateValueLocales(cav, model);
+                cav.Locales = model.Locales.ToLocalizedProperty();
                 _checkoutAttributeService.UpdateCheckoutAttribute(checkoutAttribute);
 
                 ViewBag.RefreshPage = true;
