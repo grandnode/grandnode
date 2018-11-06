@@ -45,29 +45,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        protected virtual List<LocalizedProperty> UpdateLocales(NewsletterCategory newsletterCategory, NewsletterCategoryModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-            foreach (var local in model.Locales)
-            {
-                localized.Add(new LocalizedProperty()
-                {
-                    LanguageId = local.LanguageId,
-                    LocaleKey = "Name",
-                    LocaleValue = local.Name
-                });
-
-                localized.Add(new LocalizedProperty()
-                {
-                    LanguageId = local.LanguageId,
-                    LocaleKey = "Description",
-                    LocaleValue = local.Description
-                });
-            }
-            return localized;
-        }
-
-        [NonAction]
         protected virtual void PrepareStoresMappingModel(NewsletterCategoryModel model, NewsletterCategory newsletterCategory, bool excludeProperties)
         {
             if (model == null)
@@ -146,7 +123,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var newsletterCategory = model.ToEntity();
-                newsletterCategory.Locales = UpdateLocales(newsletterCategory, model);
+                newsletterCategory.Locales = model.Locales.ToLocalizedProperty();
                 newsletterCategory.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
                 _newsletterCategoryService.InsertNewsletterCategory(newsletterCategory);
 
@@ -199,7 +176,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 newsletterCategory = model.ToEntity(newsletterCategory);
-                newsletterCategory.Locales = UpdateLocales(newsletterCategory, model);
+                newsletterCategory.Locales = model.Locales.ToLocalizedProperty();
                 newsletterCategory.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
                 _newsletterCategoryService.UpdateNewsletterCategory(newsletterCategory);
 
