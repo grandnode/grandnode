@@ -88,7 +88,7 @@ namespace Grand.Web.Areas.Admin.Helpers
                             else
                             {
                                 var itemvalue = prop.GetValue(item) ?? "";
-                                if (itemvalue!=null && !string.IsNullOrEmpty(itemvalue.ToString()))
+                                if (itemvalue != null && !string.IsNullOrEmpty(itemvalue.ToString()))
                                 {
                                     var seName = entity.ValidateSeName(itemvalue.ToString(), "", false);
                                     prop.SetValue(item, seName);
