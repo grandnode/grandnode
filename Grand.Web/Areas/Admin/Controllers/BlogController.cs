@@ -242,7 +242,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //search engine name
                 var seName = blogPost.ValidateSeName(model.SeName, model.Title, true);
                 blogPost.SeName = seName;
-                blogPost.Locales = model.Locales.ToLocalizedProperty(blogPost, x => x.Title, _urlRecordService); //UpdateLocales(blogPost, model);
+                blogPost.Locales = model.Locales.ToLocalizedProperty(blogPost, x => x.Title, _urlRecordService);
                 _blogService.UpdateBlogPost(blogPost);
                 _urlRecordService.SaveSlug(blogPost, seName, "");
 
