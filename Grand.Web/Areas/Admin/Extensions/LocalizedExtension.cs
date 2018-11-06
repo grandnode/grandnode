@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Grand.Web.Areas.Admin.Helpers
+namespace Grand.Web.Areas.Admin.Extensions
 {
     public static class LocalizedExtension
     {
