@@ -11,6 +11,7 @@ using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Extensions;
+using Grand.Web.Areas.Admin.Helpers;
 using Grand.Web.Areas.Admin.Models.Directory;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -62,23 +63,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         #endregion
 
         #region Utilities
-
-        [NonAction]
-        protected virtual List<LocalizedProperty> UpdateLocales(Currency currency, CurrencyModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-            foreach (var local in model.Locales)
-            {
-
-                localized.Add(new LocalizedProperty()
-                {
-                    LanguageId = local.LanguageId,
-                    LocaleKey = "Name",
-                    LocaleValue = local.Name
-                });
-            }
-            return localized;
-        }
 
         [NonAction]
         protected virtual void PrepareStoresMappingModel(CurrencyModel model, Currency currency, bool excludeProperties)
@@ -246,7 +230,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 var currency = model.ToEntity();
                 currency.CreatedOnUtc = DateTime.UtcNow;
                 currency.UpdatedOnUtc = DateTime.UtcNow;
-                currency.Locales = UpdateLocales(currency, model);
+                currency.Locales = model.Locales.ToLocalizedProperty();
                 currency.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
 
                 _currencyService.InsertCurrency(currency);
@@ -310,7 +294,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
                 currency = model.ToEntity(currency);
                 currency.UpdatedOnUtc = DateTime.UtcNow;
-                currency.Locales = UpdateLocales(currency, model);
+                currency.Locales = model.Locales.ToLocalizedProperty();
                 currency.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
                 _currencyService.UpdateCurrency(currency);
 
