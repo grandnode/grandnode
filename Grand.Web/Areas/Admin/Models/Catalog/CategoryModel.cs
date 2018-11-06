@@ -209,7 +209,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         #endregion
     }
 
-    public partial class CategoryLocalizedModel : ILocalizedModelLocal
+    public partial class CategoryLocalizedModel : ILocalizedModelLocal, ISlugModelLocal
     {
         public string LanguageId { get; set; }
 

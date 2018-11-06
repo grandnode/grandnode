@@ -20,6 +20,7 @@ using Grand.Services.Seo;
 using Grand.Services.Stores;
 using Grand.Services.Vendors;
 using Grand.Web.Areas.Admin.Extensions;
+using Grand.Web.Areas.Admin.Helpers;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -107,68 +108,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         #endregion
 
         #region Utilities
-
-        [NonAction]
-        protected virtual List<LocalizedProperty> UpdateLocales(Category category, CategoryModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-
-            foreach (var local in model.Locales)
-            {
-                var seName = category.ValidateSeName(local.SeName, local.Name, false);
-                _urlRecordService.SaveSlug(category, seName, local.LanguageId);
-
-                if (!(String.IsNullOrEmpty(seName)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "SeName",
-                        LocaleValue = seName,
-                    });
-
-                if (!(String.IsNullOrEmpty(local.Description)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "Description",
-                        LocaleValue = local.Description,
-                    });
-
-                if (!(String.IsNullOrEmpty(local.MetaDescription)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "MetaDescription",
-                        LocaleValue = local.MetaDescription,
-                    });
-
-                if (!(String.IsNullOrEmpty(local.MetaKeywords)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "MetaKeywords",
-                        LocaleValue = local.MetaKeywords,
-                    });
-
-                if (!(String.IsNullOrEmpty(local.MetaTitle)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "MetaTitle",
-                        LocaleValue = local.MetaTitle,
-                    });
-
-                if (!(String.IsNullOrEmpty(local.Name)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "Name",
-                        LocaleValue = local.Name,
-                    });
-
-            }
-            return localized;
-        }
 
         [NonAction]
         protected virtual void UpdatePictureSeoNames(Category category)
@@ -427,7 +366,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _categoryService.InsertCategory(category);
 
                 //locales
-                category.Locales = UpdateLocales(category, model);
+                category.Locales = model.Locales.ToLocalizedProperty(category, x => x.Name, _urlRecordService);
                 model.SeName = category.ValidateSeName(model.SeName, category.Name, true);
                 category.SeName = model.SeName;
                 _categoryService.UpdateCategory(category);
@@ -512,7 +451,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.SeName = category.ValidateSeName(model.SeName, category.Name, true);
                 category.SeName = model.SeName;
                 //locales
-                category.Locales = UpdateLocales(category, model);
+                category.Locales = model.Locales.ToLocalizedProperty(category, x => x.Name, _urlRecordService);
                 _categoryService.UpdateCategory(category);
                 //search engine name
                 _urlRecordService.SaveSlug(category, model.SeName, "");
