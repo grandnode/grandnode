@@ -259,7 +259,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     messageTemplate.AttachedDownloadId = "";
                 if (model.SendImmediately)
                     messageTemplate.DelayBeforeSend = null;
-                messageTemplate.Locales = UpdateLocales(messageTemplate, model);
+                messageTemplate.Locales = model.Locales.ToLocalizedProperty();
                 messageTemplate.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
                 _messageTemplateService.UpdateMessageTemplate(messageTemplate);
 
