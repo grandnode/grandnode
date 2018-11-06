@@ -87,22 +87,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
-        [NonAction]
-        protected virtual List<LocalizedProperty> UpdateAttributeLocales(Store store, StoreModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-            foreach (var local in model.Locales)
-            {
-                localized.Add(new LocalizedProperty()
-                {
-                    LanguageId = local.LanguageId,
-                    LocaleKey = "Name",
-                    LocaleValue = local.Name
-                });
-            }
-            return localized;
-        }
-
         public IActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageStores))
@@ -158,7 +142,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //ensure we have "/" at the end
                 if (!store.Url.EndsWith("/"))
                     store.Url += "/";
-                store.Locales = UpdateAttributeLocales(store, model);
+                store.Locales = model.Locales.ToLocalizedProperty();
                 _storeService.InsertStore(store);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Stores.Added"));
@@ -215,7 +199,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (!store.Url.EndsWith("/"))
                     store.Url += "/";
 
-                store.Locales = UpdateAttributeLocales(store, model);
+                store.Locales = model.Locales.ToLocalizedProperty();
                 _storeService.UpdateStore(store);
                 //locales
 
