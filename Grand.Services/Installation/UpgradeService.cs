@@ -52,6 +52,7 @@ namespace Grand.Services.Installation
         private const string version_410 = "4.10";
         private const string version_420 = "4.20";
         private const string version_430 = "4.30";
+        private const string version_440 = "4.40";
 
         #endregion
 
@@ -105,6 +106,11 @@ namespace Grand.Services.Installation
             {
                 From420To430();
                 fromversion = version_430;
+            }
+            if (fromversion == version_430)
+            {
+                From430To440();
+                fromversion = version_440;
             }
             if (fromversion == toversion)
             {
@@ -1169,6 +1175,11 @@ namespace Grand.Services.Installation
             _categoryRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<Category>((Builders<Category>.IndexKeys.Ascending(x => x.FeaturedProductsOnHomaPage).Ascending(x => x.Published).Ascending(x => x.DisplayOrder)), new CreateIndexOptions() { Name = "FeaturedProductsOnHomaPage_DisplayOrder_1", Unique = false }));
 
             #endregion
+        }
+
+        private void From430To440()
+        {
+
         }
 
         private void InstallStringResources(string filenames)
