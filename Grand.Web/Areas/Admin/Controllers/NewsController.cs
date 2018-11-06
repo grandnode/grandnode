@@ -1,5 +1,4 @@
 ﻿using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.News;
 using Grand.Core.Infrastructure;
 using Grand.Framework.Extensions;
@@ -15,6 +14,7 @@ using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Extensions;
+using Grand.Web.Areas.Admin.Helpers;
 using Grand.Web.Areas.Admin.Models.News;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -106,77 +106,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                     model.SelectedStoreIds = newsItem.Stores.ToArray();
                 }
             }
-        }
-
-        [NonAction]
-        protected virtual List<LocalizedProperty> UpdateLocales(NewsItem newsitem, NewsItemModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-
-            foreach (var local in model.Locales)
-            {
-                var seName = newsitem.ValidateSeName(local.SeName, local.Title, false);
-                _urlRecordService.SaveSlug(newsitem, seName, local.LanguageId);
-
-                if (!(String.IsNullOrEmpty(seName)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "SeName",
-                        LocaleValue = seName
-                    });
-
-                if (!(String.IsNullOrEmpty(local.Title)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "Title",
-                        LocaleValue = local.Title
-                    });
-
-                if (!(String.IsNullOrEmpty(local.Short)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "Short",
-                        LocaleValue = local.Short
-                    });
-
-                if (!(String.IsNullOrEmpty(local.Full)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "Full",
-                        LocaleValue = local.Full
-                    });
-
-                if (!(String.IsNullOrEmpty(local.MetaDescription)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "MetaDescription",
-                        LocaleValue = local.MetaDescription
-                    });
-
-                if (!(String.IsNullOrEmpty(local.MetaKeywords)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "MetaKeywords",
-                        LocaleValue = local.MetaKeywords
-                    });
-
-                if (!(String.IsNullOrEmpty(local.MetaTitle)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "MetaTitle",
-                        LocaleValue = local.MetaTitle
-                    });
-
-
-            }
-            return localized;
         }
 
         [NonAction]
@@ -273,7 +202,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
                 var seName = newsItem.ValidateSeName(model.SeName, model.Title, true);
                 newsItem.SeName = seName;
-                newsItem.Locales = UpdateLocales(newsItem, model);
+                newsItem.Locales = model.Locales.ToLocalizedProperty(newsItem, x => x.Title, _urlRecordService);
                 _newsService.UpdateNews(newsItem);
                 //search engine name
                 _urlRecordService.SaveSlug(newsItem, seName, "");
@@ -347,7 +276,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 newsItem.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
                 var seName = newsItem.ValidateSeName(model.SeName, model.Title, true);
                 newsItem.SeName = seName;
-                newsItem.Locales = UpdateLocales(newsItem, model);
+                newsItem.Locales = model.Locales.ToLocalizedProperty(newsItem, x => x.Title, _urlRecordService);
                 _newsService.UpdateNews(newsItem);
 
                 //search engine name
