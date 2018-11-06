@@ -1,6 +1,5 @@
 ﻿using Grand.Core;
 using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Messages;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
@@ -13,6 +12,7 @@ using Grand.Services.Messages;
 using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Extensions;
+using Grand.Web.Areas.Admin.Helpers;
 using Grand.Web.Areas.Admin.Models.Messages;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -72,56 +72,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         #endregion
         
         #region Utilities
-
-        [NonAction]
-        protected virtual List<LocalizedProperty> UpdateAttributeLocales(ContactAttribute contactAttribute, ContactAttributeModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-            foreach (var local in model.Locales)
-            {
-
-                if (!(String.IsNullOrEmpty(local.Name)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "Name",
-                        LocaleValue = local.Name,
-
-                    });
-
-                if (!(String.IsNullOrEmpty(local.TextPrompt)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "TextPrompt",
-                        LocaleValue = local.TextPrompt,
-                    });
-
-            }
-            return localized;
-            
-
-        }
-
-        [NonAction]
-        protected virtual List<LocalizedProperty> UpdateValueLocales(ContactAttributeValue contactAttributeValue, ContactAttributeValueModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-            foreach (var local in model.Locales)
-            {
-
-                if (!(String.IsNullOrEmpty(local.Name)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "Name",
-                        LocaleValue = local.Name,
-                    });
-            }
-            return localized;
-
-          
-        }
 
         [NonAction]
         protected virtual void PrepareStoresMappingModel(ContactAttributeModel model, ContactAttribute contactAttribute, bool excludeProperties)
@@ -319,7 +269,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 var contactAttribute = model.ToEntity();
                 contactAttribute.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
-                contactAttribute.Locales = UpdateAttributeLocales(contactAttribute, model);
+                contactAttribute.Locales = model.Locales.ToLocalizedProperty();
                 contactAttribute.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
                 _contactAttributeService.InsertContactAttribute(contactAttribute);
                
@@ -384,7 +334,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 contactAttribute = model.ToEntity(contactAttribute);
                 SaveConditionAttributes(contactAttribute, model);
                 contactAttribute.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
-                contactAttribute.Locales = UpdateAttributeLocales(contactAttribute, model);
+                contactAttribute.Locales = model.Locales.ToLocalizedProperty();
                 contactAttribute.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
                 _contactAttributeService.UpdateContactAttribute(contactAttribute);
                
@@ -513,7 +463,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     IsPreSelected = model.IsPreSelected,
                     DisplayOrder = model.DisplayOrder,
                 };
-                cav.Locales = UpdateValueLocales(cav, model);
+                cav.Locales = model.Locales.ToLocalizedProperty();
                 contactAttribute.ContactAttributeValues.Add(cav);
                 _contactAttributeService.UpdateContactAttribute(contactAttribute);
                 
@@ -581,7 +531,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 cav.ColorSquaresRgb = model.ColorSquaresRgb;
                 cav.IsPreSelected = model.IsPreSelected;
                 cav.DisplayOrder = model.DisplayOrder;
-                cav.Locales = UpdateValueLocales(cav, model);
+                cav.Locales = model.Locales.ToLocalizedProperty();
                 _contactAttributeService.UpdateContactAttribute(contactAttribute);
 
                 ViewBag.RefreshPage = true;
