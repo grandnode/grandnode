@@ -104,7 +104,7 @@ namespace Grand.Web.Areas.Admin.Models.Knowledgebase
         }
     }
 
-    public class KnowledgebaseArticleLocalizedModel : ILocalizedModelLocal
+    public class KnowledgebaseArticleLocalizedModel : ILocalizedModelLocal, ISlugModelLocal
     {
         public string LanguageId { get; set; }
 

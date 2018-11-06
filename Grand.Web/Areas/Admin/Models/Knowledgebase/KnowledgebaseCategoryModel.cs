@@ -82,7 +82,7 @@ namespace Grand.Web.Areas.Admin.Models.Knowledgebase
         }
     }
 
-    public class KnowledgebaseCategoryLocalizedModel : ILocalizedModelLocal
+    public class KnowledgebaseCategoryLocalizedModel : ILocalizedModelLocal, ISlugModelLocal
     {
         public string LanguageId { get; set; }
 

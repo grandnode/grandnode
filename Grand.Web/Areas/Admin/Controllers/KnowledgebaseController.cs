@@ -1,5 +1,4 @@
 ﻿using Grand.Core.Domain.Knowledgebase;
-using Grand.Core.Domain.Localization;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
@@ -13,6 +12,7 @@ using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Extensions;
+using Grand.Web.Areas.Admin.Helpers;
 using Grand.Web.Areas.Admin.Models.Knowledgebase;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -47,130 +47,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._dateTimeHelper = dateTimeHelper;
             this._urlRecordService = urlRecordService;
             this._storeService = storeService;
-        }
-
-        [NonAction]
-        protected virtual List<LocalizedProperty> UpdateLocales(KnowledgebaseCategory category, KnowledgebaseCategoryModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-
-            foreach (var local in model.Locales)
-            {
-                var seName = category.ValidateSeName(local.SeName, local.Name, false);
-                _urlRecordService.SaveSlug(category, seName, local.LanguageId);
-
-                if (!(String.IsNullOrEmpty(local.Name)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "Name",
-                        LocaleValue = local.Name,
-                    });
-
-                if (!(String.IsNullOrEmpty(local.Description)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "Description",
-                        LocaleValue = local.Description,
-                    });
-
-                if (!(String.IsNullOrEmpty(local.MetaDescription)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "MetaDescription",
-                        LocaleValue = local.MetaDescription,
-                    });
-
-                if (!(String.IsNullOrEmpty(local.MetaKeywords)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "MetaKeywords",
-                        LocaleValue = local.MetaKeywords,
-                    });
-
-                if (!(String.IsNullOrEmpty(local.MetaTitle)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "MetaTitle",
-                        LocaleValue = local.MetaTitle,
-                    });
-
-                if (!(String.IsNullOrEmpty(seName)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "SeName",
-                        LocaleValue = seName,
-                    });
-            }
-
-            return localized;
-        }
-
-        [NonAction]
-        protected virtual List<LocalizedProperty> UpdateLocales(KnowledgebaseArticle article, KnowledgebaseArticleModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-
-            foreach (var local in model.Locales)
-            {
-                var seName = article.ValidateSeName(local.SeName, local.Name, false);
-                _urlRecordService.SaveSlug(article, seName, local.LanguageId);
-
-                if (!(String.IsNullOrEmpty(local.Name)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "Name",
-                        LocaleValue = local.Name,
-                    });
-
-                if (!(String.IsNullOrEmpty(local.Content)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "Content",
-                        LocaleValue = local.Content,
-                    });
-
-                if (!(String.IsNullOrEmpty(local.MetaDescription)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "MetaDescription",
-                        LocaleValue = local.MetaDescription,
-                    });
-
-                if (!(String.IsNullOrEmpty(local.MetaKeywords)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "MetaKeywords",
-                        LocaleValue = local.MetaKeywords,
-                    });
-
-                if (!(String.IsNullOrEmpty(local.MetaTitle)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "MetaTitle",
-                        LocaleValue = local.MetaTitle,
-                    });
-
-                if (!(String.IsNullOrEmpty(seName)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "SeName",
-                        LocaleValue = seName,
-                    });
-            }
-
-            return localized;
         }
 
         public IActionResult Index()
@@ -365,7 +241,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 var knowledgebaseCategory = model.ToEntity();
                 knowledgebaseCategory.CreatedOnUtc = DateTime.UtcNow;
                 knowledgebaseCategory.UpdatedOnUtc = DateTime.UtcNow;
-                knowledgebaseCategory.Locales = UpdateLocales(knowledgebaseCategory, model);
+                knowledgebaseCategory.Locales = model.Locales.ToLocalizedProperty(knowledgebaseCategory, x => x.Name, _urlRecordService);
                 knowledgebaseCategory.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
                 model.SeName = knowledgebaseCategory.ValidateSeName(model.SeName, knowledgebaseCategory.Name, true);
                 knowledgebaseCategory.SeName = model.SeName;
@@ -454,7 +330,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 knowledgebaseCategory = model.ToEntity(knowledgebaseCategory);
                 knowledgebaseCategory.UpdatedOnUtc = DateTime.UtcNow;
-                knowledgebaseCategory.Locales = UpdateLocales(knowledgebaseCategory, model);
+                knowledgebaseCategory.Locales = model.Locales.ToLocalizedProperty(knowledgebaseCategory, x => x.Name, _urlRecordService);
                 knowledgebaseCategory.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
                 model.SeName = knowledgebaseCategory.ValidateSeName(model.SeName, knowledgebaseCategory.Name, true);
                 knowledgebaseCategory.SeName = model.SeName;
@@ -555,7 +431,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 var knowledgebaseArticle = model.ToEntity();
                 knowledgebaseArticle.CreatedOnUtc = DateTime.UtcNow;
                 knowledgebaseArticle.UpdatedOnUtc = DateTime.UtcNow;
-                knowledgebaseArticle.Locales = UpdateLocales(knowledgebaseArticle, model);
+                knowledgebaseArticle.Locales = model.Locales.ToLocalizedProperty(knowledgebaseArticle, x => x.Name, _urlRecordService);
                 knowledgebaseArticle.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
                 model.SeName = knowledgebaseArticle.ValidateSeName(model.SeName, knowledgebaseArticle.Name, true);
                 knowledgebaseArticle.SeName = model.SeName;
@@ -646,7 +522,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 knowledgebaseArticle = model.ToEntity(knowledgebaseArticle);
                 knowledgebaseArticle.UpdatedOnUtc = DateTime.UtcNow;
-                knowledgebaseArticle.Locales = UpdateLocales(knowledgebaseArticle, model);
+                knowledgebaseArticle.Locales = model.Locales.ToLocalizedProperty(knowledgebaseArticle, x => x.Name, _urlRecordService);
                 knowledgebaseArticle.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
                 model.SeName = knowledgebaseArticle.ValidateSeName(model.SeName, knowledgebaseArticle.Name, true);
                 knowledgebaseArticle.SeName = model.SeName;
