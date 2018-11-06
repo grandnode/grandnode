@@ -52,43 +52,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        protected virtual List<LocalizedProperty> UpdateLocales(Poll poll, PollModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-
-            foreach (var local in model.Locales)
-            {
-                if (!(String.IsNullOrEmpty(local.Name)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "Name",
-                        LocaleValue = local.Name
-                    });
-
-            }
-            return localized;
-        }
-
-        [NonAction]
-        protected virtual List<LocalizedProperty> UpdateOptionLocales(PollAnswer pollanswer, PollAnswerModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-            foreach (var local in model.Locales)
-            {
-                if (!(String.IsNullOrEmpty(local.Name)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "Name",
-                        LocaleValue = local.Name,
-                    });
-            }
-            return localized;
-        }
-
-
-        [NonAction]
         protected virtual void PrepareStoresMappingModel(PollModel model, Poll poll, bool excludeProperties)
         {
             if (model == null)
@@ -200,7 +163,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 poll.EndDateUtc = model.EndDate;
                 poll.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
                 poll.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
-                poll.Locales = UpdateLocales(poll, model);
+                poll.Locales = model.Locales.ToLocalizedProperty();
                 _pollService.InsertPoll(poll);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Polls.Added"));
@@ -264,7 +227,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 poll.StartDateUtc = model.StartDate;
                 poll.EndDateUtc = model.EndDate;
                 poll.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
-                poll.Locales = UpdateLocales(poll, model);
+                poll.Locales = model.Locales.ToLocalizedProperty();
                 poll.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
                 _pollService.UpdatePoll(poll);
 
@@ -372,7 +335,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var pa = model.ToEntity();
-                pa.Locales = UpdateOptionLocales(pa, model);
+                pa.Locales = model.Locales.ToLocalizedProperty();
                 poll.PollAnswers.Add(pa);
                 _pollService.UpdatePoll(poll);
                 ViewBag.RefreshPage = true;
@@ -423,8 +386,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 pollAnswer = model.ToEntity(pollAnswer);
-                pollAnswer.Locales = UpdateOptionLocales(pollAnswer, model);
-
+                pollAnswer.Locales = model.Locales.ToLocalizedProperty();
                 _pollService.UpdatePoll(poll);
 
                 ViewBag.RefreshPage = true;
