@@ -186,7 +186,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         #endregion
     }
 
-    public partial class ManufacturerLocalizedModel : ILocalizedModelLocal
+    public partial class ManufacturerLocalizedModel : ILocalizedModelLocal, ISlugModelLocal
     {
         public string LanguageId { get; set; }
 

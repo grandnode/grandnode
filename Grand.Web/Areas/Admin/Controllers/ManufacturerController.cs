@@ -1,7 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Discounts;
-using Grand.Core.Domain.Localization;
 using Grand.Framework.Controllers;
 using Grand.Framework.Extensions;
 using Grand.Framework.Kendoui;
@@ -20,6 +19,7 @@ using Grand.Services.Seo;
 using Grand.Services.Stores;
 using Grand.Services.Vendors;
 using Grand.Web.Areas.Admin.Extensions;
+using Grand.Web.Areas.Admin.Helpers;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -109,68 +109,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         #endregion
         
         #region Utilities
-
-        [NonAction]
-        protected virtual List<LocalizedProperty> UpdateLocales(Manufacturer manufacturer, ManufacturerModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-
-            foreach (var local in model.Locales)
-            {
-                if (!(String.IsNullOrEmpty(local.Description)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "Description",
-                        LocaleValue = local.Description,
-                    });
-                
-                if (!(String.IsNullOrEmpty(local.MetaDescription)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "MetaDescription",
-                        LocaleValue = local.MetaDescription,
-                    });
-
-                if (!(String.IsNullOrEmpty(local.MetaKeywords)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "MetaKeywords",
-                        LocaleValue = local.MetaKeywords,
-                    });
-
-                if (!(String.IsNullOrEmpty(local.MetaTitle)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "MetaTitle",
-                        LocaleValue = local.MetaTitle,
-                    });
-
-                if (!(String.IsNullOrEmpty(local.Name)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "Name",
-                        LocaleValue = local.Name,
-                    });
-               
-                //search engine name
-                var seName = manufacturer.ValidateSeName(local.SeName, local.Name, false);
-                _urlRecordService.SaveSlug(manufacturer, seName, local.LanguageId);
-
-                if (!(String.IsNullOrEmpty(seName)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "SeName",
-                        LocaleValue = seName,
-                    });
-            }
-            return localized;
-        }
 
         [NonAction]
         protected virtual void UpdatePictureSeoNames(Manufacturer manufacturer)
@@ -347,7 +285,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
                 _manufacturerService.InsertManufacturer(manufacturer);
                 //search engine name
-                manufacturer.Locales = UpdateLocales(manufacturer, model);
+                manufacturer.Locales = model.Locales.ToLocalizedProperty(manufacturer, x => x.Name, _urlRecordService);
                 model.SeName = manufacturer.ValidateSeName(model.SeName, manufacturer.Name, true);
                 manufacturer.SeName = model.SeName;
                 _manufacturerService.UpdateManufacturer(manufacturer);
@@ -426,7 +364,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 string prevPictureId = manufacturer.PictureId;
                 manufacturer = model.ToEntity(manufacturer);
                 manufacturer.UpdatedOnUtc = DateTime.UtcNow;
-                manufacturer.Locales = UpdateLocales(manufacturer, model);
+                manufacturer.Locales = model.Locales.ToLocalizedProperty(manufacturer, x => x.Name, _urlRecordService);
                 manufacturer.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
                 manufacturer.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
                 //discounts
