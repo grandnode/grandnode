@@ -1,5 +1,4 @@
-﻿using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Messages;
+﻿using Grand.Core.Domain.Messages;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
@@ -8,6 +7,7 @@ using Grand.Services.Messages;
 using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Extensions;
+using Grand.Web.Areas.Admin.Helpers;
 using Grand.Web.Areas.Admin.Models.Messages;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -63,47 +63,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         #endregion
         
         #region Utilities
-
-       
-
-        [NonAction]
-        protected virtual List<LocalizedProperty> UpdateLocales(MessageTemplate mt, MessageTemplateModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-            foreach (var local in model.Locales)
-            {
-                localized.Add(new LocalizedProperty()
-                {
-                    LanguageId = local.LanguageId,
-                    LocaleKey = "BccEmailAddresses",
-                    LocaleValue = local.BccEmailAddresses
-                });
-
-                localized.Add(new LocalizedProperty()
-                {
-                    LanguageId = local.LanguageId,
-                    LocaleKey = "Subject",
-                    LocaleValue = local.Subject
-                });
-
-                localized.Add(new LocalizedProperty()
-                {
-                    LanguageId = local.LanguageId,
-                    LocaleKey = "Body",
-                    LocaleValue = local.Body
-                });
-
-                localized.Add(new LocalizedProperty()
-                {
-                    LanguageId = local.LanguageId,
-                    LocaleKey = "EmailAccountId",
-                    LocaleValue = local.EmailAccountId.ToString()
-                });
-               
-            }
-            return localized;
-        }
-
 
         [NonAction]
         protected virtual void PrepareStoresMappingModel(MessageTemplateModel model, MessageTemplate messageTemplate, bool excludeProperties)
@@ -217,7 +176,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     messageTemplate.AttachedDownloadId = "";
                 if (model.SendImmediately)
                     messageTemplate.DelayBeforeSend = null;
-                messageTemplate.Locales = UpdateLocales(messageTemplate, model);
+                messageTemplate.Locales = model.Locales.ToLocalizedProperty();
                 messageTemplate.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
                 _messageTemplateService.InsertMessageTemplate(messageTemplate);
 
