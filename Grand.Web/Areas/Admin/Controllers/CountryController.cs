@@ -11,6 +11,7 @@ using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Extensions;
+using Grand.Web.Areas.Admin.Helpers;
 using Grand.Web.Areas.Admin.Models.Directory;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -67,40 +68,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Utilities
         
-        [NonAction]
-        protected virtual List<LocalizedProperty> UpdateLocales(Country country, CountryModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-            foreach (var local in model.Locales)
-            {
-
-                localized.Add(new LocalizedProperty()
-                {
-                    LanguageId = local.LanguageId,
-                    LocaleKey = "Name",
-                    LocaleValue = local.Name
-                });
-            }
-            return localized;
-        }
-
-        [NonAction]
-        protected virtual List<LocalizedProperty> UpdateLocales(StateProvince stateProvince, StateProvinceModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-            foreach (var local in model.Locales)
-            {
-
-                localized.Add(new LocalizedProperty()
-                {
-                    LanguageId = local.LanguageId,
-                    LocaleKey = "Name",
-                    LocaleValue = local.Name
-                });
-            }
-            return localized;
-        }
-
         [NonAction]
         protected virtual void PrepareStoresMappingModel(CountryModel model, Country country, bool excludeProperties)
         {
@@ -179,7 +146,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var country = model.ToEntity();
-                country.Locales = UpdateLocales(country, model);
+                country.Locales = model.Locales.ToLocalizedProperty();
                 country.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
                 _countryService.InsertCountry(country);
 
@@ -229,7 +196,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 country = model.ToEntity(country);
-                country.Locales = UpdateLocales(country, model);
+                country.Locales = model.Locales.ToLocalizedProperty();
                 country.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
                 _countryService.UpdateCountry(country);
 
@@ -365,7 +332,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var sp = model.ToEntity();
-                sp.Locales = UpdateLocales(sp, model);
+                sp.Locales = model.Locales.ToLocalizedProperty();
                 _stateProvinceService.InsertStateProvince(sp);
 
                 ViewBag.RefreshPage = true;
@@ -411,7 +378,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 sp = model.ToEntity(sp);
-                sp.Locales = UpdateLocales(sp, model);
+                sp.Locales = model.Locales.ToLocalizedProperty();
                 _stateProvinceService.UpdateStateProvince(sp);
 
                 ViewBag.RefreshPage = true;
