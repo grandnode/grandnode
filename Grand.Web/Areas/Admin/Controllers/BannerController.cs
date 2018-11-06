@@ -1,16 +1,14 @@
-﻿using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Messages;
-using Grand.Framework.Controllers;
+﻿using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
 using Grand.Services.Security;
 using Grand.Web.Areas.Admin.Extensions;
+using Grand.Web.Areas.Admin.Helpers;
 using Grand.Web.Areas.Admin.Models.Messages;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
@@ -21,6 +19,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly ILocalizationService _localizationService;
         private readonly ILanguageService _languageService;
+
         public BannerController(IBannerService bannerService,
             ILocalizationService localizationService, 
             IPermissionService permissionService,
@@ -31,33 +30,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._permissionService = permissionService;
             this._languageService = languageService;
         }
-
-        #region Utilities
-
-        [NonAction]
-        protected virtual List<LocalizedProperty> UpdateLocales(Banner bn, BannerModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-            foreach (var local in model.Locales)
-            {
-                localized.Add(new LocalizedProperty()
-                {
-                    LanguageId = local.LanguageId,
-                    LocaleKey = "Name",
-                    LocaleValue = local.Name
-                });
-
-                localized.Add(new LocalizedProperty()
-                {
-                    LanguageId = local.LanguageId,
-                    LocaleKey = "Body",
-                    LocaleValue = local.Body
-                });
-            }
-            return localized;
-        }
-
-        #endregion
 
         public IActionResult Index()
         {
@@ -113,7 +85,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 var banner = model.ToEntity();
                 banner.CreatedOnUtc = DateTime.UtcNow;
-                banner.Locales = UpdateLocales(banner, model);
+                banner.Locales = model.Locales.ToLocalizedProperty();
 
                 _bannerService.InsertBanner(banner);
 
@@ -160,7 +132,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 banner = model.ToEntity(banner);
-                banner.Locales = UpdateLocales(banner, model);
+                banner.Locales = model.Locales.ToLocalizedProperty();
                 _bannerService.UpdateBanner(banner);
             
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Banners.Updated"));
