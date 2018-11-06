@@ -1,5 +1,4 @@
-﻿using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Messages;
+﻿using Grand.Core.Domain.Messages;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
@@ -9,10 +8,10 @@ using Grand.Services.Logging;
 using Grand.Services.Messages;
 using Grand.Services.Security;
 using Grand.Web.Areas.Admin.Extensions;
+using Grand.Web.Areas.Admin.Helpers;
 using Grand.Web.Areas.Admin.Models.Messages;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -43,59 +42,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         #region Utilities
-
-        [NonAction]
-        protected virtual List<LocalizedProperty> UpdateLocales(InteractiveForm iform, InteractiveFormModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-            foreach (var local in model.Locales)
-            {
-                localized.Add(new LocalizedProperty()
-                {
-                    LanguageId = local.LanguageId,
-                    LocaleKey = "Name",
-                    LocaleValue = local.Name
-                });
-
-                localized.Add(new LocalizedProperty()
-                {
-                    LanguageId = local.LanguageId,
-                    LocaleKey = "Body",
-                    LocaleValue = local.Body
-                });
-            }
-            return localized;
-        }
-        [NonAction]
-        protected virtual List<LocalizedProperty> UpdateLocales(InteractiveForm.FormAttribute attribute, InteractiveFormAttributeModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-            foreach (var local in model.Locales)
-            {
-                localized.Add(new LocalizedProperty()
-                {
-                    LanguageId = local.LanguageId,
-                    LocaleKey = "Name",
-                    LocaleValue = local.Name
-                });
-            }
-            return localized;
-        }
-        [NonAction]
-        protected virtual List<LocalizedProperty> UpdateLocales(InteractiveForm.FormAttributeValue attributevalue, InteractiveFormAttributeValueModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-            foreach (var local in model.Locales)
-            {
-                localized.Add(new LocalizedProperty()
-                {
-                    LanguageId = local.LanguageId,
-                    LocaleKey = "Name",
-                    LocaleValue = local.Name
-                });
-            }
-            return localized;
-        }
 
         private string FormatTokens(string[] tokens)
         {
@@ -175,7 +121,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 var form = model.ToEntity();
                 form.CreatedOnUtc = DateTime.UtcNow;
-                form.Locales = UpdateLocales(form, model);
+                form.Locales = model.Locales.ToLocalizedProperty();
 
                 _interactiveFormService.InsertForm(form);
                 _customerActivityService.InsertActivity("InteractiveFormAdd", form.Id, _localizationService.GetResource("ActivityLog.InteractiveFormAdd"), form.Name);
@@ -231,7 +177,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 form = model.ToEntity(form);
-                form.Locales = UpdateLocales(form, model);
+                form.Locales = model.Locales.ToLocalizedProperty();
                 _interactiveFormService.UpdateForm(form);
 
                 _customerActivityService.InsertActivity("InteractiveFormEdit", form.Id, _localizationService.GetResource("ActivityLog.InteractiveFormUpdate"), form.Name);
@@ -348,7 +294,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     return RedirectToAction("List");
                 }
                 var attribute = model.ToEntity();
-                attribute.Locales = UpdateLocales(attribute, model);
+                attribute.Locales = model.Locales.ToLocalizedProperty();
                 form.FormAttributes.Add(attribute);
                 _interactiveFormService.UpdateForm(form);
 
@@ -404,7 +350,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (ModelState.IsValid)
                 {
                     attribute = model.ToEntity(attribute);
-                    attribute.Locales = UpdateLocales(attribute, model);
+                    attribute.Locales = model.Locales.ToLocalizedProperty();
                     _interactiveFormService.UpdateForm(form);
 
                     _customerActivityService.InsertActivity("InteractiveFormEdit", attribute.Id, _localizationService.GetResource("ActivityLog.InteractiveFormUpdateAttribute"), attribute.Name);
@@ -493,7 +439,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     IsPreSelected = model.IsPreSelected,
                     DisplayOrder = model.DisplayOrder,
                 };
-                vaf.Locales = UpdateLocales(vaf, model);
+                vaf.Locales = model.Locales.ToLocalizedProperty();
                 attribute.FormAttributeValues.Add(vaf);
                 _interactiveFormService.UpdateForm(fo);
                 _customerActivityService.InsertActivity("InteractiveFormEdit", vaf.Id, _localizationService.GetResource("ActivityLog.InteractiveFormAddAttributeValue"), vaf.Name);
@@ -566,7 +512,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 vaf.Name = model.Name;
                 vaf.IsPreSelected = model.IsPreSelected;
                 vaf.DisplayOrder = model.DisplayOrder;
-                vaf.Locales = UpdateLocales(vaf, model);
+                vaf.Locales = model.Locales.ToLocalizedProperty();
                 _interactiveFormService.UpdateForm(fo);
 
                 _customerActivityService.InsertActivity("InteractiveFormEdit", vaf.Id, _localizationService.GetResource("ActivityLog.InteractiveFormUpdateAttributeValue"), vaf.Name);
