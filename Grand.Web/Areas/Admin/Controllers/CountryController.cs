@@ -1,6 +1,5 @@
 ﻿using Grand.Core;
 using Grand.Core.Domain.Directory;
-using Grand.Core.Domain.Localization;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
