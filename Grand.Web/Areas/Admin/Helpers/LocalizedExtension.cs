@@ -1,7 +1,11 @@
-﻿using Grand.Core.Domain.Localization;
+﻿using Grand.Core;
+using Grand.Core.Domain.Localization;
+using Grand.Core.Domain.Seo;
 using Grand.Framework.Localization;
+using Grand.Services.Seo;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Grand.Web.Areas.Admin.Helpers
@@ -38,6 +42,76 @@ namespace Grand.Web.Areas.Admin.Helpers
             }
             return local;
         }
+        public static List<LocalizedProperty> ToLocalizedProperty<T, E>(this IList<T> list, E entity, Expression<Func<T, string>> keySelector,
+            IUrlRecordService _urlRecordService) where T : ILocalizedModelLocal where E : BaseEntity, ISlugSupported
+        {
+            var local = new List<LocalizedProperty>();
+            foreach (var item in list)
+            {
+                Type[] interfaces = item.GetType().GetInterfaces();
+                PropertyInfo[] props = item.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+                foreach (var prop in props)
+                {
+                    bool insert = true;
+
+                    foreach (var i in interfaces)
+                    {
+                        if (i.HasProperty(prop.Name) && typeof(ILocalizedModelLocal).IsAssignableFrom(i))
+                        {
+                            insert = false;
+                        }
+                        if (i.HasProperty(prop.Name) && typeof(ISlugModelLocal).IsAssignableFrom(i))
+                        {
+                            var member = keySelector.Body as MemberExpression;
+                            if (member == null)
+                            {
+                                throw new ArgumentException(string.Format(
+                                    "Expression '{0}' refers to a method, not a property.",
+                                    keySelector));
+                            }
+                            var propInfo = member.Member as PropertyInfo;
+                            if (propInfo == null)
+                            {
+                                throw new ArgumentException(string.Format(
+                                       "Expression '{0}' refers to a field, not a property.",
+                                       keySelector));
+                            }
+                            var value = item.GetType().GetProperty(propInfo.Name).GetValue(item, null);
+                            if (value != null)
+                            {
+                                var name = value.ToString();
+                                var itemvalue = prop.GetValue(item) ?? "";
+                                var seName = entity.ValidateSeName(itemvalue.ToString(), name, false);
+                                prop.SetValue(item, seName);
+                                _urlRecordService.SaveSlug(entity, seName, item.LanguageId);
+                            }
+                            else
+                            {
+                                var itemvalue = prop.GetValue(item) ?? "";
+                                if (itemvalue!=null && !string.IsNullOrEmpty(itemvalue.ToString()))
+                                {
+                                    var seName = entity.ValidateSeName(itemvalue.ToString(), "", false);
+                                    prop.SetValue(item, seName);
+                                    _urlRecordService.SaveSlug(entity, seName, item.LanguageId);
+                                }
+                                else
+                                    insert = false;
+                            }
+                        }
+                    }
+
+                    if (insert && prop.GetValue(item) != null)
+                        local.Add(new LocalizedProperty()
+                        {
+                            LanguageId = item.LanguageId,
+                            LocaleKey = prop.Name,
+                            LocaleValue = prop.GetValue(item).ToString(),
+                        });
+                }
+            }
+            return local;
+        }
+
 
         public static bool HasProperty(this Type obj, string propertyName)
         {
