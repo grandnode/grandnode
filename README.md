@@ -14,7 +14,7 @@ All GrandNode releases, which support Docker are available here: https://hub.doc
 
 ![Docker installation process](https://grandnode.com/content/images/dockerrun.gif)
 
-Please note that if you use grandnode/develop, Docker will pull the newest image from develop branch. To pull the latest stable image, use the branch name in the docker command, for example - docker pull grandnode/release-4.10 . Remember that Docker is supported from GrandNode 4.10.  
+Please note that if you use grandnode/develop, Docker will pull the newest image from develop branch. To pull the latest stable image, use the branch name in the docker command, for example - docker pull grandnode/release-4.30
 
 ## GrandNode resources: ##
 
@@ -32,12 +32,12 @@ Forums: [http://www.grandnode.com/boards/](http://www.grandnode.com/boards/)
 
 ## Development status ## 
 
-The latest stable version is 4.20
-Active development version: 4.30 (branch [develop](https://github.com/grandnode/grandnode/projects/1))
+The latest stable version is 4.30
+Active development version: 4.40 (branch [develop](https://github.com/grandnode/grandnode/projects/2))
 
-[Roadmap for 4.30](https://github.com/grandnode/grandnode/projects/1)
+[Roadmap for 4.40](https://github.com/grandnode/grandnode/projects/2)
 
-[Tickets linked to 4.30](https://github.com/grandnode/grandnode/issues)
+[Tickets linked to 4.40](https://github.com/grandnode/grandnode/issues)
 
 ## How to contribute code ##
 
