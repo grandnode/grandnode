@@ -83,7 +83,7 @@ namespace Grand.Web.Areas.Admin.Models.Blogs
 
     }
 
-    public partial class BlogLocalizedModel : ILocalizedModelLocal
+    public partial class BlogLocalizedModel : ILocalizedModelLocal, ISlugModelLocal
     {
         public string LanguageId { get; set; }
 
