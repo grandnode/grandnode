@@ -137,40 +137,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Methods
 
-        [NonAction]
-        protected virtual List<LocalizedProperty> UpdateLocales(ReturnRequestReason rrr, ReturnRequestReasonModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-            foreach (var local in model.Locales)
-            {
-
-                localized.Add(new LocalizedProperty()
-                {
-                    LanguageId = local.LanguageId,
-                    LocaleKey = "Name",
-                    LocaleValue = local.Name
-                });
-            }
-            return localized;
-        }
-
-        [NonAction]
-        protected virtual List<LocalizedProperty> UpdateLocales(ReturnRequestAction rrr, ReturnRequestActionModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-            foreach (var local in model.Locales)
-            {
-
-                localized.Add(new LocalizedProperty()
-                {
-                    LanguageId = local.LanguageId,
-                    LocaleKey = "Name",
-                    LocaleValue = local.Name
-                });
-            }
-            return localized;
-        }
-
         public IActionResult ChangeStoreScopeConfiguration(string storeid, string returnUrl = "")
         {
             if (storeid != null)
@@ -2147,7 +2113,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 var rrr = model.ToEntity();
                 _returnRequestService.InsertReturnRequestReason(rrr);
                 //locales
-                rrr.Locales = UpdateLocales(rrr, model);
+                rrr.Locales = model.Locales.ToLocalizedProperty();
                 _returnRequestService.UpdateReturnRequestReason(rrr);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestReasons.Added"));
@@ -2192,7 +2158,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 rrr = model.ToEntity(rrr);
                 _returnRequestService.UpdateReturnRequestReason(rrr);
                 //locales
-                rrr.Locales = UpdateLocales(rrr, model);
+                rrr.Locales = model.Locales.ToLocalizedProperty();
                 _returnRequestService.UpdateReturnRequestReason(rrr);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestReasons.Updated"));
@@ -2276,7 +2242,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
                 _returnRequestService.InsertReturnRequestAction(rra);
                 //locales
-                rra.Locales = UpdateLocales(rra, model);
+                rra.Locales = model.Locales.ToLocalizedProperty();
                 _returnRequestService.UpdateReturnRequestAction(rra);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestActions.Added"));
@@ -2319,7 +2285,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 rra = model.ToEntity(rra);
-                rra.Locales = UpdateLocales(rra, model);
+                rra.Locales = model.Locales.ToLocalizedProperty();
                 _returnRequestService.UpdateReturnRequestAction(rra);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestActions.Updated"));
