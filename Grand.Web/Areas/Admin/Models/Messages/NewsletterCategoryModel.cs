@@ -28,7 +28,7 @@ namespace Grand.Web.Areas.Admin.Models.Messages
         public bool Selected { get; set; }
 
         [GrandResourceDisplayName("Admin.Promotions.NewsletterCategory.Fields.AvailableStores")]
-        public List<Grand.Web.Areas.Admin.Models.Stores.StoreModel> AvailableStores { get; set; }
+        public List<StoreModel> AvailableStores { get; set; }
 
         [GrandResourceDisplayName("Admin.Promotions.NewsletterCategory.Fields.LimitedToStores")]
         public bool LimitedToStores { get; set; }

@@ -17,7 +17,7 @@ namespace Grand.Web.Areas.Admin.Models.Polls
 
         public PollModel()
         {
-            AvailableStores = new List<Grand.Web.Areas.Admin.Models.Stores.StoreModel>();
+            AvailableStores = new List<StoreModel>();
             Locales = new List<PollLocalizedModel>();
             AvailableCustomerRoles = new List<CustomerRoleModel>();
         }
@@ -54,7 +54,7 @@ namespace Grand.Web.Areas.Admin.Models.Polls
         [GrandResourceDisplayName("Admin.ContentManagement.Polls.Fields.LimitedToStores")]
         public bool LimitedToStores { get; set; }
         [GrandResourceDisplayName("Admin.ContentManagement.Polls.Fields.AvailableStores")]
-        public IList<Grand.Web.Areas.Admin.Models.Stores.StoreModel> AvailableStores { get; set; }
+        public IList<StoreModel> AvailableStores { get; set; }
         public string[] SelectedStoreIds { get; set; }
         public IList<PollLocalizedModel> Locales { get; set; }
 

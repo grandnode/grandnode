@@ -61,6 +61,29 @@ namespace Grand.Web.Areas.Admin.Controllers
         
         #endregion
 
+        #region Utilities
+
+        [NonAction]
+        protected virtual void PrepareStoresMappingModel(CurrencyModel model, Currency currency, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableStores = _storeService
+                .GetAllStores()
+                .Select(s => s.ToModel())
+                .ToList();
+            if (!excludeProperties)
+            {
+                if (currency != null)
+                {
+                    model.SelectedStoreIds = currency.Stores.ToArray();
+                }
+            }
+        }
+
+        #endregion
+
         #region Methods
 
         public IActionResult Index()
@@ -188,7 +211,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //locales
             AddLocales(_languageService, model.Locales);
             //Stores
-            model.PrepareStoresMappingModel(null, false, _storeService);
+            PrepareStoresMappingModel(model, null, false);
             //default values
             model.Published = true;
             model.Rate = 1;
@@ -218,7 +241,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
 
             //Stores
-            model.PrepareStoresMappingModel(null, true, _storeService);
+            PrepareStoresMappingModel(model, null, true);
 
             return View(model);
         }
@@ -241,7 +264,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.Name = currency.GetLocalized(x => x.Name, languageId, false, false);
             });
             //Stores
-            model.PrepareStoresMappingModel(currency, false, _storeService);
+            PrepareStoresMappingModel(model, currency, false);
 
             return View(model);
         }
@@ -290,7 +313,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(currency.CreatedOnUtc, DateTimeKind.Utc);
 
             //Stores
-            model.PrepareStoresMappingModel(currency, true, _storeService);
+            PrepareStoresMappingModel(model, currency, true);
 
             return View(model);
         }

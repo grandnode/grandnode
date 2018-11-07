@@ -16,7 +16,7 @@ namespace Grand.Web.Areas.Admin.Models.News
     {
         public NewsItemModel()
         {
-            this.AvailableStores = new List<Grand.Web.Areas.Admin.Models.Stores.StoreModel>();
+            this.AvailableStores = new List<StoreModel>();
             AvailableCustomerRoles = new List<CustomerRoleModel>();
             Locales = new List<NewsLocalizedModel>();
         }
@@ -25,7 +25,7 @@ namespace Grand.Web.Areas.Admin.Models.News
         [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.LimitedToStores")]
         public bool LimitedToStores { get; set; }
         [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.AvailableStores")]
-        public List<Grand.Web.Areas.Admin.Models.Stores.StoreModel> AvailableStores { get; set; }
+        public List<StoreModel> AvailableStores { get; set; }
         public string[] SelectedStoreIds { get; set; }
 
         [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Title")]
