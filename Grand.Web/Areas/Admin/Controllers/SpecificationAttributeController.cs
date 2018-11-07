@@ -45,44 +45,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #endregion
         
-        #region Utilities
-
-        [NonAction]
-        protected virtual List<LocalizedProperty> UpdateAttributeLocales(SpecificationAttribute specificationAttribute, SpecificationAttributeModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-            foreach (var local in model.Locales)
-            {
-                if (!(String.IsNullOrEmpty(local.Name)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "Name",
-                        LocaleValue = local.Name,
-                    });
-            }
-            return localized;
-        }
-
-        [NonAction]
-        protected virtual List<LocalizedProperty> UpdateOptionLocales(SpecificationAttributeOption specificationAttributeOption, SpecificationAttributeOptionModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-            foreach (var local in model.Locales)
-            {
-                if (!(String.IsNullOrEmpty(local.Name)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "Name",
-                        LocaleValue = local.Name,
-                    });
-            }
-            return localized;
-        }
-
-        #endregion
-        
         #region Specification attributes
 
         //list
@@ -137,7 +99,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var specificationAttribute = model.ToEntity();
-                specificationAttribute.Locales = UpdateAttributeLocales(specificationAttribute, model);
+                specificationAttribute.Locales = model.Locales.ToLocalizedProperty();
                 _specificationAttributeService.InsertSpecificationAttribute(specificationAttribute);
 
                 //activity log
@@ -186,7 +148,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 specificationAttribute = model.ToEntity(specificationAttribute);
-                specificationAttribute.Locales = UpdateAttributeLocales(specificationAttribute, model);
+                specificationAttribute.Locales = model.Locales.ToLocalizedProperty();
                 _specificationAttributeService.UpdateSpecificationAttribute(specificationAttribute);
 
 
@@ -289,7 +251,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (!model.EnableColorSquaresRgb)
                    sao.ColorSquaresRgb = null;
 
-                sao.Locales = UpdateOptionLocales(sao, model);
+                sao.Locales = model.Locales.ToLocalizedProperty();
                 specificationAttribute.SpecificationAttributeOptions.Add(sao);
                 _specificationAttributeService.UpdateSpecificationAttribute(specificationAttribute);                
 
@@ -338,7 +300,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 sao = model.ToEntity(sao);
-                sao.Locales = UpdateOptionLocales(sao, model);
+                sao.Locales = model.Locales.ToLocalizedProperty();
                 //clear "Color" values if it's disabled
                 if (!model.EnableColorSquaresRgb)
                     sao.ColorSquaresRgb = null;
