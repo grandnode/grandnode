@@ -65,29 +65,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
 		#endregion 
 
-        #region Utilities
-        
-        [NonAction]
-        protected virtual void PrepareStoresMappingModel(CountryModel model, Country country, bool excludeProperties)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            model.AvailableStores = _storeService
-                .GetAllStores()
-                .Select(s => s.ToModel())
-                .ToList();
-            if (!excludeProperties)
-            {
-                if (country != null)
-                {
-                    model.SelectedStoreIds = country.Stores.ToArray();
-                }
-            }
-        }
-
-        #endregion
-
         #region Countries
 
         public IActionResult Index()
@@ -128,7 +105,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //locales
             AddLocales(_languageService, model.Locales);
             //Stores
-            PrepareStoresMappingModel(model, null, false);
+            model.PrepareStoresMappingModel(null, false, _storeService);
             //default values
             model.Published = true;
             model.AllowsBilling = true;
@@ -156,7 +133,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
 
             //Stores
-            PrepareStoresMappingModel(model, null, true);
+            model.PrepareStoresMappingModel(null, true, _storeService);
+
             return View(model);
         }
 
@@ -177,7 +155,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.Name = country.GetLocalized(x => x.Name, languageId, false, false);
             });
             //Stores
-            PrepareStoresMappingModel(model, country, false);
+            model.PrepareStoresMappingModel(country, false, _storeService);
+
             return View(model);
         }
 
@@ -214,7 +193,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
 
             //Stores
-            PrepareStoresMappingModel(model, country, true);
+            model.PrepareStoresMappingModel(country, true, _storeService);
+
             return View(model);
         }
 

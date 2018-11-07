@@ -1,18 +1,19 @@
 ﻿using FluentValidation.Attributes;
 using Grand.Framework.Localization;
+using Grand.Framework.Mapping;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Models.Stores;
 using Grand.Web.Areas.Admin.Validators.Directory;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Directory
 {
     [Validator(typeof(CountryValidator))]
-    public partial class CountryModel : BaseGrandEntityModel, ILocalizedModel<CountryLocalizedModel>
+    public partial class CountryModel : BaseGrandEntityModel, ILocalizedModel<CountryLocalizedModel>, IStoreMappingModel
     {
         public CountryModel()
         {
+            this.AvailableStores = new List<StoreModel>();
             Locales = new List<CountryLocalizedModel>();
         }
         [GrandResourceDisplayName("Admin.Configuration.Countries.Fields.Name")]
@@ -44,8 +45,6 @@ namespace Grand.Web.Areas.Admin.Models.Directory
 
         [GrandResourceDisplayName("Admin.Configuration.Countries.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
-
-
 
 
         [GrandResourceDisplayName("Admin.Configuration.Countries.Fields.NumberOfStates")]
