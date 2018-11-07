@@ -203,112 +203,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        [NonAction]
-        protected virtual List<LocalizedProperty> UpdateLocales(Product product, ProductModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-
-            foreach (var local in model.Locales)
-            {
-                var seName = product.ValidateSeName(local.SeName, local.Name, false);
-                _urlRecordService.SaveSlug(product, seName, local.LanguageId);
-
-                if (!(String.IsNullOrEmpty(seName)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "SeName",
-                        LocaleValue = seName,
-                    });
-
-                if (!(String.IsNullOrEmpty(local.Name)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "Name",
-                        LocaleValue = local.Name,
-                    });
-
-                if (!(String.IsNullOrEmpty(local.ShortDescription)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "ShortDescription",
-                        LocaleValue = local.ShortDescription,
-                    });
-
-                if (!(String.IsNullOrEmpty(local.FullDescription)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "FullDescription",
-                        LocaleValue = local.FullDescription,
-                    });
-
-                if (!(String.IsNullOrEmpty(local.MetaDescription)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "MetaDescription",
-                        LocaleValue = local.MetaDescription,
-                    });
-
-                if (!(String.IsNullOrEmpty(local.MetaKeywords)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "MetaKeywords",
-                        LocaleValue = local.MetaKeywords,
-                    });
-
-                if (!(String.IsNullOrEmpty(local.MetaTitle)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "MetaTitle",
-                        LocaleValue = local.MetaTitle,
-                    });
-
-
-            }
-            return localized;
-
-        }
-
-        [NonAction]
-        protected virtual List<LocalizedProperty> UpdateLocales(ProductTag productTag, ProductTagModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-            foreach (var local in model.Locales)
-            {
-                if (!(String.IsNullOrEmpty(local.Name)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "Name",
-                        LocaleValue = local.Name,
-                    });
-            }
-            return localized;
-        }
-
-        [NonAction]
-        protected virtual List<LocalizedProperty> UpdateLocales(ProductAttributeValue pav, ProductModel.ProductAttributeValueModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-            foreach (var local in model.Locales)
-            {
-                if (!(String.IsNullOrEmpty(local.Name)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "Name",
-                        LocaleValue = local.Name,
-                    });
-            }
-            return localized;
-        }
-
+        
         [NonAction]
         protected virtual void UpdatePictureSeoNames(Product product)
         {
@@ -1081,7 +976,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
                 model.SeName = product.ValidateSeName(model.SeName, product.Name, true);
                 product.SeName = model.SeName;
-                product.Locales = UpdateLocales(product, model);
+                product.Locales = model.Locales.ToLocalizedProperty(product, x => x.Name, _urlRecordService);
 
                 //search engine name
                 _urlRecordService.SaveSlug(product, model.SeName, "");
@@ -1200,7 +1095,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 product.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
                 model.SeName = product.ValidateSeName(model.SeName, product.Name, true);
                 product.SeName = model.SeName;
-                product.Locales = UpdateLocales(product, model);
+                product.Locales = model.Locales.ToLocalizedProperty(product, x => x.Name, _urlRecordService);
 
                 //search engine name
                 _urlRecordService.SaveSlug(product, model.SeName, "");
@@ -3037,7 +2932,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 productTag.Name = model.Name;
-                productTag.Locales = UpdateLocales(productTag, model);
+                productTag.Locales = model.Locales.ToLocalizedProperty();
                 _productTagService.UpdateProductTag(productTag);
 
                 ViewBag.RefreshPage = true;
@@ -4559,7 +4454,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     DisplayOrder = model.DisplayOrder,
                     PictureId = model.PictureId,
                 };
-                pav.Locales = UpdateLocales(pav, model);
+                pav.Locales = model.Locales.ToLocalizedProperty();
 
                 _productAttributeService.InsertProductAttributeValue(pav);
                 ViewBag.RefreshPage = true;
@@ -4704,7 +4599,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 pav.IsPreSelected = model.IsPreSelected;
                 pav.DisplayOrder = model.DisplayOrder;
                 pav.PictureId = model.PictureId;
-                pav.Locales = UpdateLocales(pav, model);
+                pav.Locales = model.Locales.ToLocalizedProperty();
 
                 _productAttributeService.UpdateProductAttributeValue(pav);
 
