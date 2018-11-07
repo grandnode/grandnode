@@ -2,7 +2,6 @@
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Discounts;
-using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Vendors;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
@@ -95,56 +94,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _pictureService.SetSeoFilename(picture.Id, _pictureService.GetPictureSeName(vendor.Name));
         }
 
-
-        [NonAction]
-        protected virtual List<LocalizedProperty> UpdateLocales(Vendor vendor, VendorModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-
-            foreach (var local in model.Locales)
-            {
-                var seName = vendor.ValidateSeName(local.SeName, local.Name, false);
-                _urlRecordService.SaveSlug(vendor, seName, local.LanguageId);
-
-                localized.Add(new LocalizedProperty()
-                {
-                    LanguageId = local.LanguageId,
-                    LocaleKey = "Description",
-                    LocaleValue = local.Description
-                });
-
-                localized.Add(new LocalizedProperty()
-                {
-                    LanguageId = local.LanguageId,
-                    LocaleKey = "MetaDescription",
-                    LocaleValue = local.MetaDescription
-                });
-
-                localized.Add(new LocalizedProperty()
-                {
-                    LanguageId = local.LanguageId,
-                    LocaleKey = "MetaKeywords",
-                    LocaleValue = local.MetaKeywords
-                });
-
-                localized.Add(new LocalizedProperty()
-                {
-                    LanguageId = local.LanguageId,
-                    LocaleKey = "MetaTitle",
-                    LocaleValue = local.MetaTitle
-                });
-
-                localized.Add(new LocalizedProperty()
-                {
-                    LanguageId = local.LanguageId,
-                    LocaleKey = "Name",
-                    LocaleValue = local.Name
-                });
-
-            }
-            return localized;
-
-        }
         [NonAction]
         protected virtual void PrepareDiscountModel(VendorModel model, Vendor vendor, bool excludeProperties)
         {
@@ -348,7 +297,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
                 //search engine name
                 model.SeName = vendor.ValidateSeName(model.SeName, vendor.Name, true);
-                vendor.Locales = UpdateLocales(vendor, model);
+                vendor.Locales = model.Locales.ToLocalizedProperty(vendor, x => x.Name, _urlRecordService);
                 vendor.SeName = model.SeName;
                 _vendorService.UpdateVendor(vendor);
 
@@ -430,7 +379,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 string prevPictureId = vendor.PictureId;
                 vendor = model.ToEntity(vendor);
-                vendor.Locales = UpdateLocales(vendor, model);
+                vendor.Locales = model.Locales.ToLocalizedProperty(vendor, x => x.Name, _urlRecordService);
                 model.SeName = vendor.ValidateSeName(model.SeName, vendor.Name, true);
                 vendor.Address = model.Address.ToEntity(vendor.Address);
 

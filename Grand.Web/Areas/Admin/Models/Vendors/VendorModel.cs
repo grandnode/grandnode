@@ -121,7 +121,7 @@ namespace Grand.Web.Areas.Admin.Models.Vendors
 
     }
 
-    public partial class VendorLocalizedModel : ILocalizedModelLocal
+    public partial class VendorLocalizedModel : ILocalizedModelLocal, ISlugModelLocal
     {
         public string LanguageId { get; set; }
 
