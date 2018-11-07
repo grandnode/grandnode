@@ -58,7 +58,7 @@ namespace Grand.Web.Areas.Admin.Models.Plugins
         [GrandResourceDisplayName("Admin.Configuration.Plugins.Fields.LimitedToStores")]
         public bool LimitedToStores { get; set; }
         [GrandResourceDisplayName("Admin.Configuration.Plugins.Fields.AvailableStores")]
-        public List<StoreModel> AvailableStores { get; set; }
+        public List<Grand.Web.Areas.Admin.Models.Stores.StoreModel> AvailableStores { get; set; }
         public string[] SelectedStoreIds { get; set; }
     }
     public partial class PluginLocalizedModel : ILocalizedModelLocal

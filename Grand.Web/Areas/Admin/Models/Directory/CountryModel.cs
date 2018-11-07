@@ -13,7 +13,7 @@ namespace Grand.Web.Areas.Admin.Models.Directory
     {
         public CountryModel()
         {
-            this.AvailableStores = new List<StoreModel>();
+            AvailableStores = new List<StoreModel>();
             Locales = new List<CountryLocalizedModel>();
         }
         [GrandResourceDisplayName("Admin.Configuration.Countries.Fields.Name")]

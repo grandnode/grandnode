@@ -19,7 +19,7 @@ namespace Grand.Web.Areas.Admin.Models.Knowledgebase
             Categories = new List<SelectListItem>();
             Locales = new List<KnowledgebaseArticleLocalizedModel>();
             AvailableCustomerRoles = new List<CustomerRoleModel>();
-            AvailableStores = new List<StoreModel>();
+            AvailableStores = new List<Grand.Web.Areas.Admin.Models.Stores.StoreModel>();
         }
 
         [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Fields.Name")]
@@ -70,7 +70,7 @@ namespace Grand.Web.Areas.Admin.Models.Knowledgebase
         [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.LimitedToStores")]
         public bool LimitedToStores { get; set; }
         [GrandResourceDisplayName("Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Fields.AvailableStores")]
-        public List<StoreModel> AvailableStores { get; set; }
+        public List<Grand.Web.Areas.Admin.Models.Stores.StoreModel> AvailableStores { get; set; }
         public string[] SelectedStoreIds { get; set; }
 
         public partial class ActivityLogModel : BaseGrandEntityModel

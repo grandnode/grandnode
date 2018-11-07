@@ -16,7 +16,7 @@ namespace Grand.Web.Areas.Admin.Models.Messages
         {
             Locales = new List<MessageTemplateLocalizedModel>();
             AvailableEmailAccounts = new List<EmailAccountModel>();
-            AvailableStores = new List<StoreModel>();
+            AvailableStores = new List<Grand.Web.Areas.Admin.Models.Stores.StoreModel>();
         }
 
 
@@ -63,7 +63,7 @@ namespace Grand.Web.Areas.Admin.Models.Messages
         [GrandResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.LimitedToStores")]
         public bool LimitedToStores { get; set; }
         [GrandResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.AvailableStores")]
-        public List<StoreModel> AvailableStores { get; set; }
+        public List<Grand.Web.Areas.Admin.Models.Stores.StoreModel> AvailableStores { get; set; }
         public string[] SelectedStoreIds { get; set; }
         //comma-separated list of stores used on the list page
         [GrandResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.LimitedToStores")]

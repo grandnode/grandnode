@@ -8,10 +8,10 @@ namespace Grand.Web.Areas.Admin.Models.Settings
     {
         public StoreScopeConfigurationModel()
         {
-            Stores = new List<StoreModel>();
+            Stores = new List<Grand.Web.Areas.Admin.Models.Stores.StoreModel>();
         }
 
         public string StoreId { get; set; }
-        public IList<StoreModel> Stores { get; set; }
+        public IList<Grand.Web.Areas.Admin.Models.Stores.StoreModel> Stores { get; set; }
     }
 }

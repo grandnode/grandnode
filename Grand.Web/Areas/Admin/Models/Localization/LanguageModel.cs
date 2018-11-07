@@ -55,7 +55,7 @@ namespace Grand.Web.Areas.Admin.Models.Localization
         [GrandResourceDisplayName("Admin.Configuration.Languages.Fields.LimitedToStores")]
         public bool LimitedToStores { get; set; }
         [GrandResourceDisplayName("Admin.Configuration.Languages.Fields.AvailableStores")]
-        public List<StoreModel> AvailableStores { get; set; }
+        public List<Grand.Web.Areas.Admin.Models.Stores.StoreModel> AvailableStores { get; set; }
         public string[] SelectedStoreIds { get; set; }
 
         public LanguageResourceFilterModel Search { get; set; }
