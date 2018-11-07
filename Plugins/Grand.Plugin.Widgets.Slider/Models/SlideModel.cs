@@ -1,9 +1,9 @@
 ﻿using FluentValidation.Attributes;
 using Grand.Framework.Localization;
+using Grand.Framework.Mapping;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
 using Grand.Plugin.Widgets.Slider.Validators;
-using Grand.Web.Areas.Admin.Models.Stores;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,13 +11,14 @@ using System.ComponentModel.DataAnnotations;
 namespace Grand.Plugin.Widgets.Slider.Models
 {
     [Validator(typeof(SliderValidator))]
-    public partial class SlideModel : BaseGrandEntityModel, ILocalizedModel<SlideLocalizedModel>
+    public partial class SlideModel : BaseGrandEntityModel, ILocalizedModel<SlideLocalizedModel>, IStoreMappingModel
     {
         public SlideModel()
         {
             Locales = new List<SlideLocalizedModel>();
             AvailableCategories = new List<SelectListItem>();
             AvailableManufacturers = new List<SelectListItem>();
+            AvailableStores = new List<StoreModel>();
         }
         [GrandResourceDisplayName("Plugins.Widgets.Slider.Name")]
         public string Name { get; set; }

@@ -93,28 +93,6 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
             }
         }
 
-
-
-        [NonAction]
-        protected virtual void PrepareStoresMappingModel(SlideModel model, PictureSlider slider, bool excludeProperties)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            model.AvailableStores = _storeService
-                .GetAllStores()
-                .Select(s => s.ToModel())
-                .ToList();
-            if (!excludeProperties)
-            {
-                if (slider != null)
-                {
-                    model.SelectedStoreIds = slider.Stores.ToArray();
-                }
-            }
-        }
-
-
         public IActionResult Configure()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
@@ -155,7 +133,7 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
             //locales
             AddLocales(_languageService, model.Locales);
             //Stores
-            PrepareStoresMappingModel(model, null, false);
+            model.PrepareStoresMappingModel(null, false, _storeService);
             //Categories 
             PrepareAllCategoriesModel(model);
             //Manufacturers
@@ -182,7 +160,7 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
             }
 
             //Stores
-            PrepareStoresMappingModel(model, null, true);
+            model.PrepareStoresMappingModel(null, true, _storeService);
             //Categories 
             PrepareAllCategoriesModel(model);
             //Manufacturers
@@ -208,7 +186,7 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
                 locale.Description = slide.GetLocalized(x => x.Description, languageId, false, false);
             });
             //Stores
-            PrepareStoresMappingModel(model, slide, false);
+            model.PrepareStoresMappingModel(slide, false, _storeService);
             //Categories 
             PrepareAllCategoriesModel(model);
             //Manufacturers
@@ -237,9 +215,8 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
                 return continueEditing ? RedirectToAction("Edit", new { id = pictureSlider.Id }) : RedirectToAction("Configure");
 
             }
-
             //Stores
-            PrepareStoresMappingModel(model, pictureSlider, true);
+            model.PrepareStoresMappingModel(pictureSlider, true, _storeService);
             //Categories 
             PrepareAllCategoriesModel(model);
             //Manufacturers
