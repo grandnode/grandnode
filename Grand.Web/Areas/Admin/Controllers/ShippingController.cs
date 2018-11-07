@@ -81,49 +81,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Utilities
-
-        [NonAction]
-        protected virtual List<LocalizedProperty> UpdateLocales(ShippingMethod shippingMethod, ShippingMethodModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-            foreach (var local in model.Locales)
-            {
-                localized.Add(new LocalizedProperty()
-                {
-                    LanguageId = local.LanguageId,
-                    LocaleKey = "Name",
-                    LocaleValue = local.Name
-                });
-                localized.Add(new LocalizedProperty()
-                {
-                    LanguageId = local.LanguageId,
-                    LocaleKey = "Description",
-                    LocaleValue = local.Description
-                });
-
-            }
-            return localized;
-        }
-
-        [NonAction]
-        protected virtual List<LocalizedProperty> UpdateLocales(DeliveryDate deliveryDate, DeliveryDateModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-            foreach (var local in model.Locales)
-            {
-                localized.Add(new LocalizedProperty()
-                {
-                    LanguageId = local.LanguageId,
-                    LocaleKey = "Name",
-                    LocaleValue = local.Name
-                });
-            }
-            return localized;
-        }
-
-        #endregion
-
         #region Shipping rate computation methods
 
         public IActionResult Providers()
@@ -264,7 +221,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var sm = model.ToEntity();
-                sm.Locales = UpdateLocales(sm, model);
+                sm.Locales = model.Locales.ToLocalizedProperty();
                 _shippingService.InsertShippingMethod(sm);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Methods.Added"));
@@ -310,7 +267,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 sm = model.ToEntity(sm);
-                sm.Locales = UpdateLocales(sm, model);
+                sm.Locales = model.Locales.ToLocalizedProperty();
                 _shippingService.UpdateShippingMethod(sm);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Methods.Updated"));
@@ -391,7 +348,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var deliveryDate = model.ToEntity();
-                deliveryDate.Locales = UpdateLocales(deliveryDate, model);
+                deliveryDate.Locales = model.Locales.ToLocalizedProperty();
 
                 //ensure valid color is chosen/entered
                 //TO DO
@@ -457,7 +414,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 deliveryDate = model.ToEntity(deliveryDate);
-                deliveryDate.Locales = UpdateLocales(deliveryDate, model);
+                deliveryDate.Locales = model.Locales.ToLocalizedProperty();
                 _shippingService.UpdateDeliveryDate(deliveryDate);
                 //locales
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.DeliveryDates.Updated"));
