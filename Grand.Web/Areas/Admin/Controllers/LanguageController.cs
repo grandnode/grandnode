@@ -72,25 +72,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [NonAction]
-        protected virtual void PrepareStoresMappingModel(LanguageModel model, Language language, bool excludeProperties)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            model.AvailableStores = _storeService
-                .GetAllStores()
-                .Select(s => s.ToModel())
-                .ToList();
-            if (!excludeProperties)
-            {
-                if (language != null)
-                {
-                    model.SelectedStoreIds = language.Stores.ToArray();
-                }
-            }
-        }
-
-        [NonAction]
         protected virtual void PrepareCurrenciesModel(LanguageModel model)
         {
             if (model == null)
@@ -152,7 +133,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             var model = new LanguageModel();
             //Stores
-            PrepareStoresMappingModel(model, null, false);
+            model.PrepareStoresMappingModel(null, false, _storeService);
             //currencies
             PrepareCurrenciesModel(model);
             //flags
@@ -181,7 +162,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
 
             //Stores
-            PrepareStoresMappingModel(model, null, true);
+            model.PrepareStoresMappingModel(null, true, _storeService);
             //currencies
             PrepareCurrenciesModel(model);
             //flags
@@ -202,7 +183,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             var model = language.ToModel();
             //Stores
-            PrepareStoresMappingModel(model, language, false);
+            model.PrepareStoresMappingModel(language, false, _storeService);
             //currencies
             PrepareCurrenciesModel(model);
             //flags
@@ -254,7 +235,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
 
             //Stores
-            PrepareStoresMappingModel(model, language, true);
+            model.PrepareStoresMappingModel(language, true, _storeService);
             //currencies
             PrepareCurrenciesModel(model);
             //flags

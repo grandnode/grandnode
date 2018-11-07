@@ -9,6 +9,7 @@ using Grand.Core.Plugins;
 using Grand.Framework.Controllers;
 using Grand.Framework.Extensions;
 using Grand.Framework.Kendoui;
+using Grand.Framework.Mvc.Models;
 using Grand.Framework.Themes;
 using Grand.Services.Authentication.External;
 using Grand.Services.Cms;
@@ -35,15 +36,15 @@ using System.Linq;
 namespace Grand.Web.Areas.Admin.Controllers
 {
     public partial class PluginController : BaseAdminController
-	{
-		#region Fields
+    {
+        #region Fields
 
         private readonly IPluginFinder _pluginFinder;
         private readonly ILocalizationService _localizationService;
         private readonly IWebHelper _webHelper;
         private readonly IPermissionService _permissionService;
         private readonly ILanguageService _languageService;
-	    private readonly ISettingService _settingService;
+        private readonly ISettingService _settingService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IStoreService _storeService;
         private readonly IThemeProvider _themeProvider;
@@ -54,14 +55,14 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly TaxSettings _taxSettings;
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
         private readonly WidgetSettings _widgetSettings;
-	    #endregion
+        #endregion
 
-		#region Constructors
+        #region Constructors
 
         public PluginController(IPluginFinder pluginFinder,
             ILocalizationService localizationService,
             IWebHelper webHelper,
-            IPermissionService permissionService, 
+            IPermissionService permissionService,
             ILanguageService languageService,
             ISettingService settingService,
             ICustomerActivityService customerActivityService,
@@ -71,10 +72,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             ICacheManager cacheManager,
             PaymentSettings paymentSettings,
             ShippingSettings shippingSettings,
-            TaxSettings taxSettings, 
-            ExternalAuthenticationSettings externalAuthenticationSettings, 
+            TaxSettings taxSettings,
+            ExternalAuthenticationSettings externalAuthenticationSettings,
             WidgetSettings widgetSettings)
-		{
+        {
             this._pluginFinder = pluginFinder;
             this._localizationService = localizationService;
             this._webHelper = webHelper;
@@ -91,14 +92,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._taxSettings = taxSettings;
             this._externalAuthenticationSettings = externalAuthenticationSettings;
             this._widgetSettings = widgetSettings;
-		}
+        }
 
-		#endregion 
+        #endregion
 
         #region Utilities
 
         [NonAction]
-        protected virtual PluginModel PreparePluginModel(PluginDescriptor pluginDescriptor, 
+        protected virtual PluginModel PreparePluginModel(PluginDescriptor pluginDescriptor,
             bool prepareLocales = true, bool prepareStores = true)
         {
             var pluginModel = pluginDescriptor.ToModel();
@@ -118,7 +119,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //stores
                 pluginModel.AvailableStores = _storeService
                     .GetAllStores()
-                    .Select(s => s.ToModel())
+                    .Select(s => new StoreModel() { Id = s.Id, Name = s.Name })
                     .ToList();
                 pluginModel.SelectedStoreIds = pluginDescriptor.LimitedToStores.ToArray();
                 pluginModel.LimitedToStores = pluginDescriptor.LimitedToStores.Count > 0;
@@ -194,27 +195,27 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-	    [HttpPost]
+        [HttpPost]
         public IActionResult ListSelect(DataSourceRequest command, PluginListModel model)
-	    {
-	        if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
-	            return AccessDeniedView();
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+                return AccessDeniedView();
 
-	        var loadMode = (LoadPluginsMode) model.SearchLoadModeId;
+            var loadMode = (LoadPluginsMode)model.SearchLoadModeId;
             var pluginDescriptors = _pluginFinder.GetPluginDescriptors(loadMode, "", model.SearchGroup).ToList();
-	        var gridModel = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = pluginDescriptors.Select(x => PreparePluginModel(x, false, false))
                 .OrderBy(x => x.Group)
                 .ToList(),
                 Total = pluginDescriptors.Count()
             };
-	        return Json(gridModel);
-	    }
+            return Json(gridModel);
+        }
 
         [HttpPost, ActionName("List")]
         [FormValueRequired(FormValueRequirement.StartsWith, "install-plugin-link-")]
-        
+
         public IActionResult Install(IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
@@ -248,12 +249,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 ErrorNotification(exc);
             }
-             
+
             return RedirectToAction("List");
         }
 
         [HttpPost, ActionName("List")]
-        [FormValueRequired(FormValueRequirement.StartsWith, "uninstall-plugin-link-")]        
+        [FormValueRequired(FormValueRequirement.StartsWith, "uninstall-plugin-link-")]
         public IActionResult Uninstall(IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
@@ -562,7 +563,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (descriptor == null || !descriptor.Installed)
                 return Redirect("List");
 
-            var plugin  = descriptor.Instance<IMiscPlugin>();
+            var plugin = descriptor.Instance<IMiscPlugin>();
             var model = new MiscPluginModel();
             model.FriendlyName = descriptor.FriendlyName;
             model.ConfigurationUrl = plugin.GetConfigurationPageUrl();

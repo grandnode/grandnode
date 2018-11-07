@@ -1,11 +1,13 @@
 ﻿using Grand.Core.Domain.Localization;
+using Grand.Core.Domain.Security;
 using Grand.Core.Domain.Seo;
+using Grand.Core.Domain.Stores;
 using System;
 using System.Collections.Generic;
 
 namespace Grand.Core.Domain.Knowledgebase
 {
-    public class KnowledgebaseArticle : BaseEntity, ITreeNode, ILocalizedEntity, ISlugSupported
+    public class KnowledgebaseArticle : BaseEntity, ITreeNode, ILocalizedEntity, ISlugSupported, IAclSupported, IStoreMappingSupported
     {
         public KnowledgebaseArticle()
         {

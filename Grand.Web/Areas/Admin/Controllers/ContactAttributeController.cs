@@ -12,7 +12,6 @@ using Grand.Services.Messages;
 using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Extensions;
-using Grand.Web.Areas.Admin.Helpers;
 using Grand.Web.Areas.Admin.Models.Messages;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -73,25 +72,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         
         #region Utilities
 
-        [NonAction]
-        protected virtual void PrepareStoresMappingModel(ContactAttributeModel model, ContactAttribute contactAttribute, bool excludeProperties)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            model.AvailableStores = _storeService
-                .GetAllStores()
-                .Select(s => s.ToModel())
-                .ToList();
-            if (!excludeProperties)
-            {
-                if (contactAttribute != null)
-                {
-                    model.SelectedStoreIds = contactAttribute.Stores.ToArray();
-                }
-            }
-        }
-
+       
         [NonAction]
         protected virtual void PrepareAclModel(ContactAttributeModel model, ContactAttribute contactAttribute, bool excludeProperties)
         {
@@ -250,7 +231,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //locales
             AddLocales(_languageService, model.Locales);
             //Stores
-            PrepareStoresMappingModel(model, null, false);
+            model.PrepareStoresMappingModel(null, false, _storeService);
             //ACL
             PrepareAclModel(model, null, false);
             //condition
@@ -283,7 +264,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
 
             //Stores
-            PrepareStoresMappingModel(model, null, true);
+            model.PrepareStoresMappingModel(null, true, _storeService);
             //ACL
             PrepareAclModel(model, null, true);
 
@@ -311,7 +292,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //ACL
             PrepareAclModel(model, contactAttribute, false);
             //Stores
-            PrepareStoresMappingModel(model, contactAttribute, false);
+            model.PrepareStoresMappingModel(contactAttribute, false, _storeService);
             //condition
             PrepareConditionAttributes(model, contactAttribute);
 
@@ -355,7 +336,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
 
             //Stores
-            PrepareStoresMappingModel(model, contactAttribute, true);
+            model.PrepareStoresMappingModel(contactAttribute, true, _storeService);
             //ACL
             PrepareAclModel(model, contactAttribute, false);
             return View(model);

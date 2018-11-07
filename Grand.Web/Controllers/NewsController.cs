@@ -66,10 +66,6 @@ namespace Grand.Web.Controllers
 
         #endregion
 
-        #region Utilities
-
-        #endregion
-
         #region Methods
 
         public virtual IActionResult List(NewsPagingFilteringModel command)

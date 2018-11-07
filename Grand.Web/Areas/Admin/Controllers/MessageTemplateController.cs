@@ -62,30 +62,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #endregion
         
-        #region Utilities
-
-        [NonAction]
-        protected virtual void PrepareStoresMappingModel(MessageTemplateModel model, MessageTemplate messageTemplate, bool excludeProperties)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            model.AvailableStores = _storeService
-                .GetAllStores()
-                .Select(s => s.ToModel())
-                .ToList();
-            if (!excludeProperties)
-            {
-                if (messageTemplate != null)
-                {
-                    model.SelectedStoreIds = messageTemplate.Stores.ToArray();
-                }
-            }
-        }
-
-
-        #endregion
-        
         #region Methods
 
         public IActionResult Index()
@@ -127,7 +103,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 Data = messageTemplates.Select(x =>
                 {
                     var templateModel = x.ToModel();
-                    PrepareStoresMappingModel(templateModel, x, false);
+                    templateModel.PrepareStoresMappingModel(x, false, _storeService);
                     var stores = _storeService
                             .GetAllStores()
                             .Where(s => !x.LimitedToStores || templateModel.SelectedStoreIds.Contains(s.Id))
@@ -154,7 +130,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var model = new MessageTemplateModel();
             
             //Stores
-            PrepareStoresMappingModel(model, null, false);
+            model.PrepareStoresMappingModel(null, false, _storeService);
             model.AllowedTokens = _messageTokenProvider.GetListOfAllowedTokens();
             //available email accounts
             foreach (var ea in _emailAccountService.GetAllEmailAccounts())
@@ -200,7 +176,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             foreach (var ea in _emailAccountService.GetAllEmailAccounts())
                 model.AvailableEmailAccounts.Add(ea.ToModel());
             //Store
-            PrepareStoresMappingModel(model, null, true);
+            model.PrepareStoresMappingModel(null, true, _storeService);
             return View(model);
 
         }
@@ -224,7 +200,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             foreach (var ea in _emailAccountService.GetAllEmailAccounts())
                 model.AvailableEmailAccounts.Add(ea.ToModel());
             //Store
-            PrepareStoresMappingModel(model, messageTemplate, false);
+            model.PrepareStoresMappingModel(messageTemplate, false, _storeService);
+
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
@@ -283,7 +260,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             foreach (var ea in _emailAccountService.GetAllEmailAccounts())
                 model.AvailableEmailAccounts.Add(ea.ToModel());
             //Store
-            PrepareStoresMappingModel(model, messageTemplate, true);
+            model.PrepareStoresMappingModel(messageTemplate, true, _storeService);
+
             return View(model);
         }
 

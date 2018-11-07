@@ -221,10 +221,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             .Select(cr => cr.ToModel())
             .ToList();
             model.Published = true;
-            model.AvailableStores = _storeService
-            .GetAllStores()
-            .Select(s => s.ToModel())
-            .ToList();
+
+            model.PrepareStoresMappingModel(null, false, _storeService);
 
             AddLocales(_languageService, model.Locales);
             return View(model);
@@ -254,20 +252,14 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _customerActivityService.InsertActivity("CreateKnowledgebaseCategory", knowledgebaseCategory.Id,
                     _localizationService.GetResource("ActivityLog.CreateKnowledgebaseCategory"), knowledgebaseCategory.Name);
 
-                model.AvailableCustomerRoles = _customerService
-                .GetAllCustomerRoles(true)
-                .Select(cr => cr.ToModel())
-                .ToList();
-                model.AvailableStores = _storeService
-                .GetAllStores()
-                .Select(s => s.ToModel())
-                .ToList();
-
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Added"));
                 return continueEditing ? RedirectToAction("EditCategory", new { knowledgebaseCategory.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
+            //Stores
+            model.PrepareStoresMappingModel(null, true, _storeService);
+
             return View(model);
         }
 
@@ -307,11 +299,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             .Select(cr => cr.ToModel())
             .ToList();
             model.SelectedCustomerRoleIds = knowledgebaseCategory.CustomerRoles.ToArray();
-            model.AvailableStores = _storeService
-            .GetAllStores()
-            .Select(s => s.ToModel())
-            .ToList();
-            model.SelectedStoreIds = knowledgebaseCategory.Stores.ToArray();
+
+            //Stores
+            model.PrepareStoresMappingModel(knowledgebaseCategory, false, _storeService);
 
             return View(model);
         }
@@ -343,20 +333,14 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _customerActivityService.InsertActivity("UpdateKnowledgebaseCategory", knowledgebaseCategory.Id,
                     _localizationService.GetResource("ActivityLog.UpdateKnowledgebaseCategory"), knowledgebaseCategory.Name);
 
-                model.AvailableCustomerRoles = _customerService
-                .GetAllCustomerRoles(true)
-                .Select(cr => cr.ToModel())
-                .ToList();
-                model.AvailableStores = _storeService
-                .GetAllStores()
-                .Select(s => s.ToModel())
-                .ToList();
-
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Updated"));
                 return continueEditing ? RedirectToAction("EditCategory", new { id = knowledgebaseCategory.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
+            //Stores
+            model.PrepareStoresMappingModel(knowledgebaseCategory, true, _storeService);
+
             return View(model);
         }
 
@@ -407,10 +391,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             .Select(cr => cr.ToModel())
             .ToList();
             model.Published = true;
-            model.AvailableStores = _storeService
-                .GetAllStores()
-                .Select(s => s.ToModel())
-                .ToList();
+
+            //Stores
+            model.PrepareStoresMappingModel(null, false, _storeService);
+
             model.AllowComments = true;
 
             if (!string.IsNullOrEmpty(parentCategoryId))
@@ -449,16 +433,15 @@ namespace Grand.Web.Areas.Admin.Controllers
                 .GetAllCustomerRoles(true)
                 .Select(cr => cr.ToModel())
                 .ToList();
-                model.AvailableStores = _storeService
-                .GetAllStores()
-                .Select(s => s.ToModel())
-                .ToList();
-
+                
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Added"));
                 return continueEditing ? RedirectToAction("EditArticle", new { knowledgebaseArticle.Id }) : RedirectToAction("EditCategory", new { id = model.ParentCategoryId });
             }
 
             //If we got this far, something failed, redisplay form
+            //Stores
+            model.PrepareStoresMappingModel(null, true, _storeService);
+
             return View(model);
         }
 
@@ -498,11 +481,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             .Select(cr => cr.ToModel())
             .ToList();
             model.SelectedCustomerRoleIds = knowledgebaseArticle.CustomerRoles.ToArray();
-            model.AvailableStores = _storeService
-            .GetAllStores()
-            .Select(s => s.ToModel())
-            .ToList();
-            model.SelectedStoreIds = knowledgebaseArticle.Stores.ToArray();
+
+            //Stores
+            model.PrepareStoresMappingModel(knowledgebaseArticle, false, _storeService);
+
             model.AllowComments = knowledgebaseArticle.AllowComments;
 
             return View(model);
@@ -536,15 +518,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _customerActivityService.InsertActivity("UpdateKnowledgebaseArticle", knowledgebaseArticle.Id,
                     _localizationService.GetResource("ActivityLog.UpdateKnowledgebaseArticle"), knowledgebaseArticle.Name);
 
-                model.AvailableCustomerRoles = _customerService
-                .GetAllCustomerRoles(true)
-                .Select(cr => cr.ToModel())
-                .ToList();
-                model.AvailableStores = _storeService
-                .GetAllStores()
-                .Select(s => s.ToModel())
-                .ToList();
-
+               
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Updated"));
                 return continueEditing ? RedirectToAction("EditArticle", new { knowledgebaseArticle.Id }) : RedirectToAction("EditCategory", new { id = model.ParentCategoryId });
             }

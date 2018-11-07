@@ -173,10 +173,20 @@ namespace Grand.Web.Controllers
             if (!_knowledgebaseSettings.Enabled)
                 return RedirectToRoute("HomePage");
 
-            var model = new KnowledgebaseArticleModel();
-            var article = _knowledgebaseService.GetPublicKnowledgebaseArticle(articleId);
+            var customer = _workContext.CurrentCustomer;
+            var article = _knowledgebaseService.GetKnowledgebaseArticle(articleId);
             if (article == null)
                 return RedirectToAction("List");
+
+            //ACL (access control list)
+            if (!_aclService.Authorize(article, customer))
+                return InvokeHttp404();
+
+            //Store mapping
+            if (!_storeMappingService.Authorize(article))
+                return InvokeHttp404();
+
+            var model = new KnowledgebaseArticleModel();
 
             PrepareKnowledgebaseArticleModel(model, article);
             return View("Article", model);

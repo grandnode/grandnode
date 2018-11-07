@@ -14,7 +14,6 @@ using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Services.Tax;
 using Grand.Web.Areas.Admin.Extensions;
-using Grand.Web.Areas.Admin.Helpers;
 using Grand.Web.Areas.Admin.Models.Orders;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -99,25 +98,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.AvailableTaxCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Configuration.Settings.Tax.TaxCategories.None"), Value = "" });
             foreach (var tc in taxCategories)
                 model.AvailableTaxCategories.Add(new SelectListItem { Text = tc.Name, Value = tc.Id.ToString(), Selected = checkoutAttribute != null && !excludeProperties && tc.Id == checkoutAttribute.TaxCategoryId });
-        }
-
-        [NonAction]
-        protected virtual void PrepareStoresMappingModel(CheckoutAttributeModel model, CheckoutAttribute checkoutAttribute, bool excludeProperties)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            model.AvailableStores = _storeService
-                .GetAllStores()
-                .Select(s => s.ToModel())
-                .ToList();
-            if (!excludeProperties)
-            {
-                if (checkoutAttribute != null)
-                {
-                    model.SelectedStoreIds = checkoutAttribute.Stores.ToArray();
-                }
-            }
         }
 
         [NonAction]
@@ -280,7 +260,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //tax categories
             PrepareTaxCategories(model, null, true);
             //Stores
-            PrepareStoresMappingModel(model, null, false);
+            model.PrepareStoresMappingModel(null, false, _storeService);
             //ACL
             PrepareAclModel(model, null, false);
             //condition
@@ -315,7 +295,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             //tax categories
             PrepareTaxCategories(model, null, true);
             //Stores
-            PrepareStoresMappingModel(model, null, true);
+            model.PrepareStoresMappingModel(null, true, _storeService);
+
             //ACL
             PrepareAclModel(model, null, true);
 
@@ -345,7 +326,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             //tax categories
             PrepareTaxCategories(model, checkoutAttribute, false);
             //Stores
-            PrepareStoresMappingModel(model, checkoutAttribute, false);
+            model.PrepareStoresMappingModel(checkoutAttribute, false, _storeService);
+
             //condition
             PrepareConditionAttributes(model, checkoutAttribute);
 
@@ -391,7 +373,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             //tax categories
             PrepareTaxCategories(model, checkoutAttribute, true);
             //Stores
-            PrepareStoresMappingModel(model, checkoutAttribute, true);
+            model.PrepareStoresMappingModel(checkoutAttribute, true, _storeService);
+
             //ACL
             PrepareAclModel(model, checkoutAttribute, false);
             return View(model);

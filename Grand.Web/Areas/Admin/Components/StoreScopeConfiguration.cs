@@ -4,7 +4,6 @@ using Grand.Framework.Components;
 using Grand.Services.Common;
 using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Models.Settings;
-using Grand.Web.Areas.Admin.Models.Stores;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Grand.Web.Areas.Admin.Components
@@ -39,7 +38,7 @@ namespace Grand.Web.Areas.Admin.Components
             var model = new StoreScopeConfigurationModel();
             foreach (var s in allStores)
             {
-                model.Stores.Add(new StoreModel
+                model.Stores.Add(new Framework.Mvc.Models.StoreModel
                 {
                     Id = s.Id,
                     Name = s.Name

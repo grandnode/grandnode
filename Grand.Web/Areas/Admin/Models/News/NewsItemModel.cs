@@ -1,9 +1,9 @@
 ﻿using FluentValidation.Attributes;
 using Grand.Framework.Localization;
+using Grand.Framework.Mapping;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
 using Grand.Web.Areas.Admin.Models.Customers;
-using Grand.Web.Areas.Admin.Models.Stores;
 using Grand.Web.Areas.Admin.Validators.News;
 using System;
 using System.Collections.Generic;
@@ -12,11 +12,11 @@ using System.ComponentModel.DataAnnotations;
 namespace Grand.Web.Areas.Admin.Models.News
 {
     [Validator(typeof(NewsItemValidator))]
-    public partial class NewsItemModel : BaseGrandEntityModel, ILocalizedModel<NewsLocalizedModel>
+    public partial class NewsItemModel : BaseGrandEntityModel, ILocalizedModel<NewsLocalizedModel>, IStoreMappingModel
     {
         public NewsItemModel()
         {
-            this.AvailableStores = new List<StoreModel>();
+            AvailableStores = new List<StoreModel>();
             AvailableCustomerRoles = new List<CustomerRoleModel>();
             Locales = new List<NewsLocalizedModel>();
         }

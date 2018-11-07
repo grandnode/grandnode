@@ -52,25 +52,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        protected virtual void PrepareStoresMappingModel(PollModel model, Poll poll, bool excludeProperties)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            model.AvailableStores = _storeService
-                .GetAllStores()
-                .Select(s => s.ToModel())
-                .ToList();
-            if (!excludeProperties)
-            {
-                if (poll != null)
-                {
-                    model.SelectedStoreIds = poll.Stores.ToArray();
-                }
-            }
-        }
-
-        [NonAction]
         protected virtual void PrepareAclModel(PollModel model, Poll poll, bool excludeProperties)
         {
             if (model == null)
@@ -141,7 +122,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.Published = true;
             model.ShowOnHomePage = true;
             //Stores
-            PrepareStoresMappingModel(model, null, false);
+            model.PrepareStoresMappingModel(null, false, _storeService);
             //locales
             AddLocales(_languageService, model.Locales);
             //ACL
@@ -174,7 +155,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
 
             //Stores
-            PrepareStoresMappingModel(model, null, true);
+            model.PrepareStoresMappingModel(null, true, _storeService);
+
             //locales
             AddLocales(_languageService, model.Locales);
             //ACL
@@ -198,7 +180,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.EndDate = poll.EndDateUtc;
 
             //Store
-            PrepareStoresMappingModel(model, poll, false);
+            model.PrepareStoresMappingModel(poll, false, _storeService);
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
@@ -247,7 +229,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
 
             //Store
-            PrepareStoresMappingModel(model, poll, false);
+            model.PrepareStoresMappingModel(poll, false, _storeService);
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {

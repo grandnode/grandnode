@@ -1,7 +1,7 @@
 ﻿using FluentValidation.Attributes;
+using Grand.Framework.Mapping;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Models.Stores;
 using Grand.Web.Areas.Admin.Validators.Localization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
@@ -9,13 +9,14 @@ using System.Collections.Generic;
 namespace Grand.Web.Areas.Admin.Models.Localization
 {
     [Validator(typeof(LanguageValidator))]
-    public partial class LanguageModel : BaseGrandEntityModel
+    public partial class LanguageModel : BaseGrandEntityModel, IStoreMappingModel
     {
         public LanguageModel()
         {
             FlagFileNames = new List<string>();
             AvailableCurrencies = new List<SelectListItem>();
             Search = new LanguageResourceFilterModel();
+            AvailableStores = new List<StoreModel>();
         }
         [GrandResourceDisplayName("Admin.Configuration.Languages.Fields.Name")]
         

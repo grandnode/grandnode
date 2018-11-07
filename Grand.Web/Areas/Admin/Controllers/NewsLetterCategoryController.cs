@@ -42,26 +42,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Utilities
-
-        [NonAction]
-        protected virtual void PrepareStoresMappingModel(NewsletterCategoryModel model, NewsletterCategory newsletterCategory, bool excludeProperties)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            model.AvailableStores = _storeService.GetAllStores().Select(s => s.ToModel()).ToList();
-
-            if (!excludeProperties)
-            {
-                if (newsletterCategory != null)
-                {
-                    model.SelectedStoreIds = newsletterCategory.Stores.ToArray();
-                }
-            }
-        }
-        #endregion
-
         #region Methods
 
         public IActionResult Index()
@@ -109,8 +89,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //locales
             AddLocales(_languageService, model.Locales);
             //Stores
-            PrepareStoresMappingModel(model, null, false);
-
+            model.PrepareStoresMappingModel(null, false, _storeService);
             return View(model);
         }
 
@@ -132,7 +111,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             //Stores
-            PrepareStoresMappingModel(model, null, false);
+            model.PrepareStoresMappingModel(null, false, _storeService);
 
             return View(model);
         }
@@ -156,8 +135,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             });
 
             //Stores
-            PrepareStoresMappingModel(model, newsletterCategory, false);
-
+            model.PrepareStoresMappingModel(newsletterCategory, false, _storeService);
             return View(model);
         }
 
@@ -184,7 +162,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return continueEditing ? RedirectToAction("Edit", new { id = newsletterCategory.Id }) : RedirectToAction("List");
             }
             //Stores
-            PrepareStoresMappingModel(model, newsletterCategory, true);
+            model.PrepareStoresMappingModel(newsletterCategory, true, _storeService);
 
             return View(model);
         }

@@ -90,25 +90,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [NonAction]
-        protected virtual void PrepareStoresMappingModel(NewsItemModel model, NewsItem newsItem, bool excludeProperties)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            model.AvailableStores = _storeService
-                .GetAllStores()
-                .Select(s => s.ToModel())
-                .ToList();
-            if (!excludeProperties)
-            {
-                if (newsItem != null)
-                {
-                    model.SelectedStoreIds = newsItem.Stores.ToArray();
-                }
-            }
-        }
-
-        [NonAction]
         protected virtual void UpdatePictureSeoNames(NewsItem newsitem)
         {
             var picture = _pictureService.GetPictureById(newsitem.PictureId);
@@ -173,7 +154,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             var model = new NewsItemModel();
             //Stores
-            PrepareStoresMappingModel(model, null, false);
+            model.PrepareStoresMappingModel(null, false, _storeService);
+
             //default values
             model.Published = true;
             model.AllowComments = true;
@@ -217,7 +199,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             //Stores
-            PrepareStoresMappingModel(model, null, true);
+            model.PrepareStoresMappingModel(null, true, _storeService);
+
             //ACL
             PrepareAclModel(model, null, true);
             return View(model);
@@ -238,7 +221,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.StartDate = newsItem.StartDateUtc;
             model.EndDate = newsItem.EndDateUtc;
             //Store
-            PrepareStoresMappingModel(model, newsItem, false);
+            model.PrepareStoresMappingModel(newsItem, false, _storeService);
+
             //ACL
             PrepareAclModel(model, newsItem, false);
             //locales
@@ -308,7 +292,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             //Store
-            PrepareStoresMappingModel(model, newsItem, true);
+            model.PrepareStoresMappingModel(newsItem, true, _storeService);
             //ACL
             PrepareAclModel(model, newsItem, false);
             return View(model);
