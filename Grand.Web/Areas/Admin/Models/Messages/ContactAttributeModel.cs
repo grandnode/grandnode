@@ -1,10 +1,10 @@
 ﻿using FluentValidation.Attributes;
 using Grand.Core.Domain.Catalog;
 using Grand.Framework.Localization;
+using Grand.Framework.Mapping;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
 using Grand.Web.Areas.Admin.Models.Customers;
-using Grand.Web.Areas.Admin.Models.Stores;
 using Grand.Web.Areas.Admin.Validators.Messages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
@@ -13,12 +13,13 @@ using System.ComponentModel.DataAnnotations;
 namespace Grand.Web.Areas.Admin.Models.Messages
 {
     [Validator(typeof(ContactAttributeValidator))]
-    public partial class ContactAttributeModel : BaseGrandEntityModel, ILocalizedModel<ContactAttributeLocalizedModel>
+    public partial class ContactAttributeModel : BaseGrandEntityModel, ILocalizedModel<ContactAttributeLocalizedModel>, IStoreMappingModel
     {
         public ContactAttributeModel()
         {
             Locales = new List<ContactAttributeLocalizedModel>();
             AvailableCustomerRoles = new List<CustomerRoleModel>();
+            AvailableStores = new List<StoreModel>();
         }
 
         [GrandResourceDisplayName("Admin.Catalog.Attributes.ContactAttributes.Fields.Name")]

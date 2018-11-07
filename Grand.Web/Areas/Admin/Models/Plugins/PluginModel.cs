@@ -1,19 +1,20 @@
 ﻿using FluentValidation.Attributes;
 using Grand.Framework.Localization;
+using Grand.Framework.Mapping;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Models.Stores;
 using Grand.Web.Areas.Admin.Validators.Plugins;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Plugins
 {
     [Validator(typeof(PluginValidator))]
-    public partial class PluginModel : BaseGrandModel, ILocalizedModel<PluginLocalizedModel>
+    public partial class PluginModel : BaseGrandModel, ILocalizedModel<PluginLocalizedModel>, IStoreMappingModel
     {
         public PluginModel()
         {
             Locales = new List<PluginLocalizedModel>();
+            AvailableStores = new List<StoreModel>();
         }
         [GrandResourceDisplayName("Admin.Configuration.Plugins.Fields.Group")]
         

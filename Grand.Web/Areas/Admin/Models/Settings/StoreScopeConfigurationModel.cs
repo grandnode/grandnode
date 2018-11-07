@@ -1,5 +1,4 @@
 ﻿using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Models.Stores;
 using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Models.Settings
