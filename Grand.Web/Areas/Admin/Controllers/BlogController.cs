@@ -14,7 +14,6 @@ using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Extensions;
-using Grand.Web.Areas.Admin.Helpers;
 using Grand.Web.Areas.Admin.Models.Blogs;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -63,25 +62,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         #endregion
 
         #region Utilities
-
-        [NonAction]
-        protected virtual void PrepareStoresMappingModel(BlogPostModel model, BlogPost blogPost, bool excludeProperties)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            model.AvailableStores = _storeService
-                .GetAllStores()
-                .Select(s => s.ToModel())
-                .ToList();
-            if (!excludeProperties)
-            {
-                if (blogPost != null)
-                {
-                    model.SelectedStoreIds = blogPost.Stores.ToArray();
-                }
-            }
-        }
 
         [NonAction]
         protected virtual void UpdatePictureSeoNames(BlogPost blogpost)
@@ -142,7 +122,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             var model = new BlogPostModel();
             //Stores
-            PrepareStoresMappingModel(model, null, false);
+            model.PrepareStoresMappingModel(null, false, _storeService);
             //default values
             model.AllowComments = true;
             //locales
@@ -183,7 +163,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             //Stores
-            PrepareStoresMappingModel(model, null, true);
+            model.PrepareStoresMappingModel(null, true, _storeService);
             return View(model);
         }
 
@@ -202,7 +182,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.StartDate = blogPost.StartDateUtc;
             model.EndDate = blogPost.EndDateUtc;
             //Store
-            PrepareStoresMappingModel(model, blogPost, false);
+            model.PrepareStoresMappingModel(blogPost, false, _storeService);
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
@@ -271,7 +251,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             //Store
-            PrepareStoresMappingModel(model, blogPost, true);
+            model.PrepareStoresMappingModel(blogPost, true, _storeService);
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
