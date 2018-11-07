@@ -40,21 +40,21 @@
         }
     </ul>
     <div>
-        @Html.Partial("_CreateOrUpdate.TabInfo", Model)
+        <partial name="_CreateOrUpdate.TabInfo" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdate.TabValues", Model)
+        <partial name="_CreateOrUpdate.TabValues" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdate.TabStores", Model)
+        <partial name="_TabStores" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdate.TabAcl", Model)
+        <partial name="_CreateOrUpdate.TabAcl" model="Model" />
     </div>
     @if (Model.ConditionAllowed)
     {
         <div>
-            @Html.Partial("_CreateOrUpdate.TabCondition", Model)
+            <partial name="_CreateOrUpdate.TabCondition" model="Model" />
         </div>
     }
 </div>

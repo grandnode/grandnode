@@ -87,65 +87,66 @@
 
     </ul>
     <div>
-        @Html.Partial("_CreateOrUpdate.Info", Model)
+        <partial name="_CreateOrUpdate.Info" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdate.Prices", Model)
+        <partial name="_CreateOrUpdate.Prices" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdate.Additional", Model)
+        <partial name="_CreateOrUpdate.Additional" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdate.SEO", Model)
+        <partial name="_CreateOrUpdate.SEO" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdate.Pictures", Model)
+        <partial name="_CreateOrUpdate.Pictures" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdate.Categories", Model)
-        @Html.Partial("_CreateOrUpdate.Manufacturers", Model)
+        <partial name="_CreateOrUpdate.Categories" model="Model" />
+        <partial name="_CreateOrUpdate.Manufacturers" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdate.Inventory", Model)
+        <partial name="_CreateOrUpdate.Inventory" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdate.SpecificationAttributes", Model)
+        <partial name="_CreateOrUpdate.SpecificationAttributes" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdate.ProductAttributes", Model)
+        <partial name="_CreateOrUpdate.ProductAttributes" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdate.BundleProducts", Model)
+        <partial name="_CreateOrUpdate.BundleProducts" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdate.Calendar", Model)
+        <partial name="_CreateOrUpdate.Calendar" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdate.Bids", Model)
+        <partial name="_CreateOrUpdate.Bids" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdate.Acl", Model)
-        @Html.Partial("_CreateOrUpdate.Stores", Model)
+        <partial name="_CreateOrUpdate.Acl" model="Model" />
+        <partial name="_TabStores" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdate.RelatedProducts", Model)
+        <partial name="_CreateOrUpdate.RelatedProducts" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdate.CrossSells", Model)
+        <partial name="_CreateOrUpdate.CrossSells" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdate.AssociatedProducts", Model)
+        <partial name="_CreateOrUpdate.AssociatedProducts" model="Model" />
     </div>
     @if (!String.IsNullOrEmpty(Model.Id))
     {
         <div>
             @Html.Partial("_CreateOrUpdate.Activitylog", Model)
+            <partial name="_CreateOrUpdate.Activitylog" model="Model" />
         </div>
         <div>
-            @Html.Partial("_CreateOrUpdate.PurchasedWithOrders", Model)
+            <partial name="_CreateOrUpdate.PurchasedWithOrders" model="Model" />
         </div>
         <div>
-            @Html.Partial("_CreateOrUpdate.Reviews", Model)
+            <partial name="_CreateOrUpdate.Reviews" model="Model" />
         </div>
     }
 </div>

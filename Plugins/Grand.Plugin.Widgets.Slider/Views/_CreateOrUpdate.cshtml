@@ -25,10 +25,10 @@
         </li>
     </ul>
     <div>
-        @Html.Partial("~/Plugins/Widgets.Slider/Views/_CreateOrUpdate.TabInfo.cshtml", Model)
+        <partial name="~/Plugins/Widgets.Slider/Views/_CreateOrUpdate.TabInfo.cshtml" model="Model" />
     </div>
     <div>
-        @Html.Partial("~/Plugins/Widgets.Slider/Views/_CreateOrUpdate.TabStores.cshtml", Model)
+        <partial name="_TabStores" model="Model" />
     </div>
 </div>
 @{

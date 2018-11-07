@@ -38,22 +38,22 @@
         </li>
     </ul>
     <div>
-        @Html.Partial("_CreateOrUpdateCategory.TabInfo", Model)
+        <partial name="_CreateOrUpdateCategory.TabInfo" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdateCategory.TabArticles", Model)
+        <partial name="_CreateOrUpdateCategory.TabArticles" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdateCategory.TabSeo", Model)
+        <partial name="_CreateOrUpdateCategory.TabSeo" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdateCategory.TabAcl", Model)
+        <partial name="_CreateOrUpdateCategory.TabAcl" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdateCategory.TabStores", Model)
+        <partial name="_TabStores" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdateCategory.TabActivityLog", Model)
+        <partial name="_CreateOrUpdateCategory.TabActivityLog" model="Model" />
     </div>
 </div>
 

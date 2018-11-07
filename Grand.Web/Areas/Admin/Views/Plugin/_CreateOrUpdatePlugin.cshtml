@@ -32,10 +32,10 @@
         </li>
     </ul>
     <div>
-        @Html.Partial("_CreateOrUpdatePlugin.TabInfo.cshtml", @Model)
+        <partial name="_CreateOrUpdatePlugin.TabInfo" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdatePlugin.TabStores.cshtml", Model)
+        <partial name="_TabStores" model="Model" />
     </div>
 </div>
 @{
