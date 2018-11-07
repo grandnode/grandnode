@@ -524,6 +524,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
+            //Store
+            model.PrepareStoresMappingModel(knowledgebaseArticle, true, _storeService);
             return View(model);
         }
 
