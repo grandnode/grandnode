@@ -170,28 +170,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }
             }
         }
-
-        
-
-        [NonAction]
-        protected virtual void PrepareStoresMappingModel(ManufacturerModel model, Manufacturer manufacturer, bool excludeProperties)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            model.AvailableStores = _storeService
-                .GetAllStores()
-                .Select(s => s.ToModel())
-                .ToList();
-            if (!excludeProperties)
-            {
-                if (manufacturer != null)
-                {
-                    model.SelectedStoreIds = manufacturer.Stores.ToArray();
-                }
-            }
-        }
-
         
         #endregion
         
@@ -251,7 +229,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //ACL
             PrepareAclModel(model, null, false);
             //Stores
-            PrepareStoresMappingModel(model, null, false);
+            model.PrepareStoresMappingModel(null, false, _storeService);
             //default values
             model.PageSize = _catalogSettings.DefaultManufacturerPageSize;
             model.PageSizeOptions = _catalogSettings.DefaultManufacturerPageSizeOptions;
@@ -310,7 +288,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //ACL
             PrepareAclModel(model, null, true);
             //Stores
-            PrepareStoresMappingModel(model, null, true);
+            model.PrepareStoresMappingModel(null, true, _storeService);
 
             return View(model);
         }
@@ -343,7 +321,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //ACL
             PrepareAclModel(model, manufacturer, false);
             //Stores
-            PrepareStoresMappingModel(model, manufacturer, false);
+            model.PrepareStoresMappingModel(manufacturer, false, _storeService);
 
             return View(model);
         }
@@ -425,7 +403,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //ACL
             PrepareAclModel(model, manufacturer, true);
             //Stores
-            PrepareStoresMappingModel(model, manufacturer, true);
+            model.PrepareStoresMappingModel(manufacturer, true, _storeService);
 
             return View(model);
         }

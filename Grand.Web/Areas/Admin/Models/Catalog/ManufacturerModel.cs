@@ -1,10 +1,10 @@
 ﻿using FluentValidation.Attributes;
 using Grand.Framework.Localization;
+using Grand.Framework.Mapping;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
 using Grand.Web.Areas.Admin.Models.Customers;
 using Grand.Web.Areas.Admin.Models.Discounts;
-using Grand.Web.Areas.Admin.Models.Stores;
 using Grand.Web.Areas.Admin.Validators.Catalog;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -14,7 +14,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Grand.Web.Areas.Admin.Models.Catalog
 {
     [Validator(typeof(ManufacturerValidator))]
-    public partial class ManufacturerModel : BaseGrandEntityModel, ILocalizedModel<ManufacturerLocalizedModel>
+    public partial class ManufacturerModel : BaseGrandEntityModel, ILocalizedModel<ManufacturerLocalizedModel>, IStoreMappingModel
     {
         public ManufacturerModel()
         {
@@ -24,6 +24,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             }
             Locales = new List<ManufacturerLocalizedModel>();
             AvailableManufacturerTemplates = new List<SelectListItem>();
+            AvailableStores = new List<StoreModel>();
         }
 
         [GrandResourceDisplayName("Admin.Catalog.Manufacturers.Fields.Name")]
