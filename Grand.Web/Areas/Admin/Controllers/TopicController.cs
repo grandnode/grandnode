@@ -104,25 +104,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
-        [NonAction]
-        protected virtual void PrepareStoresMappingModel(TopicModel model, Topic topic, bool excludeProperties)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            model.AvailableStores = _storeService
-                .GetAllStores()
-                .Select(s => s.ToModel())
-                .ToList();
-            if (!excludeProperties)
-            {
-                if (topic != null)
-                {
-                    model.SelectedStoreIds = topic.Stores.ToArray();
-                }
-            }
-        }
-
         #endregion
 
         #region List
@@ -193,7 +174,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //templates
             PrepareTemplatesModel(model);
             //Stores
-            PrepareStoresMappingModel(model, null, false);
+            model.PrepareStoresMappingModel(null, false, _storeService);
             //locales
             AddLocales(_languageService, model.Locales);
             //ACL
@@ -240,7 +221,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //templates
             PrepareTemplatesModel(model);
             //Stores
-            PrepareStoresMappingModel(model, null, true);
+            model.PrepareStoresMappingModel(null, true, _storeService);
             //ACL
             PrepareAclModel(model, null, true);
             return View(model);
@@ -263,7 +244,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //ACL
             PrepareAclModel(model, topic, false);
             //Store
-            PrepareStoresMappingModel(model, topic, false);
+            model.PrepareStoresMappingModel(topic, false, _storeService);
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
@@ -329,7 +310,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //templates
             PrepareTemplatesModel(model);
             //Store
-            PrepareStoresMappingModel(model, topic, true);
+            model.PrepareStoresMappingModel(topic, true, _storeService);
             //ACL
             PrepareAclModel(model, topic, false);
             return View(model);
