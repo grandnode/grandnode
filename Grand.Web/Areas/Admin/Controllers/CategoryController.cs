@@ -1,7 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Discounts;
-using Grand.Core.Domain.Localization;
 using Grand.Framework.Controllers;
 using Grand.Framework.Extensions;
 using Grand.Framework.Kendoui;
@@ -20,7 +19,6 @@ using Grand.Services.Seo;
 using Grand.Services.Stores;
 using Grand.Services.Vendors;
 using Grand.Web.Areas.Admin.Extensions;
-using Grand.Web.Areas.Admin.Helpers;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -192,26 +190,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
-
-        [NonAction]
-        protected virtual void PrepareStoresMappingModel(CategoryModel model, Category category, bool excludeProperties)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            model.AvailableStores = _storeService
-                .GetAllStores()
-                .Select(s => s.ToModel())
-                .ToList();
-            if (!excludeProperties)
-            {
-                if (category != null)
-                {
-                    model.SelectedStoreIds = category.Stores.ToArray();
-                }
-            }
-        }
-
         #endregion
 
         #region List / tree
@@ -332,7 +310,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //ACL
             PrepareAclModel(model, null, false);
             //Stores
-            PrepareStoresMappingModel(model, null, false);
+            model.PrepareStoresMappingModel(null, false, _storeService);
             //default values
             model.PageSize = _catalogSettings.DefaultCategoryPageSize;
             model.PageSizeOptions = _catalogSettings.DefaultCategoryPageSizeOptions;
@@ -393,7 +371,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             //ACL
             PrepareAclModel(model, null, true);
             //Stores
-            PrepareStoresMappingModel(model, null, true);
+            model.PrepareStoresMappingModel(null, true, _storeService);
+
             return View(model);
         }
 
@@ -427,7 +406,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //ACL
             PrepareAclModel(model, category, false);
             //Stores
-            PrepareStoresMappingModel(model, category, false);
+            model.PrepareStoresMappingModel(category, false, _storeService);
 
             return View(model);
         }
@@ -512,7 +491,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //ACL
             PrepareAclModel(model, category, true);
             //Stores
-            PrepareStoresMappingModel(model, category, true);
+            model.PrepareStoresMappingModel(category, true, _storeService);
 
             return View(model);
         }
