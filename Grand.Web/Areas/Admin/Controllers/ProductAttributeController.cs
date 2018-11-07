@@ -47,55 +47,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         #endregion
-        
-        #region Utilities
-
-        [NonAction]
-        protected virtual List<LocalizedProperty> UpdateLocales(ProductAttribute productAttribute, ProductAttributeModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-            foreach (var local in model.Locales)
-            {
-                if(!(String.IsNullOrEmpty(local.Name)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "Name",
-                        LocaleValue = local.Name,
-                    });
-
-                if (!(String.IsNullOrEmpty(local.Description)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "Description",
-                        LocaleValue = local.Description,
-                    });
-
-            }
-            return localized;
-
-        }
-
-        [NonAction]
-        protected virtual List<LocalizedProperty> UpdateLocales(PredefinedProductAttributeValue ppav, PredefinedProductAttributeValueModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-            foreach (var local in model.Locales)
-            {
-
-                if (!(String.IsNullOrEmpty(local.Name)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "Name",
-                        LocaleValue = local.Name,
-                    });
-            }
-            return localized;
-        }
-
-        #endregion
 
         #region Methods
 
@@ -153,7 +104,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var productAttribute = model.ToEntity();
-                productAttribute.Locales = UpdateLocales(productAttribute, model);
+                productAttribute.Locales = model.Locales.ToLocalizedProperty();
                 _productAttributeService.InsertProductAttribute(productAttribute);
 
                 //activity log
@@ -203,7 +154,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 productAttribute = model.ToEntity(productAttribute);
-                productAttribute.Locales = UpdateLocales(productAttribute, model);
+                productAttribute.Locales = model.Locales.ToLocalizedProperty();
                 _productAttributeService.UpdateProductAttribute(productAttribute);
 
                 //activity log
@@ -353,7 +304,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     IsPreSelected = model.IsPreSelected,
                     DisplayOrder = model.DisplayOrder,
                 };
-                ppav.Locales = UpdateLocales(ppav, model);
+                ppav.Locales = model.Locales.ToLocalizedProperty();
                 productAttribute.PredefinedProductAttributeValues.Add(ppav);
                 _productAttributeService.UpdateProductAttribute(productAttribute);
 
@@ -411,7 +362,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 ppav.Cost = model.Cost;
                 ppav.IsPreSelected = model.IsPreSelected;
                 ppav.DisplayOrder = model.DisplayOrder;
-                ppav.Locales = UpdateLocales(ppav, model);
+                ppav.Locales = model.Locales.ToLocalizedProperty();
 
                 _productAttributeService.UpdateProductAttribute(productAttribute);
 
