@@ -1,10 +1,10 @@
 ﻿using FluentValidation.Attributes;
 using Grand.Framework.Localization;
+using Grand.Framework.Mapping;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
 using Grand.Web.Areas.Admin.Models.Customers;
 using Grand.Web.Areas.Admin.Models.Discounts;
-using Grand.Web.Areas.Admin.Models.Stores;
 using Grand.Web.Areas.Admin.Validators.Catalog;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -14,7 +14,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Grand.Web.Areas.Admin.Models.Catalog
 {
     [Validator(typeof(ProductValidator))]
-    public partial class ProductModel : BaseGrandEntityModel, ILocalizedModel<ProductLocalizedModel>
+    public partial class ProductModel : BaseGrandEntityModel, ILocalizedModel<ProductLocalizedModel>, IStoreMappingModel
     {
         public ProductModel()
         {
@@ -33,6 +33,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             AvailableProductAttributes = new List<SelectListItem>();
             AvailableUnits = new List<SelectListItem>();
             AddPictureModel = new ProductPictureModel();
+            AvailableStores = new List<StoreModel>();
             AddSpecificationAttributeModel = new AddProductSpecificationAttributeModel();
             ProductWarehouseInventoryModels = new List<ProductWarehouseInventoryModel>();
             CalendarModel = new GenerateCalendarModel();
