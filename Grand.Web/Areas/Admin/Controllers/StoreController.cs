@@ -201,7 +201,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
                 store.Locales = model.Locales.ToLocalizedProperty();
                 _storeService.UpdateStore(store);
-                //locales
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Stores.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = store.Id }) : RedirectToAction("List");

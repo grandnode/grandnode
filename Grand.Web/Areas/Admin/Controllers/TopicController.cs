@@ -42,7 +42,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public TopicController(ITopicService topicService,
             ILanguageService languageService,
             ILocalizationService localizationService,
-            IPermissionService permissionService, 
+            IPermissionService permissionService,
             IStoreService storeService,
             IStoreMappingService storeMappingService,
             IUrlRecordService urlRecordService,
@@ -105,68 +105,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [NonAction]
-        protected virtual List<LocalizedProperty> UpdateLocales(Topic topic, TopicModel model)
-        {
-            List<LocalizedProperty> localized = new List<LocalizedProperty>();
-
-            foreach (var local in model.Locales)
-            {
-                var seName = topic.ValidateSeName(local.SeName, local.Title, false);
-                _urlRecordService.SaveSlug(topic, seName, local.LanguageId);
-
-                if (!(String.IsNullOrEmpty(seName)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "SeName",
-                        LocaleValue = seName
-                    });
-
-                if (!(String.IsNullOrEmpty(local.Body)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "Body",
-                        LocaleValue = local.Body
-                    });
-
-                if (!(String.IsNullOrEmpty(local.MetaDescription)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "MetaDescription",
-                        LocaleValue = local.MetaDescription
-                    });
-
-                if (!(String.IsNullOrEmpty(local.MetaKeywords)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "MetaKeywords",
-                        LocaleValue = local.MetaKeywords
-                    });
-
-                if (!(String.IsNullOrEmpty(local.MetaTitle)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "MetaTitle",
-                        LocaleValue = local.MetaTitle
-                    });
-
-                if (!(String.IsNullOrEmpty(local.Title)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "Title",
-                        LocaleValue = local.Title
-                    });
-
-            }
-            return localized;
-        }
-
-        [NonAction]
         protected virtual void PrepareStoresMappingModel(TopicModel model, Topic topic, bool excludeProperties)
         {
             if (model == null)
@@ -186,7 +124,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         #endregion
-        
+
         #region List
 
         public IActionResult Index()
@@ -204,7 +142,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var s in _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
-            
+
             return View(model);
         }
 
@@ -215,10 +153,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             var topicModels = _topicService.GetAllTopics(model.SearchStoreId, true)
-                .Select(x =>x.ToModel())
+                .Select(x => x.ToModel())
                 .ToList();
 
-            if(!string.IsNullOrEmpty(model.Name))
+            if (!string.IsNullOrEmpty(model.Name))
             {
                 topicModels = topicModels.Where
                     (x => x.SystemName.ToLowerInvariant().Contains(model.Name.ToLowerInvariant()) ||
@@ -285,12 +223,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _topicService.InsertTopic(topic);
                 //search engine name
                 model.SeName = topic.ValidateSeName(model.SeName, topic.Title ?? topic.SystemName, true);
-                topic.Locales = UpdateLocales(topic, model);
+                topic.Locales = model.Locales.ToLocalizedProperty(topic, x => x.Title, _urlRecordService);
                 topic.SeName = model.SeName;
                 _topicService.UpdateTopic(topic);
                 _urlRecordService.SaveSlug(topic, model.SeName, "");
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Topics.Added"));
-                
+
                 //activity log
                 _customerActivityService.InsertActivity("AddNewTopic", topic.Id, _localizationService.GetResource("ActivityLog.AddNewTopic"), topic.Title ?? topic.SystemName);
 
@@ -361,25 +299,25 @@ namespace Grand.Web.Areas.Admin.Controllers
                 topic = model.ToEntity(topic);
                 topic.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
                 topic.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
-                topic.Locales = UpdateLocales(topic, model);
+                topic.Locales = model.Locales.ToLocalizedProperty(topic, x => x.Title, _urlRecordService);
                 model.SeName = topic.ValidateSeName(model.SeName, topic.Title ?? topic.SystemName, true);
                 topic.SeName = model.SeName;
                 _topicService.UpdateTopic(topic);
+
                 //search engine name
-               
                 _urlRecordService.SaveSlug(topic, model.SeName, "");
-                
+
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Topics.Updated"));
 
                 //activity log
-                _customerActivityService.InsertActivity("EditTopic", topic.Id, _localizationService.GetResource("ActivityLog.EditTopic"), topic.Title ?? topic.SystemName);                
+                _customerActivityService.InsertActivity("EditTopic", topic.Id, _localizationService.GetResource("ActivityLog.EditTopic"), topic.Title ?? topic.SystemName);
 
                 if (continueEditing)
                 {
                     //selected tab
                     SaveSelectedTabIndex();
 
-                    return RedirectToAction("Edit",  new {id = topic.Id});
+                    return RedirectToAction("Edit", new { id = topic.Id });
                 }
                 return RedirectToAction("List");
             }
@@ -413,10 +351,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Topics.Deleted"));
             //activity log
             _customerActivityService.InsertActivity("DeleteTopic", topic.Id, _localizationService.GetResource("ActivityLog.DeleteTopic"), topic.Title ?? topic.SystemName);
-            
+
             return RedirectToAction("List");
         }
-        
+
         #endregion
     }
 }

@@ -100,7 +100,7 @@ namespace Grand.Web.Areas.Admin.Models.Topics
 
     }
 
-    public partial class TopicLocalizedModel : ILocalizedModelLocal
+    public partial class TopicLocalizedModel : ILocalizedModelLocal, ISlugModelLocal
     {
         public string LanguageId { get; set; }
 
