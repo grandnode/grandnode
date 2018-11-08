@@ -89,13 +89,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
-        [NonAction]
-        protected virtual void UpdatePictureSeoNames(NewsItem newsitem)
-        {
-            var picture = _pictureService.GetPictureById(newsitem.PictureId);
-            if (picture != null)
-                _pictureService.SetSeoFilename(picture.Id, _pictureService.GetPictureSeName(newsitem.Title));
-        }
         #endregion
 
         #region News items
@@ -190,7 +183,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _urlRecordService.SaveSlug(newsItem, seName, "");
 
                 //update picture seo file name
-                UpdatePictureSeoNames(newsItem);
+                _pictureService.UpdatePictureSeoNames(newsItem.PictureId, newsItem.Title);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = newsItem.Id }) : RedirectToAction("List");
@@ -275,7 +268,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }
 
                 //update picture seo file name
-                UpdatePictureSeoNames(newsItem);
+                _pictureService.UpdatePictureSeoNames(newsItem.PictureId, newsItem.Title);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Updated"));
 

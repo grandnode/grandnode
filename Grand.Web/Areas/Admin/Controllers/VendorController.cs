@@ -87,14 +87,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        protected virtual void UpdatePictureSeoNames(Vendor vendor)
-        {
-            var picture = _pictureService.GetPictureById(vendor.PictureId);
-            if (picture != null)
-                _pictureService.SetSeoFilename(picture.Id, _pictureService.GetPictureSeName(vendor.Name));
-        }
-
-        [NonAction]
         protected virtual void PrepareDiscountModel(VendorModel model, Vendor vendor, bool excludeProperties)
         {
             if (model == null)
@@ -302,7 +294,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _vendorService.UpdateVendor(vendor);
 
                 //update picture seo file name
-                UpdatePictureSeoNames(vendor);
+                _pictureService.UpdatePictureSeoNames(vendor.PictureId, vendor.Name);
 
                 _urlRecordService.SaveSlug(vendor, model.SeName, "");
 
@@ -415,8 +407,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         _pictureService.DeletePicture(prevPicture);
                 }
                 //update picture seo file name
-                UpdatePictureSeoNames(vendor);
-
+                _pictureService.UpdatePictureSeoNames(vendor.PictureId, vendor.Name);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Vendors.Updated"));
                 if (continueEditing)

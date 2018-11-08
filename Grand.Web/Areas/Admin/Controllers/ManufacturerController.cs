@@ -111,14 +111,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        protected virtual void UpdatePictureSeoNames(Manufacturer manufacturer)
-        {
-            var picture = _pictureService.GetPictureById(manufacturer.PictureId);
-            if (picture != null)
-                _pictureService.SetSeoFilename(picture.Id, _pictureService.GetPictureSeName(manufacturer.Name));
-        }
-
-        [NonAction]
         protected virtual void PrepareTemplatesModel(ManufacturerModel model)
         {
             if (model == null)
@@ -269,10 +261,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _manufacturerService.UpdateManufacturer(manufacturer);
 
                 _urlRecordService.SaveSlug(manufacturer, model.SeName, "");
-               
+
                 //update picture seo file name
-                UpdatePictureSeoNames(manufacturer);
-                
+                _pictureService.UpdatePictureSeoNames(manufacturer.PictureId, manufacturer.Name);
+
                 //activity log
                 _customerActivityService.InsertActivity("AddNewManufacturer", manufacturer.Id, _localizationService.GetResource("ActivityLog.AddNewManufacturer"), manufacturer.Name);
 
@@ -377,8 +369,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                         _pictureService.DeletePicture(prevPicture);
                 }
                 //update picture seo file name
-                UpdatePictureSeoNames(manufacturer);
-               
+                _pictureService.UpdatePictureSeoNames(manufacturer.PictureId, manufacturer.Name);
+
                 //activity log
                 _customerActivityService.InsertActivity("EditManufacturer", manufacturer.Id, _localizationService.GetResource("ActivityLog.EditManufacturer"), manufacturer.Name);
 

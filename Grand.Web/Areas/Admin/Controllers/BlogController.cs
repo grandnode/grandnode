@@ -61,18 +61,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Utilities
-
-        [NonAction]
-        protected virtual void UpdatePictureSeoNames(BlogPost blogpost)
-        {
-            var picture = _pictureService.GetPictureById(blogpost.PictureId);
-            if (picture != null)
-                _pictureService.SetSeoFilename(picture.Id, _pictureService.GetPictureSeName(blogpost.Title));
-        }
-
-        #endregion
-
         #region Blog posts
 
         public IActionResult Index()
@@ -154,7 +142,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _urlRecordService.SaveSlug(blogPost, seName, "");
 
                 //update picture seo file name
-                UpdatePictureSeoNames(blogPost);
+                _pictureService.UpdatePictureSeoNames(blogPost.PictureId, blogPost.Title);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = blogPost.Id }) : RedirectToAction("List");
@@ -235,7 +223,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }
 
                 //update picture seo file name
-                UpdatePictureSeoNames(blogPost);
+                _pictureService.UpdatePictureSeoNames(blogPost.PictureId, blogPost.Title);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Updated"));
                 if (continueEditing)

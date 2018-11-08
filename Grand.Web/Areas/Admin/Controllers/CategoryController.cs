@@ -108,14 +108,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        protected virtual void UpdatePictureSeoNames(Category category)
-        {
-            var picture = _pictureService.GetPictureById(category.PictureId);
-            if (picture != null)
-                _pictureService.SetSeoFilename(picture.Id, _pictureService.GetPictureSeName(category.Name));
-        }
-
-        [NonAction]
         protected virtual void PrepareAllCategoriesModel(CategoryModel model)
         {
             if (model == null)
@@ -352,7 +344,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _urlRecordService.SaveSlug(category, model.SeName, "");
 
                 //update picture seo file name
-                UpdatePictureSeoNames(category);
+                _pictureService.UpdatePictureSeoNames(category.PictureId, category.Name);
 
                 //activity log
                 _customerActivityService.InsertActivity("AddNewCategory", category.Id, _localizationService.GetResource("ActivityLog.AddNewCategory"), category.Name);
@@ -464,7 +456,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         _pictureService.DeletePicture(prevPicture);
                 }
                 //update picture seo file name
-                UpdatePictureSeoNames(category);
+                _pictureService.UpdatePictureSeoNames(category.PictureId, category.Name);
 
                 //activity log
                 _customerActivityService.InsertActivity("EditCategory", category.Id, _localizationService.GetResource("ActivityLog.EditCategory"), category.Name);
