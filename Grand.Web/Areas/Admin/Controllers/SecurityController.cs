@@ -1,10 +1,10 @@
 ﻿using Grand.Core;
 using Grand.Core.Domain.Customers;
+using Grand.Framework.Mvc.Models;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Security;
-using Grand.Web.Areas.Admin.Models.Customers;
 using Grand.Web.Areas.Admin.Models.Security;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -78,11 +78,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             foreach (var cr in customerRoles)
             {
-                model.AvailableCustomerRoles.Add(new CustomerRoleModel
-                {
-                    Id = cr.Id,
-                    Name = cr.Name
-                });
+                model.AvailableCustomerRoles.Add(new CustomerRoleModel() { Id = cr.Id, Name = cr.Name });
             }
             foreach (var pr in permissionRecords)
                 foreach (var cr in customerRoles)

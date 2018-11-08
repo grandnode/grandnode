@@ -212,25 +212,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [NonAction]
-        protected virtual void PrepareAclModel(ProductModel model, Product product, bool excludeProperties)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            model.AvailableCustomerRoles = _customerService
-                .GetAllCustomerRoles(true)
-                .Select(cr => cr.ToModel())
-                .ToList();
-            if (!excludeProperties)
-            {
-                if (product != null)
-                {
-                    model.SelectedCustomerRoleIds = product.CustomerRoles.ToArray();
-                }
-            }
-        }
-        
-        [NonAction]
         protected virtual void PrepareAddProductAttributeCombinationModel(ProductAttributeCombinationModel model, Product product)
         {
             if (model == null)
@@ -915,7 +896,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var model = new ProductModel();
             PrepareProductModel(model, null, true, true);
             AddLocales(_languageService, model.Locales);
-            PrepareAclModel(model, null, false);
+            model.PrepareACLModel(null, false, _customerService);
             model.PrepareStoresMappingModel(null, false, _storeService);
             return View(model);
         }
@@ -984,7 +965,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //If we got this far, something failed, redisplay form
             PrepareProductModel(model, null, false, true);
-            PrepareAclModel(model, null, true);
+            model.PrepareACLModel(null, true, _customerService);
             model.PrepareStoresMappingModel(null, true, _storeService);
 
             return View(model);
@@ -1020,7 +1001,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.SeName = product.GetSeName(languageId, false, false);
             });
 
-            PrepareAclModel(model, product, false);
+            model.PrepareACLModel(product, false, _customerService);
             model.PrepareStoresMappingModel(product, false, _storeService);
 
             return View(model);
@@ -1179,7 +1160,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //If we got this far, something failed, redisplay form
             PrepareProductModel(model, product, false, true);
-            PrepareAclModel(model, product, true);
+            model.PrepareACLModel(product, true, _customerService);
             model.PrepareStoresMappingModel(product, true, _storeService);
 
             return View(model);

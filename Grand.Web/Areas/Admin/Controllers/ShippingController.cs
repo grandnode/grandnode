@@ -6,6 +6,7 @@ using Grand.Core.Plugins;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Mvc.Models;
 using Grand.Services.Common;
 using Grand.Services.Configuration;
 using Grand.Services.Customers;
@@ -954,7 +955,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             foreach (var r in customerRoles)
             {
-                model.AvailableCustomerRoles.Add(r.ToModel());
+                model.AvailableCustomerRoles.Add(new CustomerRoleModel() { Id = r.Id, Name = r.Name });
             }
 
             foreach (var country in countries)

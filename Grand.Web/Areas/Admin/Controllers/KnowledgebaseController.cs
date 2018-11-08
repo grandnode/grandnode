@@ -215,15 +215,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                     Text = category.GetFormattedBreadCrumb(categories)
                 });
             }
-
-            model.AvailableCustomerRoles = _customerService
-            .GetAllCustomerRoles(true)
-            .Select(cr => cr.ToModel())
-            .ToList();
-            model.Published = true;
-
+            model.PrepareACLModel(null, false, _customerService);
             model.PrepareStoresMappingModel(null, false, _storeService);
-
             AddLocales(_languageService, model.Locales);
             return View(model);
         }
@@ -259,7 +252,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
             //Stores
             model.PrepareStoresMappingModel(null, true, _storeService);
-
+            //ACL
+            model.PrepareACLModel(null, true, _customerService);
             return View(model);
         }
 
@@ -294,10 +288,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.SeName = knowledgebaseCategory.GetSeName(languageId, false, false);
             });
 
-            model.AvailableCustomerRoles = _customerService
-            .GetAllCustomerRoles(true)
-            .Select(cr => cr.ToModel())
-            .ToList();
+            model.PrepareACLModel(knowledgebaseCategory, false, _customerService);
             model.SelectedCustomerRoleIds = knowledgebaseCategory.CustomerRoles.ToArray();
 
             //Stores
@@ -340,6 +331,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
             //Stores
             model.PrepareStoresMappingModel(knowledgebaseCategory, true, _storeService);
+            //ACL
+            model.PrepareACLModel(knowledgebaseCategory, true, _customerService);
 
             return View(model);
         }
@@ -375,6 +368,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new KnowledgebaseArticleModel();
+            model.Published = true;
+            model.AllowComments = true;
             model.Categories.Add(new SelectListItem { Text = "[None]", Value = "" });
             var categories = _knowledgebaseService.GetKnowledgebaseCategories();
             foreach (var category in categories)
@@ -386,16 +381,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 });
             }
 
-            model.AvailableCustomerRoles = _customerService
-            .GetAllCustomerRoles(true)
-            .Select(cr => cr.ToModel())
-            .ToList();
-            model.Published = true;
-
+            //ACL
+            model.PrepareACLModel(null, false, _customerService);
             //Stores
             model.PrepareStoresMappingModel(null, false, _storeService);
-
-            model.AllowComments = true;
 
             if (!string.IsNullOrEmpty(parentCategoryId))
                 model.ParentCategoryId = parentCategoryId;
@@ -429,11 +418,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _customerActivityService.InsertActivity("CreateKnowledgebaseArticle", knowledgebaseArticle.Id,
                     _localizationService.GetResource("ActivityLog.CreateKnowledgebaseArticle"), knowledgebaseArticle.Name);
 
-                model.AvailableCustomerRoles = _customerService
-                .GetAllCustomerRoles(true)
-                .Select(cr => cr.ToModel())
-                .ToList();
-                
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Added"));
                 return continueEditing ? RedirectToAction("EditArticle", new { knowledgebaseArticle.Id }) : RedirectToAction("EditCategory", new { id = model.ParentCategoryId });
             }
@@ -441,6 +425,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
             //Stores
             model.PrepareStoresMappingModel(null, true, _storeService);
+            //ACL
+            model.PrepareACLModel(null, true, _customerService);
 
             return View(model);
         }
@@ -476,10 +462,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.SeName = knowledgebaseArticle.GetSeName(languageId, false, false);
             });
 
-            model.AvailableCustomerRoles = _customerService
-            .GetAllCustomerRoles(true)
-            .Select(cr => cr.ToModel())
-            .ToList();
+            model.PrepareACLModel(knowledgebaseArticle, false, _customerService);
             model.SelectedCustomerRoleIds = knowledgebaseArticle.CustomerRoles.ToArray();
 
             //Stores
@@ -526,6 +509,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
             //Store
             model.PrepareStoresMappingModel(knowledgebaseArticle, true, _storeService);
+            model.PrepareACLModel(knowledgebaseArticle, true, _customerService);
+
             return View(model);
         }
 

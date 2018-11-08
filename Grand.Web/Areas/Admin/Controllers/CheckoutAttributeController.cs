@@ -101,25 +101,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [NonAction]
-        protected virtual void PrepareAclModel(CheckoutAttributeModel model, CheckoutAttribute checkoutAttribute, bool excludeProperties)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            model.AvailableCustomerRoles = _customerService
-                .GetAllCustomerRoles(true)
-                .Select(cr => cr.ToModel())
-                .ToList();
-            if (!excludeProperties)
-            {
-                if (checkoutAttribute != null)
-                {
-                    model.SelectedCustomerRoleIds = checkoutAttribute.CustomerRoles.ToArray();
-                }
-            }
-        }
-
-        [NonAction]
         protected virtual void PrepareConditionAttributes(CheckoutAttributeModel model, CheckoutAttribute checkoutAttribute)
         {
             if (model == null)
@@ -262,7 +243,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //Stores
             model.PrepareStoresMappingModel(null, false, _storeService);
             //ACL
-            PrepareAclModel(model, null, false);
+            model.PrepareACLModel(null, false, _customerService);
             //condition
             PrepareConditionAttributes(model, null);
 
@@ -296,9 +277,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             PrepareTaxCategories(model, null, true);
             //Stores
             model.PrepareStoresMappingModel(null, true, _storeService);
-
             //ACL
-            PrepareAclModel(model, null, true);
+            model.PrepareACLModel(null, true, _customerService);
 
             return View(model);
         }
@@ -322,7 +302,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.TextPrompt = checkoutAttribute.GetLocalized(x => x.TextPrompt, languageId, false, false);
             });
             //ACL
-            PrepareAclModel(model, checkoutAttribute, false);
+            model.PrepareACLModel(checkoutAttribute, false, _customerService);
             //tax categories
             PrepareTaxCategories(model, checkoutAttribute, false);
             //Stores
@@ -374,9 +354,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             PrepareTaxCategories(model, checkoutAttribute, true);
             //Stores
             model.PrepareStoresMappingModel(checkoutAttribute, true, _storeService);
-
             //ACL
-            PrepareAclModel(model, checkoutAttribute, false);
+            model.PrepareACLModel(checkoutAttribute, true, _customerService);
+
             return View(model);
         }
 

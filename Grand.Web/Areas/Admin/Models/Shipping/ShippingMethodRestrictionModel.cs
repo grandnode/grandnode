@@ -1,5 +1,4 @@
 ﻿using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Models.Customers;
 using Grand.Web.Areas.Admin.Models.Directory;
 using System.Collections.Generic;
 

@@ -71,27 +71,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #endregion
         
         #region Utilities
-
-       
-        [NonAction]
-        protected virtual void PrepareAclModel(ContactAttributeModel model, ContactAttribute contactAttribute, bool excludeProperties)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            model.AvailableCustomerRoles = _customerService
-                .GetAllCustomerRoles(true)
-                .Select(cr => cr.ToModel())
-                .ToList();
-            if (!excludeProperties)
-            {
-                if (contactAttribute != null)
-                {
-                    model.SelectedCustomerRoleIds = contactAttribute.CustomerRoles.ToArray();
-                }
-            }
-        }
-
+        
         [NonAction]
         protected virtual void PrepareConditionAttributes(ContactAttributeModel model, ContactAttribute contactAttribute)
         {
@@ -233,7 +213,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //Stores
             model.PrepareStoresMappingModel(null, false, _storeService);
             //ACL
-            PrepareAclModel(model, null, false);
+            model.PrepareACLModel(null, false, _customerService);
             //condition
             PrepareConditionAttributes(model, null);
 
@@ -266,7 +246,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //Stores
             model.PrepareStoresMappingModel(null, true, _storeService);
             //ACL
-            PrepareAclModel(model, null, true);
+            model.PrepareACLModel(null, true, _customerService);
 
             return View(model);
         }
@@ -290,7 +270,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.TextPrompt = contactAttribute.GetLocalized(x => x.TextPrompt, languageId, false, false);
             });
             //ACL
-            PrepareAclModel(model, contactAttribute, false);
+            model.PrepareACLModel(contactAttribute, false, _customerService);
             //Stores
             model.PrepareStoresMappingModel(contactAttribute, false, _storeService);
             //condition
@@ -338,7 +318,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             //Stores
             model.PrepareStoresMappingModel(contactAttribute, true, _storeService);
             //ACL
-            PrepareAclModel(model, contactAttribute, false);
+            model.PrepareACLModel(contactAttribute, true, _customerService);
+            PrepareConditionAttributes(model, contactAttribute);
             return View(model);
         }
 

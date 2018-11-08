@@ -49,29 +49,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Utilities
-
-        [NonAction]
-        protected virtual void PrepareAclModel(PollModel model, Poll poll, bool excludeProperties)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            model.AvailableCustomerRoles = _customerService
-                .GetAllCustomerRoles(true)
-                .Select(cr => cr.ToModel())
-                .ToList();
-            if (!excludeProperties)
-            {
-                if (poll != null)
-                {
-                    model.SelectedCustomerRoleIds = poll.CustomerRoles.ToArray();
-                }
-            }
-        }
-
-        #endregion
-
         #region Polls
 
         public IActionResult Index()
@@ -126,8 +103,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //locales
             AddLocales(_languageService, model.Locales);
             //ACL
-            PrepareAclModel(model, null, false);
-
+            model.PrepareACLModel(null, false, _customerService);
             return View(model);
         }
 
@@ -153,14 +129,13 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //If we got this far, something failed, redisplay form
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
-
             //Stores
             model.PrepareStoresMappingModel(null, true, _storeService);
-
             //locales
             AddLocales(_languageService, model.Locales);
             //ACL
-            PrepareAclModel(model, null, true);
+            model.PrepareACLModel(null, true, _customerService);
+
             return View(model);
         }
 
@@ -187,7 +162,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.Name = poll.GetLocalized(x => x.Name, languageId, false, false);
             });
             //ACL
-            PrepareAclModel(model, poll, false);
+            model.PrepareACLModel(poll, false, _customerService);
 
             return View(model);
         }
@@ -229,14 +204,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
 
             //Store
-            model.PrepareStoresMappingModel(poll, false, _storeService);
+            model.PrepareStoresMappingModel(poll, true, _storeService);
+            //ACL
+            model.PrepareACLModel(poll, true, _customerService);
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = poll.GetLocalized(x => x.Name, languageId, false, false);
             });
-            //ACL
-            PrepareAclModel(model, poll, false);
 
             return View(model);
         }

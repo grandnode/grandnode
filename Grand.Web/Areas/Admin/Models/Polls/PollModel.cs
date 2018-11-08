@@ -3,7 +3,6 @@ using Grand.Framework.Localization;
 using Grand.Framework.Mapping;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Models.Customers;
 using Grand.Web.Areas.Admin.Validators.Polls;
 using System;
 using System.Collections.Generic;
@@ -12,7 +11,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Grand.Web.Areas.Admin.Models.Polls
 {
     [Validator(typeof(PollValidator))]
-    public partial class PollModel : BaseGrandEntityModel, ILocalizedModel<PollLocalizedModel>, IStoreMappingModel
+    public partial class PollModel : BaseGrandEntityModel, ILocalizedModel<PollLocalizedModel>, IAclMappingModel, IStoreMappingModel
     {
 
         public PollModel()

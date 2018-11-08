@@ -3,6 +3,7 @@ using Grand.Core.Domain.Payments;
 using Grand.Core.Plugins;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
+using Grand.Framework.Mvc.Models;
 using Grand.Services.Configuration;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
@@ -174,7 +175,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             foreach (var r in customerroles)
             {
-                model.AvailableCustomerRoles.Add(r.ToModel());
+                model.AvailableCustomerRoles.Add(new CustomerRoleModel() { Id  = r.Id, Name = r.Name });
             }
             foreach (var s in shippings)
             {

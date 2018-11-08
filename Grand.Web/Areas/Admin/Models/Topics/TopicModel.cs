@@ -3,7 +3,6 @@ using Grand.Framework.Localization;
 using Grand.Framework.Mapping;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Models.Customers;
 using Grand.Web.Areas.Admin.Validators.Topics;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
@@ -11,7 +10,7 @@ using System.Collections.Generic;
 namespace Grand.Web.Areas.Admin.Models.Topics
 {
     [Validator(typeof(TopicValidator))]
-    public partial class TopicModel : BaseGrandEntityModel, ILocalizedModel<TopicLocalizedModel>, IStoreMappingModel
+    public partial class TopicModel : BaseGrandEntityModel, ILocalizedModel<TopicLocalizedModel>, IAclMappingModel, IStoreMappingModel
     {
         public TopicModel()
         {

@@ -162,26 +162,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.SelectedDiscountIds = category.AppliedDiscounts.ToArray();
             }
         }
-
-        [NonAction]
-        protected virtual void PrepareAclModel(CategoryModel model, Category category, bool excludeProperties)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            model.AvailableCustomerRoles = _customerService
-                .GetAllCustomerRoles(true)
-                .Select(cr => cr.ToModel())
-                .ToList();
-            if (!excludeProperties)
-            {
-                if (category != null)
-                {
-                    model.SelectedCustomerRoleIds = category.CustomerRoles.ToArray();
-                }
-            }
-        }
-
+        
         #endregion
 
         #region List / tree
@@ -300,7 +281,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //discounts
             PrepareDiscountModel(model, null, true);
             //ACL
-            PrepareAclModel(model, null, false);
+            model.PrepareACLModel(null, false, _customerService);
             //Stores
             model.PrepareStoresMappingModel(null, false, _storeService);
             //default values
@@ -361,7 +342,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //discounts
             PrepareDiscountModel(model, null, true);
             //ACL
-            PrepareAclModel(model, null, true);
+            model.PrepareACLModel(null, true, _customerService);
             //Stores
             model.PrepareStoresMappingModel(null, true, _storeService);
 
@@ -396,7 +377,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //discounts
             PrepareDiscountModel(model, category, false);
             //ACL
-            PrepareAclModel(model, category, false);
+            model.PrepareACLModel(category, false, _customerService);
             //Stores
             model.PrepareStoresMappingModel(category, false, _storeService);
 
@@ -481,7 +462,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //discounts
             PrepareDiscountModel(model, category, true);
             //ACL
-            PrepareAclModel(model, category, true);
+            model.PrepareACLModel(category, true, _customerService);
             //Stores
             model.PrepareStoresMappingModel(category, true, _storeService);
 

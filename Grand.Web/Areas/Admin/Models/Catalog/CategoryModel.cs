@@ -3,7 +3,6 @@ using Grand.Framework.Localization;
 using Grand.Framework.Mapping;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Models.Customers;
 using Grand.Web.Areas.Admin.Models.Discounts;
 using Grand.Web.Areas.Admin.Validators.Catalog;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -14,7 +13,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Grand.Web.Areas.Admin.Models.Catalog
 {
     [Validator(typeof(CategoryValidator))]
-    public partial class CategoryModel : BaseGrandEntityModel, ILocalizedModel<CategoryLocalizedModel>, IStoreMappingModel
+    public partial class CategoryModel : BaseGrandEntityModel, ILocalizedModel<CategoryLocalizedModel>, IAclMappingModel, IStoreMappingModel
     {
         public CategoryModel()
         {

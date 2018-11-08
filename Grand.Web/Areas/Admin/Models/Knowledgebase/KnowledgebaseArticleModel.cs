@@ -3,7 +3,6 @@ using Grand.Framework.Localization;
 using Grand.Framework.Mapping;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Models.Customers;
 using Grand.Web.Areas.Admin.Validators.Knowledgebase;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -12,7 +11,7 @@ using System.Collections.Generic;
 namespace Grand.Web.Areas.Admin.Models.Knowledgebase
 {
     [Validator(typeof(KnowledgebaseArticleModelValidator))]
-    public class KnowledgebaseArticleModel : BaseGrandEntityModel, ILocalizedModel<KnowledgebaseArticleLocalizedModel>, IStoreMappingModel
+    public class KnowledgebaseArticleModel : BaseGrandEntityModel, ILocalizedModel<KnowledgebaseArticleLocalizedModel>, IAclMappingModel, IStoreMappingModel
     {
         public KnowledgebaseArticleModel()
         {

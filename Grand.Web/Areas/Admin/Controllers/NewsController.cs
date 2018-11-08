@@ -68,29 +68,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Utilities
-
-        [NonAction]
-        protected virtual void PrepareAclModel(NewsItemModel model, NewsItem newsItem, bool excludeProperties)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            model.AvailableCustomerRoles = _customerService
-                .GetAllCustomerRoles(true)
-                .Select(cr => cr.ToModel())
-                .ToList();
-            if (!excludeProperties)
-            {
-                if (newsItem != null)
-                {
-                    model.SelectedCustomerRoleIds = newsItem.CustomerRoles.ToArray();
-                }
-            }
-        }
-
-        #endregion
-
         #region News items
 
         public IActionResult Index()
@@ -155,7 +132,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //locales
             AddLocales(_languageService, model.Locales);
             //ACL
-            PrepareAclModel(model, null, false);
+            model.PrepareACLModel(null, false, _customerService);
             return View(model);
         }
 
@@ -193,9 +170,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             //Stores
             model.PrepareStoresMappingModel(null, true, _storeService);
-
             //ACL
-            PrepareAclModel(model, null, true);
+            model.PrepareACLModel(null, true, _customerService);
+
             return View(model);
         }
 
@@ -215,9 +192,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.EndDate = newsItem.EndDateUtc;
             //Store
             model.PrepareStoresMappingModel(newsItem, false, _storeService);
-
             //ACL
-            PrepareAclModel(model, newsItem, false);
+            model.PrepareACLModel(newsItem, false, _customerService);
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
@@ -287,7 +263,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             //Store
             model.PrepareStoresMappingModel(newsItem, true, _storeService);
             //ACL
-            PrepareAclModel(model, newsItem, false);
+            model.PrepareACLModel(newsItem, true, _customerService);
+
             return View(model);
         }
 
