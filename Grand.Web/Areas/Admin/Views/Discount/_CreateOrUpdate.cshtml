@@ -53,33 +53,33 @@
         }
     </ul>
     <div>
-        @Html.Partial("_CreateOrUpdate.TabInfo", Model)
+       <partial name="_CreateOrUpdate.TabInfo" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdate.TabCouponCodes", Model)
+       <partial name="_CreateOrUpdate.TabCouponCodes" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdate.TabRequirements", Model)
+       <partial name="_CreateOrUpdate.TabRequirements" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdate.TabAppliedToProducts", Model)
+       <partial name="_CreateOrUpdate.TabAppliedToProducts" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdate.TabAppliedToCategories", Model)
+       <partial name="_CreateOrUpdate.TabAppliedToCategories" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdate.TabAppliedToManufacturers", Model)
+       <partial name="_CreateOrUpdate.TabAppliedToManufacturers" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdate.TabAppliedToVendors", Model)
+       <partial name="_CreateOrUpdate.TabAppliedToVendors" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdate.TabAppliedToStores", Model)
+       <partial name="_CreateOrUpdate.TabAppliedToStores" model="Model" />
     </div>
     @if (!String.IsNullOrEmpty(Model.Id))
     {
         <div>
-            @Html.Partial("_CreateOrUpdate.TabHistory", Model)
+           <partial name="_CreateOrUpdate.TabHistory" model="Model" />
         </div>
     }
 </div>

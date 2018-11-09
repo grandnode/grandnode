@@ -88,46 +88,46 @@
         }
     </ul>
     <div>
-        @Html.Partial("_CreateOrUpdate.TabInfo", Model)
+       <partial name="_CreateOrUpdate.TabInfo" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdate.TabCustomerRoles", Model)
+       <partial name="_CreateOrUpdate.TabCustomerRoles" model="Model" />
     </div>
     @if (!String.IsNullOrEmpty(Model.Id))
     {
         <div>
-            @Html.Partial("_CreateOrUpdate.TabOrders", Model)
+           <partial name="_CreateOrUpdate.TabOrders" model="Model" />
         </div>
         <div>
-            @Html.Partial("_CreateOrUpdate.TabAddresses", Model)
+           <partial name="_CreateOrUpdate.TabAddresses" model="Model" />
         </div>
         <div>
-            @Html.Partial("_CreateOrUpdate.TabCurrentShoppingCart", Model)
-            @Html.Partial("_CreateOrUpdate.TabCurrentWishlist", Model)
+           <partial name="_CreateOrUpdate.TabCurrentShoppingCart" model="Model" />
+           <partial name="_CreateOrUpdate.TabCurrentWishlist" model="Model" />
         </div>
         <div>
-            @Html.Partial("_CreateOrUpdate.TabProduct", Model)
+           <partial name="_CreateOrUpdate.TabProduct" model="Model" />
         </div>
         <div>
-            @Html.Partial("_CreateOrUpdate.TabProductPrice", Model)
+           <partial name="_CreateOrUpdate.TabProductPrice" model="Model" />
         </div>
         <div>
-            @Html.Partial("_CreateOrUpdate.TabNotes", Model)
+           <partial name="_CreateOrUpdate.TabNotes" model="Model" />
         </div>
         <div>
-            @Html.Partial("_CreateOrUpdate.TabActivityLog", Model)
+           <partial name="_CreateOrUpdate.TabActivityLog" model="Model" />
         </div>
         <div>
-            @Html.Partial("_CreateOrUpdate.TabImpersonate", Model)
+           <partial name="_CreateOrUpdate.TabImpersonate" model="Model" />
         </div>
         <div>
-            @Html.Partial("_CreateOrUpdate.TabBackInStockSubscriptions", Model)
+           <partial name="_CreateOrUpdate.TabBackInStockSubscriptions" model="Model" />
         </div>
     }
     @if (Model.DisplayRewardPointsHistory)
     {
         <div>
-            @Html.Partial("_CreateOrUpdate.TabRewardPoints", Model)
+           <partial name="_CreateOrUpdate.TabRewardPoints" model="Model" />
         </div>
     }
 </div>

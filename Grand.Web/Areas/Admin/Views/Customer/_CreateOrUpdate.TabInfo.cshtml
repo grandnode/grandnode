@@ -301,7 +301,7 @@
         @if (Model.CustomerAttributes.Count > 0)
         {
             <div class="form-group">
-                @Html.Partial("_CustomerAttributes", Model.CustomerAttributes)
+                <partial name="_CustomerAttributes" model="Model.CustomerAttributes" />
             </div>
         }
         <div class="form-group">

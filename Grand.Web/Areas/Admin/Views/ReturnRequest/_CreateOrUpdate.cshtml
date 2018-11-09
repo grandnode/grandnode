@@ -32,12 +32,12 @@
         }
     </ul>
     <div>
-        @Html.Partial("_CreateOrUpdate.TabInfo", Model)
+       <partial name="_CreateOrUpdate.TabInfo" model="Model" />
     </div>
     @if (orderSettings.ReturnRequests_AllowToSpecifyPickupAddress)
     {
         <div>
-            @Html.Partial("_CreateOrUpdate.TabAddress", Model)
+           <partial name="_CreateOrUpdate.TabAddress" model="Model" />
         </div>
     }
 </div>

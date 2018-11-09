@@ -29,12 +29,12 @@
         }
     </ul>
     <div>
-        @Html.Partial("_CreateOrUpdate.TabInfo", Model)
+       <partial name="_CreateOrUpdate.TabInfo" model="Model" />
     </div>
     @if (!String.IsNullOrEmpty(Model.Id))
     {
         <div>
-            @Html.Partial("_CreateOrUpdate.TabCustomers", Model)
+           <partial name="_CreateOrUpdate.TabCustomers" model="Model" />
         </div>
         <div>
             @await Component.InvokeAsync("Affiliate", new { affiliateId = Model.Id })

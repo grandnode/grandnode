@@ -139,7 +139,7 @@
     @if (!String.IsNullOrEmpty(Model.Id))
     {
         <div>
-            @Html.Partial("_CreateOrUpdate.Activitylog", Model)
+           <partial name="_CreateOrUpdate.Activitylog" model="Model" />
             <partial name="_CreateOrUpdate.Activitylog" model="Model" />
         </div>
         <div>

@@ -32,16 +32,16 @@
         </li>
     </ul>
     <div>
-        @Html.Partial("_CreateOrUpdate.TabInfo", Model)
+       <partial name="_CreateOrUpdate.TabInfo" model="Model" />
     </div>
     @if (!string.IsNullOrEmpty(Model.Id))
     {
         <div>
-            @Html.Partial("_CreateOrUpdate.TabUsedByProducts", Model)
+           <partial name="_CreateOrUpdate.TabUsedByProducts" model="Model" />
         </div>
     }
     <div>
-        @Html.Partial("_CreateOrUpdate.TabPredefinedValues", Model)
+       <partial name="_CreateOrUpdate.TabPredefinedValues" model="Model" />
     </div>
 </div>
 @{

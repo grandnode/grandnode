@@ -184,7 +184,7 @@
         }
         @if (Model.CustomAddressAttributes.Count > 0)
         {
-            @Html.Partial("_AddressAttributes", Model.CustomAddressAttributes)
+            <partial name="_AddressAttributes" model="Model.CustomAddressAttributes" />
         }
     </div>
 </div>

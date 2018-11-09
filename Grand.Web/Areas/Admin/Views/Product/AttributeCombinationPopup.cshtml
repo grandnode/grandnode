@@ -59,7 +59,7 @@
                             }
                             @if (string.IsNullOrEmpty(Model.Id))
                             {
-                                @Html.Partial("_ProductAttributes", Model.ProductAttributes)
+                                <partial name="_ProductAttributes" model="Model.ProductAttributes" />
                             }
                             else
                             {

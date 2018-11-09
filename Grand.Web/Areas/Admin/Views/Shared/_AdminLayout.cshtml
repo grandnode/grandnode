@@ -105,7 +105,7 @@
     @Html.GrandCssFiles(this.Url, ResourceLocation.Head, false)
     @Html.GrandScripts(this.Url, ResourceLocation.Head, false)
 </head>
-<body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white">    
+<body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white">
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_header_before" })
     @if (IsSectionDefined("header"))
     {
@@ -231,7 +231,7 @@
             }
             else
             {
-                @Html.Partial("Menu")
+                <partial name="Menu" />
             }
 
             @if (IsSectionDefined("statusbar"))
@@ -239,7 +239,7 @@
                 @RenderSection("statusbar")
             }
             <div class="page-content">
-                @Html.Partial("Notifications")
+                <partial name="Notifications" />
                 @RenderBody()
             </div>
             <div class="throbber">

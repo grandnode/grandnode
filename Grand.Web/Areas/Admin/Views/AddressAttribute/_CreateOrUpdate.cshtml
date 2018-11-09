@@ -26,10 +26,10 @@
         </li>
     </ul>
     <div>
-        @Html.Partial("_CreateOrUpdate.TabInfo", Model)
+       <partial name="_CreateOrUpdate.TabInfo" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdate.TabValues", Model)
+       <partial name="_CreateOrUpdate.TabValues" model="Model" />
     </div>
 </div>
 @{

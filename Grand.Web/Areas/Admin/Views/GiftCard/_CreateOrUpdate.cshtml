@@ -27,12 +27,12 @@
         }
     </ul>
     <div>
-        @Html.Partial("_CreateOrUpdate.TabInfo", Model)
+       <partial name="_CreateOrUpdate.TabInfo" model="Model" />
     </div>
     @if (!String.IsNullOrEmpty(Model.Id))
     {
         <div>
-            @Html.Partial("_CreateOrUpdate.TabHistory", Model)
+           <partial name="_CreateOrUpdate.TabHistory" model="Model" />
         </div>
     }
 </div>

@@ -59,21 +59,21 @@
                             }
                         </ul>
                         <div>
-                            @Html.Partial("_OrderDetails.Info", Model)
+                           <partial name="_OrderDetails.Info" model="Model" />
                         </div>
                         <div>
-                            @Html.Partial("_OrderDetails.Billing", Model)
+                           <partial name="_OrderDetails.Billing" model="Model" />
                         </div>
                         <div>
-                            @Html.Partial("_OrderDetails.Shipping", Model)
+                           <partial name="_OrderDetails.Shipping" model="Model" />
                         </div>
                         <div>
-                            @Html.Partial("_OrderDetails.Products", Model)
+                           <partial name="_OrderDetails.Products" model="Model" />
                         </div>
                         @if (!Model.IsLoggedInAsVendor)
                         {
                             <div>
-                                @Html.Partial("_OrderDetails.Notes", Model)
+                               <partial name="_OrderDetails.Notes" model="Model" />
                             </div>
                         }
                     </div>
