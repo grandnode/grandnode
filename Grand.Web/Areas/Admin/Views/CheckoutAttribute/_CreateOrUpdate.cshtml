@@ -20,21 +20,21 @@
 
 <div id="checkoutattribute-edit" style="display:none">
     <ul>
-        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+        <li tab-index="0">
             @T("Admin.Catalog.Attributes.CheckoutAttributes.Info")
         </li>
-        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex()) id="tab-checkoutAttributesValues">
+        <li tab-index="1" id="tab-checkoutAttributesValues">
             @T("Admin.Catalog.Attributes.CheckoutAttributes.Values")
         </li>
-        <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+        <li tab-index="2">
             @T("Admin.Catalog.Attributes.CheckoutAttributes.Stores")
         </li>
-        <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
+        <li tab-index="3">
             @T("Admin.Catalog.Attributes.CheckoutAttributes.Acl")
         </li>
         @if (Model.ConditionAllowed)
         {
-            <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
+            <li tab-index="4">
                 @T("Admin.Catalog.Attributes.CheckoutAttributes.Condition")
             </li>
         }

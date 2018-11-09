@@ -18,10 +18,10 @@
 </script>
 <div id="attribute-edit" style="display:none">
     <ul>
-        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+        <li tab-index="0">
             @T("Admin.Promotions.InteractiveForms.Attribute.Info")
         </li>
-        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex()) id="tab-values">
+        <li tab-index="1" id="tab-values">
             @T("Admin.Promotions.InteractiveForms.Attribute.Values")
         </li>
     </ul>

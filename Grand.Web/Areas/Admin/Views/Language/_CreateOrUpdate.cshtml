@@ -17,13 +17,13 @@
 </script>
 <div id="language-edit" style="display:none">
     <ul>
-        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+        <li tab-index="0">
             @T("Admin.Configuration.Languages.Info")
         </li>
-        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+        <li tab-index="1">
             @T("Admin.Configuration.Languages.Stores")
         </li>
-        <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+        <li tab-index="2">
             @T("Admin.Configuration.Languages.Resources")
         </li>
     </ul>

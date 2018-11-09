@@ -24,10 +24,10 @@
 </script>
 <div id="plugin-edit">
     <ul>
-        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+        <li tab-index="0">
             @T("Admin.Configuration.Plugins.Info")
         </li>
-        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+        <li tab-index="1">
             @T("Admin.Configuration.Plugins.Stores")
         </li>
     </ul>

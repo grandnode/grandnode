@@ -17,10 +17,10 @@
 </script>
 <div id="template-edit" style="display:none">
     <ul>
-        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+        <li tab-index="0">
             @T("Admin.ContentManagement.MessageTemplates.Info")
         </li>
-        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+        <li tab-index="1">
             @T("Admin.ContentManagement.MessageTemplates.Stores")
         </li>
     </ul>

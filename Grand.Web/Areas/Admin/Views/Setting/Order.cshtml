@@ -31,10 +31,10 @@
                 <div class="portlet-body form">
                     <div id="ordersettings-edit" style="display:none">
                         <ul>
-                            <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                            <li tab-index="0">
                                 @T("Admin.Configuration.Settings.Order.OrderSettings")
                             </li>
-                            <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                            <li tab-index="1">
                                 @T("Admin.Configuration.Settings.Order.ReturnRequestSettings")
                             </li>
                         </ul>

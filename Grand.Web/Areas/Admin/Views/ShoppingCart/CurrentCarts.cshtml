@@ -18,10 +18,10 @@
             <div class="portlet-body form">
                 <div id="shoppingcarts-list" style="display:none">
                     <ul>
-                        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                        <li tab-index="0">
                             @T("Admin.CurrentCarts")
                         </li>
-                        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                        <li tab-index="1">
                             @T("Admin.CurrentWishlists")
                         </li>
                     </ul>

@@ -18,10 +18,10 @@
 </script>
 <div id="addressattribute-edit">
     <ul>
-        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+        <li tab-index="0">
             @T("Admin.Address.AddressAttributes.Info")
         </li>
-        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex()) id="tab-addressattributesvalues">
+        <li tab-index="1" id="tab-addressattributesvalues">
             @T("Admin.Address.AddressAttributes.Values")
         </li>
     </ul>

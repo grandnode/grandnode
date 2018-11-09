@@ -16,12 +16,12 @@
 </script>
 <div id="giftcard-edit">
     <ul>
-        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+        <li tab-index="0">
             @T("Admin.GiftCards.Info")
         </li>
         @if (!String.IsNullOrEmpty(Model.Id))
         {
-            <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+            <li tab-index="1">
                 @T("Admin.GiftCards.History")
             </li>
         }
