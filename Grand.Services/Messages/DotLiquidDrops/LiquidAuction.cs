@@ -1,0 +1,55 @@
+﻿using DotLiquid;
+using Grand.Core.Domain.Catalog;
+using Grand.Core.Domain.Directory;
+using Grand.Services.Catalog;
+using Grand.Services.Directory;
+
+namespace Grand.Services.Messages.DotLiquidDrops
+{
+    public partial class LiquidAuction : Drop
+    {
+        private readonly Product _product;
+        private readonly Bid _bid;
+
+        private readonly IPriceFormatter _priceFormatter;
+        private readonly ICurrencyService _currencyService;
+        private readonly CurrencySettings _currencySettings;
+
+        public LiquidAuction(Product product,
+            IPriceFormatter priceFormatter,
+            CurrencySettings currencySettings,
+            ICurrencyService currencyService,
+            Bid bid = null)
+        {
+            this._product = product;
+            this._bid = bid;
+            this._priceFormatter = priceFormatter;
+            this._currencySettings = currencySettings;
+            this._currencyService = currencyService;
+        }
+
+        public string ProductName
+        {
+            get { return _product.Name; }
+        }
+
+        public string Price
+        {
+            get
+            {
+                var defaultCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+                return _priceFormatter.FormatPrice(_bid.Amount, true, defaultCurrency);
+            }
+        }
+
+        public string EndTime
+        {
+            get { return _product.AvailableEndDateTimeUtc.ToString(); }
+        }
+
+        public string ProductSeName
+        {
+            get { return _product.SeName; }
+        }
+    }
+}

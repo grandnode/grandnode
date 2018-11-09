@@ -37,6 +37,7 @@ namespace Grand.Services.Directory
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Countries</returns>
         IList<Country> GetAllCountriesForShipping(string languageId = "", bool showHidden = false);
+        object GetCountryById(object countryId);
 
 
         /// <summary>

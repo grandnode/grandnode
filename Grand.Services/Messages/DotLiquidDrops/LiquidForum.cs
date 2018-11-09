@@ -1,0 +1,94 @@
+﻿using DotLiquid;
+using Grand.Core;
+using Grand.Core.Domain.Forums;
+using Grand.Core.Infrastructure;
+using Grand.Services.Customers;
+using Grand.Services.Seo;
+using Grand.Services.Stores;
+using System;
+
+namespace Grand.Services.Messages.DotLiquidDrops
+{
+    public partial class LiquidForum : Drop
+    {
+        private readonly ForumTopic _forumTopic;
+        private readonly ForumPost _forumPost;
+        private readonly Forum _forum;
+        private readonly int? _friendlyForumTopicPageIndex;
+        private readonly string _appendedPostIdentifierAnchor;
+        private readonly IStoreService _storeService;
+        private readonly IStoreContext _storeContext;
+
+        public LiquidForum(ForumTopic forumTopic,
+            ForumPost forumPost,
+            Forum forum,
+            IStoreService storeService,
+            IStoreContext storeContext,
+            int? friendlyForumTopicPageIndex = null,
+            string appendedPostIdentifierAnchor = "")
+        {
+            this._forumTopic = forumTopic;
+            this._forumPost = forumPost;
+            this._forum = forum;
+            this._friendlyForumTopicPageIndex = friendlyForumTopicPageIndex;
+            this._appendedPostIdentifierAnchor = appendedPostIdentifierAnchor;
+            this._storeService = storeService;
+            this._storeContext = storeContext;
+        }
+
+        public string TopicURL
+        {
+            get
+            {
+                string topicUrl;
+                if (_friendlyForumTopicPageIndex.HasValue && _friendlyForumTopicPageIndex.Value > 1)
+                    topicUrl = string.Format("{0}boards/topic/{1}/{2}/page/{3}", GetStoreUrl(), _forumTopic.Id, _forumTopic.GetSeName(), _friendlyForumTopicPageIndex.Value);
+                else
+                    topicUrl = string.Format("{0}boards/topic/{1}/{2}", GetStoreUrl(), _forumTopic.Id, _forumTopic.GetSeName());
+                if (!String.IsNullOrEmpty(_appendedPostIdentifierAnchor))
+                    topicUrl = string.Format("{0}#{1}", topicUrl, _appendedPostIdentifierAnchor);
+
+                return topicUrl;
+            }
+        }
+
+        public string PostAuthor
+        {
+            get {
+                var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(_forumPost.CustomerId);
+                return customer.FormatUserName();
+            }
+        }
+
+        public string TopicName
+        {
+            get { return _forumTopic.Subject; }
+        }
+
+        public string ForumURL
+        {
+            get { return string.Format("{0}boards/forum/{1}/{2}", GetStoreUrl(), _forum.Id, _forum.GetSeName()); }
+        }
+
+        public string ForumName
+        {
+            get { return _forum.Name; }
+        }
+
+        /// <summary>
+        /// Get store URL
+        /// </summary>
+        /// <param name="storeId">Store identifier; Pass 0 to load URL of the current store</param>
+        /// <param name="useSsl">Use SSL</param>
+        /// <returns></returns>
+        protected virtual string GetStoreUrl(string storeId = "", bool useSsl = false)
+        {
+            var store = _storeService.GetStoreById(storeId) ?? _storeContext.CurrentStore;
+
+            if (store == null)
+                throw new Exception("No store could be loaded");
+
+            return useSsl ? store.SecureUrl : store.Url;
+        }
+    }
+}

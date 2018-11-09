@@ -36,6 +36,7 @@ using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Media;
 using Grand.Services.Messages;
+using Grand.Services.Messages.DotLiquidDrops;
 using Grand.Services.News;
 using Grand.Services.Orders;
 using Grand.Services.Payments;
@@ -338,6 +339,9 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<DeleteGuestsScheduleTask>().InstancePerLifetimeScope();
             builder.RegisterType<UpdateExchangeRateScheduleTask>().InstancePerLifetimeScope();
             builder.RegisterType<EndAuctionsTask>().InstancePerLifetimeScope();
+
+            //DotLiquid Drops
+            //builder.RegisterType<LiquidStore>().InstancePerLifetimeScope();
         }
 
         /// <summary>
