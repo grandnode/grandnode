@@ -292,6 +292,21 @@ namespace Grand.Web.Areas.Admin.Extensions
             return model.MapTo(destination);
         }
 
+        //attributes value
+        public static AddressAttributeValueModel ToModel(this AddressAttributeValue entity)
+        {
+            return entity.MapTo<AddressAttributeValue, AddressAttributeValueModel>();
+        }
+        public static AddressAttributeValue ToEntity(this AddressAttributeValueModel model)
+        {
+            return model.MapTo<AddressAttributeValueModel, AddressAttributeValue>();
+        }
+
+        public static AddressAttributeValue ToEntity(this AddressAttributeValueModel model, AddressAttributeValue destination)
+        {
+            return model.MapTo(destination);
+        }
+
         #endregion
 
         #region Languages

@@ -11,6 +11,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, GrandConfig config)
         {
             builder.RegisterType<ActivityLogViewModelService>().As<IActivityLogViewModelService>().InstancePerLifetimeScope();
+            builder.RegisterType<AddressAttributeViewModelService>().As<IAddressAttributeViewModelService>().InstancePerLifetimeScope();
         }
 
         public int Order

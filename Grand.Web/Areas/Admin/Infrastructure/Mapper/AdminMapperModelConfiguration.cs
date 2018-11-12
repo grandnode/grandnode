@@ -767,6 +767,15 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.AttributeControlType, mo => mo.Ignore())
                 .ForMember(dest => dest.AddressAttributeValues, mo => mo.Ignore());
+            //address attributes value
+            CreateMap<AddressAttributeValue, AddressAttributeValueModel>()
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            CreateMap<AddressAttributeValueModel, AddressAttributeValue>()
+                .ForMember(dest => dest.Id, mo => mo.Ignore())
+                .ForMember(dest => dest.Locales, mo => mo.Ignore());
+
             //discounts
             CreateMap<Discount, DiscountModel>()
                 .ForMember(dest => dest.DiscountTypeName, mo => mo.Ignore())
