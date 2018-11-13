@@ -14,32 +14,20 @@ using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Stores;
 using Grand.Core.Domain.Tax;
 using Grand.Core.Domain.Vendors;
-using Grand.Core.Html;
-using Grand.Core.Infrastructure;
-using Grand.Services.Blogs;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Events;
-using Grand.Services.Forums;
 using Grand.Services.Helpers;
-using Grand.Services.Knowledgebase;
 using Grand.Services.Localization;
 using Grand.Services.Media;
-using Grand.Services.News;
+using Grand.Services.Messages.DotLiquidDrops;
 using Grand.Services.Orders;
 using Grand.Services.Payments;
-using Grand.Services.Seo;
-using Grand.Services.Shipping;
 using Grand.Services.Stores;
-using Grand.Services.Vendors;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Net;
-using System.Text;
 
 namespace Grand.Services.Messages
 {
@@ -95,7 +83,7 @@ namespace Grand.Services.Messages
             CurrencySettings currencySettings,
             ShippingSettings shippingSettings,
             StoreInformationSettings storeInformationSettings,
-            MediaSettings _mediaSettings,
+            MediaSettings mediaSettings,
             IEventPublisher eventPublisher)
         {
             this._languageService = languageService;
@@ -118,83 +106,13 @@ namespace Grand.Services.Messages
             this._taxSettings = taxSettings;
             this._currencySettings = currencySettings;
             this._storeInformationSettings = storeInformationSettings;
-            this._mediaSettings = _mediaSettings;
+            this._mediaSettings = mediaSettings;
             this._eventPublisher = eventPublisher;
         }
 
         #endregion
 
         #region Utilities
-       
-
-        /// <summary>
-        /// Convert a collection to a HTML table
-        /// </summary>
-        /// <param name="shipment">Shipment</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>HTML table of products</returns>
-        protected virtual string ProductListToHtmlTable(Shipment shipment, string languageId)
-        {
-            string result;
-
-            var sb = new StringBuilder();
-            sb.AppendLine("<table border=\"0\" style=\"width:100%;\">");
-
-            #region Products
-            sb.AppendLine(string.Format("<tr style=\"background-color:{0};text-align:center;\">", _templatesSettings.Color1));
-            sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.Order.Product(s).Name", languageId)));
-            sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.Order.Product(s).Quantity", languageId)));
-            sb.AppendLine("</tr>");
-
-            var table = shipment.ShipmentItems.ToList();
-            var order = _orderService.GetOrderById(shipment.OrderId);
-            var productService = EngineContext.Current.Resolve<IProductService>();
-            for (int i = 0; i <= table.Count - 1; i++)
-            {
-                var si = table[i];
-                var orderItem = order.OrderItems.Where(x => x.Id == si.OrderItemId).FirstOrDefault();
-                if (orderItem == null)
-                    continue;
-
-                var product = productService.GetProductByIdIncludeArch(orderItem.ProductId);
-                if (product == null)
-                    continue;
-
-                sb.AppendLine(string.Format("<tr style=\"background-color: {0};text-align: center;\">", _templatesSettings.Color2));
-                //product name
-                string productName = product.GetLocalized(x => x.Name, languageId);
-
-                sb.AppendLine("<td style=\"padding: 0.6em 0.4em;text-align: left;\">" + WebUtility.HtmlEncode(productName));
-                //attributes
-                if (!String.IsNullOrEmpty(orderItem.AttributeDescription))
-                {
-                    sb.AppendLine("<br />");
-                    sb.AppendLine(orderItem.AttributeDescription);
-                }
-                //sku
-                if (_catalogSettings.ShowSkuOnProductDetailsPage)
-                {
-                    var sku = product.FormatSku(orderItem.AttributesXml, _productAttributeParser);
-                    if (!String.IsNullOrEmpty(sku))
-                    {
-                        sb.AppendLine("<br />");
-                        sb.AppendLine(string.Format(_localizationService.GetResource("Messages.Order.Product(s).SKU", languageId), WebUtility.HtmlEncode(sku)));
-                    }
-                }
-                sb.AppendLine("</td>");
-
-                sb.AppendLine(string.Format("<td style=\"padding: 0.6em 0.4em;text-align: center;\">{0}</td>", si.Quantity));
-
-                sb.AppendLine("</tr>");
-            }
-            #endregion
-
-            sb.AppendLine("</table>");
-            result = sb.ToString();
-            return result;
-        }
-
-
 
         #endregion
 
@@ -206,261 +124,198 @@ namespace Grand.Services.Messages
         /// <returns>List of allowed (supported) message tokens for campaigns</returns>
         public virtual string[] GetListOfCampaignAllowedTokens()
         {
-            var allowedTokens = new List<string>
-            {
-                "%Store.Name%",
-                "%Store.URL%",
-                "%Store.Email%",
-                "%Store.CompanyName%",
-                "%Store.CompanyAddress%",
-                "%Store.CompanyPhoneNumber%",
-                "%Store.CompanyVat%",
-                "%NewsLetterSubscription.Email%",
-                "%NewsLetterSubscription.ActivationUrl%",
-                "%NewsLetterSubscription.DeactivationUrl%",
-                "%ShoppingCart.Products%",
-                "%ShoppingCart.ProductsWithPictures%",
-                "%Wishlist.Products%",
-                "%Wishlist.ProductsWithPictures%",
-                "%RecommendedProducts.Products%",
-                "%RecommendedProducts.ProductsWithPictures%",
-                "%RecentlyViewedProducts.Products%",
-                "%RecentlyViewedProducts.ProductsWithPictures%",
-            };
+            var allowedTokens = LiquidExtensions.GetTokens(typeof(LiquidStore),
+                typeof(LiquidNewsLetterSubscription),
+                typeof(LiquidShoppingCart),
+                typeof(LiquidCustomer));
+
             return allowedTokens.ToArray();
         }
 
         public virtual string[] GetListOfAllowedTokens()
         {
-            var allowedTokens = new List<string>
-            {
-                "%Store.Name%",
-                "%Store.URL%",
-                "%Store.Email%",
-                "%Store.CompanyName%",
-                "%Store.CompanyAddress%",
-                "%Store.CompanyPhoneNumber%",
-                "%Store.CompanyVat%",
-                "%Twitter.URL%",
-                "%Facebook.URL%",
-                "%YouTube.URL%",
-                "%GooglePlus.URL%",
-                "%Instagram.URL%",
-                "%LinkedIn.URL%",
-                "%Pinterest.URL%",
-                "%Order.OrderNumber%",
-                "%Order.CustomerFullName%",
-                "%Order.CustomerEmail%",
-                "%Order.BillingFirstName%",
-                "%Order.BillingLastName%",
-                "%Order.BillingPhoneNumber%",
-                "%Order.BillingEmail%",
-                "%Order.BillingFaxNumber%",
-                "%Order.BillingCompany%",
-                "%Order.BillingAddress1%",
-                "%Order.BillingAddress2%",
-                "%Order.BillingCity%",
-                "%Order.BillingStateProvince%",
-                "%Order.BillingZipPostalCode%",
-                "%Order.BillingCountry%",
-                "%Order.BillingCustomAttributes%",
-                "%Order.ShippingMethod%",
-                "%Order.ShippingAdditionDescription%",
-                "%Order.ShippingFirstName%",
-                "%Order.ShippingLastName%",
-                "%Order.ShippingPhoneNumber%",
-                "%Order.ShippingEmail%",
-                "%Order.ShippingFaxNumber%",
-                "%Order.ShippingCompany%",
-                "%Order.ShippingAddress1%",
-                "%Order.ShippingAddress2%",
-                "%Order.ShippingCity%",
-                "%Order.ShippingStateProvince%",
-                "%Order.ShippingZipPostalCode%",
-                "%Order.ShippingCountry%",
-                "%Order.ShippingCustomAttributes%",
-                "%Order.PaymentMethod%",
-                "%Order.VatNumber%",
-                "%Order.CustomValues%",
-                "%Order.Product(s)%",
-                "%Order.CreatedOn%",
-                "%Order.OrderURLForCustomer%",
-                "%Order.NewNoteText%",
-                "%Order.OrderNoteAttachmentUrl%",
-                "%Order.AmountRefunded%",
-                "%RecurringPayment.ID%",
-                "%Shipment.ShipmentNumber%",
-                "%Shipment.TrackingNumber%",
-                "%Shipment.TrackingNumberURL%",
-                "%Shipment.Product(s)%",
-                "%Shipment.URLForCustomer%",
-                "%ReturnRequest.ID%",
-                "%ReturnRequest.OrderId%",
-                "%ReturnRequest.Product.Quantity%",
-                "%ReturnRequest.Product.Name%",
-                "%ReturnRequest.Reason%",
-                "%ReturnRequest.RequestedAction%",
-                "%ReturnRequest.CustomerComment%",
-                "%ReturnRequest.StaffNotes%",
-                "%ReturnRequest.Status%",
-                "%GiftCard.SenderName%",
-                "%GiftCard.SenderEmail%",
-                "%GiftCard.RecipientName%",
-                "%GiftCard.RecipientEmail%",
-                "%GiftCard.Amount%",
-                "%GiftCard.CouponCode%",
-                "%GiftCard.Message%",
-                "%Customer.Email%",
-                "%Customer.Username%",
-                "%Customer.FullName%",
-                "%Customer.FirstName%",
-                "%Customer.LastName%",
-                "%Customer.VatNumber%",
-                "%Customer.CustomAttributes%",
-                "%Customer.PasswordRecoveryURL%",
-                "%Customer.AccountActivationURL%",
-                "%Customer.NewNoteText%",
-                "%Customer.NewTitleText%",
-                "%Customer.CustomerNoteAttachmentUrl%",
-                "%ContactUs.SenderEmail%",
-                "%ContactUs.SenderName%",
-                "%ContactUs.Body%",
-                "%ContactUs.AttributeDescription%",
-                "%Vendor.Address1%",
-                "%Vendor.Address2%",
-                "%Vendor.City%",
-                "%Vendor.Company%",
-                "%Vendor.Country%",
-                "%Vendor.Description%",
-                "%Vendor.Email%",
-                "%Vendor.FaxNumber%",
-                "%Vendor.Name%",
-                "%Vendor.PhoneNumber%",
-                "%Vendor.StateProvince%",
-                "%Vendor.ZipPostalCode%",
-                "%Wishlist.URLForCustomer%",
-                "%NewsLetterSubscription.Email%",
-                "%NewsLetterSubscription.ActivationUrl%",
-                "%NewsLetterSubscription.DeactivationUrl%",
-                "%ProductReview.ProductName%",
-                "%BlogComment.BlogPostTitle%",
-                "%BlogPost.URL%",
-                "%NewsComment.NewsTitle%",
-                "%NewsComment.CommentText%",
-                "%NewsComment.CommentTitle%",
-                "%News.Url%",
-                "%Product.ID%",
-                "%Product.Name%",
-                "%Product.ShortDescription%",
-                "%Product.ProductURLForCustomer%",
-                "%Product.SKU%",
-                "%Product.StockQuantity%",
-                "%Forums.TopicURL%",
-                "%Forums.TopicName%",
-                "%Forums.PostAuthor%",
-                "%Forums.PostBody%",
-                "%Forums.ForumURL%",
-                "%Forums.ForumName%",
-                "%AttributeCombination.Formatted%",
-                "%AttributeCombination.SKU%",
-                "%AttributeCombination.StockQuantity%",
-                "%PrivateMessage.Subject%",
-                "%PrivateMessage.Text%",
-                "%BackInStockSubscription.ProductName%",
-                "%BackInStockSubscription.ProductUrl%",
-                "%Auctions.ProductName%",
-                "%Auctions.Price%",
-                "%Auctions.EndTime%",
-                "%Auctions.ProductSeName%"
-            };
+            var allowedTokens = LiquidExtensions.GetTokens(typeof(LiquidAttributeCombination),
+                typeof(LiquidAuction),
+                typeof(LiquidBackInStockSubscription),
+                typeof(LiquidBlogComment),
+                typeof(LiquidCustomer),
+                typeof(LiquidExtensions),
+                typeof(LiquidForum),
+                typeof(LiquidGiftCard),
+                typeof(LiquidKnowledgebase),
+                typeof(LiquidNewsComment),
+                typeof(LiquidNewsLetterSubscription),
+                typeof(LiquidOrder),
+                typeof(LiquidPrivateMessage),
+                typeof(LiquidProduct),
+                typeof(LiquidProductReview),
+                typeof(LiquidReturnRequest),
+                typeof(LiquidShipment),
+                typeof(LiquidShoppingCart),
+                typeof(LiquidStore),
+                typeof(LiquidVendor),
+                typeof(LiquidVendorReview));
+
             return allowedTokens.ToArray();
         }
 
         public virtual string[] GetListOfCustomerReminderAllowedTokens(CustomerReminderRuleEnum rule)
         {
-            var allowedTokens = new List<string>();
-            allowedTokens.AddRange(
-                new List<string>{ "%Store.Name%",
-                "%Store.URL%",
-                "%Store.Email%",
-                "%Store.CompanyName%",
-                "%Store.CompanyAddress%",
-                "%Store.CompanyPhoneNumber%",
-                "%Store.CompanyVat%",
-                "%Twitter.URL%",
-                "%Facebook.URL%",
-                "%YouTube.URL%",
-                "%GooglePlus.URL%",
-                "%Instagram.URL%",
-                "%LinkedIn.URL%",
-                "%Pinterest.URL%"});
+            var allowedTokens = LiquidExtensions.GetTokens(typeof(LiquidStore));
 
             if (rule == CustomerReminderRuleEnum.AbandonedCart)
             {
-                allowedTokens.Add("%ShoppingCart.Products%");
-                allowedTokens.Add("%ShoppingCart.ProductsWithPictures%");
-                allowedTokens.Add("%Wishlist.Products%");
-                allowedTokens.Add("%Wishlist.ProductsWithPictures%");
+                allowedTokens.AddRange(LiquidExtensions.GetTokens(typeof(LiquidStore)));
             }
+
             if (rule == CustomerReminderRuleEnum.CompletedOrder || rule == CustomerReminderRuleEnum.UnpaidOrder)
             {
-                allowedTokens.AddRange(
-                new List<string>{
-                "%Order.OrderNumber%",
-                "%Order.CustomerFullName%",
-                "%Order.CustomerEmail%",
-                "%Order.BillingFirstName%",
-                "%Order.BillingLastName%",
-                "%Order.BillingPhoneNumber%",
-                "%Order.BillingEmail%",
-                "%Order.BillingFaxNumber%",
-                "%Order.BillingCompany%",
-                "%Order.BillingAddress1%",
-                "%Order.BillingAddress2%",
-                "%Order.BillingCity%",
-                "%Order.BillingStateProvince%",
-                "%Order.BillingZipPostalCode%",
-                "%Order.BillingCountry%",
-                "%Order.BillingCustomAttributes%",
-                "%Order.ShippingMethod%",
-                "%Order.ShippingAdditionDescription%",
-                "%Order.ShippingFirstName%",
-                "%Order.ShippingLastName%",
-                "%Order.ShippingPhoneNumber%",
-                "%Order.ShippingEmail%",
-                "%Order.ShippingFaxNumber%",
-                "%Order.ShippingCompany%",
-                "%Order.ShippingAddress1%",
-                "%Order.ShippingAddress2%",
-                "%Order.ShippingCity%",
-                "%Order.ShippingStateProvince%",
-                "%Order.ShippingZipPostalCode%",
-                "%Order.ShippingCountry%",
-                "%Order.ShippingCustomAttributes%",
-                "%Order.PaymentMethod%",
-                "%Order.VatNumber%",
-                "%Order.CustomValues%",
-                "%Order.Product(s)%",
-                "%Order.CreatedOn%",
-                "%Order.OrderURLForCustomer%",
-                "%Order.NewNoteText%",
-                "%Order.OrderNoteAttachmentUrl%",
-                "%Order.AmountRefunded%"
-                });
+                allowedTokens.AddRange(LiquidExtensions.GetTokens(typeof(LiquidOrder)));
             }
-            allowedTokens.AddRange(
-                new List<string>{
-                "%Customer.Email%",
-                "%Customer.Username%",
-                "%Customer.FullName%",
-                "%Customer.FirstName%",
-                "%Customer.LastName%",
-                "%RecommendedProducts.Products%",
-                "%RecommendedProducts.ProductsWithPictures%",
-                "%RecentlyViewedProducts.Products%",
-                "%RecentlyViewedProducts.ProductsWithPictures%",
-                });
+
+            allowedTokens.AddRange(LiquidExtensions.GetTokens(typeof(LiquidCustomer)));
+
             return allowedTokens.ToArray();
+        }
+
+        public void AddStoreTokens(IList<Token> tokens, Store store, EmailAccount emailAccount)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddOrderTokens(IList<Token> tokens, Order order, string languageId, string vendorId = "")
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddOrderRefundedTokens(IList<Token> tokens, Order order, decimal refundedAmount)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddShipmentTokens(IList<Token> tokens, Shipment shipment, string languageId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddOrderNoteTokens(IList<Token> tokens, OrderNote orderNote)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddRecurringPaymentTokens(IList<Token> tokens, RecurringPayment recurringPayment)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddReturnRequestTokens(IList<Token> tokens, ReturnRequest returnRequest, Order orderItem)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddGiftCardTokens(IList<Token> tokens, GiftCard giftCard)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddCustomerTokens(IList<Token> tokens, Customer customer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddCustomerNoteTokens(IList<Token> tokens, CustomerNote customerNote)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddShoppingCartTokens(IList<Token> tokens, Customer customer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddRecommendedProductsTokens(IList<Token> tokens, Customer customer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddRecentlyViewedProductsTokens(IList<Token> tokens, Customer customer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddVendorTokens(IList<Token> tokens, Vendor vendor)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddNewsLetterSubscriptionTokens(IList<Token> tokens, NewsLetterSubscription subscription)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddProductReviewTokens(IList<Token> tokens, ProductReview productReview)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddVendorReviewTokens(IList<Token> tokens, VendorReview VendorReview)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddBlogCommentTokens(string storeId, IList<Token> tokens, BlogComment blogComment)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddArticleCommentTokens(string storeId, IList<Token> tokens, KnowledgebaseArticleComment articleComment)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddNewsCommentTokens(string storeId, IList<Token> tokens, NewsComment newsComment)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddProductTokens(IList<Token> tokens, Product product, string languageId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddAttributeCombinationTokens(IList<Token> tokens, ProductAttributeCombination combination, string languageId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddForumTokens(IList<Token> tokens, Forum forum)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddForumTopicTokens(IList<Token> tokens, ForumTopic forumTopic, int? friendlyForumTopicPageIndex = null, string appendedPostIdentifierAnchor = "")
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddForumPostTokens(IList<Token> tokens, ForumPost forumPost)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddPrivateMessageTokens(IList<Token> tokens, PrivateMessage privateMessage)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddBackInStockTokens(IList<Token> tokens, BackInStockSubscription subscription)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddAuctionTokens(IList<Token> tokens, Product product, Bid bid)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

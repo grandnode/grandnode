@@ -19,9 +19,16 @@
         <div class="form-group">
             <admin-label asp-for="Body" />
             <div class="col-md-9 col-sm-9">
-                @{
-                    ViewData["Grand.RichEditor.EnableFullPage"] = true;
-                }
+                <div>
+                    <label>@T("Admin.ContentManagement.MessageTemplates.Fields.AllowedTokens")</label>
+                    <input type="search" name="SearchTokens" class="form-control SearchTokens" placeholder="@T("Search")" />
+                </div>
+                <div class="AllowedTokens">
+                    @foreach (var token in Model.AllowedTokens)
+                    {
+                        <button type="button" onclick="AddTokenToEditor(this)" class="btn btn-info">@token</button>
+                    }
+                </div>
                 <admin-input asp-for="Body" asp-template="RichEditor" />
                 <span asp-validation-for="Body"></span>
             </div>
@@ -33,11 +40,34 @@
                 <span asp-validation-for="EmailAccountId"></span>
             </div>
         </div>
-        <div class="form-group">
-            <admin-label asp-for="AllowedTokens" />
-            <div class="col-md-9 col-sm-9">
-                @Model.AllowedTokens
-            </div>
-        </div>
     </div>
 </div>
+<script type="text/javascript">
+    function SearchTokens(e) {
+        var searchVal = $(e.target).val();
+        var TokensPnl = $(e.target).closest(".form-group").find(".AllowedTokens");
+        $(TokensPnl).find(".btn").show()
+            .each(function (i, c) {
+                var Token = $(c).text();
+                if (Token.search(new RegExp(searchVal, "i")) == -1) {
+                    $(c).hide();
+                }
+            });
+    }
+
+    function AddTokenToEditor(e) {
+        tinyMCE.activeEditor.execCommand('mceInsertContent', false, $(e).text());
+    }
+</script>
+<style>
+    .AllowedTokens {
+        height: 200px;
+        overflow: scroll;
+        overflow-x: hidden;
+        padding: 3px;
+    }
+
+        .AllowedTokens .btn {
+            margin: 2px;
+        }
+</style>

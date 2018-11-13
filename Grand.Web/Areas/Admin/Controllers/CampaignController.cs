@@ -22,7 +22,7 @@ using System.Text;
 namespace Grand.Web.Areas.Admin.Controllers
 {
     public partial class CampaignController : BaseAdminController
-	{
+    {
         private readonly ICampaignService _campaignService;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
@@ -40,11 +40,11 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public CampaignController(ICampaignService campaignService,
             ICustomerService customerService,
-            IDateTimeHelper dateTimeHelper, 
+            IDateTimeHelper dateTimeHelper,
             IEmailAccountService emailAccountService,
             EmailAccountSettings emailAccountSettings,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
-            ILocalizationService localizationService, 
+            ILocalizationService localizationService,
             IMessageTokenProvider messageTokenProvider,
             IStoreContext storeContext,
             IStoreService storeService,
@@ -52,7 +52,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             ICustomerTagService customerTagService,
             IExportManager exportManager,
             INewsletterCategoryService newsletterCategoryService)
-		{
+        {
             this._campaignService = campaignService;
             this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
@@ -67,21 +67,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._customerTagService = customerTagService;
             this._exportManager = exportManager;
             this._newsletterCategoryService = newsletterCategoryService;
-        }
-
-        [NonAction]
-        protected virtual string FormatTokens(string[] tokens)
-        {
-            var sb = new StringBuilder();
-            for (int i = 0; i < tokens.Length; i++)
-            {
-                string token = tokens[i];
-                sb.Append(token);
-                if (i != tokens.Length - 1)
-                    sb.Append(", ");
-            }
-
-            return sb.ToString();
         }
 
         [NonAction]
@@ -128,7 +113,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (model == null)
                 throw new ArgumentNullException("model");
             model.AvailableNewsletterCategories = _newsletterCategoryService.GetAllNewsletterCategory().Select(ct => new SelectListItem() { Text = ct.Name, Value = ct.Id, Selected = model.NewsletterCategories.Contains(ct.Id) }).ToList();
-            model.NewsletterCategories = model.NewsletterCategories == null ? new List<string>(): model.NewsletterCategories;
+            model.NewsletterCategories = model.NewsletterCategories == null ? new List<string>() : model.NewsletterCategories;
         }
         [NonAction]
         protected virtual void PrepareEmailAccounts(CampaignModel model)
@@ -143,13 +128,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
-		public IActionResult List()
+        public IActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
                 return AccessDeniedView();
 
             return View();
-		}
+        }
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command)
@@ -199,7 +184,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             var gridModel = new DataSourceResult
             {
-                Data = history.Select(x => new {
+                Data = history.Select(x => new
+                {
                     Email = x.Email,
                     SentDate = x.CreatedDateUtc,
                 }),
@@ -217,7 +203,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 var campaign = _campaignService.GetCampaignById(campaignId);
                 var customers = _campaignService.CustomerSubscriptions(campaign);
-                string result = _exportManager.ExportNewsletterSubscribersToTxt(customers.Select(x=>x.Email).ToList());
+                string result = _exportManager.ExportNewsletterSubscribersToTxt(customers.Select(x => x.Email).ToList());
 
                 string fileName = String.Format("newsletter_emails_campaign_{0}_{1}.txt", campaign.Name, CommonHelper.GenerateRandomDigitCode(4));
                 return File(Encoding.UTF8.GetBytes(result), "text/csv", fileName);
@@ -237,7 +223,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new CampaignModel();
-            model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
+            model.AllowedTokens = _messageTokenProvider.GetListOfCampaignAllowedTokens();
             //stores
             PrepareStoresModel(model);
             //Tags
@@ -268,7 +254,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
+            model.AllowedTokens = _messageTokenProvider.GetListOfCampaignAllowedTokens();
             //stores
             PrepareStoresModel(model);
             //Tags
@@ -283,7 +269,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-		public IActionResult Edit(string id)
+        public IActionResult Edit(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
                 return AccessDeniedView();
@@ -294,7 +280,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             var model = campaign.ToModel();
-            model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
+            model.AllowedTokens = _messageTokenProvider.GetListOfCampaignAllowedTokens();
             //stores
             PrepareStoresModel(model);
             //Tags
@@ -306,7 +292,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //email
             PrepareEmailAccounts(model);
             return View(model);
-		}
+        }
 
         [HttpPost]
         [ParameterBasedOnFormName("save-continue", "continueEditing")]
@@ -350,7 +336,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
+            model.AllowedTokens = _messageTokenProvider.GetListOfCampaignAllowedTokens();
             //stores
             PrepareStoresModel(model);
             //Tags
@@ -362,9 +348,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             //email
             PrepareEmailAccounts(model);
             return View(model);
-		}
+        }
 
-        [HttpPost,ActionName("Edit")]
+        [HttpPost, ActionName("Edit")]
         [FormValueRequired("send-test-email")]
         public IActionResult SendTestEmail(CampaignModel model)
         {
@@ -377,7 +363,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
 
-            model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
+            model.AllowedTokens = _messageTokenProvider.GetListOfCampaignAllowedTokens();
             //stores
             PrepareStoresModel(model);
             //Tags
@@ -433,8 +419,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No campaign found with the specified id
                 return RedirectToAction("List");
 
-
-            model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
+            model.AllowedTokens = _messageTokenProvider.GetListOfCampaignAllowedTokens();
             //stores
             PrepareStoresModel(model);
             //Tags
@@ -471,7 +456,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-		[HttpPost]
+        [HttpPost]
         public IActionResult Delete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
@@ -485,7 +470,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _campaignService.DeleteCampaign(campaign);
 
             SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Deleted"));
-			return RedirectToAction("List");
-		}
-	}
+            return RedirectToAction("List");
+        }
+    }
 }

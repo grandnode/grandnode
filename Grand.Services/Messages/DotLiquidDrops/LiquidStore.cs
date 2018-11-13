@@ -1,5 +1,6 @@
 ﻿using DotLiquid;
 using Grand.Core.Domain;
+using Grand.Core.Domain.Messages;
 using Grand.Core.Domain.Stores;
 using Grand.Services.Localization;
 
@@ -8,13 +9,15 @@ namespace Grand.Services.Messages.DotLiquidDrops
     public partial class LiquidStore : Drop
     {
         private readonly Store _store;
+        private readonly EmailAccount _emailAccount;
 
         private readonly StoreInformationSettings _storeInformationSettings;
 
-        public LiquidStore(Store store, StoreInformationSettings storeInformationSettings)
+        public LiquidStore(Store store, StoreInformationSettings storeInformationSettings, EmailAccount emailAccount = null)
         {
             this._store = store;
             this._storeInformationSettings = storeInformationSettings;
+            this._emailAccount = emailAccount;
         }
 
         public string Name
@@ -25,6 +28,11 @@ namespace Grand.Services.Messages.DotLiquidDrops
         public string Url
         {
             get { return _store.Url; }
+        }
+
+        public string Email
+        {
+            get { return _emailAccount.Email; }
         }
 
         public string CompanyName

@@ -103,11 +103,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                     Value = item.Id.ToString()
                 });
             }
+
             var messageTokenProvider = Grand.Core.Infrastructure.EngineContext.Current.Resolve<IMessageTokenProvider>();
-            model.AllowedTokens = FormatTokens(messageTokenProvider.GetListOfCustomerReminderAllowedTokens(customerReminder.ReminderRule));
-
-
+            model.AllowedTokens = messageTokenProvider.GetListOfCustomerReminderAllowedTokens(customerReminder.ReminderRule);
         }
+
         public class SerializeCustomerReminderHistoryModel
         {
             public string Id { get; set; }
@@ -116,6 +116,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             public int Level { get; set; }
             public bool OrderId { get; set; }
         }
+
         protected virtual SerializeCustomerReminderHistoryModel PrepareHistoryModelForList(SerializeCustomerReminderHistory history)
         {
             return new SerializeCustomerReminderHistoryModel
@@ -128,14 +129,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             };
         }
 
-
-        private string FormatTokens(string[] tokens)
-        {
-            return string.Join(", ", tokens);
-        }
-
         #endregion
-
 
         #region Customer reminders
 
@@ -1125,7 +1119,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #endregion
 
-
         #region Levels
 
         [HttpPost]
@@ -1283,6 +1276,5 @@ namespace Grand.Web.Areas.Admin.Controllers
 
 
         #endregion
-
     }
 }

@@ -179,7 +179,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
             public string Name { get; set; }
 
             [GrandResourceDisplayName("Admin.Customers.CustomerReminder.Level.Fields.AllowedTokens")]
-            public string AllowedTokens { get; set; }
+            public string[] AllowedTokens { get; set; }
 
             [GrandResourceDisplayName("Admin.Customers.CustomerReminder.Level.Fields.Level")]
             public int Level { get; set; }
