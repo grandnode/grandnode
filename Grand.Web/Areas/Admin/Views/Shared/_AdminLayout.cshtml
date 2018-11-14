@@ -106,7 +106,7 @@
     @Html.GrandScripts(this.Url, ResourceLocation.Head, false)
 </head>
 <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_header_before" })
+    <vc:admin-widget widget-zone="admin_header_before" additional-data="null" />
     @if (IsSectionDefined("header"))
     {
         @RenderSection("header")
@@ -221,7 +221,7 @@
             }
         </div>
     }
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_header_after" })
+    <vc:admin-widget widget-zone="admin_header_after" additional-data="null"/>
     <div class="clearfix"> </div>
     <div class="page-container">
         <div class="page-content-wrapper">
