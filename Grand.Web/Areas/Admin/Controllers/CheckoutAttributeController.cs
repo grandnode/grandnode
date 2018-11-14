@@ -1,7 +1,5 @@
-﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
+﻿using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Directory;
-using Grand.Core.Domain.Orders;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
@@ -12,13 +10,11 @@ using Grand.Services.Logging;
 using Grand.Services.Orders;
 using Grand.Services.Security;
 using Grand.Services.Stores;
-using Grand.Services.Tax;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Orders;
+using Grand.Web.Areas.Admin.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
@@ -28,34 +24,26 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Fields
 
         private readonly ICheckoutAttributeService _checkoutAttributeService;
-        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
-        private readonly ITaxCategoryService _taxCategoryService;
-        private readonly IWorkContext _workContext;
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
         private readonly IMeasureService _measureService;
         private readonly MeasureSettings _measureSettings;
-        private readonly ICustomerActivityService _customerActivityService;
         private readonly IPermissionService _permissionService;
         private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly ICustomerService _customerService;
-        private readonly IAclService _aclService;
+        private readonly ICheckoutAttributeViewModelService _checkoutAttributeViewModelService;
 
         #endregion
 
         #region Constructors
 
         public CheckoutAttributeController(ICheckoutAttributeService checkoutAttributeService,
-            ICheckoutAttributeParser checkoutAttributeParser,
             ILanguageService languageService, 
             ILocalizationService localizationService,
-            ITaxCategoryService taxCategoryService,
-            IWorkContext workContext, 
             ICurrencyService currencyService, 
-            ICustomerActivityService customerActivityService, 
             CurrencySettings currencySettings,
             IMeasureService measureService, 
             MeasureSettings measureSettings,
@@ -63,16 +51,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             IStoreService storeService,
             IStoreMappingService storeMappingService,
             ICustomerService customerService,
-            IAclService aclService)
+            ICheckoutAttributeViewModelService checkoutAttributeViewModelService)
         {
             this._checkoutAttributeService = checkoutAttributeService;
-            this._checkoutAttributeParser = checkoutAttributeParser;
             this._languageService = languageService;
             this._localizationService = localizationService;
-            this._taxCategoryService = taxCategoryService;
-            this._workContext = workContext;
             this._currencyService = currencyService;
-            this._customerActivityService = customerActivityService;
             this._currencySettings = currencySettings;
             this._measureService = measureService;
             this._measureSettings = measureSettings;
@@ -80,119 +64,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._storeService = storeService;
             this._storeMappingService = storeMappingService;
             this._customerService = customerService;
-            this._aclService = aclService;
+            this._checkoutAttributeViewModelService = checkoutAttributeViewModelService;
         }
 
         #endregion
         
-        #region Utilities
-
-        [NonAction]
-        protected virtual void PrepareTaxCategories(CheckoutAttributeModel model, CheckoutAttribute checkoutAttribute, bool excludeProperties)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            //tax categories
-            var taxCategories = _taxCategoryService.GetAllTaxCategories();
-            model.AvailableTaxCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Configuration.Settings.Tax.TaxCategories.None"), Value = "" });
-            foreach (var tc in taxCategories)
-                model.AvailableTaxCategories.Add(new SelectListItem { Text = tc.Name, Value = tc.Id.ToString(), Selected = checkoutAttribute != null && !excludeProperties && tc.Id == checkoutAttribute.TaxCategoryId });
-        }
-
-        [NonAction]
-        protected virtual void PrepareConditionAttributes(CheckoutAttributeModel model, CheckoutAttribute checkoutAttribute)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            //currenty any checkout attribute can have condition.
-            model.ConditionAllowed = true;
-
-            if (checkoutAttribute == null)
-                return;
-
-            var selectedAttribute = _checkoutAttributeParser.ParseCheckoutAttributes(checkoutAttribute.ConditionAttributeXml).FirstOrDefault();
-            var selectedValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttribute.ConditionAttributeXml);
-
-            model.ConditionModel = new ConditionModel()
-            {
-                EnableCondition = !string.IsNullOrEmpty(checkoutAttribute.ConditionAttributeXml),
-                SelectedAttributeId = selectedAttribute != null ? selectedAttribute.Id : "",
-                ConditionAttributes = _checkoutAttributeService.GetAllCheckoutAttributes()
-                    //ignore this attribute and non-combinable attributes
-                    .Where(x => x.Id != checkoutAttribute.Id && x.CanBeUsedAsCondition())
-                    .Select(x =>
-                        new AttributeConditionModel()
-                        {
-                            Id = x.Id,
-                            Name = x.Name,
-                            AttributeControlType = x.AttributeControlType,
-                            Values = x.CheckoutAttributeValues
-                                .Select(v => new SelectListItem()
-                                {
-                                    Text = v.Name,
-                                    Value = v.Id.ToString(),
-                                    Selected = selectedAttribute != null && selectedAttribute.Id == x.Id && selectedValues.Any(sv => sv.Id == v.Id)
-                                }).ToList()
-                        }).ToList()
-            };
-        }
-
-        [NonAction]
-        protected virtual void SaveConditionAttributes(CheckoutAttribute checkoutAttribute, CheckoutAttributeModel model)
-        {
-            string attributesXml = null;
-            if (model.ConditionModel.EnableCondition)
-            {
-                var attribute = _checkoutAttributeService.GetCheckoutAttributeById(model.ConditionModel.SelectedAttributeId);
-                if (attribute != null)
-                {
-                    switch (attribute.AttributeControlType)
-                    {
-                        case AttributeControlType.DropdownList:
-                        case AttributeControlType.RadioList:
-                        case AttributeControlType.ColorSquares:
-                        case AttributeControlType.ImageSquares:
-                            {
-                                var selectedAttribute = model.ConditionModel.ConditionAttributes
-                                    .FirstOrDefault(x => x.Id == model.ConditionModel.SelectedAttributeId);
-                                var selectedValue = selectedAttribute != null ? selectedAttribute.SelectedValueId : null;
-                                if (!String.IsNullOrEmpty(selectedValue))
-                                    attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml, attribute, selectedValue);
-                                else
-                                    attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml, attribute, string.Empty);
-                            }
-                            break;
-                        case AttributeControlType.Checkboxes:
-                            {
-                                var selectedAttribute = model.ConditionModel.ConditionAttributes
-                                    .FirstOrDefault(x => x.Id == model.ConditionModel.SelectedAttributeId);
-                                var selectedValues = selectedAttribute != null ? selectedAttribute.Values.Where(x => x.Selected).Select(x => x.Value) : null;
-                                if (selectedValues.Any())
-                                    foreach (var value in selectedValues)
-                                        attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml, attribute, value);
-                                else
-                                    attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml, attribute, string.Empty);
-                            }
-                            break;
-                        case AttributeControlType.ReadonlyCheckboxes:
-                        case AttributeControlType.TextBox:
-                        case AttributeControlType.MultilineTextbox:
-                        case AttributeControlType.Datepicker:
-                        case AttributeControlType.FileUpload:
-                        default:
-                            //these attribute types are not supported as conditions
-                            break;
-                    }
-                }
-            }
-            checkoutAttribute.ConditionAttributeXml = attributesXml;
-        }
-
-
-        #endregion
-
         #region Checkout attributes
 
         //list
@@ -215,15 +91,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes();
+            var checkoutAttributes = _checkoutAttributeViewModelService.PrepareCheckoutAttributeListModel();
             var gridModel = new DataSourceResult
             {
-                Data = checkoutAttributes.Select(x =>
-                {
-                    var attributeModel = x.ToModel();
-                    attributeModel.AttributeControlTypeName = x.AttributeControlType.GetLocalizedEnum(_localizationService, _workContext);
-                    return attributeModel;
-                }),
+                Data = checkoutAttributes.ToList(),
                 Total = checkoutAttributes.Count()
             };
             return Json(gridModel);
@@ -235,17 +106,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            var model = new CheckoutAttributeModel();
+            var model = _checkoutAttributeViewModelService.PrepareCheckoutAttributeModel();
             //locales
             AddLocales(_languageService, model.Locales);
-            //tax categories
-            PrepareTaxCategories(model, null, true);
             //Stores
             model.PrepareStoresMappingModel(null, false, _storeService);
             //ACL
             model.PrepareACLModel(null, false, _customerService);
-            //condition
-            PrepareConditionAttributes(model, null);
 
             return View(model);
         }
@@ -258,23 +125,14 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var checkoutAttribute = model.ToEntity();
-                checkoutAttribute.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
-                checkoutAttribute.Locales = model.Locales.ToLocalizedProperty();
-                checkoutAttribute.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
-                _checkoutAttributeService.InsertCheckoutAttribute(checkoutAttribute);
-               
-                //activity log
-                _customerActivityService.InsertActivity("AddNewCheckoutAttribute", checkoutAttribute.Id, _localizationService.GetResource("ActivityLog.AddNewCheckoutAttribute"), checkoutAttribute.Name);
-
+                var checkoutAttribute = _checkoutAttributeViewModelService.InsertCheckoutAttributeModel(model);
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = checkoutAttribute.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
-
             //tax categories
-            PrepareTaxCategories(model, null, true);
+            _checkoutAttributeViewModelService.PrepareTaxCategories(model, null, true);
             //Stores
             model.PrepareStoresMappingModel(null, true, _storeService);
             //ACL
@@ -301,15 +159,18 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.Name = checkoutAttribute.GetLocalized(x => x.Name, languageId, false, false);
                 locale.TextPrompt = checkoutAttribute.GetLocalized(x => x.TextPrompt, languageId, false, false);
             });
-            //ACL
-            model.PrepareACLModel(checkoutAttribute, false, _customerService);
+
             //tax categories
-            PrepareTaxCategories(model, checkoutAttribute, false);
+            _checkoutAttributeViewModelService.PrepareTaxCategories(model, checkoutAttribute, false);
             //Stores
             model.PrepareStoresMappingModel(checkoutAttribute, false, _storeService);
 
             //condition
-            PrepareConditionAttributes(model, checkoutAttribute);
+            _checkoutAttributeViewModelService.PrepareConditionAttributes(model, checkoutAttribute);
+            //ACL
+            model.PrepareACLModel(checkoutAttribute, false, _customerService);
+            //Stores
+            model.PrepareStoresMappingModel(checkoutAttribute, false, _storeService);
 
             return View(model);
         }
@@ -327,16 +188,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                checkoutAttribute = model.ToEntity(checkoutAttribute);
-                SaveConditionAttributes(checkoutAttribute, model);
-                checkoutAttribute.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
-                checkoutAttribute.Locales = model.Locales.ToLocalizedProperty();
-                checkoutAttribute.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
-                _checkoutAttributeService.UpdateCheckoutAttribute(checkoutAttribute);
-               
-                //activity log
-                _customerActivityService.InsertActivity("EditCheckoutAttribute", checkoutAttribute.Id, _localizationService.GetResource("ActivityLog.EditCheckoutAttribute"), checkoutAttribute.Name);
-
+                checkoutAttribute = _checkoutAttributeViewModelService.UpdateCheckoutAttributeModel(checkoutAttribute, model);
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Updated"));
                 if (continueEditing)
                 {
@@ -351,7 +203,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
 
             //tax categories
-            PrepareTaxCategories(model, checkoutAttribute, true);
+            _checkoutAttributeViewModelService.PrepareTaxCategories(model, checkoutAttribute, true);
             //Stores
             model.PrepareStoresMappingModel(checkoutAttribute, true, _storeService);
             //ACL
@@ -362,7 +214,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         //delete
         [HttpPost]
-        public IActionResult Delete(string id)
+        public IActionResult Delete(string id, [FromServices] ICustomerActivityService customerActivityService)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -371,7 +223,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _checkoutAttributeService.DeleteCheckoutAttribute(checkoutAttribute);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteCheckoutAttribute", checkoutAttribute.Id, _localizationService.GetResource("ActivityLog.DeleteCheckoutAttribute"), checkoutAttribute.Name);
+            customerActivityService.InsertActivity("DeleteCheckoutAttribute", checkoutAttribute.Id, _localizationService.GetResource("ActivityLog.DeleteCheckoutAttribute"), checkoutAttribute.Name);
 
             SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Deleted"));
             return RedirectToAction("List");
@@ -387,22 +239,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
-            var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(checkoutAttributeId);
-            var values = checkoutAttribute.CheckoutAttributeValues;
+            var checkoutAttribute = _checkoutAttributeViewModelService.PrepareCheckoutAttributeValuesModel(checkoutAttributeId);
             var gridModel = new DataSourceResult
             {
-                Data = values.Select(x => new CheckoutAttributeValueModel
-                {
-                    Id = x.Id,
-                    CheckoutAttributeId = x.CheckoutAttributeId,
-                    Name = checkoutAttribute.AttributeControlType != AttributeControlType.ColorSquares ? x.Name : string.Format("{0} - {1}", x.Name, x.ColorSquaresRgb),
-                    ColorSquaresRgb = x.ColorSquaresRgb,
-                    PriceAdjustment = x.PriceAdjustment,
-                    WeightAdjustment = x.WeightAdjustment,
-                    IsPreSelected = x.IsPreSelected,
-                    DisplayOrder = x.DisplayOrder,
-                }),
-                Total = values.Count()
+                Data = checkoutAttribute.ToList(),
+                Total = checkoutAttribute.Count()
             };
             return Json(gridModel);
         }
@@ -413,16 +254,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(checkoutAttributeId);
-            var model = new CheckoutAttributeValueModel();
-            model.CheckoutAttributeId = checkoutAttributeId;
-            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
-            model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
-
-            //color squares
-            model.DisplayColorSquaresRgb = checkoutAttribute.AttributeControlType == AttributeControlType.ColorSquares;
-            model.ColorSquaresRgb = "#000000";
-
+            var model = _checkoutAttributeViewModelService.PrepareCheckoutAttributeValueModel(checkoutAttributeId);
             //locales
             AddLocales(_languageService, model.Locales);
             return View(model);
@@ -446,35 +278,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 //ensure valid color is chosen/entered
                 if (String.IsNullOrEmpty(model.ColorSquaresRgb))
-                    ModelState.AddModelError("", "Color is required");
-                //TO DO
-                //try
-                //{
-                //    //ensure color is valid (can be instanciated)
-                //    System.Drawing.ColorTranslator.FromHtml(model.ColorSquaresRgb);
-                //}
-                //catch (Exception exc)
-                //{
-                //    ModelState.AddModelError("", exc.Message);
-                //}
+                    ModelState.AddModelError("", "Color is required");                
             }
 
             if (ModelState.IsValid)
             {
-                var cav = new CheckoutAttributeValue
-                {
-                    CheckoutAttributeId = model.CheckoutAttributeId,
-                    Name = model.Name,
-                    ColorSquaresRgb = model.ColorSquaresRgb,
-                    PriceAdjustment = model.PriceAdjustment,
-                    WeightAdjustment = model.WeightAdjustment,
-                    IsPreSelected = model.IsPreSelected,
-                    DisplayOrder = model.DisplayOrder,
-                };
-                cav.Locales = model.Locales.ToLocalizedProperty();
-                checkoutAttribute.CheckoutAttributeValues.Add(cav);
-                _checkoutAttributeService.UpdateCheckoutAttribute(checkoutAttribute);
-                
+                var cav = _checkoutAttributeViewModelService.InsertCheckoutAttributeValueModel(checkoutAttribute, model);
                 ViewBag.RefreshPage = true;
                 return View(model);
             }
@@ -494,19 +303,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No checkout attribute value found with the specified id
                 return RedirectToAction("List");
 
-            var model = new CheckoutAttributeValueModel
-            {
-                CheckoutAttributeId = cav.CheckoutAttributeId,
-                Name = cav.Name,
-                ColorSquaresRgb = cav.ColorSquaresRgb,
-                DisplayColorSquaresRgb = checkoutAttribute.AttributeControlType == AttributeControlType.ColorSquares,
-                PriceAdjustment = cav.PriceAdjustment,
-                WeightAdjustment = cav.WeightAdjustment,
-                IsPreSelected = cav.IsPreSelected,
-                DisplayOrder = cav.DisplayOrder,
-                PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode,
-                BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name
-            };
+            var model = _checkoutAttributeViewModelService.PrepareCheckoutAttributeValueModel(checkoutAttribute, cav);
 
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
@@ -542,15 +339,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                cav.Name = model.Name;
-                cav.ColorSquaresRgb = model.ColorSquaresRgb;
-                cav.PriceAdjustment = model.PriceAdjustment;
-                cav.WeightAdjustment = model.WeightAdjustment;
-                cav.IsPreSelected = model.IsPreSelected;
-                cav.DisplayOrder = model.DisplayOrder;
-                cav.Locales = model.Locales.ToLocalizedProperty();
-                _checkoutAttributeService.UpdateCheckoutAttribute(checkoutAttribute);
-
+                _checkoutAttributeViewModelService.UpdateCheckoutAttributeValueModel(checkoutAttribute, cav, model);
                 ViewBag.RefreshPage = true;
                 return View(model);
             }
@@ -576,8 +365,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return new NullJsonResult();
         }
-
-
         #endregion
     }
 }

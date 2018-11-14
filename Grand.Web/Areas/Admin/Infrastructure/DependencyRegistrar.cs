@@ -16,6 +16,9 @@ namespace Grand.Web.Areas.Admin.Infrastructure
             builder.RegisterType<BlogViewModelService>().As<IBlogViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<CampaignViewModelService>().As<ICampaignViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<CategoryViewModelService>().As<ICategoryViewModelService>().InstancePerLifetimeScope();
+            builder.RegisterType<CheckoutAttributeViewModelService>().As<ICheckoutAttributeViewModelService>().InstancePerLifetimeScope();
+            builder.RegisterType<ContactAttributeViewModelService>().As<IContactAttributeViewModelService>().InstancePerLifetimeScope();
+            builder.RegisterType<ContactFormViewModelService>().As<IContactFormViewModelService>().InstancePerLifetimeScope();
         }
 
         public int Order

@@ -35,7 +35,7 @@
 </div>
 <div class="content">
     <div class="row">
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_dashboard_top" })
+        <vc:admin-widget widget-zone="admin_dashboard_top" additional-data="null" />
         <div class="col-md-12">
             @if (!Model.IsLoggedInAsVendor && canManageOrders)
             {
@@ -236,7 +236,7 @@
                 </div>
             }
         </div>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_dashboard_bottom" })
+        <vc:admin-widget widget-zone="admin_dashboard_bottom" additional-data="null"/>
     </div>
 </div>
 <script type="text/javascript">

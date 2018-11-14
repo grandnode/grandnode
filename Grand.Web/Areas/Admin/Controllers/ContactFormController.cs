@@ -1,45 +1,30 @@
-﻿using Grand.Core;
-using Grand.Framework.Controllers;
+﻿using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
-using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
 using Grand.Services.Security;
-using Grand.Services.Stores;
-using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Messages;
+using Grand.Web.Areas.Admin.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
     public partial class ContactFormController : BaseAdminController
 	{
 		private readonly IContactUsService _contactUsService;
-        private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IContactFormViewModelService _contactFormViewModelService;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreService _storeService;
-        private readonly IEmailAccountService _emailAccountService;
 
         public ContactFormController(IContactUsService contactUsService,
-            IDateTimeHelper dateTimeHelper, 
+            IContactFormViewModelService contactFormViewModelService,
             ILocalizationService localizationService,
-            IPermissionService permissionService,
-            IWorkContext workContext,
-            IStoreService storeService,
-            IEmailAccountService emailAccountService)
+            IPermissionService permissionService)
 		{
             this._contactUsService = contactUsService;
-            this._dateTimeHelper = dateTimeHelper;
+            this._contactFormViewModelService = contactFormViewModelService;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
-            this._workContext = workContext;
-            this._storeService = storeService;
-            this._emailAccountService = emailAccountService;
         }
 
         public IActionResult Index()
@@ -52,12 +37,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageContactForm))
                 return AccessDeniedView();
 
-            var model = new ContactFormListModel();
-            //stores
-            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
-            foreach (var s in _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
-
+            var model = _contactFormViewModelService.PrepareContactFormListModel();
             return View(model);
 		}
 
@@ -67,39 +47,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageContactForm))
                 return AccessDeniedView();
 
-            DateTime? startDateValue = (model.SearchStartDate == null) ? null
-                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.SearchStartDate.Value, _dateTimeHelper.CurrentTimeZone);
-
-            DateTime? endDateValue = (model.SearchEndDate == null) ? null 
-                            :(DateTime?)_dateTimeHelper.ConvertToUtcTime(model.SearchEndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
-
-            string vendorId = ""; 
-            if (_workContext.CurrentVendor != null)
-            {
-                vendorId = _workContext.CurrentVendor.Id;
-            }
-
-            var contactform = _contactUsService.GetAllContactUs(
-                fromUtc:startDateValue, 
-                toUtc: endDateValue, 
-                email: model.SearchEmail,
-                storeId: model.StoreId,
-                vendorId: vendorId,
-                pageIndex: command.Page - 1, 
-                pageSize: command.PageSize);
+            var contactform = _contactFormViewModelService.PrepareContactFormListModel(model, command.Page, command.PageSize);
 
             var gridModel = new DataSourceResult
             {
-                Data = contactform.Select(x => {
-                    var store = _storeService.GetStoreById(x.StoreId);
-                    var m = x.ToModel();
-                    m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
-                    m.Enquiry = "";
-                    m.Email = m.FullName + " - " + m.Email;
-                    m.Store = store != null ? store.Name : "-empty-";
-                    return m;
-                }),
-                Total = contactform.TotalCount
+                Data = contactform.contactFormModel,
+                Total = contactform.totalCount
             };
             return Json(gridModel);
         }
@@ -113,12 +66,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (contactform == null)
                 return RedirectToAction("List");
 
-            var model = contactform.ToModel();
-            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(contactform.CreatedOnUtc, DateTimeKind.Utc);
-            var store = _storeService.GetStoreById(contactform.StoreId);
-            model.Store = store!=null ? store.Name: "-empty-";
-            var email = _emailAccountService.GetEmailAccountById(contactform.EmailAccountId);
-            model.EmailAccountName = email != null ? email.DisplayName : "-empty-";
+            var model = _contactFormViewModelService.PrepareContactFormModel(contactform);
             return View(model);
 		}
 
