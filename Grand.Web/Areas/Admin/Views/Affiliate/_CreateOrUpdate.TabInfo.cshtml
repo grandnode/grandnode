@@ -1,6 +1,7 @@
 ﻿@model AffiliateModel
 
 <div class="form-horizontal">
+    <vc:admin-widget widget-zone="affiliate_details_info_top" additional-data="Model" />
     <div class="form-body">
         @if (!String.IsNullOrEmpty(Model.Id))
         {
@@ -47,4 +48,5 @@
             </div>
         </div>
     </div>
+    <vc:admin-widget widget-zone="affiliate_details_info_bottom" additional-data="Model" />
 </div>

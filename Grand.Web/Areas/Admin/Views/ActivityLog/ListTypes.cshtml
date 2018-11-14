@@ -16,7 +16,7 @@
                     <div class="actions btn-group btn-group-devided">
                         <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
                     </div>
-                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "activity_types_list_buttons" })
+                    <vc:admin-widget widget-zone="activity_types_list_buttons" additional-data="null" />
                 </div>
                 <div class="portlet-body form">
                     <div class="form-horizontal">

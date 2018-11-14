@@ -23,7 +23,7 @@
                         </div>
                     </div>
                 </div>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = "address_attribute_details_buttons", additionalData = Model })
+                <vc:admin-widget widget-zone="address_attribute_details_buttons" additional-data="Model" />
                 <div class="portlet-body form">
                     <partial name="_CreateOrUpdate" model="Model" />
                 </div>

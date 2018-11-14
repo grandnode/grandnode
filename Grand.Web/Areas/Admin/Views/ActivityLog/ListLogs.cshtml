@@ -18,7 +18,7 @@
                         <i class="fa fa-trash-o"></i>
                         @T("Admin.Common.Clear")
                     </a>
-                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "activity_log_list_buttons" })
+                    <vc:admin-widget widget-zone="activity_log_list_buttons" additional-data="null" />
                 </div>
             </div>
             <div class="portlet-body form">
