@@ -10,8 +10,8 @@ using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Extensions;
-using Grand.Web.Areas.Admin.Helpers;
 using Grand.Web.Areas.Admin.Models.Directory;
+using Grand.Web.Areas.Admin.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -26,13 +26,13 @@ namespace Grand.Web.Areas.Admin.Controllers
 		#region Fields
 
         private readonly ICountryService _countryService;
+        private readonly ICountryViewModelService _countryViewModelService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly ILocalizationService _localizationService;
 	    private readonly IAddressService _addressService;
         private readonly IPermissionService _permissionService;
         private readonly ILanguageService _languageService;
         private readonly IStoreService _storeService;
-        private readonly IStoreMappingService _storeMappingService;
         private readonly IExportManager _exportManager;
         private readonly IImportManager _importManager;
 
@@ -41,24 +41,24 @@ namespace Grand.Web.Areas.Admin.Controllers
 		#region Constructors
 
         public CountryController(ICountryService countryService,
+            ICountryViewModelService countryViewModelService,
             IStateProvinceService stateProvinceService, 
             ILocalizationService localizationService,
             IAddressService addressService, 
             IPermissionService permissionService,
             ILanguageService languageService,
             IStoreService storeService,
-            IStoreMappingService storeMappingService,
             IExportManager exportManager,
             IImportManager importManager)
 		{
             this._countryService = countryService;
+            this._countryViewModelService = countryViewModelService;
             this._stateProvinceService = stateProvinceService;
             this._localizationService = localizationService;
             this._addressService = addressService;
             this._permissionService = permissionService;
             this._languageService = languageService;
             this._storeService = storeService;
-            this._storeMappingService = storeMappingService;
             this._exportManager = exportManager;
             this._importManager = importManager;
 		}
@@ -101,15 +101,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
-            var model = new CountryModel();
+            var model = _countryViewModelService.PrepareCountryModel();
             //locales
             AddLocales(_languageService, model.Locales);
             //Stores
             model.PrepareStoresMappingModel(null, false, _storeService);
-            //default values
-            model.Published = true;
-            model.AllowsBilling = true;
-            model.AllowsShipping = true;
+            
             return View(model);
         }
 
@@ -121,17 +118,11 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var country = model.ToEntity();
-                country.Locales = model.Locales.ToLocalizedProperty();
-                country.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
-                _countryService.InsertCountry(country);
-
+                var country = _countryViewModelService.InsertCountryModel(model);
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Countries.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = country.Id }) : RedirectToAction("List");
             }
-
             //If we got this far, something failed, redisplay form
-
             //Stores
             model.PrepareStoresMappingModel(null, true, _storeService);
 
@@ -173,13 +164,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                country = model.ToEntity(country);
-                country.Locales = model.Locales.ToLocalizedProperty();
-                country.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
-                _countryService.UpdateCountry(country);
-
+                country = _countryViewModelService.UpdateCountryModel(country, model);
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Countries.Updated"));
-
                 if (continueEditing)
                 {
                     //selected tab
@@ -189,9 +175,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }
                 return RedirectToAction("List");
             }
-
             //If we got this far, something failed, redisplay form
-
             //Stores
             model.PrepareStoresMappingModel(country, true, _storeService);
 
@@ -288,10 +272,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
-            var model = new StateProvinceModel();
-            model.CountryId = countryId;
-            //default value
-            model.Published = true;
+            var model = _countryViewModelService.PrepareStateProvinceModel(countryId);
             //locales
             AddLocales(_languageService, model.Locales);
             return View(model);
@@ -310,10 +291,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var sp = model.ToEntity();
-                sp.Locales = model.Locales.ToLocalizedProperty();
-                _stateProvinceService.InsertStateProvince(sp);
-
+                var sp = _countryViewModelService.InsertStateProvinceModel(model);
                 ViewBag.RefreshPage = true;
                 return View(model);
             }
@@ -356,10 +334,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                sp = model.ToEntity(sp);
-                sp.Locales = model.Locales.ToLocalizedProperty();
-                _stateProvinceService.UpdateStateProvince(sp);
-
+                sp = _countryViewModelService.UpdateStateProvinceModel(sp, model);
                 ViewBag.RefreshPage = true;
                 return View(model);
             }
