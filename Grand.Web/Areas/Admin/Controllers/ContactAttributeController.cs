@@ -1,11 +1,8 @@
-﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Messages;
+﻿using Grand.Core.Domain.Catalog;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
 using Grand.Services.Customers;
-using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Messages;
@@ -13,10 +10,9 @@ using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Messages;
+using Grand.Web.Areas.Admin.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
@@ -24,144 +20,34 @@ namespace Grand.Web.Areas.Admin.Controllers
     public partial class ContactAttributeController : BaseAdminController
     {
         #region Fields
-
+        private readonly IContactAttributeViewModelService _contactAttributeViewModelService;
         private readonly IContactAttributeService _contactAttributeService;
-        private readonly IContactAttributeParser _contactAttributeParser;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
-        private readonly IWorkContext _workContext;
-        private readonly ICustomerActivityService _customerActivityService;
         private readonly IPermissionService _permissionService;
         private readonly IStoreService _storeService;
-        private readonly IStoreMappingService _storeMappingService;
         private readonly ICustomerService _customerService;
-        private readonly IAclService _aclService;
 
         #endregion
 
         #region Constructors
 
-        public ContactAttributeController(IContactAttributeService contactAttributeService,
-            IContactAttributeParser contactAttributeParser,
-            ILanguageService languageService, 
+        public ContactAttributeController(IContactAttributeViewModelService contactAttributeViewModelService,
+            IContactAttributeService contactAttributeService,
+            ILanguageService languageService,
             ILocalizationService localizationService,
-            IWorkContext workContext, 
-            ICurrencyService currencyService, 
-            ICustomerActivityService customerActivityService, 
-            IMeasureService measureService, 
             IPermissionService permissionService,
             IStoreService storeService,
-            IStoreMappingService storeMappingService,
-            ICustomerService customerService,
-            IAclService aclService)
+            ICustomerService customerService)
         {
+            this._contactAttributeViewModelService = contactAttributeViewModelService;
             this._contactAttributeService = contactAttributeService;
-            this._contactAttributeParser = contactAttributeParser;
             this._languageService = languageService;
             this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._customerActivityService = customerActivityService;
             this._permissionService = permissionService;
             this._storeService = storeService;
-            this._storeMappingService = storeMappingService;
             this._customerService = customerService;
-            this._aclService = aclService;
         }
-
-        #endregion
-        
-        #region Utilities
-        
-        [NonAction]
-        protected virtual void PrepareConditionAttributes(ContactAttributeModel model, ContactAttribute contactAttribute)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            //currenty any contact attribute can have condition.
-            model.ConditionAllowed = true;
-
-            if (contactAttribute == null)
-                return;
-
-            var selectedAttribute = _contactAttributeParser.ParseContactAttributes(contactAttribute.ConditionAttributeXml).FirstOrDefault();
-            var selectedValues = _contactAttributeParser.ParseContactAttributeValues(contactAttribute.ConditionAttributeXml);
-
-            model.ConditionModel = new ConditionModel()
-            {
-                EnableCondition = !string.IsNullOrEmpty(contactAttribute.ConditionAttributeXml),
-                SelectedAttributeId = selectedAttribute != null ? selectedAttribute.Id : "",
-                ConditionAttributes = _contactAttributeService.GetAllContactAttributes()
-                    //ignore this attribute and non-combinable attributes
-                    .Where(x => x.Id != contactAttribute.Id && x.CanBeUsedAsCondition())
-                    .Select(x =>
-                        new AttributeConditionModel()
-                        {
-                            Id = x.Id,
-                            Name = x.Name,
-                            AttributeControlType = x.AttributeControlType,
-                            Values = x.ContactAttributeValues 
-                                .Select(v => new SelectListItem()
-                                {
-                                    Text = v.Name,
-                                    Value = v.Id.ToString(),
-                                    Selected = selectedAttribute != null && selectedAttribute.Id == x.Id && selectedValues.Any(sv => sv.Id == v.Id)
-                                }).ToList()
-                        }).ToList()
-            };
-        }
-
-        [NonAction]
-        protected virtual void SaveConditionAttributes(ContactAttribute contactAttribute, ContactAttributeModel model)
-        {
-            string attributesXml = null;
-            if (model.ConditionModel.EnableCondition)
-            {
-                var attribute = _contactAttributeService.GetContactAttributeById(model.ConditionModel.SelectedAttributeId);
-                if (attribute != null)
-                {
-                    switch (attribute.AttributeControlType)
-                    {
-                        case AttributeControlType.DropdownList:
-                        case AttributeControlType.RadioList:
-                        case AttributeControlType.ColorSquares:
-                        case AttributeControlType.ImageSquares:
-                            {
-                                var selectedAttribute = model.ConditionModel.ConditionAttributes
-                                    .FirstOrDefault(x => x.Id == model.ConditionModel.SelectedAttributeId);
-                                var selectedValue = selectedAttribute != null ? selectedAttribute.SelectedValueId : null;
-                                if (!String.IsNullOrEmpty(selectedValue))
-                                    attributesXml = _contactAttributeParser.AddContactAttribute(attributesXml, attribute, selectedValue);
-                                else
-                                    attributesXml = _contactAttributeParser.AddContactAttribute(attributesXml, attribute, string.Empty);
-                            }
-                            break;
-                        case AttributeControlType.Checkboxes:
-                            {
-                                var selectedAttribute = model.ConditionModel.ConditionAttributes
-                                    .FirstOrDefault(x => x.Id == model.ConditionModel.SelectedAttributeId);
-                                var selectedValues = selectedAttribute != null ? selectedAttribute.Values.Where(x => x.Selected).Select(x => x.Value) : null;
-                                if (selectedValues.Any())
-                                    foreach (var value in selectedValues)
-                                        attributesXml = _contactAttributeParser.AddContactAttribute(attributesXml, attribute, value);
-                                else
-                                    attributesXml = _contactAttributeParser.AddContactAttribute(attributesXml, attribute, string.Empty);
-                            }
-                            break;
-                        case AttributeControlType.ReadonlyCheckboxes:
-                        case AttributeControlType.TextBox:
-                        case AttributeControlType.MultilineTextbox:
-                        case AttributeControlType.Datepicker:
-                        case AttributeControlType.FileUpload:
-                        default:
-                            //these attribute types are not supported as conditions
-                            break;
-                    }
-                }
-            }
-            contactAttribute.ConditionAttributeXml = attributesXml;
-        }
-
 
         #endregion
 
@@ -187,20 +73,15 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            var contactAttributes = _contactAttributeService.GetAllContactAttributes();
+            var contactAttributes = _contactAttributeViewModelService.PrepareContactAttributeListModel();
             var gridModel = new DataSourceResult
             {
-                Data = contactAttributes.Select(x =>
-                {
-                    var attributeModel = x.ToModel();
-                    attributeModel.AttributeControlTypeName = x.AttributeControlType.GetLocalizedEnum(_localizationService, _workContext);
-                    return attributeModel;
-                }),
+                Data = contactAttributes.ToList(),
                 Total = contactAttributes.Count()
             };
             return Json(gridModel);
         }
-        
+
         //create
         public IActionResult Create()
         {
@@ -215,7 +96,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //ACL
             model.PrepareACLModel(null, false, _customerService);
             //condition
-            PrepareConditionAttributes(model, null);
+            _contactAttributeViewModelService.PrepareConditionAttributes(model, null);
 
             return View(model);
         }
@@ -228,21 +109,11 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var contactAttribute = model.ToEntity();
-                contactAttribute.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
-                contactAttribute.Locales = model.Locales.ToLocalizedProperty();
-                contactAttribute.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
-                _contactAttributeService.InsertContactAttribute(contactAttribute);
-               
-                //activity log
-                _customerActivityService.InsertActivity("AddNewContactAttribute", contactAttribute.Id, _localizationService.GetResource("ActivityLog.AddNewContactAttribute"), contactAttribute.Name);
-
+                var contactAttribute = _contactAttributeViewModelService.InsertContactAttributeModel(model);
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.ContactAttributes.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = contactAttribute.Id }) : RedirectToAction("List");
             }
-
             //If we got this far, something failed, redisplay form
-
             //Stores
             model.PrepareStoresMappingModel(null, true, _storeService);
             //ACL
@@ -274,7 +145,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //Stores
             model.PrepareStoresMappingModel(contactAttribute, false, _storeService);
             //condition
-            PrepareConditionAttributes(model, contactAttribute);
+            _contactAttributeViewModelService.PrepareConditionAttributes(model, contactAttribute);
 
             return View(model);
         }
@@ -292,23 +163,14 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                contactAttribute = model.ToEntity(contactAttribute);
-                SaveConditionAttributes(contactAttribute, model);
-                contactAttribute.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
-                contactAttribute.Locales = model.Locales.ToLocalizedProperty();
-                contactAttribute.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
-                _contactAttributeService.UpdateContactAttribute(contactAttribute);
-               
-                //activity log
-                _customerActivityService.InsertActivity("EditContactAttribute", contactAttribute.Id, _localizationService.GetResource("ActivityLog.EditContactAttribute"), contactAttribute.Name);
-
+                contactAttribute = _contactAttributeViewModelService.UpdateContactAttributeModel(contactAttribute, model);
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.ContactAttributes.Updated"));
                 if (continueEditing)
                 {
                     //selected tab
                     SaveSelectedTabIndex();
 
-                    return RedirectToAction("Edit", new {id = contactAttribute.Id});
+                    return RedirectToAction("Edit", new { id = contactAttribute.Id });
                 }
                 return RedirectToAction("List");
             }
@@ -319,13 +181,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.PrepareStoresMappingModel(contactAttribute, true, _storeService);
             //ACL
             model.PrepareACLModel(contactAttribute, true, _customerService);
-            PrepareConditionAttributes(model, contactAttribute);
+            _contactAttributeViewModelService.PrepareConditionAttributes(model, contactAttribute);
             return View(model);
         }
 
         //delete
         [HttpPost]
-        public IActionResult Delete(string id)
+        public IActionResult Delete(string id, [FromServices] ICustomerActivityService customerActivityService)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -334,7 +196,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _contactAttributeService.DeleteContactAttribute(contactAttribute);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteContactAttribute", contactAttribute.Id, _localizationService.GetResource("ActivityLog.DeleteContactAttribute"), contactAttribute.Name);
+            customerActivityService.InsertActivity("DeleteContactAttribute", contactAttribute.Id, _localizationService.GetResource("ActivityLog.DeleteContactAttribute"), contactAttribute.Name);
 
             SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.ContactAttributes.Deleted"));
             return RedirectToAction("List");
@@ -375,12 +237,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             var contactAttribute = _contactAttributeService.GetContactAttributeById(contactAttributeId);
-            var model = new ContactAttributeValueModel();
-            model.ContactAttributeId = contactAttributeId;
-
-            //color squares
-            model.DisplayColorSquaresRgb = contactAttribute.AttributeControlType == AttributeControlType.ColorSquares;
-            model.ColorSquaresRgb = "#000000";
+            var model = _contactAttributeViewModelService.PrepareContactAttributeValueModel(contactAttribute);
 
             //locales
             AddLocales(_languageService, model.Locales);
@@ -402,33 +259,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 //ensure valid color is chosen/entered
                 if (String.IsNullOrEmpty(model.ColorSquaresRgb))
-                    ModelState.AddModelError("", "Color is required");
-                //TO DO
-                //try
-                //{
-                //    //ensure color is valid (can be instanciated)
-                //    System.Drawing.ColorTranslator.FromHtml(model.ColorSquaresRgb);
-                //}
-                //catch (Exception exc)
-                //{
-                //    ModelState.AddModelError("", exc.Message);
-                //}
+                    ModelState.AddModelError("", "Color is required");                
             }
 
             if (ModelState.IsValid)
             {
-                var cav = new ContactAttributeValue
-                {
-                    ContactAttributeId = model.ContactAttributeId,
-                    Name = model.Name,
-                    ColorSquaresRgb = model.ColorSquaresRgb,
-                    IsPreSelected = model.IsPreSelected,
-                    DisplayOrder = model.DisplayOrder,
-                };
-                cav.Locales = model.Locales.ToLocalizedProperty();
-                contactAttribute.ContactAttributeValues.Add(cav);
-                _contactAttributeService.UpdateContactAttribute(contactAttribute);
-                
+                _contactAttributeViewModelService.InsertContactAttributeValueModel(contactAttribute, model);
+
                 ViewBag.RefreshPage = true;
                 return View(model);
             }
@@ -443,21 +280,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
             var contactAttribute = _contactAttributeService.GetContactAttributeById(contactAttributeId);
-            var cav = contactAttribute.ContactAttributeValues.Where(x=>x.Id == id).FirstOrDefault();
+            var cav = contactAttribute.ContactAttributeValues.Where(x => x.Id == id).FirstOrDefault();
             if (cav == null)
                 //No contact attribute value found with the specified id
                 return RedirectToAction("List");
 
-            var model = new ContactAttributeValueModel
-            {
-                ContactAttributeId = cav.ContactAttributeId,
-                Name = cav.Name,
-                ColorSquaresRgb = cav.ColorSquaresRgb,
-                DisplayColorSquaresRgb = contactAttribute.AttributeControlType == AttributeControlType.ColorSquares,
-                IsPreSelected = cav.IsPreSelected,
-                DisplayOrder = cav.DisplayOrder,
-            };
-
+            var model = _contactAttributeViewModelService.PrepareContactAttributeValueModel(contactAttribute, cav);
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
@@ -489,13 +317,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                cav.Name = model.Name;
-                cav.ColorSquaresRgb = model.ColorSquaresRgb;
-                cav.IsPreSelected = model.IsPreSelected;
-                cav.DisplayOrder = model.DisplayOrder;
-                cav.Locales = model.Locales.ToLocalizedProperty();
-                _contactAttributeService.UpdateContactAttribute(contactAttribute);
-
+                _contactAttributeViewModelService.UpdateContactAttributeValueModel(contactAttribute, cav, model);
                 ViewBag.RefreshPage = true;
                 return View(model);
             }
