@@ -20,6 +20,7 @@
                             <button class="btn btn-success" type="submit" name="save-continue"><i class="fa fa-check-circle"></i> @T("Admin.Common.SaveContinue") </button>
                         </div>
                     </div>
+                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = "address_attribute_details_buttons" })
                 </div>
                 <div class="portlet-body form">
                    <partial name="_CreateOrUpdate" model="Model" />
