@@ -20,6 +20,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure
             builder.RegisterType<ContactAttributeViewModelService>().As<IContactAttributeViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<ContactFormViewModelService>().As<IContactFormViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<CountryViewModelService>().As<ICountryViewModelService>().InstancePerLifetimeScope();
+            builder.RegisterType<CurrencyViewModelService>().As<ICurrencyViewModelService>().InstancePerLifetimeScope();
         }
 
         public int Order

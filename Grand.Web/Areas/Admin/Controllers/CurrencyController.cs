@@ -11,6 +11,7 @@ using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Directory;
+using Grand.Web.Areas.Admin.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -26,6 +27,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Fields
 
         private readonly ICurrencyService _currencyService;
+        private readonly ICurrencyViewModelService _currencyViewModelService;
         private readonly CurrencySettings _currencySettings;
         private readonly ISettingService _settingService;
         private readonly IDateTimeHelper _dateTimeHelper;
@@ -33,21 +35,21 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly ILanguageService _languageService;
         private readonly IStoreService _storeService;
-        private readonly IStoreMappingService _storeMappingService;
 
         #endregion
 
         #region Constructors
 
-        public CurrencyController(ICurrencyService currencyService, 
+        public CurrencyController(ICurrencyService currencyService,
+            ICurrencyViewModelService currencyViewModelService,
             CurrencySettings currencySettings, ISettingService settingService,
             IDateTimeHelper dateTimeHelper, ILocalizationService localizationService,
             IPermissionService permissionService,
             ILanguageService languageService,
-            IStoreService storeService, 
-            IStoreMappingService storeMappingService)
+            IStoreService storeService)
         {
             this._currencyService = currencyService;
+            this._currencyViewModelService = currencyViewModelService;
             this._currencySettings = currencySettings;
             this._settingService = settingService;
             this._dateTimeHelper = dateTimeHelper;
@@ -55,7 +57,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._permissionService = permissionService;
             this._languageService = languageService;
             this._storeService = storeService;
-            this._storeMappingService = storeMappingService;
         }
         
         #endregion
@@ -183,14 +184,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
 
-            var model = new CurrencyModel();
+            var model = _currencyViewModelService.PrepareCurrencyModel();
             //locales
             AddLocales(_languageService, model.Locales);
             //Stores
             model.PrepareStoresMappingModel(null, false, _storeService);
-            //default values
-            model.Published = true;
-            model.Rate = 1;
+            
             return View(model);
         }
 
@@ -202,20 +201,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var currency = model.ToEntity();
-                currency.CreatedOnUtc = DateTime.UtcNow;
-                currency.UpdatedOnUtc = DateTime.UtcNow;
-                currency.Locales = model.Locales.ToLocalizedProperty();
-                currency.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
-
-                _currencyService.InsertCurrency(currency);
-
+                var currency = _currencyViewModelService.InsertCurrencyModel(model);
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = currency.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
-
             //Stores
             model.PrepareStoresMappingModel(null, true, _storeService);
 
@@ -266,15 +257,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                     ErrorNotification("At least one published currency is required.");
                     return RedirectToAction("Edit", new { id = currency.Id });
                 }
-
-                currency = model.ToEntity(currency);
-                currency.UpdatedOnUtc = DateTime.UtcNow;
-                currency.Locales = model.Locales.ToLocalizedProperty();
-                currency.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
-                _currencyService.UpdateCurrency(currency);
-
+                currency = _currencyViewModelService.UpdateCurrencyModel(currency, model);
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Updated"));
-
                 if (continueEditing)
                 {
                     //selected tab
@@ -287,10 +271,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //If we got this far, something failed, redisplay form
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(currency.CreatedOnUtc, DateTimeKind.Utc);
-
             //Stores
             model.PrepareStoresMappingModel(currency, true, _storeService);
-
             return View(model);
         }
         
