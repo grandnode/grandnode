@@ -239,12 +239,15 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No category found with the specified id
                 return RedirectToAction("List");
 
-            _categoryService.DeleteCategory(category);
+            if (ModelState.IsValid)
+            {
+                _categoryService.DeleteCategory(category);
 
-            //activity log
-            _customerActivityService.InsertActivity("DeleteCategory", category.Id, _localizationService.GetResource("ActivityLog.DeleteCategory"), category.Name);
+                //activity log
+                _customerActivityService.InsertActivity("DeleteCategory", category.Id, _localizationService.GetResource("ActivityLog.DeleteCategory"), category.Name);
 
-            SuccessNotification(_localizationService.GetResource("Admin.Catalog.Categories.Deleted"));
+                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Categories.Deleted"));
+            }
             return RedirectToAction("List");
         }
 
@@ -340,10 +343,13 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
-            
-            _categoryViewModelService.UpdateProductCategoryModel(model);
 
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                _categoryViewModelService.UpdateProductCategoryModel(model);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         public IActionResult ProductDelete(string id, string productId)
@@ -351,9 +357,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
 
-            _categoryViewModelService.DeleteProductCategoryModel(id, productId);
-
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                _categoryViewModelService.DeleteProductCategoryModel(id, productId);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         public IActionResult ProductAddPopup(string categoryId)

@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -271,7 +272,19 @@ namespace Grand.Framework.Controllers
 
             return Json(gridModel);
         }
-
+        /// <summary>
+        /// Error's json data for kendo grid
+        /// </summary>
+        /// <param name="modelState">Model state</param>
+        /// <returns>Error's json data</returns>
+        protected JsonResult ErrorForKendoGridJson(ModelStateDictionary modelState)
+        {
+            var gridModel = new DataSourceResult
+            {
+                Errors = ModelState.SerializeErrors()
+            };
+            return Json(gridModel);
+        }
         /// <summary>
         /// Display "Edit" (manage) link (in public store)
         /// </summary>
