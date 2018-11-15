@@ -30,9 +30,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         private readonly ICategoryService _categoryService;
         private readonly ICategoryViewModelService _categoryViewModelService;
-        private readonly IProductService _productService;
         private readonly ICustomerService _customerService;
-        private readonly IUrlRecordService _urlRecordService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
@@ -47,16 +45,14 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Constructors
 
-        public CategoryController(ICategoryService categoryService, ICategoryViewModelService categoryViewModelService,
-            IProductService productService,
+        public CategoryController(
+            ICategoryService categoryService, 
+            ICategoryViewModelService categoryViewModelService,
             ICustomerService customerService,
-            IUrlRecordService urlRecordService,
             ILanguageService languageService,
             ILocalizationService localizationService,
             IPermissionService permissionService,
-            IAclService aclService,
             IStoreService storeService,
-            IStoreMappingService storeMappingService,
             IExportManager exportManager,
             ICustomerActivityService customerActivityService,
             IWorkContext workContext,
@@ -65,9 +61,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             this._categoryService = categoryService;
             this._categoryViewModelService = categoryViewModelService;
-            this._productService = productService;
             this._customerService = customerService;
-            this._urlRecordService = urlRecordService;
             this._languageService = languageService;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
@@ -129,7 +123,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(model);
         }
 
-        
         #endregion
 
         #region Create / Edit / Delete
@@ -142,7 +135,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var model = _categoryViewModelService.PrepareCategoryModel();
             //locales
             AddLocales(_languageService, model.Locales);
-            
+
             return View(model);
         }
 
@@ -264,7 +257,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
-
             try
             {
                 var xml = _exportManager.ExportCategoriesToXml();
@@ -281,7 +273,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
-
             try
             {
                 var bytes = _exportManager.ExportCategoriesToXlsx(_categoryService.GetAllCategories(showHidden: true));
@@ -349,12 +340,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
-            var product = _productService.GetProductById(model.ProductId);
-            var productCategory = product.ProductCategories.FirstOrDefault(x => x.Id == model.Id);
-            if (productCategory == null)
-                throw new ArgumentException("No product category mapping found with the specified id");
-
-            _categoryViewModelService.UpdateProductCategoryModel(productCategory, model);
+            
+            _categoryViewModelService.UpdateProductCategoryModel(model);
 
             return new NullJsonResult();
         }
@@ -364,15 +351,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
 
-            var product = _productService.GetProductById(productId);
-            if (product == null)
-                throw new ArgumentException("No product found with the specified id");
-
-            var productCategory = product.ProductCategories.Where(x => x.Id == id).FirstOrDefault();
-            if (productCategory == null)
-                throw new ArgumentException("No product category mapping found with the specified id");
-            productCategory.ProductId = productId;
-            _categoryService.DeleteProductCategory(productCategory);
+            _categoryViewModelService.DeleteProductCategoryModel(id, productId);
 
             return new NullJsonResult();
         }
@@ -397,19 +376,9 @@ namespace Grand.Web.Areas.Admin.Controllers
                 searchCategoryIds.Add(model.SearchCategoryId);
 
             var gridModel = new DataSourceResult();
-            var products = _productService.SearchProducts(
-                categoryIds: searchCategoryIds,
-                manufacturerId: model.SearchManufacturerId,
-                storeId: model.SearchStoreId,
-                vendorId: model.SearchVendorId,
-                productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
-                keywords: model.SearchProductName,
-                pageIndex: command.Page - 1,
-                pageSize: command.PageSize,
-                showHidden: true
-                );
-            gridModel.Data = products.Select(x => x.ToModel());
-            gridModel.Total = products.TotalCount;
+            var products = _categoryViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
+            gridModel.Data = products.products.ToList();
+            gridModel.Total = products.totalCount;
 
             return Json(gridModel);
         }

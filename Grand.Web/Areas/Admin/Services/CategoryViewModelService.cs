@@ -304,15 +304,32 @@ namespace Grand.Web.Areas.Admin.Services
             }), productCategories.TotalCount);
         }
 
-        public virtual ProductCategory UpdateProductCategoryModel(ProductCategory productCategory, CategoryModel.CategoryProductModel model)
+        public virtual ProductCategory UpdateProductCategoryModel(CategoryModel.CategoryProductModel model)
         {
+            var product = _productService.GetProductById(model.ProductId);
+            var productCategory = product.ProductCategories.FirstOrDefault(x => x.Id == model.Id);
+            if (productCategory == null)
+                throw new ArgumentException("No product category mapping found with the specified id");
+
             productCategory.IsFeaturedProduct = model.IsFeaturedProduct;
             productCategory.DisplayOrder = model.DisplayOrder;
             productCategory.ProductId = model.ProductId;
             _categoryService.UpdateProductCategory(productCategory);
             return productCategory;
         }
+        public virtual void DeleteProductCategoryModel(string id, string productId)
+        {
+            var product = _productService.GetProductById(productId);
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
 
+            var productCategory = product.ProductCategories.Where(x => x.Id == id).FirstOrDefault();
+            if (productCategory == null)
+                throw new ArgumentException("No product category mapping found with the specified id");
+            productCategory.ProductId = productId;
+            _categoryService.DeleteProductCategory(productCategory);
+
+        }
         public virtual CategoryModel.AddCategoryProductModel PrepareAddCategoryProductModel()
         {
             var model = new CategoryModel.AddCategoryProductModel();
@@ -384,6 +401,24 @@ namespace Grand.Web.Areas.Admin.Services
 
                 }), activityLog.TotalCount);
         }
+        public virtual (IList<ProductModel> products, int totalCount) PrepareProductModel(CategoryModel.AddCategoryProductModel model, int pageIndex, int pageSize)
+        {
+            var searchCategoryIds = new List<string>();
+            if (!String.IsNullOrEmpty(model.SearchCategoryId))
+                searchCategoryIds.Add(model.SearchCategoryId);
 
+            var products = _productService.SearchProducts(
+                categoryIds: searchCategoryIds,
+                manufacturerId: model.SearchManufacturerId,
+                storeId: model.SearchStoreId,
+                vendorId: model.SearchVendorId,
+                productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
+                keywords: model.SearchProductName,
+                pageIndex: pageIndex - 1,
+                pageSize: pageSize,
+                showHidden: true
+                );
+            return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
+        }
     }
 }
