@@ -14743,7 +14743,7 @@
     <Value>Roslyn compilation</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Roslyn.Disabled">
-    <Value>Compilation of files ctx are disabled. </Value>
+    <Value>Compilation of files csx are disabled. </Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Roslyn.Errors">
     <Value>Errors during compilation</Value>
