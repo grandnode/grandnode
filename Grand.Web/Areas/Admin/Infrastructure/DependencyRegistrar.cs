@@ -23,6 +23,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure
             builder.RegisterType<CurrencyViewModelService>().As<ICurrencyViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<CustomerActionViewModelService>().As<ICustomerActionViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<CustomerAttributeViewModelService>().As<ICustomerAttributeViewModelService>().InstancePerLifetimeScope();
+            builder.RegisterType<CustomerViewModelService>().As<ICustomerViewModelService>().InstancePerLifetimeScope();
         }
 
         public int Order

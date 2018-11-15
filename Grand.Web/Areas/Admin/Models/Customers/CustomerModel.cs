@@ -134,7 +134,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
         public string AffiliateId { get; set; }
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.Affiliate")]
         public string AffiliateName { get; set; }
-
+        public string CustomAttributes { get; set; }
         //time zone
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.TimeZoneId")]
         
