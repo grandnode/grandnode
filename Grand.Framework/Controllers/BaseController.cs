@@ -206,6 +206,24 @@ namespace Grand.Framework.Controllers
         /// <summary>
         /// Display error notification
         /// </summary>
+        /// <param name="message">Message</param>
+        /// <param name="persistForTheNextRequest">A value indicating whether a message should be persisted for the next request</param>
+        protected virtual void ErrorNotification(ModelStateDictionary ModelState, bool persistForTheNextRequest = true)
+        {
+            var modelErrors = new List<string>();
+            foreach (var modelState in ModelState.Values)
+            {
+                foreach (var modelError in modelState.Errors)
+                {
+                    modelErrors.Add(modelError.ErrorMessage);
+                }
+            }
+            AddNotification(NotifyType.Error, string.Join(',', modelErrors), persistForTheNextRequest);
+        }
+
+        /// <summary>
+        /// Display error notification
+        /// </summary>
         /// <param name="exception">Exception</param>
         /// <param name="persistForTheNextRequest">A value indicating whether a message should be persisted for the next request</param>
         /// <param name="logException">A value indicating whether exception should be logged</param>
