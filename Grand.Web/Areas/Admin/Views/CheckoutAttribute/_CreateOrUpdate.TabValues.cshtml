@@ -1,4 +1,5 @@
 ﻿@model CheckoutAttributeModel
+<vc:admin-widget widget-zone="checkout_attribute_details_values_top" additional-data="Model" />
 @{
 
     if (!String.IsNullOrEmpty(Model.Id))
@@ -116,3 +117,4 @@
         </div>
     }
 }
+<vc:admin-widget widget-zone="checkout_attribute_details_values_bottom" additional-data="Model" />

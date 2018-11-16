@@ -1,4 +1,5 @@
 ﻿@model CountryModel
+<vc:admin-widget widget-zone="country_details_states_top" additional-data="Model" />
 @{
     if (!String.IsNullOrEmpty(Model.Id))
     {
@@ -107,3 +108,4 @@
         </div>
     }
 }
+<vc:admin-widget widget-zone="country_details_states_bottom" additional-data="Model" />

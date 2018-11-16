@@ -24,7 +24,7 @@
         }
     }
 </script>
-
+<vc:admin-widget widget-zone="customer_role_details_top" additional-data="Model" />
 <div id="customerrole-edit">
     <ul>
         <li tab-index="0">
@@ -41,6 +41,7 @@
        <partial name="_CreateOrUpdate.TabProducts" model="Model" />
     </div>
 </div>
+<vc:admin-widget widget-zone="customer_role_details_bottom" additional-data="Model" />
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "customerrole-edit");

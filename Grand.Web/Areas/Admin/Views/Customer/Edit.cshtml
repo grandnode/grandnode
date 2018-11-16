@@ -29,6 +29,7 @@
                                 <input type="submit" name="resend-activation-message" class="btn default" value="@T("Admin.Customers.Customers.ReSendActivationMessage")" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
                             }
                             <span id="customer-delete" class="btn red"><i class="fa fa-trash-o"></i> @T("Admin.Common.Delete")</span>
+                            <vc:admin-widget widget-zone="customer_details_buttons" additional-data="Model" />
                         </div>
                     </div>
                 </div>

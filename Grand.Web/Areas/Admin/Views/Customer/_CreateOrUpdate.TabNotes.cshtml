@@ -1,7 +1,9 @@
 ﻿@model CustomerModel
 <div class="panel panel-default">
     <div class="panel-body">
+        <vc:admin-widget widget-zone="customer_details_notes_top" additional-data="Model" />
         <div id="customernotes-grid"></div>
+        <vc:admin-widget widget-zone="customer_details_notes_bottom" additional-data="Model" />
     </div>
 </div>            
 <script>

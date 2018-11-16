@@ -14,11 +14,13 @@
                     <i class="fa fa-sitemap"></i>
                     @T("Admin.System.SeNames")
                 </div>
+                <vc:admin-widget widget-zone="senames_buttons" additional-data="null" />
                 <div class="actions btn-group btn-group-devided">
                     <span id="delete-selected" class="btn red"><i class="fa fa-trash-o"></i> @T("Admin.System.SeNames.DeleteSelected")</span>
                 </div>
             </div>
             <div class="portlet-body form">
+                <vc:admin-widget widget-zone="senames_top" additional-data="null" />
                 <div class="form-horizontal">
                     <div class="form-body">
                         <div class="form-group">
@@ -38,6 +40,7 @@
                         </div>
                     </div>
                 </div>
+                <vc:admin-widget widget-zone="senames_bottom" additional-data="null" />
             </div>
             <div class="portlet-body">
                 <div id="sename-grid"></div>
