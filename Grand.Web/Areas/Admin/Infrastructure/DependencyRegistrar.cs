@@ -28,7 +28,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure
             builder.RegisterType<CustomerRoleViewModelService>().As<ICustomerRoleViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<CustomerTagViewModelService>().As<ICustomerTagViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<DiscountViewModelService>().As<IDiscountViewModelService>().InstancePerLifetimeScope();
-            builder.RegisterType<EmailAccountViewModelService>().As<IEmailAccountViewModelService>().InstancePerLifetimeScope();            
+            builder.RegisterType<EmailAccountViewModelService>().As<IEmailAccountViewModelService>().InstancePerLifetimeScope();
+            builder.RegisterType<GiftCardViewModelService>().As<IGiftCardViewModelService>().InstancePerLifetimeScope();
         }
 
         public int Order
