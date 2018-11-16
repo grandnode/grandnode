@@ -1,4 +1,5 @@
 ﻿@model CategoryModel
+<vc:admin-widget widget-zone="category_details_discounts_top" additional-data="Model" />
 @if (Model.AvailableDiscounts != null && Model.AvailableDiscounts.Count > 0)
 {
     <div class="mt-checkbox-list">
@@ -18,3 +19,4 @@ else
         @T("Admin.Catalog.Categories.Discounts.NoDiscounts")
     </div>
 }
+<vc:admin-widget widget-zone="category_details_discounts_bottom" additional-data="Model" />

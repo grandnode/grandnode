@@ -22,6 +22,7 @@
                     </div>
                 </div>
                 <div class="portlet-body form">
+                    <vc:admin-widget widget-zone="customer_details_product_add_popup_top" additional-data="Model" />
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group popup">
@@ -71,10 +72,11 @@
                                     <admin-select asp-for="SearchProductTypeId" asp-items="Model.AvailableProductTypes" />
                                 </div>
                             </div>
-                            
+
                             <div id="products-grid"></div>
                         </div>
                     </div>
+                    <vc:admin-widget widget-zone="customer_details_product_add_popup_bottom" additional-data="Model" />
                 </div>
             </div>
         </div>

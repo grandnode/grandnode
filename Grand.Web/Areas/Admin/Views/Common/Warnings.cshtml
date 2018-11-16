@@ -12,8 +12,9 @@
                     <i class="fa fa-tasks"></i>
                     @T("Admin.System.Warnings")
                 </div>
+                <vc:admin-widget widget-zone="warnings_buttons" additional-data="null" />
             </div>
-
+            <vc:admin-widget widget-zone="warnings_top" additional-data="null" />
             @foreach (var warning in Model)
             {
                 switch (warning.Level)
@@ -41,7 +42,7 @@
                         break;
                 }
             }
-
+            <vc:admin-widget widget-zone="warnings_bottom" additional-data="null" />
         </div>
     </div>
 </div>

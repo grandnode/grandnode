@@ -2,6 +2,7 @@
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 <input asp-for="CustomerAttributeId" type="hidden" />
+<vc:admin-widget widget-zone="customer_attribute_values_details_top" additional-data="Model" />
 @if (ViewBag.RefreshPage == true)
 {
     <script type="text/javascript">
@@ -58,4 +59,4 @@
         </dic>
     </div>
 </div>
-
+<vc:admin-widget widget-zone="customer_attribute_values_details_bottom" additional-data="Model" />

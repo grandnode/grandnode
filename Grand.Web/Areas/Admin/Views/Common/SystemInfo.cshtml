@@ -12,21 +12,23 @@
                     <i class="fa fa-tasks"></i>
                     @T("Admin.System.SystemInfo")
                 </div>
+                <vc:admin-widget widget-zone="system_info_buttons" additional-data="null" />
             </div>
             <div class="portlet-body form">
+                <vc:admin-widget widget-zone="system_info_top" additional-data="null" />
                 <div class="form-horizontal">
                     <div class="form-body">
                         <div class="portlet-body">
                             <div class="form-horizontal">
                                 <div class="form-body">
                                     <div class="form-group">
-                                            <admin-label asp-for="GrandVersion" />
+                                        <admin-label asp-for="GrandVersion" />
                                         <div class="col-md-9 col-sm-9">
                                             <label class="control-label">@Model.GrandVersion</label>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                            <admin-label asp-for="OperatingSystem" />
+                                        <admin-label asp-for="OperatingSystem" />
                                         <div class="col-md-9 col-sm-9">
                                             <label class="control-label">@Model.OperatingSystem</label>
                                         </div>
@@ -38,46 +40,46 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                            <admin-label asp-for="AspNetInfo" />
+                                        <admin-label asp-for="AspNetInfo" />
                                         <div class="col-md-9 col-sm-9">
                                             <label class="control-label">@Model.AspNetInfo</label>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                            <admin-label asp-for="ServerTimeZone" />
+                                        <admin-label asp-for="ServerTimeZone" />
                                         <div class="col-md-9 col-sm-9">
                                             <label class="control-label">@Model.ServerTimeZone</label>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                            <admin-label asp-for="ServerLocalTime" />
+                                        <admin-label asp-for="ServerLocalTime" />
                                         <div class="col-md-9 col-sm-9">
                                             <label class="control-label">@Model.ServerLocalTime.ToString("F")</label>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                            <admin-label asp-for="UtcTime" />
+                                        <admin-label asp-for="UtcTime" />
                                         <div class="col-md-9 col-sm-9">
                                             <label class="control-label">@Model.UtcTime.ToString("F")</label>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                            <admin-label asp-for="ServerVariables" />
+                                        <admin-label asp-for="ServerVariables" />
                                         <div class="col-md-9 col-sm-9">
                                             <label class="control-label">
                                                 <a id="serverVariablesShowHide" href="javascript:toggleLoadedServerVariables();">@T("Admin.Common.Show")</a>
                                             </label>
-                                                <div id="pnlServerVariables" style="display:none" >
-                                                    @foreach (var serverVariable in Model.ServerVariables)
-                                                    {
-                                                        @serverVariable.Name<text>:</text> @serverVariable.Value
-                                                        <br />
-                                                    }
-                                                </div>
+                                            <div id="pnlServerVariables" style="display:none">
+                                                @foreach (var serverVariable in Model.ServerVariables)
+                                                {
+                                                    @serverVariable.Name<text>:</text> @serverVariable.Value
+                                                    <br />
+                                                }
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                            <admin-label asp-for="LoadedAssemblies" />
+                                        <admin-label asp-for="LoadedAssemblies" />
                                         <div class="col-md-9 col-sm-9">
                                             <label class="control-label"><a id="loadedAssembliesShowHide" href="javascript:toggleLoadedAssemblies();">@T("Admin.Common.Show")</a></label>
                                             <div id="pnlLoadedAssemblies" style="display:none">
@@ -100,6 +102,7 @@
                         </div>
                     </div>
                 </div>
+                <vc:admin-widget widget-zone="system_info_bottom" additional-data="null" />
             </div>
         </div>
     </div>

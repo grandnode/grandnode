@@ -2,6 +2,7 @@
 @inject IEventPublisher eventPublisher
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
+<vc:admin-widget widget-zone="campaign_details_top" additional-data="Model" />
 <div id="campaign-edit" style="display:none">
     <ul>
         <li tab-index="0">
@@ -36,6 +37,7 @@
        <partial name="_CreateOrUpdate.TabTest" model="Model" />
     </div>
 </div>
+<vc:admin-widget widget-zone="campaign_details_bottom" additional-data="Model" />
 <script>
     $(document).ready(function () {
         $('#campaign-edit').show();

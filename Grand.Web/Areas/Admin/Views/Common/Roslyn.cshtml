@@ -14,6 +14,7 @@
                     <i class="fa fa-sitemap"></i>
                     @T("Admin.System.Roslyn")
                 </div>
+                <vc:admin-widget widget-zone="roslyn_buttons" additional-data="null" />
             </div>
             @if (!Model)
             {
@@ -22,7 +23,9 @@
                 </div>
             }
             <div class="portlet-body">
+                <vc:admin-widget widget-zone="roslyn_top" additional-data="null" />
                 <div id="roslyn-grid"></div>
+                <vc:admin-widget widget-zone="roslyn_bottom" additional-data="null" />
             </div>
         </div>
     </div>

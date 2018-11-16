@@ -1,5 +1,6 @@
 ﻿@model CategoryModel
 @inject AdminAreaSettings adminAreaSettings
+<vc:admin-widget widget-zone="category_details_products_top" additional-data="Model" />
 @if (!String.IsNullOrEmpty(Model.Id))
 {
     <div class="panel panel-default">
@@ -128,3 +129,4 @@ else
         @T("Admin.Catalog.Categories.Products.SaveBeforeEdit")
     </div>
 }
+<vc:admin-widget widget-zone="category_details_products_bottom" additional-data="Model" />
