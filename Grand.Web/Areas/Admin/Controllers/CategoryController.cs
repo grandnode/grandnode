@@ -380,10 +380,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
-            var searchCategoryIds = new List<string>();
-            if (!String.IsNullOrEmpty(model.SearchCategoryId))
-                searchCategoryIds.Add(model.SearchCategoryId);
-
+            
             var gridModel = new DataSourceResult();
             var products = _categoryViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
             gridModel.Data = products.products.ToList();

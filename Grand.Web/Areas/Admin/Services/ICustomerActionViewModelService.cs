@@ -1,4 +1,5 @@
 ﻿using Grand.Core.Domain.Customers;
+using Grand.Web.Areas.Admin.Models.Catalog;
 using Grand.Web.Areas.Admin.Models.Customers;
 using System;
 using System.Collections.Generic;
@@ -39,5 +40,7 @@ namespace Grand.Web.Areas.Admin.Services
         void UpdateUrlConditionModel(CustomerActionConditionModel.AddUrlConditionModel model);
         void InsertUrlCurrentConditionModel(CustomerActionConditionModel.AddUrlConditionModel model);
         void UpdateUrlCurrentConditionModel(CustomerActionConditionModel.AddUrlConditionModel model);
+        (IList<ProductModel> products, int totalCount) PrepareProductModel(CustomerActionConditionModel.AddProductToConditionModel model, int pageIndex, int pageSize);
+
     }
 }

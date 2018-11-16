@@ -57,33 +57,6 @@ namespace Grand.Web.Areas.Admin.Services
 
         #endregion
 
-        #region Utilities
-
-        protected IPagedList<Product> PrepareProductList(string searchCategoryId, string searchManufacturerId, string searchStoreId, string searchVendorId, int productTypeId,
-            string searchProductName, int pageIndex, int pageSize)
-        {
-            var searchCategoryIds = new List<string>();
-            if (!String.IsNullOrEmpty(searchCategoryId))
-                searchCategoryIds.Add(searchCategoryId);
-
-            var products = _productService.SearchProducts(
-                categoryIds: searchCategoryIds,
-                manufacturerId: searchManufacturerId,
-                storeId: searchStoreId,
-                vendorId: searchVendorId,
-                productType: productTypeId > 0 ? (ProductType?)productTypeId : null,
-                keywords: searchProductName,
-                pageIndex: pageIndex - 1,
-                pageSize: pageSize,
-                showHidden: true
-                );
-
-            return products;
-        }
-
-        #endregion
-
-
         public virtual CustomerRoleModel PrepareCustomerRoleModel(CustomerRole customerRole)
         {
             var model = customerRole.ToModel();
@@ -160,7 +133,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual (IList<ProductModel> products, int totalCount) PrepareProductModel(CustomerRoleModel.AssociateProductToCustomerRoleModel model, int pageIndex, int pageSize)
         {
-            var products = PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
+            var products = _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
             return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
         }
         public virtual IList<CustomerRoleProductModel> PrepareCustomerRoleProductModel(string customerRoleId)
@@ -207,7 +180,7 @@ namespace Grand.Web.Areas.Admin.Services
 
         public virtual (IList<ProductModel> products, int totalCount) PrepareProductModel(CustomerRoleProductModel.AddProductModel model, int pageIndex, int pageSize)
         {
-            var products = PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
+            var products = _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
             return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
         }
         public virtual void InsertProductModel(CustomerRoleProductModel.AddProductModel model)

@@ -1,5 +1,6 @@
 ﻿using Grand.Core.Domain.Customers;
 using Grand.Services.Customers;
+using Grand.Web.Areas.Admin.Models.Catalog;
 using Grand.Web.Areas.Admin.Models.Customers;
 using System;
 using System.Collections.Generic;
@@ -35,5 +36,7 @@ namespace Grand.Web.Areas.Admin.Services
         CustomerReminder.ReminderLevel InsertReminderLevel(CustomerReminder customerReminder, CustomerReminderModel.ReminderLevelModel model);
         CustomerReminder.ReminderLevel UpdateReminderLevel(CustomerReminder customerReminder, CustomerReminder.ReminderLevel customerReminderLevel, CustomerReminderModel.ReminderLevelModel model);
         void DeleteLevel(string Id, string customerReminderId);
+        (IList<ProductModel> products, int totalCount) PrepareProductModel(CustomerActionConditionModel.AddProductToConditionModel model, int pageIndex, int pageSize);
+        CustomerReminderModel.ConditionModel.AddProductToConditionModel PrepareProductToConditionModel(string customerReminderId, string conditionId);
     }
 }
