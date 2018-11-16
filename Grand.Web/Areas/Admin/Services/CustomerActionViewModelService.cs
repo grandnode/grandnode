@@ -11,9 +11,11 @@ using Grand.Services.Messages;
 using Grand.Services.Stores;
 using Grand.Services.Vendors;
 using Grand.Web.Areas.Admin.Extensions;
+using Grand.Web.Areas.Admin.Models.Catalog;
 using Grand.Web.Areas.Admin.Models.Customers;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using static Grand.Core.Domain.Customers.CustomerAction;
 
@@ -640,6 +642,12 @@ namespace Grand.Web.Areas.Admin.Services
                     _customerActionService.UpdateCustomerAction(customerAction);
                 }
             }
+        }
+        public virtual (IList<ProductModel> products, int totalCount) PrepareProductModel(CustomerActionConditionModel.AddProductToConditionModel model, int pageIndex, int pageSize)
+        {
+            var productService = Grand.Core.Infrastructure.EngineContext.Current.Resolve<IProductService>();
+            var products = productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
+            return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
         }
     }
 }

@@ -1394,21 +1394,7 @@ namespace Grand.Web.Areas.Admin.Services
 
         public virtual (IList<ProductModel> products, int totalCount) PrepareProductModel(CustomerModel.AddProductModel model, int pageIndex, int pageSize)
         {
-            var searchCategoryIds = new List<string>();
-            if (!String.IsNullOrEmpty(model.SearchCategoryId))
-                searchCategoryIds.Add(model.SearchCategoryId);
-
-            var products = _productService.SearchProducts(
-                categoryIds: searchCategoryIds,
-                manufacturerId: model.SearchManufacturerId,
-                storeId: model.SearchStoreId,
-                vendorId: model.SearchVendorId,
-                productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
-                keywords: model.SearchProductName,
-                pageIndex: pageIndex - 1,
-                pageSize: pageSize,
-                showHidden: true
-                );
+            var products = _productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
             return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
         }
 

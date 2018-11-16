@@ -1,13 +1,20 @@
-﻿using Grand.Core.Domain.Customers;
+﻿using Grand.Core.Domain.Catalog;
+using Grand.Core.Domain.Customers;
+using Grand.Framework.Extensions;
+using Grand.Services.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Messages;
+using Grand.Services.Stores;
+using Grand.Services.Vendors;
 using Grand.Web.Areas.Admin.Extensions;
+using Grand.Web.Areas.Admin.Models.Catalog;
 using Grand.Web.Areas.Admin.Models.Customers;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Services
@@ -21,7 +28,6 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly ICustomerReminderService _customerReminderService;
         private readonly IEmailAccountService _emailAccountService;
         private readonly IDateTimeHelper _dateTimeHelper;
-
         #region Constructors
 
         public CustomerReminderViewModelService(ICustomerService customerService,
@@ -458,6 +464,49 @@ namespace Grand.Web.Areas.Admin.Services
                     _customerReminderService.UpdateCustomerReminder(customerReminder);
                 }
             }
+        }
+        public virtual (IList<ProductModel> products, int totalCount) PrepareProductModel(CustomerActionConditionModel.AddProductToConditionModel model, int pageIndex, int pageSize)
+        {
+            var productService = Grand.Core.Infrastructure.EngineContext.Current.Resolve<IProductService>();
+            var products = productService.PrepareProductList(model.SearchCategoryId, model.SearchManufacturerId, model.SearchStoreId, model.SearchVendorId, model.SearchProductTypeId, model.SearchProductName, pageIndex, pageSize);
+            return (products.Select(x => x.ToModel()).ToList(), products.TotalCount);
+        }
+        public virtual CustomerReminderModel.ConditionModel.AddProductToConditionModel PrepareProductToConditionModel(string customerReminderId, string conditionId)
+        {
+            var categoryService = Grand.Core.Infrastructure.EngineContext.Current.Resolve<ICategoryService>();
+            var manufacturerService = Grand.Core.Infrastructure.EngineContext.Current.Resolve<IManufacturerService>();
+            var storeService = Grand.Core.Infrastructure.EngineContext.Current.Resolve<IStoreService>();
+            var vendorService = Grand.Core.Infrastructure.EngineContext.Current.Resolve<IVendorService>();
+
+            var model = new CustomerReminderModel.ConditionModel.AddProductToConditionModel();
+            model.ConditionId = conditionId;
+            model.CustomerReminderId = customerReminderId;
+            //categories
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
+            var categories = categoryService.GetAllCategories(showHidden: true);
+            foreach (var c in categories)
+                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+
+            //manufacturers
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
+            foreach (var m in manufacturerService.GetAllManufacturers(showHidden: true))
+                model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
+
+            //stores
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
+            foreach (var s in storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+
+            //vendors
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
+            foreach (var v in vendorService.GetAllVendors(showHidden: true))
+                model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
+
+            //product types
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
+
+            return model;
         }
     }
 }

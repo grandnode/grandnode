@@ -1,8 +1,5 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
 using Grand.Framework.Controllers;
-using Grand.Framework.Extensions;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
@@ -11,14 +8,11 @@ using Grand.Services.Customers;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Security;
-using Grand.Services.Stores;
-using Grand.Services.Vendors;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Customers;
+using Grand.Web.Areas.Admin.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
@@ -26,59 +20,29 @@ namespace Grand.Web.Areas.Admin.Controllers
     public partial class CustomerTagController : BaseAdminController
     {
         #region Fields
-
-        private readonly ICustomerService _customerService;
+        private readonly ICustomerTagViewModelService _customerTagViewModelService;
         private readonly ILocalizationService _localizationService;
-        private readonly ICustomerActivityService _customerActivityService;
         private readonly IPermissionService _permissionService;
-        private readonly IProductService _productService;
-        private readonly ICategoryService _categoryService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly IStoreService _storeService;
-        private readonly IVendorService _vendorService;
-        private readonly IWorkContext _workContext;
         private readonly ICustomerTagService _customerTagService;
         #endregion
 
         #region Constructors
 
-        public CustomerTagController(ICustomerService customerService,
+        public CustomerTagController(
+            ICustomerTagViewModelService customerTagViewModelService,
             ILocalizationService localizationService,
             ICustomerActivityService customerActivityService,
             IPermissionService permissionService,
-            IProductService productService,
-            ICategoryService categoryService,
-            IManufacturerService manufacturerService,
-            IStoreService storeService,
-            IVendorService vendorService,
             IWorkContext workContext,
             ICustomerTagService customerTagService)
         {
-            this._customerService = customerService;
+            this._customerTagViewModelService = customerTagViewModelService;
             this._localizationService = localizationService;
-            this._customerActivityService = customerActivityService;
             this._permissionService = permissionService;
-            this._productService = productService;
-            this._categoryService = categoryService;
-            this._manufacturerService = manufacturerService;
-            this._storeService = storeService;
-            this._vendorService = vendorService;
-            this._workContext = workContext;
             this._customerTagService = customerTagService;
         }
 
         #endregion
-
-
-        [NonAction]
-        protected virtual CustomerModel PrepareCustomerModelForList(Customer customer)
-        {
-            return new CustomerModel
-            {
-                Id = customer.Id,
-                Email = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest"),
-            };
-        }
 
         #region Customer Tags
 
@@ -130,7 +94,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var customers = _customerTagService.GetCustomersByTag(customerTagId, command.Page - 1, command.PageSize);
             var gridModel = new DataSourceResult
             {
-                Data = customers.Select(PrepareCustomerModelForList),
+                Data = customers.Select(x => _customerTagViewModelService.PrepareCustomerModelForList(x)),
                 Total = customers.TotalCount
             };
             return Json(gridModel);
@@ -141,7 +105,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
-            var model = new CustomerTagModel();
+            var model = _customerTagViewModelService.PrepareCustomerTagModel();
             return View(model);
         }
 
@@ -153,13 +117,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var customertag = model.ToEntity();
-                customertag.Name = customertag.Name.ToLower();
-                _customerTagService.InsertCustomerTag(customertag);
-
-                //activity log
-                _customerActivityService.InsertActivity("AddNewCustomerTag", customertag.Id, _localizationService.GetResource("ActivityLog.AddNewCustomerTag"), customertag.Name);
-
+                var customertag = _customerTagViewModelService.InsertCustomerTagModel(model);
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerTags.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = customertag.Id }) : RedirectToAction("List");
             }
@@ -197,15 +155,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-
-                    customertag = model.ToEntity(customertag);
-                    customertag.Name = customertag.Name.ToLower();
-
-                    _customerTagService.UpdateCustomerTag(customertag);
-
-                    //activity log
-                    _customerActivityService.InsertActivity("EditCustomerTage", customertag.Id, _localizationService.GetResource("ActivityLog.EditCustomerTag"), customertag.Name);
-
+                    customertag = _customerTagViewModelService.UpdateCustomerTagModel(customertag, model);
                     SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerTags.Updated"));
                     return continueEditing ? RedirectToAction("Edit", new { id = customertag.Id }) : RedirectToAction("List");
                 }
@@ -229,10 +179,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             var customertag = _customerTagService.GetCustomerTagById(customerTagId);
             if (customertag == null)
                 throw new ArgumentException("No customertag found with the specified id");
-
-            _customerTagService.DeleteTagFromCustomer(customerTagId, Id);
-
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                _customerTagService.DeleteTagFromCustomer(customerTagId, Id);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         [HttpPost]
@@ -248,29 +200,27 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             try
             {
-                //activity log
-                _customerActivityService.InsertActivity("DeleteCustomerTag", customerTag.Id, _localizationService.GetResource("ActivityLog.DeleteCustomerTag"), customerTag.Name);
-
-                _customerTagService.DeleteCustomerTag(customerTag);
-
-                SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerTags.Deleted"));
-                return RedirectToAction("List");
+                if (ModelState.IsValid)
+                {
+                    _customerTagViewModelService.DeleteCustomerTag(customerTag);
+                    SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerTags.Deleted"));
+                    return RedirectToAction("List");
+                }
+                ErrorNotification(ModelState);
+                return RedirectToAction("Edit", new { id = customerTag.Id });
             }
             catch (Exception exc)
             {
                 ErrorNotification(exc.Message);
                 return RedirectToAction("Edit", new { id = customerTag.Id });
             }
-
         }
-
-
         #endregion
 
         #region Products
 
         [HttpPost]
-        public IActionResult Products(string customerTagId, DataSourceRequest command)
+        public IActionResult Products(string customerTagId, DataSourceRequest command, [FromServices] IProductService productService)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -282,7 +232,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 Data = products.Select(x => new CustomerRoleProductModel
                 {
                     Id = x.Id,
-                    Name = _productService.GetProductById(x.ProductId)?.Name,
+                    Name = productService.GetProductById(x.ProductId)?.Name,
                     ProductId = x.ProductId,
                     DisplayOrder = x.DisplayOrder
                 }),
@@ -300,10 +250,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             var ctp = _customerTagService.GetCustomerTagProductById(id);
             if (ctp == null)
                 throw new ArgumentException("No found the specified id");
-
-            _customerTagService.DeleteCustomerTagProduct(ctp);
-
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                _customerTagService.DeleteCustomerTagProduct(ctp);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         [HttpPost]
@@ -315,11 +267,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             var ctp = _customerTagService.GetCustomerTagProductById(model.Id);
             if (ctp == null)
                 throw new ArgumentException("No customer tag product found with the specified id");
-
-            ctp.DisplayOrder = model.DisplayOrder;
-            _customerTagService.UpdateCustomerTagProduct(ctp);
-
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                ctp.DisplayOrder = model.DisplayOrder;
+                _customerTagService.UpdateCustomerTagProduct(ctp);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         public IActionResult ProductAddPopup(string customerTagId)
@@ -327,33 +281,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var model = new CustomerTagProductModel.AddProductModel();
-            model.CustomerTagId = customerTagId;
-            //categories
-            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            var categories = _categoryService.GetAllCategories(showHidden: true);
-            foreach (var c in categories)
-                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
-
-            //manufacturers
-            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
-                model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
-
-            //stores
-            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var s in _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
-
-            //vendors
-            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var v in _vendorService.GetAllVendors(showHidden: true))
-                model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
-
-            //product types
-            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
-            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-
+            var model = _customerTagViewModelService.PrepareProductModel(customerTagId);
             return View(model);
         }
 
@@ -363,25 +291,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var searchCategoryIds = new List<string>();
-            if (!String.IsNullOrEmpty(model.SearchCategoryId))
-                searchCategoryIds.Add(model.SearchCategoryId);
-
-            var products = _productService.SearchProducts(
-                categoryIds: searchCategoryIds,
-                manufacturerId: model.SearchManufacturerId,
-                storeId: model.SearchStoreId,
-                vendorId: model.SearchVendorId,
-                productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
-                keywords: model.SearchProductName,
-                pageIndex: command.Page - 1,
-                pageSize: command.PageSize,
-                showHidden: true
-                );
-            var gridModel = new DataSourceResult();
-            gridModel.Data = products.Select(x => x.ToModel());
-            gridModel.Total = products.TotalCount;
-
+            var products = _customerTagViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
+            var gridModel = new DataSourceResult
+            {
+                Data = products.products,
+                Total = products.totalCount
+            };
             return Json(gridModel);
         }
 
@@ -394,30 +309,13 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (model.SelectedProductIds != null)
             {
-                foreach (string id in model.SelectedProductIds)
-                {
-                    var product = _productService.GetProductById(id);
-                    if (product != null)
-                    {
-                        var customerTagProduct = _customerTagService.GetCustomerTagProduct(model.CustomerTagId, id);
-                        if (customerTagProduct == null)
-                        {
-                            customerTagProduct = new CustomerTagProduct();
-                            customerTagProduct.CustomerTagId = model.CustomerTagId;
-                            customerTagProduct.ProductId = id;
-                            customerTagProduct.DisplayOrder = 0;
-                            _customerTagService.InsertCustomerTagProduct(customerTagProduct);
-                        }
-                    }
-                }
+                _customerTagViewModelService.InsertProductModel(model);
             }
 
             //a vendor should have access only to his products
             ViewBag.RefreshPage = true;
             return View(model);
         }
-
-
         #endregion
     }
 }

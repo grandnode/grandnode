@@ -393,24 +393,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
-            var searchCategoryIds = new List<string>();
-            if (!String.IsNullOrEmpty(model.SearchCategoryId))
-                searchCategoryIds.Add(model.SearchCategoryId);
-
-            var products = _productService.SearchProducts(
-                categoryIds: searchCategoryIds,
-                manufacturerId: model.SearchManufacturerId,
-                storeId: model.SearchStoreId,
-                vendorId: model.SearchVendorId,
-                productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
-                keywords: model.SearchProductName,
-                pageIndex: command.Page - 1,
-                pageSize: command.PageSize,
-                showHidden: true
-                );
+            var products = _customerActionViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult();
-            gridModel.Data = products.Select(x => x.ToModel());
-            gridModel.Total = products.TotalCount;
+            gridModel.Data = products.products.ToList();
+            gridModel.Total = products.totalCount;
 
             return Json(gridModel);
         }

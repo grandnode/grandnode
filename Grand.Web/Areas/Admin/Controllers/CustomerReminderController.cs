@@ -1,6 +1,5 @@
 ﻿using Grand.Core.Domain.Catalog;
 using Grand.Framework.Controllers;
-using Grand.Framework.Extensions;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
@@ -15,7 +14,6 @@ using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Customers;
 using Grand.Web.Areas.Admin.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,8 +29,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ICustomerTagService _customerTagService;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
-        private readonly IProductService _productService;
-        private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IStoreService _storeService;
         private readonly IVendorService _vendorService;
@@ -50,8 +46,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             ICustomerTagService customerTagService,
             ILocalizationService localizationService,
             IPermissionService permissionService,
-            IProductService productService,
-            ICategoryService categoryService,
             IManufacturerService manufacturerService,
             IStoreService storeService,
             IVendorService vendorService,
@@ -64,8 +58,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._customerTagService = customerTagService;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
-            this._productService = productService;
-            this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
             this._storeService = storeService;
             this._vendorService = vendorService;
@@ -361,7 +353,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Condition Category
 
         [HttpPost]
-        public IActionResult ConditionCategory(string customerReminderId, string conditionId)
+        public IActionResult ConditionCategory(string customerReminderId, string conditionId, [FromServices] ICategoryService categoryService)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
                 return AccessDeniedView();
@@ -371,7 +363,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             var gridModel = new DataSourceResult
             {
-                Data = condition != null ? condition.Categories.Select(z => new { Id = z, CategoryName = _categoryService.GetCategoryById(z) != null ? _categoryService.GetCategoryById(z).Name : "" }) : null,
+                Data = condition != null ? condition.Categories.Select(z => new { Id = z, CategoryName = categoryService.GetCategoryById(z) != null ? categoryService.GetCategoryById(z).Name : "" }) : null,
                 Total = customerReminder.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return Json(gridModel);
@@ -388,19 +380,19 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult CategoryAddPopupList(DataSourceRequest command, CustomerReminderModel.ConditionModel.AddCategoryConditionModel model)
+        public IActionResult CategoryAddPopupList(DataSourceRequest command, CustomerReminderModel.ConditionModel.AddCategoryConditionModel model, [FromServices] ICategoryService categoryService)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
                 return AccessDeniedView();
 
-            var categories = _categoryService.GetAllCategories(model.SearchCategoryName,
+            var categories = categoryService.GetAllCategories(model.SearchCategoryName,
                 pageIndex: command.Page - 1, pageSize: command.PageSize, showHidden: true);
             var gridModel = new DataSourceResult
             {
                 Data = categories.Select(x =>
                 {
                     var categoryModel = x.ToModel();
-                    categoryModel.Breadcrumb = x.GetFormattedBreadCrumb(_categoryService);
+                    categoryModel.Breadcrumb = x.GetFormattedBreadCrumb(categoryService);
                     return categoryModel;
                 }),
                 Total = categories.TotalCount
@@ -490,7 +482,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Condition Product
 
         [HttpPost]
-        public IActionResult ConditionProduct(string customerReminderId, string conditionId)
+        public IActionResult ConditionProduct(string customerReminderId, string conditionId, [FromServices] IProductService productService)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
                 return AccessDeniedView();
@@ -500,7 +492,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             var gridModel = new DataSourceResult
             {
-                Data = condition != null ? condition.Products.Select(z => new { Id = z, ProductName = _productService.GetProductById(z) != null ? _productService.GetProductById(z).Name : "" }) : null,
+                Data = condition != null ? condition.Products.Select(z => new { Id = z, ProductName = productService.GetProductById(z) != null ? productService.GetProductById(z).Name : "" }) : null,
                 Total = customerReminder.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return Json(gridModel);
@@ -511,34 +503,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
                 return AccessDeniedView();
 
-            var model = new CustomerReminderModel.ConditionModel.AddProductToConditionModel();
-            model.ConditionId = conditionId;
-            model.CustomerReminderId = customerReminderId;
-            //categories
-            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            var categories = _categoryService.GetAllCategories(showHidden: true);
-            foreach (var c in categories)
-                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
-
-            //manufacturers
-            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
-                model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
-
-            //stores
-            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var s in _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
-
-            //vendors
-            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var v in _vendorService.GetAllVendors(showHidden: true))
-                model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
-
-            //product types
-            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
-            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-
+            var model = _customerReminderViewModelService.PrepareProductToConditionModel(customerReminderId, conditionId);
             return View(model);
         }
 
@@ -548,24 +513,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
                 return AccessDeniedView();
 
-            var searchCategoryIds = new List<string>();
-            if (!String.IsNullOrEmpty(model.SearchCategoryId))
-                searchCategoryIds.Add(model.SearchCategoryId);
-
-            var products = _productService.SearchProducts(
-                categoryIds: searchCategoryIds,
-                manufacturerId: model.SearchManufacturerId,
-                storeId: model.SearchStoreId,
-                vendorId: model.SearchVendorId,
-                productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
-                keywords: model.SearchProductName,
-                pageIndex: command.Page - 1,
-                pageSize: command.PageSize,
-                showHidden: true
-                );
             var gridModel = new DataSourceResult();
-            gridModel.Data = products.Select(x => x.ToModel());
-            gridModel.Total = products.TotalCount;
+            var products = _customerReminderViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
+            gridModel.Data = products.products.ToList();
+            gridModel.Total = products.totalCount;
 
             return Json(gridModel);
         }
