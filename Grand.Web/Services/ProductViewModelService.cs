@@ -39,7 +39,7 @@ using System.Net;
 
 namespace Grand.Web.Services
 {
-    public partial class ProductViewModelService: IProductViewModelService
+    public partial class ProductViewModelService : IProductViewModelService
     {
         private readonly IPermissionService _permissionService;
         private readonly IWorkContext _workContext;
@@ -156,7 +156,7 @@ namespace Grand.Web.Services
                 { "Media.Product.ImageLinkTitleFormat", _localizationService.GetResource("Media.Product.ImageLinkTitleFormat", currentLanguageId.Id) },
                 { "Media.Product.ImageAlternateTextFormat", _localizationService.GetResource("Media.Product.ImageAlternateTextFormat", currentLanguageId.Id) }
             };
-            
+
             var models = new List<ProductOverviewModel>();
 
             foreach (var product in products)
@@ -437,7 +437,7 @@ namespace Grand.Web.Services
                     var defaultProductPictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DEFAULTPICTURE_MODEL_KEY, product.Id, pictureSize, true, currentLanguageId, connectionSecured, currentStoreId);
                     model.DefaultPictureModel = _cacheManager.Get(defaultProductPictureCacheKey, () =>
                     {
-                        var picture = product.ProductPictures.OrderBy(x=>x.DisplayOrder).FirstOrDefault();
+                        var picture = product.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault();
                         if (picture == null)
                             picture = new ProductPicture();
 
@@ -483,7 +483,7 @@ namespace Grand.Web.Services
 
             string cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_SPECS_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id);
             return _cacheManager.Get(cacheKey, () =>
-                product.ProductSpecificationAttributes.Where(x => x.ShowOnProductPage)
+                product.ProductSpecificationAttributes.Where(x => x.ShowOnProductPage).OrderBy(x=>x.DisplayOrder)
                 .Select(psa =>
                 {
                     var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(psa.SpecificationAttributeId);
@@ -569,7 +569,7 @@ namespace Grand.Web.Services
             return productTemplateViewPath;
         }
 
-        
+
         public virtual ProductDetailsModel PrepareProductDetailsPage(Product product,
             ShoppingCartItem updatecartitem = null, bool isAssociatedProduct = false)
         {
@@ -598,9 +598,9 @@ namespace Grand.Web.Services
                 Gtin = product.Gtin,
                 StockAvailability = product.FormatStockMessage("", _localizationService, _productAttributeParser, _storeContext),
                 HasSampleDownload = product.IsDownload && product.HasSampleDownload,
-                DisplayDiscontinuedMessage = 
+                DisplayDiscontinuedMessage =
                     (!product.Published && _catalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts) ||
-                    (product.ProductType == ProductType.Auction && product.AuctionEnded) || 
+                    (product.ProductType == ProductType.Auction && product.AuctionEnded) ||
                     (product.AvailableEndDateTimeUtc.HasValue && product.AvailableEndDateTimeUtc.Value < DateTime.UtcNow)
 
             };
@@ -712,13 +712,13 @@ namespace Grand.Web.Services
                 {
                     var breadcrumbModel = new ProductDetailsModel.ProductBreadcrumbModel
                     {
-                        
+
                         Enabled = _catalogSettings.CategoryBreadcrumbEnabled,
                         ProductId = product.Id,
                         ProductName = product.GetLocalized(x => x.Name),
                         ProductSeName = product.GetSeName()
                     };
-                    var productCategories = product.ProductCategories; 
+                    var productCategories = product.ProductCategories;
                     if (productCategories.Any())
                     {
                         var category = _categoryService.GetCategoryById(productCategories.FirstOrDefault().CategoryId);
@@ -783,7 +783,7 @@ namespace Grand.Web.Services
             var productPicturesCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DETAILS_PICTURES_MODEL_KEY, product.Id, defaultPictureSize, isAssociatedProduct, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
             var cachedPictures = _cacheManager.Get(productPicturesCacheKey, () =>
             {
-                var defaultPicture = product.ProductPictures.OrderBy(x=>x.DisplayOrder).FirstOrDefault();
+                var defaultPicture = product.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault();
                 if (defaultPicture == null)
                     defaultPicture = new ProductPicture();
 
@@ -1014,7 +1014,7 @@ namespace Grand.Web.Services
             //We cache a value indicating whether a product has attributes
             IList<ProductAttributeMapping> productAttributeMapping = product.ProductAttributeMappings.ToList();
 
-            foreach (var attribute in productAttributeMapping)
+            foreach (var attribute in productAttributeMapping.OrderBy(x => x.DisplayOrder))
             {
                 var productAttribute = _productAttributeService.GetProductAttributeById(attribute.ProductAttributeId);
                 var attributeModel = new ProductDetailsModel.ProductAttributeModel
@@ -1040,7 +1040,7 @@ namespace Grand.Web.Services
                 if (attribute.ShouldHaveValues())
                 {
                     //values
-                    var attributeValues = attribute.ProductAttributeValues; 
+                    var attributeValues = attribute.ProductAttributeValues;
                     foreach (var attributeValue in attributeValues)
                     {
                         var valueModel = new ProductDetailsModel.ProductAttributeValueModel
@@ -1315,12 +1315,12 @@ namespace Grand.Web.Services
 
             #region Product Bundle
 
-            if(product.ProductType == ProductType.BundledProduct)
+            if (product.ProductType == ProductType.BundledProduct)
             {
-                foreach (var bundle in product.BundleProducts.OrderBy(x=>x.DisplayOrder))
+                foreach (var bundle in product.BundleProducts.OrderBy(x => x.DisplayOrder))
                 {
                     var p1 = _productService.GetProductById(bundle.ProductId);
-                    if(p1!=null && p1.Published && _aclService.Authorize(p1) && _storeMappingService.Authorize(p1) && p1.IsAvailable())
+                    if (p1 != null && p1.Published && _aclService.Authorize(p1) && _storeMappingService.Authorize(p1) && p1.IsAvailable())
                     {
 
                         var bundleProduct = new ProductDetailsModel.ProductBundleModel()
@@ -1344,8 +1344,8 @@ namespace Grand.Web.Services
                         }
 
                         //prepare picture model
-                        var productbundlePicturesCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DETAILS_PICTURES_MODEL_KEY, 
-                            p1.Id, _mediaSettings.ProductBundlePictureSize, false, _workContext.WorkingLanguage.Id, 
+                        var productbundlePicturesCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DETAILS_PICTURES_MODEL_KEY,
+                            p1.Id, _mediaSettings.ProductBundlePictureSize, false, _workContext.WorkingLanguage.Id,
                             _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
 
                         bundleProduct.DefaultPictureModel = _cacheManager.Get(productbundlePicturesCacheKey, () =>
@@ -1483,7 +1483,7 @@ namespace Grand.Web.Services
 
         public virtual void SendProductAskQuestionMessage(Product product, ProductAskQuestionModel model)
         {
-            _workflowMessageService.SendProductQuestionMessage( _workContext.CurrentCustomer,
+            _workflowMessageService.SendProductQuestionMessage(_workContext.CurrentCustomer,
                     _workContext.WorkingLanguage.Id, product, model.Email, model.FullName, model.Phone,
                     Core.Html.HtmlHelper.FormatText(model.Message, false, true, false, false, false, false));
 
