@@ -3228,23 +3228,25 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
-
+            //https://docs.mongodb.com/manual/reference/text-search-languages/#text-search-languages
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var commonSettings = _settingService.LoadSetting<CommonSettings>(storeScope);
             try
             {
                 if (commonSettings.UseFullTextSearch)
                 {
+                    _productRepository.Collection.Indexes.DropOne("ProductText");
                     commonSettings.UseFullTextSearch = false;
                     _settingService.SaveSetting(commonSettings);
-                    _productRepository.Collection.Indexes.DropOneAsync("ProductText");
                     SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Disabled"));
                 }
                 else
                 {
+                    var indexOption = new CreateIndexOptions() { Name = "ProductText" };
+                    indexOption.Collation = new Collation("simple");
+                    _productRepository.Collection.Indexes.CreateOne(new CreateIndexModel<Product>((Builders<Product>.IndexKeys.Text("$**")), indexOption));
                     commonSettings.UseFullTextSearch = true;
                     _settingService.SaveSetting(commonSettings);
-                    _productRepository.Collection.Indexes.CreateOneAsync(new CreateIndexModel<Product>((Builders<Product>.IndexKeys.Text("$**")), new CreateIndexOptions() { Name = "ProductText" }));
                     SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Enabled"));
                 }
             }
