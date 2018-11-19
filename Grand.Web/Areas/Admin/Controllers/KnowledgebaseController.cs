@@ -1,51 +1,43 @@
-﻿using Grand.Core.Domain.Knowledgebase;
-using Grand.Framework.Controllers;
+﻿using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
 using Grand.Services.Customers;
-using Grand.Services.Helpers;
 using Grand.Services.Knowledgebase;
 using Grand.Services.Localization;
-using Grand.Services.Logging;
 using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Extensions;
-using Grand.Web.Areas.Admin.Helpers;
 using Grand.Web.Areas.Admin.Models.Knowledgebase;
+using Grand.Web.Areas.Admin.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
     public class KnowledgebaseController : BaseAdminController
     {
+        private readonly IKnowledgebaseViewModelService _knowledgebaseViewModelService;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
         private readonly IKnowledgebaseService _knowledgebaseService;
         private readonly ILanguageService _languageService;
-        private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IUrlRecordService _urlRecordService;
         private readonly IStoreService _storeService;
 
-        public KnowledgebaseController(ILocalizationService localizationService, IPermissionService permissionService,
-            IKnowledgebaseService knowledgebaseService, ILanguageService languageService, ICustomerActivityService customerActivityService,
-            ICustomerService customerService, IDateTimeHelper dateTimeHelper, IUrlRecordService urlRecordService, IStoreService storeService)
+        public KnowledgebaseController(IKnowledgebaseViewModelService knowledgebaseViewModelService, ILocalizationService localizationService, IPermissionService permissionService,
+            IKnowledgebaseService knowledgebaseService, ILanguageService languageService, 
+            ICustomerService customerService, IStoreService storeService)
         {
+            this._knowledgebaseViewModelService = knowledgebaseViewModelService;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
             this._knowledgebaseService = knowledgebaseService;
             this._languageService = languageService;
-            this._customerActivityService = customerActivityService;
             this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._urlRecordService = urlRecordService;
             this._storeService = storeService;
         }
 
@@ -67,71 +59,21 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
                 return AccessDeniedView();
 
-            var categories = _knowledgebaseService.GetKnowledgebaseCategories();
-            var articles = _knowledgebaseService.GetKnowledgebaseArticles();
-            List<TreeNode> nodeList = new List<TreeNode>();
-
-            List<ITreeNode> list = new List<ITreeNode>();
-            list.AddRange(categories);
-            list.AddRange(articles);
-
-            foreach (var node in list)
-            {
-                if (string.IsNullOrEmpty(node.ParentCategoryId))
-                {
-                    var newNode = new TreeNode
-                    {
-                        id = node.Id,
-                        text = node.Name,
-                        isCategory = node.GetType() == typeof(KnowledgebaseCategory),
-                        nodes = new List<TreeNode>()
-                    };
-
-                    FillChildNodes(newNode, list);
-
-                    nodeList.Add(newNode);
-                }
-            }
-
-            return Json(nodeList);
+            var model = _knowledgebaseViewModelService.PrepareTreeNode();
+            return Json(model);
         }
 
-        public void FillChildNodes(TreeNode parentNode, List<ITreeNode> nodes)
-        {
-            var children = nodes.Where(x => x.ParentCategoryId == parentNode.id);
-            foreach (var child in children)
-            {
-                var newNode = new TreeNode
-                {
-                    id = child.Id,
-                    text = child.Name,
-                    isCategory = child.GetType() == typeof(KnowledgebaseCategory),
-                    nodes = new List<TreeNode>()
-                };
-
-                FillChildNodes(newNode, nodes);
-
-                parentNode.nodes.Add(newNode);
-            }
-        }
 
         public IActionResult ArticleList(DataSourceRequest command, string parentCategoryId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
                 return AccessDeniedView();
 
-            var articles = _knowledgebaseService.GetKnowledgebaseArticlesByCategoryId(parentCategoryId, command.Page - 1, command.PageSize);
+            var articles = _knowledgebaseViewModelService.PrepareKnowledgebaseArticleGridModel(parentCategoryId, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
-                Data = articles.Select(x => new KnowledgebaseArticleGridModel
-                {
-                    Name = x.Name,
-                    DisplayOrder = x.DisplayOrder,
-                    Published = x.Published,
-                    ArticleId = x.Id,
-                    Id = x.Id
-                }),
-                Total = articles.TotalCount
+                Data = articles.knowledgebaseArticleGridModels.ToList(),
+                Total = articles.totalCount
             };
 
             return Json(gridModel);
@@ -143,26 +85,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
                 return Content("");
 
-            var activityLog = _customerActivityService.GetKnowledgebaseCategoryActivities(null, null, categoryId, command.Page - 1, command.PageSize);
+            var activityLog = _knowledgebaseViewModelService.PrepareCategoryActivityLogModels(categoryId, command.Page, command.PageSize);
 
             var gridModel = new DataSourceResult
             {
-                Data = activityLog.Select(x =>
-                {
-                    var customer = _customerService.GetCustomerById(x.CustomerId);
-                    var m = new KnowledgebaseCategoryModel.ActivityLogModel
-                    {
-                        Id = x.Id,
-                        ActivityLogTypeName = _customerActivityService.GetActivityTypeById(x.ActivityLogTypeId)?.Name,
-                        Comment = x.Comment,
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
-                        CustomerId = x.CustomerId,
-                        CustomerEmail = customer != null ? customer.Email : "null"
-                    };
-
-                    return m;
-                }),
-                Total = activityLog.TotalCount
+                Data = activityLog.activityLogModels.ToList(),
+                Total = activityLog.totalCount
             };
 
             return Json(gridModel);
@@ -174,28 +102,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
                 return Content("");
 
-            var activityLog = _customerActivityService.GetKnowledgebaseArticleActivities(null, null, articleId, command.Page - 1, command.PageSize);
+            var activityLog = _knowledgebaseViewModelService.PrepareArticleActivityLogModels(articleId, command.Page, command.PageSize);
 
             var gridModel = new DataSourceResult
             {
-                Data = activityLog.Select(x =>
-                {
-                    var customer = _customerService.GetCustomerById(x.CustomerId);
-                    var m = new KnowledgebaseArticleModel.ActivityLogModel
-                    {
-                        Id = x.Id,
-                        ActivityLogTypeName = _customerActivityService.GetActivityTypeById(x.ActivityLogTypeId)?.Name,
-                        Comment = x.Comment,
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
-                        CustomerId = x.CustomerId,
-                        CustomerEmail = customer != null ? customer.Email : "null"
-                    };
-
-                    return m;
-                }),
-                Total = activityLog.TotalCount
+                Data = activityLog.activityLogModels.ToList(),
+                Total = activityLog.totalCount
             };
-
             return Json(gridModel);
         }
 
@@ -204,17 +117,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
                 return AccessDeniedView();
 
-            var model = new KnowledgebaseCategoryModel();
-            model.Categories.Add(new SelectListItem { Text = "[None]", Value = "" });
-            var categories = _knowledgebaseService.GetKnowledgebaseCategories();
-            foreach (var category in categories)
-            {
-                model.Categories.Add(new SelectListItem
-                {
-                    Value = category.Id,
-                    Text = category.GetFormattedBreadCrumb(categories)
-                });
-            }
+            var model = _knowledgebaseViewModelService.PrepareKnowledgebaseCategoryModel();
             model.PrepareACLModel(null, false, _customerService);
             model.PrepareStoresMappingModel(null, false, _storeService);
             AddLocales(_languageService, model.Locales);
@@ -229,22 +132,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var knowledgebaseCategory = model.ToEntity();
-                knowledgebaseCategory.CreatedOnUtc = DateTime.UtcNow;
-                knowledgebaseCategory.UpdatedOnUtc = DateTime.UtcNow;
-                knowledgebaseCategory.Locales = model.Locales.ToLocalizedProperty(knowledgebaseCategory, x => x.Name, _urlRecordService);
-                knowledgebaseCategory.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
-                model.SeName = knowledgebaseCategory.ValidateSeName(model.SeName, knowledgebaseCategory.Name, true);
-                knowledgebaseCategory.SeName = model.SeName;
-                knowledgebaseCategory.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
-
-                _knowledgebaseService.InsertKnowledgebaseCategory(knowledgebaseCategory);
-
-                _urlRecordService.SaveSlug(knowledgebaseCategory, model.SeName, "");
-
-                _customerActivityService.InsertActivity("CreateKnowledgebaseCategory", knowledgebaseCategory.Id,
-                    _localizationService.GetResource("ActivityLog.CreateKnowledgebaseCategory"), knowledgebaseCategory.Name);
-
+                var knowledgebaseCategory = _knowledgebaseViewModelService.InsertKnowledgebaseCategoryModel(model);
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Added"));
                 return continueEditing ? RedirectToAction("EditCategory", new { knowledgebaseCategory.Id }) : RedirectToAction("List");
             }
@@ -267,16 +155,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             var model = knowledgebaseCategory.ToModel();
-            model.Categories.Add(new SelectListItem { Text = "[None]", Value = "" });
-            var categories = _knowledgebaseService.GetKnowledgebaseCategories();
-            foreach (var category in categories)
-            {
-                model.Categories.Add(new SelectListItem
-                {
-                    Value = category.Id,
-                    Text = category.GetFormattedBreadCrumb(categories)
-                });
-            }
+            _knowledgebaseViewModelService.PrepareCategory(model);
 
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
@@ -309,26 +188,13 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                knowledgebaseCategory = model.ToEntity(knowledgebaseCategory);
-                knowledgebaseCategory.UpdatedOnUtc = DateTime.UtcNow;
-                knowledgebaseCategory.Locales = model.Locales.ToLocalizedProperty(knowledgebaseCategory, x => x.Name, _urlRecordService);
-                knowledgebaseCategory.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
-                model.SeName = knowledgebaseCategory.ValidateSeName(model.SeName, knowledgebaseCategory.Name, true);
-                knowledgebaseCategory.SeName = model.SeName;
-                knowledgebaseCategory.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
-
-                _knowledgebaseService.UpdateKnowledgebaseCategory(knowledgebaseCategory);
-
-                _urlRecordService.SaveSlug(knowledgebaseCategory, model.SeName, "");
-
-                _customerActivityService.InsertActivity("UpdateKnowledgebaseCategory", knowledgebaseCategory.Id,
-                    _localizationService.GetResource("ActivityLog.UpdateKnowledgebaseCategory"), knowledgebaseCategory.Name);
-
+                knowledgebaseCategory = _knowledgebaseViewModelService.UpdateKnowledgebaseCategoryModel(knowledgebaseCategory, model);
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Updated"));
                 return continueEditing ? RedirectToAction("EditCategory", new { id = knowledgebaseCategory.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
+            _knowledgebaseViewModelService.PrepareCategory(model);
             //Stores
             model.PrepareStoresMappingModel(knowledgebaseCategory, true, _storeService);
             //ACL
@@ -353,13 +219,14 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("EditCategory", new { id });
             }
 
-            _knowledgebaseService.DeleteKnowledgebaseCategory(knowledgebaseCategory);
-
-            _customerActivityService.InsertActivity("DeleteKnowledgebaseCategory", knowledgebaseCategory.Id,
-                _localizationService.GetResource("ActivityLog.DeleteKnowledgebaseCategory"), knowledgebaseCategory.Name);
-
-            SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Deleted"));
-            return RedirectToAction("List");
+            if (ModelState.IsValid)
+            {
+                _knowledgebaseViewModelService.DeleteKnowledgebaseCategoryModel(knowledgebaseCategory);
+                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseCategory.Deleted"));
+                return RedirectToAction("List");
+            }
+            ErrorNotification(ModelState);
+            return RedirectToAction("EditCategory", new { id });
         }
 
         public IActionResult CreateArticle(string parentCategoryId)
@@ -367,20 +234,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
                 return AccessDeniedView();
 
-            var model = new KnowledgebaseArticleModel();
-            model.Published = true;
-            model.AllowComments = true;
-            model.Categories.Add(new SelectListItem { Text = "[None]", Value = "" });
-            var categories = _knowledgebaseService.GetKnowledgebaseCategories();
-            foreach (var category in categories)
-            {
-                model.Categories.Add(new SelectListItem
-                {
-                    Value = category.Id,
-                    Text = category.GetFormattedBreadCrumb(categories)
-                });
-            }
-
+            var model = _knowledgebaseViewModelService.PrepareKnowledgebaseArticleModel();
             //ACL
             model.PrepareACLModel(null, false, _customerService);
             //Stores
@@ -401,28 +255,13 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var knowledgebaseArticle = model.ToEntity();
-                knowledgebaseArticle.CreatedOnUtc = DateTime.UtcNow;
-                knowledgebaseArticle.UpdatedOnUtc = DateTime.UtcNow;
-                knowledgebaseArticle.Locales = model.Locales.ToLocalizedProperty(knowledgebaseArticle, x => x.Name, _urlRecordService);
-                knowledgebaseArticle.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
-                model.SeName = knowledgebaseArticle.ValidateSeName(model.SeName, knowledgebaseArticle.Name, true);
-                knowledgebaseArticle.SeName = model.SeName;
-                knowledgebaseArticle.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
-                knowledgebaseArticle.AllowComments = model.AllowComments;
-
-                _knowledgebaseService.InsertKnowledgebaseArticle(knowledgebaseArticle);
-
-                _urlRecordService.SaveSlug(knowledgebaseArticle, model.SeName, "");
-
-                _customerActivityService.InsertActivity("CreateKnowledgebaseArticle", knowledgebaseArticle.Id,
-                    _localizationService.GetResource("ActivityLog.CreateKnowledgebaseArticle"), knowledgebaseArticle.Name);
-
+                var knowledgebaseArticle = _knowledgebaseViewModelService.InsertKnowledgebaseArticleModel(model);
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Added"));
                 return continueEditing ? RedirectToAction("EditArticle", new { knowledgebaseArticle.Id }) : RedirectToAction("EditCategory", new { id = model.ParentCategoryId });
             }
 
             //If we got this far, something failed, redisplay form
+            _knowledgebaseViewModelService.PrepareCategory(model);
             //Stores
             model.PrepareStoresMappingModel(null, true, _storeService);
             //ACL
@@ -441,16 +280,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             var model = knowledgebaseArticle.ToModel();
-            model.Categories.Add(new SelectListItem { Text = "[None]", Value = "" });
-            var categories = _knowledgebaseService.GetKnowledgebaseCategories();
-            foreach (var category in categories)
-            {
-                model.Categories.Add(new SelectListItem
-                {
-                    Value = category.Id,
-                    Text = category.GetFormattedBreadCrumb(categories)
-                });
-            }
+            _knowledgebaseViewModelService.PrepareCategory(model);
 
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
@@ -485,30 +315,16 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                knowledgebaseArticle = model.ToEntity(knowledgebaseArticle);
-                knowledgebaseArticle.UpdatedOnUtc = DateTime.UtcNow;
-                knowledgebaseArticle.Locales = model.Locales.ToLocalizedProperty(knowledgebaseArticle, x => x.Name, _urlRecordService);
-                knowledgebaseArticle.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
-                model.SeName = knowledgebaseArticle.ValidateSeName(model.SeName, knowledgebaseArticle.Name, true);
-                knowledgebaseArticle.SeName = model.SeName;
-                knowledgebaseArticle.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
-                knowledgebaseArticle.AllowComments = model.AllowComments;
-
-                _knowledgebaseService.UpdateKnowledgebaseArticle(knowledgebaseArticle);
-
-                _urlRecordService.SaveSlug(knowledgebaseArticle, model.SeName, "");
-
-                _customerActivityService.InsertActivity("UpdateKnowledgebaseArticle", knowledgebaseArticle.Id,
-                    _localizationService.GetResource("ActivityLog.UpdateKnowledgebaseArticle"), knowledgebaseArticle.Name);
-
-               
+                knowledgebaseArticle = _knowledgebaseViewModelService.UpdateKnowledgebaseArticleModel(knowledgebaseArticle, model);
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Updated"));
                 return continueEditing ? RedirectToAction("EditArticle", new { knowledgebaseArticle.Id }) : RedirectToAction("EditCategory", new { id = model.ParentCategoryId });
             }
 
             //If we got this far, something failed, redisplay form
+            _knowledgebaseViewModelService.PrepareCategory(model);
             //Store
             model.PrepareStoresMappingModel(knowledgebaseArticle, true, _storeService);
+            //ACL
             model.PrepareACLModel(knowledgebaseArticle, true, _customerService);
 
             return View(model);
@@ -524,13 +340,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (knowledgebaseArticle == null)
                 return RedirectToAction("List");
 
-            _knowledgebaseService.DeleteKnowledgebaseArticle(knowledgebaseArticle);
-
-            _customerActivityService.InsertActivity("DeleteKnowledgebaseArticle", knowledgebaseArticle.Id,
-                _localizationService.GetResource("ActivityLog.DeleteKnowledgebaseArticle"), knowledgebaseArticle.Name);
-
-            SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Deleted"));
-            return RedirectToAction("List");
+            if (ModelState.IsValid)
+            {
+                _knowledgebaseViewModelService.DeleteKnowledgebaseArticle(knowledgebaseArticle);
+                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Knowledgebase.KnowledgebaseArticle.Deleted"));
+                return RedirectToAction("List");
+            }
+            ErrorNotification(ModelState);
+            return RedirectToAction("EditArticle", new { knowledgebaseArticle.Id });
         }
 
         public IActionResult ArticlesPopup(string articleId)
@@ -590,16 +407,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (model.SelectedArticlesIds != null)
             {
-                var article = _knowledgebaseService.GetKnowledgebaseArticle(model.ArticleId);
-
-                foreach (var id in model.SelectedArticlesIds)
-                {
-                    if (id != article.Id)
-                        if (!article.RelatedArticles.Contains(id))
-                            article.RelatedArticles.Add(id);
-                }
-
-                _knowledgebaseService.UpdateKnowledgebaseArticle(article);
+                _knowledgebaseViewModelService.InsertKnowledgebaseRelatedArticle(model);
             }
 
             ViewBag.RefreshPage = true;
@@ -616,23 +424,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (model.ArticleId == null || model.Id == null)
                 throw new ArgumentNullException("Article id expected ");
 
-            var article = _knowledgebaseService.GetKnowledgebaseArticle(model.ArticleId);
-            var related = _knowledgebaseService.GetKnowledgebaseArticle(model.Id);
-
-            if (article == null || related == null)
-                throw new ArgumentNullException("No article found with specified id");
-
-            string toDelete = "";
-            foreach (var item in article.RelatedArticles)
-            {
-                if (item == related.Id)
-                    toDelete = item;
-            }
-
-            if (!string.IsNullOrEmpty(toDelete))
-                article.RelatedArticles.Remove(toDelete);
-
-            _knowledgebaseService.UpdateKnowledgebaseArticle(article);
+            _knowledgebaseViewModelService.DeleteKnowledgebaseRelatedArticle(model);
 
             return new NullJsonResult();
         }
