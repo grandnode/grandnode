@@ -33,6 +33,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure
             builder.RegisterType<KnowledgebaseViewModelService>().As<IKnowledgebaseViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<LanguageViewModelService>().As<ILanguageViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<LogViewModelService>().As<ILogViewModelService>().InstancePerLifetimeScope();
+            builder.RegisterType<ManufacturerViewModelService>().As<IManufacturerViewModelService>().InstancePerLifetimeScope();
         }
 
         public int Order

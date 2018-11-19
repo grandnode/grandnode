@@ -1,5 +1,4 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
@@ -18,7 +17,6 @@ using Grand.Web.Areas.Admin.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -39,7 +37,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IWorkContext _workContext;
         private readonly IImportManager _importManager;
-        private readonly CatalogSettings _catalogSettings;
 
         #endregion
 
@@ -56,8 +53,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             IExportManager exportManager,
             ICustomerActivityService customerActivityService,
             IWorkContext workContext,
-            IImportManager importManager,
-            CatalogSettings catalogSettings)
+            IImportManager importManager)
         {
             this._categoryService = categoryService;
             this._categoryViewModelService = categoryViewModelService;
@@ -70,7 +66,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._customerActivityService = customerActivityService;
             this._workContext = workContext;
             this._importManager = importManager;
-            this._catalogSettings = catalogSettings;
         }
 
         #endregion
