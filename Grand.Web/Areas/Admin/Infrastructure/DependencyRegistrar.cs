@@ -31,6 +31,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure
             builder.RegisterType<EmailAccountViewModelService>().As<IEmailAccountViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<GiftCardViewModelService>().As<IGiftCardViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<KnowledgebaseViewModelService>().As<IKnowledgebaseViewModelService>().InstancePerLifetimeScope();
+            builder.RegisterType<LanguageViewModelService>().As<ILanguageViewModelService>().InstancePerLifetimeScope();
         }
 
         public int Order
