@@ -20,6 +20,7 @@
                             <button class="btn btn-success" type="submit" name="save-continue"><i class="fa fa-check-circle"></i> @T("Admin.Common.SaveContinue") </button>
                             <input type="submit" name="message-template-copy" class="btn blue" value="@T("Admin.ContentManagement.MessageTemplates.Copy")" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
                             <span id="message-template-delete" class="btn red"><i class="fa fa-trash-o"></i> @T("Admin.Common.Delete")</span>
+                            <vc:admin-widget widget-zone="message_template_details_buttons" additional-data="Model" />
                         </div>
                     </div>
                 </div>

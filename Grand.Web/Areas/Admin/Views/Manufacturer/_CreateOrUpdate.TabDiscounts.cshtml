@@ -1,4 +1,5 @@
 ﻿@model ManufacturerModel
+<vc:admin-widget widget-zone="manufacturer_discounts_top" additional-data="Model" />
 @{
     if (Model.AvailableDiscounts != null && Model.AvailableDiscounts.Count > 0)
     {
@@ -19,4 +20,6 @@
             @T("Admin.Catalog.Manufacturers.Discounts.NoDiscounts")
         </div>
     }
+
 }
+<vc:admin-widget widget-zone="manufacturer_discounts_bottom" additional-data="Model" />

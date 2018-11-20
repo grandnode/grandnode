@@ -17,6 +17,7 @@
                     <div class="actions btn-group btn-group-devided">
                         <input type="button" id="delete-selected" class="btn green" value="@T("Admin.System.Log.DeleteSelected")" />
                         <input type="submit" name="clearall" class="btn red" value="@T("Admin.System.Log.ClearLog")" onclick="return confirm('@T("Admin.Common.AreYouSure")'); " />
+                        <vc:admin-widget widget-zone="log_list_buttons" additional-data="null" />
                     </div>
                 </div>
                 <div class="portlet-body form">
