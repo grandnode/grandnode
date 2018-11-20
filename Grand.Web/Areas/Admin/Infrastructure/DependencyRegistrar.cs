@@ -35,8 +35,9 @@ namespace Grand.Web.Areas.Admin.Infrastructure
             builder.RegisterType<LogViewModelService>().As<ILogViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<ManufacturerViewModelService>().As<IManufacturerViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<NewsViewModelService>().As<INewsViewModelService>().InstancePerLifetimeScope();
+            builder.RegisterType<OrderViewModelService>().As<IOrderViewModelService>().InstancePerLifetimeScope();
+            builder.RegisterType<ShipmentViewModelService>().As<IShipmentViewModelService>().InstancePerLifetimeScope();
         }
-
         public int Order
         {
             get { return 3; }

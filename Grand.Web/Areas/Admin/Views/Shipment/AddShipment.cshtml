@@ -8,7 +8,7 @@
         .Where(x => x.AllowToChooseWarehouse && x.AvailableWarehouses.Count > 0)
         .ToList();
 }
-<form asp-controller="Order" asp-action="AddShipment" method="post"
+<form asp-controller="Shipment" asp-action="AddShipment" method="post"
       asp-route-orderId="@Context.Request.Query["orderId"]">
     <antiforgery-token />
     <div asp-validation-summary="All"></div>
@@ -21,7 +21,7 @@
                     @string.Format(T("Admin.Orders.Shipments.AddNew.Title").Text, Model.OrderNumber)
                     <small>
                         <i class="fa fa-arrow-circle-left"></i>
-                        @Html.ActionLink(T("Admin.Orders.Shipments.BackToOrder").Text, "Edit", new { id = Model.OrderId })
+                        @Html.ActionLink(T("Admin.Orders.Shipments.BackToOrder").Text, "List")
                     </small>
                 </div>
                 <div class="actions">
