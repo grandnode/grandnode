@@ -1,6 +1,7 @@
 ﻿@model OrderModel
 @if (Model.IsShippable)
 {
+    
     <div class="form-horizontal">
         <div class="form-body">
             @if (Model.ShippingAddress != null)
@@ -255,7 +256,7 @@
                 <div class="form-group">
                     <admin-label asp-for="ShippingStatus" />
                     <div class="col-md-9 col-sm-9">
-                        <label class="control-label">@Model.ShippingStatus</label> 
+                        <label class="control-label">@Model.ShippingStatus</label>
                     </div>
                 </div>
             }
@@ -268,6 +269,7 @@
     </p>
 
     <div class="panel panel-default">
+        <vc:admin-widget widget-zone="order_details_shipping_top" additional-data="Model" />
         <div class="panel-body">
             <div id="shipments-grid"></div>
         </div>
@@ -277,6 +279,7 @@
                 <input type="submit" id="btnAddNewShipment" name="btnAddNewShipment" value="@T("Admin.Orders.Shipments.AddNew")" onclick="javascript:setLocation('@(Url.Action("AddShipment", "Shipment", new { orderId = Model.Id }))'); return false;" class="k-button" />
             }
         </div>
+        <vc:admin-widget widget-zone="order_details_shipping_bottom" additional-data="Model" />
     </div>
     <script>
         $(document).ready(function () {

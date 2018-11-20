@@ -1,7 +1,7 @@
 ﻿@model OrderModel
 @using Grand.Core.Domain.Tax;
 @using Grand.Core.Domain.Catalog;
-
+<vc:admin-widget widget-zone="order_details_products_top" additional-data="Model" />
 <table class="table table-bordered table-striped table-hover">
     <tr>
         <td>
@@ -359,7 +359,7 @@
         </td>
     </tr>
 </table>
-
+<vc:admin-widget widget-zone="order_details_products_bottom" additional-data="Model" />
 
 @if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo) && !Model.IsLoggedInAsVendor)
 {

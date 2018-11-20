@@ -2,6 +2,7 @@
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 <div class="form-horizontal">
+    <vc:admin-widget widget-zone="forum_group_details_top" additional-data="Model" />
     <div class="form-body">
         <div class="form-group">
             <admin-label asp-for="Name" />
@@ -18,4 +19,5 @@
             </div>
         </div>
     </div>
+    <vc:admin-widget widget-zone="forum_group_details_bottom" additional-data="Model" />
 </div>

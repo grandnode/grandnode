@@ -21,6 +21,7 @@
                             <a href="@Url.Action("ExportXml", new { id = Model.Id })" class="btn blue">@T("Admin.Configuration.Languages.Export")</a>
                             <input type="button" id="importxml" class="btn yellow" value="@T("Admin.Configuration.Languages.Import")" />
                             <span id="language-delete" class="btn red"><i class="fa fa-trash-o"></i> @T("Admin.Common.Delete")</span>
+                            <vc:admin-widget widget-zone="language_details_buttons" additional-data="Model" />
                         </div>
                     </div>
                 </div>

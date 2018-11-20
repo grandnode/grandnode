@@ -1,8 +1,9 @@
 ﻿@model GiftCardModel
 @inject AdminAreaSettings adminAreaSettings
 @{
+    <vc:admin-widget widget-zone="gift_card_details_history_top" additional-data="Model" />
     <div id="usagehistory-grid"></div>
-
+    <vc:admin-widget widget-zone="gift_card_details_history_bottom" additional-data="Model" />
     <script>
         $(document).ready(function () {
             $("#usagehistory-grid").kendoGrid({

@@ -22,6 +22,7 @@
         });
     });
 </script>
+<vc:admin-widget widget-zone="plugin_details_top" additional-data="Model" />
 <div id="plugin-edit">
     <ul>
         <li tab-index="0">
@@ -38,6 +39,7 @@
         <partial name="_TabStores" model="Model" />
     </div>
 </div>
+<vc:admin-widget widget-zone="plugin_details_bottom" additional-data="Model" />
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "plugin-edit");

@@ -1,8 +1,10 @@
 ﻿@model OrderModel
 <div class="panel panel-default">
+    <vc:admin-widget widget-zone="order_details_notes_top" additional-data="Model" />
     <div class="panel-body">
         <div id="ordernotes-grid"></div>
     </div>
+    <vc:admin-widget widget-zone="order_details_notes_bottom" additional-data="Model" />
 </div>
 <script>
         $(document).ready(function () {
