@@ -14,8 +14,8 @@ using System.Linq;
 namespace Grand.Web.Areas.Admin.Controllers
 {
     public partial class MeasureController : BaseAdminController
-	{
-		#region Fields
+    {
+        #region Fields
 
         private readonly IMeasureService _measureService;
         private readonly MeasureSettings _measureSettings;
@@ -23,25 +23,25 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly ILocalizationService _localizationService;
 
-		#endregion
+        #endregion
 
-		#region Constructors
+        #region Constructors
 
         public MeasureController(IMeasureService measureService,
             MeasureSettings measureSettings, ISettingService settingService,
             IPermissionService permissionService, ILocalizationService localizationService)
-		{
+        {
             this._measureService = measureService;
             this._measureSettings = measureSettings;
             this._settingService = settingService;
             this._permissionService = permissionService;
             this._localizationService = localizationService;
-		}
+        }
 
-		#endregion 
+        #endregion
 
-		#region Methods
-        
+        #region Methods
+
         #region Weights
 
         public IActionResult Weights()
@@ -50,9 +50,9 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             return View();
-		}
+        }
 
-		[HttpPost]
+        [HttpPost]
         public IActionResult Weights(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
@@ -70,14 +70,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             };
 
             return Json(gridModel);
-		}
+        }
 
         [HttpPost]
         public IActionResult WeightUpdate(MeasureWeightModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
                 return AccessDeniedView();
-            
+
             if (!ModelState.IsValid)
             {
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
@@ -89,16 +89,16 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return new NullJsonResult();
         }
-        
+
         [HttpPost]
-        public IActionResult WeightAdd( MeasureWeightModel model)
+        public IActionResult WeightAdd(MeasureWeightModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
             {
-                return Json(new DataSourceResult {Errors = ModelState.SerializeErrors()});
+                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
             }
 
             var weight = new MeasureWeight();
@@ -195,7 +195,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult DimensionAdd( MeasureDimensionModel model)
+        public IActionResult DimensionAdd(MeasureDimensionModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
                 return AccessDeniedView();
@@ -269,7 +269,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var unitsModel = _measureService.GetAllMeasureUnits()
                 .Select(x => x.ToModel())
                 .ToList();
-            
+
             var gridModel = new DataSourceResult
             {
                 Data = unitsModel,
@@ -298,7 +298,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult UnitAdd( MeasureUnitModel model)
+        public IActionResult UnitAdd(MeasureUnitModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
                 return AccessDeniedView();

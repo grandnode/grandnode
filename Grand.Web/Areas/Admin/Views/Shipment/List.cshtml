@@ -5,7 +5,7 @@
     ViewBag.Title = T("Admin.Orders.Shipments.List").Text;
 }
 
-<form asp-controller="Order" asp-action="ShipmentList" method="post">
+<form asp-controller="Shipment" asp-action="List" method="post">
     <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
@@ -84,7 +84,7 @@
                 dataSource: {
                     transport: {
                         read: {
-                            url: "@Html.Raw(Url.Action("ShipmentListSelect", "Order"))",
+                            url: "@Html.Raw(Url.Action("ShipmentListSelect", "Shipment"))",
                             type: "POST",
                             dataType: "json",
                             data: additionalData
@@ -122,7 +122,7 @@
                     field: "ShipmentNumber",
                     title: "@T("Admin.Orders.Shipments.ID")",
                     width: 100,
-                    template: '<a class="k-link" href="@Url.Content("~/Admin/Order/ShipmentDetails/")#=Id#">#=ShipmentNumber#</a>'
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Shipment/ShipmentDetails/")#=Id#">#=ShipmentNumber#</a>'
                 }, {
                     field: "OrderNumber",
                     title: "@T("Admin.Orders.Shipments.OrderID")",
@@ -132,7 +132,7 @@
                     field: "TrackingNumber",
                     title: "@T("Admin.Orders.Shipments.TrackingNumber")",
                     width: 100,
-                    template: '<a class="k-link" href="@Url.Content("~/Admin/Order/ShipmentDetails/")#=Id#">#=TrackingNumber#</a>'
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Shipment/ShipmentDetails/")#=Id#">#=TrackingNumber#</a>'
                 }, {
                     field: "TotalWeight",
                     title: "@T("Admin.Orders.Shipments.TotalWeight")",
@@ -160,7 +160,7 @@
                 dataSource: {
                     transport: {
                         read: {
-                            url: "@Html.Raw(Url.Action("ShipmentsItemsByShipmentId", "Order"))?shipmentId="+e.data.Id,
+                            url: "@Html.Raw(Url.Action("ShipmentsItemsByShipmentId", "Shipment"))?shipmentId="+e.data.Id,
                             type: "POST",
                             dataType: "json",
                             data: addAntiForgeryToken
@@ -281,7 +281,7 @@
                 $.ajax({
                     cache: false,
                     type: "POST",
-                    url: "@(Url.Action("SetAsShippedSelected", "Order"))",
+                    url: "@(Url.Action("SetAsShippedSelected", "Shipment"))",
                     data: postData,
                     complete: function(data) {
                         //reload grid
@@ -308,7 +308,7 @@
                 $.ajax({
                     cache: false,
                     type: "POST",
-                    url: "@(Url.Action("SetAsDeliveredSelected", "Order"))",
+                    url: "@(Url.Action("SetAsDeliveredSelected", "Shipment"))",
                     data: postData,
                     complete: function(data) {
                         //reload grid
@@ -386,7 +386,7 @@
 
 </form>
 @*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
-<form asp-controller="Order" asp-action="PdfPackagingSlipSelected" method="post" id="pdf-packaging-slip-selected-form">
+<form asp-controller="Shipment" asp-action="PdfPackagingSlipSelected" method="post" id="pdf-packaging-slip-selected-form">
     <antiforgery-token />
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>

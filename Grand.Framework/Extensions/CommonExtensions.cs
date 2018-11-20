@@ -19,7 +19,10 @@ namespace Grand.Framework.Extensions
         {
             return current.Skip((command.Page - 1) * command.PageSize).Take(command.PageSize);
         }
-
+        public static IEnumerable<T> PagedForCommand<T>(this IEnumerable<T> current, int pageIndex, int pageSize)
+        {
+            return current.Skip((pageIndex - 1) * pageSize).Take(pageSize);
+        }
         public static SelectList ToSelectList<TEnum>(this TEnum enumObj, bool markCurrentAsSelected = true, int[] valuesToExclude = null) where TEnum : struct
         {
             if (!typeof(TEnum).GetTypeInfo().IsEnum) throw new ArgumentException("An Enumeration type is required.", "enumObj");

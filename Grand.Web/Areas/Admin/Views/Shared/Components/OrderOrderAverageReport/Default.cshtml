@@ -5,7 +5,7 @@
             dataSource: {
                 transport: {
                     read: {
-                        url: "@Html.Raw(Url.Action("OrderAverageReportList", "Order"))",
+                        url: "@Html.Raw(Url.Action("OrderAverageReportList", "Reports"))",
                         type: "POST",
                         dataType: "json",
                         data: addAntiForgeryToken

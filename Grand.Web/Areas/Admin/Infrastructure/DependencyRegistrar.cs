@@ -30,8 +30,14 @@ namespace Grand.Web.Areas.Admin.Infrastructure
             builder.RegisterType<DiscountViewModelService>().As<IDiscountViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<EmailAccountViewModelService>().As<IEmailAccountViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<GiftCardViewModelService>().As<IGiftCardViewModelService>().InstancePerLifetimeScope();
+            builder.RegisterType<KnowledgebaseViewModelService>().As<IKnowledgebaseViewModelService>().InstancePerLifetimeScope();
+            builder.RegisterType<LanguageViewModelService>().As<ILanguageViewModelService>().InstancePerLifetimeScope();
+            builder.RegisterType<LogViewModelService>().As<ILogViewModelService>().InstancePerLifetimeScope();
+            builder.RegisterType<ManufacturerViewModelService>().As<IManufacturerViewModelService>().InstancePerLifetimeScope();
+            builder.RegisterType<NewsViewModelService>().As<INewsViewModelService>().InstancePerLifetimeScope();
+            builder.RegisterType<OrderViewModelService>().As<IOrderViewModelService>().InstancePerLifetimeScope();
+            builder.RegisterType<ShipmentViewModelService>().As<IShipmentViewModelService>().InstancePerLifetimeScope();
         }
-
         public int Order
         {
             get { return 3; }

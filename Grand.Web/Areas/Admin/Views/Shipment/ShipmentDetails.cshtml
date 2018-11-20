@@ -3,7 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.Orders.Shipments.ViewDetails").Text;
 }
-<form asp-controller="Order" asp-action="ShipmentDetails" method="post">
+<form asp-controller="Shipment" asp-action="ShipmentDetails" method="post">
     <antiforgery-token />
     <script type="text/javascript">
         $(document).ready(function () {
@@ -55,7 +55,7 @@
                         @T("Admin.Orders.Shipments.ViewDetails") - @Model.ShipmentNumber
                         <small>
                             <i class="fa fa-arrow-circle-left"></i>
-                            @Html.ActionLink(T("Admin.Orders.Shipments.BackToOrder").Text, "Edit", new { id = Model.OrderId })
+                            @Html.ActionLink(T("Admin.Orders.Shipments.BackToList").Text, "List")
                         </small>
                     </div>
                     <div class="actions">
