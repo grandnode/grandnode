@@ -1,6 +1,4 @@
-﻿using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Localization;
-using Grand.Framework.Kendoui;
+﻿using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
 using Grand.Services.Catalog;
@@ -11,7 +9,6 @@ using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
@@ -151,7 +148,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 specificationAttribute.Locales = model.Locales.ToLocalizedProperty();
                 _specificationAttributeService.UpdateSpecificationAttribute(specificationAttribute);
 
-
                 //activity log
                 _customerActivityService.InsertActivity("EditSpecAttribute", specificationAttribute.Id, _localizationService.GetResource("ActivityLog.EditSpecAttribute"), specificationAttribute.Name);
 
@@ -182,14 +178,18 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (specificationAttribute == null)
                 //No specification attribute found with the specified id
                 return RedirectToAction("List");
+            if (ModelState.IsValid)
+            {
+                _specificationAttributeService.DeleteSpecificationAttribute(specificationAttribute);
 
-            _specificationAttributeService.DeleteSpecificationAttribute(specificationAttribute);
+                //activity log
+                _customerActivityService.InsertActivity("DeleteSpecAttribute", specificationAttribute.Id, _localizationService.GetResource("ActivityLog.DeleteSpecAttribute"), specificationAttribute.Name);
 
-            //activity log
-            _customerActivityService.InsertActivity("DeleteSpecAttribute", specificationAttribute.Id, _localizationService.GetResource("ActivityLog.DeleteSpecAttribute"), specificationAttribute.Name);
-
-            SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Deleted"));
-            return RedirectToAction("List");
+                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Deleted"));
+                return RedirectToAction("List");
+            }
+            ErrorNotification(ModelState);
+            return RedirectToAction("Edit", new { id = specificationAttribute.Id });
         }
 
         #endregion
@@ -321,14 +321,19 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
-            var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(specificationAttributeId);
-            var sao = specificationAttribute.SpecificationAttributeOptions.Where(x => x.Id == id).FirstOrDefault();
-            if (sao == null)
-                throw new ArgumentException("No specification attribute option found with the specified id");
-            
-            _specificationAttributeService.DeleteSpecificationAttributeOption(sao);
 
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(specificationAttributeId);
+                var sao = specificationAttribute.SpecificationAttributeOptions.Where(x => x.Id == id).FirstOrDefault();
+                if (sao == null)
+                    throw new ArgumentException("No specification attribute option found with the specified id");
+
+                _specificationAttributeService.DeleteSpecificationAttributeOption(sao);
+
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         

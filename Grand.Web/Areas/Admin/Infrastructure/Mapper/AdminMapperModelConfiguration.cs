@@ -88,7 +88,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                .ForMember(dest => dest.FaxEnabled, mo => mo.Ignore())
                .ForMember(dest => dest.FaxRequired, mo => mo.Ignore())
                .ForMember(dest => dest.CountryName,
-                    mo => mo.MapFrom(src => !string.IsNullOrEmpty(src.CountryId) ? src.CountryName(): null))
+                    mo => mo.MapFrom(src => !string.IsNullOrEmpty(src.CountryId) ? src.CountryName() : null))
                .ForMember(dest => dest.StateProvinceName,
                     mo => mo.MapFrom(src => !string.IsNullOrEmpty(src.StateProvinceId) ? src.StateProvinceName() : null))
                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
@@ -688,6 +688,16 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<ProductAttributeModel, ProductAttribute>()
+                .ForMember(dest => dest.Id, mo => mo.Ignore())
+                .ForMember(dest => dest.Locales, mo => mo.Ignore());
+
+            //product attribute value
+            CreateMap<PredefinedProductAttributeValue, PredefinedProductAttributeValueModel>()
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.PriceAdjustmentStr, mo => mo.ResolveUsing(x => x.PriceAdjustment.ToString("N2")))
+                .ForMember(dest => dest.WeightAdjustmentStr, mo => mo.ResolveUsing(x => x.WeightAdjustment.ToString("N2")))
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            CreateMap<PredefinedProductAttributeValueModel, PredefinedProductAttributeValue>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.Ignore());
 
