@@ -19,6 +19,7 @@
                     </div>
                 </div>
                 <div class="portlet-body form">
+                    <vc:admin-widget widget-zone="payment_method_restrictions_top" additional-data="Model" />
                     <script type="text/javascript">
                         $(document).ready(function () {
                             $('#paymentrestriction-edit').show();
@@ -46,13 +47,13 @@
                             </li>
                         </ul>
                         <div>
-                           <partial name="MethodRestrictions.TabCountry" model="Model" />
+                            <partial name="MethodRestrictions.TabCountry" model="Model" />
                         </div>
                         <div>
-                           <partial name="MethodRestrictions.TabRole" model="Model" />
+                            <partial name="MethodRestrictions.TabRole" model="Model" />
                         </div>
                         <div>
-                           <partial name="MethodRestrictions.TabShipping" model="Model" />
+                            <partial name="MethodRestrictions.TabShipping" model="Model" />
                         </div>
                     </div>
                     @{
@@ -67,6 +68,7 @@
 
                     @*save selected tab index*@
                     <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+                    <vc:admin-widget widget-zone="payment_method_restrictions_bottom" additional-data="Model" />
                 </div>
             </div>
         </div>
