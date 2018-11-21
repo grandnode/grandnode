@@ -1,5 +1,4 @@
 ﻿using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Localization;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
@@ -11,7 +10,6 @@ using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
@@ -186,14 +184,18 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (productAttribute == null)
                 //No product attribute found with the specified id
                 return RedirectToAction("List");
+            if (ModelState.IsValid)
+            {
+                _productAttributeService.DeleteProductAttribute(productAttribute);
 
-            _productAttributeService.DeleteProductAttribute(productAttribute);
+                //activity log
+                _customerActivityService.InsertActivity("DeleteProductAttribute", productAttribute.Id, _localizationService.GetResource("ActivityLog.DeleteProductAttribute"), productAttribute.Name);
 
-            //activity log
-            _customerActivityService.InsertActivity("DeleteProductAttribute", productAttribute.Id, _localizationService.GetResource("ActivityLog.DeleteProductAttribute"), productAttribute.Name);
-
-            SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.Deleted"));
-            return RedirectToAction("List");
+                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.Deleted"));
+                return RedirectToAction("List");
+            }
+            ErrorNotification(ModelState);
+            return RedirectToAction("Edit", new { id = productAttribute.Id });
         }
 
         #endregion
@@ -241,23 +243,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             var values = _productAttributeService.GetProductAttributeById(productAttributeId).PredefinedProductAttributeValues;
             var gridModel = new DataSourceResult
             {
-                Data = values.Select(x =>
-                {
-                    return new PredefinedProductAttributeValueModel
-                    {
-                        Id = x.Id,
-                        ProductAttributeId = x.ProductAttributeId,
-                        Name = x.Name,
-                        PriceAdjustment = x.PriceAdjustment,
-                        PriceAdjustmentStr = x.PriceAdjustment.ToString("G29"),
-                        WeightAdjustment = x.WeightAdjustment,
-                        WeightAdjustmentStr = x.WeightAdjustment.ToString("G29"),
-                        Cost = x.Cost,
-                        IsPreSelected = x.IsPreSelected,
-                        DisplayOrder = x.DisplayOrder
-                    };
-                }),
-                Total = values.Count()
+                Data = values.Select(x =>x.ToModel()),
+                Total = values.Count(),
             };
 
             return Json(gridModel);
@@ -294,16 +281,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var ppav = new PredefinedProductAttributeValue
-                {
-                    ProductAttributeId = model.ProductAttributeId,
-                    Name = model.Name,
-                    PriceAdjustment = model.PriceAdjustment,
-                    WeightAdjustment = model.WeightAdjustment,
-                    Cost = model.Cost,
-                    IsPreSelected = model.IsPreSelected,
-                    DisplayOrder = model.DisplayOrder,
-                };
+                var ppav = model.ToEntity();
                 ppav.Locales = model.Locales.ToLocalizedProperty();
                 productAttribute.PredefinedProductAttributeValues.Add(ppav);
                 _productAttributeService.UpdateProductAttribute(productAttribute);
@@ -326,16 +304,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ppav == null)
                 throw new ArgumentException("No product attribute value found with the specified id");
 
-            var model = new PredefinedProductAttributeValueModel
-            {
-                ProductAttributeId = ppav.ProductAttributeId,
-                Name = ppav.Name,
-                PriceAdjustment = ppav.PriceAdjustment,
-                WeightAdjustment = ppav.WeightAdjustment,
-                Cost = ppav.Cost,
-                IsPreSelected = ppav.IsPreSelected,
-                DisplayOrder = ppav.DisplayOrder
-            };
+            var model = ppav.ToModel();
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
@@ -356,14 +325,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                ppav.Name = model.Name;
-                ppav.PriceAdjustment = model.PriceAdjustment;
-                ppav.WeightAdjustment = model.WeightAdjustment;
-                ppav.Cost = model.Cost;
-                ppav.IsPreSelected = model.IsPreSelected;
-                ppav.DisplayOrder = model.DisplayOrder;
+                ppav = model.ToEntity(ppav);
                 ppav.Locales = model.Locales.ToLocalizedProperty();
-
                 _productAttributeService.UpdateProductAttribute(productAttribute);
 
                 ViewBag.RefreshPage = true;
@@ -381,14 +344,17 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            var productAttribute = _productAttributeService.GetProductAttributeById(productAttributeId);
-            var ppav = productAttribute.PredefinedProductAttributeValues.Where(x => x.Id == id).FirstOrDefault();
-            if (ppav == null)
-                throw new ArgumentException("No predefined product attribute value found with the specified id");
-            productAttribute.PredefinedProductAttributeValues.Remove(ppav);
-            _productAttributeService.UpdateProductAttribute(productAttribute);
-
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                var productAttribute = _productAttributeService.GetProductAttributeById(productAttributeId);
+                var ppav = productAttribute.PredefinedProductAttributeValues.Where(x => x.Id == id).FirstOrDefault();
+                if (ppav == null)
+                    throw new ArgumentException("No predefined product attribute value found with the specified id");
+                productAttribute.PredefinedProductAttributeValues.Remove(ppav);
+                _productAttributeService.UpdateProductAttribute(productAttribute);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         #endregion
