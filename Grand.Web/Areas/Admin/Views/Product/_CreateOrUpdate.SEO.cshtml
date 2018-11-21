@@ -1,5 +1,5 @@
 ﻿@model ProductModel
-
+<vc:admin-widget widget-zone="product_details_seo_top" additional-data="Model" />
 @(Html.LocalizedEditor<ProductModel, ProductLocalizedModel>("product-seo-localized",
     @<div class="form-horizontal">
         <div class="form-body">
@@ -67,3 +67,4 @@
             </div>
         </div>
     </div>))
+     <vc:admin-widget widget-zone="product_details_seo_bottom" additional-data="Model" />

@@ -2,7 +2,7 @@
 @using Grand.Core.Domain.Catalog;
 
 @model ProductModel
-
+<vc:admin-widget widget-zone="product_details_inventory_top" additional-data="Model" />
 <div class="form-horizontal portlet bg-inverse form-fit" id="group-inventory">
     <div class="form-body">
         <div class="form-group">
@@ -300,3 +300,4 @@
         </div>
     </div>
 </div>
+<vc:admin-widget widget-zone="product_details_inventory_bottom" additional-data="Model" />

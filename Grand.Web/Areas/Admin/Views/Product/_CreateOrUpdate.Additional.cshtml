@@ -1,5 +1,6 @@
 ﻿@using Grand.Core.Domain.Catalog;
 @model ProductModel
+<vc:admin-widget widget-zone="product_details_additional_top" additional-data="Model" />
 <div class="form-horizontal" id="group-order">
     <div class="form-body">
         <div class="form-group">
@@ -79,7 +80,7 @@
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
                     <admin-input asp-for="UnlimitedDownloads" />
-                   <span></span>
+                    <span></span>
                 </label>
                 <span asp-validation-for="UnlimitedDownloads"></span>
             </div>
@@ -222,3 +223,4 @@
         </div>
     </div>
 </div>
+<vc:admin-widget widget-zone="product_details_additional_bottom" additional-data="Model" />
