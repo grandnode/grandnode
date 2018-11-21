@@ -52,6 +52,8 @@ using Grand.Web.Areas.Admin.Models.Tax;
 using Grand.Web.Areas.Admin.Models.Templates;
 using Grand.Web.Areas.Admin.Models.Topics;
 using Grand.Web.Areas.Admin.Models.Vendors;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
 {
@@ -603,8 +605,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
             //news
             CreateMap<Poll, PollModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.StartDate, mo => mo.Ignore())
-                .ForMember(dest => dest.EndDate, mo => mo.Ignore())
+                .ForMember(dest => dest.StartDate, mo => mo.ResolveUsing(x => x.StartDateUtc))
+                .ForMember(dest => dest.EndDate, mo => mo.ResolveUsing(x => x.EndDateUtc))
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
                 .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
@@ -613,17 +615,19 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
 
             CreateMap<PollModel, Poll>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.PollAnswers, mo => mo.Ignore())
-                .ForMember(dest => dest.StartDateUtc, mo => mo.Ignore())
-                .ForMember(dest => dest.EndDateUtc, mo => mo.Ignore());
+                .ForMember(dest => dest.Stores, mo => mo.ResolveUsing(model => model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>()))
+                .ForMember(dest => dest.CustomerRoles, mo => mo.ResolveUsing(model => model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>()))
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()))
+                .ForMember(dest => dest.StartDateUtc, mo => mo.ResolveUsing(x => x.StartDate))
+                .ForMember(dest => dest.EndDateUtc, mo => mo.ResolveUsing(x => x.EndDate));
 
             CreateMap<PollAnswer, PollAnswerModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<PollAnswerModel, PollAnswer>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()));
 
 
             //customer roles

@@ -1,5 +1,4 @@
-﻿using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Polls;
+﻿using Grand.Core.Domain.Polls;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
@@ -13,7 +12,6 @@ using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Polls;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
@@ -115,12 +113,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var poll = model.ToEntity();
-                poll.StartDateUtc = model.StartDate;
-                poll.EndDateUtc = model.EndDate;
-                poll.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
-                poll.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
-                poll.Locales = model.Locales.ToLocalizedProperty();
+                var poll = model.ToEntity();                
                 _pollService.InsertPoll(poll);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Polls.Added"));
@@ -148,12 +141,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (poll == null)
                 //No poll found with the specified id
                 return RedirectToAction("List");
-
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             var model = poll.ToModel();
-            model.StartDate = poll.StartDateUtc;
-            model.EndDate = poll.EndDateUtc;
-
             //Store
             model.PrepareStoresMappingModel(poll, false, _storeService);
             //locales
@@ -181,11 +170,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 poll = model.ToEntity(poll);
-                poll.StartDateUtc = model.StartDate;
-                poll.EndDateUtc = model.EndDate;
-                poll.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
-                poll.Locales = model.Locales.ToLocalizedProperty();
-                poll.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
                 _pollService.UpdatePoll(poll);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Polls.Updated"));
@@ -226,11 +210,15 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (poll == null)
                 //No poll found with the specified id
                 return RedirectToAction("List");
-            
-            _pollService.DeletePoll(poll);
+            if (ModelState.IsValid)
+            {
+                _pollService.DeletePoll(poll);
 
-            SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Polls.Deleted"));
-            return RedirectToAction("List");
+                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Polls.Deleted"));
+                return RedirectToAction("List");
+            }
+            ErrorNotification(ModelState);
+            return RedirectToAction("Edit", new { id = poll.Id });
         }
 
         #endregion
@@ -251,14 +239,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             var gridModel = new DataSourceResult
             {
-                Data = answers.Select(x =>  new PollAnswerModel
-                {
-                    Id = x.Id,
-                    PollId = x.PollId,
-                    Name = x.Name,
-                    NumberOfVotes = x.NumberOfVotes,
-                    DisplayOrder = x.DisplayOrder
-                }),
+                Data = answers.Select(x=>x.ToModel()),
                 Total = answers.Count
             };
 
@@ -292,7 +273,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var pa = model.ToEntity();
-                pa.Locales = model.Locales.ToLocalizedProperty();
                 poll.PollAnswers.Add(pa);
                 _pollService.UpdatePoll(poll);
                 ViewBag.RefreshPage = true;
@@ -343,7 +323,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 pollAnswer = model.ToEntity(pollAnswer);
-                pollAnswer.Locales = model.Locales.ToLocalizedProperty();
                 _pollService.UpdatePoll(poll);
 
                 ViewBag.RefreshPage = true;
@@ -365,11 +344,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             var pollAnswer = pol.PollAnswers.Where(x => x.Id == answer.Id).FirstOrDefault();
             if (pollAnswer == null)
                 throw new ArgumentException("No poll answer found with the specified id", "id");
+            if (ModelState.IsValid)
+            {
+                pol.PollAnswers.Remove(pollAnswer);
+                _pollService.UpdatePoll(pol);
 
-            pol.PollAnswers.Remove(pollAnswer);
-            _pollService.UpdatePoll(pol);
-
-            return new NullJsonResult();
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         #endregion
