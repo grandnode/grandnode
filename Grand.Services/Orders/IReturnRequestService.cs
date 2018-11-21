@@ -108,9 +108,15 @@ namespace Grand.Services.Orders
         void InsertReturnRequestReason(ReturnRequestReason returnRequestReason);
 
         /// <summary>
-        /// Updates the  return request reaspn
+        /// Updates the return request reaspn
         /// </summary>
         /// <param name="returnRequestReason">Return request reason</param>
         void UpdateReturnRequestReason(ReturnRequestReason returnRequestReason);
+
+        /// <summary>
+        /// Update the return request
+        /// </summary>
+        /// <param name="returnRequest"></param>
+        void UpdateReturnRequest(ReturnRequest returnRequest);
     }
 }
