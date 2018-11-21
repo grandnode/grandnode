@@ -720,7 +720,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<SpecificationAttributeModel, SpecificationAttribute>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()))
                 .ForMember(dest => dest.SpecificationAttributeOptions, mo => mo.Ignore());
             CreateMap<SpecificationAttributeOption, SpecificationAttributeOptionModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
@@ -728,7 +728,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<SpecificationAttributeOptionModel, SpecificationAttributeOption>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()));
 
             //checkout attributes
             CreateMap<CheckoutAttribute, CheckoutAttributeModel>()
