@@ -177,6 +177,15 @@ namespace Grand.Web.Areas.Admin.Extensions
 
         #endregion
 
+        #region Product Review
+
+        public static ProductReview ToEntity(this ProductReviewModel model, ProductReview destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
+
         #region Product attributes combinations
 
         public static ProductAttributeCombinationModel ToModel(this ProductAttributeCombination entity)
