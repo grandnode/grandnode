@@ -693,8 +693,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<ProductAttributeModel, ProductAttribute>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore());
-
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()));
+                
             //product attribute value
             CreateMap<PredefinedProductAttributeValue, PredefinedProductAttributeValueModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
@@ -703,7 +703,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<PredefinedProductAttributeValueModel, PredefinedProductAttributeValue>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()));
 
             //specification attributes
             CreateMap<SpecificationAttribute, SpecificationAttributeModel>()

@@ -1,5 +1,4 @@
-﻿using Grand.Core.Domain.Catalog;
-using Grand.Framework.Kendoui;
+﻿using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
 using Grand.Services.Catalog;
@@ -102,7 +101,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var productAttribute = model.ToEntity();
-                productAttribute.Locales = model.Locales.ToLocalizedProperty();
                 _productAttributeService.InsertProductAttribute(productAttribute);
 
                 //activity log
@@ -152,7 +150,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 productAttribute = model.ToEntity(productAttribute);
-                productAttribute.Locales = model.Locales.ToLocalizedProperty();
                 _productAttributeService.UpdateProductAttribute(productAttribute);
 
                 //activity log
@@ -282,7 +279,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var ppav = model.ToEntity();
-                ppav.Locales = model.Locales.ToLocalizedProperty();
                 productAttribute.PredefinedProductAttributeValues.Add(ppav);
                 _productAttributeService.UpdateProductAttribute(productAttribute);
 
@@ -326,7 +322,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 ppav = model.ToEntity(ppav);
-                ppav.Locales = model.Locales.ToLocalizedProperty();
                 _productAttributeService.UpdateProductAttribute(productAttribute);
 
                 ViewBag.RefreshPage = true;
