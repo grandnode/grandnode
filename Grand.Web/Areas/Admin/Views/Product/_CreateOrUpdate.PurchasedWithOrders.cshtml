@@ -5,9 +5,11 @@
     @T("Admin.Catalog.Products.PurchasedWithOrders.Hint")
 </div>
 <div class="panel panel-default">
+    <vc:admin-widget widget-zone="product_details_purchased_with_orders_top" additional-data="Model" />
     <div class="panel-body">
         <div id="purchased-with-orders-grid"></div>
     </div>
+    <vc:admin-widget widget-zone="product_details_purchased_with_orders_bottom" additional-data="Model" />
 </div>
 <script>
         $(document).ready(function () {

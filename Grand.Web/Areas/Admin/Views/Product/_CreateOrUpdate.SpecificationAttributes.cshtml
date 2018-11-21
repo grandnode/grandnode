@@ -6,11 +6,13 @@
     /*hide "add spec" table if no attributes are defined*/
     if (Model.AddSpecificationAttributeModel.AvailableAttributes.Count > 0)
     {
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div id="specificationattributes-grid"></div>
-            </div>
-        </div>
+<div class="panel panel-default">
+    <vc:admin-widget widget-zone="product_details_specification_attribute_details_top" additional-data="Model" />
+    <div class="panel-body">
+        <div id="specificationattributes-grid"></div>
+    </div>
+    <vc:admin-widget widget-zone="product_details_specification_attribute_details_bottom" additional-data="Model" />
+</div>
             <script>
                 $(document).ready(function() {
                     $("#specificationattributes-grid").kendoGrid({

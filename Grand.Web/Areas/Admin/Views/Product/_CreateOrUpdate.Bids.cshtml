@@ -5,9 +5,11 @@
     <input asp-for="AuctionEnded" type="hidden" />
 
     <div class="panel panel-default">
+        <vc:admin-widget widget-zone="product_details_bids_top" additional-data="Model" />
         <div class="panel-body">
             <div id="bids-grid"></div>
         </div>
+        <vc:admin-widget widget-zone="product_details_bids_bottom" additional-data="Model" />
     </div>
     <script>
         $(document).ready(function () {

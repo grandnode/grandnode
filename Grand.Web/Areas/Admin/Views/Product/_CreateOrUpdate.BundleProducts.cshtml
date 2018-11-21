@@ -3,15 +3,17 @@
 
 @if (!String.IsNullOrEmpty(Model.Id))
 {
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div id="bundleproducts-grid"></div>
-        </div>
-        <div class="panel-footer">
-            <input type="submit" id="btnAddNewBundleProduct" value="@T("Admin.Catalog.Products.BundleProducts.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("BundleProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshBundleProducts", formId = "product-form" }))    ', 800, 800, true); return false;" class="k-button" />
-            <input type="submit" id="btnRefreshBundleProducts" style="display: none" />
-        </div>
+<div class="panel panel-default">
+    <vc:admin-widget widget-zone="product_details_bundle_products_top" additional-data="Model" />
+    <div class="panel-body">
+        <div id="bundleproducts-grid"></div>
     </div>
+    <div class="panel-footer">
+        <input type="submit" id="btnAddNewBundleProduct" value="@T("Admin.Catalog.Products.BundleProducts.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("BundleProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshBundleProducts", formId = "product-form" }))    ', 800, 800, true); return false;" class="k-button" />
+        <input type="submit" id="btnRefreshBundleProducts" style="display: none" />
+    </div>
+    <vc:admin-widget widget-zone="product_details_bundle_products_bottom" additional-data="Model" />
+</div>
 
     <script>
         $(document).ready(function () {

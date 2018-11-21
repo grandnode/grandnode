@@ -3,6 +3,7 @@
 @using Grand.Core.Domain.Catalog;
 @if (!String.IsNullOrEmpty(Model.Id))
 {
+    <vc:admin-widget widget-zone="product_details_calendar_top" additional-data="Model" />
     <div class="form-horizontal">
         <h2>@T("Admin.Catalog.Products.Calendar.Calendarconfiguration")</h2>
         <div class="form-body">
@@ -129,7 +130,7 @@
             <div id="reservations-grid"></div>
         </div>
     </div>
-
+    <vc:admin-widget widget-zone="product_details_calendar_bottom" additional-data="Model" />
 
     <script type="text/javascript">
         $(document).ready(function () {

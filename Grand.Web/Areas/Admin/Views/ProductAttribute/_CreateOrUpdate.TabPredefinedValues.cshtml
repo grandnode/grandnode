@@ -6,6 +6,7 @@
             @T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Hint")
         </div>
         <div class="panel panel-default">
+            <vc:admin-widget widget-zone="product_attribute_details_predefined_values_top" additional-data="Model" />
             <div class="panel-body">
                 <div id="productattributevalues-grid"></div>
             </div>
@@ -13,6 +14,7 @@
                 <input type="submit" id="btnAddNewValue" value="@T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.AddNew")" onclick=" javascript:OpenWindow('@(Url.Action("PredefinedProductAttributeValueCreatePopup", "ProductAttribute", new {productAttributeId = Model.Id, btnId = "btnRefresh", formId = "productattribute-form"}))', 800, 550, true); return false; " class="k-button" />
                 <input type="submit" id="btnRefresh" style="display:none" />
             </div>
+            <vc:admin-widget widget-zone="product_attribute_details_predefined_values_bottom" additional-data="Model" />
         </div>
         <script type="text/javascript">
             $(document).ready(function() {
