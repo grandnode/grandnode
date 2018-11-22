@@ -1,4 +1,5 @@
 ﻿using Grand.Core;
+using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Payments;
 using Grand.Core.Domain.Shipping;
@@ -12,6 +13,7 @@ using Grand.Services.Orders;
 using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Services.Vendors;
+using Grand.Web.Areas.Admin.Models.Catalog;
 using Grand.Web.Areas.Admin.Models.Orders;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -30,6 +32,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IWorkContext _workContext;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductService _productService;
+        private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly ILocalizationService _localizationService;
         private readonly IStoreService _storeService;
         private readonly ICountryService _countryService;
@@ -42,6 +45,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         IWorkContext workContext,
         IPriceFormatter priceFormatter,
         IProductService productService,
+        IProductAttributeFormatter productAttributeFormatter,
         ILocalizationService localizationService,
         IStoreService storeService,
         ICountryService countryService,
@@ -54,6 +58,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _workContext = workContext;
             _priceFormatter = priceFormatter;
             _productService = productService;
+            _productAttributeFormatter = productAttributeFormatter;
             _localizationService = localizationService;
             _storeService = storeService;
             _countryService = countryService;
@@ -505,6 +510,69 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-      
+        #region Low stock reports
+
+        public IActionResult LowStockReport()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            return View();
+        }
+        [HttpPost]
+        public IActionResult LowStockReportList(DataSourceRequest command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            string vendorId = "";
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+                vendorId = _workContext.CurrentVendor.Id;
+
+            IList<Product> products;
+            IList<ProductAttributeCombination> combinations;
+            _productService.GetLowStockProducts(vendorId, out products, out combinations);
+
+            var models = new List<LowStockProductModel>();
+            //products
+            foreach (var product in products)
+            {
+                var lowStockModel = new LowStockProductModel
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    ManageInventoryMethod = product.ManageInventoryMethod.GetLocalizedEnum(_localizationService, _workContext.WorkingLanguage.Id),
+                    StockQuantity = product.GetTotalStockQuantity(),
+                    Published = product.Published
+                };
+                models.Add(lowStockModel);
+            }
+            //combinations
+            foreach (var combination in combinations)
+            {
+                var product = _productService.GetProductById(combination.ProductId);
+                var lowStockModel = new LowStockProductModel
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Attributes = _productAttributeFormatter.FormatAttributes(product, combination.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false),
+                    ManageInventoryMethod = product.ManageInventoryMethod.GetLocalizedEnum(_localizationService, _workContext.WorkingLanguage.Id),
+                    StockQuantity = combination.StockQuantity,
+                    Published = product.Published
+                };
+                models.Add(lowStockModel);
+            }
+            var gridModel = new DataSourceResult
+            {
+                Data = models.PagedForCommand(command),
+                Total = models.Count
+            };
+
+            return Json(gridModel);
+        }
+
+        #endregion
+
     }
 }

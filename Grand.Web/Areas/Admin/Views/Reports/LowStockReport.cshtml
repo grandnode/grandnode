@@ -29,7 +29,7 @@
             dataSource: {
                 transport: {
                     read: {
-                        url: "@Html.Raw(Url.Action("LowStockReportList", "Product"))",
+                        url: "@Html.Raw(Url.Action("LowStockReportList", "Reports"))",
                         type: "POST",
                         dataType: "json",
                         data: addAntiForgeryToken
@@ -64,9 +64,8 @@
                     field: "Name",
                     title: "@T("Admin.Catalog.Products.Fields.Name")",
                     width: 300,
-                    //if not a grouped product, then display
-                    //template: "#:Name# # if(Attributes !== null) {# <br /><i> #=Attributes# </i> #} #"
-                    template: '<a class="k-link" href="Edit/#=Id#">#:Name# # if(Attributes !== null) {# <br /><i> #=Attributes# </i> #} #</a>',
+                    //if not a grouped product, then display                   
+                    template: '<a class="k-link" href="@Url.Action("Edit", "Product")/#=Id#">#:Name# # if(Attributes !== null) {# <br /><i> #=Attributes# </i> #} #</a>',
                 }, {
                     field: "ManageInventoryMethod",
                     title: "@T("Admin.Catalog.Products.Fields.ManageInventoryMethod")",

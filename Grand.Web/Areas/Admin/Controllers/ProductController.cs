@@ -1849,7 +1849,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #endregion
 
-
         #region Bundle products
 
         [HttpPost]
@@ -3240,70 +3239,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Low stock reports
-
-        public IActionResult LowStockReport()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
-            return View();
-        }
-        [HttpPost]
-        public IActionResult LowStockReportList(DataSourceRequest command)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
-            string vendorId = "";
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
-                vendorId = _workContext.CurrentVendor.Id;
-
-            IList<Product> products;
-            IList<ProductAttributeCombination> combinations;
-            _productService.GetLowStockProducts(vendorId, out products, out combinations);
-
-            var models = new List<LowStockProductModel>();
-            //products
-            foreach (var product in products)
-            {
-                var lowStockModel = new LowStockProductModel
-                {
-                    Id = product.Id,
-                    Name = product.Name,
-                    ManageInventoryMethod = product.ManageInventoryMethod.GetLocalizedEnum(_localizationService, _workContext.WorkingLanguage.Id),
-                    StockQuantity = product.GetTotalStockQuantity(),
-                    Published = product.Published
-                };
-                models.Add(lowStockModel);
-            }
-            //combinations
-            foreach (var combination in combinations)
-            {
-                var product = _productService.GetProductById(combination.ProductId);
-                var lowStockModel = new LowStockProductModel
-                {
-                    Id = product.Id,
-                    Name = product.Name,
-                    Attributes = _productAttributeFormatter.FormatAttributes(product, combination.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false),
-                    ManageInventoryMethod = product.ManageInventoryMethod.GetLocalizedEnum(_localizationService, _workContext.WorkingLanguage.Id),
-                    StockQuantity = combination.StockQuantity,
-                    Published = product.Published
-                };
-                models.Add(lowStockModel);
-            }
-            var gridModel = new DataSourceResult
-            {
-                Data = models.PagedForCommand(command),
-                Total = models.Count
-            };
-
-            return Json(gridModel);
-        }
-
-        #endregion
-
         #region Bulk editing
 
         public IActionResult BulkEdit()
@@ -3983,7 +3918,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #endregion
 
-
         #region Product attributes. Condition
 
         public IActionResult ProductAttributeConditionPopup(string productId, string productAttributeMappingId)
@@ -4199,7 +4133,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         #endregion
-
 
         #region Product attribute values
 
@@ -4611,10 +4544,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return new NullJsonResult();
         }
-
-
-
-
 
         public IActionResult AssociateProductToAttributeValuePopup()
         {
