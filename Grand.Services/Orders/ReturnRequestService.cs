@@ -273,6 +273,20 @@ namespace Grand.Services.Orders
             _eventPublisher.EntityUpdated(returnRequestReason);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="returnRequest"></param>
+        public virtual void UpdateReturnRequest(ReturnRequest returnRequest)
+        {
+            if (returnRequest == null)
+                throw new ArgumentNullException("returnRequest");
+
+            _returnRequestRepository.Update(returnRequest);
+
+            //event notification
+            _eventPublisher.EntityUpdated(returnRequest);
+        }
         #endregion
     }
 }

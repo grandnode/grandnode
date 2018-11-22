@@ -96,12 +96,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var specificationAttribute = model.ToEntity();
-                specificationAttribute.Locales = model.Locales.ToLocalizedProperty();
                 _specificationAttributeService.InsertSpecificationAttribute(specificationAttribute);
-
                 //activity log
                 _customerActivityService.InsertActivity("AddNewSpecAttribute", specificationAttribute.Id, _localizationService.GetResource("ActivityLog.AddNewSpecAttribute"), specificationAttribute.Name);
-
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.SpecificationAttributes.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = specificationAttribute.Id }) : RedirectToAction("List");
             }
@@ -145,9 +142,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 specificationAttribute = model.ToEntity(specificationAttribute);
-                specificationAttribute.Locales = model.Locales.ToLocalizedProperty();
                 _specificationAttributeService.UpdateSpecificationAttribute(specificationAttribute);
-
                 //activity log
                 _customerActivityService.InsertActivity("EditSpecAttribute", specificationAttribute.Id, _localizationService.GetResource("ActivityLog.EditSpecAttribute"), specificationAttribute.Name);
 
@@ -251,7 +246,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (!model.EnableColorSquaresRgb)
                    sao.ColorSquaresRgb = null;
 
-                sao.Locales = model.Locales.ToLocalizedProperty();
                 specificationAttribute.SpecificationAttributeOptions.Add(sao);
                 _specificationAttributeService.UpdateSpecificationAttribute(specificationAttribute);                
 
@@ -300,7 +294,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 sao = model.ToEntity(sao);
-                sao.Locales = model.Locales.ToLocalizedProperty();
                 //clear "Color" values if it's disabled
                 if (!model.EnableColorSquaresRgb)
                     sao.ColorSquaresRgb = null;
@@ -335,8 +328,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             return ErrorForKendoGridJson(ModelState);
         }
-
-        
         //ajax
         [AcceptVerbs("GET")]
         public IActionResult GetOptionsByAttributeId(string attributeId)
