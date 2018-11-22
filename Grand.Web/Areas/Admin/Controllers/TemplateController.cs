@@ -84,14 +84,18 @@ namespace Grand.Web.Areas.Admin.Controllers
             var template = _categoryTemplateService.GetCategoryTemplateById(model.Id);
             if (template == null)
                 throw new ArgumentException("No template found with the specified id");
-            template = model.ToEntity(template);
-            _categoryTemplateService.UpdateCategoryTemplate(template);
+            if (ModelState.IsValid)
+            {
+                template = model.ToEntity(template);
+                _categoryTemplateService.UpdateCategoryTemplate(template);
 
-            return new NullJsonResult();
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         [HttpPost]
-        public IActionResult CategoryTemplateAdd( CategoryTemplateModel model)
+        public IActionResult CategoryTemplateAdd(CategoryTemplateModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -100,12 +104,15 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
             }
+            if (ModelState.IsValid)
+            {
+                var template = new CategoryTemplate();
+                template = model.ToEntity(template);
+                _categoryTemplateService.InsertCategoryTemplate(template);
 
-            var template = new CategoryTemplate();
-            template = model.ToEntity(template);
-            _categoryTemplateService.InsertCategoryTemplate(template);
-
-            return new NullJsonResult();
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         [HttpPost]
@@ -117,10 +124,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             var template = _categoryTemplateService.GetCategoryTemplateById(id);
             if (template == null)
                 throw new ArgumentException("No template found with the specified id");
+            if (ModelState.IsValid)
+            {
+                _categoryTemplateService.DeleteCategoryTemplate(template);
 
-            _categoryTemplateService.DeleteCategoryTemplate(template);
-
-            return new NullJsonResult();
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         #endregion
@@ -167,14 +177,17 @@ namespace Grand.Web.Areas.Admin.Controllers
             var template = _manufacturerTemplateService.GetManufacturerTemplateById(model.Id);
             if (template == null)
                 throw new ArgumentException("No template found with the specified id");
-            template = model.ToEntity(template);
-            _manufacturerTemplateService.UpdateManufacturerTemplate(template);
-
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                template = model.ToEntity(template);
+                _manufacturerTemplateService.UpdateManufacturerTemplate(template);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         [HttpPost]
-        public IActionResult ManufacturerTemplateAdd( ManufacturerTemplateModel model)
+        public IActionResult ManufacturerTemplateAdd(ManufacturerTemplateModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -183,12 +196,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
             }
-
-            var template = new ManufacturerTemplate();
-            template = model.ToEntity(template);
-            _manufacturerTemplateService.InsertManufacturerTemplate(template);
-
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                var template = new ManufacturerTemplate();
+                template = model.ToEntity(template);
+                _manufacturerTemplateService.InsertManufacturerTemplate(template);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         [HttpPost]
@@ -200,10 +215,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             var template = _manufacturerTemplateService.GetManufacturerTemplateById(id);
             if (template == null)
                 throw new ArgumentException("No template found with the specified id");
-
-            _manufacturerTemplateService.DeleteManufacturerTemplate(template);
-
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                _manufacturerTemplateService.DeleteManufacturerTemplate(template);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         #endregion
@@ -249,14 +266,17 @@ namespace Grand.Web.Areas.Admin.Controllers
             var template = _productTemplateService.GetProductTemplateById(model.Id);
             if (template == null)
                 throw new ArgumentException("No template found with the specified id");
-            template = model.ToEntity(template);
-            _productTemplateService.UpdateProductTemplate(template);
-
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                template = model.ToEntity(template);
+                _productTemplateService.UpdateProductTemplate(template);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         [HttpPost]
-        public IActionResult ProductTemplateAdd( ProductTemplateModel model)
+        public IActionResult ProductTemplateAdd(ProductTemplateModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -265,12 +285,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
             }
-
-            var template = new ProductTemplate();
-            template = model.ToEntity(template);
-            _productTemplateService.InsertProductTemplate(template);
-
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                var template = new ProductTemplate();
+                template = model.ToEntity(template);
+                _productTemplateService.InsertProductTemplate(template);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         [HttpPost]
@@ -282,10 +304,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             var template = _productTemplateService.GetProductTemplateById(id);
             if (template == null)
                 throw new ArgumentException("No template found with the specified id");
-
-            _productTemplateService.DeleteProductTemplate(template);
-
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                _productTemplateService.DeleteProductTemplate(template);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         #endregion
@@ -332,14 +356,17 @@ namespace Grand.Web.Areas.Admin.Controllers
             var template = _topicTemplateService.GetTopicTemplateById(model.Id);
             if (template == null)
                 throw new ArgumentException("No template found with the specified id");
-            template = model.ToEntity(template);
-            _topicTemplateService.UpdateTopicTemplate(template);
-
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                template = model.ToEntity(template);
+                _topicTemplateService.UpdateTopicTemplate(template);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         [HttpPost]
-        public IActionResult TopicTemplateAdd( TopicTemplateModel model)
+        public IActionResult TopicTemplateAdd(TopicTemplateModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -348,12 +375,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
             }
-
-            var template = new TopicTemplate();
-            template = model.ToEntity(template);
-            _topicTemplateService.InsertTopicTemplate(template);
-
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                var template = new TopicTemplate();
+                template = model.ToEntity(template);
+                _topicTemplateService.InsertTopicTemplate(template);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         [HttpPost]
@@ -365,10 +394,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             var template = _topicTemplateService.GetTopicTemplateById(id);
             if (template == null)
                 throw new ArgumentException("No template found with the specified id");
-
-            _topicTemplateService.DeleteTopicTemplate(template);
-
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                _topicTemplateService.DeleteTopicTemplate(template);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         #endregion
