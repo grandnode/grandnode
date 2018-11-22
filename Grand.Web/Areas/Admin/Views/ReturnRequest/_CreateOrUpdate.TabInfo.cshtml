@@ -3,6 +3,7 @@
 @inject OrderSettings orderSettings
 
 <div class="form-horizontal">
+    <vc:admin-widget widget-zone="return_request_tab_info_top" additional-data="Model" />
     <div class="form-body">
         <div class="form-group">
             <admin-label asp-for="ReturnNumber" />
@@ -72,6 +73,7 @@
             <div id="products-grid"></div>
         </div>
     </div>
+    <vc:admin-widget widget-zone="return_request_tab_info_bottom" additional-data="Model" />
 </div>
 
 

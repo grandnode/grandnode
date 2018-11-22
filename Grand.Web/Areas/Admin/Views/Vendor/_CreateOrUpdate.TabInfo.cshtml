@@ -15,6 +15,7 @@
             }
         }
 </script>
+<vc:admin-widget widget-zone="vendor_details_info_top" additional-data="Model" />
 @(Html.LocalizedEditor<VendorModel, VendorLocalizedModel>("vendor-info-localized",
     @<div class="form-horizontal">
         <div class="form-body">
@@ -171,4 +172,4 @@
         <admin-input asp-for="Address" asp-template="Address" />
     </div>
 </div>
-
+<vc:admin-widget widget-zone="vendor_details_info_bottom" additional-data="Model" />

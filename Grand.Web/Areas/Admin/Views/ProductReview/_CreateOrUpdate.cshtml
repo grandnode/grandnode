@@ -3,6 +3,7 @@
 <input asp-for="Id" type="hidden" />
 <input asp-for="ProductId" type="hidden" />
 <div class="form-horizontal">
+    <vc:admin-widget widget-zone="product_review_details_top" additional-data="Model" />
     <div class="form-body">
         <div class="form-group">
             <admin-label asp-for="ProductName" />
@@ -73,4 +74,5 @@
             </div>
         </div>
     </div>
+    <vc:admin-widget widget-zone="product_review_details_bottom" additional-data="Model" />
 </div>

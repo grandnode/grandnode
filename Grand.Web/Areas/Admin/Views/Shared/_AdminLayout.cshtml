@@ -113,6 +113,7 @@
     }
     else
     {
+        <vc:admin-widget widget-zone="header_before" additional-data="null" />
         <div class="page-header navbar navbar-fixed-top">
             <div class="page-header-inner ">
                 <div class="page-logo">
@@ -122,12 +123,13 @@
                     <div class="menu-toggler sidebar-toggler">
                         <span></span>
                     </div>
-
+                    <vc:admin-widget widget-zone="header_toggle_after" additional-data="null" />
                 </div>
                 <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse">
                     <span></span>
                 </a>
                 <div class="top-menu">
+                    <vc:admin-widget widget-zone="header_navbar_before" additional-data="null" />
                     <ul class="nav navbar-nav pull-right">
                         @await Component.InvokeAsync("CommonLanguageSelector")
                         <li class="dropdown" id="header_inbox_bar">
@@ -174,6 +176,9 @@
                                         <i class="icon-logout"></i> @T("Admin.Header.Logout")
                                     </a>
                                 </li>
+                                <li>
+                                    <vc:admin-widget widget-zone="header_middle" additional-data="null" />
+                                </li>
                             </ul>
                         </li>
                         <li class="dropdown" id="header_inbox_bar">
@@ -206,6 +211,7 @@
                             </a>
                         </li>
                     </ul>
+                    <vc:admin-widget widget-zone="header_navbar_after" additional-data="null" />
                 </div>
             </div>
             @if (currentCustomer.IsAdmin())
@@ -220,8 +226,9 @@
                 </div>
             }
         </div>
+        <vc:admin-widget widget-zone="header_after" additional-data="null" />
     }
-    <vc:admin-widget widget-zone="admin_header_after" additional-data="null"/>
+    <vc:admin-widget widget-zone="admin_header_after" additional-data="null" />
     <div class="clearfix"> </div>
     <div class="page-container">
         <div class="page-content-wrapper">

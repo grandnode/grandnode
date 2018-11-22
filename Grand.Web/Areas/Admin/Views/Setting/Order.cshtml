@@ -20,6 +20,7 @@
                             <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
                         </div>
                     </div>
+                    <vc:admin-widget widget-zone="order_settings_buttons" additional-data="null" />
                 </div>
                 <div class="portlet-body">
                     <div class="form-horizontal">
@@ -29,6 +30,7 @@
                     </div>
                 </div>
                 <div class="portlet-body form">
+                    <vc:admin-widget widget-zone="order_settings_top" additional-data="null" />
                     <div id="ordersettings-edit" style="display:none">
                         <ul>
                             <li tab-index="0">
@@ -39,12 +41,13 @@
                             </li>
                         </ul>
                         <div>
-                           <partial name="Order.TabOrderSettings" model="Model" />
+                            <partial name="Order.TabOrderSettings" model="Model" />
                         </div>
                         <div>
-                           <partial name="Order.TabReturnRequestSettings" model="Model" />
+                            <partial name="Order.TabReturnRequestSettings" model="Model" />
                         </div>
                     </div>
+                    <vc:admin-widget widget-zone="order_settings_bottom" additional-data="null" />
                 </div>
             </div>
         </div>

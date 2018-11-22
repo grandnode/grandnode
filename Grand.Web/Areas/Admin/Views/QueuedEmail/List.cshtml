@@ -17,6 +17,7 @@
                     <div class="actions btn-group btn-group-devided">
                         <input type="button" id="delete-selected" class="btn green" value="@T("Admin.System.QueuedEmails.DeleteSelected")" />
                         <input type="submit" name="delete-all" class="btn red" value="@T("Admin.System.QueuedEmails.DeleteAll")" onclick="return confirm('@T("Admin.Common.AreYouSure")'); " />
+                        <vc:admin-widget widget-zone="queued_email_list_buttons" additional-data="null" />
                     </div>
                 </div>
                 <div class="portlet-body form">
