@@ -456,7 +456,23 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<DeliveryDateModel, DeliveryDate>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()));
+
+            //warehouse
+            CreateMap<Warehouse, WarehouseModel>()
+                .ForMember(dest => dest.Address, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            CreateMap<WarehouseModel, Warehouse>()
+                .ForMember(dest => dest.Id, mo => mo.Ignore());
+
+            //warehouse
+            CreateMap<PickupPoint, PickupPointModel>()
+                .ForMember(dest => dest.Address, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            CreateMap<PickupPointModel, PickupPoint>()
+                .ForMember(dest => dest.Id, mo => mo.Ignore())
+                .ForMember(dest => dest.Id, mo => mo.Ignore());
+
 
             //shipping rate computation methods
             CreateMap<IShippingRateComputationMethod, ShippingRateComputationMethodModel>()

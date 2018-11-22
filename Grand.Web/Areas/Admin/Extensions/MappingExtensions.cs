@@ -693,6 +693,45 @@ namespace Grand.Web.Areas.Admin.Extensions
 
         #endregion
 
+        #region Warehouse
+
+        public static WarehouseModel ToModel(this Warehouse entity)
+        {
+            return entity.MapTo<Warehouse, WarehouseModel>();
+        }
+
+        public static Warehouse ToEntity(this WarehouseModel model)
+        {
+            return model.MapTo<WarehouseModel, Warehouse>();
+        }
+
+        public static Warehouse ToEntity(this WarehouseModel model, Warehouse destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
+
+        #region Pickup points
+
+        public static PickupPointModel ToModel(this PickupPoint entity)
+        {
+            return entity.MapTo<PickupPoint, PickupPointModel>();
+        }
+
+        public static PickupPoint ToEntity(this PickupPointModel model)
+        {
+            return model.MapTo<PickupPointModel, PickupPoint>();
+        }
+
+        public static PickupPoint ToEntity(this PickupPointModel model, PickupPoint destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
+
+
         #region Payment methods
 
         public static PaymentMethodModel ToModel(this IPaymentMethod entity)
