@@ -40,6 +40,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure
             builder.RegisterType<ProductReviewViewModelService>().As<IProductReviewViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<ReturnRequestViewModelService>().As<IReturnRequestViewModelService>().InstancePerLifetimeScope();
             builder.RegisterType<VendorViewModelService>().As<IVendorViewModelService>().InstancePerLifetimeScope();
+            builder.RegisterType<TopicViewModelService>().As<ITopicViewModelService>().InstancePerLifetimeScope();
         }
         public int Order
         {
