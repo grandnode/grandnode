@@ -228,11 +228,6 @@ namespace Grand.Web.Areas.Admin.Models.Customers
 
         #region Nested classes
 
-        public partial class StoreModel : BaseGrandEntityModel
-        {
-            public string Name { get; set; }
-        }
-
         public partial class AssociatedExternalAuthModel : BaseGrandEntityModel
         {
             [GrandResourceDisplayName("Admin.Customers.Customers.AssociatedExternalAuth.Fields.Email")]

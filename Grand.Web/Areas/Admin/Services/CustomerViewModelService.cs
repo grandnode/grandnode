@@ -11,6 +11,7 @@ using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Tax;
 using Grand.Core.Infrastructure;
 using Grand.Framework.Extensions;
+using Grand.Framework.Mvc.Models;
 using Grand.Services.Affiliates;
 using Grand.Services.Authentication.External;
 using Grand.Services.Catalog;
@@ -604,7 +605,7 @@ namespace Grand.Web.Areas.Admin.Services
 
             //newsletter subscriptions
             model.AvailableNewsletterSubscriptionStores = allStores
-                .Select(s => new CustomerModel.StoreModel() { Id = s.Id, Name = s.Name })
+                .Select(s => new StoreModel() { Id = s.Id, Name = s.Name })
                 .ToList();
 
 
