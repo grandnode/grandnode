@@ -80,7 +80,7 @@ namespace Grand.Web.Areas.Admin.Services
             //ensure we have "/" at the end
             if (!store.Url.EndsWith("/"))
                 store.Url += "/";
-            store.Locales = model.Locales.ToLocalizedProperty();
+
             _storeService.InsertStore(store);
             return store;
         }
@@ -91,7 +91,6 @@ namespace Grand.Web.Areas.Admin.Services
             if (!store.Url.EndsWith("/"))
                 store.Url += "/";
 
-            store.Locales = model.Locales.ToLocalizedProperty();
             _storeService.UpdateStore(store);
             return store;
         }

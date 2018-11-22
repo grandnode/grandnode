@@ -212,9 +212,6 @@ namespace Grand.Web.Areas.Admin.Services
             var category = model.ToEntity();
             category.CreatedOnUtc = DateTime.UtcNow;
             category.UpdatedOnUtc = DateTime.UtcNow;
-
-            category.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
-            category.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
             var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToCategories, showHidden: true);
             foreach (var discount in allDiscounts)
             {
@@ -270,9 +267,6 @@ namespace Grand.Web.Areas.Admin.Services
                         category.AppliedDiscounts.Remove(discount.Id);
                 }
             }
-            category.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
-            category.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
-
             _categoryService.UpdateCategory(category);
             //delete an old picture (if deleted or updated)
             if (!String.IsNullOrEmpty(prevPictureId) && prevPictureId != category.PictureId)

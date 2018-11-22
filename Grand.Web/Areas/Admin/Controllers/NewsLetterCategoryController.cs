@@ -1,6 +1,4 @@
-﻿using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Messages;
-using Grand.Framework.Controllers;
+﻿using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
 using Grand.Services.Localization;
@@ -10,7 +8,6 @@ using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Messages;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -102,10 +99,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var newsletterCategory = model.ToEntity();
-                newsletterCategory.Locales = model.Locales.ToLocalizedProperty();
-                newsletterCategory.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
                 _newsletterCategoryService.InsertNewsletterCategory(newsletterCategory);
-
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.NewsletterCategory.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = newsletterCategory.Id }) : RedirectToAction("List");
             }
@@ -154,8 +148,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 newsletterCategory = model.ToEntity(newsletterCategory);
-                newsletterCategory.Locales = model.Locales.ToLocalizedProperty();
-                newsletterCategory.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
                 _newsletterCategoryService.UpdateNewsletterCategory(newsletterCategory);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.NewsletterCategory.Updated"));

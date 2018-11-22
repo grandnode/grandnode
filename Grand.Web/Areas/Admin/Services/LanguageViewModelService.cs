@@ -71,7 +71,6 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual Language InsertLanguageModel(LanguageModel model)
         {
             var language = model.ToEntity();
-            language.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
             _languageService.InsertLanguage(language);
             return language;
         }
@@ -79,7 +78,6 @@ namespace Grand.Web.Areas.Admin.Services
         {
             //update
             language = model.ToEntity(language);
-            language.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
             _languageService.UpdateLanguage(language);
             return language;
         }

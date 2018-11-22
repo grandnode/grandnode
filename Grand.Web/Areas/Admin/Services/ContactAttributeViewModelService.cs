@@ -140,9 +140,6 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual ContactAttribute InsertContactAttributeModel(ContactAttributeModel model)
         {
             var contactAttribute = model.ToEntity();
-            contactAttribute.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
-            contactAttribute.Locales = model.Locales.ToLocalizedProperty();
-            contactAttribute.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
             _contactAttributeService.InsertContactAttribute(contactAttribute);
 
             //activity log
@@ -153,9 +150,6 @@ namespace Grand.Web.Areas.Admin.Services
         {
             contactAttribute = model.ToEntity(contactAttribute);
             SaveConditionAttributes(contactAttribute, model);
-            contactAttribute.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
-            contactAttribute.Locales = model.Locales.ToLocalizedProperty();
-            contactAttribute.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
             _contactAttributeService.UpdateContactAttribute(contactAttribute);
 
             //activity log
@@ -175,28 +169,13 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual ContactAttributeValueModel PrepareContactAttributeValueModel(ContactAttribute contactAttribute, ContactAttributeValue contactAttributeValue)
         {
-            var model = new ContactAttributeValueModel
-            {
-                ContactAttributeId = contactAttributeValue.ContactAttributeId,
-                Name = contactAttributeValue.Name,
-                ColorSquaresRgb = contactAttributeValue.ColorSquaresRgb,
-                DisplayColorSquaresRgb = contactAttribute.AttributeControlType == AttributeControlType.ColorSquares,
-                IsPreSelected = contactAttributeValue.IsPreSelected,
-                DisplayOrder = contactAttributeValue.DisplayOrder,
-            };
+            var model = contactAttributeValue.ToModel();
+            model.DisplayColorSquaresRgb = contactAttribute.AttributeControlType == AttributeControlType.ColorSquares;
             return model;
         }
         public virtual ContactAttributeValue InsertContactAttributeValueModel(ContactAttribute contactAttribute, ContactAttributeValueModel model)
         {
-            var cav = new ContactAttributeValue
-            {
-                ContactAttributeId = model.ContactAttributeId,
-                Name = model.Name,
-                ColorSquaresRgb = model.ColorSquaresRgb,
-                IsPreSelected = model.IsPreSelected,
-                DisplayOrder = model.DisplayOrder,
-            };
-            cav.Locales = model.Locales.ToLocalizedProperty();
+            var cav = model.ToEntity();
             contactAttribute.ContactAttributeValues.Add(cav);
             _contactAttributeService.UpdateContactAttribute(contactAttribute);
             return cav;
@@ -204,11 +183,7 @@ namespace Grand.Web.Areas.Admin.Services
 
         public virtual ContactAttributeValue UpdateContactAttributeValueModel(ContactAttribute contactAttribute, ContactAttributeValue contactAttributeValue, ContactAttributeValueModel model)
         {
-            contactAttributeValue.Name = model.Name;
-            contactAttributeValue.ColorSquaresRgb = model.ColorSquaresRgb;
-            contactAttributeValue.IsPreSelected = model.IsPreSelected;
-            contactAttributeValue.DisplayOrder = model.DisplayOrder;
-            contactAttributeValue.Locales = model.Locales.ToLocalizedProperty();
+            contactAttributeValue = model.ToEntity(contactAttributeValue);
             _contactAttributeService.UpdateContactAttribute(contactAttribute);
             return contactAttributeValue;
         }

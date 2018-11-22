@@ -43,8 +43,6 @@ namespace Grand.Web.Areas.Admin.Services
             var currency = model.ToEntity();
             currency.CreatedOnUtc = DateTime.UtcNow;
             currency.UpdatedOnUtc = DateTime.UtcNow;
-            currency.Locales = model.Locales.ToLocalizedProperty();
-            currency.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
             _currencyService.InsertCurrency(currency);
 
             return currency;
@@ -54,8 +52,6 @@ namespace Grand.Web.Areas.Admin.Services
         {
             currency = model.ToEntity(currency);
             currency.UpdatedOnUtc = DateTime.UtcNow;
-            currency.Locales = model.Locales.ToLocalizedProperty();
-            currency.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
             _currencyService.UpdateCurrency(currency);
             return currency;
         }

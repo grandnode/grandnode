@@ -120,7 +120,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 var form = model.ToEntity();
                 form.CreatedOnUtc = DateTime.UtcNow;
-                form.Locales = model.Locales.ToLocalizedProperty();
 
                 _interactiveFormService.InsertForm(form);
                 _customerActivityService.InsertActivity("InteractiveFormAdd", form.Id, _localizationService.GetResource("ActivityLog.InteractiveFormAdd"), form.Name);
@@ -176,7 +175,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 form = model.ToEntity(form);
-                form.Locales = model.Locales.ToLocalizedProperty();
                 _interactiveFormService.UpdateForm(form);
 
                 _customerActivityService.InsertActivity("InteractiveFormEdit", form.Id, _localizationService.GetResource("ActivityLog.InteractiveFormUpdate"), form.Name);
@@ -293,7 +291,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                     return RedirectToAction("List");
                 }
                 var attribute = model.ToEntity();
-                attribute.Locales = model.Locales.ToLocalizedProperty();
                 form.FormAttributes.Add(attribute);
                 _interactiveFormService.UpdateForm(form);
 
@@ -349,11 +346,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (ModelState.IsValid)
                 {
                     attribute = model.ToEntity(attribute);
-                    attribute.Locales = model.Locales.ToLocalizedProperty();
                     _interactiveFormService.UpdateForm(form);
-
                     _customerActivityService.InsertActivity("InteractiveFormEdit", attribute.Id, _localizationService.GetResource("ActivityLog.InteractiveFormUpdateAttribute"), attribute.Name);
-
                     SuccessNotification(_localizationService.GetResource("Admin.Promotions.InteractiveForms.Attribute.Updated"));
                     return continueEditing ? RedirectToAction("EditAttribute", new { formId = form.Id, aid = attribute.Id }) : RedirectToAction("Edit", new { id = form.Id });
                 }
@@ -432,13 +426,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var vaf = new InteractiveForm.FormAttributeValue
-                {
-                    Name = model.Name,
-                    IsPreSelected = model.IsPreSelected,
-                    DisplayOrder = model.DisplayOrder,
-                };
-                vaf.Locales = model.Locales.ToLocalizedProperty();
+                var vaf = model.ToEntity();
                 attribute.FormAttributeValues.Add(vaf);
                 _interactiveFormService.UpdateForm(fo);
                 _customerActivityService.InsertActivity("InteractiveFormEdit", vaf.Id, _localizationService.GetResource("ActivityLog.InteractiveFormAddAttributeValue"), vaf.Name);
@@ -469,16 +457,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (vaf == null)
                 return RedirectToAction("List");
 
-            var model = new InteractiveFormAttributeValueModel
-            {
-                Id = vaf.Id,
-                Name = vaf.Name,
-                IsPreSelected = vaf.IsPreSelected,
-                DisplayOrder = vaf.DisplayOrder,
-                FormId = fo.Id,
-                AttributeId = aId,
-            };
-
+            var model = vaf.ToModel();
+            model.FormId = fo.Id;
+            model.AttributeId = aId;
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = vaf.GetLocalized(x => x.Name, languageId, false, false);
@@ -508,14 +489,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                vaf.Name = model.Name;
-                vaf.IsPreSelected = model.IsPreSelected;
-                vaf.DisplayOrder = model.DisplayOrder;
-                vaf.Locales = model.Locales.ToLocalizedProperty();
+                vaf = model.ToEntity();
                 _interactiveFormService.UpdateForm(fo);
-
                 _customerActivityService.InsertActivity("InteractiveFormEdit", vaf.Id, _localizationService.GetResource("ActivityLog.InteractiveFormUpdateAttributeValue"), vaf.Name);
-
                 ViewBag.RefreshPage = true;
                 ViewBag.btnId = btnId;
                 ViewBag.formId = formId;

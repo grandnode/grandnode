@@ -2112,9 +2112,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 var rrr = model.ToEntity();
                 _returnRequestService.InsertReturnRequestReason(rrr);
-                //locales
-                rrr.Locales = model.Locales.ToLocalizedProperty();
-                _returnRequestService.UpdateReturnRequestReason(rrr);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestReasons.Added"));
                 return continueEditing ? RedirectToAction("ReturnRequestReasonEdit", new { id = rrr.Id }) : RedirectToAction("ReturnRequestReasonList");
@@ -2156,9 +2153,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 rrr = model.ToEntity(rrr);
-                _returnRequestService.UpdateReturnRequestReason(rrr);
-                //locales
-                rrr.Locales = model.Locales.ToLocalizedProperty();
                 _returnRequestService.UpdateReturnRequestReason(rrr);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestReasons.Updated"));
@@ -2239,12 +2233,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var rra = model.ToEntity();
-
                 _returnRequestService.InsertReturnRequestAction(rra);
-                //locales
-                rra.Locales = model.Locales.ToLocalizedProperty();
-                _returnRequestService.UpdateReturnRequestAction(rra);
-
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestActions.Added"));
                 return continueEditing ? RedirectToAction("ReturnRequestActionEdit", new { id = rra.Id }) : RedirectToAction("ReturnRequestActionList");
             }
@@ -2285,7 +2274,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 rra = model.ToEntity(rra);
-                rra.Locales = model.Locales.ToLocalizedProperty();
                 _returnRequestService.UpdateReturnRequestAction(rra);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestActions.Updated"));

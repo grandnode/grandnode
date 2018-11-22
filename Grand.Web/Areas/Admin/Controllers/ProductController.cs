@@ -929,9 +929,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 var product = model.ToEntity();
                 product.CreatedOnUtc = DateTime.UtcNow;
                 product.UpdatedOnUtc = DateTime.UtcNow;
-                product.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
-                product.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
-
                 _productService.InsertProduct(product);
 
                 model.SeName = product.ValidateSeName(model.SeName, product.Name, true);
@@ -1053,8 +1050,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //product
                 product = model.ToEntity(product);
                 product.UpdatedOnUtc = DateTime.UtcNow;
-                product.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
-                product.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
                 model.SeName = product.ValidateSeName(model.SeName, product.Name, true);
                 product.SeName = model.SeName;
                 product.Locales = model.Locales.ToLocalizedProperty(product, x => x.Name, _urlRecordService);

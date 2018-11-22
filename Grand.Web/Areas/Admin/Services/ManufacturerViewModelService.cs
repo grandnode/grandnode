@@ -111,9 +111,6 @@ namespace Grand.Web.Areas.Admin.Services
             var manufacturer = model.ToEntity();
             manufacturer.CreatedOnUtc = DateTime.UtcNow;
             manufacturer.UpdatedOnUtc = DateTime.UtcNow;
-
-            manufacturer.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
-            manufacturer.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
             //discounts
             var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToManufacturers, showHidden: true);
             foreach (var discount in allDiscounts)
@@ -145,8 +142,6 @@ namespace Grand.Web.Areas.Admin.Services
             manufacturer = model.ToEntity(manufacturer);
             manufacturer.UpdatedOnUtc = DateTime.UtcNow;
             manufacturer.Locales = model.Locales.ToLocalizedProperty(manufacturer, x => x.Name, _urlRecordService);
-            manufacturer.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
-            manufacturer.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
             //discounts
             var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToManufacturers, showHidden: true);
             foreach (var discount in allDiscounts)

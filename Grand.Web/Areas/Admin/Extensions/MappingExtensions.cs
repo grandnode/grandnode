@@ -257,6 +257,22 @@ namespace Grand.Web.Areas.Admin.Extensions
         {
             return model.MapTo(destination);
         }
+        //checkout attribute value
+        public static CheckoutAttributeValueModel ToModel(this CheckoutAttributeValue entity)
+        {
+            return entity.MapTo<CheckoutAttributeValue, CheckoutAttributeValueModel>();
+        }
+
+        public static CheckoutAttributeValue ToEntity(this CheckoutAttributeValueModel model)
+        {
+            return model.MapTo<CheckoutAttributeValueModel, CheckoutAttributeValue>();
+        }
+
+        public static CheckoutAttributeValue ToEntity(this CheckoutAttributeValueModel model, CheckoutAttributeValue destination)
+        {
+            return model.MapTo(destination);
+        }
+
 
         #endregion
         #region Contact attributes
@@ -276,11 +292,25 @@ namespace Grand.Web.Areas.Admin.Extensions
         {
             return model.MapTo(destination);
         }
+        //contact attribute value
+        public static ContactAttributeValueModel ToModel(this ContactAttributeValue entity)
+        {
+            return entity.MapTo<ContactAttributeValue, ContactAttributeValueModel>();
+        }
 
+        public static ContactAttributeValue ToEntity(this ContactAttributeValueModel model)
+        {
+            return model.MapTo<ContactAttributeValueModel, ContactAttributeValue>();
+        }
+
+        public static ContactAttributeValue ToEntity(this ContactAttributeValueModel model, ContactAttributeValue destination)
+        {
+            return model.MapTo(destination);
+        }
         #endregion
         #region Customer attributes
 
-        //attributes
+        //customer attributes
         public static CustomerAttributeModel ToModel(this CustomerAttribute entity)
         {
             return entity.MapTo<CustomerAttribute, CustomerAttributeModel>();
@@ -292,6 +322,21 @@ namespace Grand.Web.Areas.Admin.Extensions
         }
 
         public static CustomerAttribute ToEntity(this CustomerAttributeModel model, CustomerAttribute destination)
+        {
+            return model.MapTo(destination);
+        }
+        //customer attributes value
+        public static CustomerAttributeValueModel ToModel(this CustomerAttributeValue entity)
+        {
+            return entity.MapTo<CustomerAttributeValue, CustomerAttributeValueModel>();
+        }
+
+        public static CustomerAttributeValue ToEntity(this CustomerAttributeValueModel model)
+        {
+            return model.MapTo<CustomerAttributeValueModel, CustomerAttributeValue>();
+        }
+
+        public static CustomerAttributeValue ToEntity(this CustomerAttributeValueModel model, CustomerAttributeValue destination)
         {
             return model.MapTo(destination);
         }
@@ -469,6 +514,21 @@ namespace Grand.Web.Areas.Admin.Extensions
             return model.MapTo(destination);
         }
 
+
+        public static InteractiveFormAttributeValueModel ToModel(this InteractiveForm.FormAttributeValue entity)
+        {
+            return entity.MapTo<InteractiveForm.FormAttributeValue, InteractiveFormAttributeValueModel>();
+        }
+
+        public static InteractiveForm.FormAttributeValue ToEntity(this InteractiveFormAttributeValueModel model)
+        {
+            return model.MapTo<InteractiveFormAttributeValueModel, InteractiveForm.FormAttributeValue>();
+        }
+
+        public static InteractiveForm.FormAttributeValue ToEntity(this InteractiveFormAttributeValueModel model, InteractiveForm.FormAttributeValue destination)
+        {
+            return model.MapTo(destination);
+        }
 
         #endregion
 

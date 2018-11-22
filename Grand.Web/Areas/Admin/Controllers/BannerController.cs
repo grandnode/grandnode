@@ -85,8 +85,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 var banner = model.ToEntity();
                 banner.CreatedOnUtc = DateTime.UtcNow;
-                banner.Locales = model.Locales.ToLocalizedProperty();
-
                 _bannerService.InsertBanner(banner);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Banners.Added"));
@@ -132,9 +130,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 banner = model.ToEntity(banner);
-                banner.Locales = model.Locales.ToLocalizedProperty();
-                _bannerService.UpdateBanner(banner);
-            
+                _bannerService.UpdateBanner(banner);            
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Banners.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = banner.Id }) : RedirectToAction("List");
             }

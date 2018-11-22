@@ -172,11 +172,8 @@ namespace Grand.Web.Areas.Admin.Services
             knowledgebaseCategory.CreatedOnUtc = DateTime.UtcNow;
             knowledgebaseCategory.UpdatedOnUtc = DateTime.UtcNow;
             knowledgebaseCategory.Locales = model.Locales.ToLocalizedProperty(knowledgebaseCategory, x => x.Name, _urlRecordService);
-            knowledgebaseCategory.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
             model.SeName = knowledgebaseCategory.ValidateSeName(model.SeName, knowledgebaseCategory.Name, true);
             knowledgebaseCategory.SeName = model.SeName;
-            knowledgebaseCategory.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
-
             _knowledgebaseService.InsertKnowledgebaseCategory(knowledgebaseCategory);
 
             _urlRecordService.SaveSlug(knowledgebaseCategory, model.SeName, "");
@@ -190,11 +187,8 @@ namespace Grand.Web.Areas.Admin.Services
             knowledgebaseCategory = model.ToEntity(knowledgebaseCategory);
             knowledgebaseCategory.UpdatedOnUtc = DateTime.UtcNow;
             knowledgebaseCategory.Locales = model.Locales.ToLocalizedProperty(knowledgebaseCategory, x => x.Name, _urlRecordService);
-            knowledgebaseCategory.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
             model.SeName = knowledgebaseCategory.ValidateSeName(model.SeName, knowledgebaseCategory.Name, true);
             knowledgebaseCategory.SeName = model.SeName;
-            knowledgebaseCategory.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
-
             _knowledgebaseService.UpdateKnowledgebaseCategory(knowledgebaseCategory);
 
             _urlRecordService.SaveSlug(knowledgebaseCategory, model.SeName, "");
@@ -224,10 +218,8 @@ namespace Grand.Web.Areas.Admin.Services
             knowledgebaseArticle.CreatedOnUtc = DateTime.UtcNow;
             knowledgebaseArticle.UpdatedOnUtc = DateTime.UtcNow;
             knowledgebaseArticle.Locales = model.Locales.ToLocalizedProperty(knowledgebaseArticle, x => x.Name, _urlRecordService);
-            knowledgebaseArticle.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
             model.SeName = knowledgebaseArticle.ValidateSeName(model.SeName, knowledgebaseArticle.Name, true);
             knowledgebaseArticle.SeName = model.SeName;
-            knowledgebaseArticle.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
             knowledgebaseArticle.AllowComments = model.AllowComments;
 
             _knowledgebaseService.InsertKnowledgebaseArticle(knowledgebaseArticle);
@@ -244,12 +236,9 @@ namespace Grand.Web.Areas.Admin.Services
             knowledgebaseArticle = model.ToEntity(knowledgebaseArticle);
             knowledgebaseArticle.UpdatedOnUtc = DateTime.UtcNow;
             knowledgebaseArticle.Locales = model.Locales.ToLocalizedProperty(knowledgebaseArticle, x => x.Name, _urlRecordService);
-            knowledgebaseArticle.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
             model.SeName = knowledgebaseArticle.ValidateSeName(model.SeName, knowledgebaseArticle.Name, true);
             knowledgebaseArticle.SeName = model.SeName;
-            knowledgebaseArticle.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
             knowledgebaseArticle.AllowComments = model.AllowComments;
-
             _knowledgebaseService.UpdateKnowledgebaseArticle(knowledgebaseArticle);
 
             _urlRecordService.SaveSlug(knowledgebaseArticle, model.SeName, "");

@@ -47,7 +47,6 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual AddressAttribute InsertAddressAttributeModel(AddressAttributeModel model)
         {
             var addressAttribute = model.ToEntity();
-            addressAttribute.Locales = model.Locales.ToLocalizedProperty();
             _addressAttributeService.InsertAddressAttribute(addressAttribute);
 
             return addressAttribute;
@@ -55,7 +54,6 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual AddressAttribute UpdateAddressAttributeModel(AddressAttributeModel model, AddressAttribute addressAttribute)
         {
             addressAttribute = model.ToEntity(addressAttribute);
-            addressAttribute.Locales = model.Locales.ToLocalizedProperty();
             _addressAttributeService.UpdateAddressAttribute(addressAttribute);
             return addressAttribute;
         }
@@ -76,7 +74,6 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual AddressAttributeValue InsertAddressAttributeValueModel(AddressAttributeValueModel model)
         {
             var addressAttributeValue = model.ToEntity();
-            addressAttributeValue.Locales = model.Locales.ToLocalizedProperty();
             _addressAttributeService.InsertAddressAttributeValue(addressAttributeValue);
             return addressAttributeValue;
         }
@@ -89,7 +86,6 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual AddressAttributeValue UpdateAddressAttributeValueModel(AddressAttributeValueModel model, AddressAttributeValue addressAttributeValue)
         {
             addressAttributeValue = model.ToEntity(addressAttributeValue);
-            addressAttributeValue.Locales = model.Locales.ToLocalizedProperty();
             _addressAttributeService.UpdateAddressAttributeValue(addressAttributeValue);
             return addressAttributeValue;
         }

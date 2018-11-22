@@ -94,7 +94,6 @@ namespace Grand.Web.Areas.Admin.Services
             blogPost.StartDateUtc = model.StartDate;
             blogPost.EndDateUtc = model.EndDate;
             blogPost.CreatedOnUtc = DateTime.UtcNow;
-            blogPost.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
             _blogService.InsertBlogPost(blogPost);
 
             //search engine name
@@ -117,8 +116,6 @@ namespace Grand.Web.Areas.Admin.Services
             blogPost = model.ToEntity(blogPost);
             blogPost.StartDateUtc = model.StartDate;
             blogPost.EndDateUtc = model.EndDate;
-            blogPost.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
-
             _blogService.UpdateBlogPost(blogPost);
 
             //search engine name

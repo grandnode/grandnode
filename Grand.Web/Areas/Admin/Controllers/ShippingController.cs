@@ -287,7 +287,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var sm = model.ToEntity();
-                sm.Locales = model.Locales.ToLocalizedProperty();
                 _shippingService.InsertShippingMethod(sm);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Methods.Added"));
@@ -333,7 +332,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 sm = model.ToEntity(sm);
-                sm.Locales = model.Locales.ToLocalizedProperty();
                 _shippingService.UpdateShippingMethod(sm);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Methods.Updated"));

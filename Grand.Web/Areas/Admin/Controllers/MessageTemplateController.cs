@@ -152,8 +152,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     messageTemplate.AttachedDownloadId = "";
                 if (model.SendImmediately)
                     messageTemplate.DelayBeforeSend = null;
-                messageTemplate.Locales = model.Locales.ToLocalizedProperty();
-                messageTemplate.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
+
                 _messageTemplateService.InsertMessageTemplate(messageTemplate);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.MessageTemplates.AddNew"));
@@ -236,8 +235,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     messageTemplate.AttachedDownloadId = "";
                 if (model.SendImmediately)
                     messageTemplate.DelayBeforeSend = null;
-                messageTemplate.Locales = model.Locales.ToLocalizedProperty();
-                messageTemplate.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
+
                 _messageTemplateService.UpdateMessageTemplate(messageTemplate);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Updated"));

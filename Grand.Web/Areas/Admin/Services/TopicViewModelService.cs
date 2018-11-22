@@ -65,8 +65,6 @@ namespace Grand.Web.Areas.Admin.Services
             }
 
             var topic = model.ToEntity();
-            topic.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
-            topic.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
             _topicService.InsertTopic(topic);
             //search engine name
             model.SeName = topic.ValidateSeName(model.SeName, topic.Title ?? topic.SystemName, true);
@@ -86,8 +84,6 @@ namespace Grand.Web.Areas.Admin.Services
                 model.Password = null;
             }
             topic = model.ToEntity(topic);
-            topic.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
-            topic.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
             topic.Locales = model.Locales.ToLocalizedProperty(topic, x => x.Title, _urlRecordService);
             model.SeName = topic.ValidateSeName(model.SeName, topic.Title ?? topic.SystemName, true);
             topic.SeName = model.SeName;

@@ -28,21 +28,13 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual CustomerAttribute InsertCustomerAttributeModel(CustomerAttributeModel model)
         {
             var customerAttribute = model.ToEntity();
-            customerAttribute.Locales = model.Locales.ToLocalizedProperty();
             _customerAttributeService.InsertCustomerAttribute(customerAttribute);
             return customerAttribute;
         }
 
         public virtual CustomerAttributeValue InsertCustomerAttributeValueModel(CustomerAttributeValueModel model)
         {
-            var cav = new CustomerAttributeValue
-            {
-                CustomerAttributeId = model.CustomerAttributeId,
-                Name = model.Name,
-                IsPreSelected = model.IsPreSelected,
-                DisplayOrder = model.DisplayOrder
-            };
-            cav.Locales = model.Locales.ToLocalizedProperty();
+            var cav = model.ToEntity();
             _customerAttributeService.InsertCustomerAttributeValue(cav);
             return cav;
         }
@@ -79,13 +71,7 @@ namespace Grand.Web.Areas.Admin.Services
 
         public virtual CustomerAttributeValueModel PrepareCustomerAttributeValueModel(CustomerAttributeValue customerAttributeValue)
         {
-            var model = new CustomerAttributeValueModel
-            {
-                CustomerAttributeId = customerAttributeValue.CustomerAttributeId,
-                Name = customerAttributeValue.Name,
-                IsPreSelected = customerAttributeValue.IsPreSelected,
-                DisplayOrder = customerAttributeValue.DisplayOrder
-            };
+            var model = customerAttributeValue.ToModel();
             return model;
         }
 
@@ -105,17 +91,13 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual CustomerAttribute UpdateCustomerAttributeModel(CustomerAttributeModel model, CustomerAttribute customerAttribute)
         {
             customerAttribute = model.ToEntity(customerAttribute);
-            customerAttribute.Locales = model.Locales.ToLocalizedProperty();
             _customerAttributeService.UpdateCustomerAttribute(customerAttribute);
             return customerAttribute;
         }
 
         public virtual CustomerAttributeValue UpdateCustomerAttributeValueModel(CustomerAttributeValueModel model, CustomerAttributeValue customerAttributeValue)
         {
-            customerAttributeValue.Name = model.Name;
-            customerAttributeValue.IsPreSelected = model.IsPreSelected;
-            customerAttributeValue.DisplayOrder = model.DisplayOrder;
-            customerAttributeValue.Locales = model.Locales.ToLocalizedProperty();
+            customerAttributeValue = model.ToEntity(customerAttributeValue);
             _customerAttributeService.UpdateCustomerAttributeValue(customerAttributeValue);
             return customerAttributeValue;
         }

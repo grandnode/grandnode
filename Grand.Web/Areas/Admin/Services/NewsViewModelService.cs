@@ -71,8 +71,6 @@ namespace Grand.Web.Areas.Admin.Services
             newsItem.StartDateUtc = model.StartDate;
             newsItem.EndDateUtc = model.EndDate;
             newsItem.CreatedOnUtc = DateTime.UtcNow;
-            newsItem.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
-            newsItem.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
             _newsService.InsertNews(newsItem);
 
             var seName = newsItem.ValidateSeName(model.SeName, model.Title, true);
@@ -92,8 +90,6 @@ namespace Grand.Web.Areas.Admin.Services
             newsItem = model.ToEntity(newsItem);
             newsItem.StartDateUtc = model.StartDate;
             newsItem.EndDateUtc = model.EndDate;
-            newsItem.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
-            newsItem.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
             var seName = newsItem.ValidateSeName(model.SeName, model.Title, true);
             newsItem.SeName = seName;
             newsItem.Locales = model.Locales.ToLocalizedProperty(newsItem, x => x.Title, _urlRecordService);

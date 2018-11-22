@@ -219,27 +219,16 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual CheckoutAttributeValueModel PrepareCheckoutAttributeValueModel(CheckoutAttribute checkoutAttribute, CheckoutAttributeValue checkoutAttributeValue)
         {
-            var model = new CheckoutAttributeValueModel
-            {
-                CheckoutAttributeId = checkoutAttributeValue.CheckoutAttributeId,
-                Name = checkoutAttributeValue.Name,
-                ColorSquaresRgb = checkoutAttributeValue.ColorSquaresRgb,
-                DisplayColorSquaresRgb = checkoutAttribute.AttributeControlType == AttributeControlType.ColorSquares,
-                PriceAdjustment = checkoutAttributeValue.PriceAdjustment,
-                WeightAdjustment = checkoutAttributeValue.WeightAdjustment,
-                IsPreSelected = checkoutAttributeValue.IsPreSelected,
-                DisplayOrder = checkoutAttributeValue.DisplayOrder,
-                PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode,
-                BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name
-            };
+            var model = checkoutAttributeValue.ToModel();
+            model.DisplayColorSquaresRgb = checkoutAttribute.AttributeControlType == AttributeControlType.ColorSquares;
+            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+            model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
+
             return model;
         }
         public virtual CheckoutAttribute InsertCheckoutAttributeModel(CheckoutAttributeModel model)
         {
             var checkoutAttribute = model.ToEntity();
-            checkoutAttribute.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
-            checkoutAttribute.Locales = model.Locales.ToLocalizedProperty();
-            checkoutAttribute.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
             _checkoutAttributeService.InsertCheckoutAttribute(checkoutAttribute);
 
             //activity log
@@ -250,9 +239,6 @@ namespace Grand.Web.Areas.Admin.Services
         {
             checkoutAttribute = model.ToEntity(checkoutAttribute);
             SaveConditionAttributes(checkoutAttribute, model);
-            checkoutAttribute.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
-            checkoutAttribute.Locales = model.Locales.ToLocalizedProperty();
-            checkoutAttribute.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
             _checkoutAttributeService.UpdateCheckoutAttribute(checkoutAttribute);
 
             //activity log
@@ -262,17 +248,7 @@ namespace Grand.Web.Areas.Admin.Services
 
         public virtual CheckoutAttributeValue InsertCheckoutAttributeValueModel(CheckoutAttribute checkoutAttribute, CheckoutAttributeValueModel model)
         {
-            var cav = new CheckoutAttributeValue
-            {
-                CheckoutAttributeId = model.CheckoutAttributeId,
-                Name = model.Name,
-                ColorSquaresRgb = model.ColorSquaresRgb,
-                PriceAdjustment = model.PriceAdjustment,
-                WeightAdjustment = model.WeightAdjustment,
-                IsPreSelected = model.IsPreSelected,
-                DisplayOrder = model.DisplayOrder,
-            };
-            cav.Locales = model.Locales.ToLocalizedProperty();
+            var cav = model.ToEntity();
             checkoutAttribute.CheckoutAttributeValues.Add(cav);
             _checkoutAttributeService.UpdateCheckoutAttribute(checkoutAttribute);
             return cav;
@@ -280,13 +256,7 @@ namespace Grand.Web.Areas.Admin.Services
 
         public virtual CheckoutAttributeValue UpdateCheckoutAttributeValueModel(CheckoutAttribute checkoutAttribute, CheckoutAttributeValue checkoutAttributeValue, CheckoutAttributeValueModel model)
         {
-            checkoutAttributeValue.Name = model.Name;
-            checkoutAttributeValue.ColorSquaresRgb = model.ColorSquaresRgb;
-            checkoutAttributeValue.PriceAdjustment = model.PriceAdjustment;
-            checkoutAttributeValue.WeightAdjustment = model.WeightAdjustment;
-            checkoutAttributeValue.IsPreSelected = model.IsPreSelected;
-            checkoutAttributeValue.DisplayOrder = model.DisplayOrder;
-            checkoutAttributeValue.Locales = model.Locales.ToLocalizedProperty();
+            checkoutAttributeValue = model.ToEntity(checkoutAttributeValue);
             _checkoutAttributeService.UpdateCheckoutAttribute(checkoutAttribute);
             return checkoutAttributeValue;
         }
