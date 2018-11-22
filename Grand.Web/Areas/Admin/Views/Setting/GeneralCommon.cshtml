@@ -20,6 +20,7 @@
                             <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
                         </div>
                     </div>
+                    <vc:admin-widget widget-zone="general_common_settings_buttons" additional-data="null" />
                 </div>
                 <div class="portlet-body">
                     <div class="form-horizontal">
@@ -29,6 +30,7 @@
                     </div>
                 </div>
                 <div class="portlet-body form">
+                    <vc:admin-widget widget-zone="general_common_settings_top" additional-data="null" />
                     <div id="generalsettings-edit" style="display:none">
                         <ul>
                             <li tab-index="0">
@@ -57,30 +59,31 @@
                             </li>
                         </ul>
                         <div>
-                           <partial name="GeneralCommon.TabStoreInformationSettings" model="Model" />
+                            <partial name="GeneralCommon.TabStoreInformationSettings" model="Model" />
                         </div>
                         <div>
-                           <partial name="GeneralCommon.TabSEOSettings" model="Model" />
+                            <partial name="GeneralCommon.TabSEOSettings" model="Model" />
                         </div>
                         <div>
-                           <partial name="GeneralCommon.TabSecuritySettings" model="Model" />
+                            <partial name="GeneralCommon.TabSecuritySettings" model="Model" />
                         </div>
                         <div>
-                           <partial name="GeneralCommon.TabPdfSettings" model="Model" />
+                            <partial name="GeneralCommon.TabPdfSettings" model="Model" />
                         </div>
                         <div>
-                           <partial name="GeneralCommon.TabLocalizationSettings" model="Model" />
+                            <partial name="GeneralCommon.TabLocalizationSettings" model="Model" />
                         </div>
                         <div>
-                           <partial name="GeneralCommon.TabFullTextSettings" model="Model" />
+                            <partial name="GeneralCommon.TabFullTextSettings" model="Model" />
                         </div>
                         <div>
-                           <partial name="GeneralCommon.TabGoogleAnalyticsSettings" model="Model" />
+                            <partial name="GeneralCommon.TabGoogleAnalyticsSettings" model="Model" />
                         </div>
                         <div>
-                           <partial name="GeneralCommon.TabTopMenuSettings" model="Model" />
+                            <partial name="GeneralCommon.TabTopMenuSettings" model="Model" />
                         </div>
                     </div>
+                    <vc:admin-widget widget-zone="general_common_settings_bottom" additional-data="null" />
                 </div>
             </div>
         </div>

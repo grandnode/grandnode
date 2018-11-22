@@ -77,6 +77,7 @@
     </strong>
 </p>
 <div class="form-horizontal">
+    <vc:admin-widget widget-zone="vendor_details_notes_top" additional-data="Model" />
     <div class="form-body">
         <div class="form-group">
             <admin-label asp-for="AddVendorNoteMessage" />
@@ -91,6 +92,7 @@
             <input type="button" id="addVendorNote" class="btn default" value="@T("Admin.Vendors.VendorNotes.AddButton")" />
         </div>
     </div>
+    <vc:admin-widget widget-zone="vendor_details_notes_bottom" additional-data="Model" />
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
