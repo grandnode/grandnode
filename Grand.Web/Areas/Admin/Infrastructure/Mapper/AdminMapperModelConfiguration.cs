@@ -389,6 +389,14 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.WarehouseInventory, mo => mo.Ignore())
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
 
+            //Tier prices
+            CreateMap<TierPrice, ProductModel.TierPriceModel>()
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
+                .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
+                .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore());
+            CreateMap<ProductModel.TierPriceModel, TierPrice>()
+                .ForMember(dest => dest.Id, mo => mo.Ignore());
+
             //logs
             CreateMap<Log, LogModel>()
                 .ForMember(dest => dest.CustomerEmail, mo => mo.Ignore())

@@ -240,6 +240,25 @@ namespace Grand.Web.Areas.Admin.Extensions
         }
         #endregion
 
+        #region TierPrices
+        //attributes
+        public static ProductModel.TierPriceModel ToModel(this TierPrice entity)
+        {
+            return entity.MapTo<TierPrice, ProductModel.TierPriceModel>();
+        }
+
+        public static TierPrice ToEntity(this ProductModel.TierPriceModel model)
+        {
+            return model.MapTo<ProductModel.TierPriceModel, TierPrice>();
+        }
+
+        public static TierPrice ToEntity(this ProductModel.TierPriceModel model, TierPrice destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
+
         #region Checkout attributes
 
         //attributes
