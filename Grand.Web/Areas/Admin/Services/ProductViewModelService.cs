@@ -148,72 +148,6 @@ namespace Grand.Web.Areas.Admin.Services
             }
             return categoriesIds;
         }
-        public virtual void PrepareAddProductAttributeCombinationModel(ProductAttributeCombinationModel model, Product product)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-            if (product == null)
-                throw new ArgumentNullException("product");
-            if (product.UseMultipleWarehouses)
-            {
-                model.UseMultipleWarehouses = product.UseMultipleWarehouses;
-            }
-            if (string.IsNullOrEmpty(model.Id))
-            {
-                model.ProductId = product.Id;
-                var attributes = product.ProductAttributeMappings
-                    .Where(x => !x.IsNonCombinable())
-                    .ToList();
-                foreach (var attribute in attributes)
-                {
-                    var productAttribute = _productAttributeService.GetProductAttributeById(attribute.ProductAttributeId);
-                    var attributeModel = new ProductAttributeCombinationModel.ProductAttributeModel
-                    {
-                        Id = attribute.Id,
-                        ProductAttributeId = attribute.ProductAttributeId,
-                        Name = productAttribute.Name,
-                        TextPrompt = attribute.TextPrompt,
-                        IsRequired = attribute.IsRequired,
-                        AttributeControlType = attribute.AttributeControlType
-                    };
-
-                    if (attribute.ShouldHaveValues())
-                    {
-                        //values
-                        var attributeValues = attribute.ProductAttributeValues;
-                        foreach (var attributeValue in attributeValues)
-                        {
-                            var attributeValueModel = new ProductAttributeCombinationModel.ProductAttributeValueModel
-                            {
-                                Id = attributeValue.Id,
-                                Name = attributeValue.Name,
-                                IsPreSelected = attributeValue.IsPreSelected,
-                            };
-                            attributeModel.Values.Add(attributeValueModel);
-                        }
-                    }
-
-                    model.ProductAttributes.Add(attributeModel);
-                }
-            }
-
-
-            if (!string.IsNullOrEmpty(model.PictureId))
-            {
-                var pictureThumbnailUrl = _pictureService.GetPictureUrl(model.PictureId, 75, false);
-                model.PictureThumbnailUrl = pictureThumbnailUrl;
-            }
-
-            //pictures
-            model.ProductPictureModels = product.ProductPictures.Select(picture => new ProductModel.ProductPictureModel
-            {
-                Id = picture.Id,
-                ProductId = product.Id,
-                PictureId = picture.PictureId,
-                PictureUrl = _pictureService.GetPictureUrl(picture.PictureId),
-                DisplayOrder = picture.DisplayOrder
-            }).ToList();
-        }
         protected virtual string[] ParseProductTags(string productTags)
         {
             var result = new List<string>();
@@ -280,6 +214,72 @@ namespace Grand.Web.Areas.Admin.Services
                     _productService.InsertProductTag(productTag);
                 }
             }
+        }
+        public virtual void PrepareAddProductAttributeCombinationModel(ProductAttributeCombinationModel model, Product product)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+            if (product == null)
+                throw new ArgumentNullException("product");
+            if (product.UseMultipleWarehouses)
+            {
+                model.UseMultipleWarehouses = product.UseMultipleWarehouses;
+            }
+            if (string.IsNullOrEmpty(model.Id))
+            {
+                model.ProductId = product.Id;
+                var attributes = product.ProductAttributeMappings
+                    .Where(x => !x.IsNonCombinable())
+                    .ToList();
+                foreach (var attribute in attributes)
+                {
+                    var productAttribute = _productAttributeService.GetProductAttributeById(attribute.ProductAttributeId);
+                    var attributeModel = new ProductAttributeCombinationModel.ProductAttributeModel
+                    {
+                        Id = attribute.Id,
+                        ProductAttributeId = attribute.ProductAttributeId,
+                        Name = productAttribute.Name,
+                        TextPrompt = attribute.TextPrompt,
+                        IsRequired = attribute.IsRequired,
+                        AttributeControlType = attribute.AttributeControlType
+                    };
+
+                    if (attribute.ShouldHaveValues())
+                    {
+                        //values
+                        var attributeValues = attribute.ProductAttributeValues;
+                        foreach (var attributeValue in attributeValues)
+                        {
+                            var attributeValueModel = new ProductAttributeCombinationModel.ProductAttributeValueModel
+                            {
+                                Id = attributeValue.Id,
+                                Name = attributeValue.Name,
+                                IsPreSelected = attributeValue.IsPreSelected,
+                            };
+                            attributeModel.Values.Add(attributeValueModel);
+                        }
+                    }
+
+                    model.ProductAttributes.Add(attributeModel);
+                }
+            }
+
+
+            if (!string.IsNullOrEmpty(model.PictureId))
+            {
+                var pictureThumbnailUrl = _pictureService.GetPictureUrl(model.PictureId, 75, false);
+                model.PictureThumbnailUrl = pictureThumbnailUrl;
+            }
+
+            //pictures
+            model.ProductPictureModels = product.ProductPictures.Select(picture => new ProductModel.ProductPictureModel
+            {
+                Id = picture.Id,
+                ProductId = product.Id,
+                PictureId = picture.PictureId,
+                PictureUrl = _pictureService.GetPictureUrl(picture.PictureId),
+                DisplayOrder = picture.DisplayOrder
+            }).ToList();
         }
         public virtual void PrepareTierPriceModel(ProductModel.TierPriceModel model)
         {
