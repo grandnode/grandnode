@@ -8,15 +8,19 @@ namespace Grand.Services.Messages.DotLiquidDrops
 {
     public partial class LiquidStore : Drop
     {
-        private readonly Store _store;
-        private readonly EmailAccount _emailAccount;
+        private Store _store;
+        private EmailAccount _emailAccount;
 
         private readonly StoreInformationSettings _storeInformationSettings;
 
-        public LiquidStore(Store store, StoreInformationSettings storeInformationSettings, EmailAccount emailAccount = null)
+        public LiquidStore(StoreInformationSettings storeInformationSettings)
+        {
+            this._storeInformationSettings = storeInformationSettings;
+        }
+
+        public void SetProperties(Store store, EmailAccount emailAccount = null)
         {
             this._store = store;
-            this._storeInformationSettings = storeInformationSettings;
             this._emailAccount = emailAccount;
         }
 

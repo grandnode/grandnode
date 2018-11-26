@@ -28,11 +28,11 @@ namespace Grand.Services.Messages.DotLiquidDrops
 {
     public partial class LiquidOrder : Drop
     {
-        private readonly Order _order;
-        private readonly string _languageId;
-        private readonly string _vendorId;
-        private readonly decimal _refundedAmount;
-        private readonly OrderNote _orderNote;
+        private Order _order;
+        private string _languageId;
+        private string _vendorId;
+        private decimal _refundedAmount;
+        private OrderNote _orderNote;
 
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IPaymentService _paymentService;
@@ -51,8 +51,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private readonly TaxSettings _taxSettings;
         private readonly CurrencySettings _currencySettings;
 
-        public LiquidOrder(Order order,
-            IAddressAttributeFormatter addressAttributeFormatter,
+        public LiquidOrder(IAddressAttributeFormatter addressAttributeFormatter,
             IPaymentService paymentService,
             ILocalizationService localizationService,
             IWorkContext workContext,
@@ -67,17 +66,8 @@ namespace Grand.Services.Messages.DotLiquidDrops
             MessageTemplatesSettings templatesSettings,
             CatalogSettings catalogSettings,
             TaxSettings taxSettings,
-            CurrencySettings currencySettings,
-            string languageId = "",
-            string vendorId = "",
-            decimal refundedAmount = 0,
-            OrderNote orderNote = null)
+            CurrencySettings currencySettings)
         {
-            this._order = order;
-            this._languageId = languageId;
-            this._vendorId = vendorId;
-            this._orderNote = orderNote;
-            this._refundedAmount = refundedAmount;
             this._addressAttributeFormatter = addressAttributeFormatter;
             this._paymentService = paymentService;
             this._localizationService = localizationService;
@@ -94,6 +84,15 @@ namespace Grand.Services.Messages.DotLiquidDrops
             this._catalogSettings = catalogSettings;
             this._taxSettings = taxSettings;
             this._currencySettings = currencySettings;
+        }
+
+        public void SetProperties(Order order, string languageId = "", string vendorId = "", OrderNote orderNote = null, decimal refundedAmount = 0)
+        {
+            this._order = order;
+            this._languageId = languageId;
+            this._vendorId = vendorId;
+            this._orderNote = orderNote;
+            this._refundedAmount = refundedAmount;
         }
 
         public string OrderNumber

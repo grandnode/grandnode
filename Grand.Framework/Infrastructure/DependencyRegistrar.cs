@@ -341,7 +341,8 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<EndAuctionsTask>().InstancePerLifetimeScope();
 
             //DotLiquid Drops
-            //builder.RegisterType<LiquidStore>().InstancePerLifetimeScope();
+            builder.RegisterType<LiquidStore>().InstancePerLifetimeScope();
+            builder.RegisterType<LiquidCustomer>().InstancePerLifetimeScope();
         }
 
         /// <summary>

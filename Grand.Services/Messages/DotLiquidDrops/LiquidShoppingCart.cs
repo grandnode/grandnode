@@ -15,28 +15,33 @@ namespace Grand.Services.Messages.DotLiquidDrops
 {
     public partial class LiquidShoppingCart : Drop
     {
-        private readonly Customer _customer;
-        private readonly string _languageId;
+        private Customer _customer;
+        private string _languageId;
 
         private ILocalizationService _localizationService;
+        private ILanguageService _languageService;
         private MessageTemplatesSettings _templatesSettings;
 
-        public LiquidShoppingCart(Customer customer,
-            ILanguageService languageService,
+        public LiquidShoppingCart(ILanguageService languageService,
             ILocalizationService localizationService,
             MessageTemplatesSettings templatessSettings)
         {
+            this._localizationService = localizationService;
+            this._languageService = languageService;
+            this._templatesSettings = templatessSettings;
+        }
+
+        public void SetProperties(Customer customer)
+        {
             this._customer = customer;
 
-            string languageId = languageService.GetAllLanguages().FirstOrDefault().Id;
+            string languageId = _languageService.GetAllLanguages().FirstOrDefault().Id;
             if (customer.GenericAttributes.FirstOrDefault(x => x.Key == "LanguageId") != null)
             {
                 languageId = customer.GenericAttributes.FirstOrDefault(x => x.Key == "LanguageId").Value;
             }
 
             this._languageId = languageId;
-            this._localizationService = localizationService;
-            this._templatesSettings = templatessSettings;
         }
 
         public string ShoppingCartProducts

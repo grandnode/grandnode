@@ -20,43 +20,48 @@ namespace Grand.Services.Messages.DotLiquidDrops
 {
     public partial class LiquidCustomer : Drop
     {
-        private readonly Customer _customer;
-        private readonly CustomerNote _customerNote;
-        private readonly string _languageId;
+        private Customer _customer;
+        private CustomerNote _customerNote;
+        private string _languageId;
 
         private readonly ICustomerAttributeFormatter _customerAttributeFormatter;
         private readonly IStoreService _storeService;
         private readonly IStoreContext _storeContext;
         private readonly ILocalizationService _localizationService;
+        private readonly ILanguageService _languageService;
         private readonly MessageTemplatesSettings _templatesSettings;
         private readonly CatalogSettings _catalogSettings;
 
-        public LiquidCustomer(Customer customer,
-            ICustomerAttributeFormatter customerAttributeFormatter,
+        public LiquidCustomer(ICustomerAttributeFormatter customerAttributeFormatter,
             IStoreService storeService,
             IStoreContext storeContext,
-            ILanguageService languageService,
             ILocalizationService localizationService,
+            ILanguageService languageService,
             MessageTemplatesSettings templatesSettings,
             CatalogSettings catalogSettings,
             CustomerNote customerNote = null)
         {
+            this._customerAttributeFormatter = customerAttributeFormatter;
+            this._storeService = storeService;
+            this._storeContext = storeContext;
+            this._customerNote = customerNote;
+            this._localizationService = localizationService;
+            this._languageService = languageService;
+            this._templatesSettings = templatesSettings;
+            this._catalogSettings = catalogSettings;
+        }
+
+        public void SetProperties(Customer customer, CustomerNote customerNote = null)
+        {
             this._customer = customer;
 
-            string languageId = languageService.GetAllLanguages().FirstOrDefault().Id;
+            string languageId = _languageService.GetAllLanguages().FirstOrDefault().Id;
             if (customer.GenericAttributes.FirstOrDefault(x => x.Key == "LanguageId") != null)
             {
                 languageId = customer.GenericAttributes.FirstOrDefault(x => x.Key == "LanguageId").Value;
             }
 
             this._languageId = languageId;
-            this._customerAttributeFormatter = customerAttributeFormatter;
-            this._storeService = storeService;
-            this._storeContext = storeContext;
-            this._customerNote = customerNote;
-            this._localizationService = localizationService;
-            this._templatesSettings = templatesSettings;
-            this._catalogSettings = catalogSettings;
         }
 
         public string Email
