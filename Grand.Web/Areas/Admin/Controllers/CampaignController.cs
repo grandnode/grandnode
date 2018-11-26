@@ -53,8 +53,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._exportManager = exportManager;
         }
 
-       
-
         public IActionResult Index()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
@@ -307,10 +305,14 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No campaign found with the specified id
                 return RedirectToAction("List");
 
-            _campaignService.DeleteCampaign(campaign);
-
-            SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Deleted"));
-			return RedirectToAction("List");
-		}
+            if (ModelState.IsValid)
+            {
+                _campaignService.DeleteCampaign(campaign);
+                SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Deleted"));
+                return RedirectToAction("List");
+            }
+            ErrorNotification(ModelState);
+            return RedirectToAction("Edit", new { id = id });
+        }
 	}
 }

@@ -360,10 +360,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (cav == null)
                 throw new ArgumentException("No checkout attribute value found with the specified id");
 
-            checkoutAttribute.CheckoutAttributeValues.Remove(cav);
-            _checkoutAttributeService.UpdateCheckoutAttribute(checkoutAttribute);
-
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                checkoutAttribute.CheckoutAttributeValues.Remove(cav);
+                _checkoutAttributeService.UpdateCheckoutAttribute(checkoutAttribute);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
         #endregion
     }

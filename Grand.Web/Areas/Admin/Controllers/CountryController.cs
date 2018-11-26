@@ -197,11 +197,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 if (_addressService.GetAddressTotalByCountryId(country.Id) > 0)
                     throw new GrandException("The country can't be deleted. It has associated addresses");
-
-                _countryService.DeleteCountry(country);
-
-                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Countries.Deleted"));
-                return RedirectToAction("List");
+                if (ModelState.IsValid)
+                {
+                    _countryService.DeleteCountry(country);
+                    SuccessNotification(_localizationService.GetResource("Admin.Configuration.Countries.Deleted"));
+                    return RedirectToAction("List");
+                }
+                ErrorNotification(ModelState);
+                return RedirectToAction("Edit", new { id = id });
             }
             catch (Exception exc)
             {
@@ -357,10 +360,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 return Json(new DataSourceResult { Errors = _localizationService.GetResource("Admin.Configuration.Countries.States.CantDeleteWithAddresses") });
             }
-
-            _stateProvinceService.DeleteStateProvince(state);
-
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                _stateProvinceService.DeleteStateProvince(state);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         [AcceptVerbs("Get")]

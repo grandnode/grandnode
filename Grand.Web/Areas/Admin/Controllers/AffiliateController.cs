@@ -157,10 +157,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (affiliate == null)
                 //No affiliate found with the specified id
                 return RedirectToAction("List");
-
-            _affiliateService.DeleteAffiliate(affiliate);
-            SuccessNotification(_localizationService.GetResource("Admin.Affiliates.Deleted"));
-            return RedirectToAction("List");
+            if (ModelState.IsValid)
+            {
+                _affiliateService.DeleteAffiliate(affiliate);
+                SuccessNotification(_localizationService.GetResource("Admin.Affiliates.Deleted"));
+                return RedirectToAction("List");
+            }
+            ErrorNotification(ModelState);
+            return RedirectToAction("Edit", new { id = id });
         }
 
         [HttpPost]

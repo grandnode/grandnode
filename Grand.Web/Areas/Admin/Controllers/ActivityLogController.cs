@@ -102,9 +102,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 throw new ArgumentException("No activity log found with the specified id");
             }
-            _customerActivityService.DeleteActivity(activityLog);
-
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                _customerActivityService.DeleteActivity(activityLog);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         public IActionResult ClearAll()
@@ -144,8 +147,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
 
         }
-
-
         #endregion
 
     }

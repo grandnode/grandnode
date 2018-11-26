@@ -184,10 +184,15 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No blog post found with the specified id
                 return RedirectToAction("List");
 
-            _blogService.DeleteBlogPost(blogPost);
+            if (ModelState.IsValid)
+            {
+                _blogService.DeleteBlogPost(blogPost);
 
-            SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Deleted"));
-            return RedirectToAction("List");
+                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Deleted"));
+                return RedirectToAction("List");
+            }
+            ErrorNotification(ModelState);
+            return RedirectToAction("Edit", new { id = id });
         }
 
         #endregion
@@ -228,13 +233,15 @@ namespace Grand.Web.Areas.Admin.Controllers
                 throw new ArgumentException("No comment found with the specified id");
 
             var blogPost = _blogService.GetBlogPostById(comment.BlogPostId);
-
-            _blogService.DeleteBlogComment(comment);
-            //update totals
-            blogPost.CommentCount = _blogService.GetBlogCommentsByBlogPostId(blogPost.Id).Count;
-            _blogService.UpdateBlogPost(blogPost);
-
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                _blogService.DeleteBlogComment(comment);
+                //update totals
+                blogPost.CommentCount = _blogService.GetBlogCommentsByBlogPostId(blogPost.Id).Count;
+                _blogService.UpdateBlogPost(blogPost);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
 

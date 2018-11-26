@@ -80,12 +80,16 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (contactform == null)
                 //No email found with the specified id
                 return RedirectToAction("List");
+            if (ModelState.IsValid)
+            {
+                _contactUsService.DeleteContactUs(contactform);
 
-            _contactUsService.DeleteContactUs(contactform);
-
-            SuccessNotification(_localizationService.GetResource("Admin.System.ContactForm.Deleted"));
-			return RedirectToAction("List");
-		}
+                SuccessNotification(_localizationService.GetResource("Admin.System.ContactForm.Deleted"));
+                return RedirectToAction("List");
+            }
+            ErrorNotification(ModelState);
+            return RedirectToAction("Details", new { id = id });
+        }
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("delete-all")]

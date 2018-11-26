@@ -300,8 +300,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return new NullJsonResult();
         }
-
-
         #endregion
     }
 }

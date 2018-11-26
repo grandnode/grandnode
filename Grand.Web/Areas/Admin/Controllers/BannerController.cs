@@ -148,10 +148,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (banner == null)
                 return RedirectToAction("List");
 
-            _bannerService.DeleteBanner(banner);
+            if (ModelState.IsValid)
+            {
+                _bannerService.DeleteBanner(banner);
+                SuccessNotification(_localizationService.GetResource("Admin.Promotions.Banners.Deleted"));
+                return RedirectToAction("List");
+            }
+            return RedirectToAction("Edit", new { id = id });
 
-            SuccessNotification(_localizationService.GetResource("Admin.Promotions.Banners.Deleted"));
-			return RedirectToAction("List");
-		}
+        }
 	}
 }

@@ -302,11 +302,15 @@ namespace Grand.Web.Areas.Admin.Controllers
                     ErrorNotification("At least one published currency is required.");
                     return RedirectToAction("Edit", new { id = currency.Id });
                 }
+                if (ModelState.IsValid)
+                {
+                    _currencyService.DeleteCurrency(currency);
 
-                _currencyService.DeleteCurrency(currency);
-
-                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Deleted"));
-                return RedirectToAction("List");
+                    SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Deleted"));
+                    return RedirectToAction("List");
+                }
+                ErrorNotification(ModelState);
+                return RedirectToAction("Edit", new { id = currency.Id });
             }
             catch (Exception exc)
             {

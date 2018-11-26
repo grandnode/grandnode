@@ -174,9 +174,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }
                 return RedirectToAction("List");
             }
-
             //If we got this far, something failed, redisplay form
-
             //Stores
             model.PrepareStoresMappingModel(contactAttribute, true, _storeService);
             //ACL
@@ -192,14 +190,19 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            var contactAttribute = _contactAttributeService.GetContactAttributeById(id);
-            _contactAttributeService.DeleteContactAttribute(contactAttribute);
+            if (ModelState.IsValid)
+            {
+                var contactAttribute = _contactAttributeService.GetContactAttributeById(id);
+                _contactAttributeService.DeleteContactAttribute(contactAttribute);
 
-            //activity log
-            customerActivityService.InsertActivity("DeleteContactAttribute", contactAttribute.Id, _localizationService.GetResource("ActivityLog.DeleteContactAttribute"), contactAttribute.Name);
+                //activity log
+                customerActivityService.InsertActivity("DeleteContactAttribute", contactAttribute.Id, _localizationService.GetResource("ActivityLog.DeleteContactAttribute"), contactAttribute.Name);
 
-            SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.ContactAttributes.Deleted"));
-            return RedirectToAction("List");
+                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.ContactAttributes.Deleted"));
+                return RedirectToAction("List");
+            }
+            ErrorNotification(ModelState);
+            return RedirectToAction("Edit", new { id = id });
         }
 
         #endregion
@@ -337,11 +340,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             var cav = contactAttribute.ContactAttributeValues.Where(x => x.Id == id).FirstOrDefault();
             if (cav == null)
                 throw new ArgumentException("No contact attribute value found with the specified id");
+            if (ModelState.IsValid)
+            {
+                contactAttribute.ContactAttributeValues.Remove(cav);
+                _contactAttributeService.UpdateContactAttribute(contactAttribute);
 
-            contactAttribute.ContactAttributeValues.Remove(cav);
-            _contactAttributeService.UpdateContactAttribute(contactAttribute);
-
-            return new NullJsonResult();
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
 

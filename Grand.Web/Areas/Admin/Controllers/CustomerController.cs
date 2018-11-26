@@ -164,7 +164,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             return attributesXml;
         }
 
-
         #region Customers
 
         public IActionResult Index()
@@ -448,9 +447,14 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             try
             {
-                _customerViewModelService.DeleteCustomer(customer);
-                SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Deleted"));
-                return RedirectToAction("List");
+                if (ModelState.IsValid)
+                {
+                    _customerViewModelService.DeleteCustomer(customer);
+                    SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Deleted"));
+                    return RedirectToAction("List");
+                }
+                ErrorNotification(ModelState);
+                return RedirectToAction("Edit", new { id = customer.Id });
             }
             catch (Exception exc)
             {
@@ -668,9 +672,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (address == null)
                 //No customer found with the specified id
                 return Content("No customer found with the specified id");
-
-            _customerViewModelService.DeleteAddress(customer, address);
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                _customerViewModelService.DeleteAddress(customer, address);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         public IActionResult AddressCreate(string customerId)
