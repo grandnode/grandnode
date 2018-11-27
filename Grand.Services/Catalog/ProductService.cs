@@ -377,7 +377,6 @@ namespace Grand.Services.Catalog
                 .Set(x => x.GiftCardTypeId, product.GiftCardTypeId)
                 .Set(x => x.Gtin, product.Gtin)
                 .Set(x => x.HasSampleDownload, product.HasSampleDownload)
-                .Set(x => x.HasTierPrices, product.HasTierPrices)
                 .Set(x => x.HasUserAgreement, product.HasUserAgreement)
                 .Set(x => x.Height, product.Height)
                 .Set(x => x.IncBothDate, product.IncBothDate)
@@ -1207,33 +1206,7 @@ namespace Grand.Services.Catalog
             _eventPublisher.EntityUpdated(product);
 
         }
-
-
-        /// <summary>
-        /// Update HasTierPrices property (used for performance optimization)
-        /// </summary>
-        /// <param name="product">Product</param>
-        public virtual void UpdateHasTierPricesProperty(string productId)
-        {
-            var product = GetProductById(productId);
-            if (product == null)
-                throw new ArgumentNullException("product");
-
-            product.HasTierPrices = product.TierPrices.Any();
-
-            var filter = Builders<Product>.Filter.Eq("Id", product.Id);
-            var update = Builders<Product>.Update
-                    .Set(x => x.HasTierPrices, product.HasTierPrices);
-
-            _productRepository.Collection.UpdateOneAsync(filter, update);
-
-            //event notification
-            _eventPublisher.EntityUpdated(product);
-
-            //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
-        }
-
+        
         /// <summary>
         /// Update Interval properties
         /// </summary>
@@ -2368,7 +2341,6 @@ namespace Grand.Services.Catalog
         }
 
         #endregion
-
 
         #region Personalized products
 

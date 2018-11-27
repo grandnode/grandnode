@@ -293,13 +293,7 @@ namespace Grand.Services.Catalog
         /// <param name="sku">SKU</param>
         /// <returns>Product</returns>
         Product GetProductBySku(string sku);
-
-        /// <summary>
-        /// Update HasTierPrices property (used for performance optimization)
-        /// </summary>
-        /// <param name="product">Product</param>
-        void UpdateHasTierPricesProperty(string productId);
-
+        
         /// <summary>
         /// Update Interval properties
         /// </summary>

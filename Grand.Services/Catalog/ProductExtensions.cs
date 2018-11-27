@@ -24,7 +24,7 @@ namespace Grand.Services.Catalog
         /// <returns>Price</returns>
         public static TierPrice GetPreferredTierPrice(this Product product, Customer customer, string storeId, int quantity)
         {
-            if (!product.HasTierPrices)
+            if (!product.TierPrices.Any())
                 return null;
 
             //get actual tier prices

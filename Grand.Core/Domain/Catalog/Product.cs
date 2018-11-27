@@ -452,15 +452,6 @@ namespace Grand.Core.Domain.Catalog
         public DateTime? MarkAsNewEndDateTimeUtc { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this product has tier prices configured
-        /// <remarks>The same as if we run this.TierPrices.Count > 0
-        /// We use this property for performance optimization:
-        /// if this property is set to false, then we do not need to load tier prices navigation property
-        /// </remarks>
-        /// </summary>
-        public bool HasTierPrices { get; set; }
-
-        /// <summary>
         /// Gets or sets the weight
         /// </summary>
         public decimal Weight { get; set; }

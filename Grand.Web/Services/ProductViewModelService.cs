@@ -360,7 +360,7 @@ namespace Grand.Web.Services
 
                                             //do we have tier prices configured?
                                             var tierPrices = new List<TierPrice>();
-                                            if (product.HasTierPrices)
+                                            if (product.TierPrices.Any())
                                             {
                                                 tierPrices.AddRange(product.TierPrices.OrderBy(tp => tp.Quantity)
                                                     .FilterByStore(currentStoreId)
@@ -1213,7 +1213,7 @@ namespace Grand.Web.Services
 
             #region Tier prices
 
-            if (product.HasTierPrices && _permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
+            if (product.TierPrices.Any() && _permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
             {
                 model.TierPrices = product.TierPrices.OrderBy(x => x.Quantity)
                                     .FilterByStore(_storeContext.CurrentStore.Id)

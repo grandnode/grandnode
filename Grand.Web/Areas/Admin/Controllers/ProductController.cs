@@ -1553,8 +1553,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 var tierPrice = model.ToEntity();
                 _productService.InsertTierPrice(tierPrice);
-                //update "HasTierPrices" property
-                _productService.UpdateHasTierPricesProperty(product.Id);
                 ViewBag.RefreshPage = true;
                 return View(model);
             }
@@ -1641,10 +1639,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 _productService.DeleteTierPrice(tierPrice);
-
-                //update "HasTierPrices" property
-                _productService.UpdateHasTierPricesProperty(product.Id);
-
                 return new NullJsonResult();
             }
             return ErrorForKendoGridJson(ModelState);
