@@ -4530,6 +4530,12 @@
   <LocaleResource Name="Admin.Common.Run">
     <Value>Run</Value>
   </LocaleResource>
+    <LocaleResource Name="Admin.Common.RunScript">
+    <Value>Run script (eval)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.RunQuery">
+    <Value>Run query</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Common.Save">
     <Value>Save</Value>
   </LocaleResource>
@@ -14373,6 +14379,12 @@
   <LocaleResource Name="Admin.System.ContactForm.List.Store.hint">
     <Value>Search by a specific store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Field.QueryEditor">
+    <Value>Query</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Field.QueryEditor.hint">
+    <Value>Enter query</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.Log">
     <Value>Log</Value>
   </LocaleResource>
@@ -14531,6 +14543,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.Maintenance.DeleteGuests.TotalDeleted">
     <Value>{0} customers were deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueryEditor">
+    <Value>Query editor</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.QueuedEmails">
     <Value>Message Queue</Value>

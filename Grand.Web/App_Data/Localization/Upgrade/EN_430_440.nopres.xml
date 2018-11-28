@@ -1,0 +1,14 @@
+<Language>
+  <LocaleResource Name="Admin.System.QueryEditor">
+    <Value>Query editor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Field.QueryEditor">
+    <Value>Query</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Field.QueryEditor.hint">
+    <Value>Query</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.RunScript">
+    <Value>Run script (eval)</Value>
+  </LocaleResource>
+</Language>

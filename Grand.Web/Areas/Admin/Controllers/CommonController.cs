@@ -9,6 +9,7 @@ using Grand.Core.Domain.Seo;
 using Grand.Core.Infrastructure;
 using Grand.Core.Plugins;
 using Grand.Core.Roslyn;
+using Grand.Data;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Security;
@@ -28,12 +29,16 @@ using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Models.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Driver.Core.Bindings;
+using MongoDB.Driver.Core.Operations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
+using System.Threading;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -64,25 +69,27 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly CatalogSettings _catalogSettings;
         private readonly IHttpContextAccessor _httpContext;
         private readonly GrandConfig _grandConfig;
+        private readonly IMongoDBContext _mongoDBContext;
+
         #endregion
 
         #region Constructors
 
-        public CommonController(IPaymentService paymentService, 
+        public CommonController(IPaymentService paymentService,
             IShippingService shippingService,
-            IShoppingCartService shoppingCartService, 
-            ICurrencyService currencyService, 
+            IShoppingCartService shoppingCartService,
+            ICurrencyService currencyService,
             IMeasureService measureService,
-            ICustomerService customerService, 
-            IUrlRecordService urlRecordService, 
-            IWebHelper webHelper, 
+            ICustomerService customerService,
+            IUrlRecordService urlRecordService,
+            IWebHelper webHelper,
             CurrencySettings currencySettings,
-            MeasureSettings measureSettings, 
+            MeasureSettings measureSettings,
             IDateTimeHelper dateTimeHelper,
-            ILanguageService languageService, 
+            ILanguageService languageService,
             IWorkContext workContext,
             IStoreContext storeContext,
-            IPermissionService permissionService, 
+            IPermissionService permissionService,
             ILocalizationService localizationService,
             ISearchTermService searchTermService,
             ISettingService settingService,
@@ -90,7 +97,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             IRepository<Product> repositoryProduct,
             CatalogSettings catalogSettings,
             IHttpContextAccessor httpContext,
-            GrandConfig grandConfig
+            GrandConfig grandConfig,
+            IMongoDBContext mongoDBContext
             )
         {
             this._paymentService = paymentService;
@@ -116,9 +124,35 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._catalogSettings = catalogSettings;
             this._httpContext = httpContext;
             this._grandConfig = grandConfig;
+            this._mongoDBContext = mongoDBContext;
         }
 
         #endregion
+
+        protected virtual IEnumerable<Dictionary<string, object>> Serialize(List<BsonValue> collection)
+        {
+            var results = new List<Dictionary<string, object>>();
+            var columns = new List<string>();
+            var document = collection.FirstOrDefault()?.AsBsonDocument;
+            var cols = new List<string>();
+            if (document != null)
+            {
+                foreach (var item in document.Names)
+                {
+                    columns.Add(item);
+                }
+                foreach (var row in collection)
+                {
+                    var myObject = new Dictionary<string, object>();
+                    foreach (var col in columns)
+                    {
+                        myObject.Add(col, row[col].ToString());
+                    }
+                    results.Add(myObject);
+                }
+            }
+            return results;
+        }
 
         #region Methods
 
@@ -158,7 +192,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 model.LoadedAssemblies.Add(new SystemInfoModel.LoadedAssembly
                 {
-                    FullName = assembly.FullName,                    
+                    FullName = assembly.FullName,
                 });
             }
             return View(model);
@@ -180,10 +214,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 currentStoreUrl.Equals(_webHelper.GetStoreLocation(true), StringComparison.OrdinalIgnoreCase)
                 ))
                 model.Add(new SystemWarningModel
-                    {
-                        Level = SystemWarningLevel.Pass,
-                        Text = _localizationService.GetResource("Admin.System.Warnings.URL.Match")
-                    });
+                {
+                    Level = SystemWarningLevel.Pass,
+                    Text = _localizationService.GetResource("Admin.System.Warnings.URL.Match")
+                });
             else
                 model.Add(new SystemWarningModel
                 {
@@ -331,7 +365,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     model.Add(new SystemWarningModel
                     {
                         Level = SystemWarningLevel.Warning,
-                        Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.IncompatiblePlugin"), pluginName )
+                        Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.IncompatiblePlugin"), pluginName)
                     });
 
             //performance settings
@@ -448,7 +482,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             DateTime? endDateValue = (model.DeleteExportedFiles.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteExportedFiles.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
- 
+
             model.DeleteExportedFiles.NumberOfDeletedFiles = 0;
             return View(model);
         }
@@ -463,7 +497,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             var _activityLogRepository = EngineContext.Current.Resolve<IRepository<ActivityLog>>();
             _activityLogRepository.Collection.DeleteMany(new MongoDB.Bson.BsonDocument());
-            model.DeleteActivityLog = true;            
+            model.DeleteActivityLog = true;
             return View(model);
         }
 
@@ -524,7 +558,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
-            
+
             return View(_grandConfig.UseRoslynScripts);
         }
 
@@ -540,7 +574,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 Data = scripts.Select(x =>
                 {
-                    return new 
+                    return new
                     {
                         FileName = x.OriginalFile,
                         IsCompiled = x.IsCompiled,
@@ -552,6 +586,78 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        public IActionResult QueryEditor()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+                return AccessDeniedView();
+            var model = new QueryEditor();
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult QueryEditor(string query)
+        {
+            //https://docs.mongodb.com/manual/reference/command/
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+                return Content("Access denied");
+
+            if (string.IsNullOrEmpty(query))
+                return ErrorForKendoGridJson("Empty query");
+            try
+            {
+                var result = _mongoDBContext.RunCommand<BsonDocument>(query);
+                var ok = result.Where(x => x.Name == "ok").FirstOrDefault().Value.ToBoolean();
+                var gridModel = new DataSourceResult();
+                if (result.Where(x => x.Name == "cursor").ToList().Any())
+                {
+                    var resultCollection = result["cursor"]["firstBatch"].AsBsonArray.ToList();
+                    var response = Serialize(resultCollection);
+                    gridModel = new DataSourceResult
+                    {
+                        Data = response,
+                        Total = response.Count()
+                    };
+                }
+                else if (result.Where(x => x.Name == "n").ToList().Any())
+                {
+                    List<dynamic> n = new List<dynamic>();
+                    var number = result["n"].ToInt64();
+                    n.Add(new { Number = number });
+                    gridModel = new DataSourceResult
+                    {
+                        Data = n
+                    };
+                }
+                return Json(gridModel);
+            }
+            catch (Exception ex)
+            {
+                return ErrorForKendoGridJson(ex.Message);
+            }
+        }
+        [HttpPost]
+        public IActionResult RunScript(string query)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+                return Content("Access denied");
+
+            if (string.IsNullOrEmpty(query))
+                return Json(new { Result = false, Message = "Empty query!" });
+
+            try
+            {
+                var bscript = new BsonJavaScript(query);
+                var operation = new EvalOperation(_mongoDBContext.Database().DatabaseNamespace, bscript, null);
+                var writeBinding = new WritableServerBinding(_mongoDBContext.Database().Client.Cluster, NoCoreSession.NewHandle());
+                var result = operation.Execute(writeBinding, CancellationToken.None);
+                var xx = result["_ns"];
+                return Json(new { Result = true, Message = result.ToString() });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Result = false, Message = ex.Message });
+            }
+        }
         public IActionResult SeNames()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
