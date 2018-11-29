@@ -8,14 +8,18 @@ namespace Grand.Services.Messages.DotLiquidDrops
 {
     public partial class LiquidGiftCard : Drop
     {
-        private readonly GiftCard _giftCard;
+        private GiftCard _giftCard;
 
         private readonly IPriceFormatter _priceFormatter;
 
-        public LiquidGiftCard(GiftCard giftCard, IPriceFormatter priceFormatter)
+        public LiquidGiftCard(IPriceFormatter priceFormatter)
+        {
+            this._priceFormatter = priceFormatter;
+        }
+
+        public void SetProperties(GiftCard giftCard)
         {
             this._giftCard = giftCard;
-            this._priceFormatter = priceFormatter;
         }
 
         public string SenderName

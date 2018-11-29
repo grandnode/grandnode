@@ -5,9 +5,9 @@ namespace Grand.Services.Messages.DotLiquidDrops
 {
     public partial class LiquidRecurringPayment : Drop
     {
-        private readonly RecurringPayment _recurringPayment;
+        private RecurringPayment _recurringPayment;
 
-        public LiquidRecurringPayment(RecurringPayment recurringPayment)
+        public void SetProperties(RecurringPayment recurringPayment)
         {
             this._recurringPayment = recurringPayment;
         }

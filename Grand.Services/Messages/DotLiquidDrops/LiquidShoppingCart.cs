@@ -17,6 +17,8 @@ namespace Grand.Services.Messages.DotLiquidDrops
     {
         private Customer _customer;
         private string _languageId;
+        private string _personalMessage;
+        private string _customerEmail;
 
         private ILocalizationService _localizationService;
         private ILanguageService _languageService;
@@ -31,7 +33,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
             this._templatesSettings = templatessSettings;
         }
 
-        public void SetProperties(Customer customer)
+        public void SetProperties(Customer customer, string personalMessage = "", string customerEmail = "")
         {
             this._customer = customer;
 
@@ -42,6 +44,8 @@ namespace Grand.Services.Messages.DotLiquidDrops
             }
 
             this._languageId = languageId;
+            this._personalMessage = personalMessage;
+            this._customerEmail = customerEmail;
         }
 
         public string ShoppingCartProducts

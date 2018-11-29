@@ -1,6 +1,7 @@
 ﻿using Grand.Core;
 using Grand.Core.Domain.Messages;
 using Grand.Services.Events;
+using Grand.Services.Messages.DotLiquidDrops;
 
 namespace Grand.Services.Messages
 {
@@ -31,9 +32,10 @@ namespace Grand.Services.Messages
             eventPublisher.Publish(new EntityTokensAddedEvent<T, U>(entity, tokens));
         }
 
-        public static void MessageTokensAdded<U>(this IEventPublisher eventPublisher, MessageTemplate message, System.Collections.Generic.IList<U> tokens)
+        public static void MessageTokensAdded(this IEventPublisher eventPublisher, MessageTemplate message, /*System.Collections.Generic.IList<U> tokens*/LiquidObject liquidObject)
         {
-            eventPublisher.Publish(new MessageTokensAddedEvent<U>(message, tokens));
+            //TODO
+            //eventPublisher.Publish(new MessageTokensAddedEvent<U>(message, tokens));
         }
     }
 }

@@ -14,6 +14,7 @@ using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Stores;
 using Grand.Core.Domain.Tax;
 using Grand.Core.Domain.Vendors;
+using Grand.Core.Infrastructure;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Customers;
@@ -26,8 +27,6 @@ using Grand.Services.Messages.DotLiquidDrops;
 using Grand.Services.Orders;
 using Grand.Services.Payments;
 using Grand.Services.Stores;
-using System;
-using System.Collections.Generic;
 
 namespace Grand.Services.Messages
 {
@@ -49,7 +48,6 @@ namespace Grand.Services.Messages
         private readonly IStoreService _storeService;
         private readonly IStoreContext _storeContext;
         private readonly ICustomerAttributeFormatter _customerAttributeFormatter;
-
         private readonly MessageTemplatesSettings _templatesSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly TaxSettings _taxSettings;
@@ -178,144 +176,154 @@ namespace Grand.Services.Messages
             return allowedTokens.ToArray();
         }
 
-        public void AddStoreTokens(IList<Token> tokens, Store store, EmailAccount emailAccount)
+        public void AddStoreTokens(LiquidObject liquidObject, Store store, EmailAccount emailAccount)
         {
-            throw new NotImplementedException();
+            var liquidStore = EngineContext.Current.Resolve<LiquidStore>();
+            liquidStore.SetProperties(store, emailAccount);
+            liquidObject.Store = liquidStore;
         }
 
-        public void AddOrderTokens(IList<Token> tokens, Order order, string languageId, string vendorId = "")
+        public void AddOrderTokens(LiquidObject liquidObject, Order order, string languageId,
+            string vendorId = "", OrderNote orderNote = null, decimal refundedAmount = 0)
         {
-            throw new NotImplementedException();
+            var liquidOrder = EngineContext.Current.Resolve<LiquidOrder>();
+            liquidOrder.SetProperties(order, languageId, vendorId, orderNote, refundedAmount);
+            liquidObject.Order = liquidOrder;
         }
 
-        public void AddOrderRefundedTokens(IList<Token> tokens, Order order, decimal refundedAmount)
+        public void AddShipmentTokens(LiquidObject liquidObject, Shipment shipment, string languageId)
         {
-            throw new NotImplementedException();
+            var liquidShipment = EngineContext.Current.Resolve<LiquidShipment>();
+            liquidShipment.SetProperties(shipment, languageId);
+            liquidObject.Shipment = liquidShipment;
         }
 
-        public void AddShipmentTokens(IList<Token> tokens, Shipment shipment, string languageId)
+        public void AddRecurringPaymentTokens(LiquidObject liquidObject, RecurringPayment recurringPayment)
         {
-            throw new NotImplementedException();
+            var liquidRecurringPayment = EngineContext.Current.Resolve<LiquidRecurringPayment>();
+            liquidRecurringPayment.SetProperties(recurringPayment);
+            liquidObject.RecurringPayment = liquidRecurringPayment;
         }
 
-        public void AddOrderNoteTokens(IList<Token> tokens, OrderNote orderNote)
+        public void AddReturnRequestTokens(LiquidObject liquidObject, ReturnRequest returnRequest, Order order)
         {
-            throw new NotImplementedException();
+            var liquidReturnRequest = EngineContext.Current.Resolve<LiquidReturnRequest>();
+            liquidReturnRequest.SetProperties(returnRequest, order);
+            liquidObject.ReturnRequest = liquidReturnRequest;
         }
 
-        public void AddRecurringPaymentTokens(IList<Token> tokens, RecurringPayment recurringPayment)
+        public void AddGiftCardTokens(LiquidObject liquidObject, GiftCard giftCard)
         {
-            throw new NotImplementedException();
+            var liquidGiftCart = EngineContext.Current.Resolve<LiquidGiftCard>();
+            liquidGiftCart.SetProperties(giftCard);
+            liquidObject.GiftCard = liquidGiftCart;
+
         }
 
-        public void AddReturnRequestTokens(IList<Token> tokens, ReturnRequest returnRequest, Order orderItem)
+        public void AddCustomerTokens(LiquidObject liquidObject, Customer customer, CustomerNote customerNote = null)
         {
-            throw new NotImplementedException();
+            var liquidCustomer = EngineContext.Current.Resolve<LiquidCustomer>();
+            liquidCustomer.SetProperties(customer, customerNote);
+            liquidObject.Customer = liquidCustomer;
         }
 
-        public void AddGiftCardTokens(IList<Token> tokens, GiftCard giftCard)
+        public void AddShoppingCartTokens(LiquidObject liquidObject, Customer customer, string personalMessage = "", string customerEmail = "")
         {
-            throw new NotImplementedException();
+            var liquidShoppingCart = EngineContext.Current.Resolve<LiquidShoppingCart>();
+            liquidShoppingCart.SetProperties(customer, personalMessage, customerEmail);
+            liquidObject.ShoppingCart = liquidShoppingCart;
         }
 
-        public void AddCustomerTokens(IList<Token> tokens, Customer customer)
+        public void AddVendorTokens(LiquidObject liquidObject, Vendor vendor)
         {
-            throw new NotImplementedException();
+            var liquidVendor = EngineContext.Current.Resolve<LiquidVendor>();
+            liquidVendor.SetProperties(vendor);
+            liquidObject.Vendor = liquidVendor;
         }
 
-        public void AddCustomerNoteTokens(IList<Token> tokens, CustomerNote customerNote)
+        public void AddNewsLetterSubscriptionTokens(LiquidObject liquidObject, NewsLetterSubscription subscription)
         {
-            throw new NotImplementedException();
+            var liquidNewsletterSubscription = EngineContext.Current.Resolve<LiquidNewsLetterSubscription>();
+            liquidNewsletterSubscription.SetProperties(subscription);
+            liquidObject.NewsletterSubscription = liquidNewsletterSubscription;
         }
 
-        public void AddShoppingCartTokens(IList<Token> tokens, Customer customer)
+        public void AddProductReviewTokens(LiquidObject liquidObject, ProductReview productReview)
         {
-            throw new NotImplementedException();
+            var liquidProductReview = EngineContext.Current.Resolve<LiquidProductReview>();
+            liquidProductReview.SetProperties(productReview);
+            liquidObject.ProductReview = liquidProductReview;
         }
 
-        public void AddRecommendedProductsTokens(IList<Token> tokens, Customer customer)
+        public void AddVendorReviewTokens(LiquidObject liquidObject, VendorReview vendorReview)
         {
-            throw new NotImplementedException();
+            var liquidVendorReview = EngineContext.Current.Resolve<LiquidVendorReview>();
+            liquidVendorReview.SetProperties(vendorReview);
+            liquidObject.VendorReview = liquidVendorReview;
         }
 
-        public void AddRecentlyViewedProductsTokens(IList<Token> tokens, Customer customer)
+        public void AddBlogCommentTokens(string storeId, LiquidObject liquidObject, BlogComment blogComment)
         {
-            throw new NotImplementedException();
+            var liquidBlogComment = EngineContext.Current.Resolve<LiquidBlogComment>();
+            liquidBlogComment.SetProperties(blogComment, storeId);
+            liquidObject.BlogComment = liquidBlogComment;
         }
 
-        public void AddVendorTokens(IList<Token> tokens, Vendor vendor)
+        public void AddArticleCommentTokens(string storeId, LiquidObject liquidObject, KnowledgebaseArticleComment articleComment)
         {
-            throw new NotImplementedException();
+            var liquidKnowledgebase = EngineContext.Current.Resolve<LiquidKnowledgebase>();
+            liquidKnowledgebase.SetProperties(articleComment, storeId);
+            liquidObject.Knowledgebase = liquidKnowledgebase;
         }
 
-        public void AddNewsLetterSubscriptionTokens(IList<Token> tokens, NewsLetterSubscription subscription)
+        public void AddNewsCommentTokens(string storeId, LiquidObject liquidObject, NewsComment newsComment)
         {
-            throw new NotImplementedException();
+            var liquidNewsComment = EngineContext.Current.Resolve<LiquidNewsComment>();
+            liquidNewsComment.SetProperties(newsComment, storeId);
+            liquidObject.NewsComment = liquidNewsComment;
         }
 
-        public void AddProductReviewTokens(IList<Token> tokens, ProductReview productReview)
+        public void AddProductTokens(LiquidObject liquidObject, Product product, string languageId)
         {
-            throw new NotImplementedException();
+            var liquidProduct = EngineContext.Current.Resolve<LiquidProduct>();
+            liquidProduct.SetProperties(product, languageId);
+            liquidObject.Product = liquidProduct;
         }
 
-        public void AddVendorReviewTokens(IList<Token> tokens, VendorReview VendorReview)
+        public void AddAttributeCombinationTokens(LiquidObject liquidObject, ProductAttributeCombination combination, string languageId)
         {
-            throw new NotImplementedException();
+            var liquidAttributeCombination = EngineContext.Current.Resolve<LiquidAttributeCombination>();
+            liquidAttributeCombination.SetProperties(combination, languageId);
+            liquidObject.AttributeCombination = liquidAttributeCombination;
         }
 
-        public void AddBlogCommentTokens(string storeId, IList<Token> tokens, BlogComment blogComment)
+        public void AddForumTokens(LiquidObject liquidObject, Forum forum, ForumTopic forumTopic = null, ForumPost forumPost = null,
+            int? friendlyForumTopicPageIndex = null, string appendedPostIdentifierAnchor = "")
         {
-            throw new NotImplementedException();
+            var liquidForum = EngineContext.Current.Resolve<LiquidForum>();
+            liquidForum.SetProperties(forum, forumTopic, forumPost, friendlyForumTopicPageIndex, appendedPostIdentifierAnchor);
+            liquidObject.Forum = liquidForum;
         }
 
-        public void AddArticleCommentTokens(string storeId, IList<Token> tokens, KnowledgebaseArticleComment articleComment)
+        public void AddPrivateMessageTokens(LiquidObject liquidObject, PrivateMessage privateMessage)
         {
-            throw new NotImplementedException();
+            var liquidPrivateMessage = EngineContext.Current.Resolve<LiquidPrivateMessage>();
+            liquidPrivateMessage.SetProperties(privateMessage);
+            liquidObject.PrivateMessage = liquidPrivateMessage;
         }
 
-        public void AddNewsCommentTokens(string storeId, IList<Token> tokens, NewsComment newsComment)
+        public void AddBackInStockTokens(LiquidObject liquidObject, BackInStockSubscription subscription)
         {
-            throw new NotImplementedException();
+            var liquidBackInStockSubscription = EngineContext.Current.Resolve<LiquidBackInStockSubscription>();
+            liquidBackInStockSubscription.SetProperties(subscription);
+            liquidObject.BackInStockSubscription = liquidBackInStockSubscription;
         }
 
-        public void AddProductTokens(IList<Token> tokens, Product product, string languageId)
+        public void AddAuctionTokens(LiquidObject liquidObject, Product product, Bid bid)
         {
-            throw new NotImplementedException();
-        }
-
-        public void AddAttributeCombinationTokens(IList<Token> tokens, ProductAttributeCombination combination, string languageId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void AddForumTokens(IList<Token> tokens, Forum forum)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void AddForumTopicTokens(IList<Token> tokens, ForumTopic forumTopic, int? friendlyForumTopicPageIndex = null, string appendedPostIdentifierAnchor = "")
-        {
-            throw new NotImplementedException();
-        }
-
-        public void AddForumPostTokens(IList<Token> tokens, ForumPost forumPost)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void AddPrivateMessageTokens(IList<Token> tokens, PrivateMessage privateMessage)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void AddBackInStockTokens(IList<Token> tokens, BackInStockSubscription subscription)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void AddAuctionTokens(IList<Token> tokens, Product product, Bid bid)
-        {
-            throw new NotImplementedException();
+            var liquidAuction = EngineContext.Current.Resolve<LiquidAuction>();
+            liquidAuction.SetProperties(product, bid);
+            liquidObject.Auction = liquidAuction;
         }
 
         #endregion

@@ -1,7 +1,6 @@
 ﻿using DotLiquid;
 using Grand.Core;
 using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Messages;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Infrastructure;
@@ -19,8 +18,8 @@ namespace Grand.Services.Messages.DotLiquidDrops
 {
     public partial class LiquidShipment : Drop
     {
-        private readonly Shipment _shipment;
-        private readonly string _languageId;
+        private Shipment _shipment;
+        private string _languageId;
 
         private readonly ILocalizationService _localizationService;
         private readonly IOrderService _orderService;
@@ -31,19 +30,15 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private readonly CatalogSettings _catalogSettings;
         private readonly ProductAttributeParser _productAttributeParser;
 
-        public LiquidShipment(Shipment shipment,
-            ILocalizationService localizationService,
+        public LiquidShipment(ILocalizationService localizationService,
             IOrderService orderService,
             IStoreContext storeContext,
             IStoreService storeService,
             ShippingSettings shippingSettings,
             MessageTemplatesSettings templatesSettings,
             CatalogSettings catalogSettings,
-            ProductAttributeParser productAttributeParser,
-            string languageId = "")
+            ProductAttributeParser productAttributeParser)
         {
-            this._shipment = shipment;
-            this._languageId = languageId;
             this._localizationService = localizationService;
             this._orderService = orderService;
             this._storeContext = storeContext;
@@ -52,6 +47,12 @@ namespace Grand.Services.Messages.DotLiquidDrops
             this._templatesSettings = templatesSettings;
             this._catalogSettings = catalogSettings;
             this._productAttributeParser = productAttributeParser;
+        }
+
+        public void SetProperties(Shipment shipment, string languageId = "")
+        {
+            this._shipment = shipment;
+            this._languageId = languageId;
         }
 
         public string ShipmentNumber

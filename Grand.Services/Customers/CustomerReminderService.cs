@@ -5,7 +5,6 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Messages;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Payments;
-using Grand.Core.Infrastructure;
 using Grand.Services.Catalog;
 using Grand.Services.Events;
 using Grand.Services.Helpers;
@@ -92,32 +91,19 @@ namespace Grand.Services.Customers
 
             //retrieve message template data
             var bcc = reminderLevel.BccEmailAddresses;
-            var subject = reminderLevel.Subject;
-            var body = reminderLevel.Body;
 
-            var liquidStore = EngineContext.Current.Resolve<LiquidStore>();
-            liquidStore.SetProperties(store, emailAccount);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+            _messageTokenProvider.AddShoppingCartTokens(liquidObject, customer);
 
-            var liquidCustomer = EngineContext.Current.Resolve<LiquidCustomer>();
-            liquidCustomer.SetProperties(customer);
+            var hash = Hash.FromAnonymousObject(liquidObject);
 
-            var liquidShoppingCart = EngineContext.Current.Resolve<LiquidShoppingCart>();
-            liquidShoppingCart.SetProperties(customer);
+            Template bodyTemplate = Template.Parse(reminderLevel.Body);
+            var body = bodyTemplate.Render(hash);
 
-            var hash = Hash.FromAnonymousObject(
-                new
-                {
-                    Store = liquidStore,
-                    Customer = liquidCustomer,
-                    ShoppingCart = liquidShoppingCart
-                }
-            );
-
-            Template bodyTemplate = Template.Parse(body);
-            var bodyRendered = bodyTemplate.Render(hash);
-
-            Template subjectTemplate = Template.Parse(subject);
-            var subjectRendered = subjectTemplate.Render(hash);
+            Template subjectTemplate = Template.Parse(reminderLevel.Subject);
+            var subject = subjectTemplate.Render(hash);
 
             //limit name length
             var toName = CommonHelper.EnsureMaximumLength(customer.GetFullName(), 300);
@@ -132,8 +118,8 @@ namespace Grand.Services.Customers
                 ReplyToName = string.Empty,
                 CC = string.Empty,
                 Bcc = bcc,
-                Subject = subjectRendered,
-                Body = bodyRendered,
+                Subject = subject,
+                Body = body,
                 AttachmentFilePath = "",
                 AttachmentFileName = "",
                 AttachedDownloadId = "",
@@ -156,35 +142,15 @@ namespace Grand.Services.Customers
 
             //retrieve message template data
             var bcc = reminderLevel.BccEmailAddresses;
-            var subject = reminderLevel.Subject;
-            var body = reminderLevel.Body;
 
-            var liquidStore = EngineContext.Current.Resolve<LiquidStore>();
-            liquidStore.SetProperties(store, emailAccount);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+            _messageTokenProvider.AddShoppingCartTokens(liquidObject, customer);
+            _messageTokenProvider.AddOrderTokens(liquidObject, order, order.CustomerLanguageId);
 
-            var liquidCustomer = EngineContext.Current.Resolve<LiquidCustomer>();
-            liquidCustomer.SetProperties(customer);
-
-            var liquidShoppingCart = EngineContext.Current.Resolve<LiquidShoppingCart>();
-            liquidShoppingCart.SetProperties(customer);
-
-            var liquidOrder = EngineContext.Current.Resolve<LiquidOrder>();
-            liquidOrder.SetProperties(order, order.CustomerLanguageId);
-
-            var hash = Hash.FromAnonymousObject(
-                new
-                {
-                    Store = liquidStore,
-                    Customer = liquidCustomer,
-                    ShoppingCart = liquidShoppingCart
-                }
-            );
-
-            Template bodyTemplate = Template.Parse(body);
-            var bodyRendered = bodyTemplate.Render(hash);
-
-            Template subjectTemplate = Template.Parse(subject);
-            var subjectRendered = subjectTemplate.Render(hash);
+            var body = LiquidExtensions.Render(liquidObject, reminderLevel.Body);
+            var subject = LiquidExtensions.Render(liquidObject, reminderLevel.Subject);
 
             //limit name length
             var toName = CommonHelper.EnsureMaximumLength(customer.GetFullName(), 300);
@@ -199,8 +165,8 @@ namespace Grand.Services.Customers
                 ReplyToName = string.Empty,
                 CC = string.Empty,
                 Bcc = bcc,
-                Subject = subjectRendered,
-                Body = bodyRendered,
+                Subject = subject,
+                Body = body,
                 AttachmentFilePath = "",
                 AttachmentFileName = "",
                 AttachedDownloadId = "",

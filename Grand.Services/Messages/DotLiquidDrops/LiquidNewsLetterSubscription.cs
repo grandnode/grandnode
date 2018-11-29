@@ -8,18 +8,21 @@ namespace Grand.Services.Messages.DotLiquidDrops
 {
     public partial class LiquidNewsLetterSubscription : Drop
     {
-        private readonly NewsLetterSubscription _subscription;
+        private NewsLetterSubscription _subscription;
 
         private readonly IStoreService _storeService;
         private readonly IStoreContext _storeContext;
 
-        public LiquidNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription,
-            IStoreService storeService,
+        public LiquidNewsLetterSubscription(IStoreService storeService,
             IStoreContext storeContext)
         {
-            this._subscription = newsLetterSubscription;
             this._storeContext = storeContext;
             this._storeService = storeService;
+        }
+
+        public void SetProperties(NewsLetterSubscription subscription)
+        {
+            this._subscription = subscription;
         }
 
         public string Email

@@ -70,7 +70,7 @@ namespace Grand.Framework.Infrastructure
         /// <param name="typeFinder">Type finder</param>
         /// <param name="config">Config</param>
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, GrandConfig config)
-        {            
+        {
 
             //web helper
             builder.RegisterType<WebHelper>().As<IWebHelper>().InstancePerLifetimeScope();
@@ -341,8 +341,27 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<EndAuctionsTask>().InstancePerLifetimeScope();
 
             //DotLiquid Drops
-            builder.RegisterType<LiquidStore>().InstancePerLifetimeScope();
+            builder.RegisterType<LiquidAttributeCombination>().InstancePerLifetimeScope();
+            builder.RegisterType<LiquidAuction>().InstancePerLifetimeScope();
+            builder.RegisterType<LiquidBackInStockSubscription>().InstancePerLifetimeScope();
+            builder.RegisterType<LiquidBlogComment>().InstancePerLifetimeScope();
             builder.RegisterType<LiquidCustomer>().InstancePerLifetimeScope();
+            builder.RegisterType<LiquidForum>().InstancePerLifetimeScope();
+            builder.RegisterType<LiquidGiftCard>().InstancePerLifetimeScope();
+            builder.RegisterType<LiquidKnowledgebase>().InstancePerLifetimeScope();
+            builder.RegisterType<LiquidNewsComment>().InstancePerLifetimeScope();
+            builder.RegisterType<LiquidNewsLetterSubscription>().InstancePerLifetimeScope();
+            builder.RegisterType<LiquidOrder>().InstancePerLifetimeScope();
+            builder.RegisterType<LiquidPrivateMessage>().InstancePerLifetimeScope();
+            builder.RegisterType<LiquidProduct>().InstancePerLifetimeScope();
+            builder.RegisterType<LiquidProductReview>().InstancePerLifetimeScope();
+            builder.RegisterType<LiquidRecurringPayment>().InstancePerLifetimeScope();
+            builder.RegisterType<LiquidReturnRequest>().InstancePerLifetimeScope();
+            builder.RegisterType<LiquidShipment>().InstancePerLifetimeScope();
+            builder.RegisterType<LiquidShoppingCart>().InstancePerLifetimeScope();
+            builder.RegisterType<LiquidStore>().InstancePerLifetimeScope();
+            builder.RegisterType<LiquidVendor>().InstancePerLifetimeScope();
+            builder.RegisterType<LiquidVendorReview>().InstancePerLifetimeScope();
         }
 
         /// <summary>

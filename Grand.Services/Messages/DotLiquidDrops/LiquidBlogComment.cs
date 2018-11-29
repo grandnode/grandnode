@@ -11,18 +11,23 @@ namespace Grand.Services.Messages.DotLiquidDrops
 {
     public partial class LiquidBlogComment : Drop
     {
-        private readonly BlogComment _blogComment;
+        private BlogComment _blogComment;
+        private string _storeId;
 
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
 
-        public LiquidBlogComment(BlogComment blogComment,
-            IStoreContext storeContext,
+        public LiquidBlogComment(IStoreContext storeContext,
             IStoreService storeService)
         {
-            this._blogComment = blogComment;
             this._storeContext = storeContext;
             this._storeService = storeService;
+        }
+
+        public void SetProperties(BlogComment blogComment, string storeId)
+        {
+            this._blogComment = blogComment;
+            this._storeId = storeId;
         }
 
         public string BlogPostTitle
@@ -35,7 +40,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get
             {
                 var blogPost = EngineContext.Current.Resolve<IBlogService>().GetBlogPostById(_blogComment.BlogPostId);
-                return $"{GetStoreUrl(_storeContext.CurrentStore.Id)}{blogPost.GetSeName()}";
+                return $"{GetStoreUrl(_storeId)}{blogPost.GetSeName()}";
             }
         }
 

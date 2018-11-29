@@ -11,21 +11,25 @@ namespace Grand.Services.Messages.DotLiquidDrops
 {
     public partial class LiquidNewsComment : Drop
     {
-        private readonly NewsComment _newsComment;
-        private readonly NewsItem _newsItem;
+        private NewsComment _newsComment;
+        private NewsItem _newsItem;
+        private string _storeId;
 
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
 
-        public LiquidNewsComment(NewsComment newsComment,
-            NewsItem newsItem,
-            IStoreContext storeContext,
+        public LiquidNewsComment(IStoreContext storeContext,
             IStoreService storeService)
+        {
+            this._storeContext = storeContext;
+            this._storeService = storeService;
+        }
+
+        public void SetProperties(NewsComment newsComment, string storeId)
         {
             this._newsComment = newsComment;
             this._newsItem = EngineContext.Current.Resolve<INewsService>().GetNewsById(newsComment.NewsItemId);
-            this._storeContext = storeContext;
-            this._storeService = storeService;
+            this._storeId = storeId;
         }
 
         public string NewsTitle
@@ -45,7 +49,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public string NewsURL
         {
-            get { return $"{GetStoreUrl(_storeContext.CurrentStore.Id)}{_newsItem.GetSeName()}"; }
+            get { return $"{GetStoreUrl(_storeId)}{_newsItem.GetSeName()}"; }
         }
 
         /// <summary>

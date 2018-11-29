@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DotLiquid;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -17,6 +18,15 @@ namespace Grand.Services.Messages.DotLiquidDrops
             }
 
             return toReturn;
+        }
+
+        public static string Render(LiquidObject liquidObject, string source)
+        {
+            var hash = Hash.FromAnonymousObject(liquidObject);
+            Template template = Template.Parse(source);
+            var replaced = template.Render(hash);
+
+            return replaced;
         }
     }
 }

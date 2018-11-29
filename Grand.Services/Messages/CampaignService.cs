@@ -1,4 +1,5 @@
-﻿using Grand.Core;
+﻿using DotLiquid;
+using Grand.Core;
 using Grand.Core.Data;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Messages;
@@ -6,6 +7,7 @@ using Grand.Services.Customers;
 using Grand.Services.Events;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
+using Grand.Services.Messages.DotLiquidDrops;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -160,14 +162,15 @@ namespace Grand.Services.Messages
                 campaign.CustomerHasShoppingCartCondition != CampaignCondition.All || campaign.CustomerHasShoppingCartCondition != CampaignCondition.All ||
                 campaign.CustomerLastActivityDateFrom.HasValue || campaign.CustomerLastActivityDateTo.HasValue ||
                 campaign.CustomerLastPurchaseDateFrom.HasValue || campaign.CustomerLastPurchaseDateTo.HasValue ||
-                campaign.CustomerTags.Count > 0 || campaign.CustomerRoles.Count > 0 || campaign.NewsletterCategories.Count > 0 )
+                campaign.CustomerTags.Count > 0 || campaign.CustomerRoles.Count > 0 || campaign.NewsletterCategories.Count > 0)
             {
 
                 var query = from o in _newsLetterSubscriptionRepository.Table
-                            where o.Active && o.CustomerId!="" && (o.StoreId == campaign.StoreId || String.IsNullOrEmpty(campaign.StoreId))
+                            where o.Active && o.CustomerId != "" && (o.StoreId == campaign.StoreId || String.IsNullOrEmpty(campaign.StoreId))
                             join c in _customerRepository.Table on o.CustomerId equals c.Id into joined
                             from customers in joined
-                            select new CampaignCustomerHelp() {
+                            select new CampaignCustomerHelp()
+                            {
                                 CustomerEmail = customers.Email,
                                 Email = o.Email,
                                 CustomerId = customers.Id,
@@ -200,7 +203,7 @@ namespace Grand.Services.Messages
                     query = query.Where(x => x.LastPurchaseDateUtc <= campaign.CustomerLastPurchaseDateTo.Value);
 
                 //customer has shopping carts
-                if(campaign.CustomerHasShoppingCartCondition == CampaignCondition.True)
+                if (campaign.CustomerHasShoppingCartCondition == CampaignCondition.True)
                     query = query.Where(x => x.HasShoppingCartItems);
                 if (campaign.CustomerHasShoppingCartCondition == CampaignCondition.False)
                     query = query.Where(x => !x.HasShoppingCartItems);
@@ -212,7 +215,7 @@ namespace Grand.Services.Messages
                     query = query.Where(x => !x.IsHasOrders);
 
                 //tags
-                if(campaign.CustomerTags.Count > 0)
+                if (campaign.CustomerTags.Count > 0)
                 {
                     foreach (var item in campaign.CustomerTags)
                     {
@@ -224,7 +227,7 @@ namespace Grand.Services.Messages
                 {
                     foreach (var item in campaign.CustomerRoles)
                     {
-                        query = query.Where(x => x.CustomerRoles.Any(z=>z.Id == item));
+                        query = query.Where(x => x.CustomerRoles.Any(z => z.Id == item));
                     }
                 }
                 //categories news
@@ -291,12 +294,12 @@ namespace Grand.Services.Messages
             {
                 Customer customer = null;
 
-                if(!String.IsNullOrEmpty(subscription.CustomerId))
+                if (!String.IsNullOrEmpty(subscription.CustomerId))
                 {
                     customer = _customerService.GetCustomerById(subscription.CustomerId);
                 }
 
-                if(customer == null)
+                if (customer == null)
                 {
                     customer = _customerService.GetCustomerByEmail(subscription.Email);
                 }
@@ -305,19 +308,24 @@ namespace Grand.Services.Messages
                 if (customer != null && (!customer.Active || customer.Deleted))
                     continue;
 
-                var tokens = new List<Token>();
-                _messageTokenProvider.AddStoreTokens(tokens, _storeContext.CurrentStore, emailAccount);
-                _messageTokenProvider.AddNewsLetterSubscriptionTokens(tokens, subscription);
+                LiquidObject liquidObject = new LiquidObject();
+                _messageTokenProvider.AddStoreTokens(liquidObject, _storeContext.CurrentStore, emailAccount);
+                _messageTokenProvider.AddNewsLetterSubscriptionTokens(liquidObject, subscription);
                 if (customer != null)
                 {
-                    _messageTokenProvider.AddCustomerTokens(tokens, customer);
-                    _messageTokenProvider.AddShoppingCartTokens(tokens, customer);
-                    _messageTokenProvider.AddRecommendedProductsTokens(tokens, customer);
-                    _messageTokenProvider.AddRecentlyViewedProductsTokens(tokens, customer);
+                    _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+                    _messageTokenProvider.AddShoppingCartTokens(liquidObject, customer);
+                    _messageTokenProvider.AddRecommendedProductsTokens(liquidObject, customer);
+                    _messageTokenProvider.AddRecentlyViewedProductsTokens(liquidObject, customer);
                 }
 
-                string subject = _tokenizer.Replace(campaign.Subject, tokens, false);
-                string body = _tokenizer.Replace(campaign.Body, tokens, true);
+                var hash = Hash.FromAnonymousObject(liquidObject);
+
+                Template bodyTemplate = Template.Parse(campaign.Body);
+                var body = bodyTemplate.Render(hash);
+
+                Template subjectTemplate = Template.Parse(campaign.Subject);
+                var subject = subjectTemplate.Render(hash);
 
                 var email = new QueuedEmail
                 {
@@ -334,7 +342,7 @@ namespace Grand.Services.Messages
                 InsertCampaignHistory(new CampaignHistory() { CampaignId = campaign.Id, CustomerId = subscription.CustomerId, Email = subscription.Email, CreatedDateUtc = DateTime.UtcNow, StoreId = campaign.StoreId });
 
                 //activity log
-                if(customer!=null)
+                if (customer != null)
                     _customerActivityService.InsertActivity("CustomerReminder.SendCampaign", campaign.Id, _localizationService.GetResource("ActivityLog.SendCampaign"), customer, campaign.Name);
                 else
                     _customerActivityService.InsertActivity("CustomerReminder.SendCampaign", campaign.Id, _localizationService.GetResource("ActivityLog.SendCampaign"), campaign.Name + " - " + subscription.Email);
@@ -358,19 +366,24 @@ namespace Grand.Services.Messages
             if (emailAccount == null)
                 throw new ArgumentNullException("emailAccount");
 
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, _storeContext.CurrentStore, emailAccount);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, _storeContext.CurrentStore, emailAccount);
             var customer = _customerService.GetCustomerByEmail(email);
             if (customer != null)
             {
-                _messageTokenProvider.AddCustomerTokens(tokens, customer);
-                _messageTokenProvider.AddShoppingCartTokens(tokens, customer);
-                _messageTokenProvider.AddRecommendedProductsTokens(tokens, customer);
-                _messageTokenProvider.AddRecentlyViewedProductsTokens(tokens, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+                _messageTokenProvider.AddShoppingCartTokens(liquidObject, customer);
+                _messageTokenProvider.AddRecommendedProductsTokens(liquidObject, customer);
+                _messageTokenProvider.AddRecentlyViewedProductsTokens(liquidObject, customer);
             }
 
-            string subject = _tokenizer.Replace(campaign.Subject, tokens, false);
-            string body = _tokenizer.Replace(campaign.Body, tokens, true);
+            var hash = Hash.FromAnonymousObject(liquidObject);
+
+            Template bodyTemplate = Template.Parse(campaign.Body);
+            var body = bodyTemplate.Render(hash);
+
+            Template subjectTemplate = Template.Parse(campaign.Subject);
+            var subject = subjectTemplate.Render(hash);
 
             _emailSender.SendEmail(emailAccount, subject, body, emailAccount.Email, emailAccount.DisplayName, email, null);
         }

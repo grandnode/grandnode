@@ -11,18 +11,23 @@ namespace Grand.Services.Messages.DotLiquidDrops
 {
     public partial class LiquidKnowledgebase : Drop
     {
-        private readonly KnowledgebaseArticleComment _articleComment;
+        private KnowledgebaseArticleComment _articleComment;
+        private string _storeId;
 
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
 
-        public LiquidKnowledgebase(KnowledgebaseArticleComment articleComment,
-            IStoreContext storeContext,
+        public LiquidKnowledgebase(IStoreContext storeContext,
             IStoreService storeService)
         {
-            this._articleComment = articleComment;
             this._storeContext = storeContext;
             this._storeService = storeService;
+        }
+
+        public void SetProperties(KnowledgebaseArticleComment articleComment, string storeId)
+        {
+            this._articleComment = articleComment;
+            this._storeId = storeId;
         }
 
         public string ArticleCommentTitle
@@ -35,7 +40,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get
             {
                 var article = EngineContext.Current.Resolve<IKnowledgebaseService>().GetPublicKnowledgebaseArticle(_articleComment.ArticleId);
-                return $"{GetStoreUrl(_storeContext.CurrentStore.Id)}{article.GetSeName()}";
+                return $"{GetStoreUrl(_storeId)}{article.GetSeName()}";
             }
         }
 

@@ -9,9 +9,9 @@ namespace Grand.Services.Messages.DotLiquidDrops
 {
     public partial class LiquidVendor : Drop
     {
-        private readonly Vendor _vendor;
+        private Vendor _vendor;
 
-        public LiquidVendor(Vendor vendor)
+        public void SetProperties(Vendor vendor)
         {
             this._vendor = vendor;
         }

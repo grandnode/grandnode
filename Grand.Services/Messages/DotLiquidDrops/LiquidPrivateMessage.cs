@@ -8,7 +8,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
     {
         private PrivateMessage _privateMessage;
 
-        public LiquidPrivateMessage(PrivateMessage privateMessage)
+        public void SetProperties(PrivateMessage privateMessage)
         {
             this._privateMessage = privateMessage;
         }

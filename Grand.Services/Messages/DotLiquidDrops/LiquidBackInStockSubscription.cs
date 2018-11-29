@@ -11,19 +11,22 @@ namespace Grand.Services.Messages.DotLiquidDrops
 {
     public partial class LiquidBackInStockSubscription : Drop
     {
-        private readonly BackInStockSubscription _backInStockSubscription;
-        private readonly Product _product;
+        private BackInStockSubscription _backInStockSubscription;
+        private Product _product;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
 
-        public LiquidBackInStockSubscription(BackInStockSubscription backInStockSubscription,
-            IStoreContext storeContext,
+        public LiquidBackInStockSubscription(IStoreContext storeContext,
             IStoreService storeService)
+        {
+            this._storeContext = storeContext;
+            this._storeService = storeService;
+        }
+
+        public void SetProperties(BackInStockSubscription backInStockSubscription)
         {
             this._backInStockSubscription = backInStockSubscription;
             this._product = EngineContext.Current.Resolve<IProductService>().GetProductById(_backInStockSubscription.ProductId);
-            this._storeContext = storeContext;
-            this._storeService = storeService;
         }
 
         public string ProductName

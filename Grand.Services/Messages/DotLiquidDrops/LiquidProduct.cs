@@ -13,8 +13,8 @@ namespace Grand.Services.Messages.DotLiquidDrops
 {
     public partial class LiquidProduct : Drop
     {
-        private readonly Product _product;
-        private readonly string _languageId;
+        private Product _product;
+        private string _languageId;
 
         private readonly ICurrencyService _currencyService;
         private readonly IPriceFormatter _priceFormatter;
@@ -22,15 +22,23 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private readonly IStoreService _storeService;
         private readonly CurrencySettings _currencySettings;
 
-        public LiquidProduct(Product product,
-            string languageId,
-            IStoreContext storeContext,
-            IStoreService storeService)
+        public LiquidProduct(IStoreContext storeContext,
+            IStoreService storeService,
+            CurrencySettings currencySettings,
+            ICurrencyService currencyService,
+            IPriceFormatter priceFormatter)
+        {
+            this._storeContext = storeContext;
+            this._storeService = storeService;
+            this._currencySettings = currencySettings;
+            this._currencyService = currencyService;
+            this._priceFormatter = priceFormatter;
+        }
+
+        public void SetProperties(Product product, string languageId)
         {
             this._product = product;
             this._languageId = languageId;
-            this._storeContext = storeContext;
-            this._storeService = storeService;
         }
 
         public string Id

@@ -19,8 +19,8 @@ namespace Grand.Services.Messages.DotLiquidDrops
 {
     public partial class LiquidReturnRequest : Drop
     {
-        private readonly ReturnRequest _returnRequest;
-        private readonly Order _order;
+        private ReturnRequest _returnRequest;
+        private Order _order;
 
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
@@ -31,9 +31,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly MessageTemplatesSettings _templatesSettings;
 
-        public LiquidReturnRequest(ReturnRequest returnRequest,
-            Order order,
-            ILocalizationService localizationService,
+        public LiquidReturnRequest(ILocalizationService localizationService,
             IWorkContext workContext,
             IOrderService orderService,
             ICurrencyService currencyService,
@@ -42,8 +40,6 @@ namespace Grand.Services.Messages.DotLiquidDrops
             IAddressAttributeFormatter addressAttributeFormatter,
             MessageTemplatesSettings templatesSettings)
         {
-            this._returnRequest = returnRequest;
-            this._order = order;
             this._localizationService = localizationService;
             this._workContext = workContext;
             this._orderService = orderService;
@@ -52,6 +48,13 @@ namespace Grand.Services.Messages.DotLiquidDrops
             this._languageService = languageService;
             this._addressAttributeFormatter = addressAttributeFormatter;
             this._templatesSettings = templatesSettings;
+        }
+
+        public void SetProperties(ReturnRequest returnRequest,
+            Order order)
+        {
+            this._returnRequest = returnRequest;
+            this._order = order;
         }
 
         public string Id

@@ -11,19 +11,25 @@ namespace Grand.Services.Messages.DotLiquidDrops
 {
     public partial class LiquidForum : Drop
     {
-        private readonly ForumTopic _forumTopic;
-        private readonly ForumPost _forumPost;
-        private readonly Forum _forum;
-        private readonly int? _friendlyForumTopicPageIndex;
-        private readonly string _appendedPostIdentifierAnchor;
+        private ForumTopic _forumTopic;
+        private ForumPost _forumPost;
+        private Forum _forum;
+        private int? _friendlyForumTopicPageIndex;
+        private string _appendedPostIdentifierAnchor;
+
         private readonly IStoreService _storeService;
         private readonly IStoreContext _storeContext;
 
-        public LiquidForum(ForumTopic forumTopic,
+        public LiquidForum(IStoreService storeService,
+            IStoreContext storeContext)
+        {
+            this._storeService = storeService;
+            this._storeContext = storeContext;
+        }
+
+        public void SetProperties(Forum forum,
+            ForumTopic forumTopic,
             ForumPost forumPost,
-            Forum forum,
-            IStoreService storeService,
-            IStoreContext storeContext,
             int? friendlyForumTopicPageIndex = null,
             string appendedPostIdentifierAnchor = "")
         {
@@ -32,8 +38,6 @@ namespace Grand.Services.Messages.DotLiquidDrops
             this._forum = forum;
             this._friendlyForumTopicPageIndex = friendlyForumTopicPageIndex;
             this._appendedPostIdentifierAnchor = appendedPostIdentifierAnchor;
-            this._storeService = storeService;
-            this._storeContext = storeContext;
         }
 
         public string TopicURL
@@ -54,7 +58,8 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public string PostAuthor
         {
-            get {
+            get
+            {
                 var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(_forumPost.CustomerId);
                 return customer.FormatUserName();
             }
