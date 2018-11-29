@@ -141,6 +141,11 @@ namespace Grand.Web.Areas.Admin.Extensions
             return model.MapTo(destination);
         }
 
+        public static ProductAttributeValue  ToEntity(this PredefinedProductAttributeValue model)
+        {
+            return model.MapTo<PredefinedProductAttributeValue, ProductAttributeValue>();
+        }
+
         #endregion
 
         #region Product attributes
@@ -174,6 +179,25 @@ namespace Grand.Web.Areas.Admin.Extensions
             return model.MapTo(destination);
         }
 
+
+        #endregion
+
+        #region Product Attribute mapping
+
+        public static ProductModel.ProductAttributeMappingModel ToModel(this ProductAttributeMapping entity)
+        {
+            return entity.MapTo<ProductAttributeMapping, ProductModel.ProductAttributeMappingModel>();
+        }
+
+        public static ProductAttributeMapping ToEntity(this ProductModel.ProductAttributeMappingModel model)
+        {
+            return model.MapTo<ProductModel.ProductAttributeMappingModel, ProductAttributeMapping>();
+        }
+
+        public static ProductAttributeMapping ToEntity(this ProductModel.ProductAttributeMappingModel model, ProductAttributeMapping destination)
+        {
+            return model.MapTo(destination);
+        }
 
         #endregion
 

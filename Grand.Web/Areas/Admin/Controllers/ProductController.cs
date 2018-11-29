@@ -1672,29 +1672,33 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        [HttpPost]
-        public IActionResult ProductAttributeMappingInsert(ProductModel.ProductAttributeMappingModel model)
+        public IActionResult ProductAttributeMappingPopup(string productId, string productAttributeMappingId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var product = _productService.GetProductById(model.ProductId);
+            var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
-
+            
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+                return RedirectToAction("List", "Product");
+            if (string.IsNullOrEmpty(productAttributeMappingId))
             {
-                return Content("This is not your product");
+                var model = _productViewModelService.PrepareProductAttributeMappingModel(product);
+                return View(model);
             }
-
-            _productViewModelService.InsertProductAttributeMappingModel(model);
-
-            return new NullJsonResult();
+            else
+            {
+                var productAttributeMapping = product.ProductAttributeMappings.FirstOrDefault(x => x.Id == productAttributeMappingId);
+                var model = _productViewModelService.PrepareProductAttributeMappingModel(product, productAttributeMapping);
+                return View(model);
+            }
         }
 
         [HttpPost]
-        public IActionResult ProductAttributeMappingUpdate(ProductModel.ProductAttributeMappingModel model)
+        public IActionResult ProductAttributeMappingPopup(ProductModel.ProductAttributeMappingModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1703,17 +1707,22 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
-            var productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == model.Id).FirstOrDefault();
-            if (productAttributeMapping == null)
-                throw new ArgumentException("No product attribute mapping found with the specified id");
-
-
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
-                return Content("This is not your product");
+                return RedirectToAction("List", "Product");
+            if(ModelState.IsValid)
+            {
+                if (string.IsNullOrEmpty(model.Id))
+                    _productViewModelService.InsertProductAttributeMappingModel(model);
+                else
+                    _productViewModelService.UpdateProductAttributeMappingModel(model);
 
-            _productViewModelService.UpdateProductAttributeMappingModel(productAttributeMapping, model);
-            return new NullJsonResult();
+                ViewBag.RefreshPage = true;
+                return View(model);
+            }
+
+            model = _productViewModelService.PrepareProductAttributeMappingModel(model);
+            return View(model);
         }
 
         [HttpPost]

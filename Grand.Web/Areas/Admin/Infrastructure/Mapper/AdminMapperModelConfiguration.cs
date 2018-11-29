@@ -388,6 +388,18 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.WarehouseInventory, mo => mo.Ignore())
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
 
+            CreateMap<PredefinedProductAttributeValue, ProductAttributeValue>()
+               .ForMember(dest => dest.AttributeValueType, mo => mo.ResolveUsing(x => AttributeValueType.Simple))
+               .ForMember(dest => dest.ProductAttributeMappingId, mo => mo.ResolveUsing(x => x.Id))
+               .ForMember(dest => dest.Id, mo => mo.Ignore());
+
+            //product attributes mapping
+            CreateMap<ProductAttributeMapping, ProductModel.ProductAttributeMappingModel>()
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            CreateMap<ProductModel.ProductAttributeMappingModel, ProductAttributeMapping>()
+                .ForMember(dest => dest.AttributeControlType, mo => mo.Ignore())
+                .ForMember(dest => dest.Id, mo => mo.Ignore());
+
             //Tier prices
             CreateMap<TierPrice, ProductModel.TierPriceModel>()
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())

@@ -63,9 +63,12 @@ namespace Grand.Web.Areas.Admin.Services
         IList<ProductModel.TierPriceModel> PrepareTierPriceModel(Product product);
         (IEnumerable<ProductModel.BidModel> bidModels, int totalCount) PrepareBidMode(string productId, int pageIndex, int pageSize);
         (IEnumerable<ProductModel.ActivityLogModel> activityLogModels, int totalCount) PrepareActivityLogModel(string productId, int pageIndex, int pageSize);
+        ProductModel.ProductAttributeMappingModel PrepareProductAttributeMappingModel(Product product);
+        ProductModel.ProductAttributeMappingModel PrepareProductAttributeMappingModel(ProductModel.ProductAttributeMappingModel model);
+        ProductModel.ProductAttributeMappingModel PrepareProductAttributeMappingModel(Product product, ProductAttributeMapping productAttributeMapping);
         IList<ProductModel.ProductAttributeMappingModel> PrepareProductAttributeMappingModels(Product product);
         void InsertProductAttributeMappingModel(ProductModel.ProductAttributeMappingModel model);
-        void UpdateProductAttributeMappingModel(ProductAttributeMapping productAttributeMapping, ProductModel.ProductAttributeMappingModel model);
+        void UpdateProductAttributeMappingModel(ProductModel.ProductAttributeMappingModel model);
         ProductModel.ProductAttributeMappingModel PrepareProductAttributeMappingModel(ProductAttributeMapping productAttributeMapping);
         void UpdateProductAttributeValidationRulesModel(ProductAttributeMapping productAttributeMapping, ProductModel.ProductAttributeMappingModel model);
         ProductAttributeConditionModel PrepareProductAttributeConditionModel(Product product, ProductAttributeMapping productAttributeMapping);

@@ -881,11 +881,16 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         }
         public partial class ProductAttributeMappingModel : BaseGrandEntityModel
         {
+            public ProductAttributeMappingModel()
+            {
+                AvailableProductAttribute = new List<SelectListItem>();
+            }
             public string ProductId { get; set; }
 
             public string ProductAttributeId { get; set; }
             [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.Attribute")]
             public string ProductAttribute { get; set; }
+            public IList<SelectListItem> AvailableProductAttribute { get; set; }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.TextPrompt")]
             

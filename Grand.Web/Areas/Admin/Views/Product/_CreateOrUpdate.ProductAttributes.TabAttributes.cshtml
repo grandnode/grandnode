@@ -7,6 +7,9 @@
         <div id="productattributemappings-grid"></div>
     </div>
     <vc:admin-widget widget-zone="product_details_product_attributes_bottom" additional-data="Model" />
+    <div class="panel-footer">
+        <input type="submit" id="btnAddNewCombination" value="@T("Admin.Catalog.Products.ProductAttributes.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeMappingPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshProductAttributes", formId = "product-form" }))', 800, 600, true); return false;" class="k-button" />
+    </div>
 </div>
 
 <script>
@@ -81,23 +84,8 @@
                     previousNext: false,
                     info: false
                 },
-                toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
-                edit: function(e) {
-                    if (e.model.isNew()) {
-                        //little hack here
-                        //pre-select the first value of kendoui dropdownlist datasource
-                        //for some reasons (maybe, bug) it always sends 0
-                        //if no value has been selected (changed) in the dropdownlist
-                        if (allProductAttributes.length > 0) {
-                            e.model.ProductAttributeId = allProductAttributes[0].Id;
-                        }
-                        if (allAttributeControlTypes.length > 0) {
-                            e.model.AttributeControlTypeId = allAttributeControlTypes[0].Id;
-                        }
-                    }
-                },
                 editable: {
-                    confirmation: true,
+                    confirmation: false,
                     mode: "inline"
                 },
                 scrollable: false,
@@ -106,8 +94,7 @@
                         field: "ProductAttributeId",
                         title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.Attribute")",
                         width: 190,
-                        editor: productAttributeDropDownEditor,
-                        template: "#:ProductAttribute#"
+                        template: "<a class='k-link' href='javascript:OpenWindow(\"@Url.Content("~/Admin/Product/ProductAttributeMappingPopup/")?productId=@(Model.Id)&productAttributeMappingId=#=Id#&btnId=btnRefreshProductAttributes&formId=product-form\", 800, 600, true);'>#=ProductAttribute#<br /></a>"
                     }, {
                         field: "TextPrompt",
                         title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.TextPrompt")",
@@ -155,18 +142,11 @@
                     {
                         command: [
                             {
-                                name: "edit",
-                                text: {
-                                    edit: "@T("Admin.Common.Edit")",
-                                    update: "@T("Admin.Common.Update")",
-                                    cancel: "@T("Admin.Common.Cancel")"
-                                }
-                            }, {
                                 name: "destroy",
                                 text: "@T("Admin.Common.Delete")"
                             }
                         ],
-                        width: 150
+                        width: 50
                     }
                 ]
             });

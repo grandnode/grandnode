@@ -3903,6 +3903,9 @@
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes">
     <Value>Product attributes</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AddNew">
+    <Value>Add new attribute</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations">
     <Value>Attribute combinations</Value>
   </LocaleResource>
@@ -4184,6 +4187,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.ViewLink">
     <Value>View/Edit values</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Details">
+    <Value>Details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Edit">
+    <Value>Edit attribute</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.NoAttributesAvailable">
     <Value>No product attributes available. Create at least one product attribute before mapping.</Value>

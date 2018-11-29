@@ -11,4 +11,13 @@
   <LocaleResource Name="Admin.Common.RunScript">
     <Value>Run script (eval)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AddNew">
+    <Value>Add new attribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Edit">
+    <Value>Edit attribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Details">
+    <Value>Details</Value>
+  </LocaleResource>
 </Language>

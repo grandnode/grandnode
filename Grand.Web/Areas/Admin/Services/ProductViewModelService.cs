@@ -1784,6 +1784,46 @@ namespace Grand.Web.Areas.Admin.Services
 
             }), activityLog.TotalCount);
         }
+        public virtual ProductModel.ProductAttributeMappingModel PrepareProductAttributeMappingModel(Product product)
+        {
+            var model = new ProductModel.ProductAttributeMappingModel();
+            model.ProductId = product.Id;
+            foreach (var attribute in _productAttributeService.GetAllProductAttributes())
+            {
+                model.AvailableProductAttribute.Add(new SelectListItem()
+                {
+                    Value = attribute.Id,
+                    Text = attribute.Name
+                });
+            }
+            return model;
+        }
+        public virtual ProductModel.ProductAttributeMappingModel PrepareProductAttributeMappingModel(Product product, ProductAttributeMapping productAttributeMapping)
+        {
+            var model = productAttributeMapping.ToModel();
+            foreach (var attribute in _productAttributeService.GetAllProductAttributes())
+            {
+                model.AvailableProductAttribute.Add(new SelectListItem()
+                {
+                    Value = attribute.Id,
+                    Text = attribute.Name,
+                    Selected = attribute.Id == model.ProductAttributeId
+                });
+            }
+            return model;
+        }
+        public virtual ProductModel.ProductAttributeMappingModel PrepareProductAttributeMappingModel(ProductModel.ProductAttributeMappingModel model)
+        {
+            foreach (var attribute in _productAttributeService.GetAllProductAttributes())
+            {
+                model.AvailableProductAttribute.Add(new SelectListItem()
+                {
+                    Value = attribute.Id,
+                    Text = attribute.Name
+                });
+            }
+            return model;
+        }
         public virtual IList<ProductModel.ProductAttributeMappingModel> PrepareProductAttributeMappingModels(Product product)
         {
             return product.ProductAttributeMappings.OrderBy(x => x.DisplayOrder)
@@ -1793,7 +1833,7 @@ namespace Grand.Web.Areas.Admin.Services
                     {
                         Id = x.Id,
                         ProductId = product.Id,
-                        ProductAttribute = _productAttributeService.GetProductAttributeById(x.ProductAttributeId).Name,
+                        ProductAttribute = _productAttributeService.GetProductAttributeById(x.ProductAttributeId)?.Name,
                         ProductAttributeId = x.ProductAttributeId,
                         TextPrompt = x.TextPrompt,
                         IsRequired = x.IsRequired,
@@ -1857,32 +1897,12 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual void InsertProductAttributeMappingModel(ProductModel.ProductAttributeMappingModel model)
         {
             //insert mapping
-            var productAttributeMapping = new ProductAttributeMapping
-            {
-                ProductId = model.ProductId,
-                ProductAttributeId = model.ProductAttributeId,
-                TextPrompt = model.TextPrompt,
-                IsRequired = model.IsRequired,
-                AttributeControlTypeId = model.AttributeControlTypeId,
-                DisplayOrder = model.DisplayOrder,
-            };
-
+            var productAttributeMapping = model.ToEntity();
             //predefined values
             var predefinedValues = _productAttributeService.GetPredefinedProductAttributeValues(model.ProductAttributeId);
             foreach (var predefinedValue in predefinedValues)
             {
-                var pav = new ProductAttributeValue
-                {
-                    ProductAttributeMappingId = productAttributeMapping.Id,
-                    AttributeValueType = AttributeValueType.Simple,
-                    Name = predefinedValue.Name,
-                    PriceAdjustment = predefinedValue.PriceAdjustment,
-                    WeightAdjustment = predefinedValue.WeightAdjustment,
-                    Cost = predefinedValue.Cost,
-                    IsPreSelected = predefinedValue.IsPreSelected,
-                    DisplayOrder = predefinedValue.DisplayOrder,
-                    ProductId = model.ProductId,
-                };
+                var pav = predefinedValue.ToEntity(); 
                 //locales
                 pav.Locales.Clear();
                 var languages = _languageService.GetAllLanguages(true);
@@ -1899,16 +1919,18 @@ namespace Grand.Web.Areas.Admin.Services
 
             _productAttributeService.InsertProductAttributeMapping(productAttributeMapping);
         }
-        public virtual void UpdateProductAttributeMappingModel(ProductAttributeMapping productAttributeMapping, ProductModel.ProductAttributeMappingModel model)
+        public virtual void UpdateProductAttributeMappingModel(ProductModel.ProductAttributeMappingModel model)
         {
-            productAttributeMapping.ProductId = model.ProductId;
-            productAttributeMapping.ProductAttributeId = model.ProductAttributeId;
-            productAttributeMapping.TextPrompt = model.TextPrompt;
-            productAttributeMapping.IsRequired = model.IsRequired;
-            productAttributeMapping.AttributeControlTypeId = model.AttributeControlTypeId;
-            productAttributeMapping.DisplayOrder = model.DisplayOrder;
-            _productAttributeService.UpdateProductAttributeMapping(productAttributeMapping);
-
+            var product = _productService.GetProductById(model.ProductId);
+            if (product != null)
+            {
+                var productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == model.Id).FirstOrDefault();
+                if (productAttributeMapping != null)
+                {
+                    productAttributeMapping = model.ToEntity(productAttributeMapping);
+                    _productAttributeService.UpdateProductAttributeMapping(productAttributeMapping);
+                }
+            }
         }
         public virtual ProductModel.ProductAttributeMappingModel PrepareProductAttributeMappingModel(ProductAttributeMapping productAttributeMapping)
         {
