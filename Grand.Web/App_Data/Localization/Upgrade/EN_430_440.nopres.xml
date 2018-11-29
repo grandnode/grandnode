@@ -20,4 +20,7 @@
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Details">
     <Value>Details</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.BackToList">
+    <Value>Back to shipment list</Value>
+  </LocaleResource>
 </Language>
