@@ -8,7 +8,7 @@ using Grand.Core.Domain.News;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Vendors;
-using System.Collections.Generic;
+using Grand.Services.Messages.DotLiquidDrops;
 
 namespace Grand.Services.Messages
 {
@@ -140,7 +140,7 @@ namespace Grand.Services.Messages
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         /// <returns>Queued email identifier</returns>
-        int SendOrderCompletedCustomerNotification(Order order, string languageId, 
+        int SendOrderCompletedCustomerNotification(Order order, string languageId,
             string attachmentFilePath = null, string attachmentFileName = null);
 
         /// <summary>
@@ -192,7 +192,7 @@ namespace Grand.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
         int SendRecurringPaymentCancelledStoreOwnerNotification(RecurringPayment recurringPayment, string languageId);
-        
+
         #endregion
 
         #region Newsletter workflow
@@ -269,7 +269,7 @@ namespace Grand.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
         int SendNewReturnRequestStoreOwnerNotification(ReturnRequest returnRequest, Order order, string languageId);
-        
+
 
         /// <summary>
         /// Sends 'Return Request status changed' message to a customer
@@ -288,7 +288,7 @@ namespace Grand.Services.Messages
         /// <param name="languageId"></param>
         /// <returns></returns>
         int SendNewReturnRequestCustomerNotification(ReturnRequest returnRequest, Order order, string languageId);
-        
+
         #endregion
 
         #region Forum Notifications
@@ -316,7 +316,7 @@ namespace Grand.Services.Messages
         /// <returns>Queued email identifier</returns>
         int SendNewForumPostMessage(Customer customer,
             ForumPost forumPost, ForumTopic forumTopic,
-            Forum forum, int friendlyForumTopicPageIndex, 
+            Forum forum, int friendlyForumTopicPageIndex,
             string languageId);
 
         /// <summary>
@@ -558,7 +558,7 @@ namespace Grand.Services.Messages
         /// <param name="subject">Subject. If specified, then it overrides subject of a message template</param>
         /// <returns>Queued email identifier</returns>
         int SendNotification(MessageTemplate messageTemplate,
-            EmailAccount emailAccount, string languageId, IEnumerable<Token> tokens,
+            EmailAccount emailAccount, string languageId, LiquidObject liquidObject,
             string toEmailAddress, string toName,
             string attachmentFilePath = null, string attachmentFileName = null,
             string replyToEmailAddress = null, string replyToName = null,
@@ -572,8 +572,7 @@ namespace Grand.Services.Messages
         /// <param name="tokens">Tokens</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendTestEmail(string messageTemplateId, string sendToEmail, List<Token> tokens, string languageId);
-
+        int SendTestEmail(string messageTemplateId, string sendToEmail, LiquidObject liquidObject, string languageId);
 
         #endregion
     }

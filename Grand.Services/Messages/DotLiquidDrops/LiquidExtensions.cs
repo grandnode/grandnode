@@ -23,6 +23,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
         public static string Render(LiquidObject liquidObject, string source)
         {
             var hash = Hash.FromAnonymousObject(liquidObject);
+            Template.NamingConvention = new DotLiquid.NamingConventions.CSharpNamingConvention();
             Template template = Template.Parse(source);
             var replaced = template.Render(hash);
 

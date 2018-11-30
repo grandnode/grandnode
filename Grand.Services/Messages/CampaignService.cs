@@ -315,8 +315,6 @@ namespace Grand.Services.Messages
                 {
                     _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
                     _messageTokenProvider.AddShoppingCartTokens(liquidObject, customer);
-                    _messageTokenProvider.AddRecommendedProductsTokens(liquidObject, customer);
-                    _messageTokenProvider.AddRecentlyViewedProductsTokens(liquidObject, customer);
                 }
 
                 var hash = Hash.FromAnonymousObject(liquidObject);
@@ -373,8 +371,6 @@ namespace Grand.Services.Messages
             {
                 _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
                 _messageTokenProvider.AddShoppingCartTokens(liquidObject, customer);
-                _messageTokenProvider.AddRecommendedProductsTokens(liquidObject, customer);
-                _messageTokenProvider.AddRecentlyViewedProductsTokens(liquidObject, customer);
             }
 
             var hash = Hash.FromAnonymousObject(liquidObject);

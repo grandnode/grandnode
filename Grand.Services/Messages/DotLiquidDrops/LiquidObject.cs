@@ -47,5 +47,11 @@ namespace Grand.Services.Messages.DotLiquidDrops
         public Drop VendorReview { get; set; }
 
         public Drop EmailAFriend { get; set; }
+
+        public Drop AskAQuestion { get; set; }
+
+        public Drop VatValidationResult { get; set; }
+
+        public Drop ContactUs { get; set; }
     }
 }

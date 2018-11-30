@@ -1132,10 +1132,9 @@ namespace Grand.Services.Messages
             _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
             _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
             _messageTokenProvider.AddProductTokens(liquidObject, product, languageId);
-            liquidObject.Add(new Token("AskQuestion.Message", message, true));
-            liquidObject.Add(new Token("AskQuestion.Email", customerEmail));
-            liquidObject.Add(new Token("AskQuestion.FullName", fullName));
-            liquidObject.Add(new Token("AskQuestion.Phone", phone));
+            LiquidAskQuestion liquidAskQuestion = new LiquidAskQuestion();
+            liquidAskQuestion.SetProperties(message, customerEmail, fullName, phone);
+            liquidObject.AskAQuestion = liquidAskQuestion;
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
@@ -1145,9 +1144,9 @@ namespace Grand.Services.Messages
             {
                 var subject = messageTemplate.GetLocalized(mt => mt.Subject, languageId);
                 var body = messageTemplate.GetLocalized(mt => mt.Body, languageId);
-                //Replace subject and body liquidObject 
-                var subjectReplaced = _tokenizer.Replace(subject, liquidObject, false);
-                var bodyReplaced = _tokenizer.Replace(body, liquidObject, true);
+
+                var subjectReplaced = LiquidExtensions.Render(liquidObject, subject);
+                var bodyReplaced = LiquidExtensions.Render(liquidObject, body);
 
                 var contactus = new ContactUs()
                 {
@@ -1162,6 +1161,7 @@ namespace Grand.Services.Messages
                     EmailAccountId = emailAccount.Id,
                     IpAddress = EngineContext.Current.Resolve<IWebHelper>().GetCurrentIpAddress()
                 };
+
                 EngineContext.Current.Resolve<IContactUsService>().InsertContactUs(contactus);
             }
 
@@ -1731,8 +1731,9 @@ namespace Grand.Services.Messages
             LiquidObject liquidObject = new LiquidObject();
             _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
             _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
-            liquidObject.Add(new Token("VatValidationResult.Name", vatName));
-            liquidObject.Add(new Token("VatValidationResult.Address", vatAddress));
+            LiquidVatValidationResult liquidVatValidationResult = new LiquidVatValidationResult();
+            liquidVatValidationResult.SetProperties(vatName, vatAddress);
+            liquidObject.VatValidationResult = liquidVatValidationResult;
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
@@ -1975,10 +1976,9 @@ namespace Grand.Services.Messages
             LiquidObject liquidObject = new LiquidObject();
             _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
             _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
-            liquidObject.Add(new Token("ContactUs.SenderEmail", senderEmail));
-            liquidObject.Add(new Token("ContactUs.SenderName", senderName));
-            liquidObject.Add(new Token("ContactUs.Body", body, true));
-            liquidObject.Add(new Token("ContactUs.AttributeDescription", attrInfo, true));
+            LiquidContactUs liquidContactUs = new LiquidContactUs();
+            liquidContactUs.SetProperties(senderEmail, senderName, body, attrInfo);
+            liquidObject.ContactUs = liquidContactUs;
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
@@ -2064,10 +2064,9 @@ namespace Grand.Services.Messages
             LiquidObject liquidObject = new LiquidObject();
             _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
             _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
-
-            liquidObject.Add(new Token("ContactUs.SenderEmail", senderEmail));
-            liquidObject.Add(new Token("ContactUs.SenderName", senderName));
-            liquidObject.Add(new Token("ContactUs.Body", body, true));
+            LiquidContactUs liquidContactUs = new LiquidContactUs();
+            liquidContactUs.SetProperties(senderEmail, senderName, body, "");
+            liquidObject.ContactUs = liquidContactUs;
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);

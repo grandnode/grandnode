@@ -62,6 +62,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
             }
 
             this._languageId = languageId;
+            var test = _customer.GetFullName();
         }
 
         public string Email

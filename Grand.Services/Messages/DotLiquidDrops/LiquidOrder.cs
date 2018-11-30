@@ -345,6 +345,11 @@ namespace Grand.Services.Messages.DotLiquidDrops
             }
         }
 
+        public ICollection<OrderItem> OrderItems
+        {
+            get { return _order.OrderItems; }
+        }
+
         /// <summary>
         /// Convert a collection to a HTML table
         /// </summary>

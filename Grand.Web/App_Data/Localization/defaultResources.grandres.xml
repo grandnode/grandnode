@@ -9379,10 +9379,10 @@
     <Value>Edit message template details</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.AllowedTokens">
-    <Value>Allowed message tokens</Value>
+    <Value>Allowed message tokens (some might not be available in this template)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.AllowedTokens.Hint">
-    <Value>This is a list of the message tokens you can use in your emails.</Value>
+    <Value>This is a list of the message tokens you can use in your emails. If a token is not available for this template it will result in blank space.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.AttachedDownload">
     <Value>Attached static file</Value>
@@ -13075,10 +13075,10 @@
     <Value>Email address</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.AllowedTokens">
-    <Value>Allowed message tokens</Value>
+    <Value>Allowed message tokens (some might not be available in this template)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.AllowedTokens.Hint">
-    <Value>This is a list of the message tokens you can use in your campaign emails.</Value>
+    <Value>This is a list of the message tokens you can use in your campaign emails. If a token is not available for this template it will result in blank space.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.Body">
     <Value>Body</Value>
