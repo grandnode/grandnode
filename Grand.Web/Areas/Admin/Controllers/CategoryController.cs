@@ -3,6 +3,7 @@ using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.ExportImport;
@@ -22,6 +23,7 @@ using System.Text;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Categories)]
     public partial class CategoryController : BaseAdminController
     {
         #region Fields
@@ -31,7 +33,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ICustomerService _customerService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
         private readonly IStoreService _storeService;
         private readonly IExportManager _exportManager;
         private readonly ICustomerActivityService _customerActivityService;
@@ -48,7 +49,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             ICustomerService customerService,
             ILanguageService languageService,
             ILocalizationService localizationService,
-            IPermissionService permissionService,
             IStoreService storeService,
             IExportManager exportManager,
             ICustomerActivityService customerActivityService,
@@ -60,7 +60,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._customerService = customerService;
             this._languageService = languageService;
             this._localizationService = localizationService;
-            this._permissionService = permissionService;
             this._storeService = storeService;
             this._exportManager = exportManager;
             this._customerActivityService = customerActivityService;
@@ -79,19 +78,13 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedView();
-
             var model = _categoryViewModelService.PrepareCategoryListModel();
             return View(model);
         }
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command, CategoryListModel model)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedView();
-
+        {            
             var categories = _categoryViewModelService.PrepareCategoryListModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -103,17 +96,11 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Tree()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedView();
-
             return View();
         }
 
         public IActionResult NodeList()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedView();
-
+        {            
             var model = _categoryViewModelService.PrepareCategoryNodeListModel();
             return Json(model);
         }
@@ -123,10 +110,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Create / Edit / Delete
 
         public IActionResult Create()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedView();
-
+        {            
             var model = _categoryViewModelService.PrepareCategoryModel();
             //locales
             AddLocales(_languageService, model.Locales);
@@ -137,9 +121,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Create(CategoryModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var category = _categoryViewModelService.InsertCategoryModel(model);
@@ -159,9 +140,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedView();
-
             var category = _categoryService.GetCategoryById(id);
             if (category == null)
                 //No category found with the specified id
@@ -190,9 +168,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Edit(CategoryModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedView();
-
             var category = _categoryService.GetCategoryById(model.Id);
             if (category == null)
                 //No category found with the specified id
@@ -226,9 +201,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedView();
-
             var category = _categoryService.GetCategoryById(id);
             if (category == null)
                 //No category found with the specified id
@@ -253,8 +225,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ExportXml()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedView();
             try
             {
                 var xml = _exportManager.ExportCategoriesToXml();
@@ -269,8 +239,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ExportXlsx()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedView();
             try
             {
                 var bytes = _exportManager.ExportCategoriesToXlsx(_categoryService.GetAllCategories(showHidden: true));
@@ -287,9 +255,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ImportFromXlsx(IFormFile importexcelfile)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedView();
-
             //a vendor cannot import categories
             if (_workContext.CurrentVendor != null)
                 return AccessDeniedView();
@@ -321,9 +286,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductList(DataSourceRequest command, string categoryId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedView();
-
             var productCategories = _categoryViewModelService.PrepareCategoryProductModel(categoryId, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -336,9 +298,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ProductUpdate(CategoryModel.CategoryProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 _categoryViewModelService.UpdateProductCategoryModel(model);
@@ -349,9 +308,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ProductDelete(string id, string productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 _categoryViewModelService.DeleteProductCategoryModel(id, productId);
@@ -362,20 +318,13 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ProductAddPopup(string categoryId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedView();
-
             var model = _categoryViewModelService.PrepareAddCategoryProductModel();
-
             return View(model);
         }
 
         [HttpPost]
         public IActionResult ProductAddPopupList(DataSourceRequest command, CategoryModel.AddCategoryProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedView();
-            
             var gridModel = new DataSourceResult();
             var products = _categoryViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
             gridModel.Data = products.products.ToList();
@@ -388,9 +337,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public IActionResult ProductAddPopup(CategoryModel.AddCategoryProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedView();
-
             if (model.SelectedProductIds != null)
             {
                 _categoryViewModelService.InsertCategoryProductModel(model);
@@ -406,9 +352,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ListActivityLog(DataSourceRequest command, string categoryId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return Content("");
-
             var activityLog = _categoryViewModelService.PrepareActivityLogModel(categoryId, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -420,6 +363,5 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         #endregion
-
     }
 }
