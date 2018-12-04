@@ -10,71 +10,71 @@ namespace Grand.Services.Security
     public partial class StandardPermissionProvider : IPermissionProvider
     {
         //admin area permissions
-        public static readonly PermissionRecord AccessAdminPanel = new PermissionRecord { Name = "Access admin area", SystemName = "AccessAdminPanel", Category = "Standard" };
-        public static readonly PermissionRecord AllowCustomerImpersonation = new PermissionRecord { Name = "Admin area. Allow Customer Impersonation", SystemName = "AllowCustomerImpersonation", Category = "Customers" };
-        public static readonly PermissionRecord ManageProducts = new PermissionRecord { Name = "Admin area. Manage Products", SystemName = "ManageProducts", Category = "Catalog" };
-        public static readonly PermissionRecord ManageCategories = new PermissionRecord { Name = "Admin area. Manage Categories", SystemName = "ManageCategories", Category = "Catalog" };
-        public static readonly PermissionRecord ManageManufacturers = new PermissionRecord { Name = "Admin area. Manage Manufacturers", SystemName = "ManageManufacturers", Category = "Catalog" };
-        public static readonly PermissionRecord ManageProductReviews = new PermissionRecord { Name = "Admin area. Manage Product Reviews", SystemName = "ManageProductReviews", Category = "Catalog" };
-        public static readonly PermissionRecord ManageProductTags = new PermissionRecord { Name = "Admin area. Manage Product Tags", SystemName = "ManageProductTags", Category = "Catalog" };
-        public static readonly PermissionRecord ManageAttributes = new PermissionRecord { Name = "Admin area. Manage Attributes", SystemName = "ManageAttributes", Category = "Catalog" };
-        public static readonly PermissionRecord ManageCustomers = new PermissionRecord { Name = "Admin area. Manage Customers", SystemName = "ManageCustomers", Category = "Customers" };
-        public static readonly PermissionRecord ManageActions = new PermissionRecord { Name = "Admin area. Manage Customers Actions", SystemName = "ManageActions", Category = "Customers" };
-        public static readonly PermissionRecord ManageReminders = new PermissionRecord { Name = "Admin area. Manage Customers Reminders", SystemName = "ManageReminders", Category = "Customers" };
-        public static readonly PermissionRecord ManageVendors = new PermissionRecord { Name = "Admin area. Manage Vendors", SystemName = "ManageVendors", Category = "Customers" };
-        public static readonly PermissionRecord ManageVendorReviews = new PermissionRecord { Name = "Admin area. Manage Vendor Reviews", SystemName = "ManageVendorReviews", Category = "Customers" };
-        public static readonly PermissionRecord ManageCurrentCarts = new PermissionRecord { Name = "Admin area. Manage Current Carts", SystemName = "ManageCurrentCarts", Category = "Orders" };
-        public static readonly PermissionRecord ManageOrders = new PermissionRecord { Name = "Admin area. Manage Orders", SystemName = "ManageOrders", Category = "Orders" };
-        public static readonly PermissionRecord ManageRecurringPayments = new PermissionRecord { Name = "Admin area. Manage Recurring Payments", SystemName = "ManageRecurringPayments", Category = "Orders" };
-        public static readonly PermissionRecord ManageGiftCards = new PermissionRecord { Name = "Admin area. Manage Gift Cards", SystemName = "ManageGiftCards", Category = "Orders" };
-        public static readonly PermissionRecord ManageReturnRequests = new PermissionRecord { Name = "Admin area. Manage Return Requests", SystemName = "ManageReturnRequests", Category = "Orders" };
-        public static readonly PermissionRecord OrderCountryReport = new PermissionRecord { Name = "Admin area. Access order country report", SystemName = "OrderCountryReport", Category = "Orders" };
-        public static readonly PermissionRecord ManageAffiliates = new PermissionRecord { Name = "Admin area. Manage Affiliates", SystemName = "ManageAffiliates", Category = "Promo" };
-        public static readonly PermissionRecord ManagePushNotifications = new PermissionRecord { Name = "Admin area. Manage Push Notifications", SystemName = "ManagePushNotifications", Category = "Promo" };
-        public static readonly PermissionRecord ManageCampaigns = new PermissionRecord { Name = "Admin area. Manage Campaigns", SystemName = "ManageCampaigns", Category = "Promo" };
-        public static readonly PermissionRecord ManageBanners = new PermissionRecord { Name = "Admin area. Manage Banners", SystemName = "ManageBanners", Category = "Promo" };
-        public static readonly PermissionRecord ManageInteractiveForm = new PermissionRecord { Name = "Admin area. Manage Interactive Forms", SystemName = "ManageInteractiveForms", Category = "Promo" };
-        public static readonly PermissionRecord ManageDiscounts = new PermissionRecord { Name = "Admin area. Manage Discounts", SystemName = "ManageDiscounts", Category = "Promo" };
-        public static readonly PermissionRecord ManageNewsletterSubscribers = new PermissionRecord { Name = "Admin area. Manage Newsletter Subscribers", SystemName = "ManageNewsletterSubscribers", Category = "Promo" };
-        public static readonly PermissionRecord ManagePolls = new PermissionRecord { Name = "Admin area. Manage Polls", SystemName = "ManagePolls", Category = "Content Management" };
-        public static readonly PermissionRecord ManageNews = new PermissionRecord { Name = "Admin area. Manage News", SystemName = "ManageNews", Category = "Content Management" };
-        public static readonly PermissionRecord ManageBlog = new PermissionRecord { Name = "Admin area. Manage Blog", SystemName = "ManageBlog", Category = "Content Management" };
-        public static readonly PermissionRecord ManageWidgets = new PermissionRecord { Name = "Admin area. Manage Widgets", SystemName = "ManageWidgets", Category = "Content Management" };
-        public static readonly PermissionRecord ManageTopics = new PermissionRecord { Name = "Admin area. Manage Topics", SystemName = "ManageTopics", Category = "Content Management" };
-        public static readonly PermissionRecord ManageForums = new PermissionRecord { Name = "Admin area. Manage Forums", SystemName = "ManageForums", Category = "Content Management" };
-        public static readonly PermissionRecord ManageKnowledgebase = new PermissionRecord { Name = "Admin area. Manage Knowledgebase", SystemName = "ManageKnowledgebase", Category = "Content Management" };
-        public static readonly PermissionRecord ManageMessageTemplates = new PermissionRecord { Name = "Admin area. Manage Message Templates", SystemName = "ManageMessageTemplates", Category = "Content Management" };
-        public static readonly PermissionRecord ManageCountries = new PermissionRecord { Name = "Admin area. Manage Countries", SystemName = "ManageCountries", Category = "Configuration" };
-        public static readonly PermissionRecord ManageLanguages = new PermissionRecord { Name = "Admin area. Manage Languages", SystemName = "ManageLanguages", Category = "Configuration" };
-        public static readonly PermissionRecord ManageSettings = new PermissionRecord { Name = "Admin area. Manage Settings", SystemName = "ManageSettings", Category = "Configuration" };
-        public static readonly PermissionRecord ManagePaymentMethods = new PermissionRecord { Name = "Admin area. Manage Payment Methods", SystemName = "ManagePaymentMethods", Category = "Configuration" };
-        public static readonly PermissionRecord ManageExternalAuthenticationMethods = new PermissionRecord { Name = "Admin area. Manage External Authentication Methods", SystemName = "ManageExternalAuthenticationMethods", Category = "Configuration" };
-        public static readonly PermissionRecord ManageTaxSettings = new PermissionRecord { Name = "Admin area. Manage Tax Settings", SystemName = "ManageTaxSettings", Category = "Configuration" };
-        public static readonly PermissionRecord ManageShippingSettings = new PermissionRecord { Name = "Admin area. Manage Shipping Settings", SystemName = "ManageShippingSettings", Category = "Configuration" };
-        public static readonly PermissionRecord ManageCurrencies = new PermissionRecord { Name = "Admin area. Manage Currencies", SystemName = "ManageCurrencies", Category = "Configuration" };
-        public static readonly PermissionRecord ManageMeasures = new PermissionRecord { Name = "Admin area. Manage Measures", SystemName = "ManageMeasures", Category = "Configuration" };
-        public static readonly PermissionRecord ManageActivityLog = new PermissionRecord { Name = "Admin area. Manage Activity Log", SystemName = "ManageActivityLog", Category = "Configuration" };
-        public static readonly PermissionRecord ManageAcl = new PermissionRecord { Name = "Admin area. Manage ACL", SystemName = "ManageACL", Category = "Configuration" };
-        public static readonly PermissionRecord ManageEmailAccounts = new PermissionRecord { Name = "Admin area. Manage Email Accounts", SystemName = "ManageEmailAccounts", Category = "Configuration" };
-        public static readonly PermissionRecord ManageStores = new PermissionRecord { Name = "Admin area. Manage Stores", SystemName = "ManageStores", Category = "Configuration" };
-        public static readonly PermissionRecord ManagePlugins = new PermissionRecord { Name = "Admin area. Manage Plugins", SystemName = "ManagePlugins", Category = "Configuration" };
-        public static readonly PermissionRecord ManageSystemLog = new PermissionRecord { Name = "Admin area. Manage System Log", SystemName = "ManageSystemLog", Category = "Configuration" };
-        public static readonly PermissionRecord ManageMessageQueue = new PermissionRecord { Name = "Admin area. Manage Message Queue", SystemName = "ManageMessageQueue", Category = "Configuration" };
-        public static readonly PermissionRecord ManageMessageContactForm = new PermissionRecord { Name = "Admin area. Manage Message Contact form", SystemName = "ManageMessageContactForm", Category = "Configuration" };
-        public static readonly PermissionRecord ManageMaintenance = new PermissionRecord { Name = "Admin area. Manage Maintenance", SystemName = "ManageMaintenance", Category = "Configuration" };
-        public static readonly PermissionRecord HtmlEditorManagePictures = new PermissionRecord { Name = "Admin area. HTML Editor. Manage pictures", SystemName = "HtmlEditor.ManagePictures", Category = "Configuration" };
-        public static readonly PermissionRecord ManageScheduleTasks = new PermissionRecord { Name = "Admin area. Manage Schedule Tasks", SystemName = "ManageScheduleTasks", Category = "Configuration" };
-        
+        public static readonly PermissionRecord AccessAdminPanel = new PermissionRecord { Name = "Access admin area", SystemName = PermissionSystemName.AccessAdminPanel, Category = "Standard" };
+        public static readonly PermissionRecord AllowCustomerImpersonation = new PermissionRecord { Name = "Admin area. Allow Customer Impersonation", SystemName = PermissionSystemName.AllowCustomerImpersonation, Category = "Customers" };
+        public static readonly PermissionRecord ManageProducts = new PermissionRecord { Name = "Admin area. Manage Products", SystemName = PermissionSystemName.Products, Category = "Catalog" };
+        public static readonly PermissionRecord ManageCategories = new PermissionRecord { Name = "Admin area. Manage Categories", SystemName = PermissionSystemName.Categories, Category = "Catalog" };
+        public static readonly PermissionRecord ManageManufacturers = new PermissionRecord { Name = "Admin area. Manage Manufacturers", SystemName = PermissionSystemName.Manufacturers, Category = "Catalog" };
+        public static readonly PermissionRecord ManageProductReviews = new PermissionRecord { Name = "Admin area. Manage Product Reviews", SystemName = PermissionSystemName.ProductReviews, Category = "Catalog" };
+        public static readonly PermissionRecord ManageProductTags = new PermissionRecord { Name = "Admin area. Manage Product Tags", SystemName = PermissionSystemName.ProductTags, Category = "Catalog" };
+        public static readonly PermissionRecord ManageAttributes = new PermissionRecord { Name = "Admin area. Manage Attributes", SystemName = PermissionSystemName.Attributes, Category = "Catalog" };
+        public static readonly PermissionRecord ManageCustomers = new PermissionRecord { Name = "Admin area. Manage Customers", SystemName = PermissionSystemName.Customers, Category = "Customers" };
+        public static readonly PermissionRecord ManageActions = new PermissionRecord { Name = "Admin area. Manage Customers Actions", SystemName = PermissionSystemName.Actions, Category = "Customers" };
+        public static readonly PermissionRecord ManageReminders = new PermissionRecord { Name = "Admin area. Manage Customers Reminders", SystemName = PermissionSystemName.Reminders, Category = "Customers" };
+        public static readonly PermissionRecord ManageVendors = new PermissionRecord { Name = "Admin area. Manage Vendors", SystemName = PermissionSystemName.Vendors, Category = "Customers" };
+        public static readonly PermissionRecord ManageVendorReviews = new PermissionRecord { Name = "Admin area. Manage Vendor Reviews", SystemName = PermissionSystemName.VendorReviews, Category = "Customers" };
+        public static readonly PermissionRecord ManageCurrentCarts = new PermissionRecord { Name = "Admin area. Manage Current Carts", SystemName = PermissionSystemName.CurrentCarts, Category = "Orders" };
+        public static readonly PermissionRecord ManageOrders = new PermissionRecord { Name = "Admin area. Manage Orders", SystemName = PermissionSystemName.Orders, Category = "Orders" };
+        public static readonly PermissionRecord ManageRecurringPayments = new PermissionRecord { Name = "Admin area. Manage Recurring Payments", SystemName = PermissionSystemName.RecurringPayments, Category = "Orders" };
+        public static readonly PermissionRecord ManageGiftCards = new PermissionRecord { Name = "Admin area. Manage Gift Cards", SystemName = PermissionSystemName.GiftCards, Category = "Orders" };
+        public static readonly PermissionRecord ManageReturnRequests = new PermissionRecord { Name = "Admin area. Manage Return Requests", SystemName = PermissionSystemName.ReturnRequests, Category = "Orders" };
+        public static readonly PermissionRecord OrderCountryReport = new PermissionRecord { Name = "Admin area. Access order country report", SystemName = PermissionSystemName.OrderCountryReport, Category = "Orders" };
+        public static readonly PermissionRecord ManageAffiliates = new PermissionRecord { Name = "Admin area. Manage Affiliates", SystemName = PermissionSystemName.Affiliates, Category = "Promo" };
+        public static readonly PermissionRecord ManagePushNotifications = new PermissionRecord { Name = "Admin area. Manage Push Notifications", SystemName = PermissionSystemName.PushNotifications, Category = "Promo" };
+        public static readonly PermissionRecord ManageCampaigns = new PermissionRecord { Name = "Admin area. Manage Campaigns", SystemName = PermissionSystemName.Campaigns, Category = "Promo" };
+        public static readonly PermissionRecord ManageBanners = new PermissionRecord { Name = "Admin area. Manage Banners", SystemName = PermissionSystemName.Banners, Category = "Promo" };
+        public static readonly PermissionRecord ManageInteractiveForm = new PermissionRecord { Name = "Admin area. Manage Interactive Forms", SystemName = PermissionSystemName.InteractiveForms, Category = "Promo" };
+        public static readonly PermissionRecord ManageDiscounts = new PermissionRecord { Name = "Admin area. Manage Discounts", SystemName = PermissionSystemName.Discounts, Category = "Promo" };
+        public static readonly PermissionRecord ManageNewsletterSubscribers = new PermissionRecord { Name = "Admin area. Manage Newsletter Subscribers", SystemName = PermissionSystemName.NewsletterSubscribers, Category = "Promo" };
+        public static readonly PermissionRecord ManagePolls = new PermissionRecord { Name = "Admin area. Manage Polls", SystemName = PermissionSystemName.Polls, Category = "Content Management" };
+        public static readonly PermissionRecord ManageNews = new PermissionRecord { Name = "Admin area. Manage News", SystemName = PermissionSystemName.News, Category = "Content Management" };
+        public static readonly PermissionRecord ManageBlog = new PermissionRecord { Name = "Admin area. Manage Blog", SystemName = PermissionSystemName.Blog, Category = "Content Management" };
+        public static readonly PermissionRecord ManageWidgets = new PermissionRecord { Name = "Admin area. Manage Widgets", SystemName = PermissionSystemName.Widgets, Category = "Content Management" };
+        public static readonly PermissionRecord ManageTopics = new PermissionRecord { Name = "Admin area. Manage Topics", SystemName = PermissionSystemName.Topics, Category = "Content Management" };
+        public static readonly PermissionRecord ManageForums = new PermissionRecord { Name = "Admin area. Manage Forums", SystemName = PermissionSystemName.Forums, Category = "Content Management" };
+        public static readonly PermissionRecord ManageKnowledgebase = new PermissionRecord { Name = "Admin area. Manage Knowledgebase", SystemName = PermissionSystemName.Knowledgebase, Category = "Content Management" };
+        public static readonly PermissionRecord ManageMessageTemplates = new PermissionRecord { Name = "Admin area. Manage Message Templates", SystemName = PermissionSystemName.MessageTemplates, Category = "Content Management" };
+        public static readonly PermissionRecord ManageCountries = new PermissionRecord { Name = "Admin area. Manage Countries", SystemName = PermissionSystemName.Countries, Category = "Configuration" };
+        public static readonly PermissionRecord ManageLanguages = new PermissionRecord { Name = "Admin area. Manage Languages", SystemName = PermissionSystemName.Languages, Category = "Configuration" };
+        public static readonly PermissionRecord ManageSettings = new PermissionRecord { Name = "Admin area. Manage Settings", SystemName = PermissionSystemName.Settings, Category = "Configuration" };
+        public static readonly PermissionRecord ManagePaymentMethods = new PermissionRecord { Name = "Admin area. Manage Payment Methods", SystemName = PermissionSystemName.PaymentMethods, Category = "Configuration" };
+        public static readonly PermissionRecord ManageExternalAuthenticationMethods = new PermissionRecord { Name = "Admin area. Manage External Authentication Methods", SystemName = PermissionSystemName.ExternalAuthenticationMethods, Category = "Configuration" };
+        public static readonly PermissionRecord ManageTaxSettings = new PermissionRecord { Name = "Admin area. Manage Tax Settings", SystemName = PermissionSystemName.TaxSettings, Category = "Configuration" };
+        public static readonly PermissionRecord ManageShippingSettings = new PermissionRecord { Name = "Admin area. Manage Shipping Settings", SystemName = PermissionSystemName.ShippingSettings, Category = "Configuration" };
+        public static readonly PermissionRecord ManageCurrencies = new PermissionRecord { Name = "Admin area. Manage Currencies", SystemName = PermissionSystemName.Currencies, Category = "Configuration" };
+        public static readonly PermissionRecord ManageMeasures = new PermissionRecord { Name = "Admin area. Manage Measures", SystemName = PermissionSystemName.Measures, Category = "Configuration" };
+        public static readonly PermissionRecord ManageActivityLog = new PermissionRecord { Name = "Admin area. Manage Activity Log", SystemName = PermissionSystemName.ActivityLog, Category = "Configuration" };
+        public static readonly PermissionRecord ManageAcl = new PermissionRecord { Name = "Admin area. Manage ACL", SystemName = PermissionSystemName.Acl, Category = "Configuration" };
+        public static readonly PermissionRecord ManageEmailAccounts = new PermissionRecord { Name = "Admin area. Manage Email Accounts", SystemName = PermissionSystemName.EmailAccounts, Category = "Configuration" };
+        public static readonly PermissionRecord ManageStores = new PermissionRecord { Name = "Admin area. Manage Stores", SystemName = PermissionSystemName.Stores, Category = "Configuration" };
+        public static readonly PermissionRecord ManagePlugins = new PermissionRecord { Name = "Admin area. Manage Plugins", SystemName = PermissionSystemName.Plugins, Category = "Configuration" };
+        public static readonly PermissionRecord ManageSystemLog = new PermissionRecord { Name = "Admin area. Manage System Log", SystemName = PermissionSystemName.SystemLog, Category = "Configuration" };
+        public static readonly PermissionRecord ManageMessageQueue = new PermissionRecord { Name = "Admin area. Manage Message Queue", SystemName = PermissionSystemName.MessageQueue, Category = "Configuration" };
+        public static readonly PermissionRecord ManageMessageContactForm = new PermissionRecord { Name = "Admin area. Manage Message Contact form", SystemName = PermissionSystemName.MessageContactForm, Category = "Configuration" };
+        public static readonly PermissionRecord ManageMaintenance = new PermissionRecord { Name = "Admin area. Manage Maintenance", SystemName = PermissionSystemName.Maintenance, Category = "Configuration" };
+        public static readonly PermissionRecord HtmlEditorManagePictures = new PermissionRecord { Name = "Admin area. HTML Editor. Manage pictures", SystemName = PermissionSystemName.HtmlEditor, Category = "Configuration" };
+        public static readonly PermissionRecord ManageScheduleTasks = new PermissionRecord { Name = "Admin area. Manage Schedule Tasks", SystemName = PermissionSystemName.ScheduleTasks, Category = "Configuration" };
+
         //public store permissions
-        public static readonly PermissionRecord DisplayPrices = new PermissionRecord { Name = "Public store. Display Prices", SystemName = "DisplayPrices", Category = "PublicStore" };
-        public static readonly PermissionRecord EnableShoppingCart = new PermissionRecord { Name = "Public store. Enable shopping cart", SystemName = "EnableShoppingCart", Category = "PublicStore" };
-        public static readonly PermissionRecord EnableWishlist = new PermissionRecord { Name = "Public store. Enable wishlist", SystemName = "EnableWishlist", Category = "PublicStore" };
-        public static readonly PermissionRecord PublicStoreAllowNavigation = new PermissionRecord { Name = "Public store. Allow navigation", SystemName = "PublicStoreAllowNavigation", Category = "PublicStore" };
-        public static readonly PermissionRecord AccessClosedStore = new PermissionRecord { Name = "Public store. Access a closed store", SystemName = "AccessClosedStore", Category = "PublicStore" };
+        public static readonly PermissionRecord DisplayPrices = new PermissionRecord { Name = "Public store. Display Prices", SystemName = PermissionSystemName.DisplayPrices, Category = "PublicStore" };
+        public static readonly PermissionRecord EnableShoppingCart = new PermissionRecord { Name = "Public store. Enable shopping cart", SystemName = PermissionSystemName.EnableShoppingCart, Category = "PublicStore" };
+        public static readonly PermissionRecord EnableWishlist = new PermissionRecord { Name = "Public store. Enable wishlist", SystemName = PermissionSystemName.EnableWishlist, Category = "PublicStore" };
+        public static readonly PermissionRecord PublicStoreAllowNavigation = new PermissionRecord { Name = "Public store. Allow navigation", SystemName = PermissionSystemName.PublicStoreAllowNavigation, Category = "PublicStore" };
+        public static readonly PermissionRecord AccessClosedStore = new PermissionRecord { Name = "Public store. Access a closed store", SystemName = PermissionSystemName.AccessClosedStore, Category = "PublicStore" };
 
         public virtual IEnumerable<PermissionRecord> GetPermissions()
         {
-            return new[] 
+            return new[]
             {
                 AccessAdminPanel,
                 AllowCustomerImpersonation,
@@ -140,12 +140,12 @@ namespace Grand.Services.Security
 
         public virtual IEnumerable<DefaultPermissionRecord> GetDefaultPermissions()
         {
-            return new[] 
+            return new[]
             {
-                new DefaultPermissionRecord 
+                new DefaultPermissionRecord
                 {
                     CustomerRoleSystemName = SystemCustomerRoleNames.Administrators,
-                    PermissionRecords = new[] 
+                    PermissionRecords = new[]
                     {
                         AccessAdminPanel,
                         AllowCustomerImpersonation,
@@ -208,10 +208,10 @@ namespace Grand.Services.Security
                         ManageReminders
                     }
                 },
-                new DefaultPermissionRecord 
+                new DefaultPermissionRecord
                 {
                     CustomerRoleSystemName = SystemCustomerRoleNames.ForumModerators,
-                    PermissionRecords = new[] 
+                    PermissionRecords = new[]
                     {
                         DisplayPrices,
                         EnableShoppingCart,
@@ -219,10 +219,10 @@ namespace Grand.Services.Security
                         PublicStoreAllowNavigation
                     }
                 },
-                new DefaultPermissionRecord 
+                new DefaultPermissionRecord
                 {
                     CustomerRoleSystemName = SystemCustomerRoleNames.Guests,
-                    PermissionRecords = new[] 
+                    PermissionRecords = new[]
                     {
                         DisplayPrices,
                         EnableShoppingCart,
@@ -230,10 +230,10 @@ namespace Grand.Services.Security
                         PublicStoreAllowNavigation
                     }
                 },
-                new DefaultPermissionRecord 
+                new DefaultPermissionRecord
                 {
                     CustomerRoleSystemName = SystemCustomerRoleNames.Registered,
-                    PermissionRecords = new[] 
+                    PermissionRecords = new[]
                     {
                         DisplayPrices,
                         EnableShoppingCart,
@@ -241,10 +241,10 @@ namespace Grand.Services.Security
                         PublicStoreAllowNavigation
                     }
                 },
-                new DefaultPermissionRecord 
+                new DefaultPermissionRecord
                 {
                     CustomerRoleSystemName = SystemCustomerRoleNames.Vendors,
-                    PermissionRecords = new[] 
+                    PermissionRecords = new[]
                     {
                         AccessAdminPanel,
                         ManageProducts,
