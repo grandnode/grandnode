@@ -1,6 +1,7 @@
 ﻿using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Blogs;
 using Grand.Services.Localization;
 using Grand.Services.Security;
@@ -13,6 +14,7 @@ using System;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Blog)]
     public partial class BlogController : BaseAdminController
     {
         #region Fields
@@ -21,7 +23,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IBlogViewModelService _blogViewModelService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
         private readonly IStoreService _storeService;
 
         #endregion
@@ -29,13 +30,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Constructors
 
         public BlogController(IBlogService blogService, IBlogViewModelService blogViewModelService, ILanguageService languageService, ILocalizationService localizationService,
-            IPermissionService permissionService, IStoreService storeService)
+            IStoreService storeService)
         {
             this._blogService = blogService;
             this._blogViewModelService = blogViewModelService;
             this._languageService = languageService;
             this._localizationService = localizationService;
-            this._permissionService = permissionService;
             this._storeService = storeService;
         }
 
@@ -50,18 +50,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
-                return AccessDeniedView();
-
             var blogPosts = _blogViewModelService.PrepareBlogPostsModel(command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -73,9 +67,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
-                return AccessDeniedView();
-
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             var model = _blogViewModelService.PrepareBlogPostModel();
             //locales
@@ -87,9 +78,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Create(BlogPostModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var blogPost = _blogViewModelService.InsertBlogPostModel(model);
@@ -105,9 +93,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
-                return AccessDeniedView();
-
             var blogPost = _blogService.GetBlogPostById(id);
             if (blogPost == null)
                 //No blog post found with the specified id
@@ -132,9 +117,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Edit(BlogPostModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
-                return AccessDeniedView();
-
             var blogPost = _blogService.GetBlogPostById(model.Id);
             if (blogPost == null)
                 //No blog post found with the specified id
@@ -176,9 +158,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
-                return AccessDeniedView();
-
             var blogPost = _blogService.GetBlogPostById(id);
             if (blogPost == null)
                 //No blog post found with the specified id
@@ -201,9 +180,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Comments(string filterByBlogPostId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
-                return AccessDeniedView();
-
             ViewBag.FilterByBlogPostId = filterByBlogPostId;
             return View();
         }
@@ -211,9 +187,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Comments(string filterByBlogPostId, DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
-                return AccessDeniedView();
-
             var model = _blogViewModelService.PrepareBlogPostCommentsModel(filterByBlogPostId, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -225,9 +198,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult CommentDelete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
-                return AccessDeniedView();
-
             var comment = _blogService.GetBlogCommentById(id);
             if (comment == null)
                 throw new ArgumentException("No comment found with the specified id");
@@ -243,8 +213,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             return ErrorForKendoGridJson(ModelState);
         }
-
-
         #endregion
     }
 }
