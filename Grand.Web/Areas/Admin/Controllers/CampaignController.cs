@@ -3,6 +3,7 @@ using Grand.Core.Domain.Messages;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.ExportImport;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
@@ -18,6 +19,7 @@ using System.Text;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Campaigns)]
     public partial class CampaignController : BaseAdminController
 	{
         private readonly ICampaignService _campaignService;
@@ -28,7 +30,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
-        private readonly IPermissionService _permissionService;
         private readonly IExportManager _exportManager;
 
         public CampaignController(ICampaignService campaignService, ICampaignViewModelService campaignViewModelService,
@@ -38,7 +39,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             ILocalizationService localizationService, 
             IStoreContext storeContext,
             IStoreService storeService,
-            IPermissionService permissionService,
             IExportManager exportManager)
 		{
             this._campaignService = campaignService;
@@ -49,32 +49,22 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._localizationService = localizationService;
             this._storeContext = storeContext;
             this._storeService = storeService;
-            this._permissionService = permissionService;
             this._exportManager = exportManager;
         }
 
         public IActionResult Index()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
-                return AccessDeniedView();
-
             return RedirectToAction("List");
         }
 
 		public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
-                return AccessDeniedView();
-
             return View();
 		}
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
-                return AccessDeniedView();
-
             var model = _campaignViewModelService.PrepareCampaignModels();
             var gridModel = new DataSourceResult
             {
@@ -87,9 +77,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Customers(string campaignId, DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
-                return AccessDeniedView();
-
             var campaign = _campaignService.GetCampaignById(campaignId);
             var customers = _campaignService.CustomerSubscriptions(campaign, command.Page - 1, command.PageSize);
 
@@ -104,9 +91,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult History(string campaignId, DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
-                return AccessDeniedView();
-
             var campaign = _campaignService.GetCampaignById(campaignId);
             var history = _campaignService.GetCampaignHistory(campaign, command.Page - 1, command.PageSize);
 
@@ -123,9 +107,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ExportCsv(string campaignId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
-                return AccessDeniedView();
-
             try
             {
                 var campaign = _campaignService.GetCampaignById(campaignId);
@@ -144,9 +125,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
-                return AccessDeniedView();
-
             var model = _campaignViewModelService.PrepareCampaignModel();
             return View(model);
         }
@@ -154,9 +132,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Create(CampaignModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var campaign = _campaignViewModelService.InsertCampaignModel(model);
@@ -172,9 +147,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
 		public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
-                return AccessDeniedView();
-
             var campaign = _campaignService.GetCampaignById(id);
             if (campaign == null)
                 //No campaign found with the specified id
@@ -189,9 +161,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public IActionResult Edit(CampaignModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
-                return AccessDeniedView();
-
             var campaign = _campaignService.GetCampaignById(model.Id);
             if (campaign == null)
                 //No campaign found with the specified id
@@ -214,9 +183,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("send-test-email")]
         public IActionResult SendTestEmail(CampaignModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
-                return AccessDeniedView();
-
             var campaign = _campaignService.GetCampaignById(model.Id);
             if (campaign == null)
                 //No campaign found with the specified id
@@ -260,9 +226,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("send-mass-email")]
         public IActionResult SendMassEmail(CampaignModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
-                return AccessDeniedView();
-
             var campaign = _campaignService.GetCampaignById(model.Id);
             if (campaign == null)
                 //No campaign found with the specified id
@@ -297,9 +260,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 		[HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
-                return AccessDeniedView();
-
             var campaign = _campaignService.GetCampaignById(id);
             if (campaign == null)
                 //No campaign found with the specified id
