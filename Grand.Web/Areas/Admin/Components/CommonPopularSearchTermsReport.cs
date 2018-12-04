@@ -13,7 +13,7 @@ namespace Grand.Web.Areas.Admin.Components
             this._permissionService = permissionService;
         }
 
-        public IViewComponentResult Invoke()//original Action name: PopularSearchTermsReport
+        public IViewComponentResult Invoke()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return Content("");

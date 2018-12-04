@@ -6,6 +6,7 @@ using Grand.Core.Domain.Shipping;
 using Grand.Framework.Extensions;
 using Grand.Framework.Kendoui;
 using Grand.Services.Catalog;
+using Grand.Services.Common;
 using Grand.Services.Directory;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
@@ -14,6 +15,7 @@ using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Services.Vendors;
 using Grand.Web.Areas.Admin.Models.Catalog;
+using Grand.Web.Areas.Admin.Models.Common;
 using Grand.Web.Areas.Admin.Models.Orders;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -38,6 +40,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ICountryService _countryService;
         private readonly IVendorService _vendorService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly ISearchTermService _searchTermService;
 
         public ReportsController(IOrderService orderService,
         IOrderReportService orderReportService,
@@ -50,7 +53,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         IStoreService storeService,
         ICountryService countryService,
         IVendorService vendorService,
-        IDateTimeHelper dateTimeHelper)
+        IDateTimeHelper dateTimeHelper,
+        ISearchTermService searchTermService)
         {
             _orderService = orderService;
             _orderReportService = orderReportService;
@@ -64,6 +68,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _countryService = countryService;
             _vendorService = vendorService;
             _dateTimeHelper = dateTimeHelper;
+            _searchTermService = searchTermService;
         }
 
         [NonAction]
@@ -573,6 +578,25 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         #endregion
+
+        [HttpPost]
+        public IActionResult PopularSearchTermsReport(DataSourceRequest command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var searchTermRecordLines = _searchTermService.GetStats(command.Page - 1, command.PageSize);
+            var gridModel = new DataSourceResult
+            {
+                Data = searchTermRecordLines.Select(x => new SearchTermReportLineModel
+                {
+                    Keyword = x.Keyword,
+                    Count = x.Count,
+                }),
+                Total = searchTermRecordLines.TotalCount
+            };
+            return Json(gridModel);
+        }
 
     }
 }

@@ -13,7 +13,6 @@ using Grand.Data;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Security;
-using Grand.Services.Common;
 using Grand.Services.Configuration;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
@@ -61,8 +60,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly IPermissionService _permissionService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ISearchTermService _searchTermService;
+        private readonly ILocalizationService _localizationService;        
         private readonly ISettingService _settingService;
         private readonly IStoreService _storeService;
         private readonly IRepository<Product> _repositoryProduct;
@@ -90,8 +88,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             IWorkContext workContext,
             IStoreContext storeContext,
             IPermissionService permissionService,
-            ILocalizationService localizationService,
-            ISearchTermService searchTermService,
+            ILocalizationService localizationService,            
             ISettingService settingService,
             IStoreService storeService,
             IRepository<Product> repositoryProduct,
@@ -117,7 +114,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._storeContext = storeContext;
             this._permissionService = permissionService;
             this._localizationService = localizationService;
-            this._searchTermService = searchTermService;
             this._settingService = settingService;
             this._storeService = storeService;
             this._repositoryProduct = repositoryProduct;
@@ -762,25 +758,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(new { Result = true });
         }
 
-        [HttpPost]
-        public IActionResult PopularSearchTermsReport(DataSourceRequest command)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
-            var searchTermRecordLines = _searchTermService.GetStats(command.Page - 1, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
-                Data = searchTermRecordLines.Select(x => new SearchTermReportLineModel
-                {
-                    Keyword = x.Keyword,
-                    Count = x.Count,
-                }),
-                Total = searchTermRecordLines.TotalCount
-            };
-            return Json(gridModel);
-        }
-
+       
         #endregion
     }
 }
