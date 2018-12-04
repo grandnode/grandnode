@@ -1,5 +1,6 @@
 ﻿using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Security;
@@ -13,6 +14,7 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.ActivityLog)]
     public partial class ActivityLogController : BaseAdminController
     {
         #region Fields
@@ -42,9 +44,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ListTypes()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
-                return AccessDeniedView();
-
             var model = _activityLogViewModelService.PrepareActivityLogTypeModels();
             return View(model);
         }
@@ -52,9 +51,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult SaveTypes(IFormCollection form)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
-                return AccessDeniedView();
-            
             string formKey = "checkbox_activity_types";
             var checkedActivityTypes = form[formKey].ToString() != null ? form[formKey].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x).ToList() : new List<string>();
 
@@ -70,9 +66,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ListLogs()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
-                return AccessDeniedView();
-
             var model = _activityLogViewModelService.PrepareActivityLogSearchModel();
             return View(model);
         }
@@ -80,9 +73,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ListLogs(DataSourceRequest command, ActivityLogSearchModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
-                return AccessDeniedView();
-
             var activitymodel = _activityLogViewModelService.PrepareActivityLogModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -94,9 +84,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult AcivityLogDelete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
-                return AccessDeniedView();
-
             var activityLog = _customerActivityService.GetActivityById(id);
             if (activityLog == null)
             {
@@ -112,9 +99,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ClearAll()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
-                return AccessDeniedView();
-
             _customerActivityService.ClearAllActivities();
             return RedirectToAction("ListLogs");
         }
@@ -125,9 +109,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ListStats()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
-                return AccessDeniedView();
-
             var model = _activityLogViewModelService.PrepareActivityLogSearchModel();
             return View(model);
         }
@@ -135,9 +116,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ListStats(DataSourceRequest command, ActivityLogSearchModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
-                return AccessDeniedView();
-
             var activityStatmodel = _activityLogViewModelService.PrepareActivityStatModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
