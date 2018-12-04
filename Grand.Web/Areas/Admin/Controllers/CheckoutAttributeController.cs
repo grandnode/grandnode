@@ -3,6 +3,7 @@ using Grand.Core.Domain.Directory;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
@@ -19,6 +20,7 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Attributes)]
     public partial class CheckoutAttributeController : BaseAdminController
     {
         #region Fields
@@ -30,7 +32,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly CurrencySettings _currencySettings;
         private readonly IMeasureService _measureService;
         private readonly MeasureSettings _measureSettings;
-        private readonly IPermissionService _permissionService;
         private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly ICustomerService _customerService;
@@ -47,7 +48,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             CurrencySettings currencySettings,
             IMeasureService measureService, 
             MeasureSettings measureSettings,
-            IPermissionService permissionService,
             IStoreService storeService,
             IStoreMappingService storeMappingService,
             ICustomerService customerService,
@@ -60,7 +60,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._currencySettings = currencySettings;
             this._measureService = measureService;
             this._measureSettings = measureSettings;
-            this._permissionService = permissionService;
             this._storeService = storeService;
             this._storeMappingService = storeMappingService;
             this._customerService = customerService;
@@ -79,18 +78,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var checkoutAttributes = _checkoutAttributeViewModelService.PrepareCheckoutAttributeListModel();
             var gridModel = new DataSourceResult
             {
@@ -103,9 +96,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //create
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var model = _checkoutAttributeViewModelService.PrepareCheckoutAttributeModel();
             //locales
             AddLocales(_languageService, model.Locales);
@@ -120,9 +110,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Create(CheckoutAttributeModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var checkoutAttribute = _checkoutAttributeViewModelService.InsertCheckoutAttributeModel(model);
@@ -144,9 +131,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(id);
             if (checkoutAttribute == null)
                 //No checkout attribute found with the specified id
@@ -178,9 +162,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Edit(CheckoutAttributeModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(model.Id);
             if (checkoutAttribute == null)
                 //No checkout attribute found with the specified id
@@ -216,9 +197,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id, [FromServices] ICustomerActivityService customerActivityService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(id);
             _checkoutAttributeService.DeleteCheckoutAttribute(checkoutAttribute);
 
@@ -237,8 +215,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ValueList(string checkoutAttributeId, DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
             var checkoutAttribute = _checkoutAttributeViewModelService.PrepareCheckoutAttributeValuesModel(checkoutAttributeId);
             var gridModel = new DataSourceResult
             {
@@ -251,9 +227,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //create
         public IActionResult ValueCreatePopup(string checkoutAttributeId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var model = _checkoutAttributeViewModelService.PrepareCheckoutAttributeValueModel(checkoutAttributeId);
             //locales
             AddLocales(_languageService, model.Locales);
@@ -263,9 +236,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ValueCreatePopup(CheckoutAttributeValueModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(model.CheckoutAttributeId);
             if (checkoutAttribute == null)
                 //No checkout attribute found with the specified id
@@ -295,8 +265,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit
         public IActionResult ValueEditPopup(string id, string checkoutAttributeId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
             var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(checkoutAttributeId);
             var cav = checkoutAttribute.CheckoutAttributeValues.Where(x=>x.Id == id).FirstOrDefault();
             if (cav == null)
@@ -317,9 +285,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ValueEditPopup(CheckoutAttributeValueModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(model.CheckoutAttributeId);
 
             var cav = checkoutAttribute.CheckoutAttributeValues.Where(x => x.Id == model.Id).FirstOrDefault();
@@ -352,9 +317,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ValueDelete(string id, string checkoutAttributeId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(checkoutAttributeId);
             var cav = checkoutAttribute.CheckoutAttributeValues.Where(x => x.Id == id).FirstOrDefault();
             if (cav == null)
