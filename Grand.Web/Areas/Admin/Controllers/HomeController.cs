@@ -8,6 +8,7 @@ using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Seo;
 using Grand.Services.Configuration;
 using Grand.Services.Customers;
+using Grand.Services.Localization;
 using Grand.Services.Orders;
 using Grand.Web.Areas.Admin.Models.Home;
 using Microsoft.AspNetCore.Mvc;
@@ -114,6 +115,22 @@ namespace Grand.Web.Areas.Admin.Controllers
             return PartialView(model);
         }
 
+        public IActionResult SetLanguage(string langid, [FromServices] ILanguageService languageService, string returnUrl = "")
+        {
+            var language = languageService.GetLanguageById(langid);
+            if (language != null)
+            {
+                _workContext.WorkingLanguage = language;
+            }
+
+            //home page
+            if (String.IsNullOrEmpty(returnUrl))
+                returnUrl = Url.Action("Index", "Home", new { area = "Admin" });
+            //prevent open redirection attack
+            if (!Url.IsLocalUrl(returnUrl))
+                return RedirectToAction("Index", "Home", new { area = "Admin" });
+            return Redirect(returnUrl);
+        }
         #endregion
     }
 }

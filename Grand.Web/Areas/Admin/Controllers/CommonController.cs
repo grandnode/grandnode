@@ -13,6 +13,7 @@ using Grand.Data;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Security;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Configuration;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
@@ -41,6 +42,7 @@ using System.Threading;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Maintenance)]
     public partial class CommonController : BaseAdminController
     {
         #region Fields
@@ -59,7 +61,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILanguageService _languageService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
-        private readonly IPermissionService _permissionService;
         private readonly ILocalizationService _localizationService;        
         private readonly ISettingService _settingService;
         private readonly IStoreService _storeService;
@@ -87,7 +88,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             ILanguageService languageService,
             IWorkContext workContext,
             IStoreContext storeContext,
-            IPermissionService permissionService,
             ILocalizationService localizationService,            
             ISettingService settingService,
             IStoreService storeService,
@@ -112,7 +112,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._languageService = languageService;
             this._workContext = workContext;
             this._storeContext = storeContext;
-            this._permissionService = permissionService;
             this._localizationService = localizationService;
             this._settingService = settingService;
             this._storeService = storeService;
@@ -154,9 +153,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult SystemInfo()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
             var model = new SystemInfoModel();
             model.GrandVersion = GrandVersion.CurrentVersion;
             try
@@ -197,9 +193,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Warnings()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
             var model = new List<SystemWarningModel>();
 
             //store URL
@@ -428,9 +421,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Maintenance()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
             var model = new MaintenanceModel();
             model.DeleteGuests.EndDate = DateTime.UtcNow.AddDays(-7);
             model.DeleteGuests.OnlyWithoutShoppingCart = true;
@@ -441,9 +431,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("delete-guests")]
         public IActionResult MaintenanceDeleteGuests(MaintenanceModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
             DateTime? startDateValue = (model.DeleteGuests.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteGuests.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
@@ -458,9 +445,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("clear-most-view")]
         public IActionResult MaintenanceClearMostViewed(MaintenanceModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
             var update = new UpdateDefinitionBuilder<Product>().Set(x => x.Viewed, 0);
             var result = _repositoryProduct.Collection.UpdateManyAsync(x => x.Viewed != 0, update).Result;
 
@@ -470,9 +454,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("delete-exported-files")]
         public IActionResult MaintenanceDeleteFiles(MaintenanceModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
             DateTime? startDateValue = (model.DeleteExportedFiles.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteExportedFiles.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
@@ -488,38 +469,13 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("delete-activitylog")]
         public IActionResult MaintenanceDeleteActivitylog(MaintenanceModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
             var _activityLogRepository = EngineContext.Current.Resolve<IRepository<ActivityLog>>();
             _activityLogRepository.Collection.DeleteMany(new MongoDB.Bson.BsonDocument());
             model.DeleteActivityLog = true;
             return View(model);
         }
-
-        public IActionResult SetLanguage(string langid, string returnUrl = "")
-        {
-            var language = _languageService.GetLanguageById(langid);
-            if (language != null)
-            {
-                _workContext.WorkingLanguage = language;
-            }
-
-            //home page
-            if (String.IsNullOrEmpty(returnUrl))
-                returnUrl = Url.Action("Index", "Home", new { area = "Admin" });
-            //prevent open redirection attack
-            if (!Url.IsLocalUrl(returnUrl))
-                return RedirectToAction("Index", "Home", new { area = "Admin" });
-            return Redirect(returnUrl);
-        }
-
-
         public IActionResult ClearCache(string returnUrl = "")
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
             var cacheManager = EngineContext.Current.Resolve<ICacheManager>();
             cacheManager.Clear();
 
@@ -535,9 +491,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult RestartApplication(string returnUrl = "")
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
             //restart application
             _webHelper.RestartAppDomain();
 
@@ -552,18 +505,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Roslyn()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
             return View(_grandConfig.UseRoslynScripts);
         }
 
         [HttpPost]
         public IActionResult Roslyn(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
             var scripts = RoslynCompiler.ReferencedScripts != null ? RoslynCompiler.ReferencedScripts.ToList() : new List<ResultCompiler>();
 
             var gridModel = new DataSourceResult
@@ -584,8 +531,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult QueryEditor()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
             var model = new QueryEditor();
             return View(model);
         }
@@ -594,9 +539,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult QueryEditor(string query)
         {
             //https://docs.mongodb.com/manual/reference/command/
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return Content("Access denied");
-
             if (string.IsNullOrEmpty(query))
                 return ErrorForKendoGridJson("Empty query");
             try
@@ -634,9 +576,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult RunScript(string query)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return Content("Access denied");
-
             if (string.IsNullOrEmpty(query))
                 return Json(new { Result = false, Message = "Empty query!" });
 
@@ -656,18 +595,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
         public IActionResult SeNames()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
             var model = new UrlRecordListModel();
             return View(model);
         }
         [HttpPost]
         public IActionResult SeNames(DataSourceRequest command, UrlRecordListModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
             var urlRecords = _urlRecordService.GetAllUrlRecords(model.SeName, command.Page - 1, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -739,9 +672,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult DeleteSelectedSeNames(ICollection<string> selectedIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
             if (selectedIds != null)
             {
                 var urlRecords = new List<UrlRecord>();
