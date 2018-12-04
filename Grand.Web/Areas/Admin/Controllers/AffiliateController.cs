@@ -1,6 +1,7 @@
 ﻿using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Affiliates;
 using Grand.Services.Localization;
 using Grand.Services.Security;
@@ -11,13 +12,13 @@ using System;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Affiliates)]
     public partial class AffiliateController : BaseAdminController
     {
         #region Fields
 
         private readonly ILocalizationService _localizationService;
         private readonly IAffiliateService _affiliateService;
-        private readonly IPermissionService _permissionService;
         private readonly IAffiliateViewModelService _affiliateViewModelService;
 
         #endregion
@@ -25,11 +26,10 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Constructors
 
         public AffiliateController(ILocalizationService localizationService,
-            IAffiliateService affiliateService, IPermissionService permissionService, IAffiliateViewModelService affiliateViewModelService)
+            IAffiliateService affiliateService, IAffiliateViewModelService affiliateViewModelService)
         {
             this._localizationService = localizationService;
             this._affiliateService = affiliateService;
-            this._permissionService = permissionService;
             this._affiliateViewModelService = affiliateViewModelService;
         }
 
@@ -45,9 +45,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
-                return AccessDeniedView();
-
             var model = new AffiliateListModel();
             return View(model);
         }
@@ -55,9 +52,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult List(DataSourceRequest command, AffiliateListModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
-                return AccessDeniedView();
-
             var affiliatesModel = _affiliateViewModelService.PrepareAffiliateModelList(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -70,9 +64,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //create
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
-                return AccessDeniedView();
-
             var model = new AffiliateModel();
             _affiliateViewModelService.PrepareAffiliateModel(model, null, false);
             return View(model);
@@ -82,9 +73,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public IActionResult Create(AffiliateModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var affiliate = _affiliateViewModelService.InsertAffiliateModel(model);
@@ -102,9 +90,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
-                return AccessDeniedView();
-
             var affiliate = _affiliateService.GetAffiliateById(id);
             if (affiliate == null || affiliate.Deleted)
                 //No affiliate found with the specified id
@@ -118,9 +103,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Edit(AffiliateModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
-                return AccessDeniedView();
-
             var affiliate = _affiliateService.GetAffiliateById(model.Id);
             if (affiliate == null || affiliate.Deleted)
                 //No affiliate found with the specified id
@@ -150,9 +132,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
-                return AccessDeniedView();
-
             var affiliate = _affiliateService.GetAffiliateById(id);
             if (affiliate == null)
                 //No affiliate found with the specified id
@@ -170,9 +149,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult AffiliatedOrderList(DataSourceRequest command, AffiliatedOrderListModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
-                return AccessDeniedView();
-
             var affiliate = _affiliateService.GetAffiliateById(model.AffliateId);
             if (affiliate == null)
                 throw new ArgumentException("No affiliate found with the specified id");
@@ -192,9 +168,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult AffiliatedCustomerList(string affiliateId, DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
-                return AccessDeniedView();
-
             var affiliate = _affiliateService.GetAffiliateById(affiliateId);
             if (affiliate == null)
                 throw new ArgumentException("No affiliate found with the specified id");
@@ -209,7 +182,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return Json(gridModel);
         }
-
         #endregion
     }
 }
