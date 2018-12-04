@@ -1,6 +1,7 @@
 ﻿using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Common;
 using Grand.Services.Localization;
 using Grand.Services.Security;
@@ -12,6 +13,7 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Settings)]
     public partial class AddressAttributeController : BaseAdminController
     {
         #region Fields
@@ -19,7 +21,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IAddressAttributeService _addressAttributeService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
         private readonly IAddressAttributeViewModelService _addressAttributeViewModelService;
         #endregion
 
@@ -28,13 +29,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         public AddressAttributeController(IAddressAttributeService addressAttributeService,
             ILanguageService languageService, 
             ILocalizationService localizationService,
-            IPermissionService permissionService,
             IAddressAttributeViewModelService addressAttributeViewModelService)
         {
             this._addressAttributeService = addressAttributeService;
             this._languageService = languageService;
             this._localizationService = localizationService;
-            this._permissionService = permissionService;
             this._addressAttributeViewModelService = addressAttributeViewModelService;
         }
 
@@ -55,11 +54,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
-            //we just redirect a user to the address settings page
-            
             //select third tab
             const int addressFormFieldIndex = 2;
             SaveSelectedTabIndex(addressFormFieldIndex);
@@ -69,9 +63,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult List(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var model = _addressAttributeViewModelService.PrepareAddressAttributes();
             var gridModel = new DataSourceResult
             {
@@ -84,9 +75,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //create
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var model = _addressAttributeViewModelService.PrepareAddressAttributeModel();
             //locales
             AddLocales(_languageService, model.Locales);
@@ -96,9 +84,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Create(AddressAttributeModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var addressAttribute = _addressAttributeViewModelService.InsertAddressAttributeModel(model);
@@ -113,9 +98,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var addressAttribute = _addressAttributeService.GetAddressAttributeById(id);
             if (addressAttribute == null)
                 //No address attribute found with the specified id
@@ -133,9 +115,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Edit(AddressAttributeModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var addressAttribute = _addressAttributeService.GetAddressAttributeById(model.Id);
             if (addressAttribute == null)
                 //No address attribute found with the specified id
@@ -163,9 +142,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var addressAttribute = _addressAttributeService.GetAddressAttributeById(id);
             if (addressAttribute == null)
                 //No address attribute found with the specified id
@@ -185,9 +161,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ValueList(string addressAttributeId, DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var model = _addressAttributeViewModelService.PrepareAddressAttributeValues(addressAttributeId);
             var gridModel = new DataSourceResult
             {
@@ -200,9 +173,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //create
         public IActionResult ValueCreatePopup(string addressAttributeId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var addressAttribute = _addressAttributeService.GetAddressAttributeById(addressAttributeId);
             if (addressAttribute == null)
                 //No address attribute found with the specified id
@@ -217,9 +187,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ValueCreatePopup(AddressAttributeValueModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var addressAttribute = _addressAttributeService.GetAddressAttributeById(model.AddressAttributeId);
             if (addressAttribute == null)
                 //No address attribute found with the specified id
@@ -238,9 +205,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit
         public IActionResult ValueEditPopup(string id, string addressAttributeId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var av = _addressAttributeService.GetAddressAttributeById(addressAttributeId);
             if(av == null)
                 //No address attribute found with the specified id
@@ -265,9 +229,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ValueEditPopup(AddressAttributeValueModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var av = _addressAttributeService.GetAddressAttributeById(model.AddressAttributeId);
             var cav = av.AddressAttributeValues.FirstOrDefault(x => x.Id == model.Id);
             if (cav == null)
@@ -289,9 +250,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ValueDelete(AddressAttributeValueModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var av = _addressAttributeService.GetAddressAttributeById(model.AddressAttributeId);
             var cav = av.AddressAttributeValues.FirstOrDefault(x => x.Id == model.Id);
             if (cav == null)

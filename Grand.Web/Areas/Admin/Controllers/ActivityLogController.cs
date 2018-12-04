@@ -21,7 +21,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
         private readonly IActivityLogViewModelService _activityLogViewModelService;
 
         #endregion Fields
@@ -29,12 +28,10 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Constructors
 
         public ActivityLogController(ICustomerActivityService customerActivityService,
-            ILocalizationService localizationService, IPermissionService permissionService, 
-            IActivityLogViewModelService activityLogViewModelService)
+            ILocalizationService localizationService, IActivityLogViewModelService activityLogViewModelService)
         {
             this._customerActivityService = customerActivityService;
             this._localizationService = localizationService;
-            this._permissionService = permissionService;
             this._activityLogViewModelService = activityLogViewModelService;
         }
 
