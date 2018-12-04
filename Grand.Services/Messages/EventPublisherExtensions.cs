@@ -32,10 +32,9 @@ namespace Grand.Services.Messages
             eventPublisher.Publish(new EntityTokensAddedEvent<T, U>(entity, tokens));
         }
 
-        public static void MessageTokensAdded(this IEventPublisher eventPublisher, MessageTemplate message, /*System.Collections.Generic.IList<U> tokens*/LiquidObject liquidObject)
+        public static void MessageTokensAdded(this IEventPublisher eventPublisher, MessageTemplate message, LiquidObject liquidObject)
         {
-            //TODO
-            //eventPublisher.Publish(new MessageTokensAddedEvent<U>(message, tokens));
+            eventPublisher.Publish(new MessageTokensAddedEvent(message, liquidObject));
         }
     }
 }

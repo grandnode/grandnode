@@ -1,6 +1,6 @@
 ﻿using DotLiquid;
 
-namespace Grand.Services.Messages.DotLiquidDrops
+namespace Grand.Core.Domain.Messages
 {
     public class LiquidObject
     {

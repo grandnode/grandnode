@@ -4,7 +4,6 @@ using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
-using Grand.Services.Messages.DotLiquidDrops;
 using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Extensions;
@@ -251,7 +250,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
             }
 
-
             //If we got this far, something failed, redisplay form
             model.HasAttachedDownload = !String.IsNullOrEmpty(model.AttachedDownloadId);
             model.AllowedTokens = _messageTokenProvider.GetListOfAllowedTokens();
@@ -304,67 +302,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 ErrorNotification(exc.Message);
                 return RedirectToAction("Edit", new { id = model.Id });
             }
-        }
-
-        public IActionResult TestTemplate(string id, string languageId = "")
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
-                return AccessDeniedView();
-
-            var messageTemplate = _messageTemplateService.GetMessageTemplateById(id);
-            if (messageTemplate == null)
-                //No message template found with the specified id
-                return RedirectToAction("List");
-
-            var model = new TestMessageTemplateModel
-            {
-                Id = messageTemplate.Id,
-                LanguageId = languageId
-            };
-            var tokens = _messageTokenProvider.GetListOfAllowedTokens().Distinct().ToList();
-            //filter them to the current template
-            var subject = messageTemplate.GetLocalized(mt => mt.Subject, languageId);
-            var body = messageTemplate.GetLocalized(mt => mt.Body, languageId);
-
-            tokens = tokens.Where(x => subject.Contains(x) || body.Contains(x)).ToList();
-            model.Tokens = tokens;
-
-            return View(model);
-        }
-
-        [HttpPost, ActionName("TestTemplate")]
-        [FormValueRequired("send-test")]
-
-        public IActionResult TestTemplate(TestMessageTemplateModel model, IFormCollection form)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
-                return AccessDeniedView();
-
-            var messageTemplate = _messageTemplateService.GetMessageTemplateById(model.Id);
-            if (messageTemplate == null)
-                //No message template found with the specified id
-                return RedirectToAction("List");
-
-            LiquidObject liquidObject = new LiquidObject();
-            //TODO
-            //foreach (var formKey in form.Keys)
-            //{
-            //    if (formKey.StartsWith("token_", StringComparison.OrdinalIgnoreCase))
-            //    {
-            //        var tokenKey = formKey.Substring("token_".Length).Replace("%", "");
-            //        var tokenValue = form[formKey];
-            //        tokens.Add(new Token(tokenKey, tokenValue));
-            //    }
-            //}
-
-            _workflowMessageService.SendTestEmail(messageTemplate.Id, model.SendTo, liquidObject, model.LanguageId);
-
-            if (ModelState.IsValid)
-            {
-                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Test.Success"));
-            }
-
-            return RedirectToAction("Edit", new { id = messageTemplate.Id });
         }
 
         #endregion

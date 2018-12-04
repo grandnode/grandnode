@@ -18,16 +18,21 @@ namespace Grand.Core.Domain.Messages
 
         public bool Equals(EmailSubscribedEvent other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(null, other))
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
             return Equals(other._email, _email);
         }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != typeof(EmailSubscribedEvent)) return false;
+            if (ReferenceEquals(null, obj))
+                return false;
+            if (ReferenceEquals(this, obj))
+                return true;
+            if (obj.GetType() != typeof(EmailSubscribedEvent))
+                return false;
             return Equals((EmailSubscribedEvent)obj);
         }
 
@@ -53,16 +58,21 @@ namespace Grand.Core.Domain.Messages
 
         public bool Equals(EmailUnsubscribedEvent other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(null, other))
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
             return Equals(other._email, _email);
         }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != typeof(EmailUnsubscribedEvent)) return false;
+            if (ReferenceEquals(null, obj))
+                return false;
+            if (ReferenceEquals(this, obj))
+                return true;
+            if (obj.GetType() != typeof(EmailUnsubscribedEvent))
+                return false;
             return Equals((EmailUnsubscribedEvent)obj);
         }
 
@@ -96,18 +106,18 @@ namespace Grand.Core.Domain.Messages
     /// A container for tokens that are added.
     /// </summary>
     /// <typeparam name="U"></typeparam>
-    public class MessageTokensAddedEvent<U>
+    public class MessageTokensAddedEvent
     {
         private readonly MessageTemplate _message;
-        private readonly IList<U> _tokens;
+        private readonly LiquidObject _liquidObject;
 
-        public MessageTokensAddedEvent(MessageTemplate message, IList<U> tokens)
+        public MessageTokensAddedEvent(MessageTemplate message, LiquidObject liquidObject)
         {
             _message = message;
-            _tokens = tokens;
+            _liquidObject = liquidObject;
         }
 
         public MessageTemplate Message { get { return _message; } }
-        public IList<U> Tokens { get { return _tokens; } }
+        public LiquidObject LiquidObject { get { return _liquidObject; } }
     }
 }

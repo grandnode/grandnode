@@ -1,4 +1,5 @@
 ﻿using DotLiquid;
+using Grand.Core.Domain.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;

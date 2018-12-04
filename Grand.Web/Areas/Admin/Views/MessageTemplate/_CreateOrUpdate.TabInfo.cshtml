@@ -1,5 +1,4 @@
 ﻿@model MessageTemplateModel
-
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
@@ -48,19 +47,10 @@
             <div class="form-group">
                 <admin-label asp-for="@Model.Locales[item].Body" />
                 <div class="col-md-9 col-sm-9">
-                    <admin-input asp-for="@Model.Locales[item].Body" asp-template="RichEditor" />
+                    <admin-input asp-for="@Model.Locales[item].Body"/>
                     <span asp-validation-for="@Model.Locales[item].Body"></span>
                 </div>
             </div>
-            @if (!String.IsNullOrEmpty(Model.Id))
-            {
-                <div class="form-group">
-                    <label class="col-md-3 col-sm-3 control-label">@T("Admin.ContentManagement.MessageTemplates.Test")</label>
-                    <div class="col-md-9 col-sm-9">
-                        <input type="button" class="btn green" value="@T("Admin.ContentManagement.MessageTemplates.Test")" onclick="setLocation('@(Url.Action("TestTemplate", new { id = Model.Id, languageId = Model.Locales[item].LanguageId }))')" />
-                    </div>
-                </div>
-            }
             <div class="form-group">
                 <admin-label asp-for="@Model.Locales[item].EmailAccountId" />
                 <div class="col-md-9 col-sm-9">
@@ -101,21 +91,10 @@
                             <button type="button" onclick="AddTokenToEditor(this)" class="btn btn-info">@token</button>
                         }
                     </div>
-                    <admin-input asp-for="Body" asp-template="RichEditor"/>
+                    <admin-input asp-for="Body"/>
                     <span asp-validation-for="Body"></span>
                 </div>
             </div>
-            @if (!String.IsNullOrEmpty(Model.Id))
-            {
-                <div class="form-group">
-                    <label class="col-md-3 col-sm-3 control-label">
-                        @T("Admin.ContentManagement.MessageTemplates.Test")
-                    </label>
-                    <div class="col-md-9 col-sm-9">
-                        <input type="button" class="btn green" value="@T("Admin.ContentManagement.MessageTemplates.Test")" onclick="setLocation('@(Url.Action("TestTemplate", new { id = Model.Id }))')" />
-                    </div>
-                </div>
-            }
             <div class="form-group">
                 <admin-label asp-for="EmailAccountId" />
                 <div class="col-md-9 col-sm-9">

@@ -7,11 +7,10 @@ namespace Grand.Core.Domain.Orders
     /// </summary>
     public partial class OrderItem : SubBaseEntity
     {
-
         /// <summary>
         /// Gets or sets the order item identifier
         /// </summary>
-        public Guid OrderItemGuid { get; set; }       
+        public Guid OrderItemGuid { get; set; }
 
         /// <summary>
         /// Gets or sets the product identifier
@@ -87,7 +86,7 @@ namespace Grand.Core.Domain.Orders
         /// Gets or sets the product attributes in XML format
         /// </summary>
         public string AttributesXml { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the download count
         /// </summary>
@@ -122,7 +121,5 @@ namespace Grand.Core.Domain.Orders
         /// Gets or sets the date and time of order creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
-
-        
     }
 }

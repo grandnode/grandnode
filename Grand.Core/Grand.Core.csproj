@@ -35,6 +35,6 @@
     <PackageReference Include="MongoDB.Driver" Version="2.7.0" />
     <PackageReference Include="MongoDB.Driver.Core" Version="2.7.0" />
     <PackageReference Include="MongoDB.Driver.GridFS" Version="2.7.0" />
+    <PackageReference Include="DotLiquid" Version="2.0.298" />
   </ItemGroup>
-
 </Project>

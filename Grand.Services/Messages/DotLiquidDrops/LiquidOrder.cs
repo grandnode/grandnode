@@ -33,6 +33,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private string _vendorId;
         private decimal _refundedAmount;
         private OrderNote _orderNote;
+        private ICollection<LiquidOrderItem> _orderItems;
 
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IPaymentService _paymentService;
@@ -93,6 +94,14 @@ namespace Grand.Services.Messages.DotLiquidDrops
             this._vendorId = vendorId;
             this._orderNote = orderNote;
             this._refundedAmount = refundedAmount;
+
+            this._orderItems = new List<LiquidOrderItem>();
+            foreach (var orderItem in order.OrderItems)
+            {
+                var liquidOrderItem = new LiquidOrderItem();
+                liquidOrderItem.SetProperties(orderItem, order, languageId);
+                this._orderItems.Add(liquidOrderItem);
+            }
         }
 
         public string OrderNumber
@@ -345,9 +354,9 @@ namespace Grand.Services.Messages.DotLiquidDrops
             }
         }
 
-        public ICollection<OrderItem> OrderItems
+        public ICollection<LiquidOrderItem> OrderItems
         {
-            get { return _order.OrderItems; }
+            get { return _orderItems; }
         }
 
         /// <summary>

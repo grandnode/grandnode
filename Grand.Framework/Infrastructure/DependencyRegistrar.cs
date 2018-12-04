@@ -362,6 +362,7 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<LiquidStore>().InstancePerLifetimeScope();
             builder.RegisterType<LiquidVendor>().InstancePerLifetimeScope();
             builder.RegisterType<LiquidVendorReview>().InstancePerLifetimeScope();
+            builder.RegisterType<LiquidOrderItem>().InstancePerLifetimeScope();
         }
 
         /// <summary>
