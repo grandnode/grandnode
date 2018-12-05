@@ -2,6 +2,7 @@
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Common;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
@@ -14,12 +15,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.ReturnRequests)]
     public partial class ReturnRequestController : BaseAdminController
     {
         #region Fields
         private readonly IReturnRequestViewModelService _returnRequestViewModelService;
         private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
         private readonly IReturnRequestService _returnRequestService;
 
         #endregion Fields
@@ -29,12 +30,10 @@ namespace Grand.Web.Areas.Admin.Controllers
         public ReturnRequestController(
             IReturnRequestViewModelService returnRequestViewModelService,
             ILocalizationService localizationService,
-            IPermissionService permissionService,
             IReturnRequestService returnRequestService)
         {
             this._returnRequestViewModelService = returnRequestViewModelService;
             this._localizationService = localizationService;
-            this._permissionService = permissionService;
             this._returnRequestService = returnRequestService;
         }
 
@@ -52,9 +51,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
-                return AccessDeniedView();
-
             var model = _returnRequestViewModelService.PrepareReturnReqestListModel();
             return View(model);
         }
@@ -62,9 +58,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult List(DataSourceRequest command, ReturnReqestListModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
-                return AccessDeniedView();
-
             var returnRequestModels = _returnRequestViewModelService.PrepareReturnRequestModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -93,9 +86,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductsForReturnRequest(string returnRequestId, DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
-                return AccessDeniedView();
-
             var items = _returnRequestViewModelService.PrepareReturnRequestItemModel(returnRequestId);
             var gridModel = new DataSourceResult
             {
@@ -109,9 +99,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
-                return AccessDeniedView();
-
             var returnRequest = _returnRequestService.GetReturnRequestById(id);
             if (returnRequest == null)
                 //No return request found with the specified id
@@ -130,9 +117,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             [FromServices] OrderSettings orderSettings
             )
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
-                return AccessDeniedView();
-
             var returnRequest = _returnRequestService.GetReturnRequestById(model.Id);
             if (returnRequest == null)
                 //No return request found with the specified id
@@ -165,9 +149,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
-                return AccessDeniedView();
-
             var returnRequest = _returnRequestService.GetReturnRequestById(id);
             if (returnRequest == null)
                 //No return request found with the specified id
