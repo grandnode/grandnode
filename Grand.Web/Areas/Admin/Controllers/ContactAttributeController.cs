@@ -2,6 +2,7 @@
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
@@ -17,6 +18,7 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Attributes)]
     public partial class ContactAttributeController : BaseAdminController
     {
         #region Fields
@@ -24,7 +26,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IContactAttributeService _contactAttributeService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
         private readonly IStoreService _storeService;
         private readonly ICustomerService _customerService;
 
@@ -36,7 +37,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             IContactAttributeService contactAttributeService,
             ILanguageService languageService,
             ILocalizationService localizationService,
-            IPermissionService permissionService,
             IStoreService storeService,
             ICustomerService customerService)
         {
@@ -44,7 +44,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._contactAttributeService = contactAttributeService;
             this._languageService = languageService;
             this._localizationService = localizationService;
-            this._permissionService = permissionService;
             this._storeService = storeService;
             this._customerService = customerService;
         }
@@ -61,18 +60,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var contactAttributes = _contactAttributeViewModelService.PrepareContactAttributeListModel();
             var gridModel = new DataSourceResult
             {
@@ -85,9 +78,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //create
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var model = new ContactAttributeModel();
             //locales
             AddLocales(_languageService, model.Locales);
@@ -104,9 +94,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Create(ContactAttributeModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var contactAttribute = _contactAttributeViewModelService.InsertContactAttributeModel(model);
@@ -125,9 +112,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var contactAttribute = _contactAttributeService.GetContactAttributeById(id);
             if (contactAttribute == null)
                 //No contact attribute found with the specified id
@@ -153,9 +137,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Edit(ContactAttributeModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var contactAttribute = _contactAttributeService.GetContactAttributeById(model.Id);
             if (contactAttribute == null)
                 //No contact attribute found with the specified id
@@ -187,9 +168,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id, [FromServices] ICustomerActivityService customerActivityService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var contactAttribute = _contactAttributeService.GetContactAttributeById(id);
@@ -213,8 +191,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ValueList(string contactAttributeId, DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
             var contactAttribute = _contactAttributeService.GetContactAttributeById(contactAttributeId);
             var values = contactAttribute.ContactAttributeValues;
             var gridModel = new DataSourceResult
@@ -236,9 +212,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //create
         public IActionResult ValueCreatePopup(string contactAttributeId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var contactAttribute = _contactAttributeService.GetContactAttributeById(contactAttributeId);
             var model = _contactAttributeViewModelService.PrepareContactAttributeValueModel(contactAttribute);
 
@@ -250,9 +223,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ValueCreatePopup(ContactAttributeValueModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var contactAttribute = _contactAttributeService.GetContactAttributeById(model.ContactAttributeId);
             if (contactAttribute == null)
                 //No contact attribute found with the specified id
@@ -280,8 +250,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit
         public IActionResult ValueEditPopup(string id, string contactAttributeId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
             var contactAttribute = _contactAttributeService.GetContactAttributeById(contactAttributeId);
             var cav = contactAttribute.ContactAttributeValues.Where(x => x.Id == id).FirstOrDefault();
             if (cav == null)
@@ -301,9 +269,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ValueEditPopup(ContactAttributeValueModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var contactAttribute = _contactAttributeService.GetContactAttributeById(model.ContactAttributeId);
 
             var cav = contactAttribute.ContactAttributeValues.Where(x => x.Id == model.Id).FirstOrDefault();
@@ -333,9 +298,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ValueDelete(string id, string contactAttributeId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var contactAttribute = _contactAttributeService.GetContactAttributeById(contactAttributeId);
             var cav = contactAttribute.ContactAttributeValues.Where(x => x.Id == id).FirstOrDefault();
             if (cav == null)
@@ -349,8 +311,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             return ErrorForKendoGridJson(ModelState);
         }
-
-
         #endregion
     }
 }
