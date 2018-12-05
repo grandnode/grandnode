@@ -2,6 +2,7 @@
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
 using Grand.Services.News;
@@ -17,6 +18,7 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.News)]
     public partial class NewsController : BaseAdminController
 	{
         #region Fields
@@ -24,7 +26,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly INewsService _newsService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
         private readonly IStoreService _storeService;
         private readonly ICustomerService _customerService;
 
@@ -37,7 +38,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             INewsService newsService, 
             ILanguageService languageService,
             ILocalizationService localizationService,
-            IPermissionService permissionService,
             IStoreService storeService, 
             ICustomerService customerService)
         {
@@ -45,7 +45,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._newsService = newsService;
             this._languageService = languageService;
             this._localizationService = localizationService;
-            this._permissionService = permissionService;
             this._storeService = storeService;
             this._customerService = customerService;
         }
@@ -61,9 +60,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
-                return AccessDeniedView();
-
             var model = new NewsItemListModel();
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
@@ -76,9 +72,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult List(DataSourceRequest command, NewsItemListModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
-                return AccessDeniedView();
-
             var news = _newsViewModelService.PrepareNewsItemModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -90,9 +83,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
-                return AccessDeniedView();
-
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             var model = new NewsItemModel();
             //Stores
@@ -111,9 +101,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Create(NewsItemModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var newsItem = _newsViewModelService.InsertNewsItemModel(model);
@@ -133,9 +120,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
-                return AccessDeniedView();
-
             var newsItem = _newsService.GetNewsById(id);
             if (newsItem == null)
                 //No news item found with the specified id
@@ -166,9 +150,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Edit(NewsItemModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
-                return AccessDeniedView();
-
             var newsItem = _newsService.GetNewsById(model.Id);
             if (newsItem == null)
                 //No news item found with the specified id
@@ -202,9 +183,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
-                return AccessDeniedView();
-
             var newsItem = _newsService.GetNewsById(id);
             if (newsItem == null)
                 //No news item found with the specified id
@@ -226,9 +204,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Comments(string filterByNewsItemId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
-                return AccessDeniedView();
-
             ViewBag.FilterByNewsItemId = filterByNewsItemId;
             return View();
         }
@@ -236,9 +211,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Comments(string filterByNewsItemId, DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
-                return AccessDeniedView();
-
             var comments = _newsViewModelService.PrepareNewsCommentModel(filterByNewsItemId, command.Page, command.PageSize);
 
             var gridModel = new DataSourceResult
@@ -252,9 +224,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult CommentDelete(NewsComment model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
-                return AccessDeniedView();
-
             if(ModelState.IsValid)
             {
                 _newsViewModelService.CommentDelete(model);
