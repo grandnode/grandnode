@@ -4,6 +4,7 @@ using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Seo;
@@ -17,17 +18,15 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Vendors)]
     public partial class VendorController : BaseAdminController
     {
         #region Fields
         private readonly IVendorViewModelService _vendorViewModelService;
         private readonly ILocalizationService _localizationService;
         private readonly IVendorService _vendorService;
-        private readonly IPermissionService _permissionService;
         private readonly ILanguageService _languageService;
-
         private readonly VendorSettings _vendorSettings;
-
         #endregion
 
         #region Constructors
@@ -36,14 +35,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             IVendorViewModelService vendorViewModelService,
             ILocalizationService localizationService,
             IVendorService vendorService,
-            IPermissionService permissionService,
             ILanguageService languageService,
             VendorSettings vendorSettings)
         {
             this._vendorViewModelService = vendorViewModelService;
             this._localizationService = localizationService;
             this._vendorService = vendorService;
-            this._permissionService = permissionService;
             this._languageService = languageService;
             this._vendorSettings = vendorSettings;
         }
@@ -60,9 +57,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
-                return AccessDeniedView();
-
             var model = new VendorListModel();
             return View(model);
         }
@@ -70,9 +64,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult List(DataSourceRequest command, VendorListModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
-                return AccessDeniedView();
-
             var vendors = _vendorService.GetAllVendors(model.SearchName, command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
             {
@@ -83,18 +74,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }),
                 Total = vendors.TotalCount,
             };
-
             return Json(gridModel);
         }
 
         //create
-
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
-                return AccessDeniedView();
-
-
             var model = _vendorViewModelService.PrepareVendorModel();
             //locales
             AddLocales(_languageService, model.Locales);
@@ -105,9 +90,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public IActionResult Create(VendorModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var vendor = _vendorViewModelService.InsertVendorModel(model);
@@ -129,9 +111,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
-                return AccessDeniedView();
-
             var vendor = _vendorService.GetVendorById(id);
             if (vendor == null || vendor.Deleted)
                 //No vendor found with the specified id
@@ -163,9 +142,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Edit(VendorModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
-                return AccessDeniedView();
-
             var vendor = _vendorService.GetVendorById(model.Id);
             if (vendor == null || vendor.Deleted)
                 //No vendor found with the specified id
@@ -203,9 +179,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
-                return AccessDeniedView();
-
             var vendor = _vendorService.GetVendorById(id);
             if (vendor == null)
                 //No vendor found with the specified id
@@ -228,9 +201,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult VendorNotesSelect(string vendorId, DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
-                return AccessDeniedView();
-
             var vendor = _vendorService.GetVendorById(vendorId);
             if (vendor == null)
                 throw new ArgumentException("No vendor found with the specified id");
@@ -245,12 +215,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-
         public IActionResult VendorNoteAdd(string vendorId, string message)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var result = _vendorViewModelService.InsertVendorNote(vendorId, message);
@@ -262,9 +228,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult VendorNoteDelete(string id, string vendorId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 _vendorViewModelService.DeleteVendorNote(id, vendorId);
@@ -280,9 +243,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Reviews(DataSourceRequest command, string vendorId, [FromServices] IWorkContext workContext)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
-                return AccessDeniedView();
-
             var vendor = _vendorService.GetVendorById(vendorId);
             if (vendor == null)
                 throw new ArgumentException("No vendor found with the specified id");
