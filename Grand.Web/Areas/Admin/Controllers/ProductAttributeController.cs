@@ -1,6 +1,7 @@
 ﻿using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
@@ -13,17 +14,15 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Attributes)]
     public partial class ProductAttributeController : BaseAdminController
     {
         #region Fields
-
         private readonly IProductService _productService;
         private readonly IProductAttributeService _productAttributeService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly ICustomerActivityService _customerActivityService;
-        private readonly IPermissionService _permissionService;
-
         #endregion Fields
 
         #region Constructors
@@ -32,15 +31,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             IProductAttributeService productAttributeService,
             ILanguageService languageService,
             ILocalizationService localizationService,
-            ICustomerActivityService customerActivityService,
-            IPermissionService permissionService)
+            ICustomerActivityService customerActivityService)
         {
             this._productService = productService;
             this._productAttributeService = productAttributeService;
             this._languageService = languageService;
             this._localizationService = localizationService;
             this._customerActivityService = customerActivityService;
-            this._permissionService = permissionService;
         }
 
         #endregion
@@ -57,18 +54,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var productAttributes = _productAttributeService
                 .GetAllProductAttributes(command.Page - 1, command.PageSize);
             var gridModel = new DataSourceResult
@@ -83,9 +74,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //create
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var model = new ProductAttributeModel();
             //locales
             AddLocales(_languageService, model.Locales);
@@ -95,9 +83,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Create(ProductAttributeModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var productAttribute = model.ToEntity();
@@ -117,9 +102,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var productAttribute = _productAttributeService.GetProductAttributeById(id);
             if (productAttribute == null)
                 //No product attribute found with the specified id
@@ -139,9 +121,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Edit(ProductAttributeModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var productAttribute = _productAttributeService.GetProductAttributeById(model.Id);
             if (productAttribute == null)
                 //No product attribute found with the specified id
@@ -174,9 +153,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var productAttribute = _productAttributeService.GetProductAttributeById(id);
             if (productAttribute == null)
                 //No product attribute found with the specified id
@@ -203,9 +179,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult UsedByProducts(DataSourceRequest command, string productAttributeId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var orders = _productService.GetProductsByProductAtributeId(
                 productAttributeId: productAttributeId,
                 pageIndex: command.Page - 1,
@@ -223,20 +196,15 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }),
                 Total = orders.TotalCount
             };
-
             return Json(gridModel);
         }
         
         #endregion
 
         #region Predefined values
-
         [HttpPost]
         public IActionResult PredefinedProductAttributeValueList(string productAttributeId, DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var values = _productAttributeService.GetProductAttributeById(productAttributeId).PredefinedProductAttributeValues;
             var gridModel = new DataSourceResult
             {
@@ -250,9 +218,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //create
         public IActionResult PredefinedProductAttributeValueCreatePopup(string productAttributeId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var productAttribute = _productAttributeService.GetProductAttributeById(productAttributeId);
             if (productAttribute == null)
                 throw new ArgumentException("No product attribute found with the specified id");
@@ -269,9 +234,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult PredefinedProductAttributeValueCreatePopup(PredefinedProductAttributeValueModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var productAttribute = _productAttributeService.GetProductAttributeById(model.ProductAttributeId);
             if (productAttribute == null)
                 throw new ArgumentException("No product attribute found with the specified id");
@@ -285,7 +247,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 ViewBag.RefreshPage = true;
                 return View(model);
             }
-
             //If we got this far, something failed, redisplay form
             return View(model);
         }
@@ -293,9 +254,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit
         public IActionResult PredefinedProductAttributeValueEditPopup(string id, string productAttributeId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var ppav = _productAttributeService.GetProductAttributeById(productAttributeId).PredefinedProductAttributeValues.Where(x=>x.Id == id).FirstOrDefault();
             if (ppav == null)
                 throw new ArgumentException("No product attribute value found with the specified id");
@@ -312,8 +270,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult PredefinedProductAttributeValueEditPopup(PredefinedProductAttributeValueModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
             var productAttribute = _productAttributeService.GetProductAttributeById(model.ProductAttributeId);
             var ppav = productAttribute.PredefinedProductAttributeValues.Where(x=>x.Id == model.Id).FirstOrDefault();
             if (ppav == null)
@@ -327,7 +283,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 ViewBag.RefreshPage = true;
                 return View(model);
             }
-
             //If we got this far, something failed, redisplay form
             return View(model);
         }
@@ -336,9 +291,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult PredefinedProductAttributeValueDelete(string id, string productAttributeId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var productAttribute = _productAttributeService.GetProductAttributeById(productAttributeId);
@@ -351,7 +303,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             return ErrorForKendoGridJson(ModelState);
         }
-
         #endregion
 
         #endregion
