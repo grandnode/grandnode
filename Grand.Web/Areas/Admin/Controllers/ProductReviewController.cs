@@ -1,5 +1,6 @@
 ﻿using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Services.Security;
@@ -12,12 +13,12 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.ProductReviews)]
     public partial class ProductReviewController : BaseAdminController
     {
         #region Fields
         private readonly IProductReviewViewModelService _productReviewViewModelService;
         private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
 
         #endregion Fields
 
@@ -25,12 +26,10 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public ProductReviewController(
             IProductReviewViewModelService productReviewViewModelService,
-            ILocalizationService localizationService,
-            IPermissionService permissionService)
+            ILocalizationService localizationService)
         {
             this._productReviewViewModelService = productReviewViewModelService;
             this._localizationService = localizationService;
-            this._permissionService = permissionService;
         }
 
         #endregion
@@ -45,9 +44,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
-                return AccessDeniedView();
-
             var model = _productReviewViewModelService.PrepareProductReviewListModel();
             return View(model);
         }
@@ -55,9 +51,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult List(DataSourceRequest command, ProductReviewListModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
-                return AccessDeniedView();
-
             var productReviews = _productReviewViewModelService.PrepareProductReviewsModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -71,9 +64,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit
         public IActionResult Edit(string id, [FromServices] IProductService productService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
-                return AccessDeniedView();
-
             var productReview = productService.GetProductReviewById(id);
 
             if (productReview == null)
@@ -88,9 +78,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Edit(ProductReviewModel model, bool continueEditing, [FromServices] IProductService productService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
-                return AccessDeniedView();
-
             var productReview = productService.GetProductReviewById(model.Id);
             if (productReview == null)
                 //No product review found with the specified id
@@ -112,9 +99,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id, [FromServices] IProductService productService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
-                return AccessDeniedView();
-
             var productReview = productService.GetProductReviewById(id);
             if (productReview == null)
                 //No product review found with the specified id
@@ -133,9 +117,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ApproveSelected(ICollection<string> selectedIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
-                return AccessDeniedView();
-
             if (selectedIds != null)
             {
                 _productReviewViewModelService.ApproveSelected(selectedIds.ToList());
@@ -147,9 +128,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult DisapproveSelected(ICollection<string> selectedIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
-                return AccessDeniedView();
-
             if (selectedIds != null)
             {
                 _productReviewViewModelService.DisapproveSelected(selectedIds.ToList());
