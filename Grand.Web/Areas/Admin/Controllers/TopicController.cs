@@ -1,5 +1,6 @@
 ﻿using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
 using Grand.Services.Security;
@@ -14,6 +15,7 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Topics)]
     public partial class TopicController : BaseAdminController
     {
         #region Fields
@@ -21,10 +23,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ITopicService _topicService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
         private readonly IStoreService _storeService;
         private readonly ICustomerService _customerService;
-        
         #endregion Fields
 
         #region Constructors
@@ -34,7 +34,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             ITopicService topicService,
             ILanguageService languageService,
             ILocalizationService localizationService,
-            IPermissionService permissionService,
             IStoreService storeService,
             ICustomerService customerService)
         {
@@ -42,7 +41,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._topicService = topicService;
             this._languageService = languageService;
             this._localizationService = localizationService;
-            this._permissionService = permissionService;
             this._storeService = storeService;
             this._customerService = customerService;
         }
@@ -58,9 +56,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
-                return AccessDeniedView();
-
             var model = _topicViewModelService.PrepareTopicListModel();
             return View(model);
         }
@@ -68,9 +63,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult List(DataSourceRequest command, TopicListModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
-                return AccessDeniedView();
-
             var topicModels = _topicService.GetAllTopics(model.SearchStoreId, true)
                 .Select(x => x.ToModel())
                 .ToList();
@@ -101,9 +93,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
-                return AccessDeniedView();
-
             var model = new TopicModel();
             //templates
             _topicViewModelService.PrepareTemplatesModel(model);
@@ -122,9 +111,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Create(TopicModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var topic = _topicViewModelService.InsertTopicModel(model);
@@ -144,9 +130,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
-                return AccessDeniedView();
-
             var topic = _topicService.GetTopicById(id);
             if (topic == null)
                 //No topic found with the specified id
@@ -170,16 +153,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.MetaTitle = topic.GetLocalized(x => x.MetaTitle, languageId, false, false);
                 locale.SeName = topic.GetSeName(languageId, false, false);
             });
-
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Edit(TopicModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
-                return AccessDeniedView();
-
             var topic = _topicService.GetTopicById(model.Id);
             if (topic == null)
                 //No topic found with the specified id
@@ -213,9 +192,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
-                return AccessDeniedView();
-
             var topic = _topicService.GetTopicById(id);
             if (topic == null)
                 //No topic found with the specified id
