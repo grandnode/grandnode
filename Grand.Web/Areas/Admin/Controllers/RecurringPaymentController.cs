@@ -5,6 +5,7 @@ using Grand.Core.Infrastructure;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Customers;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
@@ -18,6 +19,7 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.RecurringPayments)]
     public partial class RecurringPaymentController : BaseAdminController
     {
         #region Fields
@@ -28,7 +30,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IWorkContext _workContext;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IPaymentService _paymentService;
-        private readonly IPermissionService _permissionService;
 
         #endregion Fields
 
@@ -36,8 +37,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public RecurringPaymentController(IOrderService orderService,
             IOrderProcessingService orderProcessingService, ILocalizationService localizationService,
-            IWorkContext workContext, IDateTimeHelper dateTimeHelper, IPaymentService paymentService,
-            IPermissionService permissionService)
+            IWorkContext workContext, IDateTimeHelper dateTimeHelper, IPaymentService paymentService)
         {
             this._orderService = orderService;
             this._orderProcessingService = orderProcessingService;
@@ -45,7 +45,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._workContext = workContext;
             this._dateTimeHelper = dateTimeHelper;
             this._paymentService = paymentService;
-            this._permissionService = permissionService;
         }
 
         #endregion
@@ -113,18 +112,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageRecurringPayments))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageRecurringPayments))
-                return AccessDeniedView();
-
             var payments = _orderService.SearchRecurringPayments("", "", "", null, command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
             {
@@ -143,9 +136,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageRecurringPayments))
-                return AccessDeniedView();
-
             var payment = _orderService.GetRecurringPaymentById(id);
             if (payment == null || payment.Deleted)
                 //No recurring payment found with the specified id
@@ -160,9 +150,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public IActionResult Edit(RecurringPaymentModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageRecurringPayments))
-                return AccessDeniedView();
-
             var payment = _orderService.GetRecurringPaymentById(model.Id);
             if (payment == null || payment.Deleted)
                 //No recurring payment found with the specified id
@@ -190,9 +177,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageRecurringPayments))
-                return AccessDeniedView();
-
             var payment = _orderService.GetRecurringPaymentById(id);
             if (payment == null)
                 //No recurring payment found with the specified id
@@ -211,9 +195,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult HistoryList(string recurringPaymentId, DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageRecurringPayments))
-                return AccessDeniedView();
-
             var payment = _orderService.GetRecurringPaymentById(recurringPaymentId);
             if (payment == null)
                 throw new ArgumentException("No recurring payment found with the specified id");
@@ -239,9 +220,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("processnextpayment")]
         public IActionResult ProcessNextPayment(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageRecurringPayments))
-                return AccessDeniedView();
-
             var payment = _orderService.GetRecurringPaymentById(id);
             if (payment == null)
                 //No recurring payment found with the specified id
@@ -278,9 +256,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("cancelpayment")]
         public IActionResult CancelRecurringPayment(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageRecurringPayments))
-                return AccessDeniedView();
-
             var payment = _orderService.GetRecurringPaymentById(id);
             if (payment == null)
                 //No recurring payment found with the specified id
