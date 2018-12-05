@@ -1,6 +1,7 @@
 ﻿using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
 using Grand.Services.Security;
@@ -11,16 +12,14 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Settings)]
     public partial class CustomerAttributeController : BaseAdminController
     {
         #region Fields
-
         private readonly ICustomerAttributeService _customerAttributeService;
         private readonly ICustomerAttributeViewModelService _customerAttributeViewModelService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
-
         #endregion
 
         #region Constructors
@@ -28,14 +27,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         public CustomerAttributeController(ICustomerAttributeService customerAttributeService,
             ICustomerAttributeViewModelService customerAttributeViewModelService,
             ILanguageService languageService, 
-            ILocalizationService localizationService,
-            IPermissionService permissionService)
+            ILocalizationService localizationService)
         {
             this._customerAttributeService = customerAttributeService;
             this._customerAttributeViewModelService = customerAttributeViewModelService;
             this._languageService = languageService;
             this._localizationService = localizationService;
-            this._permissionService = permissionService;
         }
 
         #endregion
@@ -54,9 +51,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             //we just redirect a user to the customer settings page
             //select second tab
             const int customerFormFieldIndex = 1;
@@ -67,9 +61,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult List(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var customerAttributes = _customerAttributeViewModelService.PrepareCustomerAttributes();
             var gridModel = new DataSourceResult
             {
@@ -82,9 +73,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //create
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var model = _customerAttributeViewModelService.PrepareCustomerAttributeModel();
             //locales
             AddLocales(_languageService, model.Locales);
@@ -94,9 +82,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Create(CustomerAttributeModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var customerAttribute = _customerAttributeViewModelService.InsertCustomerAttributeModel(model);
@@ -110,9 +95,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var customerAttribute = _customerAttributeService.GetCustomerAttributeById(id);
             if (customerAttribute == null)
                 //No customer attribute found with the specified id
@@ -130,9 +112,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Edit(CustomerAttributeModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var customerAttribute = _customerAttributeService.GetCustomerAttributeById(model.Id);
             if (customerAttribute == null)
                 //No customer attribute found with the specified id
@@ -161,9 +140,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             _customerAttributeViewModelService.DeleteCustomerAttribute(id);
 
             SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerAttributes.Deleted"));
@@ -178,9 +154,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ValueList(string customerAttributeId, DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var values = _customerAttributeViewModelService.PrepareCustomerAttributeValues(customerAttributeId);
             var gridModel = new DataSourceResult
             {
@@ -193,9 +166,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //create
         public IActionResult ValueCreatePopup(string customerAttributeId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var customerAttribute = _customerAttributeService.GetCustomerAttributeById(customerAttributeId);
             if (customerAttribute == null)
                 //No customer attribute found with the specified id
@@ -210,9 +180,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ValueCreatePopup(CustomerAttributeValueModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var customerAttribute = _customerAttributeService.GetCustomerAttributeById(model.CustomerAttributeId);
             if (customerAttribute == null)
                 //No customer attribute found with the specified id
@@ -232,8 +199,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit
         public IActionResult ValueEditPopup(string id, string customerAttributeId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
             var av = _customerAttributeService.GetCustomerAttributeById(customerAttributeId);
             var cav = av.CustomerAttributeValues.FirstOrDefault(x=>x.Id == id);
             if (cav == null)
@@ -253,9 +218,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ValueEditPopup(CustomerAttributeValueModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var av = _customerAttributeService.GetCustomerAttributeById(model.CustomerAttributeId);
             var cav = av.CustomerAttributeValues.FirstOrDefault(x => x.Id == model.Id);
             if (cav == null)
@@ -278,15 +240,10 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ValueDelete(CustomerAttributeValueModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             _customerAttributeViewModelService.DeleteCustomerAttributeValue(model);
 
             return new NullJsonResult();
         }
-
-
         #endregion
     }
 }
