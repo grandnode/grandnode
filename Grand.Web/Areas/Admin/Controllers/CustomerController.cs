@@ -7,6 +7,7 @@ using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.ExportImport;
@@ -26,6 +27,7 @@ using System.Text;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Customers)]
     public partial class CustomerController : BaseAdminController
     {
         #region Fields
@@ -39,7 +41,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly CustomerSettings _customerSettings;
         private readonly IWorkContext _workContext;
         private readonly IExportManager _exportManager;
-        private readonly IPermissionService _permissionService;
         private readonly ICustomerAttributeParser _customerAttributeParser;
         private readonly ICustomerAttributeService _customerAttributeService;
         private readonly IAddressAttributeParser _addressAttributeParser;
@@ -60,7 +61,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             CustomerSettings customerSettings,
             IWorkContext workContext,
             IExportManager exportManager,
-            IPermissionService permissionService,
             ICustomerAttributeParser customerAttributeParser,
             ICustomerAttributeService customerAttributeService,
             IAddressAttributeParser addressAttributeParser,
@@ -77,7 +77,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._customerSettings = customerSettings;
             this._workContext = workContext;
             this._exportManager = exportManager;
-            this._permissionService = permissionService;
             this._customerAttributeParser = customerAttributeParser;
             this._customerAttributeService = customerAttributeService;
             this._addressAttributeParser = addressAttributeParser;
@@ -173,9 +172,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var model = _customerViewModelService.PrepareCustomerListModel();
             return View(model);
         }
@@ -184,10 +180,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult CustomerList(DataSourceRequest command, CustomerListModel model,
             string[] searchCustomerRoleIds, string[] searchCustomerTagIds)
         {
-            //we use own own binder for searchCustomerRoleIds property 
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customers = _customerViewModelService.PrepareCustomerList(model, searchCustomerRoleIds, searchCustomerTagIds, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -200,9 +192,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var model = new CustomerModel();
             _customerViewModelService.PrepareCustomerModel(model, null, false);
             //default value
@@ -215,9 +204,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Create(CustomerModel model, bool continueEditing, IFormCollection form)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             if (!String.IsNullOrWhiteSpace(model.Email))
             {
                 var cust2 = _customerService.GetCustomerByEmail(model.Email);
@@ -279,9 +265,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customer = _customerService.GetCustomerById(id);
             if (customer == null || customer.Deleted)
                 //No customer found with the specified id
@@ -296,9 +279,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public IActionResult Edit(CustomerModel model, bool continueEditing, IFormCollection form)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customer = _customerService.GetCustomerById(model.Id);
             if (customer == null || customer.Deleted)
                 //No customer found with the specified id
@@ -356,9 +336,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("changepassword")]
         public IActionResult ChangePassword(CustomerModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customer = _customerService.GetCustomerById(model.Id);
             if (customer == null)
                 //No customer found with the specified id
@@ -383,9 +360,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("markVatNumberAsValid")]
         public IActionResult MarkVatNumberAsValid(CustomerModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customer = _customerService.GetCustomerById(model.Id);
             if (customer == null)
                 //No customer found with the specified id
@@ -402,9 +376,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("markVatNumberAsInvalid")]
         public IActionResult MarkVatNumberAsInvalid(CustomerModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customer = _customerService.GetCustomerById(model.Id);
             if (customer == null)
                 //No customer found with the specified id
@@ -421,9 +392,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("remove-affiliate")]
         public IActionResult RemoveAffiliate(CustomerModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customer = _customerService.GetCustomerById(model.Id);
             if (customer == null)
                 //No customer found with the specified id
@@ -437,9 +405,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customer = _customerService.GetCustomerById(id);
             if (customer == null)
                 //No customer found with the specified id
@@ -467,9 +432,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("impersonate")]
         public IActionResult Impersonate(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.AllowCustomerImpersonation))
-                return AccessDeniedView();
-
             var customer = _customerService.GetCustomerById(id);
             if (customer == null)
                 //No customer found with the specified id
@@ -493,9 +455,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("send-welcome-message")]
         public IActionResult SendWelcomeMessage(CustomerModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customer = _customerService.GetCustomerById(model.Id);
             if (customer == null)
                 //No customer found with the specified id
@@ -512,9 +471,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("resend-activation-message")]
         public IActionResult ReSendActivationMessage(CustomerModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customer = _customerService.GetCustomerById(model.Id);
             if (customer == null)
                 //No customer found with the specified id
@@ -531,9 +487,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult SendEmail(CustomerModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customer = _customerService.GetCustomerById(model.Id);
             if (customer == null)
                 //No customer found with the specified id
@@ -564,9 +517,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult SendPm(CustomerModel model, [FromServices] ForumSettings forumSettings)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customer = _customerService.GetCustomerById(model.Id);
             if (customer == null)
                 //No customer found with the specified id
@@ -602,9 +552,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult RewardPointsHistorySelect(string customerId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customer = _customerService.GetCustomerById(customerId);
             if (customer == null)
                 throw new ArgumentException("No customer found with the specified id");
@@ -622,9 +569,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult RewardPointsHistoryAdd(string customerId, string storeId, int addRewardPointsValue, string addRewardPointsMessage)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customer = _customerService.GetCustomerById(customerId);
             if (customer == null)
                 return Json(new { Result = false });
@@ -641,9 +585,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult AddressesSelect(string customerId, DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customer = _customerService.GetCustomerById(customerId);
             if (customer == null)
                 throw new ArgumentException("No customer found with the specified id", "customerId");
@@ -661,9 +602,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult AddressDelete(string id, string customerId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customer = _customerService.GetCustomerById(customerId);
             if (customer == null)
                 throw new ArgumentException("No customer found with the specified id", "customerId");
@@ -682,9 +620,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult AddressCreate(string customerId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customer = _customerService.GetCustomerById(customerId);
             if (customer == null)
                 //No customer found with the specified id
@@ -700,9 +635,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult AddressCreate(CustomerAddressModel model, IFormCollection form)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customer = _customerService.GetCustomerById(model.CustomerId);
             if (customer == null)
                 //No customer found with the specified id
@@ -730,9 +662,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult AddressEdit(string addressId, string customerId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customer = _customerService.GetCustomerById(customerId);
             if (customer == null)
                 //No customer found with the specified id
@@ -752,9 +681,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult AddressEdit(CustomerAddressModel model, IFormCollection form)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customer = _customerService.GetCustomerById(model.CustomerId);
             if (customer == null)
                 //No customer found with the specified id
@@ -792,11 +718,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult OrderList(string customerId, DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var orders = _customerViewModelService.PrepareOrderModel(customerId, command.Page, command.PageSize);
-
             var gridModel = new DataSourceResult
             {
                 Data = orders.orderModels.ToList(),
@@ -811,9 +733,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Reports()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var model = _customerViewModelService.PrepareCustomerReportsModel();
             return View(model);
         }
@@ -821,9 +740,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ReportBestCustomersByOrderTotalList(DataSourceRequest command, BestCustomersReportModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return Content("");
-
             var items = _customerViewModelService.PrepareBestCustomerReportLineModel(model, 1, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -835,9 +751,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ReportBestCustomersByNumberOfOrdersList(DataSourceRequest command, BestCustomersReportModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return Content("");
-
             var items = _customerViewModelService.PrepareBestCustomerReportLineModel(model, 2, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -850,9 +763,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ReportRegisteredCustomersList(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return Content("");
-
             var model = _customerViewModelService.GetReportRegisteredCustomersModel();
             var gridModel = new DataSourceResult
             {
@@ -866,9 +776,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ReportCustomerTimeChart(DataSourceRequest command, DateTime? startDate, DateTime? endDate)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return Content("");
-
             var model = _customerReportService.GetCustomerByTimeReport(startDate, endDate);
             var gridModel = new DataSourceResult
             {
@@ -884,9 +791,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult GetCartList(string customerId, int cartTypeId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return Content("");
-
             var cart = _customerViewModelService.PrepareShoppingCartItemModel(customerId, cartTypeId);
             var gridModel = new DataSourceResult
             {
@@ -900,9 +804,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult DeleteCart(string id, string customerId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customer = _customerService.GetCustomerById(customerId);
             if (customer == null)
                 throw new ArgumentException("No customer found with the specified id", "customerId");
@@ -918,9 +819,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductsPrice(DataSourceRequest command, string customerId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return Content("");
-
             var productPrices = _customerViewModelService.PrepareProductPriceModel(customerId, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -934,9 +832,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult PersonalizedProducts(DataSourceRequest command, string customerId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return Content("");
-
             var products = _customerViewModelService.PreparePersonalizedProducts(customerId, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -948,9 +843,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ProductAddPopup(string customerId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedView();
-
             var model = _customerViewModelService.PrepareCustomerModelAddProductModel();
             return View(model);
         }
@@ -958,9 +850,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductAddPopupList(DataSourceRequest command, CustomerModel.AddProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedView();
-
             var products = _customerViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
 
             var gridModel = new DataSourceResult();
@@ -973,9 +862,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public IActionResult ProductAddPopup(string customerId, bool personalized, CustomerModel.AddProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             if (model.SelectedProductIds != null)
             {
                 _customerViewModelService.InsertCustomerAddProductModel(customerId, personalized, model);
@@ -986,33 +872,23 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
         public IActionResult UpdateProductPrice(CustomerModel.ProductPriceModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             _customerViewModelService.UpdateProductPrice(model);
             return new NullJsonResult();
         }
         public IActionResult DeleteProductPrice(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
             _customerViewModelService.DeleteProductPrice(id);
             return new NullJsonResult();
         }
 
         public IActionResult UpdatePersonalizedProduct(CustomerModel.ProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
             _customerViewModelService.UpdatePersonalizedProduct(model);
             return new NullJsonResult();
         }
 
         public IActionResult DeletePersonalizedProduct(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             _customerViewModelService.DeletePersonalizedProduct(id);
 
             return new NullJsonResult();
@@ -1025,9 +901,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ListActivityLog(DataSourceRequest command, string customerId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return Content("");
-
             var activityLog = _customerViewModelService.PrepareActivityLogModel(customerId, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -1041,9 +914,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ContactFormList(DataSourceRequest command, string customerId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageContactForm))
-                return AccessDeniedView();
-
             string vendorId = "";
             if (_workContext.CurrentVendor != null)
             {
@@ -1057,8 +927,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             };
             return Json(gridModel);
         }
-
-
         #endregion
 
         #region Back in stock subscriptions
@@ -1066,9 +934,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult BackInStockSubscriptionList(DataSourceRequest command, string customerId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return Content("");
-
             var subscriptions = _customerViewModelService.PrepareBackInStockSubscriptionModel(customerId, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -1085,9 +950,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult CustomerNotesSelect(string customerId, DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customer = _customerService.GetCustomerById(customerId);
             if (customer == null)
                 throw new ArgumentException("No customer found with the specified id");
@@ -1109,9 +971,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult CustomerNoteAdd(string customerId, string downloadId, bool displayToCustomer, string title, string message)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customer = _customerService.GetCustomerById(customerId);
             if (customer == null)
                 return Json(new { Result = false });
@@ -1128,9 +987,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult CustomerNoteDelete(string id, string customerId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customer = _customerService.GetCustomerById(customerId);
             if (customer == null)
                 throw new ArgumentException("No customer found with the specified id");
@@ -1153,9 +1009,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("exportexcel-all")]
         public IActionResult ExportExcelAll(CustomerListModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customers = _customerService.GetAllCustomers(
                 customerRoleIds: model.SearchCustomerRoleIds.ToArray(),
                 email: model.SearchEmail,
@@ -1182,9 +1035,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ExportExcelSelected(string selectedIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customers = new List<Customer>();
             if (selectedIds != null)
             {
@@ -1203,9 +1053,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("exportxml-all")]
         public IActionResult ExportXmlAll(CustomerListModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customers = _customerService.GetAllCustomers(
                 customerRoleIds: model.SearchCustomerRoleIds.ToArray(),
                 email: model.SearchEmail,
@@ -1232,9 +1079,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ExportXmlSelected(string selectedIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customers = new List<Customer>();
             if (selectedIds != null)
             {
