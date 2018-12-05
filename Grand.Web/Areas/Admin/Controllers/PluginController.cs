@@ -10,6 +10,7 @@ using Grand.Framework.Controllers;
 using Grand.Framework.Extensions;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Models;
+using Grand.Framework.Security.Authorization;
 using Grand.Framework.Themes;
 using Grand.Services.Authentication.External;
 using Grand.Services.Cms;
@@ -35,6 +36,7 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Plugins)]
     public partial class PluginController : BaseAdminController
     {
         #region Fields
@@ -42,7 +44,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IPluginFinder _pluginFinder;
         private readonly ILocalizationService _localizationService;
         private readonly IWebHelper _webHelper;
-        private readonly IPermissionService _permissionService;
         private readonly ILanguageService _languageService;
         private readonly ISettingService _settingService;
         private readonly ICustomerActivityService _customerActivityService;
@@ -62,7 +63,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         public PluginController(IPluginFinder pluginFinder,
             ILocalizationService localizationService,
             IWebHelper webHelper,
-            IPermissionService permissionService,
             ILanguageService languageService,
             ISettingService settingService,
             ICustomerActivityService customerActivityService,
@@ -79,7 +79,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._pluginFinder = pluginFinder;
             this._localizationService = localizationService;
             this._webHelper = webHelper;
-            this._permissionService = permissionService;
             this._languageService = languageService;
             this._settingService = settingService;
             this._customerActivityService = customerActivityService;
@@ -182,9 +181,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
-                return AccessDeniedView();
-
             var model = new PluginListModel();
             //load modes
             model.AvailableLoadModes = LoadPluginsMode.All.ToSelectList(false).ToList();
@@ -198,9 +194,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ListSelect(DataSourceRequest command, PluginListModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
-                return AccessDeniedView();
-
             var loadMode = (LoadPluginsMode)model.SearchLoadModeId;
             var pluginDescriptors = _pluginFinder.GetPluginDescriptors(loadMode, "", model.SearchGroup).ToList();
             var gridModel = new DataSourceResult
@@ -218,9 +211,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Install(IFormCollection form)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
-                return AccessDeniedView();
-
             try
             {
                 //get plugin system name
@@ -257,9 +247,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired(FormValueRequirement.StartsWith, "uninstall-plugin-link-")]
         public IActionResult Uninstall(IFormCollection form)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
-                return AccessDeniedView();
-
             try
             {
                 //get plugin system name
@@ -296,9 +283,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired(FormValueRequirement.StartsWith, "remove-plugin-link-")]
         public IActionResult Remove(IFormCollection form)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
-                return AccessDeniedView();
-
             try
             {
                 //get plugin system name
@@ -338,9 +322,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ReloadList()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
-                return AccessDeniedView();
-
             //restart application
             _webHelper.RestartAppDomain();
             return RedirectToAction("List");
@@ -350,9 +331,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult UploadPlugin(IFormFile zippedFile)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
-                return AccessDeniedView();
-
             if (zippedFile == null || zippedFile.Length == 0)
             {
                 ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
@@ -401,9 +379,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult UploadTheme(IFormFile zippedFile)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
-                return AccessDeniedView();
-
             if (zippedFile == null || zippedFile.Length == 0)
             {
                 ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
@@ -555,10 +530,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ConfigureMiscPlugin(string systemName)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
-                return AccessDeniedView();
-
-
             var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<IMiscPlugin>(systemName);
             if (descriptor == null || !descriptor.Installed)
                 return Redirect("List");
@@ -574,9 +545,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit
         public IActionResult EditPopup(string systemName)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
-                return AccessDeniedView();
-
             var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName(systemName, LoadPluginsMode.All);
             if (pluginDescriptor == null)
                 //No plugin found with the specified id
@@ -589,9 +557,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult EditPopup(string btnId, string formId, PluginModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
-                return AccessDeniedView();
-
             var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName(model.SystemName, LoadPluginsMode.All);
             if (pluginDescriptor == null)
                 //No plugin found with the specified id
@@ -736,7 +701,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
             return View(model);
         }
-
         #endregion
     }
 }
