@@ -1,5 +1,6 @@
 ﻿using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Security;
@@ -11,21 +12,19 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.SystemLog)]
     public partial class LogController : BaseAdminController
     {
         private readonly ILogViewModelService _logViewModelService;
         private readonly ILogger _logger;
         private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
 
         public LogController(ILogViewModelService logViewModelService, ILogger logger, 
-            ILocalizationService localizationService, 
-            IPermissionService permissionService)
+            ILocalizationService localizationService)
         {
             this._logViewModelService = logViewModelService;
             this._logger = logger;
             this._localizationService = localizationService;
-            this._permissionService = permissionService;
         }
 
         public IActionResult Index()
@@ -35,9 +34,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
-                return AccessDeniedView();
-
             var model = _logViewModelService.PrepareLogListModel();
             return View(model);
         }
@@ -45,10 +41,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult LogList(DataSourceRequest command, LogListModel model)
         {
-
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
-                return AccessDeniedView();
-
             var logItems = _logViewModelService.PrepareLogModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -63,9 +55,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("clearall")]
         public IActionResult ClearAll()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
-                return AccessDeniedView();
-
             _logger.ClearLog();
 
             SuccessNotification(_localizationService.GetResource("Admin.System.Log.Cleared"));
@@ -74,9 +63,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public new IActionResult View(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
-                return AccessDeniedView();
-
             var log = _logger.GetLogById(id);
             if (log == null)
                 //No log found with the specified id
@@ -90,9 +76,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
-                return AccessDeniedView();
-
             var log = _logger.GetLogById(id);
             if (log == null)
                 //No log found with the specified id
@@ -110,9 +93,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult DeleteSelected(ICollection<string> selectedIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 if (selectedIds != null)
