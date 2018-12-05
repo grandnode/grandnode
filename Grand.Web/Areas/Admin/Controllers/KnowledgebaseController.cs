@@ -2,6 +2,7 @@
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Customers;
 using Grand.Services.Knowledgebase;
 using Grand.Services.Localization;
@@ -18,23 +19,22 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Knowledgebase)]
     public class KnowledgebaseController : BaseAdminController
     {
         private readonly IKnowledgebaseViewModelService _knowledgebaseViewModelService;
         private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
         private readonly IKnowledgebaseService _knowledgebaseService;
         private readonly ILanguageService _languageService;
         private readonly ICustomerService _customerService;
         private readonly IStoreService _storeService;
 
-        public KnowledgebaseController(IKnowledgebaseViewModelService knowledgebaseViewModelService, ILocalizationService localizationService, IPermissionService permissionService,
+        public KnowledgebaseController(IKnowledgebaseViewModelService knowledgebaseViewModelService, ILocalizationService localizationService,
             IKnowledgebaseService knowledgebaseService, ILanguageService languageService, 
             ICustomerService customerService, IStoreService storeService)
         {
             this._knowledgebaseViewModelService = knowledgebaseViewModelService;
             this._localizationService = localizationService;
-            this._permissionService = permissionService;
             this._knowledgebaseService = knowledgebaseService;
             this._languageService = languageService;
             this._customerService = customerService;
@@ -48,17 +48,11 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
-                return AccessDeniedView();
-
             return View();
         }
 
         public IActionResult NodeList()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
-                return AccessDeniedView();
-
             var model = _knowledgebaseViewModelService.PrepareTreeNode();
             return Json(model);
         }
@@ -66,9 +60,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ArticleList(DataSourceRequest command, string parentCategoryId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
-                return AccessDeniedView();
-
             var articles = _knowledgebaseViewModelService.PrepareKnowledgebaseArticleGridModel(parentCategoryId, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -82,9 +73,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ListCategoryActivityLog(DataSourceRequest command, string categoryId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
-                return Content("");
-
             var activityLog = _knowledgebaseViewModelService.PrepareCategoryActivityLogModels(categoryId, command.Page, command.PageSize);
 
             var gridModel = new DataSourceResult
@@ -99,9 +87,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ListArticleActivityLog(DataSourceRequest command, string articleId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
-                return Content("");
-
             var activityLog = _knowledgebaseViewModelService.PrepareArticleActivityLogModels(articleId, command.Page, command.PageSize);
 
             var gridModel = new DataSourceResult
@@ -114,9 +99,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult CreateCategory()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
-                return AccessDeniedView();
-
             var model = _knowledgebaseViewModelService.PrepareKnowledgebaseCategoryModel();
             model.PrepareACLModel(null, false, _customerService);
             model.PrepareStoresMappingModel(null, false, _storeService);
@@ -127,9 +109,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult CreateCategory(KnowledgebaseCategoryModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var knowledgebaseCategory = _knowledgebaseViewModelService.InsertKnowledgebaseCategoryModel(model);
@@ -147,9 +126,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult EditCategory(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
-                return AccessDeniedView();
-
             var knowledgebaseCategory = _knowledgebaseService.GetKnowledgebaseCategory(id);
             if (knowledgebaseCategory == null)
                 return RedirectToAction("List");
@@ -179,9 +155,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult EditCategory(KnowledgebaseCategoryModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
-                return AccessDeniedView();
-
             var knowledgebaseCategory = _knowledgebaseService.GetKnowledgebaseCategory(model.Id);
             if (knowledgebaseCategory == null)
                 return RedirectToAction("List");
@@ -206,9 +179,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult DeleteCategory(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
-                return AccessDeniedView();
-
             var knowledgebaseCategory = _knowledgebaseService.GetKnowledgebaseCategory(id);
             if (knowledgebaseCategory == null)
                 return RedirectToAction("List");
@@ -231,9 +201,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult CreateArticle(string parentCategoryId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
-                return AccessDeniedView();
-
             var model = _knowledgebaseViewModelService.PrepareKnowledgebaseArticleModel();
             //ACL
             model.PrepareACLModel(null, false, _customerService);
@@ -250,9 +217,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult CreateArticle(KnowledgebaseArticleModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var knowledgebaseArticle = _knowledgebaseViewModelService.InsertKnowledgebaseArticleModel(model);
@@ -272,9 +236,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult EditArticle(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
-                return AccessDeniedView();
-
             var knowledgebaseArticle = _knowledgebaseService.GetKnowledgebaseArticle(id);
             if (knowledgebaseArticle == null)
                 return RedirectToAction("List");
@@ -306,9 +267,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult EditArticle(KnowledgebaseArticleModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
-                return AccessDeniedView();
-
             var knowledgebaseArticle = _knowledgebaseService.GetKnowledgebaseArticle(model.Id);
             if (knowledgebaseArticle == null)
                 return RedirectToAction("List");
@@ -333,9 +291,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult DeleteArticle(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
-                return AccessDeniedView();
-
             var knowledgebaseArticle = _knowledgebaseService.GetKnowledgebaseArticle(id);
             if (knowledgebaseArticle == null)
                 return RedirectToAction("List");
@@ -365,9 +320,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult RelatedArticlesAddPopupList(DataSourceRequest command, KnowledgebaseArticleModel.AddRelatedArticleModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
-                return AccessDeniedView();
-
             var articles = _knowledgebaseService.GetKnowledgebaseArticlesByName(model.SearchArticleName, command.Page - 1, command.PageSize);
             var gridModel = new DataSourceResult();
             gridModel.Data = articles.Select(x => x.ToModel());
@@ -378,9 +330,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult RelatedArticlesList(DataSourceRequest command, string articleId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
-                return AccessDeniedView();
-
             var articles = _knowledgebaseService.GetRelatedKnowledgebaseArticles(articleId, command.Page - 1, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -402,9 +351,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public IActionResult ArticlesPopup(KnowledgebaseArticleModel.AddRelatedArticleModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageKnowledgebase))
-                return AccessDeniedView();
-
             if (model.SelectedArticlesIds != null)
             {
                 _knowledgebaseViewModelService.InsertKnowledgebaseRelatedArticle(model);
@@ -418,9 +364,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult RelatedArticleDelete(KnowledgebaseArticleModel.AddRelatedArticleModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             if (model.ArticleId == null || model.Id == null)
                 throw new ArgumentNullException("Article id expected ");
 
