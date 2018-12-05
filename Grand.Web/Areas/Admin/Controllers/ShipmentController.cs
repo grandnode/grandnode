@@ -8,6 +8,7 @@ using Grand.Core.Domain.Tax;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Affiliates;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
@@ -36,6 +37,7 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Orders)]
     public partial class ShipmentController : BaseAdminController
     {
         #region Fields
@@ -48,7 +50,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IPdfService _pdfService;
         private readonly IProductService _productService;
         private readonly IExportManager _exportManager;
-        private readonly IPermissionService _permissionService;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
@@ -89,7 +90,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             IPdfService pdfService,
             IProductService productService,
             IExportManager exportManager,
-            IPermissionService permissionService,
             IWorkflowMessageService workflowMessageService,
             ICategoryService categoryService,
             IManufacturerService manufacturerService,
@@ -128,7 +128,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._pdfService = pdfService;
             this._productService = productService;
             this._exportManager = exportManager;
-            this._permissionService = permissionService;
             this._workflowMessageService = workflowMessageService;
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
@@ -163,9 +162,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var model = _shipmentViewModelService.PrepareShipmentListModel();
             return View(model);
         }
@@ -173,11 +169,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ShipmentListSelect(DataSourceRequest command, ShipmentListModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var shipments = _shipmentViewModelService.PrepareShipments(model, command.Page, command.PageSize);
-
             var gridModel = new DataSourceResult
             {
                 Data = shipments.shipments.Select(shipment => _shipmentViewModelService.PrepareShipmentModel(shipment, false)),
@@ -189,9 +181,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ShipmentsByOrder(string orderId, DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var order = _orderService.GetOrderById(orderId);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
@@ -221,9 +210,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ShipmentsItemsByShipmentId(string shipmentId, DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var shipment = _shipmentService.GetShipmentById(shipmentId);
             if (shipment == null)
                 throw new ArgumentException("No shipment found with the specified id");
@@ -253,9 +239,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult AddShipment(string orderId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var order = _orderService.GetOrderById(orderId);
             if (order == null)
                 //No order found with the specified id
@@ -274,9 +257,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public IActionResult AddShipment(string orderId, IFormCollection form, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var order = _orderService.GetOrderById(orderId);
             if (order == null)
                 //No order found with the specified id
@@ -322,9 +302,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ShipmentDetails(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var shipment = _shipmentService.GetShipmentById(id);
             if (shipment == null)
                 //No shipment found with the specified id
@@ -347,9 +324,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult DeleteShipment(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var shipment = _shipmentService.GetShipmentById(id);
             if (shipment == null)
                 //No shipment found with the specified id
@@ -393,9 +367,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("settrackingnumber")]
         public IActionResult SetTrackingNumber(ShipmentModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var shipment = _shipmentService.GetShipmentById(model.Id);
             if (shipment == null)
                 //No shipment found with the specified id
@@ -420,9 +391,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("setadmincomment")]
         public IActionResult SetShipmentAdminComment(ShipmentModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var shipment = _shipmentService.GetShipmentById(model.Id);
             if (shipment == null)
                 //No shipment found with the specified id
@@ -447,9 +415,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("setasshipped")]
         public IActionResult SetAsShipped(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var shipment = _shipmentService.GetShipmentById(id);
             if (shipment == null)
                 //No shipment found with the specified id
@@ -481,9 +446,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("saveshippeddate")]
         public IActionResult EditShippedDate(ShipmentModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var shipment = _shipmentService.GetShipmentById(model.Id);
             if (shipment == null)
                 //No shipment found with the specified id
@@ -520,9 +482,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("setasdelivered")]
         public IActionResult SetAsDelivered(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var shipment = _shipmentService.GetShipmentById(id);
             if (shipment == null)
                 //No shipment found with the specified id
@@ -555,9 +514,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("savedeliverydate")]
         public IActionResult EditDeliveryDate(ShipmentModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var shipment = _shipmentService.GetShipmentById(model.Id);
             if (shipment == null)
                 //No shipment found with the specified id
@@ -592,9 +548,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult PdfPackagingSlip(string shipmentId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var shipment = _shipmentService.GetShipmentById(shipmentId);
             if (shipment == null)
                 //no shipment found with the specified id
@@ -625,9 +578,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("exportpackagingslips-all")]
         public IActionResult PdfPackagingSlipAll(ShipmentListModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             //load shipments
             var shipments = _shipmentViewModelService.PrepareShipments(model, 1, 100);
 
@@ -650,9 +600,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult PdfPackagingSlipSelected(string selectedIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var shipments = new List<Shipment>();
             if (selectedIds != null)
             {
@@ -693,9 +640,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult SetAsShippedSelected(ICollection<string> selectedIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var shipments = new List<Shipment>();
             if (selectedIds != null)
             {
@@ -729,9 +673,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult SetAsDeliveredSelected(ICollection<string> selectedIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var shipments = new List<Shipment>();
             if (selectedIds != null)
             {
