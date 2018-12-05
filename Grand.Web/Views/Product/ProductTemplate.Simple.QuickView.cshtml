@@ -7,8 +7,7 @@
 }
 @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_after_breadcrumb", additionalData = Model.Id })
 <resources asp-type="ScriptHeader" />
-<div class="product-quickview">
-    <div class="modal-dialog container" role="document">
+    <div class="modal-dialog product-quickview" role="document">
         <div class="modal-content rounded-0">
             <button type="button" class="close text-dark" data-dismiss="modal" aria-label="Close">
                 <span class="quick-close"></span>
@@ -177,25 +176,31 @@
             </div>
         </div>
     </div>
-</div>
 <script>
     $(document).ready(function () {
-        if ($(window).width() > 768) {
+
+        $('#ModalQuickView').animate({
+            scrollTop: 0
+        }, 300, 'linear');
+
+        if ($(window).width() > 767) {
             $('.product-quickview .review-scroll-button').on('click', function (e) {
                 e.preventDefault();
-                $('#ModalQuickView').animate({
-                    scrollTop: $($(this).attr('href')).offset().top - 120
-                }, 300, 'linear');
                 $("#review-tab").click();
+                var vcenter = $('.product-quickview .overview').height() + 30;
+                $('#ModalQuickView').animate({
+                    scrollTop: vcenter
+                }, 300, 'linear');
             });
         }
         else {
             $('.product-quickview .review-scroll-button').on('click', function (e) {
                 e.preventDefault();
-                $('#ModalQuickView').animate({
-                    scrollTop: $($(this).attr('href')).offset().top - 500
-                }, 300, 'linear');
                 $("#review-tab").click();
+                var vcenter = $('.product-quickview .overview').height() + $('.product-quickview .gallery').height() + 30;
+                $('#ModalQuickView').animate({
+                    scrollTop: vcenter
+                }, 300, 'linear');
             });
         }
         var rating_percent = $('.progress10').attr("data-rating");

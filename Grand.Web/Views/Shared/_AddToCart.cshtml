@@ -170,5 +170,8 @@
             var rating_percent = $(this).attr("data-rating");
             productStarProgress10(rating_percent, rating_id);
         });
+        $("#ModalAddToCart .cross-sell-container .btn-quick-view").on("click", function () {
+            $('#ModalAddToCart').modal('hide');
+        });
     });
 </script>
