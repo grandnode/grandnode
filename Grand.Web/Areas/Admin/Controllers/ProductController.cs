@@ -5,6 +5,7 @@ using Grand.Framework.Extensions;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Customers;
@@ -29,6 +30,7 @@ using System.Text;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Products)]
     public partial class ProductController : BaseAdminController
     {
         #region Fields
@@ -40,7 +42,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IExportManager _exportManager;
         private readonly IImportManager _importManager;
-        private readonly IPermissionService _permissionService;
         private readonly IStoreService _storeService;
         private readonly IProductReservationService _productReservationService;
         private readonly IAuctionService _auctionService;
@@ -57,7 +58,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             ILocalizationService localizationService,
             IExportManager exportManager,
             IImportManager importManager,
-            IPermissionService permissionService,
             IStoreService storeService,
             IProductReservationService productReservationService,
             IAuctionService auctionService)
@@ -70,7 +70,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._localizationService = localizationService;
             this._exportManager = exportManager;
             this._importManager = importManager;
-            this._permissionService = permissionService;
             this._storeService = storeService;
             this._productReservationService = productReservationService;
             this._auctionService = auctionService;
@@ -90,8 +89,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
             var model = _productViewModelService.PrepareProductListModel();
             return View(model);
         }
@@ -99,9 +96,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductList(DataSourceRequest command, ProductListModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var products = _productViewModelService.PrepareProductsModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult();
             gridModel.Data = products.productModels.ToList();
@@ -128,9 +122,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //create product
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var model = new ProductModel();
             _productViewModelService.PrepareProductModel(model, null, true, true);
             AddLocales(_languageService, model.Locales);
@@ -142,9 +133,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Create(ProductModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var product = _productViewModelService.InsertProductModel(model);
@@ -163,9 +151,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit product
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(id);
             if (product == null)
                 //No product found with the specified id
@@ -199,9 +184,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Edit(ProductModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(model.Id);
             if (product == null)
                 //No product found with the specified id
@@ -239,9 +221,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(id);
             if (product == null)
                 //No product found with the specified id
@@ -264,9 +243,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult DeleteSelected(ICollection<string> selectedIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             if (selectedIds != null)
             {
                 _productViewModelService.DeleteSelected(selectedIds.ToList());
@@ -278,9 +254,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult CopyProduct(ProductModel model, [FromServices] ICopyProductService copyProductService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var copyModel = model.CopyProductModel;
             try
             {
@@ -312,9 +285,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             var result = "";
 
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return Json(new { Text = result });
-
             if (!String.IsNullOrWhiteSpace(productIds))
             {
                 var ids = new List<string>();
@@ -342,8 +312,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult RequiredProductAddPopup(string productIdsInput)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
             var model = _productViewModelService.PrepareAddRequiredProductModel();
             ViewBag.productIdsInput = productIdsInput;
             return View(model);
@@ -352,9 +320,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult RequiredProductAddPopupList(DataSourceRequest command, ProductModel.AddRequiredProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
@@ -375,8 +340,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductCategoryList(DataSourceRequest command, string productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
             var product = _productService.GetProductById(productId);
 
             //a vendor should have access only to his products
@@ -400,9 +363,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductCategoryInsert(ProductModel.ProductCategoryModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 try
@@ -410,7 +370,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     _productViewModelService.InsertProductCategoryModel(model);
                     return new NullJsonResult();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     return ErrorForKendoGridJson(ex.Message);
                 }
@@ -421,9 +381,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductCategoryUpdate(ProductModel.ProductCategoryModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 try
@@ -442,9 +399,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductCategoryDelete(string id, string productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 _productViewModelService.DeleteProductCategory(id, productId);
@@ -460,9 +414,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductManufacturerList(DataSourceRequest command, string productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -486,8 +437,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductManufacturerInsert(ProductModel.ProductManufacturerModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
             if (ModelState.IsValid)
             {
                 try
@@ -506,28 +455,30 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductManufacturerUpdate(ProductModel.ProductManufacturerModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-            try
+            if (ModelState.IsValid)
             {
-                _productViewModelService.UpdateProductManufacturer(model);
-                return new NullJsonResult();
+                try
+                {
+                    _productViewModelService.UpdateProductManufacturer(model);
+                    return new NullJsonResult();
+                }
+                catch (Exception ex)
+                {
+                    return ErrorForKendoGridJson(ex.Message);
+                }
             }
-            catch (Exception ex)
-            {
-                return ErrorForKendoGridJson(ex.Message);
-            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         [HttpPost]
         public IActionResult ProductManufacturerDelete(string id, string productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
-            _productViewModelService.DeleteProductManufacturer(id, productId);
-
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                _productViewModelService.DeleteProductManufacturer(id, productId);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         #endregion
@@ -537,9 +488,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult RelatedProductList(DataSourceRequest command, string productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -575,8 +523,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult RelatedProductUpdate(ProductModel.RelatedProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
             _productViewModelService.UpdateRelatedProductModel(model);
             return new NullJsonResult();
         }
@@ -584,18 +530,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult RelatedProductDelete(ProductModel.RelatedProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             _productViewModelService.DeleteRelatedProductModel(model);
             return new NullJsonResult();
         }
 
         public IActionResult RelatedProductAddPopup(string productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var model = _productViewModelService.PrepareRelatedProductModel();
             return View(model);
         }
@@ -603,9 +543,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult RelatedProductAddPopupList(DataSourceRequest command, ProductModel.AddRelatedProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var items = _productViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult();
             gridModel.Data = items.products.ToList();
@@ -617,9 +554,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public IActionResult RelatedProductAddPopup(ProductModel.AddRelatedProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             if (model.SelectedProductIds != null)
             {
                 _productViewModelService.InsertRelatedProductModel(model);
@@ -638,9 +572,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult BundleProductList(DataSourceRequest command, string productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -651,7 +582,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                     return Content("This is not your product");
                 }
             }
-
             var bundleProducts = product.BundleProducts.OrderBy(x => x.DisplayOrder);
             var bundleProductsModel = bundleProducts
                 .Select(x => new ProductModel.BundleProductModel
@@ -677,9 +607,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult BundleProductUpdate(ProductModel.BundleProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             _productViewModelService.UpdateBundleProductModel(model);
             return new NullJsonResult();
         }
@@ -687,17 +614,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult BundleProductDelete(ProductModel.BundleProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             _productViewModelService.DeleteBundleProductModel(model);
             return new NullJsonResult();
         }
 
         public IActionResult BundleProductAddPopup(string productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
             var model = _productViewModelService.PrepareBundleProductModel();
             return View(model);
         }
@@ -705,9 +627,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult BundleProductAddPopupList(DataSourceRequest command, ProductModel.AddBundleProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var items = _productViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult();
             gridModel.Data = items.products.ToList();
@@ -720,9 +639,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public IActionResult BundleProductAddPopup(ProductModel.AddBundleProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             if (model.SelectedProductIds != null)
             {
                 _productViewModelService.InsertBundleProductModel(model);
@@ -741,9 +657,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult CrossSellProductList(DataSourceRequest command, string productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
 
             //a vendor should have access only to his products
@@ -754,7 +667,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                     return Content("This is not your product");
                 }
             }
-
             var crossSellProducts = product.CrossSellProduct;
             var crossSellProductsModel = crossSellProducts
                 .Select(x => new ProductModel.CrossSellProductModel
@@ -776,9 +688,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult CrossSellProductDelete(string id, string productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
 
             var crossSellProduct = product.CrossSellProduct.Where(x => x == id).FirstOrDefault();
@@ -799,9 +708,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult CrossSellProductAddPopup(string productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var model = _productViewModelService.PrepareCrossSellProductModel();
             return View(model);
         }
@@ -809,9 +715,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult CrossSellProductAddPopupList(DataSourceRequest command, ProductModel.AddCrossSellProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var items = _productViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult();
             gridModel.Data = items.products.ToList();
@@ -824,9 +727,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public IActionResult CrossSellProductAddPopup(ProductModel.AddCrossSellProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             if (model.SelectedProductIds != null)
             {
                 _productViewModelService.InsertCrossSellProductModel(model);
@@ -845,9 +745,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult AssociatedProductList(DataSourceRequest command, string productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
@@ -857,7 +754,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                     return Content("This is not your product");
                 }
             }
-
             //a vendor should have access only to his products
             var vendorId = "";
             if (_workContext.CurrentVendor != null)
@@ -889,9 +785,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult AssociatedProductUpdate(ProductModel.AssociatedProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var associatedProduct = _productService.GetProductById(model.Id);
             if (associatedProduct == null)
                 throw new ArgumentException("No associated product found with the specified id");
@@ -911,9 +804,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult AssociatedProductDelete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(id);
             if (product == null)
                 throw new ArgumentException("No associated product found with the specified id");
@@ -924,9 +814,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult AssociatedProductAddPopup(string productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var model = _productViewModelService.PrepareAssociatedProductModel();
             return View(model);
         }
@@ -934,9 +821,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult AssociatedProductAddPopupList(DataSourceRequest command, ProductModel.AddAssociatedProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var items = _productViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult();
             gridModel.Data = items.products.ToList();
@@ -948,9 +832,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public IActionResult AssociatedProductAddPopup(ProductModel.AddAssociatedProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             if (model.SelectedProductIds != null)
             {
                 _productViewModelService.InsertAssociatedProductModel(model);
@@ -968,9 +849,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             string overrideAltAttribute, string overrideTitleAttribute,
             string productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             if (String.IsNullOrEmpty(pictureId))
                 throw new ArgumentException();
 
@@ -990,9 +868,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductPictureList(DataSourceRequest command, string productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -1015,9 +890,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductPictureUpdate(ProductModel.ProductPictureModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             _productViewModelService.UpdateProductPicture(model);
             return new NullJsonResult();
         }
@@ -1025,9 +897,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductPictureDelete(ProductModel.ProductPictureModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             _productViewModelService.DeleteProductPicture(model);
             return new NullJsonResult();
         }
@@ -1036,11 +905,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Product specification attributes
         public IActionResult ProductSpecificationAttributeAdd(ProductModel.AddProductSpecificationAttributeModel model, string productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
-
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
@@ -1057,9 +922,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductSpecAttrList(DataSourceRequest command, string productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             //a vendor should have access only to his products
             var product = _productService.GetProductById(productId);
             if (_workContext.CurrentVendor != null)
@@ -1081,9 +943,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductSpecAttrUpdate(ProductSpecificationAttributeModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(model.ProductId);
             var psa = product.ProductSpecificationAttributes.Where(x => x.SpecificationAttributeId == model.ProductSpecificationId).Where(x => x.Id == model.Id).FirstOrDefault();
             if (psa == null)
@@ -1104,9 +963,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductSpecAttrDelete(string id, string ProductSpecificationId, string productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
             var psa = product.ProductSpecificationAttributes.Where(x => x.Id == id && x.SpecificationAttributeId == ProductSpecificationId).FirstOrDefault();
             if (psa == null)
@@ -1130,18 +986,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ProductTags()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductTags))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult ProductTags(DataSourceRequest command, [FromServices] IProductTagService productTagService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductTags))
-                return AccessDeniedView();
-
             var tags = productTagService.GetAllProductTags()
                 //order by product count
                 .OrderByDescending(x => productTagService.GetProductCount(x.Id, ""))
@@ -1165,8 +1015,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductTagDelete(string id, [FromServices] IProductTagService productTagService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductTags))
-                return AccessDeniedView();
             var tag = productTagService.GetProductTagById(id);
             if (tag == null)
                 throw new ArgumentException("No product tag found with the specified id");
@@ -1180,9 +1028,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit
         public IActionResult EditProductTag(string id, [FromServices] IProductTagService productTagService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductTags))
-                return AccessDeniedView();
-
             var productTag = productTagService.GetProductTagById(id);
             if (productTag == null)
                 //No product tag found with the specified id
@@ -1206,9 +1051,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult EditProductTag(ProductTagModel model, [FromServices] IProductTagService productTagService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductTags))
-                return AccessDeniedView();
-
             var productTag = productTagService.GetProductTagById(model.Id);
             if (productTag == null)
                 //No product tag found with the specified id
@@ -1233,9 +1075,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult PurchasedWithOrders(DataSourceRequest command, string productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
@@ -1261,9 +1100,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Reviews(DataSourceRequest command, string productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
@@ -1297,9 +1133,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("download-catalog-pdf")]
         public IActionResult DownloadCatalogAsPdf(ProductListModel model, [FromServices] IPdfService pdfService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var products = _productViewModelService.PrepareProducts(model);
             try
             {
@@ -1323,9 +1156,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("exportxml-all")]
         public IActionResult ExportXmlAll(ProductListModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var products = _productViewModelService.PrepareProducts(model);
             try
             {
@@ -1343,9 +1173,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ExportXmlSelected(string selectedIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var products = new List<Product>();
             if (selectedIds != null)
             {
@@ -1371,9 +1198,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("exportexcel-all")]
         public IActionResult ExportExcelAll(ProductListModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var products = _productViewModelService.PrepareProducts(model);
             try
             {
@@ -1390,9 +1214,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ExportExcelSelected(string selectedIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var products = new List<Product>();
             if (selectedIds != null)
             {
@@ -1415,9 +1236,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ImportExcel(IFormFile importexcelfile)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             //a vendor cannot import products
             if (_workContext.CurrentVendor != null)
                 return AccessDeniedView();
@@ -1450,8 +1268,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult BulkEdit()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
             var model = _productViewModelService.PrepareBulkEditListModel();
             return View(model);
         }
@@ -1459,9 +1275,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult BulkEditSelect(DataSourceRequest command, BulkEditListModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var items = _productViewModelService.PrepareBulkEditProductModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult();
             gridModel.Data = items.bulkEditProductModels.ToList();
@@ -1472,9 +1285,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult BulkEditUpdate(IEnumerable<BulkEditProductModel> products)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             if (products != null)
             {
                 _productViewModelService.UpdateBulkEdit(products.ToList());
@@ -1485,9 +1295,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult BulkEditDelete(IEnumerable<BulkEditProductModel> products)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             if (products != null)
             {
                 _productViewModelService.DeleteBulkEdit(products.ToList());
@@ -1502,9 +1309,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult TierPriceList(DataSourceRequest command, string productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
@@ -1519,28 +1323,21 @@ namespace Grand.Web.Areas.Admin.Controllers
                 Data = tierPricesModel,
                 Total = tierPricesModel.Count
             };
-
             return Json(gridModel);
         }
 
         public IActionResult TierPriceCreatePopup(string productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
             var model = new ProductModel.TierPriceModel();
             model.ProductId = productId;
             _productViewModelService.PrepareTierPriceModel(model);
             return View(model);
-
         }
 
         [HttpPost]
         [FormValueRequired("save")]
         public IActionResult TierPriceCreatePopup(ProductModel.TierPriceModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(model.ProductId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
@@ -1564,9 +1361,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult TierPriceEditPopup(string id, string productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
@@ -1588,9 +1382,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult TierPriceEditPopup(string productId, ProductModel.TierPriceModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
@@ -1620,9 +1411,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult TierPriceDelete(string id, string productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
@@ -1651,9 +1439,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductAttributeMappingList(DataSourceRequest command, string productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
@@ -1674,13 +1459,10 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ProductAttributeMappingPopup(string productId, string productAttributeMappingId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
-            
+
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List", "Product");
@@ -1700,9 +1482,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductAttributeMappingPopup(ProductModel.ProductAttributeMappingModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(model.ProductId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
@@ -1710,7 +1489,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List", "Product");
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 if (string.IsNullOrEmpty(model.Id))
                     _productViewModelService.InsertProductAttributeMappingModel(model);
@@ -1728,9 +1507,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductAttributeMappingDelete(string id, string productId, [FromServices] IProductAttributeService productAttributeService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
@@ -1755,9 +1531,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit
         public IActionResult ProductAttributeValidationRulesPopup(string id, string productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
@@ -1779,9 +1552,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductAttributeValidationRulesPopup(ProductModel.ProductAttributeMappingModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(model.ProductId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
@@ -1790,7 +1560,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (productAttributeMapping == null)
                 //No attribute value found with the specified id
                 return RedirectToAction("List", "Product");
-
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
@@ -1815,8 +1584,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ProductAttributeConditionPopup(string productId, string productAttributeMappingId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
             var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
@@ -1836,9 +1603,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductAttributeConditionPopup(ProductAttributeConditionModel model, IFormCollection form)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(model.ProductId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
@@ -1869,9 +1633,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //list
         public IActionResult EditAttributeValues(string productAttributeMappingId, string productId, [FromServices] IProductAttributeService productAttributeService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
@@ -1879,7 +1640,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             var productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == productAttributeMappingId).FirstOrDefault();
             if (productAttributeMapping == null)
                 throw new ArgumentException("No product attribute mapping found with the specified id");
-
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
@@ -1900,9 +1660,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductAttributeValueList(string productAttributeMappingId, string productId, DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
@@ -1927,9 +1684,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //create
         public IActionResult ProductAttributeValueCreatePopup(string productAttributeMappingId, string productId, [FromServices] IPictureService pictureService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
@@ -1937,7 +1691,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             var productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == productAttributeMappingId).FirstOrDefault();
             if (productAttributeMapping == null)
                 throw new ArgumentException("No product attribute mapping found with the specified id");
-
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
@@ -1977,9 +1730,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductAttributeValueCreatePopup(ProductModel.ProductAttributeValueModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(model.ProductId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
@@ -2021,9 +1771,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit
         public IActionResult ProductAttributeValueEditPopup(string id, string productId, string productAttributeMappingId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
@@ -2054,9 +1801,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductAttributeValueEditPopup(string productId, ProductModel.ProductAttributeValueModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
@@ -2098,9 +1842,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductAttributeValueDelete(string Id, string pam, string productId, [FromServices] IProductAttributeService productAttributeService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
@@ -2124,9 +1865,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult AssociateProductToAttributeValuePopup()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var model = _productViewModelService.PrepareAssociateProductToAttributeValueModel();
             return View(model);
         }
@@ -2135,8 +1873,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult AssociateProductToAttributeValuePopupList(DataSourceRequest command,
             ProductModel.ProductAttributeValueModel.AssociateProductToAttributeValueModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
             var items = _productViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult();
             gridModel.Data = items.products.ToList();
@@ -2148,9 +1884,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public IActionResult AssociateProductToAttributeValuePopup(ProductModel.ProductAttributeValueModel.AssociateProductToAttributeValueModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var associatedProduct = _productService.GetProductById(model.AssociatedToProductId);
             if (associatedProduct == null)
                 return Content("Cannot load a product");
@@ -2174,9 +1907,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductAttributeCombinationList(DataSourceRequest command, string productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
@@ -2191,16 +1921,12 @@ namespace Grand.Web.Areas.Admin.Controllers
                 Data = combinationsModel,
                 Total = combinationsModel.Count
             };
-
             return Json(gridModel);
         }
 
         [HttpPost]
         public IActionResult ProductAttributeCombinationDelete(string id, string productId, [FromServices] IProductAttributeService productAttributeService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
@@ -2229,9 +1955,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit
         public IActionResult AttributeCombinationPopup(string productId, string Id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
             if (product == null)
                 //No product found with the specified id
@@ -2250,9 +1973,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult AttributeCombinationPopup(string productId,
             ProductAttributeCombinationModel model, IFormCollection form)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
             if (product == null)
                 //No product found with the specified id
@@ -2282,9 +2002,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult GenerateAllAttributeCombinations(string productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
@@ -2301,9 +2018,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ClearAllAttributeCombinations(string productId, [FromServices] IProductAttributeService productAttributeService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
@@ -2334,9 +2048,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductAttributeCombinationTierPriceList(DataSourceRequest command, string productId, string productAttributeCombinationId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
@@ -2358,9 +2069,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductAttributeCombinationTierPriceInsert(string productId, string productAttributeCombinationId, ProductModel.ProductAttributeCombinationTierPricesModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
@@ -2378,9 +2086,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductAttributeCombinationTierPriceUpdate(string productId, string productAttributeCombinationId, ProductModel.ProductAttributeCombinationTierPricesModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
@@ -2399,9 +2104,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductAttributeCombinationTierPriceDelete(string productId, string productAttributeCombinationId, string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
@@ -2423,15 +2125,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
         #endregion
         #endregion
-        
+
         #region Activity log
 
         [HttpPost]
         public IActionResult ListActivityLog(DataSourceRequest command, string productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return Content("");
-
             var activityLog = _productViewModelService.PrepareActivityLogModel(productId, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -2634,9 +2333,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductReservationDelete(ProductModel.ReservationModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var toDelete = _productReservationService.GetProductReservation(model.ReservationId);
             if (toDelete != null)
             {
@@ -2668,9 +2364,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult BidDelete(ProductModel.BidModel model, [FromServices] ICustomerActivityService customerActivityService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var toDelete = _auctionService.GetBid(model.BidId);
             if (toDelete != null)
             {
