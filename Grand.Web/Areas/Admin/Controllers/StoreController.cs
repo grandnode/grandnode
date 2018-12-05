@@ -1,6 +1,7 @@
 ﻿using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Stores;
@@ -12,42 +13,34 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Stores)]
     public partial class StoreController : BaseAdminController
     {
         private readonly IStoreViewModelService _storeViewModelService;
         private readonly IStoreService _storeService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
 
         public StoreController(
             IStoreViewModelService storeViewModelService,
             IStoreService storeService,
             ILanguageService languageService,
-            ILocalizationService localizationService,
-            IPermissionService permissionService)
+            ILocalizationService localizationService)
         {
             this._storeViewModelService = storeViewModelService;
             this._storeService = storeService;
             this._languageService = languageService;
             this._localizationService = localizationService;
-            this._permissionService = permissionService;
         }
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageStores))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageStores))
-                return AccessDeniedView();
-
             var storeModels = _storeService.GetAllStores()
                 .Select(x => x.ToModel())
                 .ToList();
@@ -63,9 +56,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageStores))
-                return AccessDeniedView();
-
             var model = _storeViewModelService.PrepareStoreModel();
             //locales
             AddLocales(_languageService, model.Locales);
@@ -80,9 +70,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Create(StoreModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageStores))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var store = _storeViewModelService.InsertStoreModel(model);
@@ -100,9 +87,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageStores))
-                return AccessDeniedView();
-
             var store = _storeService.GetStoreById(id);
             if (store == null)
                 //No store found with the specified id
@@ -125,9 +109,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public IActionResult Edit(StoreModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageStores))
-                return AccessDeniedView();
-
             var store = _storeService.GetStoreById(model.Id);
             if (store == null)
                 //No store found with the specified id
@@ -152,9 +133,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageStores))
-                return AccessDeniedView();
-
             var store = _storeService.GetStoreById(id);
             if (store == null)
                 //No store found with the specified id
