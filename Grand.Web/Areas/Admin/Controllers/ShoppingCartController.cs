@@ -2,6 +2,7 @@
 using Grand.Core.Domain.Orders;
 using Grand.Core.Infrastructure;
 using Grand.Framework.Kendoui;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.Helpers;
@@ -16,6 +17,7 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.CurrentCarts)]
     public partial class ShoppingCartController : BaseAdminController
     {
         #region Fields
@@ -26,7 +28,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly ITaxService _taxService;
         private readonly IPriceCalculationService _priceCalculationService;
-        private readonly IPermissionService _permissionService;
         private readonly ILocalizationService _localizationService;
         private readonly IProductAttributeFormatter _productAttributeFormatter;
 
@@ -40,7 +41,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             IStoreService storeService,
             ITaxService taxService,
             IPriceCalculationService priceCalculationService,
-            IPermissionService permissionService,
             ILocalizationService localizationService,
             IProductAttributeFormatter productAttributeFormatter)
         {
@@ -50,7 +50,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._storeService = storeService;
             this._taxService = taxService;
             this._priceCalculationService = priceCalculationService;
-            this._permissionService = permissionService;
             this._localizationService = localizationService;
             this._productAttributeFormatter = productAttributeFormatter;
         }
@@ -62,18 +61,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         //shopping carts
         public IActionResult CurrentCarts()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult CurrentCarts(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
-                return AccessDeniedView();
-
             var customers = _customerService.GetAllCustomers(
                 loadOnlyWithShoppingCart: true,
                 sct: ShoppingCartType.ShoppingCart,
@@ -97,9 +90,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult GetCartDetails(string customerId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
-                return AccessDeniedView();
-
             var customer = _customerService.GetCustomerById(customerId);
             var cart = customer.ShoppingCartItems.Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
 
@@ -134,9 +124,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult CurrentWishlists(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
-                return AccessDeniedView();
-
             var customers = _customerService.GetAllCustomers(
                 loadOnlyWithShoppingCart: true,
                 sct: ShoppingCartType.Wishlist,
@@ -160,9 +147,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult GetWishlistDetails(string customerId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
-                return AccessDeniedView();
-
             var customer = _customerService.GetCustomerById(customerId);
             var cart = customer.ShoppingCartItems.Where(x => x.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
 
