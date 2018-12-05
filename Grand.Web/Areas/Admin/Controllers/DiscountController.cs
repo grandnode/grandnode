@@ -3,6 +3,7 @@ using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
 using Grand.Services.Discounts;
 using Grand.Services.Localization;
@@ -19,14 +20,13 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Discounts)]
     public partial class DiscountController : BaseAdminController
     {
         #region Fields
         private readonly IDiscountViewModelService _discountViewModelService;
         private readonly IDiscountService _discountService;
         private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
-
         #endregion
 
         #region Constructors
@@ -34,13 +34,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         public DiscountController(
             IDiscountViewModelService discountViewModelService,
             IDiscountService discountService, 
-            ILocalizationService localizationService,
-            IPermissionService permissionService)
+            ILocalizationService localizationService)
         {
             this._discountViewModelService = discountViewModelService;
             this._discountService = discountService;
             this._localizationService = localizationService;
-            this._permissionService = permissionService;
         }
 
         #endregion
@@ -55,9 +53,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var model = _discountViewModelService.PrepareDiscountListModel();
             return View(model);
         }
@@ -65,9 +60,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult List(DiscountListModel model, DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var discounts = _discountViewModelService.PrepareDiscountModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -80,9 +72,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //create
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var model = new DiscountModel();
             _discountViewModelService.PrepareDiscountModel(model, null);
             //default values
@@ -93,9 +82,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Create(DiscountModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var discount = _discountViewModelService.InsertDiscountModel(model);
@@ -110,9 +96,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var discount = _discountService.GetDiscountById(id);
             if (discount == null)
                 //No discount found with the specified id
@@ -126,9 +109,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Edit(DiscountModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var discount = _discountService.GetDiscountById(model.Id);
             if (discount == null)
                 //No discount found with the specified id
@@ -156,9 +136,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var discount = _discountService.GetDiscountById(id);
             if (discount == null)
                 //No discount found with the specified id
@@ -186,9 +163,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult CouponCodeList(DataSourceRequest command, string discountId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new Exception("No discount found with the specified id");
@@ -209,9 +183,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult CouponCodeDelete(string discountId, string Id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new Exception("No discount found with the specified id");
@@ -233,9 +204,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
         public IActionResult CouponCodeInsert(string discountId, string couponCode)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             if(string.IsNullOrEmpty(couponCode))
                 throw new Exception("Coupon code can't be empty");
 
@@ -261,9 +229,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [AcceptVerbs("GET")]
         public IActionResult GetDiscountRequirementConfigurationUrl(string systemName, string discountId, string discountRequirementId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             if (String.IsNullOrEmpty(systemName))
                 throw new ArgumentNullException("systemName");
 
@@ -283,9 +248,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult GetDiscountRequirementMetaInfo(string discountRequirementId, string discountId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new ArgumentException("Discount could not be loaded");
@@ -308,9 +270,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult DeleteDiscountRequirement(string discountRequirementId, string discountId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new ArgumentException("Discount could not be loaded");
@@ -334,9 +293,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductList(DataSourceRequest command, string discountId, [FromServices] IProductService productService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new Exception("No discount found with the specified id");
@@ -357,9 +313,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ProductDelete(string discountId, string productId, [FromServices] IProductService productService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new Exception("No discount found with the specified id");
@@ -378,9 +331,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ProductAddPopup(string discountId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var model = _discountViewModelService.PrepareProductToDiscountModel();
             return View(model);
         }
@@ -388,9 +338,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductAddPopupList(DataSourceRequest command, DiscountModel.AddProductToDiscountModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var products = _discountViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
 
             var gridModel = new DataSourceResult();
@@ -404,9 +351,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public IActionResult ProductAddPopup(DiscountModel.AddProductToDiscountModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var discount = _discountService.GetDiscountById(model.DiscountId);
             if (discount == null)
                 throw new Exception("No discount found with the specified id");
@@ -427,9 +371,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult CategoryList(DataSourceRequest command, string discountId, [FromServices] ICategoryService categoryService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new Exception("No discount found with the specified id");
@@ -450,9 +391,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult CategoryDelete(string discountId, string categoryId, [FromServices] ICategoryService categoryService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new Exception("No discount found with the specified id");
@@ -471,9 +409,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult CategoryAddPopup(string discountId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var model = new DiscountModel.AddCategoryToDiscountModel();
             return View(model);
         }
@@ -481,9 +416,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult CategoryAddPopupList(DataSourceRequest command, DiscountModel.AddCategoryToDiscountModel model, [FromServices] ICategoryService categoryService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var categories = categoryService.GetAllCategories(model.SearchCategoryName,
                 pageIndex: command.Page - 1, pageSize: command.PageSize, showHidden: true);
             var gridModel = new DataSourceResult
@@ -504,9 +436,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public IActionResult CategoryAddPopup(DiscountModel.AddCategoryToDiscountModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var discount = _discountService.GetDiscountById(model.DiscountId);
             if (discount == null)
                 throw new Exception("No discount found with the specified id");
@@ -526,9 +455,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ManufacturerList(DataSourceRequest command, string discountId, [FromServices] IManufacturerService manufacturerService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new Exception("No discount found with the specified id");
@@ -549,9 +475,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ManufacturerDelete(string discountId, string manufacturerId, [FromServices] IManufacturerService manufacturerService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new Exception("No discount found with the specified id");
@@ -570,9 +493,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ManufacturerAddPopup(string discountId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var model = new DiscountModel.AddManufacturerToDiscountModel();
             return View(model);
         }
@@ -580,9 +500,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ManufacturerAddPopupList(DataSourceRequest command, DiscountModel.AddManufacturerToDiscountModel model, [FromServices] IManufacturerService manufacturerService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var manufacturers = manufacturerService.GetAllManufacturers(model.SearchManufacturerName,"",
                 command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
@@ -598,9 +515,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public IActionResult ManufacturerAddPopup(DiscountModel.AddManufacturerToDiscountModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var discount = _discountService.GetDiscountById(model.DiscountId);
             if (discount == null)
                 throw new Exception("No discount found with the specified id");
@@ -620,9 +534,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult VendorList(DataSourceRequest command, string discountId, [FromServices] IVendorService vendorService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new Exception("No discount found with the specified id");
@@ -643,9 +554,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult VendorDelete(string discountId, string vendorId, [FromServices] IVendorService vendorService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new Exception("No discount found with the specified id");
@@ -663,9 +571,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult VendorAddPopup(string discountId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var model = new DiscountModel.AddVendorToDiscountModel();
             return View(model);
         }
@@ -673,9 +578,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult VendorAddPopupList(DataSourceRequest command, DiscountModel.AddVendorToDiscountModel model, [FromServices] IVendorService vendorService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var vendors = vendorService.GetAllVendors(model.SearchVendorName, command.Page - 1, command.PageSize, true);
 
             //search for emails
@@ -698,9 +600,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public IActionResult VendorAddPopup(DiscountModel.AddVendorToDiscountModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var discount = _discountService.GetDiscountById(model.DiscountId);
             if (discount == null)
                 throw new Exception("No discount found with the specified id");
@@ -719,9 +618,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult StoreList(DataSourceRequest command, string discountId, [FromServices] IStoreService storeService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new Exception("No discount found with the specified id");
@@ -742,9 +638,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult StoreDelete(string discountId, string storeId, [FromServices] IStoreService storeService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new Exception("No discount found with the specified id");
@@ -762,9 +655,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult StoreAddPopup(string discountId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var model = new DiscountModel.AddStoreToDiscountModel();
             return View(model);
         }
@@ -772,9 +662,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult StoreAddPopupList(DataSourceRequest command, DiscountModel.AddStoreToDiscountModel model, [FromServices] IStoreService storeService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var stores = storeService.GetAllStores();
             var gridModel = new DataSourceResult
             {
@@ -789,9 +676,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public IActionResult StoreAddPopup(DiscountModel.AddStoreToDiscountModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var discount = _discountService.GetDiscountById(model.DiscountId);
             if (discount == null)
                 throw new Exception("No discount found with the specified id");
@@ -811,9 +695,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult UsageHistoryList(string discountId, DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new ArgumentException("No discount found with the specified id");
@@ -830,9 +711,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult UsageHistoryDelete(string discountId, string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
-                return AccessDeniedView();
-
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new ArgumentException("No discount found with the specified id");
