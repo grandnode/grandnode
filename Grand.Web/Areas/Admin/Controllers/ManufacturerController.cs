@@ -4,6 +4,7 @@ using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.ExportImport;
@@ -23,6 +24,7 @@ using System.Text;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Manufacturers)]
     public partial class ManufacturerController : BaseAdminController
     {
         #region Fields
@@ -33,9 +35,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly IExportManager _exportManager;
-        private readonly IPermissionService _permissionService;
         private readonly IImportManager _importManager;
-
         #endregion
 
         #region Constructors
@@ -48,7 +48,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             ILanguageService languageService,
             ILocalizationService localizationService,
             IExportManager exportManager,
-            IPermissionService permissionService,
             IImportManager importManager)
         {
             this._manufacturerViewModelService = manufacturerViewModelService;
@@ -58,7 +57,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._languageService = languageService;
             this._localizationService = localizationService;
             this._exportManager = exportManager;
-            this._permissionService = permissionService;
             this._importManager = importManager;
         }
 
@@ -73,9 +71,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
-                return AccessDeniedView();
-
             var model = new ManufacturerListModel();
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var s in _storeService.GetAllStores())
@@ -87,9 +82,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult List(DataSourceRequest command, ManufacturerListModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
-                return AccessDeniedView();
-
             var manufacturers = _manufacturerService.GetAllManufacturers(model.SearchManufacturerName,
                 model.SearchStoreId, command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
@@ -107,9 +99,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Create([FromServices] CatalogSettings catalogSettings)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
-                return AccessDeniedView();
-
             var model = new ManufacturerModel();
             //locales
             AddLocales(_languageService, model.Locales);
@@ -133,9 +122,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Create(ManufacturerModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var manufacturer = _manufacturerViewModelService.InsertManufacturerModel(model);
@@ -158,9 +144,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
-                return AccessDeniedView();
-
             var manufacturer = _manufacturerService.GetManufacturerById(id);
             if (manufacturer == null)
                 //No manufacturer found with the specified id
@@ -192,9 +175,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Edit(ManufacturerModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
-                return AccessDeniedView();
-
             var manufacturer = _manufacturerService.GetManufacturerById(model.Id);
             if (manufacturer == null)
                 //No manufacturer found with the specified id
@@ -232,9 +212,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
-                return AccessDeniedView();
-
             var manufacturer = _manufacturerService.GetManufacturerById(id);
             if (manufacturer == null)
                 //No manufacturer found with the specified id
@@ -257,9 +234,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ExportXml()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
-                return AccessDeniedView();
-
             try
             {
                 var manufacturers = _manufacturerService.GetAllManufacturers(showHidden: true);
@@ -276,8 +250,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ExportXlsx()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
-                return AccessDeniedView();
             try
             {
                 var bytes = _exportManager.ExportManufacturersToXlsx(_manufacturerService.GetAllManufacturers(showHidden: true));
@@ -293,9 +265,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ImportFromXlsx(IFormFile importexcelfile, [FromServices] IWorkContext workContext)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
-                return AccessDeniedView();
-
             //a vendor cannot import manufacturers
             if (workContext.CurrentVendor != null)
                 return AccessDeniedView();
@@ -326,9 +295,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductList(DataSourceRequest command, string manufacturerId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
-                return AccessDeniedView();
-
             var productManufacturers = _manufacturerViewModelService.PrepareManufacturerProductModel(manufacturerId, command.Page, command.PageSize);
 
             var gridModel = new DataSourceResult
@@ -342,9 +308,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductUpdate(ManufacturerModel.ManufacturerProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 _manufacturerViewModelService.ProductUpdate(model);
@@ -356,9 +319,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductDelete(string id, string productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 _manufacturerViewModelService.ProductDelete(id, productId);
@@ -370,9 +330,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ProductAddPopup(string manufacturerId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
-                return AccessDeniedView();
-
             var model = _manufacturerViewModelService.PrepareAddManufacturerProductModel();
             return View(model);
         }
@@ -380,9 +337,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductAddPopupList(DataSourceRequest command, ManufacturerModel.AddManufacturerProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
-                return AccessDeniedView();
-
             var products = _manufacturerViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult();
             gridModel.Data = products.products.ToList();
@@ -395,9 +349,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public IActionResult ProductAddPopup(ManufacturerModel.AddManufacturerProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
-                return AccessDeniedView();
-
             if (model.SelectedProductIds != null)
             {
                 _manufacturerViewModelService.InsertManufacturerProductModel(model);
@@ -413,9 +364,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ListActivityLog(DataSourceRequest command, string manufacturerId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
-                return Content("");
-
             var activityLog = _manufacturerViewModelService.PrepareActivityLogModel(manufacturerId, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
