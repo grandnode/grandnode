@@ -3,6 +3,7 @@ using Grand.Core.Domain.Messages;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Configuration;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
@@ -16,6 +17,7 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.EmailAccounts)]
     public partial class EmailAccountController : BaseAdminController
     {
         private readonly IEmailAccountViewModelService _emailAccountViewModelService;
@@ -23,34 +25,26 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly ISettingService _settingService;
         private readonly EmailAccountSettings _emailAccountSettings;
-        private readonly IPermissionService _permissionService;
 
         public EmailAccountController(IEmailAccountViewModelService emailAccountViewModelService, IEmailAccountService emailAccountService,
             ILocalizationService localizationService, ISettingService settingService,
-            EmailAccountSettings emailAccountSettings, IPermissionService permissionService)
+            EmailAccountSettings emailAccountSettings)
         {
             this._emailAccountViewModelService = emailAccountViewModelService;
             this._emailAccountService = emailAccountService;
             this._localizationService = localizationService;
             this._emailAccountSettings = emailAccountSettings;
             this._settingService = settingService;
-            this._permissionService = permissionService;
         }
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
-                return AccessDeniedView();
-
             var emailAccountModels = _emailAccountService.GetAllEmailAccounts()
                                     .Select(x => x.ToModel())
                                     .ToList();
@@ -68,9 +62,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult MarkAsDefaultEmail(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
-                return AccessDeniedView();
-
             var defaultEmailAccount = _emailAccountService.GetEmailAccountById(id);
             if (defaultEmailAccount != null)
             {
@@ -82,9 +73,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
-                return AccessDeniedView();
-
             var model = _emailAccountViewModelService.PrepareEmailAccountModel();
             return View(model);
         }
@@ -92,9 +80,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Create(EmailAccountModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var emailAccount = _emailAccountViewModelService.InsertEmailAccountModel(model);
@@ -107,9 +92,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
-                return AccessDeniedView();
-
             var emailAccount = _emailAccountService.GetEmailAccountById(id);
             if (emailAccount == null)
                 //No email account found with the specified id
@@ -122,9 +104,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public IActionResult Edit(EmailAccountModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
-                return AccessDeniedView();
-
             var emailAccount = _emailAccountService.GetEmailAccountById(model.Id);
             if (emailAccount == null)
                 //No email account found with the specified id
@@ -145,9 +124,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("changepassword")]
         public IActionResult ChangePassword(EmailAccountModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
-                return AccessDeniedView();
-
             var emailAccount = _emailAccountService.GetEmailAccountById(model.Id);
             if (emailAccount == null)
                 //No email account found with the specified id
@@ -168,9 +144,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("sendtestemail")]
         public IActionResult SendTestEmail(EmailAccountModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
-                return AccessDeniedView();
-
             var emailAccount = _emailAccountService.GetEmailAccountById(model.Id);
             if (emailAccount == null)
                 //No email account found with the specified id
@@ -199,9 +172,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
-                return AccessDeniedView();
-
             var emailAccount = _emailAccountService.GetEmailAccountById(id);
             if (emailAccount == null)
                 //No email account found with the specified id
