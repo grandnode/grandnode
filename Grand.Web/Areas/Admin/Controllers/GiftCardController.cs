@@ -2,6 +2,7 @@
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
 using Grand.Services.Security;
@@ -13,14 +14,13 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.GiftCards)]
     public partial class GiftCardController : BaseAdminController
     {
         #region Fields
         private readonly IGiftCardViewModelService _giftCardViewModelService;
         private readonly IGiftCardService _giftCardService;
         private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
-
         #endregion
 
         #region Constructors
@@ -28,13 +28,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         public GiftCardController(
             IGiftCardViewModelService giftCardViewModelService,
             IGiftCardService giftCardService, 
-            ILocalizationService localizationService, 
-            IPermissionService permissionService)
+            ILocalizationService localizationService) 
         {
             this._giftCardViewModelService = giftCardViewModelService;
             this._giftCardService = giftCardService;
             this._localizationService = localizationService;
-            this._permissionService = permissionService;
         }
 
         #endregion
@@ -49,8 +47,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
-                return AccessDeniedView();
             var model = _giftCardViewModelService.PrepareGiftCardListModel();
             return View(model);
         }
@@ -58,9 +54,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult GiftCardList(DataSourceRequest command, GiftCardListModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
-                return AccessDeniedView();
-
             var giftCards = _giftCardViewModelService.PrepareGiftCardModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -73,9 +66,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
-                return AccessDeniedView();
-
             var model = _giftCardViewModelService.PrepareGiftCardModel();
             return View(model);
         }
@@ -83,9 +73,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Create(GiftCardModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var giftCard = _giftCardViewModelService.InsertGiftCardModel(model);
@@ -100,9 +87,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
-                return AccessDeniedView();
-
             var giftCard = _giftCardService.GetGiftCardById(id);
             if (giftCard == null)
                 //No gift card found with the specified id
@@ -116,9 +100,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public IActionResult Edit(GiftCardModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
-                return AccessDeniedView();
-
             var giftCard = _giftCardService.GetGiftCardById(model.Id);
             if (giftCard == null)
                 return RedirectToAction("List");
@@ -154,9 +135,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("notifyRecipient")]
         public IActionResult NotifyRecipient(GiftCardModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
-                return AccessDeniedView();
-
             var giftCard = _giftCardService.GetGiftCardById(model.Id);
 
             if (!CommonHelper.IsValidEmail(giftCard.RecipientEmail))
@@ -184,9 +162,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
-                return AccessDeniedView();
-
             var giftCard = _giftCardService.GetGiftCardById(id);
             if (giftCard == null)
                 //No gift card found with the specified id
@@ -205,9 +180,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult UsageHistoryList(string giftCardId, DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
-                return AccessDeniedView();
-
             var giftCard = _giftCardService.GetGiftCardById(giftCardId);
             if (giftCard == null)
                 throw new ArgumentException("No gift card found with the specified id");
