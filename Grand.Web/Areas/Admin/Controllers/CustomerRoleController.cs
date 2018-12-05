@@ -4,6 +4,7 @@ using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
@@ -16,14 +17,13 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Customers)]
     public partial class CustomerRoleController : BaseAdminController
     {
         #region Fields
         private readonly ICustomerRoleViewModelService _customerRoleViewModelService;
         private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
-
         #endregion
 
         #region Constructors
@@ -31,13 +31,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         public CustomerRoleController(
             ICustomerRoleViewModelService customerRoleViewModelService,
             ICustomerService customerService,
-            ILocalizationService localizationService,
-            IPermissionService permissionService)
+            ILocalizationService localizationService)
         {
             this._customerRoleViewModelService = customerRoleViewModelService;
             this._customerService = customerService;
             this._localizationService = localizationService;
-            this._permissionService = permissionService;
         }
 
         #endregion
@@ -51,18 +49,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customerRoles = _customerService.GetAllCustomerRoles(true);
             var gridModel = new DataSourceResult
             {
@@ -74,9 +66,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var model = _customerRoleViewModelService.PrepareCustomerRoleModel();
             return View(model);
         }
@@ -84,9 +73,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Create(CustomerRoleModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var customerRole = _customerRoleViewModelService.InsertCustomerRoleModel(model);
@@ -96,12 +82,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             //If we got this far, something failed, redisplay form
             return View(model);
         }
-
+        
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customerRole = _customerService.GetCustomerRoleById(id);
             if (customerRole == null)
                 //No customer role found with the specified id
@@ -114,9 +97,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Edit(CustomerRoleModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customerRole = _customerService.GetCustomerRoleById(model.Id);
             if (customerRole == null)
                 //No customer role found with the specified id
@@ -154,9 +134,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customerRole = _customerService.GetCustomerRoleById(id);
             if (customerRole == null)
                 //No customer role found with the specified id
@@ -177,16 +154,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 ErrorNotification(exc.Message);
                 return RedirectToAction("Edit", new { id = customerRole.Id });
             }
-
         }
-
-
 
         public IActionResult AssociateProductToCustomerRolePopup()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var model = _customerRoleViewModelService.PrepareAssociateProductToCustomerRoleModel();
             return View(model);
         }
@@ -195,9 +166,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult AssociateProductToCustomerRolePopupList(DataSourceRequest command,
             CustomerRoleModel.AssociateProductToCustomerRoleModel model, [FromServices] IWorkContext workContext)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             //a vendor should have access only to his products
             if (workContext.CurrentVendor != null)
             {
@@ -216,9 +184,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult AssociateProductToCustomerRolePopup(string btnId, string productIdInput,
             string productNameInput, CustomerRoleModel.AssociateProductToCustomerRoleModel model, [FromServices] IProductService productService, [FromServices] IWorkContext workContext)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var associatedProduct = productService.GetProductById(model.AssociatedToProductId);
             if (associatedProduct == null)
                 return Content("Cannot load a product");
@@ -244,9 +209,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Products(string customerRoleId, DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var products = _customerRoleViewModelService.PrepareCustomerRoleProductModel(customerRoleId);
             var gridModel = new DataSourceResult
             {
@@ -259,9 +221,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductDelete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var crp = _customerService.GetCustomerRoleProductById(id);
             if (crp == null)
                 throw new ArgumentException("No found the specified id");
@@ -276,9 +235,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductUpdate(CustomerRoleProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var crp = _customerService.GetCustomerRoleProductById(model.Id);
             if (crp == null)
                 throw new ArgumentException("No customer role product found with the specified id");
@@ -293,9 +249,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ProductAddPopup(string customerRoleId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var model = _customerRoleViewModelService.PrepareProductModel(customerRoleId);
             return View(model);
         }
@@ -303,9 +256,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductAddPopupList(DataSourceRequest command, CustomerRoleProductModel.AddProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var products = _customerRoleViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -319,9 +269,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public IActionResult ProductAddPopup(CustomerRoleProductModel.AddProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             if (model.SelectedProductIds != null)
             {
                 _customerRoleViewModelService.InsertProductModel(model);
