@@ -4,6 +4,7 @@ using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
@@ -22,6 +23,7 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Actions)]
     public partial class CustomerActionController : BaseAdminController
     {
         #region Fields
@@ -31,7 +33,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ICustomerTagService _customerTagService;
         private readonly ILocalizationService _localizationService;
         private readonly ICustomerActivityService _customerActivityService;
-        private readonly IPermissionService _permissionService;
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
@@ -51,7 +52,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             ICustomerTagService customerTagService,
             ILocalizationService localizationService,
             ICustomerActivityService customerActivityService,
-            IPermissionService permissionService,
             IProductService productService,
             ICategoryService categoryService,
             IManufacturerService manufacturerService,
@@ -67,7 +67,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._customerTagService = customerTagService;
             this._localizationService = localizationService;
             this._customerActivityService = customerActivityService;
-            this._permissionService = permissionService;
             this._productService = productService;
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
@@ -104,18 +103,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             var customeractions = _customerActionService.GetCustomerActions();
             var gridModel = new DataSourceResult
             {
@@ -127,9 +120,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             var model = _customerActionViewModelService.PrepareCustomerActionModel();
             return View(model);
         }
@@ -137,8 +127,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Create(CustomerActionModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
             CheckValidateModel(model);
             if (ModelState.IsValid)
             {
@@ -152,9 +140,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             var customerAction = _customerActionService.GetCustomerActionById(id);
             if (customerAction == null)
                 return RedirectToAction("List");
@@ -168,9 +153,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Edit(CustomerActionModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             CheckValidateModel(model);
 
             var customeraction = _customerActionService.GetCustomerActionById(model.Id);
@@ -197,10 +179,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult History(DataSourceRequest command, string customerActionId)
         {
-            //we use own own binder for searchCustomerRoleIds property 
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             var history = _customerActionService.GetAllCustomerActionHistory(customerActionId,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize);
@@ -216,9 +194,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             var customerAction = _customerActionService.GetCustomerActionById(id);
             if (customerAction == null)
                 return RedirectToAction("List");
@@ -241,9 +216,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Conditions(string customerActionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             var conditions = _customerActionService.GetCustomerActionById(customerActionId);
             var gridModel = new DataSourceResult
             {
@@ -259,9 +231,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult AddCondition(string customerActionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             var model = _customerActionViewModelService.PrepareCustomerActionConditionModel(customerActionId);
             return View(model);
         }
@@ -269,9 +238,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult AddCondition(CustomerActionConditionModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var customerAction = _customerActionViewModelService.InsertCustomerActionConditionModel(model);
@@ -283,9 +249,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult EditCondition(string customerActionId, string cid)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             var customerAction = _customerActionService.GetCustomerActionById(customerActionId);
             if (customerAction == null)
                 return RedirectToAction("List");
@@ -339,9 +302,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionDelete(string Id, string customerActionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             _customerActionViewModelService.ConditionDelete(Id, customerActionId);
             return new NullJsonResult();
         }
@@ -349,9 +309,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionDeletePosition(string id, string customerActionId, string conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             _customerActionViewModelService.ConditionDeletePosition(id, customerActionId, conditionId);
 
             return new NullJsonResult();
@@ -363,9 +320,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionProduct(string customerActionId, string conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
             var condition = customerActions.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
@@ -380,9 +334,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ProductAddPopup(string customerActionId, string conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             var model = _customerActionViewModelService.PrepareAddProductToConditionModel(customerActionId, conditionId);
             return View(model);
         }
@@ -390,9 +341,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductAddPopupList(DataSourceRequest command, CustomerActionConditionModel.AddProductToConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             var products = _customerActionViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult();
             gridModel.Data = products.products.ToList();
@@ -405,9 +353,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public IActionResult ProductAddPopup(CustomerActionConditionModel.AddProductToConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             if (model.SelectedProductIds != null)
             {
                 _customerActionViewModelService.InsertProductToConditionModel(model);
@@ -422,9 +367,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionCategory(string customerActionId, string conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
             var condition = customerActions.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
@@ -438,9 +380,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult CategoryAddPopup(string customerActionId, string conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             var model = new CustomerActionConditionModel.AddCategoryConditionModel();
             model.CustomerActionConditionId = conditionId;
             model.CustomerActionId = customerActionId;
@@ -450,9 +389,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult CategoryAddPopupList(DataSourceRequest command, CustomerActionConditionModel.AddCategoryConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             var categories = _categoryService.GetAllCategories(model.SearchCategoryName,
                 pageIndex: command.Page - 1, pageSize: command.PageSize, showHidden: true);
             var gridModel = new DataSourceResult
@@ -473,9 +409,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public IActionResult CategoryAddPopup(CustomerActionConditionModel.AddCategoryConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             if (model.SelectedCategoryIds != null)
             {
                 _customerActionViewModelService.InsertCategoryConditionModel(model);
@@ -490,9 +423,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionManufacturer(string customerActionId, string conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
             var condition = customerActions.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
@@ -516,9 +446,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ManufacturerAddPopupList(DataSourceRequest command, CustomerActionConditionModel.AddManufacturerConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             var manufacturers = _manufacturerService.GetAllManufacturers(model.SearchManufacturerName, "",
                 command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
@@ -534,9 +461,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public IActionResult ManufacturerAddPopup(CustomerActionConditionModel.AddManufacturerConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             if (model.SelectedManufacturerIds != null)
             {
                 _customerActionViewModelService.InsertManufacturerConditionModel(model);
@@ -552,9 +476,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionVendor(string customerActionId, string conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
             var condition = customerActions.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
@@ -569,9 +490,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionVendorInsert(CustomerActionConditionModel.AddVendorConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             _customerActionViewModelService.InsertVendorConditionModel(model);
             return new NullJsonResult();
         }
@@ -579,8 +497,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult Vendors()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
             var customerVendors = _vendorService.GetAllVendors().Select(x => new { Id = x.Id, Name = x.Name });
             return Json(customerVendors);
         }
@@ -591,9 +507,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionCustomerRole(string customerActionId, string conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
             var condition = customerActions.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
@@ -608,9 +521,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionCustomerRoleInsert(CustomerActionConditionModel.AddCustomerRoleConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             _customerActionViewModelService.InsertCustomerRoleConditionModel(model);
             return new NullJsonResult();
         }
@@ -619,8 +529,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult CustomerRoles()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
             var customerRole = _customerService.GetAllCustomerRoles().Select(x => new { Id = x.Id, Name = x.Name });
             return Json(customerRole);
         }
@@ -632,8 +540,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult Stores()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
             var stores = _storeService.GetAllStores().Select(x => new { Id = x.Id, Name = x.Name });
             return Json(stores);
         }
@@ -641,9 +547,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionStore(string customerActionId, string conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
             var condition = customerActions.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
@@ -658,9 +561,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionStoreInsert(CustomerActionConditionModel.AddStoreConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             _customerActionViewModelService.InsertStoreConditionModel(model);
             return new NullJsonResult();
         }
@@ -672,9 +572,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionCustomerTag(string customerActionId, string conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
             var condition = customerActions.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
@@ -689,9 +586,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionCustomerTagInsert(CustomerActionConditionModel.AddCustomerTagConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             _customerActionViewModelService.InsertCustomerTagConditionModel(model);
             return new NullJsonResult();
         }
@@ -699,8 +593,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult CustomerTags()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
             var customerTag = _customerTagService.GetAllCustomerTags().Select(x => new { Id = x.Id, Name = x.Name });
             return Json(customerTag);
         }
@@ -711,9 +603,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionProductAttribute(string customerActionId, string conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
             var condition = customerActions.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
@@ -728,18 +617,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionProductAttributeInsert(CustomerActionConditionModel.AddProductAttributeConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             _customerActionViewModelService.InsertProductAttributeConditionModel(model);
             return new NullJsonResult();
         }
         [HttpPost]
         public IActionResult ConditionProductAttributeUpdate(CustomerActionConditionModel.AddProductAttributeConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             _customerActionViewModelService.UpdateProductAttributeConditionModel(model);
             return new NullJsonResult();
         }
@@ -747,8 +630,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult ProductAttributes()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
             var customerAttr = _productAttributeService.GetAllProductAttributes().Select(x => new { Id = x.Id, Name = x.Name });
             return Json(customerAttr);
         }
@@ -759,9 +640,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionProductSpecification(string customerActionId, string conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
             var condition = customerActions.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
@@ -783,9 +661,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionProductSpecificationInsert(CustomerActionConditionModel.AddProductSpecificationConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             _customerActionViewModelService.InsertProductSpecificationConditionModel(model);
             return new NullJsonResult();
         }
@@ -793,8 +668,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult ProductSpecification()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
             var customerAttr = _specificationAttributeService.GetSpecificationAttributes().Select(x => new { Id = x.Id, Name = x.Name });
             return Json(customerAttr);
         }
@@ -802,9 +675,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult ProductSpecificationValue(string specificationId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             if (String.IsNullOrEmpty(specificationId))
                 return new NullJsonResult();
 
@@ -820,9 +690,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionCustomerRegister(string customerActionId, string conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
             var condition = customerActions.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
@@ -843,18 +710,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionCustomerRegisterInsert(CustomerActionConditionModel.AddCustomerRegisterConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             _customerActionViewModelService.InsertCustomerRegisterConditionModel(model);
             return new NullJsonResult();
         }
         [HttpPost]
         public IActionResult ConditionCustomerRegisterUpdate(CustomerActionConditionModel.AddCustomerRegisterConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             _customerActionViewModelService.UpdateCustomerRegisterConditionModel(model);
             return new NullJsonResult();
         }
@@ -862,9 +723,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult CustomerRegisterFields()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             var list = new List<Tuple<string, string>>();
             list.Add(Tuple.Create("Gender", "Gender"));
             list.Add(Tuple.Create("Company", "Company"));
@@ -907,9 +765,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionCustomCustomerAttribute(string customerActionId, string conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
             var condition = customerActions.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
@@ -931,18 +786,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionCustomCustomerAttributeInsert(CustomerActionConditionModel.AddCustomCustomerAttributeConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             _customerActionViewModelService.InsertCustomCustomerAttributeConditionModel(model);
             return new NullJsonResult();
         }
         [HttpPost]
         public IActionResult ConditionCustomCustomerAttributeUpdate(CustomerActionConditionModel.AddCustomCustomerAttributeConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             _customerActionViewModelService.UpdateCustomCustomerAttributeConditionModel(model);
             return new NullJsonResult();
         }
@@ -950,8 +799,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult CustomCustomerAttributeFields()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
             var list = new List<Tuple<string, string>>();
             foreach (var item in _customerAttributeService.GetAllCustomerAttributes())
             {
@@ -975,9 +822,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionUrlReferrer(string customerActionId, string conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
             var condition = customerActions.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
@@ -992,18 +836,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionUrlReferrerInsert(CustomerActionConditionModel.AddUrlConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             _customerActionViewModelService.InsertUrlConditionModel(model);
             return new NullJsonResult();
         }
         [HttpPost]
         public IActionResult ConditionUrlReferrerUpdate(CustomerActionConditionModel.AddUrlConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             _customerActionViewModelService.UpdateUrlConditionModel(model);
             return new NullJsonResult();
         }
@@ -1015,9 +853,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionUrlCurrent(string customerActionId, string conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
             var condition = customerActions.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
@@ -1032,24 +867,16 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionUrlCurrentInsert(CustomerActionConditionModel.AddUrlConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             _customerActionViewModelService.InsertUrlCurrentConditionModel(model);
             return new NullJsonResult();
         }
         [HttpPost]
         public IActionResult ConditionUrlCurrentUpdate(CustomerActionConditionModel.AddUrlConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             _customerActionViewModelService.UpdateUrlCurrentConditionModel(model);
             return new NullJsonResult();
         }
 
         #endregion
-
-
     }
 }
