@@ -3,6 +3,7 @@ using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
@@ -20,6 +21,7 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Reminders)]
     public partial class CustomerReminderController : BaseAdminController
     {
         #region Fields
@@ -28,7 +30,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ICustomerAttributeService _customerAttributeService;
         private readonly ICustomerTagService _customerTagService;
         private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IStoreService _storeService;
         private readonly IVendorService _vendorService;
@@ -45,7 +46,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             ICustomerAttributeService customerAttributeService,
             ICustomerTagService customerTagService,
             ILocalizationService localizationService,
-            IPermissionService permissionService,
             IManufacturerService manufacturerService,
             IStoreService storeService,
             IVendorService vendorService,
@@ -57,7 +57,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._customerAttributeService = customerAttributeService;
             this._customerTagService = customerTagService;
             this._localizationService = localizationService;
-            this._permissionService = permissionService;
             this._manufacturerService = manufacturerService;
             this._storeService = storeService;
             this._vendorService = vendorService;
@@ -76,18 +75,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var customeractions = _customerReminderService.GetCustomerReminders();
             var gridModel = new DataSourceResult
             {
@@ -99,8 +92,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
             var model = _customerReminderViewModelService.PrepareCustomerReminderModel();
             return View(model);
         }
@@ -108,9 +99,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Create(CustomerReminderModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var customerreminder = _customerReminderViewModelService.InsertCustomerReminderModel(model);
@@ -123,9 +111,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var customerReminder = _customerReminderService.GetCustomerReminderById(id);
             if (customerReminder == null)
                 return RedirectToAction("List");
@@ -137,9 +122,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Edit(CustomerReminderModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var customerreminder = _customerReminderService.GetCustomerReminderById(model.Id);
             if (customerreminder == null)
                 return RedirectToAction("List");
@@ -163,9 +145,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Run(string Id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var reminder = _customerReminderService.GetCustomerReminderById(Id);
             if (reminder == null)
                 return RedirectToAction("List");
@@ -178,9 +157,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var customerReminder = _customerReminderService.GetCustomerReminderById(id);
             if (customerReminder == null)
                 return RedirectToAction("List");
@@ -208,9 +184,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult History(DataSourceRequest command, string customerReminderId)
         {
             //we use own own binder for searchCustomerRoleIds property 
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var history = _customerReminderService.GetAllCustomerReminderHistory(customerReminderId,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize);
@@ -230,9 +203,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Conditions(string customerReminderId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
             var gridModel = new DataSourceResult
             {
@@ -245,9 +215,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult AddCondition(string customerReminderId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
             if (customerReminder == null)
                 return RedirectToAction("Edit", new { id = customerReminderId });
@@ -260,9 +227,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult AddCondition(CustomerReminderModel.ConditionModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var customerReminder = _customerReminderService.GetCustomerReminderById(model.CustomerReminderId);
@@ -281,9 +245,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult EditCondition(string customerReminderId, string cid)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
             if (customerReminder == null)
                 return RedirectToAction("List");
@@ -325,9 +286,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionDelete(string Id, string customerReminderId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 _customerReminderViewModelService.ConditionDelete(Id, customerReminderId);
@@ -340,8 +298,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionDeletePosition(string id, string customerReminderId, string conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
             if (ModelState.IsValid)
             {
                 _customerReminderViewModelService.ConditionDeletePosition(id, customerReminderId, conditionId);
@@ -355,9 +311,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionCategory(string customerReminderId, string conditionId, [FromServices] ICategoryService categoryService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
             var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
@@ -371,8 +324,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult CategoryAddPopup(string customerReminderId, string conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
             var model = new CustomerReminderModel.ConditionModel.AddCategoryConditionModel();
             model.ConditionId = conditionId;
             model.CustomerReminderId = customerReminderId;
@@ -382,9 +333,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult CategoryAddPopupList(DataSourceRequest command, CustomerReminderModel.ConditionModel.AddCategoryConditionModel model, [FromServices] ICategoryService categoryService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var categories = categoryService.GetAllCategories(model.SearchCategoryName,
                 pageIndex: command.Page - 1, pageSize: command.PageSize, showHidden: true);
             var gridModel = new DataSourceResult
@@ -405,9 +353,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public IActionResult CategoryAddPopup(CustomerReminderModel.ConditionModel.AddCategoryConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             if (model.SelectedCategoryIds != null)
             {
                 _customerReminderViewModelService.InsertCategoryConditionModel(model);
@@ -422,9 +367,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionManufacturer(string customerReminderId, string conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
             var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
@@ -447,9 +389,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ManufacturerAddPopupList(DataSourceRequest command, CustomerReminderModel.ConditionModel.AddManufacturerConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var manufacturers = _manufacturerService.GetAllManufacturers(model.SearchManufacturerName, "",
                 command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
@@ -465,9 +404,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public IActionResult ManufacturerAddPopup(CustomerReminderModel.ConditionModel.AddManufacturerConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             if (model.SelectedManufacturerIds != null)
             {
                 _customerReminderViewModelService.InsertManufacturerConditionModel(model);
@@ -484,9 +420,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionProduct(string customerReminderId, string conditionId, [FromServices] IProductService productService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
             var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
@@ -500,9 +433,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ProductAddPopup(string customerReminderId, string conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var model = _customerReminderViewModelService.PrepareProductToConditionModel(customerReminderId, conditionId);
             return View(model);
         }
@@ -510,9 +440,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductAddPopupList(DataSourceRequest command, CustomerActionConditionModel.AddProductToConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var gridModel = new DataSourceResult();
             var products = _customerReminderViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
             gridModel.Data = products.products.ToList();
@@ -525,9 +452,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public IActionResult ProductAddPopup(CustomerReminderModel.ConditionModel.AddProductToConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             if (model.SelectedProductIds != null)
             {
                 _customerReminderViewModelService.InsertProductToConditionModel(model);
@@ -544,9 +468,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionCustomerTag(string customerReminderId, string conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
             var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
@@ -560,8 +481,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionCustomerTagInsert(CustomerReminderModel.ConditionModel.AddCustomerTagConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
             if (ModelState.IsValid)
             {
                 _customerReminderViewModelService.InsertCustomerTagConditionModel(model);
@@ -574,8 +493,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult CustomerTags()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
             var customerTag = _customerTagService.GetAllCustomerTags().Select(x => new { Id = x.Id, Name = x.Name });
             return Json(customerTag);
         }
@@ -586,9 +503,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionCustomerRole(string customerReminderId, string conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
             var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
@@ -603,8 +517,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionCustomerRoleInsert(CustomerReminderModel.ConditionModel.AddCustomerRoleConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
             if (ModelState.IsValid)
             {
                 _customerReminderViewModelService.InsertCustomerRoleConditionModel(model);
@@ -617,8 +529,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult CustomerRoles()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
             var customerRole = _customerService.GetAllCustomerRoles().Select(x => new { Id = x.Id, Name = x.Name });
             return Json(customerRole);
         }
@@ -629,9 +539,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionCustomerRegister(string customerReminderId, string conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
             var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
@@ -652,8 +559,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionCustomerRegisterInsert(CustomerReminderModel.ConditionModel.AddCustomerRegisterConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
             if (ModelState.IsValid)
             {
                 _customerReminderViewModelService.InsertCustomerRegisterConditionModel(model);
@@ -664,8 +569,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionCustomerRegisterUpdate(CustomerReminderModel.ConditionModel.AddCustomerRegisterConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
             if (ModelState.IsValid)
             {
                 _customerReminderViewModelService.UpdateCustomerRegisterConditionModel(model);
@@ -677,9 +580,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult CustomerRegisterFields()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var list = new List<Tuple<string, string>>();
             list.Add(Tuple.Create("Gender", "Gender"));
             list.Add(Tuple.Create("Company", "Company"));
@@ -722,9 +622,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionCustomCustomerAttribute(string customerReminderId, string conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
             var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
@@ -746,8 +643,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionCustomCustomerAttributeInsert(CustomerReminderModel.ConditionModel.AddCustomCustomerAttributeConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
             if (ModelState.IsValid)
             {
                 _customerReminderViewModelService.InsertCustomCustomerAttributeConditionModel(model);
@@ -758,8 +653,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionCustomCustomerAttributeUpdate(CustomerReminderModel.ConditionModel.AddCustomCustomerAttributeConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
             if (ModelState.IsValid)
             {
                 _customerReminderViewModelService.UpdateCustomCustomerAttributeConditionModel(model);
@@ -771,8 +664,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult CustomCustomerAttributeFields()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
             var list = new List<Tuple<string, string>>();
             foreach (var item in _customerAttributeService.GetAllCustomerAttributes())
             {
@@ -798,9 +689,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Levels(string customerReminderId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
             var gridModel = new DataSourceResult
             {
@@ -813,8 +701,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult AddLevel(string customerReminderId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
             var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
             var model = new CustomerReminderModel.ReminderLevelModel();
             model.CustomerReminderId = customerReminderId;
@@ -825,8 +711,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult AddLevel(CustomerReminderModel.ReminderLevelModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
             var customerReminder = _customerReminderService.GetCustomerReminderById(model.CustomerReminderId);
             if (customerReminder == null)
             {
@@ -849,9 +733,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult EditLevel(string customerReminderId, string cid)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
             if (customerReminder == null)
             {
@@ -907,9 +788,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult DeleteLevel(string Id, string customerReminderId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 _customerReminderViewModelService.DeleteLevel(Id, customerReminderId);
