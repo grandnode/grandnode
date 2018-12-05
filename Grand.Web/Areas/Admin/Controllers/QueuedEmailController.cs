@@ -25,7 +25,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
-0
+
 		public QueuedEmailController(IQueuedEmailService queuedEmailService,
             IEmailAccountService emailAccountService,
             IDateTimeHelper dateTimeHelper, 
