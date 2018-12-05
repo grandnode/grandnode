@@ -1,12 +1,12 @@
 ﻿using Grand.Core;
 using Grand.Core.Domain.Directory;
-using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Plugins;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Mvc.Models;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Common;
 using Grand.Services.Configuration;
 using Grand.Services.Customers;
@@ -27,6 +27,7 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.ShippingSettings)]
     public partial class ShippingController : BaseAdminController
     {
         #region Fields
@@ -38,13 +39,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
         private readonly ILanguageService _languageService;
         private readonly IPluginFinder _pluginFinder;
         private readonly IWebHelper _webHelper;
         private readonly IStoreService _storeService;
         private readonly ICustomerService _customerService;
-
 
         #endregion
 
@@ -57,7 +56,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             ICountryService countryService,
             IStateProvinceService stateProvinceService,
             ILocalizationService localizationService,
-            IPermissionService permissionService,
             ILanguageService languageService,
             IPluginFinder pluginFinder,
             IWebHelper webHelper,
@@ -71,13 +69,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
             this._localizationService = localizationService;
-            this._permissionService = permissionService;
             this._languageService = languageService;
             this._pluginFinder = pluginFinder;
             this._webHelper = webHelper;
             this._storeService = storeService;
             this._customerService = customerService;
-
         }
 
         #endregion
@@ -151,18 +147,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Providers()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult Providers(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             var shippingProvidersModel = new List<ShippingRateComputationMethodModel>();
             var shippingProviders = _shippingService.LoadAllShippingRateComputationMethods();
             foreach (var shippingProvider in shippingProviders)
@@ -186,9 +176,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProviderUpdate(ShippingRateComputationMethodModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             var srcm = _shippingService.LoadShippingRateComputationMethodBySystemName(model.SystemName);
             if (srcm.IsShippingRateComputationMethodActive(_shippingSettings))
             {
@@ -220,9 +207,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ConfigureProvider(string systemName)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             var srcm = _shippingService.LoadShippingRateComputationMethodBySystemName(systemName);
             if (srcm == null)
                 //No shipping rate computation method found with the specified id
@@ -242,18 +226,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Methods()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult Methods(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             var shippingMethodsModel = _shippingService.GetAllShippingMethods()
                 .Select(x => x.ToModel())
                 .ToList();
@@ -269,9 +247,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult CreateMethod()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             var model = new ShippingMethodModel();
             //locales
             AddLocales(_languageService, model.Locales);
@@ -281,9 +256,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult CreateMethod(ShippingMethodModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var sm = model.ToEntity();
@@ -299,9 +271,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult EditMethod(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             var sm = _shippingService.GetShippingMethodById(id);
             if (sm == null)
                 //No shipping method found with the specified id
@@ -321,9 +290,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult EditMethod(ShippingMethodModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             var sm = _shippingService.GetShippingMethodById(model.Id);
             if (sm == null)
                 //No shipping method found with the specified id
@@ -346,9 +312,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult DeleteMethod(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             var sm = _shippingService.GetShippingMethodById(id);
             if (sm == null)
                 //No shipping method found with the specified id
@@ -366,18 +329,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult DeliveryDates()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult DeliveryDates(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             var deliveryDatesModel = _shippingService.GetAllDeliveryDates()
                 .Select(x => x.ToModel())
                 .ToList();
@@ -392,9 +349,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult CreateDeliveryDate()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             var model = new DeliveryDateModel();
             model.ColorSquaresRgb = "#000000";
             //locales
@@ -405,9 +359,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult CreateDeliveryDate(DeliveryDateModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var deliveryDate = model.ToEntity();
@@ -422,9 +373,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult EditDeliveryDate(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             var deliveryDate = _shippingService.GetDeliveryDateById(id);
             if (deliveryDate == null)
                 //No delivery date found with the specified id
@@ -449,9 +397,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult EditDeliveryDate(DeliveryDateModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             var deliveryDate = _shippingService.GetDeliveryDateById(model.Id);
             if (deliveryDate == null)
                 //No delivery date found with the specified id
@@ -474,9 +419,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult DeleteDeliveryDate(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             var deliveryDate = _shippingService.GetDeliveryDateById(id);
             if (deliveryDate == null)
                 //No delivery date found with the specified id
@@ -498,18 +440,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Warehouses()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult Warehouses(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             var warehousesModel = _shippingService.GetAllWarehouses()
                 .Select(x => x.ToModel())
                 .ToList();
@@ -521,13 +457,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return Json(gridModel);
         }
-
-
         public IActionResult CreateWarehouse()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             var model = new WarehouseModel();
             PrepareAddressWarehouseModel(model);
             return View(model);
@@ -536,9 +467,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult CreateWarehouse(WarehouseModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var address = model.Address.ToEntity();
@@ -559,9 +487,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult EditWarehouse(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             var warehouse = _shippingService.GetWarehouseById(id);
             if (warehouse == null)
                 //No warehouse found with the specified id
@@ -580,9 +505,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult EditWarehouse(WarehouseModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             var warehouse = _shippingService.GetWarehouseById(model.Id);
             if (warehouse == null)
                 //No warehouse found with the specified id
@@ -615,9 +537,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult DeleteWarehouse(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             var warehouse = _shippingService.GetWarehouseById(id);
             if (warehouse == null)
                 //No warehouse found with the specified id
@@ -635,18 +554,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult PickupPoints()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult PickupPoints(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             var pickupPointsModel = _shippingService.GetAllPickupPoints()
                 .Select(x => x.ToModel())
                 .ToList();
@@ -662,9 +575,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult CreatePickupPoint()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             var model = new PickupPointModel();
             PreparePickupPointModel(model);
             return View(model);
@@ -674,9 +584,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult CreatePickupPoint(PickupPointModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var address = model.Address.ToEntity();
@@ -697,9 +604,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult EditPickupPoint(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             var pickuppoint = _shippingService.GetPickupPointById(id);
             if (pickuppoint == null)
                 //No pickup pint found with the specified id
@@ -715,9 +619,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult EditPickupPoint(PickupPointModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             var pickupPoint = _shippingService.GetPickupPointById(model.Id);
             if (pickupPoint == null)
                 //No pickup point found with the specified id
@@ -741,9 +642,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult DeletePickupPoint(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             var pickupPoint = _shippingService.GetPickupPointById(id);
             if (pickupPoint == null)
                 //No pickup point found with the specified id
@@ -761,9 +659,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Restrictions()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             var model = new ShippingMethodRestrictionModel();
 
             var countries = _countryService.GetAllCountries(showHidden: true);
@@ -821,9 +716,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [RequestFormLimits(ValueCountLimit = 2048)]
         public IActionResult RestrictionSave(IFormCollection form)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedView();
-
             var countries = _countryService.GetAllCountries(showHidden: true);
             var shippingMethods = _shippingService.GetAllShippingMethods();
             var customerRoles = _customerService.GetAllCustomerRoles();
