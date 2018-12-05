@@ -1,6 +1,7 @@
 ﻿using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
@@ -13,6 +14,7 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Attributes)]
     public partial class SpecificationAttributeController : BaseAdminController
     {
         #region Fields
@@ -21,7 +23,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly ICustomerActivityService _customerActivityService;
-        private readonly IPermissionService _permissionService;
 
         #endregion Fields
 
@@ -30,14 +31,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         public SpecificationAttributeController(ISpecificationAttributeService specificationAttributeService,
             ILanguageService languageService, 
             ILocalizationService localizationService, 
-            ICustomerActivityService customerActivityService,
-            IPermissionService permissionService)
+            ICustomerActivityService customerActivityService)
         {
             this._specificationAttributeService = specificationAttributeService;
             this._languageService = languageService;
             this._localizationService = localizationService;
             this._customerActivityService = customerActivityService;
-            this._permissionService = permissionService;
         }
 
         #endregion
@@ -52,18 +51,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var specificationAttributes = _specificationAttributeService
                 .GetSpecificationAttributes(command.Page - 1, command.PageSize);
             var gridModel = new DataSourceResult
@@ -78,9 +71,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //create
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var model = new SpecificationAttributeModel();
             //locales
             AddLocales(_languageService, model.Locales);
@@ -90,9 +80,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Create(SpecificationAttributeModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var specificationAttribute = model.ToEntity();
@@ -110,9 +97,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(id);
             if (specificationAttribute == null)
                 //No specification attribute found with the specified id
@@ -131,9 +115,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Edit(SpecificationAttributeModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(model.Id);
             if (specificationAttribute == null)
                 //No specification attribute found with the specified id
@@ -166,9 +147,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(id);
             if (specificationAttribute == null)
                 //No specification attribute found with the specified id
@@ -195,9 +173,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult OptionList(string specificationAttributeId, DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var options = _specificationAttributeService.GetSpecificationAttributeById(specificationAttributeId).SpecificationAttributeOptions;
             var gridModel = new DataSourceResult
             {
@@ -218,9 +193,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //create
         public IActionResult OptionCreatePopup(string specificationAttributeId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var model = new SpecificationAttributeOptionModel();
             model.SpecificationAttributeId = specificationAttributeId;
             //locales
@@ -231,9 +203,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult OptionCreatePopup(SpecificationAttributeOptionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(model.SpecificationAttributeId);
             if (specificationAttribute == null)
                 //No specification attribute found with the specified id
@@ -260,9 +229,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit
         public IActionResult OptionEditPopup(string id, string specificationAttributeId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var sao = _specificationAttributeService.GetSpecificationAttributeById(specificationAttributeId).SpecificationAttributeOptions.Where(x=>x.Id == id).FirstOrDefault();
             if (sao == null)
                 //No specification attribute option found with the specified id
@@ -282,9 +248,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult OptionEditPopup(SpecificationAttributeOptionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(model.SpecificationAttributeId);
             var sao = specificationAttribute.SpecificationAttributeOptions.Where(x=>x.Id == model.Id).FirstOrDefault();
             if (sao == null)
@@ -312,9 +275,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult OptionDelete(string id, string specificationAttributeId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(specificationAttributeId);
@@ -328,21 +288,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             return ErrorForKendoGridJson(ModelState);
         }
-        //ajax
-        [AcceptVerbs("GET")]
-        public IActionResult GetOptionsByAttributeId(string attributeId)
-        {
-            
-            if (String.IsNullOrEmpty(attributeId))
-                throw new ArgumentNullException("attributeId");
-
-            var options = _specificationAttributeService.GetSpecificationAttributeById(attributeId).SpecificationAttributeOptions;
-            var result = (from o in options
-                          select new { id = o.Id, name = o.Name }).ToList();
-            return Json(result);
-        }
-        
-
         #endregion
     }
 }

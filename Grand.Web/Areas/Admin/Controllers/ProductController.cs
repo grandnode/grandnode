@@ -903,6 +903,19 @@ namespace Grand.Web.Areas.Admin.Controllers
         #endregion
 
         #region Product specification attributes
+        //ajax
+        [AcceptVerbs("GET")]
+        public IActionResult GetOptionsByAttributeId(string attributeId, [FromServices] ISpecificationAttributeService specificationAttributeService)
+        {
+            if (String.IsNullOrEmpty(attributeId))
+                throw new ArgumentNullException("attributeId");
+
+            var options = specificationAttributeService.GetSpecificationAttributeById(attributeId).SpecificationAttributeOptions;
+            var result = (from o in options
+                          select new { id = o.Id, name = o.Name }).ToList();
+            return Json(result);
+        }
+
         public IActionResult ProductSpecificationAttributeAdd(ProductModel.AddProductSpecificationAttributeModel model, string productId)
         {
             var product = _productService.GetProductById(productId);
