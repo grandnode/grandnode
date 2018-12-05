@@ -1,12 +1,11 @@
-﻿using Grand.Core;
-using Grand.Framework.Controllers;
+﻿using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
-using Grand.Services.Logging;
 using Grand.Services.Security;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Customers;
@@ -17,12 +16,12 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Customers)]
     public partial class CustomerTagController : BaseAdminController
     {
         #region Fields
         private readonly ICustomerTagViewModelService _customerTagViewModelService;
         private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
         private readonly ICustomerTagService _customerTagService;
         #endregion
 
@@ -31,14 +30,10 @@ namespace Grand.Web.Areas.Admin.Controllers
         public CustomerTagController(
             ICustomerTagViewModelService customerTagViewModelService,
             ILocalizationService localizationService,
-            ICustomerActivityService customerActivityService,
-            IPermissionService permissionService,
-            IWorkContext workContext,
             ICustomerTagService customerTagService)
         {
             this._customerTagViewModelService = customerTagViewModelService;
             this._localizationService = localizationService;
-            this._permissionService = permissionService;
             this._customerTagService = customerTagService;
         }
 
@@ -53,18 +48,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customertags = _customerTagService.GetAllCustomerTags();
             var gridModel = new DataSourceResult
             {
@@ -77,8 +66,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult Search(string term)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
             var customertags = _customerTagService.GetCustomerTagsByName(term).Select(x => x.Name);
             return Json(customertags);
         }
@@ -88,9 +75,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Customers(string customerTagId, DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customers = _customerTagService.GetCustomersByTag(customerTagId, command.Page - 1, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -102,9 +86,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var model = _customerTagViewModelService.PrepareCustomerTagModel();
             return View(model);
         }
@@ -112,9 +93,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Create(CustomerTagModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var customertag = _customerTagViewModelService.InsertCustomerTagModel(model);
@@ -128,9 +106,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customerTag = _customerTagService.GetCustomerTagById(id);
             if (customerTag == null)
                 //No customer role found with the specified id
@@ -143,9 +118,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Edit(CustomerTagModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customertag = _customerTagService.GetCustomerTagById(model.Id);
             if (customertag == null)
                 //No customer role found with the specified id
@@ -173,9 +145,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult CustomerDelete(string Id, string customerTagId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customertag = _customerTagService.GetCustomerTagById(customerTagId);
             if (customertag == null)
                 throw new ArgumentException("No customertag found with the specified id");
@@ -190,9 +159,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customerTag = _customerTagService.GetCustomerTagById(id);
             if (customerTag == null)
                 //No customer role found with the specified id
@@ -222,9 +188,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Products(string customerTagId, DataSourceRequest command, [FromServices] IProductService productService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var products = _customerTagService.GetCustomerTagProducts(customerTagId);
 
             var gridModel = new DataSourceResult
@@ -244,9 +207,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductDelete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var ctp = _customerTagService.GetCustomerTagProductById(id);
             if (ctp == null)
                 throw new ArgumentException("No found the specified id");
@@ -261,9 +221,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductUpdate(CustomerRoleProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var ctp = _customerTagService.GetCustomerTagProductById(model.Id);
             if (ctp == null)
                 throw new ArgumentException("No customer tag product found with the specified id");
@@ -278,9 +235,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ProductAddPopup(string customerTagId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var model = _customerTagViewModelService.PrepareProductModel(customerTagId);
             return View(model);
         }
@@ -288,9 +242,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ProductAddPopupList(DataSourceRequest command, CustomerTagProductModel.AddProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             var products = _customerTagViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -304,9 +255,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public IActionResult ProductAddPopup(CustomerTagProductModel.AddProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
             if (model.SelectedProductIds != null)
             {
                 _customerTagViewModelService.InsertProductModel(model);
