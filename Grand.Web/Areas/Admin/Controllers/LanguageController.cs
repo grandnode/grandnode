@@ -1,9 +1,8 @@
-﻿using Grand.Core.Domain.Localization;
-using Grand.Framework.Extensions;
-using Grand.Framework.Kendoui;
+﻿using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Stores;
@@ -19,6 +18,7 @@ using System.Text;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Languages)]
     public partial class LanguageController : BaseAdminController
     {
         #region Fields
@@ -26,8 +26,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly IStoreService _storeService;
-        private readonly IPermissionService _permissionService;
-
         #endregion
 
         #region Constructors
@@ -36,14 +34,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             ILanguageViewModelService languageViewModelService,
             ILanguageService languageService,
             ILocalizationService localizationService,
-            IStoreService storeService,
-            IPermissionService permissionService)
+            IStoreService storeService)
         {
             this._languageViewModelService = languageViewModelService;
             this._localizationService = localizationService;
             this._languageService = languageService;
             this._storeService = storeService;
-            this._permissionService = permissionService;
         }
 
         #endregion
@@ -58,18 +54,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
-                return AccessDeniedView();
-
             var languages = _languageService.GetAllLanguages(true);
             var gridModel = new DataSourceResult
             {
@@ -81,9 +71,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
-                return AccessDeniedView();
-
             var model = new LanguageModel();
             //Stores
             model.PrepareStoresMappingModel(null, false, _storeService);
@@ -99,9 +86,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Create(LanguageModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var language = _languageViewModelService.InsertLanguageModel(model);
@@ -122,9 +106,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
-                return AccessDeniedView();
-
             var language = _languageService.GetLanguageById(id);
             if (language == null)
                 //No language found with the specified id
@@ -144,9 +125,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Edit(LanguageModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
-                return AccessDeniedView();
-
             var language = _languageService.GetLanguageById(model.Id);
             if (language == null)
                 //No language found with the specified id
@@ -189,9 +167,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
-                return AccessDeniedView();
-
             var language = _languageService.GetLanguageById(id);
             if (language == null)
                 //No language found with the specified id
@@ -227,9 +202,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult Resources(string languageId, DataSourceRequest command,
             LanguageResourceFilterModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
-                return AccessDeniedView();
-
             var resources = _languageViewModelService.PrepareLanguageResourceModel(model, languageId, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -243,9 +215,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ResourceUpdate(LanguageResourceModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
-                return AccessDeniedView();
-
             if (!ModelState.IsValid)
             {
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
@@ -260,9 +229,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ResourceAdd(LanguageResourceModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
-                return AccessDeniedView();
-
             if (!ModelState.IsValid)
             {
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
@@ -278,9 +244,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ResourceDelete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
-                return AccessDeniedView();
-
             var resource = _localizationService.GetLocaleStringResourceById(id);
             if (resource == null)
                 throw new ArgumentException("No resource found with the specified id");
@@ -298,9 +261,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ExportXml(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
-                return AccessDeniedView();
-
             var language = _languageService.GetLanguageById(id);
             if (language == null)
                 //No language found with the specified id
@@ -321,9 +281,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ImportXml(string id, IFormFile importxmlfile)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
-                return AccessDeniedView();
-
             var language = _languageService.GetLanguageById(id);
             if (language == null)
                 //No language found with the specified id
