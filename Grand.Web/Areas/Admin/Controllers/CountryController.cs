@@ -1,8 +1,8 @@
 ﻿using Grand.Core;
-using Grand.Core.Domain.Directory;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Common;
 using Grand.Services.Directory;
 using Grand.Services.ExportImport;
@@ -21,6 +21,7 @@ using System.Text;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Countries)]
     public partial class CountryController : BaseAdminController
 	{
 		#region Fields
@@ -30,7 +31,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IStateProvinceService _stateProvinceService;
         private readonly ILocalizationService _localizationService;
 	    private readonly IAddressService _addressService;
-        private readonly IPermissionService _permissionService;
         private readonly ILanguageService _languageService;
         private readonly IStoreService _storeService;
         private readonly IExportManager _exportManager;
@@ -45,7 +45,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             IStateProvinceService stateProvinceService, 
             ILocalizationService localizationService,
             IAddressService addressService, 
-            IPermissionService permissionService,
             ILanguageService languageService,
             IStoreService storeService,
             IExportManager exportManager,
@@ -56,7 +55,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._stateProvinceService = stateProvinceService;
             this._localizationService = localizationService;
             this._addressService = addressService;
-            this._permissionService = permissionService;
             this._languageService = languageService;
             this._storeService = storeService;
             this._exportManager = exportManager;
@@ -74,18 +72,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult CountryList(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
-                return AccessDeniedView();
-
             var countries = _countryService.GetAllCountries(showHidden: true);
             var gridModel = new DataSourceResult
             {
@@ -98,9 +90,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
-                return AccessDeniedView();
-
             var model = _countryViewModelService.PrepareCountryModel();
             //locales
             AddLocales(_languageService, model.Locales);
@@ -113,9 +102,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Create(CountryModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var country = _countryViewModelService.InsertCountryModel(model);
@@ -131,9 +117,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
-                return AccessDeniedView();
-
             var country = _countryService.GetCountryById(id);
             if (country == null)
                 //No country found with the specified id
@@ -154,9 +137,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Edit(CountryModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
-                return AccessDeniedView();
-
             var country = _countryService.GetCountryById(model.Id);
             if (country == null)
                 //No country found with the specified id
@@ -185,9 +165,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
-                return AccessDeniedView();
-
             var country = _countryService.GetCountryById(id);
             if (country == null)
                 //No country found with the specified id
@@ -216,9 +193,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult PublishSelected(ICollection<string> selectedIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
-                return AccessDeniedView();
-
             if (selectedIds != null)
             {
                 var countries = _countryService.GetCountriesByIds(selectedIds.ToArray());
@@ -234,9 +208,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult UnpublishSelected(ICollection<string> selectedIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
-                return AccessDeniedView();
-
             if (selectedIds != null)
             {
                 var countries = _countryService.GetCountriesByIds(selectedIds.ToArray());
@@ -256,9 +227,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult States(string countryId, DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
-                return AccessDeniedView();
-
             var states = _stateProvinceService.GetStateProvincesByCountryId(countryId, showHidden: true);
 
             var gridModel = new DataSourceResult
@@ -272,9 +240,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //create
         public IActionResult StateCreatePopup(string countryId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
-                return AccessDeniedView();
-
             var model = _countryViewModelService.PrepareStateProvinceModel(countryId);
             //locales
             AddLocales(_languageService, model.Locales);
@@ -284,9 +249,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult StateCreatePopup(StateProvinceModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
-                return AccessDeniedView();
-
             var country = _countryService.GetCountryById(model.CountryId);
             if (country == null)
                 //No country found with the specified id
@@ -306,9 +268,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit
         public IActionResult StateEditPopup(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
-                return AccessDeniedView();
-
             var sp = _stateProvinceService.GetStateProvinceById(id);
             if (sp == null)
                 //No state found with the specified id
@@ -327,9 +286,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult StateEditPopup(StateProvinceModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
-                return AccessDeniedView();
-
             var sp = _stateProvinceService.GetStateProvinceById(model.Id);
             if (sp == null)
                 //No state found with the specified id
@@ -349,9 +305,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult StateDelete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
-                return AccessDeniedView();
-
             var state = _stateProvinceService.GetStateProvinceById(id);
             if (state == null)
                 throw new ArgumentException("No state found with the specified id");
@@ -368,67 +321,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             return ErrorForKendoGridJson(ModelState);
         }
 
-        [AcceptVerbs("Get")]
-        public IActionResult GetStatesByCountryId(string countryId,
-            bool? addSelectStateItem, bool? addAsterisk)
-        {
-            // This action method gets called via an ajax request
-            if (String.IsNullOrEmpty(countryId))
-                return Json(new List<dynamic>() { new { id = "", name = _localizationService.GetResource("Address.SelectState") } });
-
-            var country = _countryService.GetCountryById(countryId);
-            var states = country != null ? _stateProvinceService.GetStateProvincesByCountryId(country.Id, showHidden: true).ToList() : new List<StateProvince>();
-            var result = (from s in states
-                         select new { id = s.Id, name = s.Name }).ToList();
-            if (addAsterisk.HasValue && addAsterisk.Value)
-            {
-                //asterisk
-                result.Insert(0, new { id = "", name = "*" });
-            }
-            else
-            {
-                if (country == null)
-                {
-                    //country is not selected ("choose country" item)
-                    if (addSelectStateItem.HasValue && addSelectStateItem.Value)
-                    {
-                        result.Insert(0, new { id = "", name = _localizationService.GetResource("Admin.Address.SelectState") });
-                    }
-                    else
-                    {
-                        result.Insert(0, new { id = "", name = _localizationService.GetResource("Admin.Address.OtherNonUS") });
-                    }
-                }
-                else
-                {
-                    //some country is selected
-                    if (result.Count == 0)
-                    {
-                        //country does not have states
-                        result.Insert(0, new { id = "", name = _localizationService.GetResource("Admin.Address.OtherNonUS") });
-                    }
-                    else
-                    {
-                        //country has some states
-                        if (addSelectStateItem.HasValue && addSelectStateItem.Value)
-                        {
-                            result.Insert(0, new { id = "", name = _localizationService.GetResource("Admin.Address.SelectState") });
-                        }
-                    }
-                }
-            }
-            return Json(result);
-        }
-
         #endregion
 
         #region Export / import
 
         public IActionResult ExportCsv()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
-                return AccessDeniedView();
-
             string fileName = String.Format("states_{0}_{1}.txt", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
 
             var states = _stateProvinceService.GetStateProvinces(true);
@@ -440,9 +338,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ImportCsv(IFormFile importcsvfile)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
-                return AccessDeniedView();
-
             try
             {
                 if (importcsvfile != null && importcsvfile.Length > 0)
