@@ -5,6 +5,7 @@ using Grand.Core.Domain.Orders;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Directory;
@@ -26,6 +27,7 @@ using System.Text;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Orders)]
     public partial class OrderController : BaseAdminController
     {
         #region Fields
@@ -35,9 +37,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly IPdfService _pdfService;
-        private readonly IExportManager _exportManager;
-        private readonly IPermissionService _permissionService;
-        
+        private readonly IExportManager _exportManager;        
         #endregion
 
         #region Ctor
@@ -50,8 +50,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             IWorkContext workContext,
             ICurrencyService currencyService,
             IPdfService pdfService,
-            IExportManager exportManager,
-            IPermissionService permissionService)
+            IExportManager exportManager)
         {
             this._orderViewModelService = orderViewModelService;
             this._orderService = orderService;
@@ -60,7 +59,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._workContext = workContext;
             this._pdfService = pdfService;
             this._exportManager = exportManager;
-            this._permissionService = permissionService;
         }
         
         #endregion
@@ -75,9 +73,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult List(int? orderStatusId = null,
             int? paymentStatusId = null, int? shippingStatusId = null, DateTime? startDate = null)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var model = _orderViewModelService.PrepareOrderListModel(orderStatusId, paymentStatusId, shippingStatusId, startDate);
             return View(model);
 		}
@@ -85,9 +80,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 		[HttpPost]
 		public IActionResult OrderList(DataSourceRequest command, OrderListModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
@@ -123,9 +115,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("exportxml-all")]
         public IActionResult ExportXmlAll(OrderListModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             //a vendor cannot export orders
             if (_workContext.CurrentVendor != null)
                 return AccessDeniedView();
@@ -146,9 +135,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ExportXmlSelected(string selectedIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             //a vendor cannot export orders
             if (_workContext.CurrentVendor != null)
                 return AccessDeniedView();
@@ -171,9 +157,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("exportexcel-all")]
         public IActionResult ExportExcelAll(OrderListModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             //a vendor cannot export orders
             if (_workContext.CurrentVendor != null)
                 return AccessDeniedView();
@@ -195,9 +178,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ExportExcelSelected(string selectedIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             //a vendor cannot export orders
             if (_workContext.CurrentVendor != null)
                 return AccessDeniedView();
@@ -226,9 +206,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("cancelorder")]
         public IActionResult CancelOrder(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 //No order found with the specified id
@@ -260,9 +237,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("captureorder")]
         public IActionResult CaptureOrder(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 //No order found with the specified id
@@ -297,9 +271,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("markorderaspaid")]
         public IActionResult MarkOrderAsPaid(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 //No order found with the specified id
@@ -331,9 +302,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("refundorder")]
         public IActionResult RefundOrder(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 //No order found with the specified id
@@ -367,9 +335,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("refundorderoffline")]
         public IActionResult RefundOrderOffline(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 //No order found with the specified id
@@ -401,9 +366,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("voidorder")]
         public IActionResult VoidOrder(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 //No order found with the specified id
@@ -437,9 +399,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("voidorderoffline")]
         public IActionResult VoidOrderOffline(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 //No order found with the specified id
@@ -469,9 +428,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         
         public IActionResult PartiallyRefundOrderPopup(string id, bool online)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 //No order found with the specified id
@@ -491,9 +447,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("partialrefundorder")]
         public IActionResult PartiallyRefundOrderPopup(string id, bool online, OrderModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 //No order found with the specified id
@@ -546,9 +499,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("btnSaveOrderStatus")]
         public IActionResult ChangeOrderStatus(string id, OrderModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 //No order found with the specified id
@@ -593,9 +543,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var order = _orderService.GetOrderById(id);
             if (order == null || order.Deleted)
                 //No order found with the specified id
@@ -614,9 +561,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id, [FromServices] ICustomerActivityService customerActivityService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 //No order found with the specified id
@@ -637,9 +581,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult PdfInvoice(string orderId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var vendorId = String.Empty;
 
             //a vendor does not have access to this functionality
@@ -664,9 +605,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("pdf-invoice-all")]
         public IActionResult PdfInvoiceAll(OrderListModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
@@ -687,9 +625,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult PdfInvoiceSelected(string selectedIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var orders = new List<Order>();
             if (selectedIds != null)
             {
@@ -727,9 +662,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("btnSaveCC")]
         public IActionResult EditCreditCardInfo(string id, OrderModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 //No order found with the specified id
@@ -762,9 +694,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("btnSaveOrderTotals")]
         public IActionResult EditOrderTotals(string id, OrderModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 //No order found with the specified id
@@ -806,9 +735,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save-shipping-method")]
         public IActionResult EditShippingMethod(string id, OrderModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 //No order found with the specified id
@@ -843,9 +769,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         
         public IActionResult EditOrderItem(string id, IFormCollection form, [FromServices] IProductService productService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 //No order found with the specified id
@@ -929,15 +852,11 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired(FormValueRequirement.StartsWith, "btnDeleteOrderItem")]
-        
         public IActionResult DeleteOrderItem(string id, IFormCollection form, 
             [FromServices] IGiftCardService giftCardService,
             [FromServices] IProductService productService
             )
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 //No order found with the specified id
@@ -1003,12 +922,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired(FormValueRequirement.StartsWith, "btnResetDownloadCount")]
-        
         public IActionResult ResetDownloadCount(string id, IFormCollection form)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 //No order found with the specified id
@@ -1045,9 +960,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         
         public IActionResult ActivateDownloadItem(string id, IFormCollection form)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 //No order found with the specified id
@@ -1081,9 +993,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult UploadLicenseFilePopup(string id, string orderItemId, [FromServices] IProductService productService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var order = _orderService.GetOrderById(id);
             if (order == null)
                 //No order found with the specified id
@@ -1116,9 +1025,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("uploadlicense")]
         public IActionResult UploadLicenseFilePopup(OrderModel.UploadLicenseModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var order = _orderService.GetOrderById(model.OrderId);
             if (order == null)
                 //No order found with the specified id
@@ -1150,9 +1056,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("deletelicense")]
         public IActionResult DeleteLicenseFilePopup(OrderModel.UploadLicenseModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var order = _orderService.GetOrderById(model.OrderId);
             if (order == null)
                 //No order found with the specified id
@@ -1179,9 +1082,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult AddProductToOrder(string orderId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = orderId });
@@ -1198,9 +1098,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult AddProductToOrder(DataSourceRequest command, OrderModel.AddOrderProductModel model, [FromServices] IProductService productService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return Content("");
@@ -1234,9 +1131,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult AddProductToOrderDetails(string orderId, string productId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = orderId });
@@ -1248,9 +1142,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult AddProductToOrderDetails(string orderId, string productId, IFormCollection form)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = orderId });
@@ -1271,12 +1162,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         #endregion
 
         #region Addresses
-
         public IActionResult AddressEdit(string addressId, string orderId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var order = _orderService.GetOrderById(orderId);
             if (order == null)
                 //No order found with the specified id
@@ -1305,9 +1192,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             [FromServices] IAddressAttributeService addressAttributeService,
             [FromServices] IAddressAttributeParser addressAttributeParser)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var order = _orderService.GetOrderById(model.OrderId);
             if (order == null)
                 //No order found with the specified id
@@ -1355,9 +1239,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult OrderNotesSelect(string orderId, DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var order = _orderService.GetOrderById(orderId);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
@@ -1373,16 +1254,11 @@ namespace Grand.Web.Areas.Admin.Controllers
                 Data = orderNoteModels,
                 Total = orderNoteModels.Count
             };
-
             return Json(gridModel);
         }
         
-        
         public IActionResult OrderNoteAdd(string orderId, string downloadId, bool displayToCustomer, string message)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var order = _orderService.GetOrderById(orderId);
             if (order == null)
                 return Json(new { Result = false });
@@ -1399,9 +1275,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult OrderNoteDelete(string id, string orderId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedView();
-
             var order = _orderService.GetOrderById(orderId);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
@@ -1414,8 +1287,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return new NullJsonResult();
         }
-
         #endregion
- 
     }
 }
