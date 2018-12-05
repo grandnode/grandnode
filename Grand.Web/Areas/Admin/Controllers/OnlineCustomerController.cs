@@ -1,5 +1,6 @@
 ﻿using Grand.Core.Domain.Customers;
 using Grand.Framework.Kendoui;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
@@ -13,6 +14,7 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Customers)]
     public partial class OnlineCustomerController : BaseAdminController
     {
         #region Fields
@@ -21,7 +23,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IGeoLookupService _geoLookupService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly CustomerSettings _customerSettings;
-        private readonly IPermissionService _permissionService;
         private readonly ILocalizationService _localizationService;
 
         #endregion
@@ -31,13 +32,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         public OnlineCustomerController(ICustomerService customerService,
             IGeoLookupService geoLookupService, IDateTimeHelper dateTimeHelper,
             CustomerSettings customerSettings,
-            IPermissionService permissionService, ILocalizationService localizationService)
+            ILocalizationService localizationService)
         {
             this._customerService = customerService;
             this._geoLookupService = geoLookupService;
             this._dateTimeHelper = dateTimeHelper;
             this._customerSettings = customerSettings;
-            this._permissionService = permissionService;
             this._localizationService = localizationService;
         }
 
@@ -47,18 +47,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
             var customers = _customerService.GetOnlineCustomers(DateTime.UtcNow.AddMinutes(-_customerSettings.OnlineCustomerMinutes),
                 null, command.Page - 1, command.PageSize);
             var gridModel = new DataSourceResult
