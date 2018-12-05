@@ -2,6 +2,7 @@
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Customers;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
@@ -16,15 +17,14 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Polls)]
     public partial class PollController : BaseAdminController
 	{
 		#region Fields
-
         private readonly IPollService _pollService;
         private readonly ILanguageService _languageService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
         private readonly IStoreService _storeService;
         private readonly ICustomerService _customerService;
         #endregion
@@ -33,14 +33,13 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public PollController(IPollService pollService, ILanguageService languageService,
             IDateTimeHelper dateTimeHelper, ILocalizationService localizationService,
-            IPermissionService permissionService, IStoreService storeService,
+            IStoreService storeService,
             ICustomerService customerService)
         {
             this._pollService = pollService;
             this._languageService = languageService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
-            this._permissionService = permissionService;
             this._storeService = storeService;
             this._customerService = customerService;
         }
@@ -56,18 +55,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedView();
-
             var polls = _pollService.GetPolls("", false, command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
             {
@@ -88,9 +81,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedView();
-
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             var model = new PollModel();
             //default values
@@ -108,9 +98,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Create(PollModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var poll = model.ToEntity();                
@@ -134,9 +121,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedView();
-
             var poll = _pollService.GetPollById(id);
             if (poll == null)
                 //No poll found with the specified id
@@ -159,9 +143,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Edit(PollModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedView();
-
             var poll = _pollService.GetPollById(model.Id);
             if (poll == null)
                 //No poll found with the specified id
@@ -203,9 +184,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedView();
-
             var poll = _pollService.GetPollById(id);
             if (poll == null)
                 //No poll found with the specified id
@@ -228,9 +206,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult PollAnswers(string pollId, DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedView();
-
             var poll = _pollService.GetPollById(pollId);
             if (poll == null)
                 throw new ArgumentException("No poll found with the specified id", "pollId");
@@ -248,9 +223,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //create
         public IActionResult PollAnswerCreatePopup(string pollId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedView();
-
             var model = new PollAnswerModel();
             model.PollId = pollId;
 
@@ -262,9 +234,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult PollAnswerCreatePopup(PollAnswerModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedView();
-
             var poll = _pollService.GetPollById(model.PollId);
             if (poll == null)
                 //No poll found with the specified id
@@ -286,9 +255,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit
         public IActionResult PollAnswerEditPopup(string id, string pollId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedView();
-
             var pollAnswer = _pollService.GetPollById(pollId).PollAnswers.Where(x => x.Id == id).FirstOrDefault();
             if (pollAnswer == null)
                 //No poll answer found with the specified id
@@ -307,9 +273,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult PollAnswerEditPopup(PollAnswerModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedView();
-
             var poll = _pollService.GetPollById(model.PollId);
             if (poll == null)
                 //No poll found with the specified id
@@ -333,13 +296,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-
         [HttpPost]
         public IActionResult PollAnswerDelete(PollAnswer answer)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedView();
-
             var pol = _pollService.GetPollById(answer.PollId);
             var pollAnswer = pol.PollAnswers.Where(x => x.Id == answer.Id).FirstOrDefault();
             if (pollAnswer == null)
