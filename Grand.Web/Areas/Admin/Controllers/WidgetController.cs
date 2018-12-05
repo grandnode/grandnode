@@ -3,6 +3,7 @@ using Grand.Core.Domain.Cms;
 using Grand.Core.Plugins;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Cms;
 using Grand.Services.Configuration;
 using Grand.Services.Security;
@@ -14,32 +15,30 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Widgets)]
     public partial class WidgetController : BaseAdminController
 	{
 		#region Fields
-
         private readonly IWidgetService _widgetService;
-        private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
-        private readonly WidgetSettings _widgetSettings;
 	    private readonly IPluginFinder _pluginFinder;
         private readonly ICacheManager _cacheManager;
+        private readonly WidgetSettings _widgetSettings;
         #endregion
 
         #region Constructors
 
         public WidgetController(IWidgetService widgetService,
-            IPermissionService permissionService, ISettingService settingService,
-            WidgetSettings widgetSettings, IPluginFinder pluginFinder,
-            ICacheManager cacheManager)
+            ISettingService settingService,
+            IPluginFinder pluginFinder,
+            ICacheManager cacheManager,
+            WidgetSettings widgetSettings)
 		{
             this._widgetService = widgetService;
-            this._permissionService = permissionService;
-            this._settingService = settingService;
             this._widgetSettings = widgetSettings;
             this._pluginFinder = pluginFinder;
             this._cacheManager = cacheManager;
-
+            this._settingService = settingService;
         }
 
 		#endregion 
@@ -53,18 +52,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
-                return AccessDeniedView();
-
             var widgetsModel = new List<WidgetModel>();
             var widgets = _widgetService.LoadAllWidgets();
             foreach (var widget in widgets)
@@ -88,9 +81,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult WidgetUpdate( WidgetModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
-                return AccessDeniedView();
-
             var widget = _widgetService.LoadWidgetBySystemName(model.SystemName);
             if (widget.IsWidgetActive(_widgetSettings))
             {
