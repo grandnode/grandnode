@@ -27,6 +27,7 @@ using Grand.Framework.Localization;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Security;
+using Grand.Framework.Security.Authorization;
 using Grand.Framework.Security.Captcha;
 using Grand.Framework.Themes;
 using Grand.Services.Common;
@@ -55,6 +56,7 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Settings)]
     public partial class SettingController : BaseAdminController
     {
         #region Fields
@@ -73,7 +75,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IThemeProvider _themeProvider;
         private readonly ICustomerService _customerService;
         private readonly ICustomerActivityService _customerActivityService;
-        private readonly IPermissionService _permissionService;
         private readonly IStoreService _storeService;
         private readonly IWorkContext _workContext;
         private readonly IGenericAttributeService _genericAttributeService;
@@ -100,7 +101,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             IThemeProvider themeProvider,
             ICustomerService customerService,
             ICustomerActivityService customerActivityService,
-            IPermissionService permissionService,
             IStoreService storeService,
             IWorkContext workContext,
             IGenericAttributeService genericAttributeService,
@@ -123,7 +123,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._themeProvider = themeProvider;
             this._customerService = customerService;
             this._customerActivityService = customerActivityService;
-            this._permissionService = permissionService;
             this._storeService = storeService;
             this._workContext = workContext;
             this._genericAttributeService = genericAttributeService;
@@ -164,9 +163,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Blog()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var blogSettings = _settingService.LoadSetting<BlogSettings>(storeScope);
@@ -190,9 +186,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Blog(BlogSettingsModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var blogSettings = _settingService.LoadSetting<BlogSettings>(storeScope);
@@ -256,14 +249,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             return RedirectToAction("Blog");
         }
 
-
-
-
         public IActionResult Vendor()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var vendorSettings = _settingService.LoadSetting<VendorSettings>(storeScope);
@@ -311,9 +298,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Vendor(VendorSettingsModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var vendorSettings = _settingService.LoadSetting<VendorSettings>(storeScope);
@@ -413,14 +397,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             return RedirectToAction("Vendor");
         }
 
-
-
-
         public IActionResult Forum()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var forumSettings = _settingService.LoadSetting<ForumSettings>(storeScope);
@@ -459,10 +437,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Forum(ForumSettingsModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
-
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var forumSettings = _settingService.LoadSetting<ForumSettings>(storeScope);
@@ -597,14 +571,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             return RedirectToAction("Forum");
         }
 
-
-
-
         public IActionResult News()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var newsSettings = _settingService.LoadSetting<NewsSettings>(storeScope);
@@ -625,9 +593,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult News(NewsSettingsModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var newsSettings = _settingService.LoadSetting<NewsSettings>(storeScope);
@@ -681,15 +646,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("News");
         }
-
-
-
-
         public IActionResult Shipping()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var shippingSettings = _settingService.LoadSetting<ShippingSettings>(storeScope);
@@ -743,10 +701,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Shipping(ShippingSettingsModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
-
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var shippingSettings = _settingService.LoadSetting<ShippingSettings>(storeScope);
@@ -845,16 +799,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("Shipping");
         }
-
-
-
-
         public IActionResult Tax()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
-
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var taxSettings = _settingService.LoadSetting<TaxSettings>(storeScope);
@@ -935,10 +881,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Tax(TaxSettingsModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
-
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var taxSettings = _settingService.LoadSetting<TaxSettings>(storeScope);
@@ -992,8 +934,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(taxSettings, x => x.TaxBasedOn, storeScope);
 
-
-
             if (model.DefaultTaxAddress_OverrideForStore || storeScope == "")
             {
                 //update address
@@ -1018,9 +958,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(taxSettings, x => x.DefaultTaxAddressId, storeScope);
-
-
-
 
             if (model.ShippingIsTaxable_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(taxSettings, x => x.ShippingIsTaxable, storeScope, false);
@@ -1096,16 +1033,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("Tax");
         }
-
-
-
-
         public IActionResult Catalog()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
-
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var catalogSettings = _settingService.LoadSetting<CatalogSettings>(storeScope);
@@ -1184,10 +1113,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Catalog(CatalogSettingsModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
-
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var catalogSettings = _settingService.LoadSetting<CatalogSettings>(storeScope);
@@ -1542,9 +1467,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult SortOptionsList(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var catalogSettings = _settingService.LoadSetting<CatalogSettings>(storeScope);
             var model = new List<SortOptionModel>();
@@ -1570,9 +1492,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult SortOptionUpdate(SortOptionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var catalogSettings = _settingService.LoadSetting<CatalogSettings>(storeScope);
 
@@ -1593,10 +1512,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult RewardPoints()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
-
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var rewardPointsSettings = _settingService.LoadSetting<RewardPointsSettings>(storeScope);
@@ -1623,9 +1538,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult RewardPoints(RewardPointsSettingsModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 //load settings for a chosen store scope
@@ -1701,15 +1613,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             return RedirectToAction("RewardPoints");
         }
-
-
-
-
         public IActionResult Order()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var orderSettings = _settingService.LoadSetting<OrderSettings>(storeScope);
@@ -1758,9 +1663,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Order(OrderSettingsModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 //load settings for a chosen store scope
@@ -1911,14 +1813,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             return RedirectToAction("Order");
         }
 
-
-
-
         public IActionResult ShoppingCart()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var shoppingCartSettings = _settingService.LoadSetting<ShoppingCartSettings>(storeScope);
@@ -1950,9 +1846,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ShoppingCart(ShoppingCartSettingsModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var shoppingCartSettings = _settingService.LoadSetting<ShoppingCartSettings>(storeScope);
@@ -2067,11 +1960,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ReturnRequestReasonList()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
-            //we just redirect a user to the order settings page
-
             //select second tab
             const int customerFormFieldIndex = 1;
             SaveSelectedTabIndex(customerFormFieldIndex);
@@ -2080,9 +1968,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ReturnRequestReasonList(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var reasons = _returnRequestService.GetAllReturnRequestReasons();
             var gridModel = new DataSourceResult
             {
@@ -2094,9 +1979,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //create
         public IActionResult ReturnRequestReasonCreate()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var model = new ReturnRequestReasonModel();
             //locales
             AddLocales(_languageService, model.Locales);
@@ -2105,9 +1987,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult ReturnRequestReasonCreate(ReturnRequestReasonModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var rrr = model.ToEntity();
@@ -2123,9 +2002,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit
         public IActionResult ReturnRequestReasonEdit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var rrr = _returnRequestService.GetReturnRequestReasonById(id);
             if (rrr == null)
                 //No reason found with the specified id
@@ -2142,9 +2018,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult ReturnRequestReasonEdit(ReturnRequestReasonModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var rrr = _returnRequestService.GetReturnRequestReasonById(model.Id);
             if (rrr == null)
                 //No reason found with the specified id
@@ -2173,9 +2046,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ReturnRequestReasonDelete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var rrr = _returnRequestService.GetReturnRequestReasonById(id);
             _returnRequestService.DeleteReturnRequestReason(rrr);
 
@@ -2189,11 +2059,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ReturnRequestActionList()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
-            //we just redirect a user to the order settings page
-
             //select second tab
             const int customerFormFieldIndex = 1;
             SaveSelectedTabIndex(customerFormFieldIndex);
@@ -2202,9 +2067,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ReturnRequestActionList(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var actions = _returnRequestService.GetAllReturnRequestActions();
             var gridModel = new DataSourceResult
             {
@@ -2216,9 +2078,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //create
         public IActionResult ReturnRequestActionCreate()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var model = new ReturnRequestActionModel();
             //locales
             AddLocales(_languageService, model.Locales);
@@ -2227,9 +2086,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult ReturnRequestActionCreate(ReturnRequestActionModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var rra = model.ToEntity();
@@ -2244,9 +2100,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit
         public IActionResult ReturnRequestActionEdit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var rra = _returnRequestService.GetReturnRequestActionById(id);
             if (rra == null)
                 //No action found with the specified id
@@ -2263,9 +2116,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult ReturnRequestActionEdit(ReturnRequestActionModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var rra = _returnRequestService.GetReturnRequestActionById(model.Id);
             if (rra == null)
                 //No action found with the specified id
@@ -2294,25 +2144,15 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ReturnRequestActionDelete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var rra = _returnRequestService.GetReturnRequestActionById(id);
             _returnRequestService.DeleteReturnRequestAction(rra);
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Order.ReturnRequestActions.Deleted"));
             return RedirectToAction("ReturnRequestActionList");
         }
-
         #endregion
-
-
-
         public IActionResult Media()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var mediaSettings = _settingService.LoadSetting<MediaSettings>(storeScope);
@@ -2342,9 +2182,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public IActionResult Media(MediaSettingsModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var mediaSettings = _settingService.LoadSetting<MediaSettings>(storeScope);
@@ -2418,8 +2255,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(mediaSettings, x => x.DefaultImageQuality, storeScope);
 
-
-
             //now clear cache
             var cacheManager = Grand.Core.Infrastructure.EngineContext.Current.Resolve<Grand.Core.Caching.ICacheManager>();
             cacheManager.Clear();
@@ -2437,9 +2272,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("change-picture-storage")]
         public IActionResult ChangePictureStorage()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             _pictureService.StoreInDb = !_pictureService.StoreInDb;
 
             //activity log
@@ -2449,13 +2281,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             return RedirectToAction("Media");
         }
 
-
-
         public IActionResult CustomerUser()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var customerSettings = _settingService.LoadSetting<CustomerSettings>(storeScope);
             var addressSettings = _settingService.LoadSetting<AddressSettings>(storeScope);
@@ -2486,10 +2313,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult CustomerUser(CustomerUserSettingsModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
-
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var customerSettings = _settingService.LoadSetting<CustomerSettings>(storeScope);
             var addressSettings = _settingService.LoadSetting<AddressSettings>(storeScope);
@@ -2519,13 +2342,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return RedirectToAction("CustomerUser");
         }
-
-
         public IActionResult GeneralCommon()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var model = new GeneralCommonSettingsModel();
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             model.ActiveStoreScopeConfiguration = storeScope;
@@ -2734,10 +2552,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public IActionResult GeneralCommon(GeneralCommonSettingsModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
-
             //load settings for a chosen store scope
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
 
@@ -3133,9 +2947,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("changeencryptionkey")]
         public IActionResult ChangeEncryptionKey(GeneralCommonSettingsModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var securitySettings = _settingService.LoadSetting<SecuritySettings>(storeScope);
 
@@ -3214,8 +3025,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("togglefulltext")]
         public IActionResult ToggleFullText(GeneralCommonSettingsModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
             //https://docs.mongodb.com/manual/reference/text-search-languages/#text-search-languages
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var commonSettings = _settingService.LoadSetting<CommonSettings>(storeScope);
@@ -3251,8 +3060,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //all settings
         public IActionResult AllSettings()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
             return View();
         }
 
@@ -3260,9 +3067,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [AdminAntiForgery(true)]
         public IActionResult AllSettings(DataSourceRequest command, SettingFilterModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var settings = _settingService
                 .GetAllSettings()
                 .Select(x =>
@@ -3307,9 +3111,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult PushNotifications()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var settings = _settingService.LoadSetting<PushNotificationsSettings>(storeScope);
 
@@ -3330,9 +3131,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [AdminAntiForgery(true)]
         public IActionResult PushNotifications(DataSourceRequest command, ConfigurationModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var settings = _settingService.LoadSetting<PushNotificationsSettings>(storeScope);
             settings.AllowGuestNotifications = model.AllowGuestNotifications;
@@ -3397,9 +3195,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult AdminSearch()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var settings = _settingService.LoadSetting<AdminSearchSettings>(storeScope);
 
@@ -3432,9 +3227,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [AdminAntiForgery(true)]
         public IActionResult AdminSearch(DataSourceRequest command, AdminSearchSettingsModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var settings = _settingService.LoadSetting<AdminSearchSettings>(storeScope);
             settings.SearchInBlogs = model.SearchInBlogs;
@@ -3468,9 +3260,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [AdminAntiForgery(true)]
         public IActionResult SettingUpdate(SettingModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             if (model.Name != null)
                 model.Name = model.Name.Trim();
             if (model.Value != null)
@@ -3513,9 +3302,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [AdminAntiForgery(true)]
         public IActionResult SettingAdd(SettingModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             if (model.Name != null)
                 model.Name = model.Name.Trim();
             if (model.Value != null)
@@ -3545,9 +3331,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [AdminAntiForgery(true)]
         public IActionResult SettingDelete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedView();
-
             var setting = _settingService.GetSettingById(id);
             if (setting == null)
                 throw new ArgumentException("No setting found with the specified id");
