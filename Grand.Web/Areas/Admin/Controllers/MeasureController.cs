@@ -1,6 +1,7 @@
 ﻿using Grand.Core.Domain.Directory;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Configuration;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
@@ -13,29 +14,29 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Measures)]
     public partial class MeasureController : BaseAdminController
     {
         #region Fields
 
         private readonly IMeasureService _measureService;
-        private readonly MeasureSettings _measureSettings;
         private readonly ISettingService _settingService;
-        private readonly IPermissionService _permissionService;
         private readonly ILocalizationService _localizationService;
+        private readonly MeasureSettings _measureSettings;
 
         #endregion
 
         #region Constructors
 
         public MeasureController(IMeasureService measureService,
-            MeasureSettings measureSettings, ISettingService settingService,
-            IPermissionService permissionService, ILocalizationService localizationService)
+            ISettingService settingService,
+            ILocalizationService localizationService,
+            MeasureSettings measureSettings)
         {
             this._measureService = measureService;
-            this._measureSettings = measureSettings;
             this._settingService = settingService;
-            this._permissionService = permissionService;
             this._localizationService = localizationService;
+            this._measureSettings = measureSettings;
         }
 
         #endregion
@@ -46,18 +47,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Weights()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult Weights(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
-                return AccessDeniedView();
-
             var weightsModel = _measureService.GetAllMeasureWeights()
                 .Select(x => x.ToModel())
                 .ToList();
@@ -75,9 +70,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult WeightUpdate(MeasureWeightModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
-                return AccessDeniedView();
-
             if (!ModelState.IsValid)
             {
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
@@ -93,9 +85,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult WeightAdd(MeasureWeightModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
-                return AccessDeniedView();
-
             if (!ModelState.IsValid)
             {
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
@@ -111,9 +100,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult WeightDelete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
-                return AccessDeniedView();
-
             var weight = _measureService.GetMeasureWeightById(id);
             if (weight == null)
                 throw new ArgumentException("No weight found with the specified id");
@@ -131,9 +117,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult MarkAsPrimaryWeight(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
-                return AccessDeniedView();
-
             var primaryWeight = _measureService.GetMeasureWeightById(id);
             if (primaryWeight != null)
             {
@@ -150,18 +133,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Dimensions()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult Dimensions(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
-                return AccessDeniedView();
-
             var dimensionsModel = _measureService.GetAllMeasureDimensions()
                 .Select(x => x.ToModel())
                 .ToList();
@@ -179,9 +156,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult DimensionUpdate(MeasureDimensionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
-                return AccessDeniedView();
-
             if (!ModelState.IsValid)
             {
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
@@ -197,9 +171,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult DimensionAdd(MeasureDimensionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
-                return AccessDeniedView();
-
             if (!ModelState.IsValid)
             {
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
@@ -215,9 +186,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult DimensionDelete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
-                return AccessDeniedView();
-
             var dimension = _measureService.GetMeasureDimensionById(id);
             if (dimension == null)
                 throw new ArgumentException("No dimension found with the specified id");
@@ -235,9 +203,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult MarkAsPrimaryDimension(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
-                return AccessDeniedView();
-
             var primaryDimension = _measureService.GetMeasureDimensionById(id);
             if (primaryDimension != null)
             {
@@ -254,18 +219,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Units()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult Units(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
-                return AccessDeniedView();
-
             var unitsModel = _measureService.GetAllMeasureUnits()
                 .Select(x => x.ToModel())
                 .ToList();
@@ -282,9 +241,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult UnitUpdate(MeasureUnitModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
-                return AccessDeniedView();
-
             if (!ModelState.IsValid)
             {
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
@@ -300,9 +256,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult UnitAdd(MeasureUnitModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
-                return AccessDeniedView();
-
             if (!ModelState.IsValid)
             {
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
@@ -318,9 +271,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult UnitDelete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
-                return AccessDeniedView();
-
             var unit = _measureService.GetMeasureUnitById(id);
             if (unit == null)
                 throw new ArgumentException("No unit found with the specified id");
