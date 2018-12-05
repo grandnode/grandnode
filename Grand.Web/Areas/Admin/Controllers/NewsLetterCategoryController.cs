@@ -1,6 +1,7 @@
 ﻿using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
 using Grand.Services.Security;
@@ -12,11 +13,11 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.NewsletterSubscribers)]
     public partial class NewsletterCategoryController: BaseAdminController
     {
         #region Fields 
 
-        private readonly IPermissionService _permissionService;
         private readonly INewsletterCategoryService _newsletterCategoryService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
@@ -26,10 +27,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Ctor
 
-        public NewsletterCategoryController(IPermissionService permissionService, INewsletterCategoryService newsletterCategoryService, ILanguageService languageService,
+        public NewsletterCategoryController(INewsletterCategoryService newsletterCategoryService, ILanguageService languageService,
             ILocalizationService localizationService, IStoreService storeService)
         {
-            this._permissionService = permissionService;
             this._newsletterCategoryService = newsletterCategoryService;
             this._languageService = languageService;
             this._localizationService = localizationService;
@@ -47,18 +47,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
-                return AccessDeniedView();
-
             var newslettercategories = _newsletterCategoryService.GetAllNewsletterCategory();
             var gridModel = new DataSourceResult
             {
@@ -78,9 +72,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
-                return AccessDeniedView();
-
             var model = new NewsletterCategoryModel();
             //locales
             AddLocales(_languageService, model.Locales);
@@ -92,9 +83,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Create(NewsletterCategoryModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var newsletterCategory = model.ToEntity();
@@ -111,9 +99,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
-                return AccessDeniedView();
-
             var newsletterCategory = _newsletterCategoryService.GetNewsletterCategoryById(id);
             if (newsletterCategory == null)
                 return RedirectToAction("List");
@@ -137,9 +122,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public IActionResult Edit(NewsletterCategoryModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
-                return AccessDeniedView();
-
             var newsletterCategory = _newsletterCategoryService.GetNewsletterCategoryById(model.Id);
             if (newsletterCategory == null)
                 return RedirectToAction("List");
@@ -161,9 +143,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageBanners))
-                return AccessDeniedView();
-
             var newsletterCategory = _newsletterCategoryService.GetNewsletterCategoryById(id);
             if (newsletterCategory == null)
                 return RedirectToAction("List");
