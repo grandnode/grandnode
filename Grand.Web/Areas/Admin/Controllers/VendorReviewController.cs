@@ -2,6 +2,7 @@
 using Grand.Core.Domain.Customers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Vendors;
@@ -15,15 +16,14 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.VendorReviews)]
     public partial class VendorReviewController : BaseAdminController
     {
         #region Fields
         private readonly IVendorViewModelService _vendorViewModelService;
         private readonly IVendorService _vendorService;
         private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
         private readonly IWorkContext _workContext;
-
         #endregion Fields
 
         #region Constructors
@@ -32,13 +32,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             IVendorViewModelService vendorViewModelService,
             IVendorService vendorService,
             ILocalizationService localizationService,
-            IPermissionService permissionService,
             IWorkContext workContext)
         {
             this._vendorViewModelService = vendorViewModelService;
             this._vendorService = vendorService;
             this._localizationService = localizationService;
-            this._permissionService = permissionService;
             this._workContext = workContext;
         }
 
@@ -54,9 +52,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendorReviews))
-                return AccessDeniedView();
-
             var model = new VendorReviewListModel();
             return View(model);
         }
@@ -64,9 +59,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult List(DataSourceRequest command, VendorReviewListModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendorReviews))
-                return AccessDeniedView();
-
             var vendorId = string.Empty;
             //vendor
             if (_workContext.CurrentVendor != null)
@@ -95,9 +87,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendorReviews))
-                return AccessDeniedView();
-
             var vendorReview = _vendorService.GetVendorReviewById(id);
 
             if (vendorReview == null)
@@ -112,9 +101,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Edit(VendorReviewModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendorReviews) || _workContext.CurrentVendor != null)
-                return AccessDeniedView();
-
             var vendorReview = _vendorService.GetVendorReviewById(model.Id);
             if (vendorReview == null)
                 //No vendor review found with the specified id
@@ -136,9 +122,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendorReviews))
-                return AccessDeniedView();
-
             var vendorReview = _vendorService.GetVendorReviewById(id);
             if (vendorReview == null)
                 //No vendor review found with the specified id
@@ -158,9 +141,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ApproveSelected(ICollection<string> selectedIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendorReviews))
-                return AccessDeniedView();
-
             if (selectedIds != null)
             {
                 _vendorViewModelService.ApproveVendorReviews(selectedIds.ToList());
@@ -171,9 +151,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult DisapproveSelected(ICollection<string> selectedIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendorReviews))
-                return AccessDeniedView();
-
             if (selectedIds != null)
             {
                 _vendorViewModelService.DisapproveVendorReviews(selectedIds.ToList());
