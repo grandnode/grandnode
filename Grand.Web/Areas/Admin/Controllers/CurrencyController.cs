@@ -3,6 +3,7 @@ using Grand.Core.Domain.Directory;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Configuration;
 using Grand.Services.Directory;
 using Grand.Services.Helpers;
@@ -22,6 +23,7 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Currencies)]
     public partial class CurrencyController :  BaseAdminController
     {
         #region Fields
@@ -32,7 +34,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ISettingService _settingService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
         private readonly ILanguageService _languageService;
         private readonly IStoreService _storeService;
 
@@ -44,7 +45,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             ICurrencyViewModelService currencyViewModelService,
             CurrencySettings currencySettings, ISettingService settingService,
             IDateTimeHelper dateTimeHelper, ILocalizationService localizationService,
-            IPermissionService permissionService,
             ILanguageService languageService,
             IStoreService storeService)
         {
@@ -54,7 +54,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._settingService = settingService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
-            this._permissionService = permissionService;
             this._languageService = languageService;
             this._storeService = storeService;
         }
@@ -70,9 +69,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List(bool liveRates = false)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
-                return AccessDeniedView();
-
             if (liveRates)
             {
                 try
@@ -107,9 +103,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public IActionResult List(IFormCollection formValues)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
-                return AccessDeniedView();
-
             _currencySettings.ActiveExchangeRateProviderSystemName = formValues["exchangeRateProvider"];
             _currencySettings.AutoUpdateEnabled = !formValues["autoUpdateEnabled"].Equals("false");
             _settingService.SaveSetting(_currencySettings);
@@ -119,9 +112,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ListGrid(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
-                return AccessDeniedView();
-
             var currenciesModel = _currencyService.GetAllCurrencies(true).Select(x => x.ToModel()).ToList();
             foreach (var currency in currenciesModel)
                 currency.IsPrimaryExchangeRateCurrency = currency.Id == _currencySettings.PrimaryExchangeRateCurrencyId;
@@ -139,8 +129,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ApplyRate(string currencyCode, string rate)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
-                return AccessDeniedView();
             var _rate = decimal.Parse(rate, CultureInfo.InvariantCulture.NumberFormat);
             var currency = _currencyService.GetCurrencyByCode(currencyCode);
             if (currency != null)
@@ -155,9 +143,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult MarkAsPrimaryExchangeRateCurrency(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
-                return AccessDeniedView();
-
             _currencySettings.PrimaryExchangeRateCurrencyId = id;
             _settingService.SaveSetting(_currencySettings);
 
@@ -167,9 +152,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult MarkAsPrimaryStoreCurrency(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
-                return AccessDeniedView();
-
             _currencySettings.PrimaryStoreCurrencyId = id;
             _settingService.SaveSetting(_currencySettings);
             return Json(new { result = true });
@@ -181,9 +163,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
-                return AccessDeniedView();
-
             var model = _currencyViewModelService.PrepareCurrencyModel();
             //locales
             AddLocales(_languageService, model.Locales);
@@ -196,9 +175,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Create(CurrencyModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var currency = _currencyViewModelService.InsertCurrencyModel(model);
@@ -215,9 +191,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
-                return AccessDeniedView();
-
             var currency = _currencyService.GetCurrencyById(id);
             if (currency == null)
                 //No currency found with the specified id
@@ -239,9 +212,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Edit(CurrencyModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
-                return AccessDeniedView();
-
             var currency = _currencyService.GetCurrencyById(model.Id);
             if (currency == null)
                 //No currency found with the specified id
@@ -279,9 +249,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
-                return AccessDeniedView();
-
             var currency = _currencyService.GetCurrencyById(id);
             if (currency == null)
                 //No currency found with the specified id
