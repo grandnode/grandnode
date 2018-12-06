@@ -1,6 +1,7 @@
 ﻿using Grand.Framework.Components;
 using Grand.Web.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Grand.Web.ViewComponents
 {
@@ -13,9 +14,9 @@ namespace Grand.Web.ViewComponents
             this._catalogViewModelService = catalogViewModelService;
         }
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = _catalogViewModelService.PrepareSearchBox();
+            var model = await Task.Run(() => _catalogViewModelService.PrepareSearchBox());
             return View(model);
         }
     }

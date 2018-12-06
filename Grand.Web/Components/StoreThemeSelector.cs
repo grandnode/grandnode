@@ -2,6 +2,7 @@
 using Grand.Framework.Components;
 using Grand.Web.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Grand.Web.ViewComponents
 {
@@ -16,11 +17,11 @@ namespace Grand.Web.ViewComponents
             this._storeInformationSettings = storeInformationSettings;
         }
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
             if (!_storeInformationSettings.AllowCustomerToSelectTheme)
                 return Content("");
-            var model = _commonViewModelService.PrepareStoreThemeSelector();
+            var model = await Task.Run(() => _commonViewModelService.PrepareStoreThemeSelector());
             return View(model);
 
 

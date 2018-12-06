@@ -2,6 +2,7 @@
 using Grand.Framework.Components;
 using Grand.Web.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Grand.Web.ViewComponents
 {
@@ -16,9 +17,9 @@ namespace Grand.Web.ViewComponents
             this._workContext = workContext;
         }
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = _commonViewModelService.PrepareAdminHeaderLinks(_workContext.CurrentCustomer);
+            var model = await Task.Run(() => _commonViewModelService.PrepareAdminHeaderLinks(_workContext.CurrentCustomer));
             if (!model.DisplayAdminLink)
                 return Content("");
             return View(model);

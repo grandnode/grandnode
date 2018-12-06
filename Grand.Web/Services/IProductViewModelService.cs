@@ -28,5 +28,13 @@ namespace Grand.Web.Services
         ProductDetailsAttributeChangeModel PrepareProductDetailsAttributeChangeModel(Product product, bool validateAttributeConditions, bool loadPicture, IFormCollection form);
         ProductAskQuestionModel PrepareProductAskQuestionModel(Product product);
         ProductAskQuestionSimpleModel PrepareProductAskQuestionSimpleModel(Product product);
+        IList<ProductOverviewModel> PrepareProductsDisplayedOnHomePage(int? productThumbPictureSize);
+        IList<ProductOverviewModel> PrepareProductsHomePageBestSellers(int? productThumbPictureSize);
+        IList<ProductOverviewModel> PrepareProductsRecommended(int? productThumbPictureSize);
+        IList<ProductOverviewModel> PrepareProductsPersonalized(int? productThumbPictureSize);
+        IList<ProductOverviewModel> PrepareProductsSuggested(int? productThumbPictureSize);
+        IList<ProductOverviewModel> PrepareProductsCrossSell(int? productThumbPictureSize, int count);
+        IList<ProductOverviewModel> PrepareProductsRelated(string productId, int? productThumbPictureSize);
+        IList<ProductOverviewModel> PrepareProductsRecentlyViewed(int? productThumbPictureSize, bool? preparePriceModel);
     }
 }

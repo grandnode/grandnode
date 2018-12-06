@@ -3,6 +3,7 @@ using Grand.Framework.Components;
 using Grand.Services.Security;
 using Grand.Web.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Grand.Web.ViewComponents
 {
@@ -21,7 +22,7 @@ namespace Grand.Web.ViewComponents
             this._shoppingCartSettings = shoppingCartSettings;
         }
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
             if (!_shoppingCartSettings.MiniShoppingCartEnabled)
                 return Content("");
@@ -29,7 +30,7 @@ namespace Grand.Web.ViewComponents
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return Content("");
 
-            var model = _shoppingCartViewModelService.PrepareMiniShoppingCart();
+            var model = await Task.Run(() => _shoppingCartViewModelService.PrepareMiniShoppingCart());
             return View(model);
         }
     }

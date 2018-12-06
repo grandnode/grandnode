@@ -2,6 +2,7 @@
 using Grand.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.ViewComponents
 {
@@ -14,9 +15,9 @@ namespace Grand.Web.ViewComponents
             this._catalogViewModelService = catalogViewModelService;
         }
 
-        public IViewComponentResult Invoke(string currentCategoryId, string currentProductId)
+        public async Task<IViewComponentResult> InvokeAsync(string currentCategoryId, string currentProductId)
         {
-            var model = _catalogViewModelService.PreparePopularProductTags();
+            var model = await Task.Run(() => _catalogViewModelService.PreparePopularProductTags());
             if (!model.Tags.Any())
                 return Content("");
 

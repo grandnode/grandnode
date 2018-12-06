@@ -419,8 +419,9 @@ namespace Grand.Web.Services
             return model;
         }
 
-        public virtual LastPostModel PrepareLastPost(ForumPost post, bool showTopic)
+        public virtual LastPostModel PrepareLastPost(string forumPostId, bool showTopic)
         {
+            var post = _forumService.GetPostById(forumPostId);
             var model = new LastPostModel();
             if (post != null)
             {

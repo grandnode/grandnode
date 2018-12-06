@@ -5,6 +5,7 @@ using Grand.Services.Orders;
 using Grand.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.ViewComponents
 {
@@ -20,13 +21,13 @@ namespace Grand.Web.ViewComponents
             this._storeContext = storeContext;
         }
 
-        public IViewComponentResult Invoke(bool isEditable)
+        public async Task<IViewComponentResult> InvokeAsync(bool isEditable)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
-            var model = _shoppingCartViewModelService.PrepareOrderTotals(cart, isEditable);
+            var model = await Task.Run(() => _shoppingCartViewModelService.PrepareOrderTotals(cart, isEditable));
             return View(model);
         }
     }

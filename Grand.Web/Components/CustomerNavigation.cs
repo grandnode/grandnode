@@ -1,6 +1,7 @@
 ﻿using Grand.Framework.Components;
 using Grand.Web.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Components
 {
@@ -13,9 +14,9 @@ namespace Grand.Web.Components
             this._customerViewModelService = customerViewModelService;
         }
 
-        public IViewComponentResult Invoke(int selectedTabId = 0)
+        public async Task<IViewComponentResult> InvokeAsync(int selectedTabId = 0)
         {
-            var model = _customerViewModelService.PrepareNavigation(selectedTabId);
+            var model = await Task.Run(() => _customerViewModelService.PrepareNavigation(selectedTabId));
             return View(model);
         }
     }

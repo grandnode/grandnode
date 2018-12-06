@@ -18,6 +18,7 @@ using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Messages;
+using Grand.Services.Orders;
 using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Shipping;
@@ -1606,6 +1607,153 @@ namespace Grand.Web.Services
             model.AskQuestionPhone = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone);
             model.AskQuestionMessage = "";
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnAskQuestionPage;
+            return model;
+        }
+
+        public virtual IList<ProductOverviewModel> PrepareProductsDisplayedOnHomePage(int? productThumbPictureSize)
+        {
+            var products = _productService.GetAllProductsDisplayedOnHomePage();
+
+            //ACL and store mapping
+            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+            //availability dates
+            products = products.Where(p => p.IsAvailable()).ToList();
+
+            if (!products.Any())
+                return new List<ProductOverviewModel>();
+
+            return PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
+        }
+        public virtual IList<ProductOverviewModel> PrepareProductsHomePageBestSellers(int? productThumbPictureSize)
+        {
+            //load and cache report
+            var orderReportService = EngineContext.Current.Resolve<Grand.Services.Orders.IOrderReportService>();
+            var report = _cacheManager.Get(string.Format(ModelCacheEventConsumer.HOMEPAGE_BESTSELLERS_IDS_KEY, _storeContext.CurrentStore.Id),
+                () => orderReportService.BestSellersReport(
+                        storeId: _storeContext.CurrentStore.Id,
+                        pageSize: _catalogSettings.NumberOfBestsellersOnHomepage)
+                        .ToList());
+
+            //load products
+            var products = _productService.GetProductsByIds(report.Select(x => x.ProductId).ToArray());
+            //ACL and store mapping
+            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+            //availability dates
+            products = products.Where(p => p.IsAvailable()).ToList();
+
+            if (!products.Any())
+                return new List<ProductOverviewModel>();
+
+            return PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
+        }
+        public virtual IList<ProductOverviewModel> PrepareProductsRecommended(int? productThumbPictureSize)
+        {
+            var products = _productService.GetRecommendedProducts(_workContext.CurrentCustomer.GetCustomerRoleIds());
+
+            //ACL and store mapping
+            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+
+            //availability dates
+            products = products.Where(p => p.IsAvailable()).ToList();
+
+            if (!products.Any())
+                return new List<ProductOverviewModel>();
+
+            //prepare model
+            return PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
+        }
+        public virtual IList<ProductOverviewModel> PrepareProductsPersonalized(int? productThumbPictureSize)
+        {
+            var customer = _workContext.CurrentCustomer;
+            var products = _productService.GetPersonalizedProducts(customer.Id);
+
+            //ACL and store mapping
+            products = products.Where(p => _aclService.Authorize(p, customer) && _storeMappingService.Authorize(p)).ToList();
+
+            //availability dates
+            products = products.Where(p => p.IsAvailable()).ToList();
+
+            if (!products.Any())
+                return new List<ProductOverviewModel>();
+
+            //prepare model
+            return PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
+        }
+        public virtual IList<ProductOverviewModel> PrepareProductsSuggested(int? productThumbPictureSize)
+        {
+            var products = _productService.GetSuggestedProducts(_workContext.CurrentCustomer.CustomerTags.ToArray());
+
+            //ACL and store mapping
+            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+
+            //availability dates
+            products = products.Where(p => p.IsAvailable()).ToList();
+
+            if (!products.Any())
+                return new List<ProductOverviewModel>();
+
+            //prepare model
+            return PrepareProductOverviewModels(products.Take(_catalogSettings.SuggestedProductsNumber), true, true, productThumbPictureSize).ToList();
+        }
+        public virtual IList<ProductOverviewModel> PrepareProductsCrossSell(int? productThumbPictureSize, int count)
+        {
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
+                .ToList();
+
+            var products = _productService.GetCrosssellProductsByShoppingCart(cart, count);
+            //ACL and store mapping
+            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+            //availability dates
+            products = products.Where(p => p.IsAvailable()).ToList();
+
+            if (!products.Any())
+                return new List<ProductOverviewModel>();
+
+            return PrepareProductOverviewModels(products,
+                productThumbPictureSize: productThumbPictureSize, forceRedirectionAfterAddingToCart: true)
+                .ToList();
+        }
+        public virtual IList<ProductOverviewModel> PrepareProductsRelated(string productId, int? productThumbPictureSize)
+        {
+            var productIds = _cacheManager.Get(string.Format(ModelCacheEventConsumer.PRODUCTS_RELATED_IDS_KEY, productId, _storeContext.CurrentStore.Id),
+               () =>
+                   _productService.GetProductById(productId).RelatedProducts.Select(x => x.ProductId2).ToArray()
+                   );
+
+            //load products
+            var products = _productService.GetProductsByIds(productIds);
+            //ACL and store mapping
+            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+            //availability dates
+            products = products.Where(p => p.IsAvailable()).ToList();
+
+            if (!products.Any())
+                return new List<ProductOverviewModel>();
+
+            return PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
+        }
+        public virtual IList<ProductOverviewModel> PrepareProductsRecentlyViewed(int? productThumbPictureSize, bool? preparePriceModel)
+        {
+            var preparePictureModel = productThumbPictureSize.HasValue;
+            var recentlyViewedProductsService = EngineContext.Current.Resolve<IRecentlyViewedProductsService>();
+            var products = recentlyViewedProductsService.GetRecentlyViewedProducts(_workContext.CurrentCustomer.Id, _catalogSettings.RecentlyViewedProductsNumber);
+
+            //ACL and store mapping
+            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+            //availability dates
+            products = products.Where(p => p.IsAvailable()).ToList();
+
+            if (!products.Any())
+                return new List<ProductOverviewModel>();
+
+            //prepare model
+            var model = new List<ProductOverviewModel>();
+            model.AddRange(PrepareProductOverviewModels(products,
+                preparePriceModel.GetValueOrDefault(),
+                preparePictureModel,
+                productThumbPictureSize));
             return model;
         }
     }

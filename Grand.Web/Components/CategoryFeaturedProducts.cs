@@ -2,6 +2,7 @@
 using Grand.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Components
 {
@@ -24,9 +25,9 @@ namespace Grand.Web.Components
 
         #region Invoker
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = _catalogViewModelService.PrepareCategoryFeaturedProducts();
+            var model = await Task.Run(() => _catalogViewModelService.PrepareCategoryFeaturedProducts());
             if (!model.Any())
                 return Content("");
             return View(model);

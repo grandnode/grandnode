@@ -3,6 +3,7 @@ using Grand.Framework.Components;
 using Grand.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.ViewComponents
 {
@@ -17,12 +18,12 @@ namespace Grand.Web.ViewComponents
             this._vendorSettings = vendorSettings;
         }
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
             if (_vendorSettings.VendorsBlockItemsToDisplay == 0)
                 return Content("");
 
-            var model = _catalogViewModelService.PrepareVendorNavigation();
+            var model = await Task.Run(() => _catalogViewModelService.PrepareVendorNavigation());
             if (!model.Vendors.Any())
                 return Content("");
 

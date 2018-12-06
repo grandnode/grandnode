@@ -2,6 +2,7 @@
 using Grand.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading.Tasks;
 
 namespace Grand.Web.ViewComponents
 {
@@ -14,11 +15,11 @@ namespace Grand.Web.ViewComponents
             this._pollViewModelService = pollViewModelService;
         }
 
-        public IViewComponentResult Invoke(string systemKeyword)
+        public async Task<IViewComponentResult> InvokeAsync(string systemKeyword)
         {
             if (String.IsNullOrWhiteSpace(systemKeyword))
                 return Content("");
-            var model = _pollViewModelService.PreparePollBySystemName(systemKeyword);
+            var model = await Task.Run(() => _pollViewModelService.PreparePollBySystemName(systemKeyword));
             if (model == null)
                 return Content("");
 

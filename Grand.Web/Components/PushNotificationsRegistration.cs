@@ -9,16 +9,16 @@ namespace Grand.Web.Components
 {
     public class PushNotificationsRegistration : BaseViewComponent
     {
-        private readonly PushNotificationsSettings _pushNotificationsSettings;
         private readonly IWorkContext _workContext;
+        private readonly PushNotificationsSettings _pushNotificationsSettings;
 
-        public PushNotificationsRegistration(PushNotificationsSettings pushNotificationsSettings, IWorkContext workContext)
+        public PushNotificationsRegistration(IWorkContext workContext, PushNotificationsSettings pushNotificationsSettings)
         {
-            _pushNotificationsSettings = pushNotificationsSettings;
             _workContext = workContext;
+            _pushNotificationsSettings = pushNotificationsSettings;
         }
 
-        public IViewComponentResult Invoke(string widgetZone, object additionalData)
+        public IViewComponentResult Invoke()
         {
             var model = new PublicInfoModel();
             model.PublicApiKey = _pushNotificationsSettings.PublicApiKey;

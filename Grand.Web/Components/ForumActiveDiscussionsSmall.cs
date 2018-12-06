@@ -1,6 +1,7 @@
 ﻿using Grand.Framework.Components;
 using Grand.Web.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Grand.Web.ViewComponents
 {
@@ -13,9 +14,9 @@ namespace Grand.Web.ViewComponents
             this._boardsViewModelService = boardsViewModelService;
         }
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = _boardsViewModelService.PrepareActiveDiscussions();
+            var model = await Task.Run(() => _boardsViewModelService.PrepareActiveDiscussions());
             if (model == null)
                 return Content("");
 

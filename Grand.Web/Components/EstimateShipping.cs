@@ -5,6 +5,7 @@ using Grand.Services.Orders;
 using Grand.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.ViewComponents
 {
@@ -20,14 +21,14 @@ namespace Grand.Web.ViewComponents
             this._storeContext = storeContext;
         }
 
-        public IViewComponentResult Invoke(bool? prepareAndDisplayOrderReviewData)
+        public async Task<IViewComponentResult> InvokeAsync(bool? prepareAndDisplayOrderReviewData)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
-            var model = _shoppingCartViewModelService.PrepareEstimateShipping(cart);
+            var model = await Task.Run(() => _shoppingCartViewModelService.PrepareEstimateShipping(cart));
             if (!model.Enabled)
                 return Content("");
 
