@@ -1,7 +1,8 @@
 ﻿@model OrderModel
+@inject Grand.Services.Security.IPermissionService permisionService;
 @if (Model.IsShippable)
 {
-    
+
     <div class="form-horizontal">
         <div class="form-body">
             @if (Model.ShippingAddress != null)
@@ -262,26 +263,27 @@
             }
         </div>
     </div>
-    <p>
-        <strong>
-            @T("Admin.Orders.Shipments")
-        </strong>
-    </p>
-
-    <div class="panel panel-default">
-        <vc:admin-widget widget-zone="order_details_shipping_top" additional-data="Model" />
-        <div class="panel-body">
-            <div id="shipments-grid"></div>
+    if (permisionService.Authorize(Grand.Services.Security.PermissionSystemName.Shipments))
+    {
+        <p>
+            <strong>
+                @T("Admin.Orders.Shipments")
+            </strong>
+        </p>
+        <div class="panel panel-default">
+            <vc:admin-widget widget-zone="order_details_shipping_top" additional-data="Model" />
+            <div class="panel-body">
+                <div id="shipments-grid"></div>
+            </div>
+            <div class="panel-footer">
+                @if (Model.CanAddNewShipments)
+                {
+                    <input type="submit" id="btnAddNewShipment" name="btnAddNewShipment" value="@T("Admin.Orders.Shipments.AddNew")" onclick="javascript:setLocation('@(Url.Action("AddShipment", "Shipment", new { orderId = Model.Id }))'); return false;" class="k-button" />
+                }
+            </div>
+            <vc:admin-widget widget-zone="order_details_shipping_bottom" additional-data="Model" />
         </div>
-        <div class="panel-footer">
-            @if (Model.CanAddNewShipments)
-            {
-                <input type="submit" id="btnAddNewShipment" name="btnAddNewShipment" value="@T("Admin.Orders.Shipments.AddNew")" onclick="javascript:setLocation('@(Url.Action("AddShipment", "Shipment", new { orderId = Model.Id }))'); return false;" class="k-button" />
-            }
-        </div>
-        <vc:admin-widget widget-zone="order_details_shipping_bottom" additional-data="Model" />
-    </div>
-    <script>
+        <script>
         $(document).ready(function () {
             $("#shipments-grid").kendoGrid({
                 dataSource: {
@@ -405,7 +407,8 @@
                 ]
             });
         }
-    </script>
+        </script>
+    }
 }
 else
 {

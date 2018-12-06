@@ -37,7 +37,7 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
-    [PermissionAuthorize(PermissionSystemName.Orders)]
+    [PermissionAuthorize(PermissionSystemName.Shipments)]
     public partial class ShipmentController : BaseAdminController
     {
         #region Fields

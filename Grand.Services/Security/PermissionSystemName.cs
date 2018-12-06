@@ -17,6 +17,7 @@
         public const string VendorReviews = "ManageVendorReviews";
         public const string CurrentCarts = "ManageCurrentCarts";
         public const string Orders = "ManageOrders";
+        public const string Shipments = "ManageShipments";
         public const string RecurringPayments = "ManageRecurringPayments";
         public const string GiftCards = "ManageGiftCards";
         public const string ReturnRequests = "ManageReturnRequests";
