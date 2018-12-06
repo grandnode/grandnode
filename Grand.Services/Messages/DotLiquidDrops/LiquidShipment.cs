@@ -93,11 +93,6 @@ namespace Grand.Services.Messages.DotLiquidDrops
             }
         }
 
-        public string Products
-        {
-            get { return ProductListToHtmlTable(_shipment, _languageId); }
-        }
-
         public string URLForCustomer
         {
             get

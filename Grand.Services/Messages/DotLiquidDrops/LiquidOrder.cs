@@ -123,6 +123,8 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         private void CalculateSubTotals()
         {
+            _displaySubTotalDiscount = false;
+            _cusSubTotalDiscount = string.Empty;
             if (_order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal)
             {
                 //including tax
@@ -156,6 +158,8 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
             //shipping, payment method fee
             _taxRates = new SortedDictionary<decimal, decimal>();
+            _cusTaxTotal = string.Empty;
+            _cusDiscount = string.Empty;
             if (_order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
             {
                 //including tax
@@ -422,11 +426,6 @@ namespace Grand.Services.Messages.DotLiquidDrops
             }
         }
 
-        public string Products
-        {
-            get { return ProductListToHtmlTable(_order, _languageId, _vendorId); }
-        }
-
         public string CreatedOn
         {
             get
@@ -564,6 +563,15 @@ namespace Grand.Services.Messages.DotLiquidDrops
             }
         }
 
+        public bool DisplayTaxRates
+        {
+            get
+            {
+                return _displayTaxRates;
+            }
+        }
+
+
         public Dictionary<string, string> TaxRates
         {
             get
@@ -596,7 +604,61 @@ namespace Grand.Services.Messages.DotLiquidDrops
                 return _cusDiscount;
             }
         }
-               
+
+        public string CheckoutAttributeDescription
+        {
+            get
+            {
+                return _order.CheckoutAttributeDescription;
+            }
+        }
+
+        public Dictionary<string, string> GiftCards
+        {
+            get
+            {
+                Dictionary<string, string> cards = new Dictionary<string, string>();
+
+                var _servicegiftCard = EngineContext.Current.Resolve<IGiftCardService>();
+                var gcuhC = _servicegiftCard.GetAllGiftCardUsageHistory(_order.Id);
+                foreach (var gcuh in gcuhC)
+                {
+                    var giftCard = EngineContext.Current.Resolve<IGiftCardService>().GetGiftCardById(gcuh.GiftCardId);
+                    string giftCardText = String.Format(_localizationService.GetResource("Messages.Order.GiftCardInfo", _languageId), WebUtility.HtmlEncode(giftCard.GiftCardCouponCode));
+                    string giftCardAmount = _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(gcuh.UsedValue, _order.CurrencyRate)), true, _order.CustomerCurrencyCode, false, _language);
+
+                    cards.Add(giftCardText, giftCardAmount);
+                }
+
+                return cards;
+            }
+        }
+
+        public bool RedeemedRewardPointsEntryExists
+        {
+            get
+            {
+                return _order.RedeemedRewardPointsEntry != null;
+            }
+        }
+
+        public string RPTitle
+        {
+            get
+            {
+                return string.Format(_localizationService.GetResource("Messages.Order.RewardPoints", _languageId), -_order.RedeemedRewardPointsEntry.Points);
+            }
+        }
+
+        public string RPAmount
+        {
+            get
+            {
+                return _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(_order.RedeemedRewardPointsEntry.UsedAmount, _order.CurrencyRate)),
+                    true, _order.CustomerCurrencyCode, false, _language);
+            }
+        }
+
         protected virtual string GetStoreUrl(string storeId = "", bool useSsl = false)
         {
             var store = _storeService.GetStoreById(storeId) ?? _storeContext.CurrentStore;

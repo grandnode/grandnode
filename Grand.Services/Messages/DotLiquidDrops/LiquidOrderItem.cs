@@ -181,6 +181,58 @@ namespace Grand.Services.Messages.DotLiquidDrops
             }
         }
 
+        public string ProductShortDescription
+        {
+            get
+            {
+                string desc = "";
+
+                if (_product != null)
+                    desc = WebUtility.HtmlEncode(_product.GetLocalized(x => x.ShortDescription, _languageId));
+
+                return desc;
+            }
+        }
+
+        public string ProductFullDescription
+        {
+            get
+            {
+                string desc = "";
+
+                if (_product != null)
+                    desc = WebUtility.HtmlDecode(_product.GetLocalized(x => x.FullDescription, _languageId));
+
+                return desc;
+            }
+        }
+
+        public string ProductPrice
+        {
+            get
+            {
+                string price = "";
+
+                if (_product != null)
+                    price = _priceFormatter.FormatPrice(_product.Price, true, _order.CustomerCurrencyCode, _languageService.GetLanguageById(_languageId), true);
+
+                return price;
+            }
+        }
+
+        public string ProductOldPrice
+        {
+            get
+            {
+                string price = "";
+
+                if (_product != null)
+                    price = _priceFormatter.FormatPrice(_product.OldPrice, true, _order.CustomerCurrencyCode, _languageService.GetLanguageById(_languageId), true);
+
+                return price;
+            }
+        }
+
         public string ProductId
         {
             get
