@@ -3,7 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.ProductTags").Text;
 }
-<form asp-controller="Product" asp-action="ProductTags" method="post" id = "product-tags-form">
+<form asp-controller="ProductTags" method="post" id = "product-tags-form">
     <antiforgery-token />
     <div class="row">
         <div class="col-md-12">
@@ -33,13 +33,13 @@
                 dataSource: {
                     transport: {
                         read: {
-                            url: "@Html.Raw(Url.Action("ProductTags", "Product"))",
+                            url: "@Html.Raw(Url.Action("List", "ProductTags"))",
                             type: "POST",
                             dataType: "json",
                             data: addAntiForgeryToken
                         },
                         destroy: {
-                            url: "@Html.Raw(Url.Action("ProductTagDelete", "Product"))",
+                            url: "@Html.Raw(Url.Action("Delete", "ProductTags"))",
                             type: "POST",
                             dataType: "json",
                             data: addAntiForgeryToken
@@ -88,7 +88,7 @@
                     field: "Name",
                     title: "@T("Admin.Catalog.ProductTags.Fields.Name")",
                     width: 300,
-                    template: "<a class='k-link' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Product/EditProductTag/")#=Id#?btnId=btnRefresh&formId=product-tags-form', 800, 350, true); return false;\" >#=Name#</a>",
+                    template: "<a class='k-link' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/ProductTags/Edit/")#=Id#?btnId=btnRefresh&formId=product-tags-form', 800, 350, true); return false;\" >#=Name#</a>",
                 }, {
                     field: "ProductCount",
                     title: "@T("Admin.Catalog.ProductTags.Fields.ProductCount")",

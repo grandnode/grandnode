@@ -5,7 +5,7 @@
     ViewBag.Title = T("Admin.Catalog.ProductTags.EditTagDetails").Text;
 }
 
-<form asp-controller="Product" asp-action="EditProductTag" method="post"
+<form asp-controller="ProductTags" asp-action="Edit" method="post"
       asp-route-btnId="@Context.Request.Query["btnId"]"
       asp-route-formId="@Context.Request.Query["formId"]">
     <antiforgery-token />
@@ -25,7 +25,7 @@
                     </div>
                 </div>
                 <div class="portlet-body form">
-                   <partial name="_CreateOrUpdateProductTag" model="Model" />
+                   <partial name="_CreateOrUpdate" model="Model" />
                 </div>
             </div>
         </div>
