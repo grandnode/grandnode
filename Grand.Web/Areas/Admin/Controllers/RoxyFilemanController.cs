@@ -1,5 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Framework.Security;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Security;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -22,6 +23,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
     //do not validate request token (XSRF)
     [AdminAntiForgery(true)]
+    [PermissionAuthorize(PermissionSystemName.Files)]
     public class RoxyFilemanController : BaseAdminController
     {
         #region Constants

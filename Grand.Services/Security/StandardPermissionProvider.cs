@@ -62,6 +62,7 @@ namespace Grand.Services.Security
         public static readonly PermissionRecord ManageMessageQueue = new PermissionRecord { Name = "Admin area. Manage Message Queue", SystemName = PermissionSystemName.MessageQueue, Category = "Configuration" };
         public static readonly PermissionRecord ManageMessageContactForm = new PermissionRecord { Name = "Admin area. Manage Message Contact form", SystemName = PermissionSystemName.MessageContactForm, Category = "Configuration" };
         public static readonly PermissionRecord ManageMaintenance = new PermissionRecord { Name = "Admin area. Manage Maintenance", SystemName = PermissionSystemName.Maintenance, Category = "Configuration" };
+        public static readonly PermissionRecord ManageFiles = new PermissionRecord { Name = "Admin area. Manage Files", SystemName = PermissionSystemName.Files, Category = "Configuration" };
         public static readonly PermissionRecord HtmlEditorManagePictures = new PermissionRecord { Name = "Admin area. HTML Editor. Manage pictures", SystemName = PermissionSystemName.HtmlEditor, Category = "Configuration" };
         public static readonly PermissionRecord ManageScheduleTasks = new PermissionRecord { Name = "Admin area. Manage Schedule Tasks", SystemName = PermissionSystemName.ScheduleTasks, Category = "Configuration" };
 
@@ -128,6 +129,7 @@ namespace Grand.Services.Security
                 ManageMessageQueue,
                 ManageMessageContactForm,
                 ManageMaintenance,
+                ManageFiles,
                 HtmlEditorManagePictures,
                 ManageScheduleTasks,
                 DisplayPrices,
@@ -195,6 +197,7 @@ namespace Grand.Services.Security
                         ManageMessageQueue,
                         ManageMessageContactForm,
                         ManageMaintenance,
+                        ManageFiles,
                         HtmlEditorManagePictures,
                         ManageScheduleTasks,
                         DisplayPrices,

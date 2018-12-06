@@ -1182,6 +1182,11 @@ namespace Grand.Services.Installation
             #region Install String resources
             InstallStringResources("430_440.nopres.xml");
             #endregion
+
+            #region Permisions
+            IPermissionProvider provider = new StandardPermissionProvider();
+            EngineContext.Current.Resolve<IPermissionService>().InstallPermissions(provider);
+            #endregion
         }
 
         private void InstallStringResources(string filenames)

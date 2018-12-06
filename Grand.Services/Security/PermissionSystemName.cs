@@ -54,6 +54,7 @@
         public const string MessageQueue = "ManageMessageQueue";
         public const string MessageContactForm = "ManageMessageContactForm";
         public const string Maintenance = "ManageMaintenance";
+        public const string Files = "ManageFiles";
         public const string HtmlEditor = "HtmlEditor.ManagePictures";
         public const string ScheduleTasks = "ManageScheduleTasks";
 
