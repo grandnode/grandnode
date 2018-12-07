@@ -170,7 +170,7 @@ namespace Grand.Web.Areas.Admin.Services
             var productTagsToRemove = new List<string>();
             foreach (var existingProductTag in existingProductTags)
             {
-                var existingProductTagText = _productTagService.GetProductTagById(existingProductTag);
+                var existingProductTagText = _productTagService.GetProductTagByName(existingProductTag.ToLowerInvariant());
                 bool found = false;
                 foreach (string newProductTag in productTags)
                 {
@@ -200,6 +200,7 @@ namespace Grand.Web.Areas.Admin.Services
                     productTag = new ProductTag
                     {
                         Name = productTagName,
+                        SeName = SeoExtensions.GetSeName(productTagName),
                         Count = 0,
                     };
                     _productTagService.InsertProductTag(productTag);
@@ -208,7 +209,7 @@ namespace Grand.Web.Areas.Admin.Services
                 {
                     productTag = productTag2;
                 }
-                if (!product.ProductTagExists(productTag.Id))
+                if (!product.ProductTagExists(productTag.Name))
                 {
                     productTag.ProductId = product.Id;
                     _productService.InsertProductTag(productTag);
@@ -528,7 +529,7 @@ namespace Grand.Web.Areas.Admin.Services
                 for (int i = 0; i < product.ProductTags.Count; i++)
                 {
                     var pt = product.ProductTags.ToList()[i];
-                    var productTag = _productTagService.GetProductTagById(pt);
+                    var productTag = _productTagService.GetProductTagByName(pt);
                     if (productTag != null)
                     {
                         result.Append(productTag.Name);

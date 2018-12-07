@@ -1178,7 +1178,7 @@ namespace Grand.Web.Services
             //products
             var products = _productService.SearchProducts(
                 storeId: _storeContext.CurrentStore.Id,
-                productTagId: productTag.Id,
+                productTag: productTag.Name,
                 visibleIndividuallyOnly: true,
                 orderBy: (ProductSortingEnum)command.OrderBy,
                 pageIndex: command.PageNumber - 1,
@@ -1216,7 +1216,7 @@ namespace Grand.Web.Services
                     {
                         Id = tag.Id,
                         Name = tag.GetLocalized(y => y.Name, languageId),
-                        SeName = tag.GetSeName(languageId),
+                        SeName = tag.SeName,
                         ProductCount = _productTagService.GetProductCount(tag.Id, _storeContext.CurrentStore.Id)
                     });
                 return model;
@@ -1236,7 +1236,7 @@ namespace Grand.Web.Services
                     {
                         Id = x.Id,
                         Name = x.GetLocalized(y => y.Name, languageId),
-                        SeName = x.GetSeName(languageId),
+                        SeName = x.SeName,
                         ProductCount = _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id)
                     };
                     return ptModel;

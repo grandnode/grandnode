@@ -163,7 +163,7 @@ namespace Grand.Services.Catalog
             bool? featuredProducts = null,
             decimal? priceMin = null,
             decimal? priceMax = null,
-            string productTagId = "",
+            string productTag = "",
             string keywords = null,
             bool searchDescriptions = false,
             bool searchSku = true,

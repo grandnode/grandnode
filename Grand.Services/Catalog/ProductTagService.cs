@@ -175,6 +175,20 @@ namespace Grand.Services.Catalog
         }
 
         /// <summary>
+        /// Gets product tag by sename
+        /// </summary>
+        /// <param name="sename">Product tag sename</param>
+        /// <returns>Product tag</returns>
+        public virtual ProductTag GetProductTagBySeName(string sename)
+        {
+            var query = from pt in _productTagRepository.Table
+                        where pt.SeName == sename
+                        select pt;
+            var productTag = query.FirstOrDefault();
+            return productTag;        
+        }
+
+        /// <summary>
         /// Inserts a product tag
         /// </summary>
         /// <param name="productTag">Product tag</param>
@@ -201,7 +215,16 @@ namespace Grand.Services.Catalog
             if (productTag == null)
                 throw new ArgumentNullException("productTag");
 
+            var previouse = GetProductTagById(productTag.Id);
+
             _productTagRepository.Update(productTag);
+
+            //update name on products
+            var filter = new BsonDocument();
+            filter.Add(new BsonElement("ProductTags", previouse.Name));
+            var update = Builders<Product>.Update
+                .Set(x => x.ProductTags.ElementAt(-1), productTag.Name);
+            var result = _productRepository.Collection.UpdateMany(filter, update);
 
             //cache
             _cacheManager.RemoveByPattern(PRODUCTTAG_PATTERN_KEY);

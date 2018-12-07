@@ -20,6 +20,7 @@ using Grand.Core.Domain.Tasks;
 using Grand.Core.Domain.Topics;
 using Grand.Core.Infrastructure;
 using Grand.Data;
+using Grand.Services.Catalog;
 using Grand.Services.Configuration;
 using Grand.Services.Localization;
 using Grand.Services.Security;
@@ -1186,6 +1187,25 @@ namespace Grand.Services.Installation
             #region Permisions
             IPermissionProvider provider = new StandardPermissionProvider();
             EngineContext.Current.Resolve<IPermissionService>().InstallPermissions(provider);
+            #endregion
+            #region Update tags on the products
+
+            var productTagService = EngineContext.Current.Resolve<IProductTagService>();
+            var productRepository = EngineContext.Current.Resolve<IRepository<Product>>();
+
+            foreach (var tag in productTagService.GetAllProductTags())
+            {
+                var builder = Builders<Product>.Filter;
+                var filter = new BsonDocument();
+                filter.Add(new BsonElement("ProductTags", tag.Id));
+                var update = Builders<Product>.Update
+                    .Set(x => x.ProductTags.ElementAt(-1), tag.Name);
+                var result = productRepository.Collection.UpdateMany(filter, update);
+
+                tag.SeName = SeoExtensions.GetSeName(tag.Name);
+                productTagService.UpdateProductTag(tag);
+            }
+
             #endregion
         }
 

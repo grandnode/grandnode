@@ -35,6 +35,13 @@ namespace Grand.Services.Catalog
         ProductTag GetProductTagByName(string name);
 
         /// <summary>
+        /// Gets product tag by sename
+        /// </summary>
+        /// <param name="sename">Product tag sename</param>
+        /// <returns>Product tag</returns>
+        ProductTag GetProductTagBySeName(string sename);
+
+        /// <summary>
         /// Inserts a product tag
         /// </summary>
         /// <param name="productTag">Product tag</param>

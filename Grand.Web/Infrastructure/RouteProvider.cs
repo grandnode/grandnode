@@ -220,6 +220,11 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("ProductsByTag",
                             "producttag/{productTagId}/{SeName}",
                             new { controller = "Catalog", action = "ProductsByTag" });
+
+            routeBuilder.MapLocalizedRoute("ProductsByTagName",
+                            "producttag/{SeName}",
+                            new { controller = "Catalog", action = "ProductsByTagName" });
+
             //comparing products
             routeBuilder.MapLocalizedRoute("AddProductToCompare",
                             "compareproducts/add/{productId}",

@@ -163,12 +163,12 @@ namespace Grand.Services.Catalog
         /// <param name="productTagId">Product tag identifier</param>
         /// <returns>Result</returns>
         public static bool ProductTagExists(this Product product,
-            string productTagId)
+            string productTagName)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            bool result = product.ProductTags.FirstOrDefault(pt => pt == productTagId) != null;
+            bool result = product.ProductTags.FirstOrDefault(pt => pt == productTagName) != null;
             return result;
         }
 

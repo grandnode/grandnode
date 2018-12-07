@@ -623,7 +623,7 @@ namespace Grand.Services.Catalog
             bool? featuredProducts = null,
             decimal? priceMin = null,
             decimal? priceMax = null,
-            string productTagId = "",
+            string productTag = "",
             string keywords = null,
             bool searchDescriptions = false,
             bool searchSku = true,
@@ -639,7 +639,7 @@ namespace Grand.Services.Catalog
                 pageIndex, pageSize, categoryIds, manufacturerId,
                 storeId, vendorId, warehouseId,
                 productType, visibleIndividuallyOnly, markedAsNewOnly, featuredProducts,
-                priceMin, priceMax, productTagId, keywords, searchDescriptions, searchSku,
+                priceMin, priceMax, productTag, keywords, searchDescriptions, searchSku,
                 searchProductTags, languageId, filteredSpecs,
                 orderBy, showHidden, overridePublished);
         }
@@ -692,7 +692,7 @@ namespace Grand.Services.Catalog
             bool? featuredProducts = null,
             decimal? priceMin = null,
             decimal? priceMax = null,
-            string productTagId = "",
+            string productTag = "",
             string keywords = null,
             bool searchDescriptions = false,
             bool searchSku = true,
@@ -875,9 +875,9 @@ namespace Grand.Services.Catalog
             }
 
             //tag filtering
-            if (!String.IsNullOrEmpty(productTagId))
+            if (!String.IsNullOrEmpty(productTag))
             {
-                filter = filter & builder.Where(x => x.ProductTags.Any(y => y == productTagId));
+                filter = filter & builder.Where(x => x.ProductTags.Any(y => y == productTag));
             }
 
 
@@ -2209,7 +2209,7 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("productTag");
            
             var updatebuilder = Builders<Product>.Update;
-            var update = updatebuilder.AddToSet(p => p.ProductTags, productTag.Id);
+            var update = updatebuilder.AddToSet(p => p.ProductTags, productTag.Name);
             _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productTag.ProductId), update);
 
             var builder = Builders<ProductTag>.Filter;
@@ -2232,7 +2232,7 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("productTag");
 
             var updatebuilder = Builders<Product>.Update;
-            var update = updatebuilder.Pull(p => p.ProductTags, productTag.Id);
+            var update = updatebuilder.Pull(p => p.ProductTags, productTag.Name);
             _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productTag.ProductId), update);
 
             var builder = Builders<ProductTag>.Filter;

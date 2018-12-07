@@ -754,14 +754,14 @@ namespace Grand.Web.Services
                     List<ProductTagModel> tags = new List<ProductTagModel>();
                     foreach (var item in product.ProductTags)
                     {
-                        var tag = _productTagService.GetProductTagById(item);
+                        var tag = _productTagService.GetProductTagByName(item);
                         if (tag != null)
                         {
                             tags.Add(new ProductTagModel()
                             {
                                 Id = tag.Id,
                                 Name = tag.GetLocalized(y => y.Name),
-                                SeName = tag.GetSeName(),
+                                SeName = tag.SeName,
                                 ProductCount = _productTagService.GetProductCount(tag.Id, _storeContext.CurrentStore.Id)
                             });
                         }

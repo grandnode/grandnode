@@ -5,6 +5,7 @@ using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Services.Security;
+using Grand.Services.Seo;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Microsoft.AspNetCore.Mvc;
@@ -88,6 +89,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 productTag.Name = model.Name;
                 productTag.Locales = model.Locales.ToLocalizedProperty();
+                productTag.SeName = SeoExtensions.GetSeName(productTag.Name);
                 _productTagService.UpdateProductTag(productTag);
                 ViewBag.RefreshPage = true;
                 return View(model);

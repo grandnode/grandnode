@@ -389,6 +389,15 @@ namespace Grand.Web.Controllers
             var model = _catalogViewModelService.PrepareProductsByTag(productTag, command);
             return View(model);
         }
+        public virtual IActionResult ProductsByTagName(string seName, CatalogPagingFilteringModel command, [FromServices] IProductTagService productTagService)
+        {
+            var productTag = productTagService.GetProductTagBySeName(seName);
+            if (productTag == null)
+                return InvokeHttp404();
+
+            var model = _catalogViewModelService.PrepareProductsByTag(productTag, command);
+            return View("ProductsByTag", model);
+        }
 
         public virtual IActionResult ProductTagsAll()
         {
