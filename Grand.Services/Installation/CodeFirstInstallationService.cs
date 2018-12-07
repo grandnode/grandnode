@@ -11032,13 +11032,14 @@ namespace Grand.Services.Installation
                 productTag = new ProductTag
                 {
                     Name = tag,
+                    SeName = SeoExtensions.GetSeName(tag),
                 };
 
                 _productTagRepository.Insert(productTag);
             }
             productTag.Count = productTag.Count + 1;
             _productTagRepository.Update(productTag);
-            product.ProductTags.Add(productTag.Id);
+            product.ProductTags.Add(productTag.Name);
             _productRepository.Update(product);
         }
 
