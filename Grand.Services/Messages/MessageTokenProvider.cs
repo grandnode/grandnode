@@ -132,25 +132,32 @@ namespace Grand.Services.Messages
 
         public virtual string[] GetListOfAllowedTokens()
         {
-            var allowedTokens = LiquidExtensions.GetTokens(typeof(LiquidAttributeCombination),
+            var allowedTokens = LiquidExtensions.GetTokens(
+                typeof(LiquidAskQuestion),
+                typeof(LiquidAttributeCombination),
                 typeof(LiquidAuction),
                 typeof(LiquidBackInStockSubscription),
                 typeof(LiquidBlogComment),
+                typeof(LiquidContactUs),
                 typeof(LiquidCustomer),
-                typeof(LiquidExtensions),
+                typeof(LiquidEmailAFriend),
                 typeof(LiquidForum),
                 typeof(LiquidGiftCard),
                 typeof(LiquidKnowledgebase),
                 typeof(LiquidNewsComment),
                 typeof(LiquidNewsLetterSubscription),
                 typeof(LiquidOrder),
+                typeof(LiquidOrderItem),
                 typeof(LiquidPrivateMessage),
                 typeof(LiquidProduct),
                 typeof(LiquidProductReview),
+                typeof(RecurringPayment),
                 typeof(LiquidReturnRequest),
                 typeof(LiquidShipment),
+                typeof(LiquidShipmentItem),
                 typeof(LiquidShoppingCart),
                 typeof(LiquidStore),
+                typeof(LiquidVatValidationResult),
                 typeof(LiquidVendor),
                 typeof(LiquidVendorReview));
 

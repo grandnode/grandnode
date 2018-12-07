@@ -1,4 +1,9 @@
 ﻿@model MessageTemplateModel
+@{
+    Html.AddScriptParts("~/content/codemirror/codemirror.js", excludeFromBundle: true);
+    Html.AddCssFileParts("~/content/codemirror/codemirror.css", excludeFromBundle: true);
+}
+
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
@@ -7,7 +12,7 @@
                 @if (!String.IsNullOrEmpty(Model.Id))
                 {
                     <label class="control-label">@Model.Name</label>
-                        <input asp-for="Name" type="hidden" />
+                    <input asp-for="Name" type="hidden" />
                 }
                 else
                 {
@@ -47,7 +52,7 @@
             <div class="form-group">
                 <admin-label asp-for="@Model.Locales[item].Body" />
                 <div class="col-md-9 col-sm-9">
-                    <admin-input asp-for="@Model.Locales[item].Body"/>
+                    <admin-input asp-for="@Model.Locales[item].Body" />
                     <span asp-validation-for="@Model.Locales[item].Body"></span>
                 </div>
             </div>
@@ -87,11 +92,11 @@
                     </div>
                     <div class="AllowedTokens">
                         @foreach (var token in Model.AllowedTokens)
-                        {
-                            <button type="button" onclick="AddTokenToEditor(this)" class="btn btn-info">@token</button>
-                        }
+                                    {
+                            <button type="button" class="btn btn-info">@token</button>
+                                    }
                     </div>
-                    <admin-input asp-for="Body"/>
+                    <textarea asp-for="Body" name="templateBody" id="templateBody"></textarea>
                     <span asp-validation-for="Body"></span>
                 </div>
             </div>
@@ -153,6 +158,12 @@
 </div>
 <script type="text/javascript">
         $(document).ready(function () {
+            var editor = CodeMirror.fromTextArea(templateBody, {
+                mode: "xml",
+                lineNumbers: true,
+                htmlMode: true
+            });
+
             $("#@Html.FieldIdFor(model => model.HasAttachedDownload)").change(toggleHasAttachedDownload);
             $("#@Html.FieldIdFor(model => model.SendImmediately)").click(sendImmediately);
             toggleHasAttachedDownload();
@@ -161,9 +172,6 @@
             $("input").click(function (e) {
                 onInputFocus = $(e.target);
             });
-            setTimeout(function () {
-                tinyMCE.editors[0].focus();
-            }, 2000)
         });
 
         function toggleHasAttachedDownload() {
@@ -193,21 +201,17 @@
                     $(c).hide();
                 }
              });
-
-    }
-
-    function AddTokenToEditor(e) {
-        tinyMCE.activeEditor.execCommand('mceInsertContent', false, $(e).text());
     }
 </script>
 <style>
-.AllowedTokens {
-    height: 200px;
-    overflow: scroll;
-    overflow-x: hidden;
-    padding: 3px;
-}
-.AllowedTokens .btn {
-    margin: 2px;
-}
+    .AllowedTokens {
+        height: 200px;
+        overflow: scroll;
+        overflow-x: hidden;
+        padding: 3px;
+    }
+
+        .AllowedTokens .btn {
+            margin: 2px;
+        }
 </style>

@@ -352,17 +352,18 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<LiquidNewsComment>().InstancePerLifetimeScope();
             builder.RegisterType<LiquidNewsLetterSubscription>().InstancePerLifetimeScope();
             builder.RegisterType<LiquidOrder>().InstancePerLifetimeScope();
+            builder.RegisterType<LiquidOrderItem>().InstancePerLifetimeScope();
             builder.RegisterType<LiquidPrivateMessage>().InstancePerLifetimeScope();
             builder.RegisterType<LiquidProduct>().InstancePerLifetimeScope();
             builder.RegisterType<LiquidProductReview>().InstancePerLifetimeScope();
             builder.RegisterType<LiquidRecurringPayment>().InstancePerLifetimeScope();
             builder.RegisterType<LiquidReturnRequest>().InstancePerLifetimeScope();
             builder.RegisterType<LiquidShipment>().InstancePerLifetimeScope();
+            builder.RegisterType<LiquidShipmentItem>().InstancePerLifetimeScope();
             builder.RegisterType<LiquidShoppingCart>().InstancePerLifetimeScope();
             builder.RegisterType<LiquidStore>().InstancePerLifetimeScope();
             builder.RegisterType<LiquidVendor>().InstancePerLifetimeScope();
             builder.RegisterType<LiquidVendorReview>().InstancePerLifetimeScope();
-            builder.RegisterType<LiquidOrderItem>().InstancePerLifetimeScope();
         }
 
         /// <summary>

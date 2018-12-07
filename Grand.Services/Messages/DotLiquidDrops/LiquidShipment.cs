@@ -10,6 +10,7 @@ using Grand.Services.Orders;
 using Grand.Services.Shipping;
 using Grand.Services.Stores;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -20,24 +21,25 @@ namespace Grand.Services.Messages.DotLiquidDrops
     {
         private Shipment _shipment;
         private string _languageId;
+        private ICollection<LiquidShipmentItem> _shipmentItems;
 
         private readonly ILocalizationService _localizationService;
         private readonly IOrderService _orderService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
+        private readonly IProductAttributeParser _productAttributeParser;
         private readonly ShippingSettings _shippingSettings;
         private readonly MessageTemplatesSettings _templatesSettings;
         private readonly CatalogSettings _catalogSettings;
-        private readonly ProductAttributeParser _productAttributeParser;
 
         public LiquidShipment(ILocalizationService localizationService,
             IOrderService orderService,
             IStoreContext storeContext,
             IStoreService storeService,
+            IProductAttributeParser productAttributeParser,
             ShippingSettings shippingSettings,
             MessageTemplatesSettings templatesSettings,
-            CatalogSettings catalogSettings,
-            ProductAttributeParser productAttributeParser)
+            CatalogSettings catalogSettings)
         {
             this._localizationService = localizationService;
             this._orderService = orderService;
@@ -53,6 +55,18 @@ namespace Grand.Services.Messages.DotLiquidDrops
         {
             this._shipment = shipment;
             this._languageId = languageId;
+
+            this._shipmentItems = new List<LiquidShipmentItem>();
+            foreach (var shipmentItem in shipment.ShipmentItems)
+            {
+                var liquidShipmentItem = new LiquidShipmentItem();
+                liquidShipmentItem.SetProperties(shipmentItem, shipment, languageId);
+                this._shipmentItems.Add(liquidShipmentItem);
+            }
+        }
+        public ICollection<LiquidShipmentItem> ShipmentItems
+        {
+            get { return _shipmentItems; }
         }
 
         public string ShipmentNumber
