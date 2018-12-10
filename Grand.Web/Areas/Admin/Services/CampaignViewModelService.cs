@@ -117,7 +117,7 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual CampaignModel PrepareCampaignModel()
         {
             var model = new CampaignModel();
-            model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
+            model.AllowedTokens = _messageTokenProvider.GetListOfCampaignAllowedTokens();
             //stores
             PrepareStoresModel(model);
             //Tags
@@ -134,7 +134,7 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual CampaignModel PrepareCampaignModel(CampaignModel model)
         {
             //If we got this far, something failed, redisplay form
-            model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
+            model.AllowedTokens = _messageTokenProvider.GetListOfCampaignAllowedTokens();
             //stores
             PrepareStoresModel(model);
             //Tags
@@ -151,7 +151,7 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual CampaignModel PrepareCampaignModel(Campaign campaign)
         {
             var model = campaign.ToModel();
-            model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
+            model.AllowedTokens = _messageTokenProvider.GetListOfCampaignAllowedTokens();
             //stores
             PrepareStoresModel(model);
             //Tags

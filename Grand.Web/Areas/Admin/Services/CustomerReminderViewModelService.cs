@@ -50,11 +50,6 @@ namespace Grand.Web.Areas.Admin.Services
         #endregion
 
         #region Utilities
-        private string FormatTokens(string[] tokens)
-        {
-            return string.Join(", ", tokens);
-        }
-
         #endregion
         public virtual CustomerReminderModel PrepareCustomerReminderModel()
         {
@@ -415,7 +410,7 @@ namespace Grand.Web.Areas.Admin.Services
                 });
             }
             var messageTokenProvider = Grand.Core.Infrastructure.EngineContext.Current.Resolve<IMessageTokenProvider>();
-            model.AllowedTokens = FormatTokens(messageTokenProvider.GetListOfCustomerReminderAllowedTokens(customerReminder.ReminderRule));
+            model.AllowedTokens = messageTokenProvider.GetListOfCustomerReminderAllowedTokens(customerReminder.ReminderRule);
         }
         public virtual CustomerReminder.ReminderLevel InsertReminderLevel(CustomerReminder customerReminder, CustomerReminderModel.ReminderLevelModel model)
         {
