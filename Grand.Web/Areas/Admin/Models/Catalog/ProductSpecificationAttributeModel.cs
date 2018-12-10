@@ -5,15 +5,12 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
     public partial class ProductSpecificationAttributeModel : BaseGrandEntityModel
     {
         public int AttributeTypeId { get; set; }
-
         
         public string AttributeTypeName { get; set; }
-
         
         public string AttributeName { get; set; }
 
         public string AttributeId { get; set; }
-
         
         public string ValueRaw { get; set; }
 

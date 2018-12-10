@@ -1,0 +1,26 @@
+<Language>
+  <LocaleResource Name="Admin.System.QueryEditor">
+    <Value>Query editor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Field.QueryEditor">
+    <Value>Query</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Field.QueryEditor.hint">
+    <Value>Query</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.RunScript">
+    <Value>Run script (eval)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AddNew">
+    <Value>Add new attribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Edit">
+    <Value>Edit attribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Details">
+    <Value>Details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.BackToList">
+    <Value>Back to shipment list</Value>
+  </LocaleResource>
+</Language>

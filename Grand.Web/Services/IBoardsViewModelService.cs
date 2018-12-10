@@ -20,7 +20,7 @@ namespace Grand.Web.Services
         TopicMoveModel PrepareTopicMove(ForumTopic forumTopic);
         EditForumTopicModel PrepareEditForumTopic(Forum forum);
         EditForumPostModel PrepareEditForumPost(Forum forum, ForumTopic forumTopic, string quote);
-        LastPostModel PrepareLastPost(ForumPost post, bool showTopic);
+        LastPostModel PrepareLastPost(string forumPostId, bool showTopic);
         ForumBreadcrumbModel PrepareForumBreadcrumb(string forumGroupId, string forumId, string forumTopicId);
         CustomerForumSubscriptionsModel PrepareCustomerForumSubscriptions(int pageIndex);
         SearchModel PrepareSearch(string searchterms, bool? adv, string forumId,

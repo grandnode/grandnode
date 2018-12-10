@@ -3,6 +3,7 @@ using Grand.Core.Domain.Directory;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Configuration;
 using Grand.Services.Directory;
 using Grand.Services.Helpers;
@@ -11,6 +12,7 @@ using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Directory;
+using Grand.Web.Areas.Admin.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -21,41 +23,39 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Currencies)]
     public partial class CurrencyController :  BaseAdminController
     {
         #region Fields
 
         private readonly ICurrencyService _currencyService;
+        private readonly ICurrencyViewModelService _currencyViewModelService;
         private readonly CurrencySettings _currencySettings;
         private readonly ISettingService _settingService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
         private readonly ILanguageService _languageService;
         private readonly IStoreService _storeService;
-        private readonly IStoreMappingService _storeMappingService;
 
         #endregion
 
         #region Constructors
 
-        public CurrencyController(ICurrencyService currencyService, 
+        public CurrencyController(ICurrencyService currencyService,
+            ICurrencyViewModelService currencyViewModelService,
             CurrencySettings currencySettings, ISettingService settingService,
             IDateTimeHelper dateTimeHelper, ILocalizationService localizationService,
-            IPermissionService permissionService,
             ILanguageService languageService,
-            IStoreService storeService, 
-            IStoreMappingService storeMappingService)
+            IStoreService storeService)
         {
             this._currencyService = currencyService;
+            this._currencyViewModelService = currencyViewModelService;
             this._currencySettings = currencySettings;
             this._settingService = settingService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
-            this._permissionService = permissionService;
             this._languageService = languageService;
             this._storeService = storeService;
-            this._storeMappingService = storeMappingService;
         }
         
         #endregion
@@ -69,9 +69,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List(bool liveRates = false)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
-                return AccessDeniedView();
-
             if (liveRates)
             {
                 try
@@ -106,9 +103,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public IActionResult List(IFormCollection formValues)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
-                return AccessDeniedView();
-
             _currencySettings.ActiveExchangeRateProviderSystemName = formValues["exchangeRateProvider"];
             _currencySettings.AutoUpdateEnabled = !formValues["autoUpdateEnabled"].Equals("false");
             _settingService.SaveSetting(_currencySettings);
@@ -118,9 +112,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ListGrid(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
-                return AccessDeniedView();
-
             var currenciesModel = _currencyService.GetAllCurrencies(true).Select(x => x.ToModel()).ToList();
             foreach (var currency in currenciesModel)
                 currency.IsPrimaryExchangeRateCurrency = currency.Id == _currencySettings.PrimaryExchangeRateCurrencyId;
@@ -138,8 +129,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ApplyRate(string currencyCode, string rate)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
-                return AccessDeniedView();
             var _rate = decimal.Parse(rate, CultureInfo.InvariantCulture.NumberFormat);
             var currency = _currencyService.GetCurrencyByCode(currencyCode);
             if (currency != null)
@@ -154,9 +143,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult MarkAsPrimaryExchangeRateCurrency(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
-                return AccessDeniedView();
-
             _currencySettings.PrimaryExchangeRateCurrencyId = id;
             _settingService.SaveSetting(_currencySettings);
 
@@ -166,9 +152,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult MarkAsPrimaryStoreCurrency(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
-                return AccessDeniedView();
-
             _currencySettings.PrimaryStoreCurrencyId = id;
             _settingService.SaveSetting(_currencySettings);
             return Json(new { result = true });
@@ -180,42 +163,26 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
-                return AccessDeniedView();
-
-            var model = new CurrencyModel();
+            var model = _currencyViewModelService.PrepareCurrencyModel();
             //locales
             AddLocales(_languageService, model.Locales);
             //Stores
             model.PrepareStoresMappingModel(null, false, _storeService);
-            //default values
-            model.Published = true;
-            model.Rate = 1;
+            
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Create(CurrencyModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
-                var currency = model.ToEntity();
-                currency.CreatedOnUtc = DateTime.UtcNow;
-                currency.UpdatedOnUtc = DateTime.UtcNow;
-                currency.Locales = model.Locales.ToLocalizedProperty();
-                currency.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
-
-                _currencyService.InsertCurrency(currency);
-
+                var currency = _currencyViewModelService.InsertCurrencyModel(model);
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = currency.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
-
             //Stores
             model.PrepareStoresMappingModel(null, true, _storeService);
 
@@ -224,9 +191,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
-                return AccessDeniedView();
-
             var currency = _currencyService.GetCurrencyById(id);
             if (currency == null)
                 //No currency found with the specified id
@@ -248,9 +212,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Edit(CurrencyModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
-                return AccessDeniedView();
-
             var currency = _currencyService.GetCurrencyById(model.Id);
             if (currency == null)
                 //No currency found with the specified id
@@ -266,15 +227,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                     ErrorNotification("At least one published currency is required.");
                     return RedirectToAction("Edit", new { id = currency.Id });
                 }
-
-                currency = model.ToEntity(currency);
-                currency.UpdatedOnUtc = DateTime.UtcNow;
-                currency.Locales = model.Locales.ToLocalizedProperty();
-                currency.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
-                _currencyService.UpdateCurrency(currency);
-
+                currency = _currencyViewModelService.UpdateCurrencyModel(currency, model);
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Updated"));
-
                 if (continueEditing)
                 {
                     //selected tab
@@ -287,19 +241,14 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //If we got this far, something failed, redisplay form
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(currency.CreatedOnUtc, DateTimeKind.Utc);
-
             //Stores
             model.PrepareStoresMappingModel(currency, true, _storeService);
-
             return View(model);
         }
         
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
-                return AccessDeniedView();
-
             var currency = _currencyService.GetCurrencyById(id);
             if (currency == null)
                 //No currency found with the specified id
@@ -320,11 +269,15 @@ namespace Grand.Web.Areas.Admin.Controllers
                     ErrorNotification("At least one published currency is required.");
                     return RedirectToAction("Edit", new { id = currency.Id });
                 }
+                if (ModelState.IsValid)
+                {
+                    _currencyService.DeleteCurrency(currency);
 
-                _currencyService.DeleteCurrency(currency);
-
-                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Deleted"));
-                return RedirectToAction("List");
+                    SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Deleted"));
+                    return RedirectToAction("List");
+                }
+                ErrorNotification(ModelState);
+                return RedirectToAction("Edit", new { id = currency.Id });
             }
             catch (Exception exc)
             {

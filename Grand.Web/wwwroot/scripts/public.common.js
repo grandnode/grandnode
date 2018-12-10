@@ -50,16 +50,14 @@ function displayPopupNotification(message, messagetype, modal) {
     container.html(htmlcode);
     $('#generalModal').modal('show');
 }
-
-$('#ModalAddToCart .modal-dialog').on('click tap', function (e) {
-    if ($(e.target).hasClass('modal-dialog')) {
-        $('.modal').modal('hide');
-    }
-});
-
 $(document).ready(function () {
     $('#ModalQuickView').on('hide.bs.modal', function (e) {
         $('#ModalQuickView').empty();
+    });
+    $('#ModalAddToCart .modal-dialog').on('click tap', function (e) {
+        if ($(e.target).hasClass('modal-dialog')) {
+            $('.modal').modal('hide');
+        }
     });
 });
 

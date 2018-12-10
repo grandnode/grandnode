@@ -2,6 +2,7 @@
 using Grand.Framework.Components;
 using Grand.Web.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Grand.Web.ViewComponents
 {
@@ -16,12 +17,12 @@ namespace Grand.Web.ViewComponents
             this._blogSettings = blogSettings;
         }
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
             if (!_blogSettings.Enabled || !_blogSettings.ShowBlogOnHomePage)
                 return Content("");
 
-            var model = _blogViewModelService.PrepareHomePageBlogItems();
+            var model = await Task.Run(() => _blogViewModelService.PrepareHomePageBlogItems());
             return View(model);
         }
     }

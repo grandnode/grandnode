@@ -10,20 +10,18 @@
     <antiforgery-token />
     <div id="googlebase-configure">
         <ul>
-            <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+            <li tab-index="0">
                 @T("Plugins.Feed.GoogleShopping.General")
             </li>
-            <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+            <li tab-index="1">
                 @T("Plugins.Feed.GoogleShopping.Override")
             </li>
         </ul>
         <div>
-            @*@TabGeneral()*@
-            @Html.Partial("TabGeneral.Configure.cshtml")
+            <partial name="TabGeneral.Configure.cshtml" />
         </div>
         <div>
-            @*@TabOverride()*@
-            @Html.Partial("TabOverride.Configure.cshtml")
+            <partial name="TabOverride.Configure.cshtml" />
         </div>
     </div>
     <script type="text/javascript">

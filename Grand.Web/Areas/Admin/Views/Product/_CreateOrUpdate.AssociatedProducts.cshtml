@@ -6,6 +6,7 @@
         <p>@T("Admin.Catalog.Products.AssociatedProducts.Note2")</p>
     </div>
     <div class="panel panel-default">
+        <vc:admin-widget widget-zone="product_details_associated_products_top" additional-data="Model" />
         <div class="panel-body">
             <div id="associatedproducts-grid"></div>
         </div>
@@ -13,6 +14,7 @@
             <input type="submit" id="btnAddNewAssociatedProduct" value="@T("Admin.Catalog.Products.AssociatedProducts.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("AssociatedProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshAssociatedProducts", formId = "product-form" }))    ', 800, 800, true); return false;" class="k-button" />
             <input type="submit" id="btnRefreshAssociatedProducts" style="display: none" />
         </div>
+        <vc:admin-widget widget-zone="product_details_associated_products_bottom" additional-data="Model" />
     </div>
     <script>
         $(document).ready(function () {

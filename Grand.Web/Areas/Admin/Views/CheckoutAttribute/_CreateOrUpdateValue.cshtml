@@ -16,7 +16,7 @@
         window.close();
     </script>
 }
-
+    <vc:admin-widget widget-zone="checkout_attribute_top" additional-data="Model" />
 @(Html.LocalizedEditor<CheckoutAttributeValueModel, CheckoutAttributeValueLocalizedModel>("checkoutattributevalue-localized",
 @<div class="form-horizontal">
      <div class="form-body">
@@ -94,4 +94,4 @@
     </div>
     </div>
 </div>
-
+<vc:admin-widget widget-zone="checkout_attribute_bottom" additional-data="Model" />

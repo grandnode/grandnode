@@ -9,10 +9,11 @@ using Grand.Core.Domain.Seo;
 using Grand.Core.Infrastructure;
 using Grand.Core.Plugins;
 using Grand.Core.Roslyn;
+using Grand.Data;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Security;
-using Grand.Services.Common;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Configuration;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
@@ -28,15 +29,20 @@ using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Models.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Driver.Core.Bindings;
+using MongoDB.Driver.Core.Operations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
+using System.Threading;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Maintenance)]
     public partial class CommonController : BaseAdminController
     {
         #region Fields
@@ -55,42 +61,41 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILanguageService _languageService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
-        private readonly IPermissionService _permissionService;
-        private readonly ILocalizationService _localizationService;
-        private readonly ISearchTermService _searchTermService;
+        private readonly ILocalizationService _localizationService;        
         private readonly ISettingService _settingService;
         private readonly IStoreService _storeService;
         private readonly IRepository<Product> _repositoryProduct;
         private readonly CatalogSettings _catalogSettings;
         private readonly IHttpContextAccessor _httpContext;
         private readonly GrandConfig _grandConfig;
+        private readonly IMongoDBContext _mongoDBContext;
+
         #endregion
 
         #region Constructors
 
-        public CommonController(IPaymentService paymentService, 
+        public CommonController(IPaymentService paymentService,
             IShippingService shippingService,
-            IShoppingCartService shoppingCartService, 
-            ICurrencyService currencyService, 
+            IShoppingCartService shoppingCartService,
+            ICurrencyService currencyService,
             IMeasureService measureService,
-            ICustomerService customerService, 
-            IUrlRecordService urlRecordService, 
-            IWebHelper webHelper, 
+            ICustomerService customerService,
+            IUrlRecordService urlRecordService,
+            IWebHelper webHelper,
             CurrencySettings currencySettings,
-            MeasureSettings measureSettings, 
+            MeasureSettings measureSettings,
             IDateTimeHelper dateTimeHelper,
-            ILanguageService languageService, 
+            ILanguageService languageService,
             IWorkContext workContext,
             IStoreContext storeContext,
-            IPermissionService permissionService, 
-            ILocalizationService localizationService,
-            ISearchTermService searchTermService,
+            ILocalizationService localizationService,            
             ISettingService settingService,
             IStoreService storeService,
             IRepository<Product> repositoryProduct,
             CatalogSettings catalogSettings,
             IHttpContextAccessor httpContext,
-            GrandConfig grandConfig
+            GrandConfig grandConfig,
+            IMongoDBContext mongoDBContext
             )
         {
             this._paymentService = paymentService;
@@ -107,26 +112,47 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._languageService = languageService;
             this._workContext = workContext;
             this._storeContext = storeContext;
-            this._permissionService = permissionService;
             this._localizationService = localizationService;
-            this._searchTermService = searchTermService;
             this._settingService = settingService;
             this._storeService = storeService;
             this._repositoryProduct = repositoryProduct;
             this._catalogSettings = catalogSettings;
             this._httpContext = httpContext;
             this._grandConfig = grandConfig;
+            this._mongoDBContext = mongoDBContext;
         }
 
         #endregion
+
+        protected virtual IEnumerable<Dictionary<string, object>> Serialize(List<BsonValue> collection)
+        {
+            var results = new List<Dictionary<string, object>>();
+            var columns = new List<string>();
+            var document = collection.FirstOrDefault()?.AsBsonDocument;
+            var cols = new List<string>();
+            if (document != null)
+            {
+                foreach (var item in document.Names)
+                {
+                    columns.Add(item);
+                }
+                foreach (var row in collection)
+                {
+                    var myObject = new Dictionary<string, object>();
+                    foreach (var col in columns)
+                    {
+                        myObject.Add(col, row[col].ToString());
+                    }
+                    results.Add(myObject);
+                }
+            }
+            return results;
+        }
 
         #region Methods
 
         public IActionResult SystemInfo()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
             var model = new SystemInfoModel();
             model.GrandVersion = GrandVersion.CurrentVersion;
             try
@@ -158,7 +184,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 model.LoadedAssemblies.Add(new SystemInfoModel.LoadedAssembly
                 {
-                    FullName = assembly.FullName,                    
+                    FullName = assembly.FullName,
                 });
             }
             return View(model);
@@ -167,9 +193,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Warnings()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
             var model = new List<SystemWarningModel>();
 
             //store URL
@@ -180,10 +203,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 currentStoreUrl.Equals(_webHelper.GetStoreLocation(true), StringComparison.OrdinalIgnoreCase)
                 ))
                 model.Add(new SystemWarningModel
-                    {
-                        Level = SystemWarningLevel.Pass,
-                        Text = _localizationService.GetResource("Admin.System.Warnings.URL.Match")
-                    });
+                {
+                    Level = SystemWarningLevel.Pass,
+                    Text = _localizationService.GetResource("Admin.System.Warnings.URL.Match")
+                });
             else
                 model.Add(new SystemWarningModel
                 {
@@ -331,7 +354,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     model.Add(new SystemWarningModel
                     {
                         Level = SystemWarningLevel.Warning,
-                        Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.IncompatiblePlugin"), pluginName )
+                        Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.IncompatiblePlugin"), pluginName)
                     });
 
             //performance settings
@@ -398,9 +421,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Maintenance()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
             var model = new MaintenanceModel();
             model.DeleteGuests.EndDate = DateTime.UtcNow.AddDays(-7);
             model.DeleteGuests.OnlyWithoutShoppingCart = true;
@@ -411,9 +431,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("delete-guests")]
         public IActionResult MaintenanceDeleteGuests(MaintenanceModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
             DateTime? startDateValue = (model.DeleteGuests.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteGuests.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
@@ -428,9 +445,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("clear-most-view")]
         public IActionResult MaintenanceClearMostViewed(MaintenanceModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
             var update = new UpdateDefinitionBuilder<Product>().Set(x => x.Viewed, 0);
             var result = _repositoryProduct.Collection.UpdateManyAsync(x => x.Viewed != 0, update).Result;
 
@@ -440,15 +454,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("delete-exported-files")]
         public IActionResult MaintenanceDeleteFiles(MaintenanceModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
             DateTime? startDateValue = (model.DeleteExportedFiles.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteExportedFiles.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
             DateTime? endDateValue = (model.DeleteExportedFiles.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteExportedFiles.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
- 
+
             model.DeleteExportedFiles.NumberOfDeletedFiles = 0;
             return View(model);
         }
@@ -458,38 +469,13 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("delete-activitylog")]
         public IActionResult MaintenanceDeleteActivitylog(MaintenanceModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
             var _activityLogRepository = EngineContext.Current.Resolve<IRepository<ActivityLog>>();
             _activityLogRepository.Collection.DeleteMany(new MongoDB.Bson.BsonDocument());
-            model.DeleteActivityLog = true;            
+            model.DeleteActivityLog = true;
             return View(model);
         }
-
-        public IActionResult SetLanguage(string langid, string returnUrl = "")
-        {
-            var language = _languageService.GetLanguageById(langid);
-            if (language != null)
-            {
-                _workContext.WorkingLanguage = language;
-            }
-
-            //home page
-            if (String.IsNullOrEmpty(returnUrl))
-                returnUrl = Url.Action("Index", "Home", new { area = "Admin" });
-            //prevent open redirection attack
-            if (!Url.IsLocalUrl(returnUrl))
-                return RedirectToAction("Index", "Home", new { area = "Admin" });
-            return Redirect(returnUrl);
-        }
-
-
         public IActionResult ClearCache(string returnUrl = "")
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
             var cacheManager = EngineContext.Current.Resolve<ICacheManager>();
             cacheManager.Clear();
 
@@ -505,9 +491,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult RestartApplication(string returnUrl = "")
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
             //restart application
             _webHelper.RestartAppDomain();
 
@@ -522,25 +505,19 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Roslyn()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-            
             return View(_grandConfig.UseRoslynScripts);
         }
 
         [HttpPost]
         public IActionResult Roslyn(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
             var scripts = RoslynCompiler.ReferencedScripts != null ? RoslynCompiler.ReferencedScripts.ToList() : new List<ResultCompiler>();
 
             var gridModel = new DataSourceResult
             {
                 Data = scripts.Select(x =>
                 {
-                    return new 
+                    return new
                     {
                         FileName = x.OriginalFile,
                         IsCompiled = x.IsCompiled,
@@ -552,20 +529,78 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        public IActionResult QueryEditor()
+        {
+            var model = new QueryEditor();
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult QueryEditor(string query)
+        {
+            //https://docs.mongodb.com/manual/reference/command/
+            if (string.IsNullOrEmpty(query))
+                return ErrorForKendoGridJson("Empty query");
+            try
+            {
+                var result = _mongoDBContext.RunCommand<BsonDocument>(query);
+                var ok = result.Where(x => x.Name == "ok").FirstOrDefault().Value.ToBoolean();
+                var gridModel = new DataSourceResult();
+                if (result.Where(x => x.Name == "cursor").ToList().Any())
+                {
+                    var resultCollection = result["cursor"]["firstBatch"].AsBsonArray.ToList();
+                    var response = Serialize(resultCollection);
+                    gridModel = new DataSourceResult
+                    {
+                        Data = response,
+                        Total = response.Count()
+                    };
+                }
+                else if (result.Where(x => x.Name == "n").ToList().Any())
+                {
+                    List<dynamic> n = new List<dynamic>();
+                    var number = result["n"].ToInt64();
+                    n.Add(new { Number = number });
+                    gridModel = new DataSourceResult
+                    {
+                        Data = n
+                    };
+                }
+                return Json(gridModel);
+            }
+            catch (Exception ex)
+            {
+                return ErrorForKendoGridJson(ex.Message);
+            }
+        }
+        [HttpPost]
+        public IActionResult RunScript(string query)
+        {
+            if (string.IsNullOrEmpty(query))
+                return Json(new { Result = false, Message = "Empty query!" });
+
+            try
+            {
+                var bscript = new BsonJavaScript(query);
+                var operation = new EvalOperation(_mongoDBContext.Database().DatabaseNamespace, bscript, null);
+                var writeBinding = new WritableServerBinding(_mongoDBContext.Database().Client.Cluster, NoCoreSession.NewHandle());
+                var result = operation.Execute(writeBinding, CancellationToken.None);
+                var xx = result["_ns"];
+                return Json(new { Result = true, Message = result.ToString() });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Result = false, Message = ex.Message });
+            }
+        }
         public IActionResult SeNames()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
             var model = new UrlRecordListModel();
             return View(model);
         }
         [HttpPost]
         public IActionResult SeNames(DataSourceRequest command, UrlRecordListModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
             var urlRecords = _urlRecordService.GetAllUrlRecords(model.SeName, command.Page - 1, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -637,9 +672,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult DeleteSelectedSeNames(ICollection<string> selectedIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
-                return AccessDeniedView();
-
             if (selectedIds != null)
             {
                 var urlRecords = new List<UrlRecord>();
@@ -656,25 +688,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(new { Result = true });
         }
 
-        [HttpPost]
-        public IActionResult PopularSearchTermsReport(DataSourceRequest command)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
-            var searchTermRecordLines = _searchTermService.GetStats(command.Page - 1, command.PageSize);
-            var gridModel = new DataSourceResult
-            {
-                Data = searchTermRecordLines.Select(x => new SearchTermReportLineModel
-                {
-                    Keyword = x.Keyword,
-                    Count = x.Count,
-                }),
-                Total = searchTermRecordLines.TotalCount
-            };
-            return Json(gridModel);
-        }
-
+       
         #endregion
     }
 }

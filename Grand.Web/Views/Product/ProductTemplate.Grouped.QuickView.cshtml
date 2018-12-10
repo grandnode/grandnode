@@ -4,8 +4,7 @@
 @{
     Layout = "";
 }
-<div class="product-quickview">
-    <div class="modal-dialog container" role="document">
+    <div class="modal-dialog product-quickview product-grouped" role="document">
         <div class="modal-content rounded-0">
             <button type="button" class="close text-dark" data-dismiss="modal" aria-label="Close">
                 <span class="quick-close"></span>
@@ -192,4 +191,40 @@
                 </div>
             </div>
         </div>
-</div>
+    <script>
+    $(document).ready(function () {
+
+        $('#ModalQuickView').animate({
+            scrollTop: 0
+        }, 300, 'linear');
+
+        if ($(window).width() > 767) {
+            $('.product-quickview .review-scroll-button').on('click', function (e) {
+                e.preventDefault();
+                $("#review-tab").click();
+                var vcenter = $('.product-quickview .overview').height() + 30;
+                $('#ModalQuickView').animate({
+                    scrollTop: vcenter
+                }, 300, 'linear');
+            });
+        }
+        else {
+            $('.product-quickview .review-scroll-button').on('click', function (e) {
+                e.preventDefault();
+                $("#review-tab").click();
+                var vcenter = $('.product-quickview .overview').height() + $('.product-quickview .gallery').height() + 30;
+                $('#ModalQuickView').animate({
+                    scrollTop: vcenter
+                }, 300, 'linear');
+            });
+        }
+        var rating_percent = $('.progress10').attr("data-rating");
+        productStarProgress10(rating_percent, 'progress10');
+
+        $('.box-progress10').each(function () {
+            var rating_id = $(this).attr("data-id");
+            var rating_percent = $(this).attr("data-rating");
+            productStarProgress10(rating_percent, rating_id);
+        });
+    });
+    </script>

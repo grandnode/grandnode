@@ -1,12 +1,13 @@
 ﻿@model CategoryModel
 @inject AdminAreaSettings adminAreaSettings
 @{
-
+    <vc:admin-widget widget-zone="category_details_activity_top" additional-data="Model" />
     <div class="panel panel-default">
         <div class="panel-body">
             <div id="activitylog-grid"></div>
         </div>
     </div>
+    <vc:admin-widget widget-zone="category_details_activity_bottom" additional-data="Model" />
     <script>
         $(document).ready(function () {
             $("#activitylog-grid").kendoGrid({

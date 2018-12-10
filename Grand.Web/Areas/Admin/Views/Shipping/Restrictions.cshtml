@@ -16,6 +16,7 @@
                     </div>
                     <div class="actions">
                         <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                        <vc:admin-widget widget-zone="shipping_restriction_list_buttons" additional-data="null" />
                     </div>
                 </div>
                 <div class="portlet-body form">
@@ -34,18 +35,18 @@
                     </script>
                     <div id="shippingrestriction-edit" style="display:none">
                         <ul>
-                            <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                            <li tab-index="0">
                                 @T("Admin.Configuration.Shipping.Restrictions.Country")
                             </li>
-                            <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                            <li tab-index="1">
                                 @T("Admin.Configuration.Shipping.Restrictions.Role")
                             </li>
                         </ul>
                         <div>
-                            @Html.Partial("Restrictions.TabCountry", Model)
+                           <partial name="Restrictions.TabCountry" model="Model" />
                         </div>
                         <div>
-                            @Html.Partial("Restrictions.TabRole", Model)
+                           <partial name="Restrictions.TabRole" model="Model" />
                         </div>
                     </div>
                     @{

@@ -773,6 +773,12 @@ ul.ui-autocomplete li {
     background-color: #ddd;
 }
 
+#ModalQuickView {
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-right: 0 !important;
+}
+
 #ModalAddToCart {
     z-index: 9999;
 }
@@ -2578,7 +2584,7 @@ ul.opc .order-summary-content h5 {
 
     .product-details-page .thumbnails img {
         width: 100px;
-        height: 100px;
+        height: auto;
         border-radius: 0 !important;
     }
 
@@ -2698,6 +2704,10 @@ ul.opc .order-summary-content h5 {
     .product-quickview .modal-dialog.container {
         max-width: 540px;
     }
+
+    .product-quickview {
+        max-width: 960px;
+    }
 }
 
 @media (min-width: 768px) {
@@ -2708,10 +2718,18 @@ ul.opc .order-summary-content h5 {
     .return-request-table thead th {
         min-width: 140px;
     }
+
+    .product-quickview {
+        max-width: 960px;
+    }
 }
 
 @media (min-width: 992px) {
     .product-quickview .modal-dialog.container {
+        max-width: 960px;
+    }
+
+    .product-quickview {
         max-width: 960px;
     }
 }
@@ -3020,7 +3038,7 @@ section.totals {
 }
 
 .card.generalNote {
-    z-index: 9999;
+    z-index: 10000;
     position: fixed;
     width: 100%;
     display: none;
@@ -4079,6 +4097,10 @@ footer .list-group .list-group-item {
 @media screen and (min-width: 1200px) {
     .shopping-cart .subtotal {
         min-width: 165px;
+    }
+
+    .product-quickview {
+        max-width: 1140px;
     }
 
     .shopping-cart .unit-price {
@@ -5751,6 +5773,7 @@ footer .list-group .list-group-item {
 
     #ModalAddToCart.show {
         display: flex !important;
+        justify-content: center;
     }
 
     #ModalAddToCart {

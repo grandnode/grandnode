@@ -1,6 +1,8 @@
 ﻿@model OrderModel
+@inject Grand.Services.Security.IPermissionService permisionService;
 @if (Model.IsShippable)
 {
+
     <div class="form-horizontal">
         <div class="form-body">
             @if (Model.ShippingAddress != null)
@@ -255,36 +257,39 @@
                 <div class="form-group">
                     <admin-label asp-for="ShippingStatus" />
                     <div class="col-md-9 col-sm-9">
-                        <label class="control-label">@Model.ShippingStatus</label> 
+                        <label class="control-label">@Model.ShippingStatus</label>
                     </div>
                 </div>
             }
         </div>
     </div>
-    <p>
-        <strong>
-            @T("Admin.Orders.Shipments")
-        </strong>
-    </p>
-
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div id="shipments-grid"></div>
+    if (permisionService.Authorize(Grand.Services.Security.PermissionSystemName.Shipments))
+    {
+        <p>
+            <strong>
+                @T("Admin.Orders.Shipments")
+            </strong>
+        </p>
+        <div class="panel panel-default">
+            <vc:admin-widget widget-zone="order_details_shipping_top" additional-data="Model" />
+            <div class="panel-body">
+                <div id="shipments-grid"></div>
+            </div>
+            <div class="panel-footer">
+                @if (Model.CanAddNewShipments)
+                {
+                    <input type="submit" id="btnAddNewShipment" name="btnAddNewShipment" value="@T("Admin.Orders.Shipments.AddNew")" onclick="javascript:setLocation('@(Url.Action("AddShipment", "Shipment", new { orderId = Model.Id }))'); return false;" class="k-button" />
+                }
+            </div>
+            <vc:admin-widget widget-zone="order_details_shipping_bottom" additional-data="Model" />
         </div>
-        <div class="panel-footer">
-            @if (Model.CanAddNewShipments)
-            {
-                <input type="submit" id="btnAddNewShipment" name="btnAddNewShipment" value="@T("Admin.Orders.Shipments.AddNew")" onclick="javascript:setLocation('@(Url.Action("AddShipment", "Order", new { orderId = Model.Id }))'); return false;" class="k-button" />
-            }
-        </div>
-    </div>
-    <script>
+        <script>
         $(document).ready(function () {
             $("#shipments-grid").kendoGrid({
                 dataSource: {
                     transport: {
                         read: {
-                            url: "@Html.Raw(Url.Action("ShipmentsByOrder", "Order", new { orderId = Model.Id }))",
+                            url: "@Html.Raw(Url.Action("ShipmentsByOrder", "Shipment", new { orderId = Model.Id }))",
                             type: "POST",
                             dataType: "json",
                             data: addAntiForgeryToken
@@ -317,12 +322,12 @@
                     field: "ShipmentNumber",
                     title: "@T("Admin.Orders.Shipments.ID")",
                     width: 50,
-                    template: '<a class="k-link" href="@Url.Content("~/Admin/Order/ShipmentDetails/")#=Id#">#=ShipmentNumber#</a>'
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Shipment/ShipmentDetails/")#=Id#">#=ShipmentNumber#</a>'
                 }, {
                     field: "TrackingNumber",
                     title: "@T("Admin.Orders.Shipments.TrackingNumber")",
                     width: 100,
-                        template: '<a class="k-link" href="@Url.Content("~/Admin/Order/ShipmentDetails/")#=Id#">#=TrackingNumber#</a>'
+                        template: '<a class="k-link" href="@Url.Content("~/Admin/Shipment/ShipmentDetails/")#=Id#">#=TrackingNumber#</a>'
                 }, {
                     field: "TotalWeight",
                     title: "@T("Admin.Orders.Shipments.TotalWeight")",
@@ -349,7 +354,7 @@
                 dataSource: {
                     transport: {
                         read: {
-                            url: "@Html.Raw(Url.Action("ShipmentsItemsByShipmentId", "Order"))?shipmentId="+e.data.Id,
+                            url: "@Html.Raw(Url.Action("ShipmentsItemsByShipmentId", "Shipment"))?shipmentId="+e.data.Id,
                             type: "POST",
                             dataType: "json",
                             data: addAntiForgeryToken
@@ -402,7 +407,8 @@
                 ]
             });
         }
-    </script>
+        </script>
+    }
 }
 else
 {

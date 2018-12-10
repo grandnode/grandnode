@@ -3,17 +3,15 @@ using Grand.Core.Domain.Messages;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
-using Grand.Services.Customers;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.ExportImport;
-using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
 using Grand.Services.Security;
 using Grand.Services.Stores;
-using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Messages;
+using Grand.Web.Areas.Admin.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,106 +19,37 @@ using System.Text;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Campaigns)]
     public partial class CampaignController : BaseAdminController
     {
         private readonly ICampaignService _campaignService;
-        private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly ICampaignViewModelService _campaignViewModelService;
         private readonly IEmailAccountService _emailAccountService;
         private readonly EmailAccountSettings _emailAccountSettings;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly ILocalizationService _localizationService;
-        private readonly IMessageTokenProvider _messageTokenProvider;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
-        private readonly IPermissionService _permissionService;
-        private readonly ICustomerTagService _customerTagService;
         private readonly IExportManager _exportManager;
-        private readonly INewsletterCategoryService _newsletterCategoryService;
 
-        public CampaignController(ICampaignService campaignService,
-            ICustomerService customerService,
-            IDateTimeHelper dateTimeHelper,
+        public CampaignController(ICampaignService campaignService, ICampaignViewModelService campaignViewModelService,
             IEmailAccountService emailAccountService,
             EmailAccountSettings emailAccountSettings,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
-            ILocalizationService localizationService,
-            IMessageTokenProvider messageTokenProvider,
+            ILocalizationService localizationService, 
             IStoreContext storeContext,
             IStoreService storeService,
-            IPermissionService permissionService,
-            ICustomerTagService customerTagService,
-            IExportManager exportManager,
-            INewsletterCategoryService newsletterCategoryService)
-        {
+            IExportManager exportManager)
+		{
             this._campaignService = campaignService;
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
+            this._campaignViewModelService = campaignViewModelService;
             this._emailAccountService = emailAccountService;
             this._emailAccountSettings = emailAccountSettings;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
             this._localizationService = localizationService;
-            this._messageTokenProvider = messageTokenProvider;
             this._storeContext = storeContext;
             this._storeService = storeService;
-            this._permissionService = permissionService;
-            this._customerTagService = customerTagService;
             this._exportManager = exportManager;
-            this._newsletterCategoryService = newsletterCategoryService;
-        }
-
-        [NonAction]
-        protected virtual void PrepareStoresModel(CampaignModel model)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            model.AvailableStores.Add(new SelectListItem
-            {
-                Text = _localizationService.GetResource("Admin.Common.All"),
-                Value = ""
-            });
-            var stores = _storeService.GetAllStores();
-            foreach (var store in stores)
-            {
-                model.AvailableStores.Add(new SelectListItem
-                {
-                    Text = store.Name,
-                    Value = store.Id.ToString()
-                });
-            }
-        }
-
-        [NonAction]
-        protected virtual void PrepareCustomerTagsModel(CampaignModel model)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-            model.AvailableCustomerTags = _customerTagService.GetAllCustomerTags().Select(ct => new SelectListItem() { Text = ct.Name, Value = ct.Id, Selected = model.CustomerTags.Contains(ct.Id) }).ToList();
-            model.CustomerTags = model.CustomerTags == null ? new List<string>() : model.CustomerTags;
-        }
-        [NonAction]
-        protected virtual void PrepareCustomerRolesModel(CampaignModel model)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-            model.AvailableCustomerRoles = _customerService.GetAllCustomerRoles().Select(ct => new SelectListItem() { Text = ct.Name, Value = ct.Id, Selected = model.CustomerRoles.Contains(ct.Id) }).ToList();
-            model.CustomerRoles = model.CustomerRoles == null ? new List<string>() : model.CustomerRoles;
-        }
-        [NonAction]
-        protected virtual void PrepareNewsletterCategoriesModel(CampaignModel model)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-            model.AvailableNewsletterCategories = _newsletterCategoryService.GetAllNewsletterCategory().Select(ct => new SelectListItem() { Text = ct.Name, Value = ct.Id, Selected = model.NewsletterCategories.Contains(ct.Id) }).ToList();
-            model.NewsletterCategories = model.NewsletterCategories == null ? new List<string>() : model.NewsletterCategories;
-        }
-        [NonAction]
-        protected virtual void PrepareEmailAccounts(CampaignModel model)
-        {
-            //available email accounts
-            foreach (var ea in _emailAccountService.GetAllEmailAccounts())
-                model.AvailableEmailAccounts.Add(ea.ToModel());
         }
 
         public IActionResult Index()
@@ -130,28 +59,17 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
-                return AccessDeniedView();
-
-            var campaigns = _campaignService.GetAllCampaigns();
+            var model = _campaignViewModelService.PrepareCampaignModels();
             var gridModel = new DataSourceResult
             {
-                Data = campaigns.Select(x =>
-                {
-                    var model = x.ToModel();
-                    model.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
-                    return model;
-                }),
-                Total = campaigns.Count
+                Data = model.campaignModels,
+                Total = model.totalCount
             };
             return Json(gridModel);
         }
@@ -159,9 +77,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Customers(string campaignId, DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
-                return AccessDeniedView();
-
             var campaign = _campaignService.GetCampaignById(campaignId);
             var customers = _campaignService.CustomerSubscriptions(campaign, command.Page - 1, command.PageSize);
 
@@ -176,9 +91,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult History(string campaignId, DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
-                return AccessDeniedView();
-
             var campaign = _campaignService.GetCampaignById(campaignId);
             var history = _campaignService.GetCampaignHistory(campaign, command.Page - 1, command.PageSize);
 
@@ -196,9 +108,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ExportCsv(string campaignId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
-                return AccessDeniedView();
-
             try
             {
                 var campaign = _campaignService.GetCampaignById(campaignId);
@@ -215,82 +124,36 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
         }
 
-
-
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
-                return AccessDeniedView();
-
-            var model = new CampaignModel();
-            model.AllowedTokens = _messageTokenProvider.GetListOfCampaignAllowedTokens();
-            //stores
-            PrepareStoresModel(model);
-            //Tags
-            PrepareCustomerTagsModel(model);
-            //Roles
-            PrepareCustomerRolesModel(model);
-            //Newsletter categories
-            PrepareNewsletterCategoriesModel(model);
-            //email
-            PrepareEmailAccounts(model);
+            var model = _campaignViewModelService.PrepareCampaignModel();
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Create(CampaignModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
-                var campaign = model.ToEntity();
-                campaign.CreatedOnUtc = DateTime.UtcNow;
-                _campaignService.InsertCampaign(campaign);
+                var campaign = _campaignViewModelService.InsertCampaignModel(model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = campaign.Id }) : RedirectToAction("List");
             }
 
-            //If we got this far, something failed, redisplay form
-            model.AllowedTokens = _messageTokenProvider.GetListOfCampaignAllowedTokens();
-            //stores
-            PrepareStoresModel(model);
-            //Tags
-            PrepareCustomerTagsModel(model);
-            //Newsletter categories
-            PrepareNewsletterCategoriesModel(model);
-            //Roles
-            PrepareCustomerRolesModel(model);
-            //email
-            PrepareEmailAccounts(model);
+            model = _campaignViewModelService.PrepareCampaignModel(model);
 
             return View(model);
         }
 
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
-                return AccessDeniedView();
-
             var campaign = _campaignService.GetCampaignById(id);
             if (campaign == null)
                 //No campaign found with the specified id
                 return RedirectToAction("List");
 
-            var model = campaign.ToModel();
-            model.AllowedTokens = _messageTokenProvider.GetListOfCampaignAllowedTokens();
-            //stores
-            PrepareStoresModel(model);
-            //Tags
-            PrepareCustomerTagsModel(model);
-            //Newsletter categories
-            PrepareNewsletterCategoriesModel(model);
-            //Roles
-            PrepareCustomerRolesModel(model);
-            //email
-            PrepareEmailAccounts(model);
+            var model = _campaignViewModelService.PrepareCampaignModel(campaign);
             return View(model);
         }
 
@@ -299,9 +162,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public IActionResult Edit(CampaignModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
-                return AccessDeniedView();
-
             var campaign = _campaignService.GetCampaignById(model.Id);
             if (campaign == null)
                 //No campaign found with the specified id
@@ -309,44 +169,14 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                campaign = model.ToEntity(campaign);
-                campaign.CustomerRoles.Clear();
-                foreach (var item in model.CustomerRoles)
-                {
-                    campaign.CustomerRoles.Add(item);
-                }
-                campaign.CustomerTags.Clear();
-                foreach (var item in model.CustomerTags)
-                {
-                    campaign.CustomerTags.Add(item);
-                }
-                campaign.NewsletterCategories.Clear();
-                foreach (var item in model.NewsletterCategories)
-                {
-                    campaign.NewsletterCategories.Add(item);
-                }
-
-                _campaignService.UpdateCampaign(campaign);
-
+                campaign = _campaignViewModelService.UpdateCampaignModel(campaign, model);
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Updated"));
                 //selected tab
                 SaveSelectedTabIndex();
 
                 return continueEditing ? RedirectToAction("Edit", new { id = campaign.Id }) : RedirectToAction("List");
             }
-
-            //If we got this far, something failed, redisplay form
-            model.AllowedTokens = _messageTokenProvider.GetListOfCampaignAllowedTokens();
-            //stores
-            PrepareStoresModel(model);
-            //Tags
-            PrepareCustomerTagsModel(model);
-            //Newsletter categories
-            PrepareNewsletterCategoriesModel(model);
-            //Roles
-            PrepareCustomerRolesModel(model);
-            //email
-            PrepareEmailAccounts(model);
+            model = _campaignViewModelService.PrepareCampaignModel(model);
             return View(model);
         }
 
@@ -354,26 +184,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("send-test-email")]
         public IActionResult SendTestEmail(CampaignModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
-                return AccessDeniedView();
-
             var campaign = _campaignService.GetCampaignById(model.Id);
             if (campaign == null)
                 //No campaign found with the specified id
                 return RedirectToAction("List");
 
-
-            model.AllowedTokens = _messageTokenProvider.GetListOfCampaignAllowedTokens();
-            //stores
-            PrepareStoresModel(model);
-            //Tags
-            PrepareCustomerTagsModel(model);
-            //Newsletter categories
-            PrepareNewsletterCategoriesModel(model);
-            //email
-            PrepareEmailAccounts(model);
-            //Roles
-            PrepareCustomerRolesModel(model);
+            model = _campaignViewModelService.PrepareCampaignModel(model);
             try
             {
                 var emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
@@ -411,26 +227,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("send-mass-email")]
         public IActionResult SendMassEmail(CampaignModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
-                return AccessDeniedView();
-
             var campaign = _campaignService.GetCampaignById(model.Id);
             if (campaign == null)
                 //No campaign found with the specified id
                 return RedirectToAction("List");
 
-            model.AllowedTokens = _messageTokenProvider.GetListOfCampaignAllowedTokens();
-            //stores
-            PrepareStoresModel(model);
-            //Tags
-            PrepareCustomerTagsModel(model);
-            //Newsletter categories
-            PrepareNewsletterCategoriesModel(model);
-            //email
-            PrepareEmailAccounts(model);
-            //Roles
-            PrepareCustomerRolesModel(model);
-
+            model = _campaignViewModelService.PrepareCampaignModel(model);
             model.CustomerTags = campaign.CustomerTags.ToList();
             model.CustomerRoles = campaign.CustomerRoles.ToList();
             try
@@ -459,18 +261,19 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
-                return AccessDeniedView();
-
             var campaign = _campaignService.GetCampaignById(id);
             if (campaign == null)
                 //No campaign found with the specified id
                 return RedirectToAction("List");
 
-            _campaignService.DeleteCampaign(campaign);
-
-            SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Deleted"));
-            return RedirectToAction("List");
+            if (ModelState.IsValid)
+            {
+                _campaignService.DeleteCampaign(campaign);
+                SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Deleted"));
+                return RedirectToAction("List");
+            }
+            ErrorNotification(ModelState);
+            return RedirectToAction("Edit", new { id = id });
         }
-    }
+	}
 }

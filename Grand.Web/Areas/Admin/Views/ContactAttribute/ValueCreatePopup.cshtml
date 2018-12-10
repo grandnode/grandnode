@@ -23,10 +23,11 @@
                     </div>
                     <div class="actions">
                         <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                        <vc:admin-widget widget-zone="contact_attribute_value_details_buttons" additional-data="null" />
                     </div>
                 </div>
                 <div class="portlet-body form">
-                    @Html.Partial("_CreateOrUpdateValue", Model)
+                   <partial name="_CreateOrUpdateValue" model="Model" />
                 </div>
             </div>
         </div>

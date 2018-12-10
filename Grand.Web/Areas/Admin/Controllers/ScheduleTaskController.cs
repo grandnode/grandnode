@@ -1,5 +1,6 @@
 ﻿using Grand.Core.Domain.Tasks;
 using Grand.Framework.Kendoui;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Security;
@@ -11,11 +12,11 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.ScheduleTasks)]
     public partial class ScheduleTaskController : BaseAdminController
     {
         #region Fields
         private readonly IScheduleTaskService _scheduleTaskService;
-        private readonly IPermissionService _permissionService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         #endregion
@@ -23,12 +24,10 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Constructors
         public ScheduleTaskController(
             IScheduleTaskService scheduleTaskService,
-            IPermissionService permissionService,
             IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService)
         {
             this._scheduleTaskService = scheduleTaskService;
-            this._permissionService = permissionService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
         }
@@ -69,17 +68,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageScheduleTasks))
-                return AccessDeniedView();
             return View();
         }
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageScheduleTasks))
-                return AccessDeniedView();
-
             //get all tasks and then change their type inside PrepareSCheduleTaskModel and return as List<ScheduleTaskModel>
             var models = _scheduleTaskService.GetAllTasks()
                 .Select(PrepareScheduleTaskModel)
@@ -142,8 +136,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult RunNow(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageScheduleTasks))
-                return AccessDeniedView();
             try
             {
                 var scheduleTask = _scheduleTaskService.GetTaskById(id);

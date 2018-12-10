@@ -20,6 +20,7 @@
                             <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
                         </div>
                     </div>
+                    <vc:admin-widget widget-zone="general_common_settings_buttons" additional-data="null" />
                 </div>
                 <div class="portlet-body">
                     <div class="form-horizontal">
@@ -29,58 +30,60 @@
                     </div>
                 </div>
                 <div class="portlet-body form">
+                    <vc:admin-widget widget-zone="general_common_settings_top" additional-data="null" />
                     <div id="generalsettings-edit" style="display:none">
                         <ul>
-                            <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                            <li tab-index="0">
                                 @T("Admin.Configuration.Settings.GeneralCommon.StoreInformationSettings")
                             </li>
-                            <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                            <li tab-index="1">
                                 @T("Admin.Configuration.Settings.GeneralCommon.SEOSettings")
                             </li>
-                            <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+                            <li tab-index="2">
                                 @T("Admin.Configuration.Settings.GeneralCommon.SecuritySettings")
                             </li>
-                            <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
+                            <li tab-index="3">
                                 @T("Admin.Configuration.Settings.GeneralCommon.PdfSettings")
                             </li>
-                            <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
+                            <li tab-index="4">
                                 @T("Admin.Configuration.Settings.GeneralCommon.LocalizationSettings")
                             </li>
-                            <li @Html.RenderSelectedTabIndex(5, GetSelectedTabIndex())>
+                            <li tab-index="5">
                                 @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings")
                             </li>
-                            <li @Html.RenderSelectedTabIndex(6, GetSelectedTabIndex())>
+                            <li tab-index="6">
                                 @T("Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics")
                             </li>
-                            <li @Html.RenderSelectedTabIndex(7, GetSelectedTabIndex())>
+                            <li tab-index="7">
                                 @T("Admin.Configuration.Settings.GeneralCommon.DisplayTopMenu")
                             </li>
                         </ul>
                         <div>
-                            @Html.Partial("GeneralCommon.TabStoreInformationSettings", Model)
+                            <partial name="GeneralCommon.TabStoreInformationSettings" model="Model" />
                         </div>
                         <div>
-                            @Html.Partial("GeneralCommon.TabSEOSettings", Model)
+                            <partial name="GeneralCommon.TabSEOSettings" model="Model" />
                         </div>
                         <div>
-                            @Html.Partial("GeneralCommon.TabSecuritySettings", Model)
+                            <partial name="GeneralCommon.TabSecuritySettings" model="Model" />
                         </div>
                         <div>
-                            @Html.Partial("GeneralCommon.TabPdfSettings", Model)
+                            <partial name="GeneralCommon.TabPdfSettings" model="Model" />
                         </div>
                         <div>
-                            @Html.Partial("GeneralCommon.TabLocalizationSettings", Model)
+                            <partial name="GeneralCommon.TabLocalizationSettings" model="Model" />
                         </div>
                         <div>
-                            @Html.Partial("GeneralCommon.TabFullTextSettings", Model)
+                            <partial name="GeneralCommon.TabFullTextSettings" model="Model" />
                         </div>
                         <div>
-                            @Html.Partial("GeneralCommon.TabGoogleAnalyticsSettings", Model)
+                            <partial name="GeneralCommon.TabGoogleAnalyticsSettings" model="Model" />
                         </div>
                         <div>
-                            @Html.Partial("GeneralCommon.TabTopMenuSettings", Model)
+                            <partial name="GeneralCommon.TabTopMenuSettings" model="Model" />
                         </div>
                     </div>
+                    <vc:admin-widget widget-zone="general_common_settings_bottom" additional-data="null" />
                 </div>
             </div>
         </div>

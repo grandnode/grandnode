@@ -3,6 +3,7 @@ using Grand.Framework.Components;
 using Grand.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.ViewComponents
 {
@@ -18,12 +19,12 @@ namespace Grand.Web.ViewComponents
             this._catalogSettings = catalogSettings;
         }
 
-        public IViewComponentResult Invoke(string currentManufacturerId)
+        public async Task<IViewComponentResult> InvokeAsync(string currentManufacturerId)
         {
             if (_catalogSettings.ManufacturersBlockItemsToDisplay == 0)
                 return Content("");
 
-            var model = _catalogViewModelService.PrepareManufacturerNavigation(currentManufacturerId);
+            var model = await Task.Run(() => _catalogViewModelService.PrepareManufacturerNavigation(currentManufacturerId));
             if (!model.Manufacturers.Any())
                 return Content("");
 

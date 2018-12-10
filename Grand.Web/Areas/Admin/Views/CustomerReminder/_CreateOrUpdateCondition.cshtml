@@ -18,54 +18,54 @@
 </script>
 <div id="customerremindercondition-edit">
     <ul>
-        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+        <li tab-index="0">
             @T("Admin.Customers.CustomerReminder.Condition.Info")
         </li>
-        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex()) id="tab-product">
+        <li tab-index="1" id="tab-product">
             @T("Admin.Customers.CustomerActionCondition.Products")
         </li>
-        <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex()) id="tab-category">
+        <li tab-index="2" id="tab-category">
             @T("Admin.Customers.CustomerReminder.Condition.Categories")
         </li>
-        <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex()) id="tab-manufacturer">
+        <li tab-index="3" id="tab-manufacturer">
             @T("Admin.Customers.CustomerReminder.Condition.Manufacturers")
         </li>
-        <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex()) id="tab-customerRole">
+        <li tab-index="4" id="tab-customerRole">
             @T("Admin.Customers.CustomerReminder.Condition.CustomerRole")
         </li>
-        <li @Html.RenderSelectedTabIndex(5, GetSelectedTabIndex()) id="tab-customerTag">
+        <li tab-index="5" id="tab-customerTag">
             @T("Admin.Customers.CustomerReminder.Condition.CustomerTag")
         </li>
-        <li @Html.RenderSelectedTabIndex(6, GetSelectedTabIndex()) id="tab-customerRegister">
+        <li tab-index="6" id="tab-customerRegister">
             @T("Admin.Customers.CustomerReminder.Condition.CustomerRegister")
         </li>
-        <li @Html.RenderSelectedTabIndex(7, GetSelectedTabIndex()) id="tab-customAttribute">
+        <li tab-index="7" id="tab-customAttribute">
             @T("Admin.Customers.CustomerReminder.Condition.CustomCustomerAttribute")
         </li>
     </ul>
     <div>
-        @Html.Partial("_ConditionInfo", Model)
+       <partial name="_ConditionInfo" model="Model" />
     </div>
     <div>
-        @Html.Partial("_ConditionProduct", Model)
+       <partial name="_ConditionProduct" model="Model" />
     </div>
     <div>
-        @Html.Partial("_ConditionCategory", Model)
+       <partial name="_ConditionCategory" model="Model" />
     </div>
     <div>
-        @Html.Partial("_ConditionManufacturer", Model)
+       <partial name="_ConditionManufacturer" model="Model" />
     </div>
     <div>
-        @Html.Partial("_ConditionCustomerRole", Model)
+       <partial name="_ConditionCustomerRole" model="Model" />
     </div>
     <div>
-        @Html.Partial("_ConditionCustomerTag", Model)
+       <partial name="_ConditionCustomerTag" model="Model" />
     </div>
     <div>
-        @Html.Partial("_ConditionCustomerRegister", Model)
+       <partial name="_ConditionCustomerRegister" model="Model" />
     </div>
     <div>
-        @Html.Partial("_ConditionCustomCustomerAttribute", Model)
+       <partial name="_ConditionCustomCustomerAttribute" model="Model" />
     </div>
 </div>
 @{

@@ -2,7 +2,7 @@
 @using Grand.Core.Domain.Catalog;
 
 @model ProductModel
-
+<vc:admin-widget widget-zone="product_details_inventory_top" additional-data="Model" />
 <div class="form-horizontal portlet bg-inverse form-fit" id="group-inventory">
     <div class="form-body">
         <div class="form-group">
@@ -55,40 +55,26 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model.ProductWarehouseInventoryModels)
+                            @for (int i = 0; i < Model.ProductWarehouseInventoryModels.Count; i++)
                             {
+                                var item = Model.ProductWarehouseInventoryModels[i];
                                 <tr>
                                     <td style="width: 40%;">
                                         <div style="padding-left: 10px; padding-right: 10px;">
                                             @item.WarehouseName
+                                            <input asp-for="@Model.ProductWarehouseInventoryModels[i].WarehouseId" type="hidden"/>
                                         </div>
                                     </td>
                                     <td align="center" style="width: 10%;">
                                         <label class="mt-checkbox mt-checkbox-outline">
-                                            <input type="checkbox" id="warehouse_used_@(item.WarehouseId)" name="warehouse_used_@(item.WarehouseId)" value="@item.WarehouseId" checked="@item.WarehouseUsed" />
+                                            <admin-input asp-for="@Model.ProductWarehouseInventoryModels[i].WarehouseUsed" />
                                             <span></span>
                                         </label>
-                                        <script type="text/javascript">
-                                                $(document).ready(function() {
-                                                    $("#warehouse_used_@(item.WarehouseId)").change(toggleWarehouseUsed_@(item.WarehouseId));
-                                                    toggleWarehouseUsed_@(item.WarehouseId)();
-                                                });
-
-                                                function toggleWarehouseUsed_@(item.WarehouseId)() {
-                                                    if ($('#warehouse_used_@(item.WarehouseId)').is(':checked')) {
-                                                        $('#warehouse_qty_@(item.WarehouseId)').prop('disabled', false);
-                                                        $('#warehouse_reserved_@(item.WarehouseId)').prop('disabled', false);
-                                                    } else {
-                                                        $('#warehouse_qty_@(item.WarehouseId)').prop('disabled', true);
-                                                        $('#warehouse_reserved_@(item.WarehouseId)').prop('disabled', true);
-                                                    }
-                                                }
-                                        </script>
                                     <td align="center" style="width: 20%;">
-                                        <input id="warehouse_qty_@(item.WarehouseId)" name="warehouse_qty_@(item.WarehouseId)" type="text" value="@item.StockQuantity" class="k-input"  style="width: 70px;" />
+                                        <admin-input asp-for="@Model.ProductWarehouseInventoryModels[i].StockQuantity" />
                                     </td>
                                     <td align="center" style="width: 20%;">
-                                        <input id="warehouse_reserved_@(item.WarehouseId)" name="warehouse_reserved_@(item.WarehouseId)" type="text" value="@item.ReservedQuantity" class="k-input" style="width: 70px;" />
+                                        <admin-input asp-for="@Model.ProductWarehouseInventoryModels[i].ReservedQuantity" />
                                     </td>
                                     <td align="center" style="width: 10%;">
                                         @item.PlannedQuantity
@@ -300,3 +286,4 @@
         </div>
     </div>
 </div>
+<vc:admin-widget widget-zone="product_details_inventory_bottom" additional-data="Model" />

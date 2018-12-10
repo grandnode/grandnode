@@ -17,33 +17,33 @@
     }
 
 </script>
-
+<vc:admin-widget widget-zone="address_attribute_details_info_top" additional-data="Model" />
 @(Html.LocalizedEditor<AddressAttributeModel, AddressAttributeLocalizedModel>("addressattribute-localized",
-    @<div class="form-horizontal">
-         <div class="form-body">
-             <div class="form-group">
-                 <admin-label asp-for="@Model.Locales[item].Name" />
-                 <div class="col-md-9 col-sm-9">
-                     <admin-input asp-for="@Model.Locales[item].Name" />
-                     <span asp-validation-for="@Model.Locales[item].Name"></span>
-                 </div>
-             </div>
-             <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
-         </div>
-    </div>
-    ,
-    @<div class="form-horizontal">
-        <div class="form-body">
-            <div class="form-group">
-                <admin-label asp-for="Name" />
-                <div class="col-md-9 col-sm-9">
-                    <admin-input asp-for="Name" />
-                    <span asp-validation-for="Name"></span>
+            @<div class="form-horizontal">
+                <div class="form-body">
+                    <div class="form-group">
+                        <admin-label asp-for="@Model.Locales[item].Name" />
+                        <div class="col-md-9 col-sm-9">
+                            <admin-input asp-for="@Model.Locales[item].Name" />
+                            <span asp-validation-for="@Model.Locales[item].Name"></span>
+                        </div>
+                    </div>
+                    <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
                 </div>
             </div>
-        </div>
-    </div>
-    ))
+                        ,
+                        @<div class="form-horizontal">
+                            <div class="form-body">
+                                <div class="form-group">
+                                    <admin-label asp-for="Name" />
+                                    <div class="col-md-9 col-sm-9">
+                                        <admin-input asp-for="Name" />
+                                        <span asp-validation-for="Name"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                                        ))
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
@@ -78,3 +78,4 @@
         </div>
     </div>
 </div>
+<vc:admin-widget widget-zone="address_attribute_details_info_bottom" additional-data="Model" />

@@ -17,16 +17,16 @@
 </script>
 <div id="topic-edit" style="display:none">
     <ul>
-        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+        <li tab-index="0">
             @T("Admin.ContentManagement.Topics.Info")
         </li>
-        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+        <li tab-index="1">
             @T("Admin.Common.SEO")
         </li>
-        <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+        <li tab-index="2">
             @T("Admin.ContentManagement.Topics.Acl")
         </li>
-        <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
+        <li tab-index="3">
             @T("Admin.ContentManagement.Topics.Stores")
         </li>
     </ul>
@@ -37,7 +37,7 @@
         <partial name="_CreateOrUpdate.TabSeo" model="Model" />
     </div>
     <div>
-        <partial name="_CreateOrUpdate.TabAcl" model="Model" />
+        <partial name="_TabAcl" model="Model" />
     </div>
     <div>
         <partial name="_TabStores" model="Model" />

@@ -19,11 +19,12 @@
                             <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
                             <button class="btn btn-success" type="submit" name="save-continue"><i class="fa fa-check-circle"></i> @T("Admin.Common.SaveContinue") </button>
                             <span id="returnrequest-delete" class="btn red"><i class="fa fa-trash-o"></i> @T("Admin.Common.Delete")</span>
+                            <vc:admin-widget widget-zone="return_request_details_buttons" additional-data="Model" />
                         </div>
                     </div>
                 </div>
                 <div class="portlet-body form">
-                    @Html.Partial("_CreateOrUpdate", Model)
+                   <partial name="_CreateOrUpdate" model="Model" />
                 </div>
             </div>
         </div>

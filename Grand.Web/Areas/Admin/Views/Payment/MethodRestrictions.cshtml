@@ -19,6 +19,7 @@
                     </div>
                 </div>
                 <div class="portlet-body form">
+                    <vc:admin-widget widget-zone="payment_method_restrictions_top" additional-data="Model" />
                     <script type="text/javascript">
                         $(document).ready(function () {
                             $('#paymentrestriction-edit').show();
@@ -35,24 +36,24 @@
 
                     <div id="paymentrestriction-edit" style="display:none">
                         <ul>
-                            <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                            <li tab-index="0">
                                 @T("Admin.Configuration.Payment.MethodRestrictions.Country")
                             </li>
-                            <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                            <li tab-index="1">
                                 @T("Admin.Configuration.Payment.MethodRestrictions.Role")
                             </li>
-                            <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+                            <li tab-index="2">
                                 @T("Admin.Configuration.Payment.MethodRestrictions.Shipping")
                             </li>
                         </ul>
                         <div>
-                            @Html.Partial("MethodRestrictions.TabCountry", Model)
+                            <partial name="MethodRestrictions.TabCountry" model="Model" />
                         </div>
                         <div>
-                            @Html.Partial("MethodRestrictions.TabRole", Model)
+                            <partial name="MethodRestrictions.TabRole" model="Model" />
                         </div>
                         <div>
-                            @Html.Partial("MethodRestrictions.TabShipping", Model)
+                            <partial name="MethodRestrictions.TabShipping" model="Model" />
                         </div>
                     </div>
                     @{
@@ -67,6 +68,7 @@
 
                     @*save selected tab index*@
                     <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+                    <vc:admin-widget widget-zone="payment_method_restrictions_bottom" additional-data="Model" />
                 </div>
             </div>
         </div>

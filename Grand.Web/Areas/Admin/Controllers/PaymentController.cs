@@ -3,6 +3,8 @@ using Grand.Core.Domain.Payments;
 using Grand.Core.Plugins;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
+using Grand.Framework.Mvc.Models;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Configuration;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
@@ -20,6 +22,7 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.PaymentMethods)]
     public partial class PaymentController : BaseAdminController
 	{
 		#region Fields
@@ -27,7 +30,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IPaymentService _paymentService;
         private readonly PaymentSettings _paymentSettings;
         private readonly ISettingService _settingService;
-        private readonly IPermissionService _permissionService;
 	    private readonly ICountryService _countryService;
         private readonly ICustomerService _customerService;
         private readonly IShippingService _shippingService;
@@ -42,7 +44,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         public PaymentController(IPaymentService paymentService,
             PaymentSettings paymentSettings,
             ISettingService settingService, 
-            IPermissionService permissionService,
             ICountryService countryService,
             ICustomerService customerService,
             IShippingService shippingService,
@@ -53,7 +54,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._paymentService = paymentService;
             this._paymentSettings = paymentSettings;
             this._settingService = settingService;
-            this._permissionService = permissionService;
             this._countryService = countryService;
             this._customerService = customerService;
             this._shippingService = shippingService;
@@ -68,18 +68,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Methods()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult Methods(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
-                return AccessDeniedView();
-
             var paymentMethodsModel = new List<PaymentMethodModel>();
             var paymentMethods = _paymentService.LoadAllPaymentMethods();
             foreach (var paymentMethod in paymentMethods)
@@ -103,9 +97,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult MethodUpdate( PaymentMethodModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
-                return AccessDeniedView();
-
             var pm = _paymentService.LoadPaymentMethodBySystemName(model.SystemName);
             if (pm.IsPaymentMethodActive(_paymentSettings))
             {
@@ -137,9 +128,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ConfigureMethod(string systemName)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
-                return AccessDeniedView();
-
             var pm = _paymentService.LoadPaymentMethodBySystemName(systemName);
             if (pm == null)
                 //No payment method found with the specified id
@@ -154,11 +142,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult MethodRestrictions()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
-                return AccessDeniedView();
-
             var model = new PaymentMethodRestrictionModel();
-
             var paymentMethods = _paymentService.LoadAllPaymentMethods();
             var countries = _countryService.GetAllCountries(showHidden: true);
             var customerroles = _customerService.GetAllCustomerRoles(showHidden: true);
@@ -174,7 +158,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             foreach (var r in customerroles)
             {
-                model.AvailableCustomerRoles.Add(r.ToModel());
+                model.AvailableCustomerRoles.Add(new CustomerRoleModel() { Id  = r.Id, Name = r.Name });
             }
             foreach (var s in shippings)
             {
@@ -222,9 +206,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [RequestFormLimits(ValueCountLimit = 2048)]
         public IActionResult MethodRestrictionsSave(IFormCollection form)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
-                return AccessDeniedView();
-
             var paymentMethods = _paymentService.LoadAllPaymentMethods();
             var countries = _countryService.GetAllCountries(showHidden: true);
             var customerroles = _customerService.GetAllCustomerRoles(showHidden: true);
@@ -281,7 +262,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             SaveSelectedTabIndex();
             return RedirectToAction("MethodRestrictions");
         }
-
         #endregion
     }
 }

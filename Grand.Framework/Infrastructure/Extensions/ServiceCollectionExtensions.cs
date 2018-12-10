@@ -8,11 +8,14 @@ using Grand.Core.Plugins;
 using Grand.Framework.FluentValidation;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Routing;
+using Grand.Framework.Security.Authorization;
 using Grand.Framework.Themes;
 using Grand.Services.Authentication;
 using Grand.Services.Authentication.External;
+using Grand.Services.Configuration;
 using Grand.Services.Logging;
 using Grand.Services.Security;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
@@ -23,6 +26,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 
@@ -218,6 +222,8 @@ namespace Grand.Framework.Infrastructure.Extensions
                 instance.Configure(authenticationBuilder);
 
 
+            services.AddSingleton<IAuthorizationPolicyProvider, PermisionPolicyProvider>();
+            services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
         }
 
         /// <summary>
@@ -300,6 +306,27 @@ namespace Grand.Framework.Infrastructure.Extensions
         {
             //we use custom redirect executor as a workaround to allow using non-ASCII characters in redirect URLs
             services.AddSingleton<RedirectResultExecutor, GrandRedirectResultExecutor>();
+        }
+
+        public static void AddSettings(this IServiceCollection services)
+        {
+
+            var typeFinder = new WebAppTypeFinder();
+            var settings = typeFinder.FindClassesOfType<ISettings>();
+
+            var instances = settings.Select(x => (ISettings)Activator.CreateInstance(x));
+
+            foreach (var item in instances)
+            {
+                services.AddScoped(item.GetType(), (x) =>
+                {
+                    var type = item.GetType();
+                    var settingService = x.GetService<ISettingService>();
+                    var currentStoreId = x.GetService<IStoreContext>().CurrentStore.Id;
+                    return settingService.LoadSetting(type, currentStoreId);
+                });
+            }
+
         }
     }
 }

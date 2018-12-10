@@ -290,8 +290,6 @@ namespace Grand.Web.Controllers
             });
         }
 
-
-
         #region Quick view product
 
         public virtual IActionResult QuickView(string productId)
@@ -384,11 +382,6 @@ namespace Grand.Web.Controllers
         }
         #endregion
 
-        #endregion
-
-        #region Add product to cart
-
-        
         #endregion
 
         #region Recently viewed products

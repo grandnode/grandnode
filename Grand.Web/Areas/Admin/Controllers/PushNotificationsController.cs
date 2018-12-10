@@ -2,6 +2,7 @@
 using Grand.Core.Domain.PushNotifications;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Configuration;
 using Grand.Services.Customers;
 using Grand.Services.Helpers;
@@ -18,6 +19,7 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.PushNotifications)]
     public class PushNotificationsController : BaseAdminController
     {
         private readonly PushNotificationsSettings _pushNotificationsSettings;
@@ -25,7 +27,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ISettingService _settingService;
         private readonly IStoreService _storeService;
         private readonly IPushNotificationsService _pushNotificationsService;
-        private readonly IPermissionService _permissionService;
         private readonly IWorkContext _workContext;
         private readonly ICustomerService _customerService;
         private readonly IPictureService _pictureService;
@@ -33,7 +34,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public PushNotificationsController(PushNotificationsSettings pushNotificationsSettings,
             ILocalizationService localizationService, ISettingService settingService, IStoreService storeService,
-            IPushNotificationsService pushNotificationsService, IPermissionService permissionService, IWorkContext workContext,
+            IPushNotificationsService pushNotificationsService, IWorkContext workContext,
             ICustomerService customerService, IPictureService pictureService, IDateTimeHelper dateTimeHelper)
         {
             this._pushNotificationsSettings = pushNotificationsSettings;
@@ -41,7 +42,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._settingService = settingService;
             this._storeService = storeService;
             this._pushNotificationsService = pushNotificationsService;
-            this._permissionService = permissionService;
             this._workContext = workContext;
             this._customerService = customerService;
             this._pictureService = pictureService;
@@ -105,7 +105,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return View(model);
         }
-               
+
         [HttpPost]
         public IActionResult PushMessagesList(DataSourceRequest command)
         {

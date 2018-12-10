@@ -20,6 +20,7 @@
                             <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
                         </div>
                     </div>
+                    <vc:admin-widget widget-zone="order_settings_buttons" additional-data="null" />
                 </div>
                 <div class="portlet-body">
                     <div class="form-horizontal">
@@ -29,22 +30,24 @@
                     </div>
                 </div>
                 <div class="portlet-body form">
+                    <vc:admin-widget widget-zone="order_settings_top" additional-data="null" />
                     <div id="ordersettings-edit" style="display:none">
                         <ul>
-                            <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                            <li tab-index="0">
                                 @T("Admin.Configuration.Settings.Order.OrderSettings")
                             </li>
-                            <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                            <li tab-index="1">
                                 @T("Admin.Configuration.Settings.Order.ReturnRequestSettings")
                             </li>
                         </ul>
                         <div>
-                            @Html.Partial("Order.TabOrderSettings", Model)
+                            <partial name="Order.TabOrderSettings" model="Model" />
                         </div>
                         <div>
-                            @Html.Partial("Order.TabReturnRequestSettings", Model)
+                            <partial name="Order.TabReturnRequestSettings" model="Model" />
                         </div>
                     </div>
+                    <vc:admin-widget widget-zone="order_settings_bottom" additional-data="null" />
                 </div>
             </div>
         </div>

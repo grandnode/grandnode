@@ -306,7 +306,7 @@ namespace Grand.Services.Localization
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
             var languageService = EngineContext.Current.Resolve<ILanguageService>();
             DeletePluginLocaleResource(plugin, localizationService,
-                languageService, resourceName);
+                languageService, resourceName.ToLowerInvariant());
         }
         /// <summary>
         /// Delete a locale resource

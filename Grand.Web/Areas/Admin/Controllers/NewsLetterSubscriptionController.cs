@@ -2,6 +2,7 @@
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Customers;
 using Grand.Services.ExportImport;
 using Grand.Services.Helpers;
@@ -21,13 +22,13 @@ using System.Text;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.NewsletterSubscribers)]
     public partial class NewsLetterSubscriptionController : BaseAdminController
 	{
 		private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly INewsletterCategoryService _newsletterCategoryService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
         private readonly IStoreService _storeService;
         private readonly ICustomerService _customerService;
         private readonly IExportManager _exportManager;
@@ -37,7 +38,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             INewsletterCategoryService newsletterCategoryService,
             IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService,
-            IPermissionService permissionService,
             IStoreService storeService,
             ICustomerService customerService,
             IExportManager exportManager,
@@ -47,7 +47,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._newsletterCategoryService = newsletterCategoryService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
-            this._permissionService = permissionService;
             this._storeService = storeService;
             this._customerService = customerService;
             this._exportManager = exportManager;
@@ -82,9 +81,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
 		public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
-                return AccessDeniedView();
-
             var model = new NewsLetterSubscriptionListModel();
 
             //stores
@@ -118,9 +114,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 		[HttpPost]
 		public IActionResult SubscriptionList(DataSourceRequest command, NewsLetterSubscriptionListModel model, string[] searchCategoryIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
-                return AccessDeniedView();
-
             bool? isActive = null;
             if (model.ActiveId == 1)
                 isActive = true;
@@ -150,9 +143,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult SubscriptionUpdate(NewsLetterSubscriptionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
-                return AccessDeniedView();
-
             if (!ModelState.IsValid)
             {
                 return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
@@ -169,9 +159,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult SubscriptionDelete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
-                return AccessDeniedView();
-
             var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionById(id);
             if (subscription == null)
                 throw new ArgumentException("No subscription found with the specified id");
@@ -184,9 +171,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("exportcsv")]
 		public IActionResult ExportCsv(NewsLetterSubscriptionListModel model, string[] searchCategoryIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
-                return AccessDeniedView();
-
             bool? isActive = null;
             if (model.ActiveId == 1)
                 isActive = true;
@@ -205,9 +189,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ImportCsv(IFormFile importcsvfile)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
-                return AccessDeniedView();
-
             try
             {
                 if (importcsvfile != null && importcsvfile.Length > 0)

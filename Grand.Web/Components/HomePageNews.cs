@@ -2,6 +2,7 @@
 using Grand.Framework.Components;
 using Grand.Web.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Grand.Web.ViewComponents
 {
@@ -16,12 +17,12 @@ namespace Grand.Web.ViewComponents
             this._newsSettings = newsSettings;
         }
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
             if (!_newsSettings.Enabled || !_newsSettings.ShowNewsOnMainPage)
                 return Content("");
 
-            var model = _newsViewModelService.PrepareHomePageNewsItems();
+            var model = await Task.Run(() => _newsViewModelService.PrepareHomePageNewsItems());
             return View(model);
         }
     }

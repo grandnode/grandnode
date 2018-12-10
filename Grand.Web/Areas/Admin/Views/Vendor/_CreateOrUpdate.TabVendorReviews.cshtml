@@ -2,9 +2,11 @@
 @inject AdminAreaSettings adminAreaSettings
 
 <div class="panel panel-default">
+    <vc:admin-widget widget-zone="vendor_details_reviews_top" additional-data="Model" />
     <div class="panel-body">
         <div id="reviews-grid"></div>
     </div>
+    <vc:admin-widget widget-zone="vendor_details_reviews_bottom" additional-data="Model" />
 </div>
 <script>
 $(document).ready(function () {

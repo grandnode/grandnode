@@ -1,5 +1,5 @@
 ﻿@model CustomerModel
-
+<vc:admin-widget widget-zone="customer_details_customer_roles_top" additional-data="Model" />
 @if (Model.AvailableCustomerRoles != null && Model.AvailableCustomerRoles.Count > 0)
 {
 
@@ -17,3 +17,4 @@ else
 {
     @T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")
 }
+<vc:admin-widget widget-zone="customer_details_customer_roles_bottom" additional-data="Model" />

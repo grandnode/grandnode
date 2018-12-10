@@ -1,5 +1,6 @@
 ﻿@model LanguageModel
 @inject AdminAreaSettings adminAreaSettings
+<vc:admin-widget widget-zone="language_details_resources_top" additional-data="Model" />
 <div class="panel panel-default">
     @if (String.IsNullOrEmpty(Model.Id))
     {
@@ -35,7 +36,7 @@
         <div id="resources-grid"></div>
     </div>
 </div>
-
+<vc:admin-widget widget-zone="language_details_resources_bottom" additional-data="Model" />
 @if (!String.IsNullOrEmpty(Model.Id))
 {
     <script>

@@ -12,51 +12,53 @@
         window.close();
     </script>
 }
-<div class="form-horizontal">
-    <div class="form-body">
-        <div class="form-group">
-            <admin-label asp-for="Quantity" class="col-sm-3 control-label"/>
-            <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="Quantity" />
-                <span asp-validation-for="Quantity"></span>
+    <div class="form-horizontal">
+        <vc:admin-widget widget-zone="product_details_tier_price_top" additional-data="Model" />
+        <div class="form-body">
+            <div class="form-group">
+                <admin-label asp-for="Quantity" class="col-sm-3 control-label" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="Quantity" />
+                    <span asp-validation-for="Quantity"></span>
+                </div>
             </div>
-        </div>        
-        <div class="form-group">
-            <admin-label asp-for="Price" class="col-sm-3 control-label"/>
-            <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="Price" />
-                <span asp-validation-for="Price"></span>
+            <div class="form-group">
+                <admin-label asp-for="Price" class="col-sm-3 control-label" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="Price" />
+                    <span asp-validation-for="Price"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <admin-label asp-for="StoreId" class="col-sm-3 control-label" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-select asp-for="StoreId" asp-items="Model.AvailableStores" />
+                    <span asp-validation-for="StoreId"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <admin-label asp-for="CustomerRoleId" class="col-sm-3 control-label" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-select asp-for="CustomerRoleId" asp-items="Model.AvailableCustomerRoles" />
+                    <span asp-validation-for="CustomerRoleId"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <admin-label asp-for="StartDateTimeUtc" class="col-sm-3 control-label" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="StartDateTimeUtc" />
+                    <span asp-validation-for="StartDateTimeUtc"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <admin-label asp-for="EndDateTimeUtc" class="col-sm-3 control-label" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="EndDateTimeUtc" />
+                    <span asp-validation-for="EndDateTimeUtc"></span>
+                </div>
             </div>
         </div>
-        <div class="form-group">
-            <admin-label asp-for="StoreId" class="col-sm-3 control-label"/>
-            <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="StoreId" asp-items="Model.AvailableStores" />
-                <span asp-validation-for="StoreId"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <admin-label asp-for="CustomerRoleId" class="col-sm-3 control-label"/>
-            <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="CustomerRoleId" asp-items="Model.AvailableCustomerRoles" />
-                <span asp-validation-for="CustomerRoleId"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <admin-label asp-for="StartDateTimeUtc" class="col-sm-3 control-label"/>
-            <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="StartDateTimeUtc" />
-                <span asp-validation-for="StartDateTimeUtc"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <admin-label asp-for="EndDateTimeUtc" class="col-sm-3 control-label"/>
-            <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="EndDateTimeUtc" />
-                <span asp-validation-for="EndDateTimeUtc"></span>
-            </div>
-        </div>
+        <vc:admin-widget widget-zone="product_details_tier_price_bottom" additional-data="Model" />
     </div>
-</div>
 
 

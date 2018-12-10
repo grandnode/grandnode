@@ -3,55 +3,59 @@
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 <div class="form-horizontal">
+    <vc:admin-widget widget-zone="email_account_details_top" additional-data="Model" />
     <div class="form-body">
         <div class="form-group">
-                <admin-label asp-for="Email" />
+            <admin-label asp-for="Email" />
             <div class="col-md-9 col-sm-9">
                 <admin-input asp-for="Email" />
                 <span asp-validation-for="Email"></span>
             </div>
         </div>
         <div class="form-group">
-                <admin-label asp-for="DisplayName" />
+            <admin-label asp-for="DisplayName" />
             <div class="col-md-9 col-sm-9">
                 <admin-input asp-for="DisplayName" />
                 <span asp-validation-for="DisplayName"></span>
             </div>
         </div>
         <div class="form-group">
-                <admin-label asp-for="Host" />
+            <admin-label asp-for="Host" />
             <div class="col-md-9 col-sm-9">
                 <admin-input asp-for="Host" />
                 <span asp-validation-for="Host"></span>
             </div>
         </div>
         <div class="form-group">
-                <admin-label asp-for="Port" />
+            <admin-label asp-for="Port" />
             <div class="col-md-9 col-sm-9">
                 <admin-input asp-for="Port" />
                 <span asp-validation-for="Port"></span>
             </div>
         </div>
         <div class="form-group">
-                <admin-label asp-for="Username" />
+            <admin-label asp-for="Username" />
             <div class="col-md-9 col-sm-9">
                 <admin-input asp-for="Username" />
                 <span asp-validation-for="Username"></span>
             </div>
         </div>
         <div class="form-group">
-                <admin-label asp-for="Password" />
+            <admin-label asp-for="Password" />
             <div class="col-md-9 col-sm-9">
-                @Html.PasswordFor(model => model.Password)
-                <span asp-validation-for="Password"></span>
-                @if (!String.IsNullOrEmpty(Model.Id))
-                {
-                    <input type="submit" name="changepassword" class="btn default" value="@T("Admin.Configuration.EmailAccounts.Fields.Password.Change")" />
-                }
+                <div class="input-group">
+                    <div class="input-icon">
+                        <i class="fa fa-lock fa-fw"></i>
+                        <admin-input asp-for="Password" />
+                    </div>
+                    <span class="input-group-btn">
+                        <input type="submit" name="changepassword" class="btn btn-success" value="@T("Admin.Customers.Customers.Fields.Password.Change")" />
+                    </span>
+                </div>
             </div>
         </div>
         <div class="form-group">
-                <admin-label asp-for="EnableSsl" />
+            <admin-label asp-for="EnableSsl" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
                     <admin-input asp-for="EnableSsl" />
@@ -61,7 +65,7 @@
             </div>
         </div>
         <div class="form-group">
-                <admin-label asp-for="UseDefaultCredentials" />
+            <admin-label asp-for="UseDefaultCredentials" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
                     <admin-input asp-for="UseDefaultCredentials" />
@@ -73,12 +77,12 @@
         @if (!String.IsNullOrEmpty(Model.Id))
         {
             <div class="form-group">
-                    <div class="note note-info">
-                        @T("Admin.Configuration.EmailAccounts.SendTestEmail")
-                    </div>
+                <div class="note note-info">
+                    @T("Admin.Configuration.EmailAccounts.SendTestEmail")
+                </div>
             </div>
             <div class="form-group">
-                    <admin-label asp-for="SendTestEmailTo" />
+                <admin-label asp-for="SendTestEmailTo" />
                 <div class="col-md-9 col-sm-9">
                     <admin-input asp-for="SendTestEmailTo" />
                 </div>
@@ -90,4 +94,5 @@
             </div>
         }
     </div>
+    <vc:admin-widget widget-zone="email_account_details_bottom" additional-data="Model" />
 </div>

@@ -134,7 +134,7 @@ namespace Grand.Web.Areas.Admin.Models.Customers
         public string AffiliateId { get; set; }
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.Affiliate")]
         public string AffiliateName { get; set; }
-
+        public string CustomAttributes { get; set; }
         //time zone
         [GrandResourceDisplayName("Admin.Customers.Customers.Fields.TimeZoneId")]
         
@@ -227,11 +227,6 @@ namespace Grand.Web.Areas.Admin.Models.Customers
         public string AddCustomerNoteDownloadId { get; set; }
 
         #region Nested classes
-
-        public partial class StoreModel : BaseGrandEntityModel
-        {
-            public string Name { get; set; }
-        }
 
         public partial class AssociatedExternalAuthModel : BaseGrandEntityModel
         {

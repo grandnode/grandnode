@@ -16,18 +16,18 @@
 </script>
 <div id="customerattribute-edit">
     <ul>
-        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+        <li tab-index="0">
             @T("Admin.Customers.CustomerAttributes.Info")
         </li>
-        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex()) id="tab-customerattributesvalues">
+        <li tab-index="1" id="tab-customerattributesvalues">
             @T("Admin.Customers.CustomerAttributes.Values")
         </li>
     </ul>
     <div>
-        @Html.Partial("_CreateOrUpdate.TabInfo", Model)
+       <partial name="_CreateOrUpdate.TabInfo" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdate.TabValues", Model)
+       <partial name="_CreateOrUpdate.TabValues" model="Model" />
     </div>
 </div>
 @{

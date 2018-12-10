@@ -3903,6 +3903,9 @@
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes">
     <Value>Product attributes</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AddNew">
+    <Value>Add new attribute</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations">
     <Value>Attribute combinations</Value>
   </LocaleResource>
@@ -4184,6 +4187,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.ViewLink">
     <Value>View/Edit values</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Details">
+    <Value>Details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Edit">
+    <Value>Edit attribute</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.NoAttributesAvailable">
     <Value>No product attributes available. Create at least one product attribute before mapping.</Value>
@@ -4529,6 +4538,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Common.Run">
     <Value>Run</Value>
+  </LocaleResource>
+    <LocaleResource Name="Admin.Common.RunScript">
+    <Value>Run script (eval)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.RunQuery">
+    <Value>Run query</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Common.Save">
     <Value>Save</Value>
@@ -12765,6 +12780,9 @@
   <LocaleResource Name="Admin.Orders.Shipments.BackToOrder">
     <Value>back to order details</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.BackToList">
+    <Value>Back to shipment list</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.Deleted">
     <Value>The shipment has been deleted successfully.</Value>
   </LocaleResource>
@@ -14343,6 +14361,12 @@
   <LocaleResource Name="Admin.System.ContactForm.List.Store.hint">
     <Value>Search by a specific store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Field.QueryEditor">
+    <Value>Query</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Field.QueryEditor.hint">
+    <Value>Enter query</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.Log">
     <Value>Log</Value>
   </LocaleResource>
@@ -14501,6 +14525,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.Maintenance.DeleteGuests.TotalDeleted">
     <Value>{0} customers were deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueryEditor">
+    <Value>Query editor</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.QueuedEmails">
     <Value>Message Queue</Value>
@@ -14713,7 +14740,7 @@
     <Value>Roslyn compilation</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Roslyn.Disabled">
-    <Value>Compilation of files ctx are disabled. </Value>
+    <Value>Compilation of files csx are disabled. </Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Roslyn.Errors">
     <Value>Errors during compilation</Value>

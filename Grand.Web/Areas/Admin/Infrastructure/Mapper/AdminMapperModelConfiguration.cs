@@ -52,6 +52,8 @@ using Grand.Web.Areas.Admin.Models.Tax;
 using Grand.Web.Areas.Admin.Models.Templates;
 using Grand.Web.Areas.Admin.Models.Topics;
 using Grand.Web.Areas.Admin.Models.Vendors;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
 {
@@ -88,7 +90,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                .ForMember(dest => dest.FaxEnabled, mo => mo.Ignore())
                .ForMember(dest => dest.FaxRequired, mo => mo.Ignore())
                .ForMember(dest => dest.CountryName,
-                    mo => mo.MapFrom(src => !string.IsNullOrEmpty(src.CountryId) ? src.CountryName(): null))
+                    mo => mo.MapFrom(src => !string.IsNullOrEmpty(src.CountryId) ? src.CountryName() : null))
                .ForMember(dest => dest.StateProvinceName,
                     mo => mo.MapFrom(src => !string.IsNullOrEmpty(src.StateProvinceId) ? src.StateProvinceName() : null))
                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
@@ -103,7 +105,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
             //countries
             CreateMap<CountryModel, Country>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()))
+                .ForMember(dest => dest.Stores, mo => mo.ResolveUsing(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()))
                 .ForMember(dest => dest.StateProvinces, mo => mo.Ignore())
                 .ForMember(dest => dest.RestrictedShippingMethods, mo => mo.Ignore());
             CreateMap<Country, CountryModel>()
@@ -119,7 +122,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<StateProvinceModel, StateProvince>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()));
 
             //language
             CreateMap<Language, LanguageModel>()
@@ -129,7 +132,9 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.FlagFileNames, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<LanguageModel, Language>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore());
+                .ForMember(dest => dest.Id, mo => mo.Ignore())
+                .ForMember(dest => dest.Stores, mo => mo.ResolveUsing(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()));
+
             //email account
             CreateMap<EmailAccount, EmailAccountModel>()
                 .ForMember(dest => dest.Password, mo => mo.Ignore())
@@ -153,7 +158,9 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<MessageTemplateModel, MessageTemplate>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.DelayPeriod, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore());
+                .ForMember(dest => dest.Stores, mo => mo.ResolveUsing(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()))
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()));
+
             //queued email
             CreateMap<QueuedEmail, QueuedEmailModel>()
                 .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
@@ -183,7 +190,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<BannerModel, Banner>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()));
 
             //InteractiveForm
             CreateMap<InteractiveForm, InteractiveFormModel>()
@@ -194,15 +201,21 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<InteractiveFormModel, InteractiveForm>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.FormAttributes, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()));
 
             CreateMap<InteractiveForm.FormAttribute, InteractiveFormAttributeModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<InteractiveFormAttributeModel, InteractiveForm.FormAttribute>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()));
 
+            CreateMap<InteractiveForm.FormAttributeValue, InteractiveFormAttributeValueModel>()
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            CreateMap<InteractiveFormAttributeValueModel, InteractiveForm.FormAttributeValue>()
+                .ForMember(dest => dest.Id, mo => mo.Ignore())
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()));
 
             //campaign
             CreateMap<Campaign, CampaignModel>()
@@ -227,7 +240,9 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<TopicModel, Topic>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomerRoles, mo => mo.ResolveUsing(x => x.SelectedCustomerRoleIds != null ? x.SelectedCustomerRoleIds.ToList() : new List<string>()))
+                .ForMember(dest => dest.Stores, mo => mo.ResolveUsing(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()));
 
             //category
             CreateMap<Category, CategoryModel>()
@@ -249,6 +264,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore())
+                .ForMember(dest => dest.Stores, mo => mo.ResolveUsing(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()))
+                .ForMember(dest => dest.CustomerRoles, mo => mo.ResolveUsing(x => x.SelectedCustomerRoleIds != null ? x.SelectedCustomerRoleIds.ToList() : new List<string>()))
                 .ForMember(dest => dest.AppliedDiscounts, mo => mo.Ignore());
             //manufacturer
             CreateMap<Manufacturer, ManufacturerModel>()
@@ -265,6 +282,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<ManufacturerModel, Manufacturer>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
+                .ForMember(dest => dest.Stores, mo => mo.ResolveUsing(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()))
+                .ForMember(dest => dest.CustomerRoles, mo => mo.ResolveUsing(x => x.SelectedCustomerRoleIds != null ? x.SelectedCustomerRoleIds.ToList() : new List<string>()))
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore())
@@ -344,7 +363,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.ProductPictures, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductSpecificationAttributes, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductWarehouseInventory, mo => mo.Ignore())
-                .ForMember(dest => dest.HasTierPrices, mo => mo.Ignore())
                 .ForMember(dest => dest.BackorderMode, mo => mo.Ignore())
                 .ForMember(dest => dest.DownloadActivationType, mo => mo.Ignore())
                 .ForMember(dest => dest.GiftCardType, mo => mo.Ignore())
@@ -357,6 +375,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.ProductAttributeCombinations, mo => mo.Ignore())
                 .ForMember(dest => dest.TierPrices, mo => mo.Ignore())
                 .ForMember(dest => dest.AppliedDiscounts, mo => mo.Ignore())
+                .ForMember(dest => dest.Stores, mo => mo.ResolveUsing(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()))
+                .ForMember(dest => dest.CustomerRoles, mo => mo.ResolveUsing(x => x.SelectedCustomerRoleIds != null ? x.SelectedCustomerRoleIds.ToList() : new List<string>()))
                 .ForPath(dest => dest.IncBothDate, mo => mo.MapFrom(x => x.CalendarModel.IncBothDate));
 
             //product attributes combination
@@ -366,6 +386,26 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.WarehouseInventoryModels, mo => mo.Ignore());
             CreateMap<ProductAttributeCombinationModel, ProductAttributeCombination>()
                 .ForMember(dest => dest.WarehouseInventory, mo => mo.Ignore())
+                .ForMember(dest => dest.Id, mo => mo.Ignore());
+
+            CreateMap<PredefinedProductAttributeValue, ProductAttributeValue>()
+               .ForMember(dest => dest.AttributeValueType, mo => mo.ResolveUsing(x => AttributeValueType.Simple))
+               .ForMember(dest => dest.ProductAttributeMappingId, mo => mo.ResolveUsing(x => x.Id))
+               .ForMember(dest => dest.Id, mo => mo.Ignore());
+
+            //product attributes mapping
+            CreateMap<ProductAttributeMapping, ProductModel.ProductAttributeMappingModel>()
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            CreateMap<ProductModel.ProductAttributeMappingModel, ProductAttributeMapping>()
+                .ForMember(dest => dest.AttributeControlType, mo => mo.Ignore())
+                .ForMember(dest => dest.Id, mo => mo.Ignore());
+
+            //Tier prices
+            CreateMap<TierPrice, ProductModel.TierPriceModel>()
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
+                .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
+                .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore());
+            CreateMap<ProductModel.TierPriceModel, TierPrice>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
 
             //logs
@@ -403,7 +443,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<CurrencyModel, Currency>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()))
+                .ForMember(dest => dest.Stores, mo => mo.ResolveUsing(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()))
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore());
             //measure weights
@@ -434,19 +475,18 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
             .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             //tax categories
             CreateMap<TaxCategory, TaxCategoryModel>()
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<TaxCategoryModel, TaxCategory>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore());
-
+            .ForMember(dest => dest.Id, mo => mo.Ignore());
 
             //shipping methods
             CreateMap<ShippingMethod, ShippingMethodModel>()
             .ForMember(dest => dest.Locales, mo => mo.Ignore())
             .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<ShippingMethodModel, ShippingMethod>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.RestrictedCountries, mo => mo.Ignore());
+            .ForMember(dest => dest.Id, mo => mo.Ignore())
+            .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()))
+            .ForMember(dest => dest.RestrictedCountries, mo => mo.Ignore());
 
             //delivery dates
             CreateMap<DeliveryDate, DeliveryDateModel>()
@@ -454,7 +494,23 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<DeliveryDateModel, DeliveryDate>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()));
+
+            //warehouse
+            CreateMap<Warehouse, WarehouseModel>()
+                .ForMember(dest => dest.Address, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            CreateMap<WarehouseModel, Warehouse>()
+                .ForMember(dest => dest.Id, mo => mo.Ignore());
+
+            //warehouse
+            CreateMap<PickupPoint, PickupPointModel>()
+                .ForMember(dest => dest.Address, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            CreateMap<PickupPointModel, PickupPoint>()
+                .ForMember(dest => dest.Id, mo => mo.Ignore())
+                .ForMember(dest => dest.Id, mo => mo.Ignore());
+
 
             //shipping rate computation methods
             CreateMap<IShippingRateComputationMethod, ShippingRateComputationMethodModel>()
@@ -515,8 +571,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<NewsletterCategoryModel, NewsletterCategory>()
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.Stores, mo => mo.Ignore())
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()))
+                .ForMember(dest => dest.Stores, mo => mo.ResolveUsing(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()))
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
 
             //forums
@@ -550,6 +606,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
 
             CreateMap<KnowledgebaseCategoryModel, KnowledgebaseCategory>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.Stores, mo => mo.ResolveUsing(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()))
+                .ForMember(dest => dest.CustomerRoles, mo => mo.ResolveUsing(x => x.SelectedCustomerRoleIds != null ? x.SelectedCustomerRoleIds.ToList() : new List<string>()))
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore());
             CreateMap<KnowledgebaseArticle, KnowledgebaseArticleModel>()
@@ -557,6 +615,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore());
             CreateMap<KnowledgebaseArticleModel, KnowledgebaseArticle>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.Stores, mo => mo.ResolveUsing(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()))
+                .ForMember(dest => dest.CustomerRoles, mo => mo.ResolveUsing(x => x.SelectedCustomerRoleIds != null ? x.SelectedCustomerRoleIds.ToList() : new List<string>()))
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore());
 
@@ -574,6 +634,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<BlogPostModel, BlogPost>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.Stores, mo => mo.ResolveUsing(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()))
                 .ForMember(dest => dest.CommentCount, mo => mo.Ignore())
                 .ForMember(dest => dest.StartDateUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.EndDateUtc, mo => mo.Ignore())
@@ -599,12 +660,14 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.CommentCount, mo => mo.Ignore())
                 .ForMember(dest => dest.StartDateUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.EndDateUtc, mo => mo.Ignore())
-                .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore());
+                .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
+                .ForMember(dest => dest.Stores, mo => mo.ResolveUsing(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()))
+                .ForMember(dest => dest.CustomerRoles, mo => mo.ResolveUsing(x => x.SelectedCustomerRoleIds != null ? x.SelectedCustomerRoleIds.ToList() : new List<string>()));
             //news
             CreateMap<Poll, PollModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.StartDate, mo => mo.Ignore())
-                .ForMember(dest => dest.EndDate, mo => mo.Ignore())
+                .ForMember(dest => dest.StartDate, mo => mo.ResolveUsing(x => x.StartDateUtc))
+                .ForMember(dest => dest.EndDate, mo => mo.ResolveUsing(x => x.EndDateUtc))
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
                 .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
@@ -613,17 +676,19 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
 
             CreateMap<PollModel, Poll>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.PollAnswers, mo => mo.Ignore())
-                .ForMember(dest => dest.StartDateUtc, mo => mo.Ignore())
-                .ForMember(dest => dest.EndDateUtc, mo => mo.Ignore());
+                .ForMember(dest => dest.Stores, mo => mo.ResolveUsing(model => model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>()))
+                .ForMember(dest => dest.CustomerRoles, mo => mo.ResolveUsing(model => model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>()))
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()))
+                .ForMember(dest => dest.StartDateUtc, mo => mo.ResolveUsing(x => x.StartDate))
+                .ForMember(dest => dest.EndDateUtc, mo => mo.ResolveUsing(x => x.EndDate));
 
             CreateMap<PollAnswer, PollAnswerModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<PollAnswerModel, PollAnswer>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()));
 
 
             //customer roles
@@ -689,7 +754,26 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<ProductAttributeModel, ProductAttribute>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()));
+
+            //product review
+            CreateMap<ProductReviewModel, ProductReview>()
+                .ForMember(dest => dest.HelpfulYesTotal, mo => mo.Ignore())
+                .ForMember(dest => dest.HelpfulNoTotal, mo => mo.Ignore())
+                .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
+                .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore())
+                .ForMember(dest => dest.ProductReviewHelpfulnessEntries, mo => mo.Ignore())
+                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+
+            //product attribute value
+            CreateMap<PredefinedProductAttributeValue, PredefinedProductAttributeValueModel>()
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.PriceAdjustmentStr, mo => mo.ResolveUsing(x => x.PriceAdjustment.ToString("N2")))
+                .ForMember(dest => dest.WeightAdjustmentStr, mo => mo.ResolveUsing(x => x.WeightAdjustment.ToString("N2")))
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            CreateMap<PredefinedProductAttributeValueModel, PredefinedProductAttributeValue>()
+                .ForMember(dest => dest.Id, mo => mo.Ignore())
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()));
 
             //specification attributes
             CreateMap<SpecificationAttribute, SpecificationAttributeModel>()
@@ -697,7 +781,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<SpecificationAttributeModel, SpecificationAttribute>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()))
                 .ForMember(dest => dest.SpecificationAttributeOptions, mo => mo.Ignore());
             CreateMap<SpecificationAttributeOption, SpecificationAttributeOptionModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
@@ -705,11 +789,10 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<SpecificationAttributeOptionModel, SpecificationAttributeOption>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()));
 
             //checkout attributes
             CreateMap<CheckoutAttribute, CheckoutAttributeModel>()
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableTaxCategories, mo => mo.Ignore())
                 .ForMember(dest => dest.AttributeControlTypeName, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
@@ -722,16 +805,24 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<CheckoutAttributeModel, CheckoutAttribute>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()))
                 .ForMember(dest => dest.AttributeControlType, mo => mo.Ignore())
                 .ForMember(dest => dest.ConditionAttributeXml, mo => mo.Ignore())
+                .ForMember(dest => dest.Stores, mo => mo.ResolveUsing(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()))
+                .ForMember(dest => dest.CustomerRoles, mo => mo.ResolveUsing(x => x.SelectedCustomerRoleIds != null ? x.SelectedCustomerRoleIds.ToList() : new List<string>()))
                 .ForMember(dest => dest.CheckoutAttributeValues, mo => mo.Ignore());
+
+            CreateMap<CheckoutAttributeValue, CheckoutAttributeValueModel>()
+               .ForMember(dest => dest.Locales, mo => mo.Ignore())
+               .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            CreateMap<CheckoutAttributeValueModel, CheckoutAttributeValue>()
+                .ForMember(dest => dest.Id, mo => mo.Ignore())
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()));
 
             //contact attributes
             CreateMap<ContactAttribute, ContactAttributeModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.AttributeControlTypeName, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
                 .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
@@ -741,10 +832,20 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<ContactAttributeModel, ContactAttribute>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()))
                 .ForMember(dest => dest.AttributeControlType, mo => mo.Ignore())
                 .ForMember(dest => dest.ConditionAttributeXml, mo => mo.Ignore())
+                .ForMember(dest => dest.Stores, mo => mo.ResolveUsing(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()))
+                .ForMember(dest => dest.CustomerRoles, mo => mo.ResolveUsing(x => x.SelectedCustomerRoleIds != null ? x.SelectedCustomerRoleIds.ToList() : new List<string>()))
                 .ForMember(dest => dest.ContactAttributeValues, mo => mo.Ignore());
+
+            CreateMap<ContactAttributeValue, ContactAttributeValueModel>()
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            CreateMap<ContactAttributeValueModel, ContactAttributeValue>()
+                .ForMember(dest => dest.Id, mo => mo.Ignore())
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()));
+
             //customer attributes
             CreateMap<CustomerAttribute, CustomerAttributeModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
@@ -753,9 +854,18 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<CustomerAttributeModel, CustomerAttribute>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()))
                 .ForMember(dest => dest.AttributeControlType, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomerAttributeValues, mo => mo.Ignore());
+            //customer attributes value
+            CreateMap<CustomerAttributeValue, CustomerAttributeValueModel>()
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            CreateMap<CustomerAttributeValueModel, CustomerAttributeValue>()
+                .ForMember(dest => dest.Id, mo => mo.Ignore())
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()));
+
             //address attributes
             CreateMap<AddressAttribute, AddressAttributeModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
@@ -764,9 +874,18 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<AddressAttributeModel, AddressAttribute>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()))
                 .ForMember(dest => dest.AttributeControlType, mo => mo.Ignore())
                 .ForMember(dest => dest.AddressAttributeValues, mo => mo.Ignore());
+            //address attributes value
+            CreateMap<AddressAttributeValue, AddressAttributeValueModel>()
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            CreateMap<AddressAttributeValueModel, AddressAttributeValue>()
+                .ForMember(dest => dest.Id, mo => mo.Ignore())
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()));
+
             //discounts
             CreateMap<Discount, DiscountModel>()
                 .ForMember(dest => dest.DiscountTypeName, mo => mo.Ignore())
@@ -806,21 +925,21 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<StoreModel, Store>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()));
 
             //return request reasons
             CreateMap<ReturnRequestReason, ReturnRequestReasonModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<ReturnRequestReasonModel, ReturnRequestReason>()
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()))
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
             //return request actions
             CreateMap<ReturnRequestAction, ReturnRequestActionModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<ReturnRequestActionModel, ReturnRequestAction>()
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.Locales, mo => mo.ResolveUsing(x => x.Locales.ToLocalizedProperty()))
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
 
 

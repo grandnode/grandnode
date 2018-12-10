@@ -19,11 +19,12 @@
                     <div class="actions">
                         <div class="btn-group btn-group-devided">
                             <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                            <vc:admin-widget widget-zone="plugin_details_buttons" additional-data="Model" />
                         </div>
                     </div>
                 </div>
                 <div class="portlet-body form">
-                    @Html.Partial("_CreateOrUpdatePlugin", Model)
+                   <partial name="_CreateOrUpdatePlugin" model="Model" />
                 </div>
             </div>
         </div>

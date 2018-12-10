@@ -14,22 +14,23 @@
                     <i class="fa fa-cart-plus"></i>
                     @T("Admin.CurrentCartWishlists")
                 </div>
+                <vc:admin-widget widget-zone="current_shopping_cart_list_buttons" additional-data="null" />
             </div>
             <div class="portlet-body form">
                 <div id="shoppingcarts-list" style="display:none">
                     <ul>
-                        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                        <li tab-index="0">
                             @T("Admin.CurrentCarts")
                         </li>
-                        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                        <li tab-index="1">
                             @T("Admin.CurrentWishlists")
                         </li>
                     </ul>
                     <div>
-                        @Html.Partial("_CurrentCarts.TabCurrentCarts", Model)
+                       <partial name="_CurrentCarts.TabCurrentCarts" model="Model" />
                     </div>
                     <div>
-                        @Html.Partial("_CurrentCarts.TabCurrentWishlists", Model)
+                       <partial name="_CurrentCarts.TabCurrentWishlists" model="Model" />
                     </div>
                 </div>
             </div>

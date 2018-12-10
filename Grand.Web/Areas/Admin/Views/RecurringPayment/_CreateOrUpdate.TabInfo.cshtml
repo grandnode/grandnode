@@ -2,6 +2,7 @@
 @using Grand.Core.Domain.Catalog;
 
 <div class="form-horizontal">
+    <vc:admin-widget widget-zone="reccuring_payment_details_info_top" additional-data="Model" />
     <div class="form-body">
         <div class="form-group">
             <admin-label asp-for="InitialOrderId" />
@@ -75,4 +76,5 @@
             </div>
         </div>
     </div>
+    <vc:admin-widget widget-zone="reccuring_payment_details_info_bottom" additional-data="Model" />
 </div>

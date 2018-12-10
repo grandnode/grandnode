@@ -3,14 +3,16 @@
 {
     if (Model.AvailableManufacturers.Count > 0)
     {
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                @T("Admin.Catalog.Products.Manufacturers.Fields.Manufacturer")
-            </div>
-            <div class="panel-body">
-                <div id="productmanufacturers-grid"></div>
-            </div>
-        </div>
+<div class="panel panel-default">
+    <vc:admin-widget widget-zone="product_details_manufacturers_top" additional-data="Model" />
+    <div class="panel-heading">
+        @T("Admin.Catalog.Products.Manufacturers.Fields.Manufacturer")
+    </div>
+    <div class="panel-body">
+        <div id="productmanufacturers-grid"></div>
+    </div>
+    <vc:admin-widget widget-zone="product_details_manufacturers_bottom" additional-data="Model" />
+</div>
 
 
             <script>

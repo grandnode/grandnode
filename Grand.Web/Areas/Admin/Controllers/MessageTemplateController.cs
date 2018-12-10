@@ -2,6 +2,7 @@
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
 using Grand.Services.Security;
@@ -17,6 +18,7 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.MessageTemplates)]
     public partial class MessageTemplateController : BaseAdminController
     {
         #region Fields
@@ -26,7 +28,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly IMessageTokenProvider _messageTokenProvider;
-        private readonly IPermissionService _permissionService;
         private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IWorkflowMessageService _workflowMessageService;
@@ -38,10 +39,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public MessageTemplateController(IMessageTemplateService messageTemplateService,
             IEmailAccountService emailAccountService,
-            ILanguageService languageService,
-            ILocalizationService localizationService,
-            IMessageTokenProvider messageTokenProvider,
-            IPermissionService permissionService,
+            ILanguageService languageService, 
+            ILocalizationService localizationService, 
+            IMessageTokenProvider messageTokenProvider, 
             IStoreService storeService,
             IStoreMappingService storeMappingService,
             IWorkflowMessageService workflowMessageService,
@@ -52,7 +52,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._languageService = languageService;
             this._localizationService = localizationService;
             this._messageTokenProvider = messageTokenProvider;
-            this._permissionService = permissionService;
             this._storeService = storeService;
             this._storeMappingService = storeMappingService;
             this._workflowMessageService = workflowMessageService;
@@ -70,9 +69,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
-                return AccessDeniedView();
-
             var model = new MessageTemplateListModel();
             //stores
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
@@ -85,9 +81,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult List(DataSourceRequest command, MessageTemplateListModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
-                return AccessDeniedView();
-
             var messageTemplates = _messageTemplateService.GetAllMessageTemplates(model.SearchStoreId);
 
             if (!string.IsNullOrEmpty(model.Name))
@@ -123,9 +116,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
-                return AccessDeniedView();
-
             var model = new MessageTemplateModel();
 
             //Stores
@@ -141,9 +131,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Create(MessageTemplateModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var messageTemplate = model.ToEntity();
@@ -152,8 +139,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     messageTemplate.AttachedDownloadId = "";
                 if (model.SendImmediately)
                     messageTemplate.DelayBeforeSend = null;
-                messageTemplate.Locales = model.Locales.ToLocalizedProperty();
-                messageTemplate.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
+
                 _messageTemplateService.InsertMessageTemplate(messageTemplate);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.MessageTemplates.AddNew"));
@@ -182,9 +168,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
-                return AccessDeniedView();
-
             var messageTemplate = _messageTemplateService.GetMessageTemplateById(id);
             if (messageTemplate == null)
                 //No message template found with the specified id
@@ -218,9 +201,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public IActionResult Edit(MessageTemplateModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
-                return AccessDeniedView();
-
             var messageTemplate = _messageTemplateService.GetMessageTemplateById(model.Id);
             if (messageTemplate == null)
                 //No message template found with the specified id
@@ -234,8 +214,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     messageTemplate.AttachedDownloadId = "";
                 if (model.SendImmediately)
                     messageTemplate.DelayBeforeSend = null;
-                messageTemplate.Locales = model.Locales.ToLocalizedProperty();
-                messageTemplate.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
+
                 _messageTemplateService.UpdateMessageTemplate(messageTemplate);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Updated"));
@@ -265,9 +244,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
-                return AccessDeniedView();
-
             var messageTemplate = _messageTemplateService.GetMessageTemplateById(id);
             if (messageTemplate == null)
                 //No message template found with the specified id
@@ -283,9 +259,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("message-template-copy")]
         public IActionResult CopyTemplate(MessageTemplateModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
-                return AccessDeniedView();
-
             var messageTemplate = _messageTemplateService.GetMessageTemplateById(model.Id);
             if (messageTemplate == null)
                 //No message template found with the specified id

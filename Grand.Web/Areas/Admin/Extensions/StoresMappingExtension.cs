@@ -22,6 +22,6 @@ namespace Grand.Web.Areas.Admin.Extensions
                     baseGrandEntityModel.SelectedStoreIds = storeMapping.Stores.ToArray();
                 }
             }
-        }
+        }       
     }
 }

@@ -18,6 +18,7 @@ using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Messages;
+using Grand.Services.Orders;
 using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Shipping;
@@ -39,7 +40,7 @@ using System.Net;
 
 namespace Grand.Web.Services
 {
-    public partial class ProductViewModelService: IProductViewModelService
+    public partial class ProductViewModelService : IProductViewModelService
     {
         private readonly IPermissionService _permissionService;
         private readonly IWorkContext _workContext;
@@ -156,7 +157,7 @@ namespace Grand.Web.Services
                 { "Media.Product.ImageLinkTitleFormat", _localizationService.GetResource("Media.Product.ImageLinkTitleFormat", currentLanguageId.Id) },
                 { "Media.Product.ImageAlternateTextFormat", _localizationService.GetResource("Media.Product.ImageAlternateTextFormat", currentLanguageId.Id) }
             };
-            
+
             var models = new List<ProductOverviewModel>();
 
             foreach (var product in products)
@@ -360,7 +361,7 @@ namespace Grand.Web.Services
 
                                             //do we have tier prices configured?
                                             var tierPrices = new List<TierPrice>();
-                                            if (product.HasTierPrices)
+                                            if (product.TierPrices.Any())
                                             {
                                                 tierPrices.AddRange(product.TierPrices.OrderBy(tp => tp.Quantity)
                                                     .FilterByStore(currentStoreId)
@@ -437,7 +438,7 @@ namespace Grand.Web.Services
                     var defaultProductPictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DEFAULTPICTURE_MODEL_KEY, product.Id, pictureSize, true, currentLanguageId, connectionSecured, currentStoreId);
                     model.DefaultPictureModel = _cacheManager.Get(defaultProductPictureCacheKey, () =>
                     {
-                        var picture = product.ProductPictures.OrderBy(x=>x.DisplayOrder).FirstOrDefault();
+                        var picture = product.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault();
                         if (picture == null)
                             picture = new ProductPicture();
 
@@ -483,7 +484,7 @@ namespace Grand.Web.Services
 
             string cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_SPECS_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id);
             return _cacheManager.Get(cacheKey, () =>
-                product.ProductSpecificationAttributes.Where(x => x.ShowOnProductPage)
+                product.ProductSpecificationAttributes.Where(x => x.ShowOnProductPage).OrderBy(x=>x.DisplayOrder)
                 .Select(psa =>
                 {
                     var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(psa.SpecificationAttributeId);
@@ -569,7 +570,7 @@ namespace Grand.Web.Services
             return productTemplateViewPath;
         }
 
-        
+
         public virtual ProductDetailsModel PrepareProductDetailsPage(Product product,
             ShoppingCartItem updatecartitem = null, bool isAssociatedProduct = false)
         {
@@ -598,9 +599,9 @@ namespace Grand.Web.Services
                 Gtin = product.Gtin,
                 StockAvailability = product.FormatStockMessage("", _localizationService, _productAttributeParser, _storeContext),
                 HasSampleDownload = product.IsDownload && product.HasSampleDownload,
-                DisplayDiscontinuedMessage = 
+                DisplayDiscontinuedMessage =
                     (!product.Published && _catalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts) ||
-                    (product.ProductType == ProductType.Auction && product.AuctionEnded) || 
+                    (product.ProductType == ProductType.Auction && product.AuctionEnded) ||
                     (product.AvailableEndDateTimeUtc.HasValue && product.AvailableEndDateTimeUtc.Value < DateTime.UtcNow)
 
             };
@@ -712,13 +713,13 @@ namespace Grand.Web.Services
                 {
                     var breadcrumbModel = new ProductDetailsModel.ProductBreadcrumbModel
                     {
-                        
+
                         Enabled = _catalogSettings.CategoryBreadcrumbEnabled,
                         ProductId = product.Id,
                         ProductName = product.GetLocalized(x => x.Name),
                         ProductSeName = product.GetSeName()
                     };
-                    var productCategories = product.ProductCategories; 
+                    var productCategories = product.ProductCategories;
                     if (productCategories.Any())
                     {
                         var category = _categoryService.GetCategoryById(productCategories.FirstOrDefault().CategoryId);
@@ -753,14 +754,14 @@ namespace Grand.Web.Services
                     List<ProductTagModel> tags = new List<ProductTagModel>();
                     foreach (var item in product.ProductTags)
                     {
-                        var tag = _productTagService.GetProductTagById(item);
+                        var tag = _productTagService.GetProductTagByName(item);
                         if (tag != null)
                         {
                             tags.Add(new ProductTagModel()
                             {
                                 Id = tag.Id,
                                 Name = tag.GetLocalized(y => y.Name),
-                                SeName = tag.GetSeName(),
+                                SeName = tag.SeName,
                                 ProductCount = _productTagService.GetProductCount(tag.Id, _storeContext.CurrentStore.Id)
                             });
                         }
@@ -783,7 +784,7 @@ namespace Grand.Web.Services
             var productPicturesCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DETAILS_PICTURES_MODEL_KEY, product.Id, defaultPictureSize, isAssociatedProduct, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
             var cachedPictures = _cacheManager.Get(productPicturesCacheKey, () =>
             {
-                var defaultPicture = product.ProductPictures.OrderBy(x=>x.DisplayOrder).FirstOrDefault();
+                var defaultPicture = product.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault();
                 if (defaultPicture == null)
                     defaultPicture = new ProductPicture();
 
@@ -1014,7 +1015,7 @@ namespace Grand.Web.Services
             //We cache a value indicating whether a product has attributes
             IList<ProductAttributeMapping> productAttributeMapping = product.ProductAttributeMappings.ToList();
 
-            foreach (var attribute in productAttributeMapping)
+            foreach (var attribute in productAttributeMapping.OrderBy(x => x.DisplayOrder))
             {
                 var productAttribute = _productAttributeService.GetProductAttributeById(attribute.ProductAttributeId);
                 var attributeModel = new ProductDetailsModel.ProductAttributeModel
@@ -1040,7 +1041,7 @@ namespace Grand.Web.Services
                 if (attribute.ShouldHaveValues())
                 {
                     //values
-                    var attributeValues = attribute.ProductAttributeValues; 
+                    var attributeValues = attribute.ProductAttributeValues;
                     foreach (var attributeValue in attributeValues)
                     {
                         var valueModel = new ProductDetailsModel.ProductAttributeValueModel
@@ -1213,7 +1214,7 @@ namespace Grand.Web.Services
 
             #region Tier prices
 
-            if (product.HasTierPrices && _permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
+            if (product.TierPrices.Any() && _permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
             {
                 model.TierPrices = product.TierPrices.OrderBy(x => x.Quantity)
                                     .FilterByStore(_storeContext.CurrentStore.Id)
@@ -1315,12 +1316,12 @@ namespace Grand.Web.Services
 
             #region Product Bundle
 
-            if(product.ProductType == ProductType.BundledProduct)
+            if (product.ProductType == ProductType.BundledProduct)
             {
-                foreach (var bundle in product.BundleProducts.OrderBy(x=>x.DisplayOrder))
+                foreach (var bundle in product.BundleProducts.OrderBy(x => x.DisplayOrder))
                 {
                     var p1 = _productService.GetProductById(bundle.ProductId);
-                    if(p1!=null && p1.Published && _aclService.Authorize(p1) && _storeMappingService.Authorize(p1) && p1.IsAvailable())
+                    if (p1 != null && p1.Published && _aclService.Authorize(p1) && _storeMappingService.Authorize(p1) && p1.IsAvailable())
                     {
 
                         var bundleProduct = new ProductDetailsModel.ProductBundleModel()
@@ -1344,8 +1345,8 @@ namespace Grand.Web.Services
                         }
 
                         //prepare picture model
-                        var productbundlePicturesCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DETAILS_PICTURES_MODEL_KEY, 
-                            p1.Id, _mediaSettings.ProductBundlePictureSize, false, _workContext.WorkingLanguage.Id, 
+                        var productbundlePicturesCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DETAILS_PICTURES_MODEL_KEY,
+                            p1.Id, _mediaSettings.ProductBundlePictureSize, false, _workContext.WorkingLanguage.Id,
                             _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
 
                         bundleProduct.DefaultPictureModel = _cacheManager.Get(productbundlePicturesCacheKey, () =>
@@ -1483,7 +1484,7 @@ namespace Grand.Web.Services
 
         public virtual void SendProductAskQuestionMessage(Product product, ProductAskQuestionModel model)
         {
-            _workflowMessageService.SendProductQuestionMessage( _workContext.CurrentCustomer,
+            _workflowMessageService.SendProductQuestionMessage(_workContext.CurrentCustomer,
                     _workContext.WorkingLanguage.Id, product, model.Email, model.FullName, model.Phone,
                     Core.Html.HtmlHelper.FormatText(model.Message, false, true, false, false, false, false));
 
@@ -1606,6 +1607,153 @@ namespace Grand.Web.Services
             model.AskQuestionPhone = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone);
             model.AskQuestionMessage = "";
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnAskQuestionPage;
+            return model;
+        }
+
+        public virtual IList<ProductOverviewModel> PrepareProductsDisplayedOnHomePage(int? productThumbPictureSize)
+        {
+            var products = _productService.GetAllProductsDisplayedOnHomePage();
+
+            //ACL and store mapping
+            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+            //availability dates
+            products = products.Where(p => p.IsAvailable()).ToList();
+
+            if (!products.Any())
+                return new List<ProductOverviewModel>();
+
+            return PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
+        }
+        public virtual IList<ProductOverviewModel> PrepareProductsHomePageBestSellers(int? productThumbPictureSize)
+        {
+            //load and cache report
+            var orderReportService = EngineContext.Current.Resolve<Grand.Services.Orders.IOrderReportService>();
+            var report = _cacheManager.Get(string.Format(ModelCacheEventConsumer.HOMEPAGE_BESTSELLERS_IDS_KEY, _storeContext.CurrentStore.Id),
+                () => orderReportService.BestSellersReport(
+                        storeId: _storeContext.CurrentStore.Id,
+                        pageSize: _catalogSettings.NumberOfBestsellersOnHomepage)
+                        .ToList());
+
+            //load products
+            var products = _productService.GetProductsByIds(report.Select(x => x.ProductId).ToArray());
+            //ACL and store mapping
+            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+            //availability dates
+            products = products.Where(p => p.IsAvailable()).ToList();
+
+            if (!products.Any())
+                return new List<ProductOverviewModel>();
+
+            return PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
+        }
+        public virtual IList<ProductOverviewModel> PrepareProductsRecommended(int? productThumbPictureSize)
+        {
+            var products = _productService.GetRecommendedProducts(_workContext.CurrentCustomer.GetCustomerRoleIds());
+
+            //ACL and store mapping
+            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+
+            //availability dates
+            products = products.Where(p => p.IsAvailable()).ToList();
+
+            if (!products.Any())
+                return new List<ProductOverviewModel>();
+
+            //prepare model
+            return PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
+        }
+        public virtual IList<ProductOverviewModel> PrepareProductsPersonalized(int? productThumbPictureSize)
+        {
+            var customer = _workContext.CurrentCustomer;
+            var products = _productService.GetPersonalizedProducts(customer.Id);
+
+            //ACL and store mapping
+            products = products.Where(p => _aclService.Authorize(p, customer) && _storeMappingService.Authorize(p)).ToList();
+
+            //availability dates
+            products = products.Where(p => p.IsAvailable()).ToList();
+
+            if (!products.Any())
+                return new List<ProductOverviewModel>();
+
+            //prepare model
+            return PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
+        }
+        public virtual IList<ProductOverviewModel> PrepareProductsSuggested(int? productThumbPictureSize)
+        {
+            var products = _productService.GetSuggestedProducts(_workContext.CurrentCustomer.CustomerTags.ToArray());
+
+            //ACL and store mapping
+            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+
+            //availability dates
+            products = products.Where(p => p.IsAvailable()).ToList();
+
+            if (!products.Any())
+                return new List<ProductOverviewModel>();
+
+            //prepare model
+            return PrepareProductOverviewModels(products.Take(_catalogSettings.SuggestedProductsNumber), true, true, productThumbPictureSize).ToList();
+        }
+        public virtual IList<ProductOverviewModel> PrepareProductsCrossSell(int? productThumbPictureSize, int count)
+        {
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
+                .ToList();
+
+            var products = _productService.GetCrosssellProductsByShoppingCart(cart, count);
+            //ACL and store mapping
+            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+            //availability dates
+            products = products.Where(p => p.IsAvailable()).ToList();
+
+            if (!products.Any())
+                return new List<ProductOverviewModel>();
+
+            return PrepareProductOverviewModels(products,
+                productThumbPictureSize: productThumbPictureSize, forceRedirectionAfterAddingToCart: true)
+                .ToList();
+        }
+        public virtual IList<ProductOverviewModel> PrepareProductsRelated(string productId, int? productThumbPictureSize)
+        {
+            var productIds = _cacheManager.Get(string.Format(ModelCacheEventConsumer.PRODUCTS_RELATED_IDS_KEY, productId, _storeContext.CurrentStore.Id),
+               () =>
+                   _productService.GetProductById(productId).RelatedProducts.Select(x => x.ProductId2).ToArray()
+                   );
+
+            //load products
+            var products = _productService.GetProductsByIds(productIds);
+            //ACL and store mapping
+            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+            //availability dates
+            products = products.Where(p => p.IsAvailable()).ToList();
+
+            if (!products.Any())
+                return new List<ProductOverviewModel>();
+
+            return PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
+        }
+        public virtual IList<ProductOverviewModel> PrepareProductsRecentlyViewed(int? productThumbPictureSize, bool? preparePriceModel)
+        {
+            var preparePictureModel = productThumbPictureSize.HasValue;
+            var recentlyViewedProductsService = EngineContext.Current.Resolve<IRecentlyViewedProductsService>();
+            var products = recentlyViewedProductsService.GetRecentlyViewedProducts(_workContext.CurrentCustomer.Id, _catalogSettings.RecentlyViewedProductsNumber);
+
+            //ACL and store mapping
+            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+            //availability dates
+            products = products.Where(p => p.IsAvailable()).ToList();
+
+            if (!products.Any())
+                return new List<ProductOverviewModel>();
+
+            //prepare model
+            var model = new List<ProductOverviewModel>();
+            model.AddRange(PrepareProductOverviewModels(products,
+                preparePriceModel.GetValueOrDefault(),
+                preparePictureModel,
+                productThumbPictureSize));
             return model;
         }
     }

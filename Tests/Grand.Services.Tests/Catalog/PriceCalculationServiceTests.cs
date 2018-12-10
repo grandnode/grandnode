@@ -120,7 +120,6 @@ namespace Grand.Services.Catalog.Tests
                 Price = 49.99M,
                 CustomerEntersPrice = false,
                 Published = true,
-                HasTierPrices = true //set to true - now Product has some TierPrices
             };
 
             //TierPrice is simply "the more you buy, the less you pay"
@@ -165,7 +164,6 @@ namespace Grand.Services.Catalog.Tests
                 Price = 49.99M,
                 CustomerEntersPrice = false,
                 Published = true,
-                HasTierPrices = true
             };
 
             //this is normal user - normal prices

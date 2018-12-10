@@ -3,7 +3,7 @@
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 <input asp-for="CountryId" type="hidden" />
-
+<vc:admin-widget widget-zone="country_state_details_top" additional-data="Model" />
 @if (ViewBag.RefreshPage == true)
 {
     <script type="text/javascript">
@@ -65,3 +65,4 @@
         </div>
     </div>
 </div>
+<vc:admin-widget widget-zone="country_state_details_bottom" additional-data="Model" />

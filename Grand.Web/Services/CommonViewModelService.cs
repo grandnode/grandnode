@@ -12,10 +12,12 @@ using Grand.Core.Domain.News;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Tax;
 using Grand.Core.Domain.Vendors;
+using Grand.Core.Infrastructure;
 using Grand.Framework.Security.Captcha;
 using Grand.Framework.Themes;
 using Grand.Framework.UI;
 using Grand.Services.Catalog;
+using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Forums;
@@ -356,7 +358,26 @@ namespace Grand.Web.Services
                     .Sum(x => x.Quantity);
 
             }
+            if (_forumSettings.AllowPrivateMessages)
+            {
+                var unreadMessageCount = GetUnreadPrivateMessages();
+                var unreadMessage = string.Empty;
+                var alertMessage = string.Empty;
+                if (unreadMessageCount > 0)
+                {
+                    unreadMessage = string.Format(_localizationService.GetResource("PrivateMessages.TotalUnread"), unreadMessageCount);
 
+                    //notifications here
+                    if (_forumSettings.ShowAlertForPM &&
+                        !customer.GetAttribute<bool>(SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, _storeContext.CurrentStore.Id))
+                    {
+                        EngineContext.Current.Resolve<IGenericAttributeService>().SaveAttribute(customer, SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, true, _storeContext.CurrentStore.Id);
+                        alertMessage = string.Format(_localizationService.GetResource("PrivateMessages.YouHaveUnreadPM"), unreadMessageCount);
+                    }
+                }
+                model.UnreadPrivateMessages = unreadMessage;
+                model.AlertMessage = alertMessage;
+            }
             return model;
         }
         public virtual AdminHeaderLinksModel PrepareAdminHeaderLinks(Customer customer)

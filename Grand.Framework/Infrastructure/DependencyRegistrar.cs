@@ -207,8 +207,6 @@ namespace Grand.Framework.Infrastructure
                 builder.RegisterType<LocalizationService>().As<ILocalizationService>().InstancePerLifetimeScope();
             }
 
-            builder.RegisterSource(new SettingsSource());
-
             builder.RegisterType<LanguageService>().As<ILanguageService>().InstancePerLifetimeScope();
             builder.RegisterType<DownloadService>().As<IDownloadService>().InstancePerLifetimeScope();
 
@@ -373,40 +371,6 @@ namespace Grand.Framework.Infrastructure
         {
             get { return 0; }
         }
-    }
-
-
-    public class SettingsSource : IRegistrationSource
-    {
-        static readonly MethodInfo BuildMethod = typeof(SettingsSource).GetMethod(
-            "BuildRegistration",
-            BindingFlags.Static | BindingFlags.NonPublic);
-
-        public IEnumerable<IComponentRegistration> RegistrationsFor(
-            Autofac.Core.Service service,
-            Func<Autofac.Core.Service, IEnumerable<IComponentRegistration>> registrations)
-        {
-            var ts = service as TypedService;
-            if (ts != null && typeof(ISettings).IsAssignableFrom(ts.ServiceType))
-            {
-                var buildMethod = BuildMethod.MakeGenericMethod(ts.ServiceType);
-                yield return (IComponentRegistration)buildMethod.Invoke(null, null);
-            }
-        }
-
-        static IComponentRegistration BuildRegistration<TSettings>() where TSettings : ISettings, new()
-        {
-            return RegistrationBuilder
-                .ForDelegate((c, p) =>
-                {
-                    var currentStoreId = c.Resolve<IStoreContext>().CurrentStore.Id;
-                    return c.Resolve<ISettingService>().LoadSetting<TSettings>(currentStoreId);
-                })
-                .InstancePerLifetimeScope()
-                .CreateRegistration();
-        }
-
-        public bool IsAdapterForIndividualComponents { get { return false; } }
     }
 
 }

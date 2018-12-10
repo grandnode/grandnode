@@ -16,23 +16,23 @@
 </script>
 <div id="giftcard-edit">
     <ul>
-        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+        <li tab-index="0">
             @T("Admin.GiftCards.Info")
         </li>
         @if (!String.IsNullOrEmpty(Model.Id))
         {
-            <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+            <li tab-index="1">
                 @T("Admin.GiftCards.History")
             </li>
         }
     </ul>
     <div>
-        @Html.Partial("_CreateOrUpdate.TabInfo", Model)
+       <partial name="_CreateOrUpdate.TabInfo" model="Model" />
     </div>
     @if (!String.IsNullOrEmpty(Model.Id))
     {
         <div>
-            @Html.Partial("_CreateOrUpdate.TabHistory", Model)
+           <partial name="_CreateOrUpdate.TabHistory" model="Model" />
         </div>
     }
 </div>

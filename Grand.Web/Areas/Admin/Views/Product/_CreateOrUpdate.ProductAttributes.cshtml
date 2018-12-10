@@ -17,7 +17,7 @@
         </script>
         <div id="productattribute-edit">
             <ul>
-                <li @Html.RenderSelectedTabIndex(0, 0)>
+                <li class="k-state-active">
                     @T("Admin.Catalog.Products.ProductAttributes.Attributes")
                 </li>
                 <li>
@@ -25,10 +25,10 @@
                 </li>
             </ul>
             <div>
-                @Html.Partial("_CreateOrUpdate.ProductAttributes.TabAttributes", Model)
+               <partial name="_CreateOrUpdate.ProductAttributes.TabAttributes" model="Model" />
             </div>
             <div>
-                @Html.Partial("_CreateOrUpdate.ProductAttributes.TabAttributeCombinations", Model)
+               <partial name="_CreateOrUpdate.ProductAttributes.TabAttributeCombinations" model="Model" />
             </div>
         </div>
     }

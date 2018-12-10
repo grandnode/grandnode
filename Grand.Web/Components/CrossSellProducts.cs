@@ -1,76 +1,44 @@
-﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Orders;
+﻿using Grand.Core.Domain.Orders;
 using Grand.Framework.Components;
-using Grand.Services.Catalog;
-using Grand.Services.Orders;
-using Grand.Services.Security;
-using Grand.Services.Stores;
 using Grand.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Components
 {
     public class CrossSellProductsViewComponent : BaseViewComponent
     {
         #region Fields
-        private readonly IProductService _productService;
-        private readonly IWorkContext _workContext;
-        private readonly IAclService _aclService;
-        private readonly IStoreMappingService _storeMappingService;
         private readonly IProductViewModelService _productViewModelService;
-        private readonly IStoreContext _storeContext;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         #endregion
 
         #region Constructors
 
         public CrossSellProductsViewComponent(
-            IProductService productService,
-            IWorkContext workContext,
-            IAclService aclService,
-            IStoreMappingService storeMappingService,
             IProductViewModelService productViewModelService,
-            IStoreContext storeContext,
             ShoppingCartSettings shoppingCartSettings
 )
         {
-            this._productService = productService;
-            this._workContext = workContext;
-            this._aclService = aclService;
-            this._shoppingCartSettings = shoppingCartSettings;
             this._productViewModelService = productViewModelService;
-            this._storeMappingService = storeMappingService;
-            this._storeContext = storeContext;
+            this._shoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion
 
         #region Invoker
 
-        public IViewComponentResult Invoke(int? productThumbPictureSize)
+        public async Task<IViewComponentResult> InvokeAsync(int? productThumbPictureSize)
         {
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
-                .ToList();
-
-            var products = _productService.GetCrosssellProductsByShoppingCart(cart, _shoppingCartSettings.CrossSellsNumber);
-            //ACL and store mapping
-            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
-            //availability dates
-            products = products.Where(p => p.IsAvailable()).ToList();
-
-            if (!products.Any())
+            if (_shoppingCartSettings.CrossSellsNumber == 0)
                 return Content("");
 
-            var model = _productViewModelService.PrepareProductOverviewModels(products,
-                productThumbPictureSize: productThumbPictureSize, forceRedirectionAfterAddingToCart: true)
-                .ToList();
+            var model = await Task.Run(() => _productViewModelService.PrepareProductsCrossSell(productThumbPictureSize, _shoppingCartSettings.CrossSellsNumber));
+            if (!model.Any())
+                return Content("");
 
             return View(model);
-
         }
 
         #endregion

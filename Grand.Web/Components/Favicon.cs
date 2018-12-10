@@ -2,6 +2,7 @@
 using Grand.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading.Tasks;
 
 namespace Grand.Web.ViewComponents
 {
@@ -14,9 +15,9 @@ namespace Grand.Web.ViewComponents
             this._commonViewModelService = commonViewModelService;
         }
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = _commonViewModelService.PrepareFavicon();
+            var model = await Task.Run(() => _commonViewModelService.PrepareFavicon());
             if (String.IsNullOrEmpty(model.FaviconUrl))
                 return Content("");
 

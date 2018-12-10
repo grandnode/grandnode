@@ -7,9 +7,11 @@
     <br />
     <strong>@T("Admin.Configuration.Activitylog")</strong>
     <div class="panel panel-default">
+        <vc:admin-widget widget-zone="customer_details_activity_log_top" additional-data="Model" />
         <div class="panel-body">
             <div id="activitylog-grid"></div>
         </div>
+        <vc:admin-widget widget-zone="customer_details_activity_log_bottom" additional-data="Model" />
     </div>
 
     <script>

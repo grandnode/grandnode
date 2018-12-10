@@ -3,7 +3,6 @@ using Grand.Framework.Localization;
 using Grand.Framework.Mapping;
 using Grand.Framework.Mvc.ModelBinding;
 using Grand.Framework.Mvc.Models;
-using Grand.Web.Areas.Admin.Models.Customers;
 using Grand.Web.Areas.Admin.Models.Discounts;
 using Grand.Web.Areas.Admin.Validators.Catalog;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -14,7 +13,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Grand.Web.Areas.Admin.Models.Catalog
 {
     [Validator(typeof(ProductValidator))]
-    public partial class ProductModel : BaseGrandEntityModel, ILocalizedModel<ProductLocalizedModel>, IStoreMappingModel
+    public partial class ProductModel : BaseGrandEntityModel, ILocalizedModel<ProductLocalizedModel>, IAclMappingModel, IStoreMappingModel
     {
         public ProductModel()
         {
@@ -34,6 +33,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             AvailableUnits = new List<SelectListItem>();
             AddPictureModel = new ProductPictureModel();
             AvailableStores = new List<StoreModel>();
+            AvailableCustomerRoles = new List<CustomerRoleModel>();
             AddSpecificationAttributeModel = new AddProductSpecificationAttributeModel();
             ProductWarehouseInventoryModels = new List<ProductWarehouseInventoryModel>();
             CalendarModel = new GenerateCalendarModel();
@@ -415,14 +415,8 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         //discounts
         public List<DiscountModel> AvailableDiscounts { get; set; }
         public string[] SelectedDiscountIds { get; set; }
-
-
-
-
         //add specification attribute model
         public AddProductSpecificationAttributeModel AddSpecificationAttributeModel { get; set; }
-
-
         //multiple warehouses
         [GrandResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory")]
         public IList<ProductWarehouseInventoryModel> ProductWarehouseInventoryModels { get; set; }
@@ -483,7 +477,6 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
 
             [GrandResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttributeOption")]
             public string SpecificationAttributeOptionId { get; set; }
-
             
             [GrandResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.CustomValue")]
             public string CustomValue { get; set; }
@@ -888,11 +881,16 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         }
         public partial class ProductAttributeMappingModel : BaseGrandEntityModel
         {
+            public ProductAttributeMappingModel()
+            {
+                AvailableProductAttribute = new List<SelectListItem>();
+            }
             public string ProductId { get; set; }
 
             public string ProductAttributeId { get; set; }
             [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.Attribute")]
             public string ProductAttribute { get; set; }
+            public IList<SelectListItem> AvailableProductAttribute { get; set; }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.TextPrompt")]
             

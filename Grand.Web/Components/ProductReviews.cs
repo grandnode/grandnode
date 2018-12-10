@@ -4,6 +4,7 @@ using Grand.Services.Catalog;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Components
 {
@@ -30,15 +31,14 @@ namespace Grand.Web.Components
         #endregion
 
         #region Invoker
-
-        public IViewComponentResult Invoke(string productId)
+        public async Task<IViewComponentResult> InvokeAsync(string productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null || !product.Published || !product.AllowCustomerReviews)
                 return Content("");
 
             var model = new ProductReviewsModel();
-            _productViewModelService.PrepareProductReviewsModel(model, product, _catalogSettings.NumberOfReview);
+            await Task.Run(() => _productViewModelService.PrepareProductReviewsModel(model, product, _catalogSettings.NumberOfReview));
             
             return View(model);
         }

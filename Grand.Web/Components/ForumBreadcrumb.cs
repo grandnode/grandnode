@@ -1,6 +1,7 @@
 ﻿using Grand.Framework.Components;
 using Grand.Web.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Grand.Web.ViewComponents
 {
@@ -12,9 +13,9 @@ namespace Grand.Web.ViewComponents
             this._boardsViewModelService = boardsViewModelService;
         }
 
-        public IViewComponentResult Invoke(string forumGroupId, string forumId, string forumTopicId)
+        public async Task<IViewComponentResult> InvokeAsync(string forumGroupId, string forumId, string forumTopicId)
         {
-            var model = _boardsViewModelService.PrepareForumBreadcrumb(forumGroupId, forumId, forumTopicId);
+            var model = await Task.Run(() => _boardsViewModelService.PrepareForumBreadcrumb(forumGroupId, forumId, forumTopicId));
             return View(model);
         }
     }

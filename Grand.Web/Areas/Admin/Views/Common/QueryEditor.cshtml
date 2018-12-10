@@ -1,0 +1,139 @@
+﻿@model QueryEditor
+@inject AdminAreaSettings adminAreaSettings
+@{
+    //page title
+    ViewBag.Title = T("Admin.System.QueryEditor").Text;
+}
+
+<antiforgery-token />
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light form-fit">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-sitemap"></i>
+                    @T("Admin.System.QueryEditor")
+                </div>
+                <vc:admin-widget widget-zone="queryeditor_buttons" additional-data="null" />
+            </div>
+            <div class="portlet-body form">
+                <div class="note note-info">
+                    More info about queries you can find: <a target="_blank" href="https://docs.mongodb.com/manual/reference/command/" />https://docs.mongodb.com/manual/reference/command/</a>
+                </div>
+                <div class="form-horizontal">
+                    <div class="form-body">
+                        <div class="form-group">
+                            <admin-label asp-for="Query" />
+                            <div class="col-md-8 col-sm-8">
+                                <admin-textarea asp-for="Query" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <div class="row">
+                            <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
+                                <button id="btnGenerate" class="btn btn-success filter-submit">
+                                    <i class="fa fa-play-circle"></i> @T("Admin.Common.RunQuery")
+                                </button>
+                                <button id="btnScript" class="btn btn-success filter-submit">
+                                    <i class="fa fa-caret-square-o-right"></i> @T("Admin.Common.RunScript")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div id="result"></div>
+                <div id="queryEditor-grid"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+		dataSource = new kendo.data.DataSource({
+			transport: {
+				read:  {
+					url: "@Html.Raw(Url.Action("QueryEditor", "Common"))",
+					dataType: "json",
+					data: additionalData,
+					type: "POST",
+				}
+			},
+			schema:
+            {
+                data: "Data",
+                total: "Total",
+				errors: "Errors",
+			},
+			error: function(e) {
+				display_kendoui_grid_error(e);
+                // Cancel the changes
+                this.cancelChanges();
+            },
+            pageSize: @(adminAreaSettings.DefaultGridPageSize),
+        });
+
+        $("#queryEditor-grid").kendoGrid({
+			autoBind: false,
+            dataSource: dataSource,
+            pageable: true,
+            editable: {
+                confirmation: false,
+                mode: "inline"
+            },
+            scrollable: false,
+        });
+    });
+
+    $(document).ready(function () {        
+        $('#btnGenerate').click(function () {
+            if ($('#@Html.FieldIdFor(model => model.Query)').val().length > 0) {
+                $('#queryEditor-grid').html('');
+                $("#queryEditor-grid").kendoGrid({
+                    autoBind: false,
+                    dataSource: dataSource,
+                    pageable: true,
+                    editable: {
+                        confirmation: false,
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                });
+                dataSource.read();
+            }
+        });
+        $('#btnScript').click(function () {
+            if ($('#@Html.FieldIdFor(model => model.Query)').val().length > 0) {
+                 $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "@(Url.Action("RunScript", "Common"))",
+                    dataType: 'json',
+                    data: additionalData(),
+                    success: function (data) {
+                        if (data.Result == false) {
+                            alert(data.Message);
+                        }
+                        else {
+                            $('#result').html(data.Message);
+                        }
+                    },
+                    error: function () {
+                        alert('Error');
+                    }
+                });
+            }
+        });
+    });
+
+    function additionalData() {
+        var data = {
+            query: $('#@Html.FieldIdFor(model => model.Query)').val()
+        };
+        addAntiForgeryToken(data);
+        return data;
+    }
+</script>

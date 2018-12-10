@@ -330,7 +330,8 @@
                     url: '@Html.Raw(Url.Action("productdetails_attributechange", "product", new {productId = productId, validateAttributeConditions = attributesHaveConditions, loadPicture = attributesHaveAssociatedPictures }))',
                     data: $('#product-details-form').serialize(),
                     type: 'post',
-                    success: function(data) {
+                    context: { product: '@productId' },
+                    success: function (data, url) {
                         if (data.price) {
                             $('.price-value-@productId').text(data.price);
                         }
@@ -358,12 +359,19 @@
                                 $('#product_attribute_input_' + data.disabledattributemappingids[i]).hide();
                             }
                         }
+                        var product = this.product;
                         setTimeout(function () {
                             if (data.pictureDefaultSizeUrl) {
-                                $('#main-product-img-@productId').attr("src", data.pictureDefaultSizeUrl);
-                                if ($(".zoomImg").length) {
-                                    $(".zoomImg").attr("src", data.pictureFullSizeUrl)
+                                if ($(".product-grouped").length == 0) {
+                                    $('#main-product-img-@productId').attr("src", data.pictureDefaultSizeUrl);
+                                    if ($(".zoomImg").length) {
+                                        $(".zoomImg").attr("src", data.pictureFullSizeUrl)
+                                    }
                                 }
+                                else {
+                                    $('#main-product-img-'+product).attr("src", data.pictureDefaultSizeUrl);
+                                }
+
                             }}, 100);
                     }
                 });

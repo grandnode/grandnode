@@ -223,8 +223,7 @@ namespace Grand.Services.Catalog
                 UpdatedOnUtc = DateTime.UtcNow,
                 Locales = product.Locales,
                 CustomerRoles = product.CustomerRoles,
-                Stores = product.Stores,
-                HasTierPrices = product.HasTierPrices,
+                Stores = product.Stores
             };
 
             // product <-> warehouses mappings

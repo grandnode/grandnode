@@ -80,7 +80,15 @@ namespace Grand.Services.Configuration
         /// <typeparam name="T">Type</typeparam>
         /// <param name="storeId">Store identifier for which settigns should be loaded</param>
         T LoadSetting<T>(string storeId = "") where T : ISettings, new();
-        
+
+        /// <summary>
+        /// Load settings
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="storeId"></param>
+        /// <returns></returns>
+        ISettings LoadSetting(Type type, string storeId = "");
+
         /// <summary>
         /// Save settings object
         /// </summary>

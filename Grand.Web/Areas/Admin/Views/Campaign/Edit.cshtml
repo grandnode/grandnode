@@ -25,8 +25,9 @@
                         </div>
                     </div>
                 </div>
+                <vc:admin-widget widget-zone="campaign_details_buttons" additional-data="Model" />
                 <div class="portlet-body form">
-                    @Html.Partial("_CreateOrUpdate", Model)
+                    <partial name="_CreateOrUpdate" model="Model" />
                 </div>
             </div>
         </div>

@@ -2,6 +2,7 @@
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 <div class="form-horizontal">
+    <vc:admin-widget widget-zone="queued_email_details_top" additional-data="Model" />
     <div class="form-body">
         <div class="form-group">
             <admin-label asp-for="PriorityName" />
@@ -105,7 +106,7 @@
                     </div>
                 </div>
             </div>
-                        }
+        }
         <div class="form-group">
             <admin-label asp-for="CreatedOn" />
             <div class="col-md-9 col-sm-9">
@@ -155,6 +156,7 @@
             </div>
         </div>
     </div>
+    <vc:admin-widget widget-zone="queued_email_details_bottom" additional-data="Model" />
 </div>
 
 <script type="text/javascript">

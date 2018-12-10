@@ -22,12 +22,13 @@
         });
     });
 </script>
+<vc:admin-widget widget-zone="plugin_details_top" additional-data="Model" />
 <div id="plugin-edit">
     <ul>
-        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+        <li tab-index="0">
             @T("Admin.Configuration.Plugins.Info")
         </li>
-        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+        <li tab-index="1">
             @T("Admin.Configuration.Plugins.Stores")
         </li>
     </ul>
@@ -38,6 +39,7 @@
         <partial name="_TabStores" model="Model" />
     </div>
 </div>
+<vc:admin-widget widget-zone="plugin_details_bottom" additional-data="Model" />
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "plugin-edit");

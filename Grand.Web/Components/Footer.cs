@@ -1,6 +1,7 @@
 ﻿using Grand.Framework.Components;
 using Grand.Web.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Grand.Web.ViewComponents
 {
@@ -13,9 +14,9 @@ namespace Grand.Web.ViewComponents
             this._commonViewModelService = commonViewModelService;
         }
 
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = _commonViewModelService.PrepareFooter();
+            var model = await Task.Run(() => _commonViewModelService.PrepareFooter());
             return View(model);
 
         }

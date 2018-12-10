@@ -1,7 +1,7 @@
 ﻿@model AffiliateModel
 @inject AdminAreaSettings adminAreaSettings
 @{
-
+    <vc:admin-widget widget-zone="affiliate_details_customers_top" additional-data="Model" />
     <div id="customers-grid"></div>
     <script>
     $(document).ready(function () {
@@ -47,5 +47,5 @@
         });
     });
     </script>
-
+    <vc:admin-widget widget-zone="affiliate_details_customers_bottom" additional-data="Model" />
 }

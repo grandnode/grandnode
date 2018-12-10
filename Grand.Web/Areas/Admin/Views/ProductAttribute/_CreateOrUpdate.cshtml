@@ -18,30 +18,30 @@
 
 <div id="product-attribute-edit" style="display:none">
     <ul>
-        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+        <li tab-index="0">
             @T("Admin.Catalog.Attributes.ProductAttributes.Info")
         </li>
         @if (!string.IsNullOrEmpty(Model.Id))
         {
-        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+        <li tab-index="1">
             @T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts")
         </li>
         }
-        <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+        <li tab-index="2">
             @T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues")
         </li>
     </ul>
     <div>
-        @Html.Partial("_CreateOrUpdate.TabInfo", Model)
+       <partial name="_CreateOrUpdate.TabInfo" model="Model" />
     </div>
     @if (!string.IsNullOrEmpty(Model.Id))
     {
         <div>
-            @Html.Partial("_CreateOrUpdate.TabUsedByProducts", Model)
+           <partial name="_CreateOrUpdate.TabUsedByProducts" model="Model" />
         </div>
     }
     <div>
-        @Html.Partial("_CreateOrUpdate.TabPredefinedValues", Model)
+       <partial name="_CreateOrUpdate.TabPredefinedValues" model="Model" />
     </div>
 </div>
 @{

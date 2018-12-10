@@ -1,8 +1,8 @@
-﻿using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Polls;
+﻿using Grand.Core.Domain.Polls;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Customers;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
@@ -13,20 +13,18 @@ using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Polls;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Polls)]
     public partial class PollController : BaseAdminController
 	{
 		#region Fields
-
         private readonly IPollService _pollService;
         private readonly ILanguageService _languageService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
         private readonly IStoreService _storeService;
         private readonly ICustomerService _customerService;
         #endregion
@@ -35,39 +33,15 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public PollController(IPollService pollService, ILanguageService languageService,
             IDateTimeHelper dateTimeHelper, ILocalizationService localizationService,
-            IPermissionService permissionService, IStoreService storeService,
+            IStoreService storeService,
             ICustomerService customerService)
         {
             this._pollService = pollService;
             this._languageService = languageService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
-            this._permissionService = permissionService;
             this._storeService = storeService;
             this._customerService = customerService;
-        }
-
-        #endregion
-
-        #region Utilities
-
-        [NonAction]
-        protected virtual void PrepareAclModel(PollModel model, Poll poll, bool excludeProperties)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            model.AvailableCustomerRoles = _customerService
-                .GetAllCustomerRoles(true)
-                .Select(cr => cr.ToModel())
-                .ToList();
-            if (!excludeProperties)
-            {
-                if (poll != null)
-                {
-                    model.SelectedCustomerRoleIds = poll.CustomerRoles.ToArray();
-                }
-            }
         }
 
         #endregion
@@ -81,18 +55,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedView();
-
             var polls = _pollService.GetPolls("", false, command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
             {
@@ -113,9 +81,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedView();
-
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             var model = new PollModel();
             //default values
@@ -126,25 +91,16 @@ namespace Grand.Web.Areas.Admin.Controllers
             //locales
             AddLocales(_languageService, model.Locales);
             //ACL
-            PrepareAclModel(model, null, false);
-
+            model.PrepareACLModel(null, false, _customerService);
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Create(PollModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
-                var poll = model.ToEntity();
-                poll.StartDateUtc = model.StartDate;
-                poll.EndDateUtc = model.EndDate;
-                poll.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
-                poll.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
-                poll.Locales = model.Locales.ToLocalizedProperty();
+                var poll = model.ToEntity();                
                 _pollService.InsertPoll(poll);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Polls.Added"));
@@ -153,32 +109,24 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             //If we got this far, something failed, redisplay form
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
-
             //Stores
             model.PrepareStoresMappingModel(null, true, _storeService);
-
             //locales
             AddLocales(_languageService, model.Locales);
             //ACL
-            PrepareAclModel(model, null, true);
+            model.PrepareACLModel(null, true, _customerService);
+
             return View(model);
         }
 
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedView();
-
             var poll = _pollService.GetPollById(id);
             if (poll == null)
                 //No poll found with the specified id
                 return RedirectToAction("List");
-
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             var model = poll.ToModel();
-            model.StartDate = poll.StartDateUtc;
-            model.EndDate = poll.EndDateUtc;
-
             //Store
             model.PrepareStoresMappingModel(poll, false, _storeService);
             //locales
@@ -187,7 +135,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.Name = poll.GetLocalized(x => x.Name, languageId, false, false);
             });
             //ACL
-            PrepareAclModel(model, poll, false);
+            model.PrepareACLModel(poll, false, _customerService);
 
             return View(model);
         }
@@ -195,9 +143,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Edit(PollModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedView();
-
             var poll = _pollService.GetPollById(model.Id);
             if (poll == null)
                 //No poll found with the specified id
@@ -206,11 +151,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 poll = model.ToEntity(poll);
-                poll.StartDateUtc = model.StartDate;
-                poll.EndDateUtc = model.EndDate;
-                poll.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
-                poll.Locales = model.Locales.ToLocalizedProperty();
-                poll.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
                 _pollService.UpdatePoll(poll);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Polls.Updated"));
@@ -229,14 +169,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
 
             //Store
-            model.PrepareStoresMappingModel(poll, false, _storeService);
+            model.PrepareStoresMappingModel(poll, true, _storeService);
+            //ACL
+            model.PrepareACLModel(poll, true, _customerService);
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = poll.GetLocalized(x => x.Name, languageId, false, false);
             });
-            //ACL
-            PrepareAclModel(model, poll, false);
 
             return View(model);
         }
@@ -244,18 +184,19 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedView();
-
             var poll = _pollService.GetPollById(id);
             if (poll == null)
                 //No poll found with the specified id
                 return RedirectToAction("List");
-            
-            _pollService.DeletePoll(poll);
+            if (ModelState.IsValid)
+            {
+                _pollService.DeletePoll(poll);
 
-            SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Polls.Deleted"));
-            return RedirectToAction("List");
+                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Polls.Deleted"));
+                return RedirectToAction("List");
+            }
+            ErrorNotification(ModelState);
+            return RedirectToAction("Edit", new { id = poll.Id });
         }
 
         #endregion
@@ -265,9 +206,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult PollAnswers(string pollId, DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedView();
-
             var poll = _pollService.GetPollById(pollId);
             if (poll == null)
                 throw new ArgumentException("No poll found with the specified id", "pollId");
@@ -276,14 +214,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             var gridModel = new DataSourceResult
             {
-                Data = answers.Select(x =>  new PollAnswerModel
-                {
-                    Id = x.Id,
-                    PollId = x.PollId,
-                    Name = x.Name,
-                    NumberOfVotes = x.NumberOfVotes,
-                    DisplayOrder = x.DisplayOrder
-                }),
+                Data = answers.Select(x=>x.ToModel()),
                 Total = answers.Count
             };
 
@@ -292,9 +223,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //create
         public IActionResult PollAnswerCreatePopup(string pollId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedView();
-
             var model = new PollAnswerModel();
             model.PollId = pollId;
 
@@ -306,9 +234,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult PollAnswerCreatePopup(PollAnswerModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedView();
-
             var poll = _pollService.GetPollById(model.PollId);
             if (poll == null)
                 //No poll found with the specified id
@@ -317,7 +242,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var pa = model.ToEntity();
-                pa.Locales = model.Locales.ToLocalizedProperty();
                 poll.PollAnswers.Add(pa);
                 _pollService.UpdatePoll(poll);
                 ViewBag.RefreshPage = true;
@@ -331,9 +255,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit
         public IActionResult PollAnswerEditPopup(string id, string pollId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedView();
-
             var pollAnswer = _pollService.GetPollById(pollId).PollAnswers.Where(x => x.Id == id).FirstOrDefault();
             if (pollAnswer == null)
                 //No poll answer found with the specified id
@@ -352,9 +273,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult PollAnswerEditPopup(PollAnswerModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedView();
-
             var poll = _pollService.GetPollById(model.PollId);
             if (poll == null)
                 //No poll found with the specified id
@@ -368,7 +286,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 pollAnswer = model.ToEntity(pollAnswer);
-                pollAnswer.Locales = model.Locales.ToLocalizedProperty();
                 _pollService.UpdatePoll(poll);
 
                 ViewBag.RefreshPage = true;
@@ -379,22 +296,21 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-
         [HttpPost]
         public IActionResult PollAnswerDelete(PollAnswer answer)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedView();
-
             var pol = _pollService.GetPollById(answer.PollId);
             var pollAnswer = pol.PollAnswers.Where(x => x.Id == answer.Id).FirstOrDefault();
             if (pollAnswer == null)
                 throw new ArgumentException("No poll answer found with the specified id", "id");
+            if (ModelState.IsValid)
+            {
+                pol.PollAnswers.Remove(pollAnswer);
+                _pollService.UpdatePoll(pol);
 
-            pol.PollAnswers.Remove(pollAnswer);
-            _pollService.UpdatePoll(pol);
-
-            return new NullJsonResult();
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
 
         #endregion

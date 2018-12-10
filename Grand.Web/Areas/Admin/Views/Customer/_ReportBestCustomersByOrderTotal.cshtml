@@ -1,5 +1,6 @@
 ﻿@model BestCustomersReportModel
 @inject AdminAreaSettings adminAreaSettings
+<vc:admin-widget widget-zone="customer_details_report_by_order_total_top" additional-data="Model" />
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
@@ -43,6 +44,7 @@
     </div>
 </div>
 <div id="best-customers-ordertotal-grid"></div>
+<vc:admin-widget widget-zone="customer_details_report_by_order_total_bottom" additional-data="Model" />
 <script>
     $(document).ready(function () {
         $("#best-customers-ordertotal-grid").kendoGrid({

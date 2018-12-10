@@ -16,7 +16,7 @@
                 $.ajax({
                     cache: false,
                     type: "GET",
-                    url: "@(Url.Action("GetStatesByCountryId", "Country"))",
+                    url: "@(Url.Action("GetStatesByCountryId", "Home"))",
                     data: postData,
                     success: function(data) {
                         ddlStates.html('');
@@ -32,66 +32,67 @@
         });
     </script>
 }
-<div class="form-horizontal">
-    <div class="form-body">
-        @if (Model.UsernamesEnabled)
-        {
-            if (String.IsNullOrEmpty(Model.Id) || Model.AllowUsersToChangeUsernames)
+    <div class="form-horizontal">
+        <vc:admin-widget widget-zone="customer_details_info_top" additional-data="Model" />
+        <div class="form-body">
+            @if (Model.UsernamesEnabled)
             {
-                <div class="form-group">
-                    <admin-label asp-for="Username" />
-                    <div class="col-md-9 col-sm-9">
-                        <admin-input asp-for="Username" />
-                        <span asp-validation-for="Username"></span>
+                if (String.IsNullOrEmpty(Model.Id) || Model.AllowUsersToChangeUsernames)
+                {
+                    <div class="form-group">
+                        <admin-label asp-for="Username" />
+                        <div class="col-md-9 col-sm-9">
+                            <admin-input asp-for="Username" />
+                            <span asp-validation-for="Username"></span>
+                        </div>
                     </div>
-                </div>
+                }
+                else
+                {
+                    <div class="form-group">
+                        <admin-label asp-for="Username" />
+                        <div class="col-md-9 col-sm-9">
+                            <label class="control-label"> @Model.Username</label>
+                            <input asp-for="Username" type="hidden" />
+                        </div>
+                    </div>
+                }
             }
-            else
-            {
-                <div class="form-group">
-                    <admin-label asp-for="Username" />
-                    <div class="col-md-9 col-sm-9">
-                        <label class="control-label"> @Model.Username</label>
-                        <input asp-for="Username" type="hidden" />
-                    </div>
-                </div>
-            }
-        }
-        <div class="form-group">
-            <admin-label asp-for="Email" />
-            <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="Email" />
-                <span asp-validation-for="Email"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <admin-label asp-for="Password" />
-            <div class="col-md-9 col-sm-9">
-                <div class="input-group">
-                    <div class="input-icon">
-                        <i class="fa fa-lock fa-fw"></i>
-                        <admin-input asp-for="Password" />
-                    </div>
-                    <span class="input-group-btn">
-                        <input type="submit" name="changepassword" class="btn btn-success" value="@T("Admin.Customers.Customers.Fields.Password.Change")" />
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
-            <admin-label asp-for="CustomerTags" />
-            <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="CustomerTags" />
-                <span asp-validation-for="CustomerTags"></span>
-            </div>
-        </div>
-        @if (!String.IsNullOrEmpty(Model.Id) && Model.AssociatedExternalAuthRecords.Count > 0)
-        {
             <div class="form-group">
-                <admin-label asp-for="AssociatedExternalAuthRecords" />
+                <admin-label asp-for="Email" />
                 <div class="col-md-9 col-sm-9">
-                    <div id="externalauthrecords-grid"></div>
-                    <script>
+                    <admin-input asp-for="Email" />
+                    <span asp-validation-for="Email"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <admin-label asp-for="Password" />
+                <div class="col-md-9 col-sm-9">
+                    <div class="input-group">
+                        <div class="input-icon">
+                            <i class="fa fa-lock fa-fw"></i>
+                            <admin-input asp-for="Password" />
+                        </div>
+                        <span class="input-group-btn">
+                            <input type="submit" name="changepassword" class="btn btn-success" value="@T("Admin.Customers.Customers.Fields.Password.Change")" />
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <admin-label asp-for="CustomerTags" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="CustomerTags" />
+                    <span asp-validation-for="CustomerTags"></span>
+                </div>
+            </div>
+            @if (!String.IsNullOrEmpty(Model.Id) && Model.AssociatedExternalAuthRecords.Count > 0)
+            {
+                <div class="form-group">
+                    <admin-label asp-for="AssociatedExternalAuthRecords" />
+                    <div class="col-md-9 col-sm-9">
+                        <div id="externalauthrecords-grid"></div>
+                        <script>
 
                             //local datasource
                             var externalauthrecords = [
@@ -156,316 +157,317 @@
                                 });
                             });
 
-                    </script>
-                </div>
-            </div>
-        }
-        <div class="form-group">
-            <admin-label asp-for="VendorId" />
-            <div class="col-md-9 col-sm-9">
-                <admin-select asp-for="VendorId" asp-items="Model.AvailableVendors" />
-                <span asp-validation-for="VendorId"></span>
-                <em>@T("Admin.Customers.Customers.VendorShouldBeInVendorsRole")</em>
-            </div>
-        </div>
-        @if (Model.GenderEnabled)
-        {
-            <div class="form-group">
-                <admin-label asp-for="Gender" />
-                <div class="col-md-9 col-sm-9">
-                    <div class="gender">
-                        @Html.RadioButton("Gender", "M", (Model.Gender == "M"), new { id = "Gender_Male" })
-                        <label class="forcheckbox" for="Gender_Male">@T("Admin.Customers.Customers.Fields.Gender.Male")</label>
-                    </div>
-                    <div class="gender">
-                        @Html.RadioButton("Gender", "F", (Model.Gender == "F"), new { id = "Gender_Female" })
-                        <label class="forcheckbox" for="Gender_Female">@T("Admin.Customers.Customers.Fields.Gender.Female")</label>
+                        </script>
                     </div>
                 </div>
-            </div>
-        }
-        <div class="form-group">
-            <admin-label asp-for="FirstName" />
-            <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="FirstName" />
-                <span asp-validation-for="FirstName"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <admin-label asp-for="LastName" />
-            <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="LastName" />
-                <span asp-validation-for="LastName"></span>
-            </div>
-        </div>
-        @if (Model.DateOfBirthEnabled)
-        {
+            }
             <div class="form-group">
-                <admin-label asp-for="DateOfBirth" />
+                <admin-label asp-for="VendorId" />
                 <div class="col-md-9 col-sm-9">
-                    <admin-input asp-for="DateOfBirth" />
-                    <span asp-validation-for="DateOfBirth"></span>
+                    <admin-select asp-for="VendorId" asp-items="Model.AvailableVendors" />
+                    <span asp-validation-for="VendorId"></span>
+                    <em>@T("Admin.Customers.Customers.VendorShouldBeInVendorsRole")</em>
                 </div>
             </div>
-        }
-        @if (Model.CompanyEnabled)
-        {
-            <div class="form-group">
-                <admin-label asp-for="Company" />
-                <div class="col-md-9 col-sm-9">
-                    <admin-input asp-for="Company" />
-                    <span asp-validation-for="Company"></span>
-                </div>
-            </div>
-        }
-        @if (Model.StreetAddressEnabled)
-        {
-            <div class="form-group">
-                <admin-label asp-for="StreetAddress" />
-                <div class="col-md-9 col-sm-9">
-                    <admin-input asp-for="StreetAddress" />
-                    <span asp-validation-for="StreetAddress"></span>
-                </div>
-            </div>
-        }
-        @if (Model.StreetAddress2Enabled)
-        {
-            <div class="form-group">
-                <admin-label asp-for="StreetAddress2" />
-                <div class="col-md-9 col-sm-9">
-                    <admin-input asp-for="StreetAddress2" />
-                    <span asp-validation-for="StreetAddress2"></span>
-                </div>
-            </div>
-        }
-        @if (Model.ZipPostalCodeEnabled)
-        {
-            <div class="form-group">
-                <admin-label asp-for="ZipPostalCode" />
-                <div class="col-md-9 col-sm-9">
-                    <admin-input asp-for="ZipPostalCode" />
-                    <span asp-validation-for="ZipPostalCode"></span>
-                </div>
-            </div>
-        }
-        @if (Model.CityEnabled)
-        {
-            <div class="form-group">
-                <admin-label asp-for="City" />
-                <div class="col-md-9 col-sm-9">
-                    <admin-input asp-for="City" />
-                    <span asp-validation-for="City"></span>
-                </div>
-            </div>
-        }
-        @if (Model.CountryEnabled)
-        {
-            <div class="form-group">
-                <admin-label asp-for="CountryId" />
-                <div class="col-md-9 col-sm-9">
-                    <admin-select asp-for="CountryId" asp-items="Model.AvailableCountries" />
-                    <span asp-validation-for="CountryId"></span>
-                </div>
-            </div>
-        }
-        @if (Model.CountryEnabled && Model.StateProvinceEnabled)
-        {
-            <div class="form-group">
-                <admin-label asp-for="StateProvinceId" />
-                <div class="col-md-9 col-sm-9">
-                    <admin-select asp-for="StateProvinceId" asp-items="Model.AvailableStates" />
-                    <span asp-validation-for="StateProvinceId"></span>
-                </div>
-            </div>
-        }
-        @if (Model.PhoneEnabled)
-        {
-            <div class="form-group">
-                <admin-label asp-for="Phone" />
-                <div class="col-md-9 col-sm-9">
-                    <admin-input asp-for="Phone" />
-                    <span asp-validation-for="Phone"></span>
-                </div>
-            </div>
-        }
-        @if (Model.FaxEnabled)
-        {
-            <div class="form-group">
-                <admin-label asp-for="Fax" />
-                <div class="col-md-9 col-sm-9">
-                    <admin-input asp-for="Fax" />
-                    <span asp-validation-for="Fax"></span>
-                </div>
-            </div>
-        }
-        @if (Model.CustomerAttributes.Count > 0)
-        {
-            <div class="form-group">
-                @Html.Partial("_CustomerAttributes", Model.CustomerAttributes)
-            </div>
-        }
-        <div class="form-group">
-            <admin-label asp-for="AdminComment" />
-            <div class="col-md-9 col-sm-9">
-                <admin-textarea asp-for="AdminComment"></admin-textarea>
-                <span asp-validation-for="AdminComment"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <admin-label asp-for="IsTaxExempt" />
-            <div class="col-md-9 col-sm-9">
-                <label class="mt-checkbox mt-checkbox-outline">
-                    <admin-input asp-for="IsTaxExempt" />
-                    <span></span>
-                </label>
-                <span asp-validation-for="IsTaxExempt"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <admin-label asp-for="FreeShipping" />
-            <div class="col-md-9 col-sm-9">
-                <label class="mt-checkbox mt-checkbox-outline">
-                    <admin-input asp-for="FreeShipping" />
-                    <span></span>
-                </label>
-                <span asp-validation-for="FreeShipping"></span>
-            </div>
-        </div>
-        @if (Model.AllowCustomersToSetTimeZone)
-        {
-            <div class="form-group">
-                <admin-label asp-for="TimeZoneId" />
-                <div class="col-md-9 col-sm-9">
-                    <admin-select asp-for="TimeZoneId" asp-items="Model.AvailableTimeZones" />
-                    <span asp-validation-for="TimeZoneId"></span>
-                </div>
-            </div>
-        }
-        @if (!String.IsNullOrEmpty(Model.AffiliateId))
-        {
-            <div class="form-group">
-                <admin-label asp-for="AffiliateId" />
-                <div class="col-md-9 col-sm-9">
-                    <a class="btn default" href="@Url.Action("Edit", "Affiliate", new { id = Model.AffiliateId })">@Model.AffiliateName - @T("Admin.Common.View")</a>
-                    <input type="submit" name="remove-affiliate" class="btn red" value="@T("Admin.Customers.Customers.Fields.Affiliate.Remove")" />
-                </div>
-            </div>
-        }
-        @if (Model.DisplayVatNumber)
-        {
-            <div class="form-group">
-                <admin-label asp-for="VatNumber" />
-                <div class="col-md-9 col-sm-9">
-                    <div class="input-group-control">
-                        <admin-input asp-for="VatNumber" />
-                        <label class="control-label">
-                            (@string.Format(T("Admin.Customers.Customers.Fields.VatNumberStatus").Text, Model.VatNumberStatusNote))
-                        </label>
-                        <input type="submit" name="markVatNumberAsValid" class="btn green" value="@T("Admin.Customers.Customers.Fields.VatNumber.MarkAsValid")" />
-                        <input type="submit" name="markVatNumberAsInvalid" class="btn red" value="@T("Admin.Customers.Customers.Fields.VatNumber.MarkAsInvalid")" />
-                    </div>
-                    <span asp-validation-for="VatNumber"></span>
-                </div>
-            </div>
-        }
-        @if (Model.AvailableNewsletterSubscriptionStores != null && Model.AvailableNewsletterSubscriptionStores.Count > 0)
-        {
-            <div class="form-group">
-                <admin-label asp-for="SelectedNewsletterSubscriptionStoreIds" />
-                <div class="col-md-9 col-sm-9">
-                    @foreach (var store in Model.AvailableNewsletterSubscriptionStores)
-                    {
-                        <div>
-                            <label class="mt-checkbox mt-checkbox-outline">
-                                <input type="checkbox" name="SelectedNewsletterSubscriptionStoreIds" value="@store.Id" checked="@(Model.SelectedNewsletterSubscriptionStoreIds != null && Model.SelectedNewsletterSubscriptionStoreIds.Contains(store.Id))" />(@(store.Name))
-                                <span></span>
-                            </label>
-
+            @if (Model.GenderEnabled)
+            {
+                <div class="form-group">
+                    <admin-label asp-for="Gender" />
+                    <div class="col-md-9 col-sm-9">
+                        <div class="gender">
+                            @Html.RadioButton("Gender", "M", (Model.Gender == "M"), new { id = "Gender_Male" })
+                            <label class="forcheckbox" for="Gender_Male">@T("Admin.Customers.Customers.Fields.Gender.Male")</label>
                         </div>
+                        <div class="gender">
+                            @Html.RadioButton("Gender", "F", (Model.Gender == "F"), new { id = "Gender_Female" })
+                            <label class="forcheckbox" for="Gender_Female">@T("Admin.Customers.Customers.Fields.Gender.Female")</label>
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                <admin-label asp-for="FirstName" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="FirstName" />
+                    <span asp-validation-for="FirstName"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <admin-label asp-for="LastName" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-input asp-for="LastName" />
+                    <span asp-validation-for="LastName"></span>
+                </div>
+            </div>
+            @if (Model.DateOfBirthEnabled)
+            {
+                <div class="form-group">
+                    <admin-label asp-for="DateOfBirth" />
+                    <div class="col-md-9 col-sm-9">
+                        <admin-input asp-for="DateOfBirth" />
+                        <span asp-validation-for="DateOfBirth"></span>
+                    </div>
+                </div>
+            }
+            @if (Model.CompanyEnabled)
+            {
+                <div class="form-group">
+                    <admin-label asp-for="Company" />
+                    <div class="col-md-9 col-sm-9">
+                        <admin-input asp-for="Company" />
+                        <span asp-validation-for="Company"></span>
+                    </div>
+                </div>
+            }
+            @if (Model.StreetAddressEnabled)
+            {
+                <div class="form-group">
+                    <admin-label asp-for="StreetAddress" />
+                    <div class="col-md-9 col-sm-9">
+                        <admin-input asp-for="StreetAddress" />
+                        <span asp-validation-for="StreetAddress"></span>
+                    </div>
+                </div>
+            }
+            @if (Model.StreetAddress2Enabled)
+            {
+                <div class="form-group">
+                    <admin-label asp-for="StreetAddress2" />
+                    <div class="col-md-9 col-sm-9">
+                        <admin-input asp-for="StreetAddress2" />
+                        <span asp-validation-for="StreetAddress2"></span>
+                    </div>
+                </div>
+            }
+            @if (Model.ZipPostalCodeEnabled)
+            {
+                <div class="form-group">
+                    <admin-label asp-for="ZipPostalCode" />
+                    <div class="col-md-9 col-sm-9">
+                        <admin-input asp-for="ZipPostalCode" />
+                        <span asp-validation-for="ZipPostalCode"></span>
+                    </div>
+                </div>
+            }
+            @if (Model.CityEnabled)
+            {
+                <div class="form-group">
+                    <admin-label asp-for="City" />
+                    <div class="col-md-9 col-sm-9">
+                        <admin-input asp-for="City" />
+                        <span asp-validation-for="City"></span>
+                    </div>
+                </div>
+            }
+            @if (Model.CountryEnabled)
+            {
+                <div class="form-group">
+                    <admin-label asp-for="CountryId" />
+                    <div class="col-md-9 col-sm-9">
+                        <admin-select asp-for="CountryId" asp-items="Model.AvailableCountries" />
+                        <span asp-validation-for="CountryId"></span>
+                    </div>
+                </div>
+            }
+            @if (Model.CountryEnabled && Model.StateProvinceEnabled)
+            {
+                <div class="form-group">
+                    <admin-label asp-for="StateProvinceId" />
+                    <div class="col-md-9 col-sm-9">
+                        <admin-select asp-for="StateProvinceId" asp-items="Model.AvailableStates" />
+                        <span asp-validation-for="StateProvinceId"></span>
+                    </div>
+                </div>
+            }
+            @if (Model.PhoneEnabled)
+            {
+                <div class="form-group">
+                    <admin-label asp-for="Phone" />
+                    <div class="col-md-9 col-sm-9">
+                        <admin-input asp-for="Phone" />
+                        <span asp-validation-for="Phone"></span>
+                    </div>
+                </div>
+            }
+            @if (Model.FaxEnabled)
+            {
+                <div class="form-group">
+                    <admin-label asp-for="Fax" />
+                    <div class="col-md-9 col-sm-9">
+                        <admin-input asp-for="Fax" />
+                        <span asp-validation-for="Fax"></span>
+                    </div>
+                </div>
+            }
+            @if (Model.CustomerAttributes.Count > 0)
+            {
+                <div class="form-group">
+                    <partial name="_CustomerAttributes" model="Model.CustomerAttributes" />
+                </div>
+            }
+            <div class="form-group">
+                <admin-label asp-for="AdminComment" />
+                <div class="col-md-9 col-sm-9">
+                    <admin-textarea asp-for="AdminComment"></admin-textarea>
+                    <span asp-validation-for="AdminComment"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <admin-label asp-for="IsTaxExempt" />
+                <div class="col-md-9 col-sm-9">
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        <admin-input asp-for="IsTaxExempt" />
+                        <span></span>
+                    </label>
+                    <span asp-validation-for="IsTaxExempt"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <admin-label asp-for="FreeShipping" />
+                <div class="col-md-9 col-sm-9">
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        <admin-input asp-for="FreeShipping" />
+                        <span></span>
+                    </label>
+                    <span asp-validation-for="FreeShipping"></span>
+                </div>
+            </div>
+            @if (Model.AllowCustomersToSetTimeZone)
+            {
+                <div class="form-group">
+                    <admin-label asp-for="TimeZoneId" />
+                    <div class="col-md-9 col-sm-9">
+                        <admin-select asp-for="TimeZoneId" asp-items="Model.AvailableTimeZones" />
+                        <span asp-validation-for="TimeZoneId"></span>
+                    </div>
+                </div>
+            }
+            @if (!String.IsNullOrEmpty(Model.AffiliateId))
+            {
+                <div class="form-group">
+                    <admin-label asp-for="AffiliateId" />
+                    <div class="col-md-9 col-sm-9">
+                        <a class="btn default" href="@Url.Action("Edit", "Affiliate", new { id = Model.AffiliateId })">@Model.AffiliateName - @T("Admin.Common.View")</a>
+                        <input type="submit" name="remove-affiliate" class="btn red" value="@T("Admin.Customers.Customers.Fields.Affiliate.Remove")" />
+                    </div>
+                </div>
+            }
+            @if (Model.DisplayVatNumber)
+            {
+                <div class="form-group">
+                    <admin-label asp-for="VatNumber" />
+                    <div class="col-md-9 col-sm-9">
+                        <div class="input-group-control">
+                            <admin-input asp-for="VatNumber" />
+                            <label class="control-label">
+                                (@string.Format(T("Admin.Customers.Customers.Fields.VatNumberStatus").Text, Model.VatNumberStatusNote))
+                            </label>
+                            <input type="submit" name="markVatNumberAsValid" class="btn green" value="@T("Admin.Customers.Customers.Fields.VatNumber.MarkAsValid")" />
+                            <input type="submit" name="markVatNumberAsInvalid" class="btn red" value="@T("Admin.Customers.Customers.Fields.VatNumber.MarkAsInvalid")" />
+                        </div>
+                        <span asp-validation-for="VatNumber"></span>
+                    </div>
+                </div>
+            }
+            @if (Model.AvailableNewsletterSubscriptionStores != null && Model.AvailableNewsletterSubscriptionStores.Count > 0)
+            {
+                <div class="form-group">
+                    <admin-label asp-for="SelectedNewsletterSubscriptionStoreIds" />
+                    <div class="col-md-9 col-sm-9">
+                        @foreach (var store in Model.AvailableNewsletterSubscriptionStores)
+                        {
+                            <div>
+                                <label class="mt-checkbox mt-checkbox-outline">
+                                    <input type="checkbox" name="SelectedNewsletterSubscriptionStoreIds" value="@store.Id" checked="@(Model.SelectedNewsletterSubscriptionStoreIds != null && Model.SelectedNewsletterSubscriptionStoreIds.Contains(store.Id))" />(@(store.Name))
+                                    <span></span>
+                                </label>
 
-                    }
+                            </div>
+
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="note note-info">
+                    @T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")
+                </div>
+            }
+            <div class="form-group">
+                <admin-label asp-for="Active" />
+                <div class="col-md-9 col-sm-9">
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        <admin-input asp-for="Active" />
+                        <span></span>
+                    </label>
+                    <span asp-validation-for="Active"></span>
                 </div>
             </div>
-        }
-        else
-        {
-            <div class="note note-info">
-                @T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")
-            </div>
-        }
-        <div class="form-group">
-            <admin-label asp-for="Active" />
-            <div class="col-md-9 col-sm-9">
-                <label class="mt-checkbox mt-checkbox-outline">
-                    <admin-input asp-for="Active" />
-                    <span></span>
-                </label>
-                <span asp-validation-for="Active"></span>
-            </div>
+            @if (!String.IsNullOrEmpty(Model.Id))
+            {
+                <div class="form-group">
+                    <admin-label asp-for="LastIpAddress" />
+                    <div class="col-md-9 col-sm-9">
+                        <label class="control-label">@Model.LastIpAddress</label>
+                    </div>
+                </div>
+            }
+            @if (!String.IsNullOrEmpty(Model.Id) && !String.IsNullOrEmpty(Model.UrlReferrer))
+            {
+                <div class="form-group">
+                    <admin-label asp-for="UrlReferrer" />
+                    <div class="col-md-9 col-sm-9">
+                        <label class="control-label">@Model.UrlReferrer</label>
+                    </div>
+                </div>
+            }
+            @if (!String.IsNullOrEmpty(Model.Id))
+            {
+                <div class="form-group">
+                    <admin-label asp-for="CreatedOn" />
+                    <div class="col-md-9 col-sm-9">
+                        <label class="control-label">@Model.CreatedOn</label>
+                    </div>
+                </div>
+            }
+            @if (!String.IsNullOrEmpty(Model.Id))
+            {
+                <div class="form-group">
+                    <admin-label asp-for="LastActivityDate" />
+                    <div class="col-md-9 col-sm-9">
+                        <label class="control-label">@Model.LastActivityDate</label>
+                    </div>
+                </div>
+            }
+            @if (!String.IsNullOrEmpty(Model.Id) && !String.IsNullOrEmpty(Model.LastVisitedPage))
+            {
+                <div class="form-group">
+                    <admin-label asp-for="LastVisitedPage" />
+                    <div class="col-md-9 col-sm-9">
+                        <label class="control-label">@Model.LastVisitedPage</label>
+                    </div>
+                </div>
+            }
+            @if (!String.IsNullOrEmpty(Model.Id) && !String.IsNullOrEmpty(Model.LastUrlReferrer))
+            {
+                <div class="form-group">
+                    <admin-label asp-for="LastUrlReferrer" />
+                    <div class="col-md-9 col-sm-9">
+                        <label class="control-label">@Model.LastUrlReferrer</label>
+                    </div>
+                </div>
+            }
+            @if (!String.IsNullOrEmpty(Model.Id) && Model.LastPurchaseDate.HasValue)
+            {
+                <div class="form-group">
+                    <admin-label asp-for="LastPurchaseDate" />
+                    <div class="col-md-9 col-sm-9">
+                        <label class="control-label">@Model.LastPurchaseDate</label>
+                    </div>
+                </div>
+            }
         </div>
-        @if (!String.IsNullOrEmpty(Model.Id))
-        {
-            <div class="form-group">
-                <admin-label asp-for="LastIpAddress" />
-                <div class="col-md-9 col-sm-9">
-                    <label class="control-label">@Model.LastIpAddress</label>
-                </div>
-            </div>
-        }
-        @if (!String.IsNullOrEmpty(Model.Id) && !String.IsNullOrEmpty(Model.UrlReferrer))
-        {
-            <div class="form-group">
-                <admin-label asp-for="UrlReferrer" />
-                <div class="col-md-9 col-sm-9">
-                    <label class="control-label">@Model.UrlReferrer</label>
-                </div>
-            </div>
-        }
-        @if (!String.IsNullOrEmpty(Model.Id))
-        {
-            <div class="form-group">
-                <admin-label asp-for="CreatedOn" />
-                <div class="col-md-9 col-sm-9">
-                    <label class="control-label">@Model.CreatedOn</label>
-                </div>
-            </div>
-        }
-        @if (!String.IsNullOrEmpty(Model.Id))
-        {
-            <div class="form-group">
-                <admin-label asp-for="LastActivityDate" />
-                <div class="col-md-9 col-sm-9">
-                    <label class="control-label">@Model.LastActivityDate</label>
-                </div>
-            </div>
-        }
-        @if (!String.IsNullOrEmpty(Model.Id) && !String.IsNullOrEmpty(Model.LastVisitedPage))
-        {
-            <div class="form-group">
-                <admin-label asp-for="LastVisitedPage" />
-                <div class="col-md-9 col-sm-9">
-                    <label class="control-label">@Model.LastVisitedPage</label>
-                </div>
-            </div>
-        }
-        @if (!String.IsNullOrEmpty(Model.Id) && !String.IsNullOrEmpty(Model.LastUrlReferrer))
-        {
-            <div class="form-group">
-                <admin-label asp-for="LastUrlReferrer" />
-                <div class="col-md-9 col-sm-9">
-                    <label class="control-label">@Model.LastUrlReferrer</label>
-                </div>
-            </div>
-        }
-        @if (!String.IsNullOrEmpty(Model.Id) && Model.LastPurchaseDate.HasValue)
-        {
-            <div class="form-group">
-                <admin-label asp-for="LastPurchaseDate" />
-                <div class="col-md-9 col-sm-9">
-                    <label class="control-label">@Model.LastPurchaseDate</label>
-                </div>
-            </div>
-        }
+        <vc:admin-widget widget-zone="customer_details_info_bottom" additional-data="Model" />
     </div>
-</div>
 

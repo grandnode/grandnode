@@ -1,0 +1,98 @@
+﻿@using Grand.Core.Domain.Catalog
+@model ProductModel.ProductAttributeMappingModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
+    //page title
+    ViewBag.Title = T("Admin.Catalog.Products.ProductAttributes.Details").Text;
+}
+<form asp-controller="Product" asp-action="ProductAttributeMappingPopup" enctype="multipart/form-data" method="post"
+      asp-route-ProductId="@Context.Request.Query["ProductId"]"
+      asp-route-productAttributeMappingId="@Context.Request.Query["ProductAttributeMappingId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
+
+    <antiforgery-token />
+    <div asp-validation-summary="All"></div>
+    <input asp-for="ProductId" type="hidden" />
+    <input asp-for="Id" type="hidden" />
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-cubes"></i>
+                        @if (string.IsNullOrEmpty(Model.Id))
+                        {
+                            <text> @T("Admin.Catalog.Products.ProductAttributes.AddNew")</text>
+                        }
+                        else
+                        {
+                            <text>@T("Admin.Catalog.Products.ProductAttributes.Edit")</text>
+                        }
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                <admin-label asp-for="ProductAttribute" />
+                                <div class="col-md-9 col-sm-9">
+                                    <admin-select asp-for="ProductAttributeId" asp-items="Model.AvailableProductAttribute" />
+                                    <span asp-validation-for="ProductAttributeId"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <admin-label asp-for="TextPrompt" />
+                                <div class="col-md-9 col-sm-9">
+                                    <admin-input asp-for="TextPrompt" />
+                                    <span asp-validation-for="TextPrompt"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <admin-label asp-for="IsRequired" class="col-sm-3 control-label" />
+                                <div class="col-md-9 col-sm-9">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        <admin-input asp-for="IsRequired" />
+                                        <span></span>
+                                    </label>
+                                    <span asp-validation-for="IsRequired"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <admin-label asp-for="AttributeControlType" />
+                                <div class="col-md-9 col-sm-9">
+                                    <admin-select asp-for="AttributeControlTypeId" asp-items="((AttributeControlType)Model.AttributeControlTypeId).ToSelectList()" />
+                                    <span asp-validation-for="AttributeControlTypeId"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <admin-label asp-for="DisplayOrder" />
+                                <div class="col-md-9 col-sm-9">
+                                    <admin-input asp-for="DisplayOrder" />
+                                    <span asp-validation-for="DisplayOrder"></span>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <div class="row">
+                                    <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
+                                        <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @if (ViewBag.RefreshPage == true)
+    {
+        <script type="text/javascript">
+            try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
+            catch (e){}
+            window.close();
+        </script>
+    }
+</form>

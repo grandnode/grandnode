@@ -11,7 +11,7 @@
                 <div class="portlet-title">
                     <div class="caption">
                         <i class="fa fa-sitemap"></i>
-                        @T("Admin.Catalog.Categories.EditCategoryDetails") - @Model.Name 
+                        @T("Admin.Catalog.Categories.EditCategoryDetails") - @Model.Name
                         <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Catalog.Categories.BackToList").Text, "List")</small>
                     </div>
                     <div class="actions">
@@ -26,8 +26,9 @@
                         </div>
                     </div>
                 </div>
+                <vc:admin-widget widget-zone="category_details_buttons" additional-data="Model" />
                 <div class="portlet-body form">
-                    @Html.Partial("_CreateOrUpdate", Model)
+                    <partial name="_CreateOrUpdate" model="Model" />
                 </div>
             </div>
         </div>

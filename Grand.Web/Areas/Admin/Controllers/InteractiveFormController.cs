@@ -3,12 +3,12 @@ using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Messages;
 using Grand.Services.Security;
 using Grand.Web.Areas.Admin.Extensions;
-using Grand.Web.Areas.Admin.Helpers;
 using Grand.Web.Areas.Admin.Models.Messages;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -17,10 +17,10 @@ using System.Text;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.InteractiveForms)]
     public partial class InteractiveFormController : BaseAdminController
     {
         private readonly IInteractiveFormService _interactiveFormService;
-        private readonly IPermissionService _permissionService;
         private readonly ILocalizationService _localizationService;
         private readonly ILanguageService _languageService;
         private readonly ICustomerActivityService _customerActivityService;
@@ -28,14 +28,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public InteractiveFormController(IInteractiveFormService interactiveFormService,
             ILocalizationService localizationService,
-            IPermissionService permissionService,
             ILanguageService languageService,
             ICustomerActivityService customerActivityService,
             IEmailAccountService emailAccountService)
         {
             this._interactiveFormService = interactiveFormService;
             this._localizationService = localizationService;
-            this._permissionService = permissionService;
             this._languageService = languageService;
             this._customerActivityService = customerActivityService;
             this._emailAccountService = emailAccountService;
@@ -67,18 +65,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageInteractiveForm))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageBanners))
-                return AccessDeniedView();
-
             var forms = _interactiveFormService.GetAllForms();
             var gridModel = new DataSourceResult
             {
@@ -98,9 +90,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageInteractiveForm))
-                return AccessDeniedView();
-
             var model = new InteractiveFormModel();
             //locales
             AddLocales(_languageService, model.Locales);
@@ -114,14 +103,10 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Create(InteractiveFormModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageInteractiveForm))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var form = model.ToEntity();
                 form.CreatedOnUtc = DateTime.UtcNow;
-                form.Locales = model.Locales.ToLocalizedProperty();
 
                 _interactiveFormService.InsertForm(form);
                 _customerActivityService.InsertActivity("InteractiveFormAdd", form.Id, _localizationService.GetResource("ActivityLog.InteractiveFormAdd"), form.Name);
@@ -139,9 +124,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageInteractiveForm))
-                return AccessDeniedView();
-
             var form = _interactiveFormService.GetFormById(id);
             if (form == null)
                 return RedirectToAction("List");
@@ -167,9 +149,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public IActionResult Edit(InteractiveFormModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageBanners))
-                return AccessDeniedView();
-
             var form = _interactiveFormService.GetFormById(model.Id);
             if (form == null)
                 return RedirectToAction("List");
@@ -177,7 +156,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 form = model.ToEntity(form);
-                form.Locales = model.Locales.ToLocalizedProperty();
                 _interactiveFormService.UpdateForm(form);
 
                 _customerActivityService.InsertActivity("InteractiveFormEdit", form.Id, _localizationService.GetResource("ActivityLog.InteractiveFormUpdate"), form.Name);
@@ -204,9 +182,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageInteractiveForm))
-                return AccessDeniedView();
-
             var form = _interactiveFormService.GetFormById(id);
             if (form == null)
                 return RedirectToAction("List");
@@ -225,9 +200,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult FormAttributesList(string formId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageInteractiveForm))
-                return AccessDeniedView();
-
             var form = _interactiveFormService.GetFormById(formId);
             if (form == null)
                 return RedirectToAction("List");
@@ -249,9 +221,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult FormAttributesDelete(string id, string formId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
-
             var form = _interactiveFormService.GetFormById(formId);
             if (form == null)
                 return RedirectToAction("List");
@@ -270,9 +239,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult AddAttribute(string formId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageInteractiveForm))
-                return AccessDeniedView();
-
             InteractiveFormAttributeModel model = new InteractiveFormAttributeModel();
             model.FormId = formId;
 
@@ -283,9 +249,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult AddAttribute(InteractiveFormAttributeModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageInteractiveForm))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var form = _interactiveFormService.GetFormById(model.FormId);
@@ -294,7 +257,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                     return RedirectToAction("List");
                 }
                 var attribute = model.ToEntity();
-                attribute.Locales = model.Locales.ToLocalizedProperty();
                 form.FormAttributes.Add(attribute);
                 _interactiveFormService.UpdateForm(form);
 
@@ -310,9 +272,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult EditAttribute(string formId, string aid)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageInteractiveForm))
-                return AccessDeniedView();
-
             var form = _interactiveFormService.GetFormById(formId);
             if (form == null)
                 return RedirectToAction("List");
@@ -335,9 +294,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult EditAttribute(string formId, InteractiveFormAttributeModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageInteractiveForm))
-                return AccessDeniedView();
-
             var form = _interactiveFormService.GetFormById(formId);
             if (form == null)
                 return RedirectToAction("List");
@@ -350,11 +306,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (ModelState.IsValid)
                 {
                     attribute = model.ToEntity(attribute);
-                    attribute.Locales = model.Locales.ToLocalizedProperty();
                     _interactiveFormService.UpdateForm(form);
-
                     _customerActivityService.InsertActivity("InteractiveFormEdit", attribute.Id, _localizationService.GetResource("ActivityLog.InteractiveFormUpdateAttribute"), attribute.Name);
-
                     SuccessNotification(_localizationService.GetResource("Admin.Promotions.InteractiveForms.Attribute.Updated"));
                     return continueEditing ? RedirectToAction("EditAttribute", new { formId = form.Id, aid = attribute.Id }) : RedirectToAction("Edit", new { id = form.Id });
                 }
@@ -374,8 +327,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult AttributeValuesList(string formId, string aId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageInteractiveForm))
-                return AccessDeniedView();
             var form = _interactiveFormService.GetFormById(formId);
             if (form == null)
                 return RedirectToAction("List");
@@ -396,9 +347,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ValueCreatePopup(string form, string aId, string btnId, string formId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageInteractiveForm))
-                return AccessDeniedView();
-
             var fo = _interactiveFormService.GetFormById(form);
             if (fo == null)
                 return RedirectToAction("List");
@@ -421,9 +369,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ValueCreatePopup(string btnId, string formId, string form, string aId, InteractiveFormAttributeValueModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageInteractiveForm))
-                return AccessDeniedView();
-
             var fo = _interactiveFormService.GetFormById(form);
             if (fo == null)
                 return RedirectToAction("List");
@@ -433,13 +378,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var vaf = new InteractiveForm.FormAttributeValue
-                {
-                    Name = model.Name,
-                    IsPreSelected = model.IsPreSelected,
-                    DisplayOrder = model.DisplayOrder,
-                };
-                vaf.Locales = model.Locales.ToLocalizedProperty();
+                var vaf = model.ToEntity();
                 attribute.FormAttributeValues.Add(vaf);
                 _interactiveFormService.UpdateForm(fo);
                 _customerActivityService.InsertActivity("InteractiveFormEdit", vaf.Id, _localizationService.GetResource("ActivityLog.InteractiveFormAddAttributeValue"), vaf.Name);
@@ -456,9 +395,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit
         public IActionResult ValueEditPopup(string id, string form, string aId, string formId, string btnId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageInteractiveForm))
-                return AccessDeniedView();
-
             var fo = _interactiveFormService.GetFormById(form);
             if (fo == null)
                 return RedirectToAction("List");
@@ -470,16 +406,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (vaf == null)
                 return RedirectToAction("List");
 
-            var model = new InteractiveFormAttributeValueModel
-            {
-                Id = vaf.Id,
-                Name = vaf.Name,
-                IsPreSelected = vaf.IsPreSelected,
-                DisplayOrder = vaf.DisplayOrder,
-                FormId = fo.Id,
-                AttributeId = aId,
-            };
-
+            var model = vaf.ToModel();
+            model.FormId = fo.Id;
+            model.AttributeId = aId;
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = vaf.GetLocalized(x => x.Name, languageId, false, false);
@@ -493,9 +422,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ValueEditPopup(string btnId, string formId, string form, string aId, InteractiveFormAttributeValueModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageInteractiveForm))
-                return AccessDeniedView();
-
             var fo = _interactiveFormService.GetFormById(form);
             if (fo == null)
                 return RedirectToAction("List");
@@ -509,14 +435,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                vaf.Name = model.Name;
-                vaf.IsPreSelected = model.IsPreSelected;
-                vaf.DisplayOrder = model.DisplayOrder;
-                vaf.Locales = model.Locales.ToLocalizedProperty();
+                vaf = model.ToEntity();
                 _interactiveFormService.UpdateForm(fo);
-
                 _customerActivityService.InsertActivity("InteractiveFormEdit", vaf.Id, _localizationService.GetResource("ActivityLog.InteractiveFormUpdateAttributeValue"), vaf.Name);
-
                 ViewBag.RefreshPage = true;
                 ViewBag.btnId = btnId;
                 ViewBag.formId = formId;
@@ -529,9 +450,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult AttributeValuesDelete(string id, string formId, string aId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageInteractiveForm))
-                return AccessDeniedView();
-
             var form = _interactiveFormService.GetFormById(formId);
             if (form == null)
                 return RedirectToAction("List");

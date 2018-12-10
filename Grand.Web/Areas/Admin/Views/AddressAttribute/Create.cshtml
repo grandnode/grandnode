@@ -20,9 +20,10 @@
                             <button class="btn btn-success" type="submit" name="save-continue"><i class="fa fa-check-circle"></i> @T("Admin.Common.SaveContinue") </button>
                         </div>
                     </div>
+                    <vc:admin-widget widget-zone="address_attribute_details_buttons" additional-data="null" />
                 </div>
                 <div class="portlet-body form">
-                    @Html.Partial("_CreateOrUpdate", Model)
+                   <partial name="_CreateOrUpdate" model="Model" />
                 </div>
             </div>
         </div>

@@ -4,10 +4,13 @@ using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
+using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Seo;
 using Grand.Services.Configuration;
 using Grand.Services.Customers;
+using Grand.Services.Directory;
+using Grand.Services.Localization;
 using Grand.Services.Orders;
 using Grand.Web.Areas.Admin.Models.Home;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +23,7 @@ namespace Grand.Web.Areas.Admin.Controllers
     public partial class HomeController : BaseAdminController
     {
         #region Fields
+        private readonly ILocalizationService _localizationService;
         private readonly IStoreContext _storeContext;
         private readonly CommonSettings _commonSettings;
         private readonly GoogleAnalyticsSettings _googleAnalyticsSettings;
@@ -35,7 +39,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Ctor
 
-        public HomeController(IStoreContext storeContext, 
+        public HomeController(
+            ILocalizationService localizationService,
+            IStoreContext storeContext, 
             CommonSettings commonSettings,
             GoogleAnalyticsSettings googleAnalyticsSettings,
             ISettingService settingService,
@@ -46,6 +52,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             IRepository<Product> productRepository,
             IRepository<ReturnRequest> returnRequestRepository)
         {
+            this._localizationService = localizationService;
             this._storeContext = storeContext;
             this._commonSettings = commonSettings;
             this._googleAnalyticsSettings = googleAnalyticsSettings;
@@ -112,6 +119,74 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             var model = PrepareActivityModel();
             return PartialView(model);
+        }
+
+        public IActionResult SetLanguage(string langid, [FromServices] ILanguageService languageService, string returnUrl = "")
+        {
+            var language = languageService.GetLanguageById(langid);
+            if (language != null)
+            {
+                _workContext.WorkingLanguage = language;
+            }
+
+            //home page
+            if (String.IsNullOrEmpty(returnUrl))
+                returnUrl = Url.Action("Index", "Home", new { area = "Admin" });
+            //prevent open redirection attack
+            if (!Url.IsLocalUrl(returnUrl))
+                return RedirectToAction("Index", "Home", new { area = "Admin" });
+            return Redirect(returnUrl);
+        }
+        [AcceptVerbs("Get")]
+        public IActionResult GetStatesByCountryId([FromServices] ICountryService countryService, [FromServices] IStateProvinceService stateProvinceService,
+            string countryId, bool? addSelectStateItem, bool? addAsterisk)
+        {
+            // This action method gets called via an ajax request
+            if (String.IsNullOrEmpty(countryId))
+                return Json(new List<dynamic>() { new { id = "", name = _localizationService.GetResource("Address.SelectState") } });
+
+            var country = countryService.GetCountryById(countryId);
+            var states = country != null ? stateProvinceService.GetStateProvincesByCountryId(country.Id, showHidden: true).ToList() : new List<StateProvince>();
+            var result = (from s in states
+                          select new { id = s.Id, name = s.Name }).ToList();
+            if (addAsterisk.HasValue && addAsterisk.Value)
+            {
+                //asterisk
+                result.Insert(0, new { id = "", name = "*" });
+            }
+            else
+            {
+                if (country == null)
+                {
+                    //country is not selected ("choose country" item)
+                    if (addSelectStateItem.HasValue && addSelectStateItem.Value)
+                    {
+                        result.Insert(0, new { id = "", name = _localizationService.GetResource("Admin.Address.SelectState") });
+                    }
+                    else
+                    {
+                        result.Insert(0, new { id = "", name = _localizationService.GetResource("Admin.Address.OtherNonUS") });
+                    }
+                }
+                else
+                {
+                    //some country is selected
+                    if (result.Count == 0)
+                    {
+                        //country does not have states
+                        result.Insert(0, new { id = "", name = _localizationService.GetResource("Admin.Address.OtherNonUS") });
+                    }
+                    else
+                    {
+                        //country has some states
+                        if (addSelectStateItem.HasValue && addSelectStateItem.Value)
+                        {
+                            result.Insert(0, new { id = "", name = _localizationService.GetResource("Admin.Address.SelectState") });
+                        }
+                    }
+                }
+            }
+            return Json(result);
         }
 
         #endregion

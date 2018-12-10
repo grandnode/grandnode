@@ -1,132 +1,67 @@
-﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Customers;
+﻿using Grand.Core.Domain.Catalog;
 using Grand.Framework.Controllers;
-using Grand.Framework.Extensions;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Catalog;
 using Grand.Services.Customers;
-using Grand.Services.Helpers;
 using Grand.Services.Localization;
-using Grand.Services.Logging;
 using Grand.Services.Messages;
 using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Services.Vendors;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Customers;
+using Grand.Web.Areas.Admin.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Reminders)]
     public partial class CustomerReminderController : BaseAdminController
     {
         #region Fields
-
+        private readonly ICustomerReminderViewModelService _customerReminderViewModelService;
         private readonly ICustomerService _customerService;
         private readonly ICustomerAttributeService _customerAttributeService;
         private readonly ICustomerTagService _customerTagService;
         private readonly ILocalizationService _localizationService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly IPermissionService _permissionService;
-        private readonly IProductService _productService;
-        private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IStoreService _storeService;
         private readonly IVendorService _vendorService;
-        private readonly IWorkContext _workContext;
         private readonly ICustomerReminderService _customerReminderService;
-        private readonly IMessageTemplateService _messageTemplateService;
         private readonly IEmailAccountService _emailAccountService;
-        private readonly IDateTimeHelper _dateTimeHelper;
 
         #endregion
 
         #region Constructors
 
-        public CustomerReminderController(ICustomerService customerService,
+        public CustomerReminderController(
+            ICustomerReminderViewModelService customerReminderViewModelService,
+            ICustomerService customerService,
             ICustomerAttributeService customerAttributeService,
             ICustomerTagService customerTagService,
             ILocalizationService localizationService,
-            ICustomerActivityService customerActivityService,
-            IPermissionService permissionService,
-            IProductService productService,
-            ICategoryService categoryService,
             IManufacturerService manufacturerService,
             IStoreService storeService,
             IVendorService vendorService,
-            IWorkContext workContext,
             ICustomerReminderService customerReminderService,
-            IMessageTemplateService messageTemplateService,
-            IEmailAccountService emailAccountService,
-            IDateTimeHelper dateTimeHelper)
+            IEmailAccountService emailAccountService)
         {
+            this._customerReminderViewModelService = customerReminderViewModelService;
             this._customerService = customerService;
             this._customerAttributeService = customerAttributeService;
             this._customerTagService = customerTagService;
             this._localizationService = localizationService;
-            this._customerActivityService = customerActivityService;
-            this._permissionService = permissionService;
-            this._productService = productService;
-            this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
             this._storeService = storeService;
             this._vendorService = vendorService;
-            this._workContext = workContext;
             this._customerReminderService = customerReminderService;
-            this._messageTemplateService = messageTemplateService;
             this._emailAccountService = emailAccountService;
-            this._dateTimeHelper = dateTimeHelper;
-        }
-
-        #endregion
-
-        #region Utilities
-
-        protected virtual void PrepareModel(CustomerReminderModel.ReminderLevelModel model, CustomerReminder customerReminder)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            var emailAccounts = _emailAccountService.GetAllEmailAccounts();
-            foreach (var item in emailAccounts)
-            {
-                model.EmailAccounts.Add(new SelectListItem
-                {
-                    Text = item.Email,
-                    Value = item.Id.ToString()
-                });
-            }
-
-            var messageTokenProvider = Grand.Core.Infrastructure.EngineContext.Current.Resolve<IMessageTokenProvider>();
-            model.AllowedTokens = messageTokenProvider.GetListOfCustomerReminderAllowedTokens(customerReminder.ReminderRule);
-        }
-
-        public class SerializeCustomerReminderHistoryModel
-        {
-            public string Id { get; set; }
-            public string Email { get; set; }
-            public DateTime SendDate { get; set; }
-            public int Level { get; set; }
-            public bool OrderId { get; set; }
-        }
-
-        protected virtual SerializeCustomerReminderHistoryModel PrepareHistoryModelForList(SerializeCustomerReminderHistory history)
-        {
-            return new SerializeCustomerReminderHistoryModel
-            {
-                Id = history.Id,
-                Email = _customerService.GetCustomerById(history.CustomerId).Email,
-                SendDate = _dateTimeHelper.ConvertToUserTime(history.SendDate, DateTimeKind.Utc),
-                Level = history.Level,
-                OrderId = !String.IsNullOrEmpty(history.OrderId)
-            };
         }
 
         #endregion
@@ -140,18 +75,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var customeractions = _customerReminderService.GetCustomerReminders();
             var gridModel = new DataSourceResult
             {
@@ -163,43 +92,25 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-            var model = new CustomerReminderModel();
-            model.StartDateTimeUtc = DateTime.UtcNow;
-            model.EndDateTimeUtc = DateTime.UtcNow.AddMonths(1);
-            model.LastUpdateDate = DateTime.UtcNow.AddDays(-7);
-            model.Active = true;
+            var model = _customerReminderViewModelService.PrepareCustomerReminderModel();
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Create(CustomerReminderModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
-                var customerreminder = model.ToEntity();
-                _customerReminderService.InsertCustomerReminder(customerreminder);
-
-                //activity log
-                _customerActivityService.InsertActivity("AddNewCustomerReminder", customerreminder.Id, _localizationService.GetResource("ActivityLog.AddNewCustomerReminder"), customerreminder.Name);
-
+                var customerreminder = _customerReminderViewModelService.InsertCustomerReminderModel(model);
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerReminder.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = customerreminder.Id }) : RedirectToAction("List");
             }
-
             //If we got this far, something failed, redisplay form
             return View(model);
         }
 
         public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var customerReminder = _customerReminderService.GetCustomerReminderById(id);
             if (customerReminder == null)
                 return RedirectToAction("List");
@@ -211,9 +122,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult Edit(CustomerReminderModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var customerreminder = _customerReminderService.GetCustomerReminderById(model.Id);
             if (customerreminder == null)
                 return RedirectToAction("List");
@@ -221,15 +129,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    if (customerreminder.Conditions.Count() > 0)
-                        model.ReminderRuleId = customerreminder.ReminderRuleId;
-                    if (model.ReminderRuleId == 0)
-                        model.ReminderRuleId = customerreminder.ReminderRuleId;
-
-                    customerreminder = model.ToEntity(customerreminder);
-                    _customerReminderService.UpdateCustomerReminder(customerreminder);
-                    _customerActivityService.InsertActivity("EditCustomerReminder", customerreminder.Id, _localizationService.GetResource("ActivityLog.EditCustomerReminder"), customerreminder.Name);
-
+                    customerreminder = _customerReminderViewModelService.UpdateCustomerReminderModel(customerreminder, model);
                     SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerReminder.Updated"));
                     return continueEditing ? RedirectToAction("Edit", new { id = customerreminder.Id }) : RedirectToAction("List");
                 }
@@ -245,27 +145,11 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Run(string Id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-            var model = _customerReminderService.GetCustomerReminderById(Id);
-            if (model == null)
+            var reminder = _customerReminderService.GetCustomerReminderById(Id);
+            if (reminder == null)
                 return RedirectToAction("List");
 
-            if (model.ReminderRule == CustomerReminderRuleEnum.AbandonedCart)
-                _customerReminderService.Task_AbandonedCart(model.Id);
-
-            if (model.ReminderRule == CustomerReminderRuleEnum.Birthday)
-                _customerReminderService.Task_Birthday(model.Id);
-
-            if (model.ReminderRule == CustomerReminderRuleEnum.LastActivity)
-                _customerReminderService.Task_LastActivity(model.Id);
-
-            if (model.ReminderRule == CustomerReminderRuleEnum.LastPurchase)
-                _customerReminderService.Task_LastPurchase(model.Id);
-
-            if (model.ReminderRule == CustomerReminderRuleEnum.RegisteredCustomer)
-                _customerReminderService.Task_RegisteredCustomer(model.Id);
-
+            _customerReminderViewModelService.RunReminder(reminder);
             SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerReminder.Run"));
             return RedirectToAction("Edit", new { id = Id });
         }
@@ -273,18 +157,21 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var customerReminder = _customerReminderService.GetCustomerReminderById(id);
             if (customerReminder == null)
                 return RedirectToAction("List");
             try
             {
-                _customerActivityService.InsertActivity("DeleteCustomerReminder", customerReminder.Id, _localizationService.GetResource("ActivityLog.DeleteCustomerReminder"), customerReminder.Name);
-                _customerReminderService.DeleteCustomerReminder(customerReminder);
-                SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerReminder.Deleted"));
-                return RedirectToAction("List");
+                if (ModelState.IsValid)
+                {
+                    _customerReminderViewModelService.DeleteCustomerReminder(customerReminder);
+                    SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerReminder.Deleted"));
+                    return RedirectToAction("List");
+                }
+                else
+                {
+                    return RedirectToAction("Edit", new { id = id });
+                }
             }
             catch (Exception exc)
             {
@@ -297,15 +184,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult History(DataSourceRequest command, string customerReminderId)
         {
             //we use own own binder for searchCustomerRoleIds property 
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var history = _customerReminderService.GetAllCustomerReminderHistory(customerReminderId,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize);
             var gridModel = new DataSourceResult
             {
-                Data = history.Select(PrepareHistoryModelForList),
+                Data = history.Select(x => _customerReminderViewModelService.PrepareHistoryModelForList(x)),
                 Total = history.TotalCount
             };
 
@@ -319,9 +203,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Conditions(string customerReminderId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
             var gridModel = new DataSourceResult
             {
@@ -334,37 +215,11 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult AddCondition(string customerReminderId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
+            if (customerReminder == null)
+                return RedirectToAction("Edit", new { id = customerReminderId });
 
-            var model = new CustomerReminderModel.ConditionModel();
-            model.CustomerReminderId = customerReminderId;
-            foreach (CustomerReminderConditionTypeEnum item in Enum.GetValues(typeof(CustomerReminderConditionTypeEnum)))
-            {
-                if (customerReminder.ReminderRule == CustomerReminderRuleEnum.AbandonedCart || customerReminder.ReminderRule == CustomerReminderRuleEnum.CompletedOrder
-                    || customerReminder.ReminderRule == CustomerReminderRuleEnum.UnpaidOrder)
-                    model.ConditionType.Add(new SelectListItem()
-                    {
-                        Value = ((int)item).ToString(),
-                        Text = item.ToString()
-                    });
-                else
-                {
-                    if (item != CustomerReminderConditionTypeEnum.Product &&
-                        item != CustomerReminderConditionTypeEnum.Manufacturer &&
-                        item != CustomerReminderConditionTypeEnum.Category)
-                    {
-                        model.ConditionType.Add(new SelectListItem()
-                        {
-                            Value = ((int)item).ToString(),
-                            Text = item.ToString()
-                        });
-
-                    }
-                }
-            }
+            var model = _customerReminderViewModelService.PrepareConditionModel(customerReminder);
             return View(model);
 
         }
@@ -372,9 +227,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult AddCondition(CustomerReminderModel.ConditionModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var customerReminder = _customerReminderService.GetCustomerReminderById(model.CustomerReminderId);
@@ -382,18 +234,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     return RedirectToAction("List");
                 }
-
-                var condition = new CustomerReminder.ReminderCondition()
-                {
-                    Name = model.Name,
-                    ConditionTypeId = model.ConditionTypeId,
-                    ConditionId = model.ConditionId,
-                };
-                customerReminder.Conditions.Add(condition);
-                _customerReminderService.UpdateCustomerReminder(customerReminder);
-
-                _customerActivityService.InsertActivity("AddNewCustomerReminderCondition", customerReminder.Id, _localizationService.GetResource("ActivityLog.AddNewCustomerReminder"), customerReminder.Name);
-
+                var condition = _customerReminderViewModelService.InsertConditionModel(customerReminder, model);
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerReminder.Condition.Added"));
 
                 return continueEditing ? RedirectToAction("EditCondition", new { customerReminderId = customerReminder.Id, cid = condition.Id }) : RedirectToAction("Edit", new { id = customerReminder.Id });
@@ -402,12 +243,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-
         public IActionResult EditCondition(string customerReminderId, string cid)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
             if (customerReminder == null)
                 return RedirectToAction("List");
@@ -415,17 +252,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == cid);
             if (condition == null)
                 return RedirectToAction("List");
-
-            var model = condition.ToModel();
-            model.CustomerReminderId = customerReminder.Id;
-            foreach (CustomerReminderConditionTypeEnum item in Enum.GetValues(typeof(CustomerReminderConditionTypeEnum)))
-            {
-                model.ConditionType.Add(new SelectListItem()
-                {
-                    Value = ((int)item).ToString(),
-                    Text = item.ToString()
-                });
-            }
+            var model = _customerReminderViewModelService.PrepareConditionModel(customerReminder, condition);
             return View(model);
         }
 
@@ -443,11 +270,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    condition = model.ToEntity(condition);
-                    _customerReminderService.UpdateCustomerReminder(customerReminder);
-
-                    _customerActivityService.InsertActivity("EditCustomerReminderCondition", customerReminder.Id, _localizationService.GetResource("ActivityLog.EditCustomerReminderCondition"), customerReminder.Name);
-
+                    condition = _customerReminderViewModelService.UpdateConditionModel(customerReminder, condition, model);
                     SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerReminderCondition.Updated"));
                     return continueEditing ? RedirectToAction("EditCondition", new { customerReminderId = customerReminder.Id, cid = condition.Id }) : RedirectToAction("Edit", new { id = customerReminder.Id });
                 }
@@ -463,82 +286,37 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionDelete(string Id, string customerReminderId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
+            if (ModelState.IsValid)
+            {
+                _customerReminderViewModelService.ConditionDelete(Id, customerReminderId);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
 
-            var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
-            var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == Id);
-            customerReminder.Conditions.Remove(condition);
-            _customerReminderService.UpdateCustomerReminder(customerReminder);
-
-            return new NullJsonResult();
         }
 
         [HttpPost]
         public IActionResult ConditionDeletePosition(string id, string customerReminderId, string conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
-            var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
-            var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == conditionId);
-
-            if (condition.ConditionTypeId == (int)CustomerReminderConditionTypeEnum.Product)
+            if (ModelState.IsValid)
             {
-                condition.Products.Remove(id);
-                _customerReminderService.UpdateCustomerReminder(customerReminder);
+                _customerReminderViewModelService.ConditionDeletePosition(id, customerReminderId, conditionId);
+                return new NullJsonResult();
             }
-            if (condition.ConditionTypeId == (int)CustomerReminderConditionTypeEnum.Category)
-            {
-                condition.Categories.Remove(id);
-                _customerReminderService.UpdateCustomerReminder(customerReminder);
-            }
-            if (condition.ConditionTypeId == (int)CustomerReminderConditionTypeEnum.Manufacturer)
-            {
-                condition.Manufacturers.Remove(id);
-                _customerReminderService.UpdateCustomerReminder(customerReminder);
-            }
-
-            if (condition.ConditionTypeId == (int)CustomerReminderConditionTypeEnum.CustomerRole)
-            {
-                condition.CustomerRoles.Remove(id);
-                _customerReminderService.UpdateCustomerReminder(customerReminder);
-            }
-            if (condition.ConditionTypeId == (int)CustomerReminderConditionTypeEnum.CustomerTag)
-            {
-                condition.CustomerTags.Remove(id);
-                _customerReminderService.UpdateCustomerReminder(customerReminder);
-            }
-
-            if (condition.ConditionTypeId == (int)CustomerReminderConditionTypeEnum.CustomCustomerAttribute)
-            {
-                condition.CustomCustomerAttributes.Remove(condition.CustomCustomerAttributes.FirstOrDefault(x => x.Id == id));
-                _customerReminderService.UpdateCustomerReminder(customerReminder);
-            }
-            if (condition.ConditionTypeId == (int)CustomerReminderConditionTypeEnum.CustomerRegisterField)
-            {
-                condition.CustomerRegistration.Remove(condition.CustomerRegistration.FirstOrDefault(x => x.Id == id));
-                _customerReminderService.UpdateCustomerReminder(customerReminder);
-            }
-
-
-            return new NullJsonResult();
+            return ErrorForKendoGridJson(ModelState);
         }
 
         #region Condition Category
 
         [HttpPost]
-        public IActionResult ConditionCategory(string customerReminderId, string conditionId)
+        public IActionResult ConditionCategory(string customerReminderId, string conditionId, [FromServices] ICategoryService categoryService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
             var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
             var gridModel = new DataSourceResult
             {
-                Data = condition != null ? condition.Categories.Select(z => new { Id = z, CategoryName = _categoryService.GetCategoryById(z) != null ? _categoryService.GetCategoryById(z).Name : "" }) : null,
+                Data = condition != null ? condition.Categories.Select(z => new { Id = z, CategoryName = categoryService.GetCategoryById(z) != null ? categoryService.GetCategoryById(z).Name : "" }) : null,
                 Total = customerReminder.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return Json(gridModel);
@@ -546,8 +324,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult CategoryAddPopup(string customerReminderId, string conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
             var model = new CustomerReminderModel.ConditionModel.AddCategoryConditionModel();
             model.ConditionId = conditionId;
             model.CustomerReminderId = customerReminderId;
@@ -555,19 +331,16 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult CategoryAddPopupList(DataSourceRequest command, CustomerReminderModel.ConditionModel.AddCategoryConditionModel model)
+        public IActionResult CategoryAddPopupList(DataSourceRequest command, CustomerReminderModel.ConditionModel.AddCategoryConditionModel model, [FromServices] ICategoryService categoryService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
-            var categories = _categoryService.GetAllCategories(model.SearchCategoryName,
+            var categories = categoryService.GetAllCategories(model.SearchCategoryName,
                 pageIndex: command.Page - 1, pageSize: command.PageSize, showHidden: true);
             var gridModel = new DataSourceResult
             {
                 Data = categories.Select(x =>
                 {
                     var categoryModel = x.ToModel();
-                    categoryModel.Breadcrumb = x.GetFormattedBreadCrumb(_categoryService);
+                    categoryModel.Breadcrumb = x.GetFormattedBreadCrumb(categoryService);
                     return categoryModel;
                 }),
                 Total = categories.TotalCount
@@ -580,43 +353,20 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public IActionResult CategoryAddPopup(CustomerReminderModel.ConditionModel.AddCategoryConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             if (model.SelectedCategoryIds != null)
             {
-                foreach (string id in model.SelectedCategoryIds)
-                {
-                    var customerReminder = _customerReminderService.GetCustomerReminderById(model.CustomerReminderId);
-                    if (customerReminder != null)
-                    {
-                        var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == model.ConditionId);
-                        if (condition != null)
-                        {
-                            if (condition.Categories.Where(x => x == id).Count() == 0)
-                            {
-                                condition.Categories.Add(id);
-                                _customerReminderService.UpdateCustomerReminder(customerReminder);
-                            }
-                        }
-                    }
-                }
+                _customerReminderViewModelService.InsertCategoryConditionModel(model);
             }
             ViewBag.RefreshPage = true;
             return View(model);
         }
 
-
         #endregion
-
 
         #region Condition Manufacturer
         [HttpPost]
         public IActionResult ConditionManufacturer(string customerReminderId, string conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
             var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
@@ -639,9 +389,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ManufacturerAddPopupList(DataSourceRequest command, CustomerReminderModel.ConditionModel.AddManufacturerConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var manufacturers = _manufacturerService.GetAllManufacturers(model.SearchManufacturerName, "",
                 command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
@@ -657,30 +404,10 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public IActionResult ManufacturerAddPopup(CustomerReminderModel.ConditionModel.AddManufacturerConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             if (model.SelectedManufacturerIds != null)
             {
-                foreach (string id in model.SelectedManufacturerIds)
-                {
-                    var customerReminder = _customerReminderService.GetCustomerReminderById(model.CustomerReminderId);
-                    if (customerReminder != null)
-                    {
-                        var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == model.ConditionId);
-                        if (condition != null)
-                        {
-                            if (condition.Manufacturers.Where(x => x == id).Count() == 0)
-                            {
-                                condition.Manufacturers.Add(id);
-                                _customerReminderService.UpdateCustomerReminder(customerReminder);
-                            }
-                        }
-                    }
-
-                }
+                _customerReminderViewModelService.InsertManufacturerConditionModel(model);
             }
-
             ViewBag.RefreshPage = true;
             return View(model);
         }
@@ -691,17 +418,14 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Condition Product
 
         [HttpPost]
-        public IActionResult ConditionProduct(string customerReminderId, string conditionId)
+        public IActionResult ConditionProduct(string customerReminderId, string conditionId, [FromServices] IProductService productService)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
             var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
             var gridModel = new DataSourceResult
             {
-                Data = condition != null ? condition.Products.Select(z => new { Id = z, ProductName = _productService.GetProductById(z) != null ? _productService.GetProductById(z).Name : "" }) : null,
+                Data = condition != null ? condition.Products.Select(z => new { Id = z, ProductName = productService.GetProductById(z) != null ? productService.GetProductById(z).Name : "" }) : null,
                 Total = customerReminder.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return Json(gridModel);
@@ -709,64 +433,17 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult ProductAddPopup(string customerReminderId, string conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
-            var model = new CustomerReminderModel.ConditionModel.AddProductToConditionModel();
-            model.ConditionId = conditionId;
-            model.CustomerReminderId = customerReminderId;
-            //categories
-            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            var categories = _categoryService.GetAllCategories(showHidden: true);
-            foreach (var c in categories)
-                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
-
-            //manufacturers
-            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
-                model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
-
-            //stores
-            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var s in _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
-
-            //vendors
-            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var v in _vendorService.GetAllVendors(showHidden: true))
-                model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
-
-            //product types
-            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
-            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-
+            var model = _customerReminderViewModelService.PrepareProductToConditionModel(customerReminderId, conditionId);
             return View(model);
         }
 
         [HttpPost]
         public IActionResult ProductAddPopupList(DataSourceRequest command, CustomerActionConditionModel.AddProductToConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
-            var searchCategoryIds = new List<string>();
-            if (!String.IsNullOrEmpty(model.SearchCategoryId))
-                searchCategoryIds.Add(model.SearchCategoryId);
-
-            var products = _productService.SearchProducts(
-                categoryIds: searchCategoryIds,
-                manufacturerId: model.SearchManufacturerId,
-                storeId: model.SearchStoreId,
-                vendorId: model.SearchVendorId,
-                productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
-                keywords: model.SearchProductName,
-                pageIndex: command.Page - 1,
-                pageSize: command.PageSize,
-                showHidden: true
-                );
             var gridModel = new DataSourceResult();
-            gridModel.Data = products.Select(x => x.ToModel());
-            gridModel.Total = products.TotalCount;
+            var products = _customerReminderViewModelService.PrepareProductModel(model, command.Page, command.PageSize);
+            gridModel.Data = products.products.ToList();
+            gridModel.Total = products.totalCount;
 
             return Json(gridModel);
         }
@@ -775,27 +452,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save")]
         public IActionResult ProductAddPopup(CustomerReminderModel.ConditionModel.AddProductToConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             if (model.SelectedProductIds != null)
             {
-                foreach (string id in model.SelectedProductIds)
-                {
-                    var customerReminder = _customerReminderService.GetCustomerReminderById(model.CustomerReminderId);
-                    if (customerReminder != null)
-                    {
-                        var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == model.ConditionId);
-                        if (condition != null)
-                        {
-                            if (condition.Products.Where(x => x == id).Count() == 0)
-                            {
-                                condition.Products.Add(id);
-                                _customerReminderService.UpdateCustomerReminder(customerReminder);
-                            }
-                        }
-                    }
-                }
+                _customerReminderViewModelService.InsertProductToConditionModel(model);
             }
             ViewBag.RefreshPage = true;
             return View(model);
@@ -809,9 +468,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionCustomerTag(string customerReminderId, string conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
             var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
@@ -822,37 +478,21 @@ namespace Grand.Web.Areas.Admin.Controllers
             };
             return Json(gridModel);
         }
-
-
-
         [HttpPost]
         public IActionResult ConditionCustomerTagInsert(CustomerReminderModel.ConditionModel.AddCustomerTagConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
-            var customerReminder = _customerReminderService.GetCustomerReminderById(model.CustomerReminderId);
-            if (customerReminder != null)
+            if (ModelState.IsValid)
             {
-                var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == model.ConditionId);
-                if (condition != null)
-                {
-                    if (condition.CustomerTags.Where(x => x == model.CustomerTagId).Count() == 0)
-                    {
-                        condition.CustomerTags.Add(model.CustomerTagId);
-                        _customerReminderService.UpdateCustomerReminder(customerReminder);
-                    }
-                }
+                _customerReminderViewModelService.InsertCustomerTagConditionModel(model);
+                return new NullJsonResult();
             }
-            return new NullJsonResult();
+            return ErrorForKendoGridJson(ModelState);
         }
 
 
         [HttpGet]
         public IActionResult CustomerTags()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
             var customerTag = _customerTagService.GetAllCustomerTags().Select(x => new { Id = x.Id, Name = x.Name });
             return Json(customerTag);
         }
@@ -863,9 +503,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionCustomerRole(string customerReminderId, string conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
             var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
@@ -880,31 +517,18 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionCustomerRoleInsert(CustomerReminderModel.ConditionModel.AddCustomerRoleConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
-            var customerReminder = _customerReminderService.GetCustomerReminderById(model.CustomerReminderId);
-            if (customerReminder != null)
+            if (ModelState.IsValid)
             {
-                var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == model.ConditionId);
-                if (condition != null)
-                {
-                    if (condition.CustomerRoles.Where(x => x == model.CustomerRoleId).Count() == 0)
-                    {
-                        condition.CustomerRoles.Add(model.CustomerRoleId);
-                        _customerReminderService.UpdateCustomerReminder(customerReminder);
-                    }
-                }
+                _customerReminderViewModelService.InsertCustomerRoleConditionModel(model);
+                return new NullJsonResult();
             }
-            return new NullJsonResult();
+            return ErrorForKendoGridJson(ModelState);
         }
 
 
         [HttpGet]
         public IActionResult CustomerRoles()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
             var customerRole = _customerService.GetAllCustomerRoles().Select(x => new { Id = x.Id, Name = x.Name });
             return Json(customerRole);
         }
@@ -912,14 +536,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         #endregion
 
         #region Condition Customer Register
-
-
         [HttpPost]
         public IActionResult ConditionCustomerRegister(string customerReminderId, string conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
             var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
@@ -940,53 +559,27 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionCustomerRegisterInsert(CustomerReminderModel.ConditionModel.AddCustomerRegisterConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
-            var customerReminder = _customerReminderService.GetCustomerReminderById(model.CustomerReminderId);
-            if (customerReminder != null)
+            if (ModelState.IsValid)
             {
-                var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == model.ConditionId);
-                if (condition != null)
-                {
-                    var _cr = new CustomerReminder.ReminderCondition.CustomerRegister()
-                    {
-                        RegisterField = model.CustomerRegisterName,
-                        RegisterValue = model.CustomerRegisterValue,
-                    };
-                    condition.CustomerRegistration.Add(_cr);
-                    _customerReminderService.UpdateCustomerReminder(customerReminder);
-                }
+                _customerReminderViewModelService.InsertCustomerRegisterConditionModel(model);
+                return new NullJsonResult();
             }
-            return new NullJsonResult();
+            return ErrorForKendoGridJson(ModelState);
         }
         [HttpPost]
         public IActionResult ConditionCustomerRegisterUpdate(CustomerReminderModel.ConditionModel.AddCustomerRegisterConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
-            var customerReminder = _customerReminderService.GetCustomerReminderById(model.CustomerReminderId);
-            if (customerReminder != null)
+            if (ModelState.IsValid)
             {
-                var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == model.ConditionId);
-                if (condition != null)
-                {
-                    var cr = condition.CustomerRegistration.FirstOrDefault(x => x.Id == model.Id);
-                    cr.RegisterField = model.CustomerRegisterName;
-                    cr.RegisterValue = model.CustomerRegisterValue;
-                    _customerReminderService.UpdateCustomerReminder(customerReminder);
-                }
+                _customerReminderViewModelService.UpdateCustomerRegisterConditionModel(model);
+                return new NullJsonResult();
             }
-            return new NullJsonResult();
+            return ErrorForKendoGridJson(ModelState);
         }
 
         [HttpGet]
         public IActionResult CustomerRegisterFields()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var list = new List<Tuple<string, string>>();
             list.Add(Tuple.Create("Gender", "Gender"));
             list.Add(Tuple.Create("Company", "Company"));
@@ -1029,9 +622,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionCustomCustomerAttribute(string customerReminderId, string conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
             var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == conditionId);
 
@@ -1053,52 +643,27 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ConditionCustomCustomerAttributeInsert(CustomerReminderModel.ConditionModel.AddCustomCustomerAttributeConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
-            var customerReminder = _customerReminderService.GetCustomerReminderById(model.CustomerReminderId);
-            if (customerReminder != null)
+            if (ModelState.IsValid)
             {
-                var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == model.ConditionId);
-                if (condition != null)
-                {
-                    var _cr = new CustomerReminder.ReminderCondition.CustomerRegister()
-                    {
-                        RegisterField = model.CustomerAttributeName,
-                        RegisterValue = model.CustomerAttributeValue,
-                    };
-                    condition.CustomCustomerAttributes.Add(_cr);
-                    _customerReminderService.UpdateCustomerReminder(customerReminder);
-                }
+                _customerReminderViewModelService.InsertCustomCustomerAttributeConditionModel(model);
+                return new NullJsonResult();
             }
-            return new NullJsonResult();
+            return ErrorForKendoGridJson(ModelState);
         }
         [HttpPost]
         public IActionResult ConditionCustomCustomerAttributeUpdate(CustomerReminderModel.ConditionModel.AddCustomCustomerAttributeConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
-            var customerReminder = _customerReminderService.GetCustomerReminderById(model.CustomerReminderId);
-            if (customerReminder != null)
+            if (ModelState.IsValid)
             {
-                var condition = customerReminder.Conditions.FirstOrDefault(x => x.Id == model.ConditionId);
-                if (condition != null)
-                {
-                    var cr = condition.CustomCustomerAttributes.FirstOrDefault(x => x.Id == model.Id);
-                    cr.RegisterField = model.CustomerAttributeName;
-                    cr.RegisterValue = model.CustomerAttributeValue;
-                    _customerReminderService.UpdateCustomerReminder(customerReminder);
-                }
+                _customerReminderViewModelService.UpdateCustomCustomerAttributeConditionModel(model);
+                return new NullJsonResult();
             }
-            return new NullJsonResult();
+            return ErrorForKendoGridJson(ModelState);
         }
 
         [HttpGet]
         public IActionResult CustomCustomerAttributeFields()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
             var list = new List<Tuple<string, string>>();
             foreach (var item in _customerAttributeService.GetAllCustomerAttributes())
             {
@@ -1124,9 +689,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Levels(string customerReminderId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
             var gridModel = new DataSourceResult
             {
@@ -1139,20 +701,16 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult AddLevel(string customerReminderId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
             var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
             var model = new CustomerReminderModel.ReminderLevelModel();
             model.CustomerReminderId = customerReminderId;
-            PrepareModel(model, customerReminder);
+            _customerReminderViewModelService.PrepareReminderLevelModel(model, customerReminder);
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult AddLevel(CustomerReminderModel.ReminderLevelModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
             var customerReminder = _customerReminderService.GetCustomerReminderById(model.CustomerReminderId);
             if (customerReminder == null)
             {
@@ -1165,35 +723,16 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-
-                var level = new CustomerReminder.ReminderLevel()
-                {
-                    Name = model.Name,
-                    Level = model.Level,
-                    BccEmailAddresses = model.BccEmailAddresses,
-                    Body = model.Body,
-                    EmailAccountId = model.EmailAccountId,
-                    Subject = model.Subject,
-                    Day = model.Day,
-                    Hour = model.Hour,
-                    Minutes = model.Minutes,
-                };
-
-                customerReminder.Levels.Add(level);
-                _customerReminderService.UpdateCustomerReminder(customerReminder);
-                _customerActivityService.InsertActivity("AddNewCustomerReminderLevel", customerReminder.Id, _localizationService.GetResource("ActivityLog.AddNewCustomerReminderLevel"), customerReminder.Name);
+                var level = _customerReminderViewModelService.InsertReminderLevel(customerReminder, model);
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerReminderLevel.Added"));
                 return continueEditing ? RedirectToAction("EditLevel", new { customerReminderId = customerReminder.Id, cid = level.Id }) : RedirectToAction("Edit", new { id = customerReminder.Id });
             }
-            PrepareModel(model, customerReminder);
+            _customerReminderViewModelService.PrepareReminderLevelModel(model, customerReminder);
             return View(model);
         }
 
         public IActionResult EditLevel(string customerReminderId, string cid)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
             var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
             if (customerReminder == null)
             {
@@ -1204,10 +743,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (level == null)
                 return RedirectToAction("List");
 
-
             var model = level.ToModel();
             model.CustomerReminderId = customerReminderId;
-            PrepareModel(model, customerReminder);
+            _customerReminderViewModelService.PrepareReminderLevelModel(model, customerReminder);
             return View(model);
         }
 
@@ -1233,24 +771,11 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    level.Level = model.Level;
-                    level.Name = model.Name;
-                    level.Subject = model.Subject;
-                    level.BccEmailAddresses = model.BccEmailAddresses;
-                    level.Body = model.Body;
-                    level.EmailAccountId = model.EmailAccountId;
-                    level.Day = model.Day;
-                    level.Hour = model.Hour;
-                    level.Minutes = model.Minutes;
-                    _customerReminderService.UpdateCustomerReminder(customerReminder);
-
-                    _customerActivityService.InsertActivity("EditCustomerReminderCondition", customerReminder.Id, _localizationService.GetResource("ActivityLog.EditCustomerReminderLevel"), customerReminder.Name);
-
+                    level = _customerReminderViewModelService.UpdateReminderLevel(customerReminder, level, model);
                     SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerReminderLevel.Updated"));
                     return continueEditing ? RedirectToAction("EditLevel", new { customerReminderId = customerReminder.Id, cid = level.Id }) : RedirectToAction("Edit", new { id = customerReminder.Id });
                 }
-
-                PrepareModel(model, customerReminder);
+                _customerReminderViewModelService.PrepareReminderLevelModel(model, customerReminder);
                 return View(model);
             }
             catch (Exception exc)
@@ -1263,18 +788,13 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult DeleteLevel(string Id, string customerReminderId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
-                return AccessDeniedView();
-
-            var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
-            var level = customerReminder.Levels.FirstOrDefault(x => x.Id == Id);
-            customerReminder.Levels.Remove(level);
-            _customerReminderService.UpdateCustomerReminder(customerReminder);
-
-            return new NullJsonResult();
+            if (ModelState.IsValid)
+            {
+                _customerReminderViewModelService.DeleteLevel(Id, customerReminderId);
+                return new NullJsonResult();
+            }
+            return ErrorForKendoGridJson(ModelState);
         }
-
-
         #endregion
     }
 }

@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -205,6 +206,24 @@ namespace Grand.Framework.Controllers
         /// <summary>
         /// Display error notification
         /// </summary>
+        /// <param name="message">Message</param>
+        /// <param name="persistForTheNextRequest">A value indicating whether a message should be persisted for the next request</param>
+        protected virtual void ErrorNotification(ModelStateDictionary ModelState, bool persistForTheNextRequest = true)
+        {
+            var modelErrors = new List<string>();
+            foreach (var modelState in ModelState.Values)
+            {
+                foreach (var modelError in modelState.Errors)
+                {
+                    modelErrors.Add(modelError.ErrorMessage);
+                }
+            }
+            AddNotification(NotifyType.Error, string.Join(',', modelErrors), persistForTheNextRequest);
+        }
+
+        /// <summary>
+        /// Display error notification
+        /// </summary>
         /// <param name="exception">Exception</param>
         /// <param name="persistForTheNextRequest">A value indicating whether a message should be persisted for the next request</param>
         /// <param name="logException">A value indicating whether exception should be logged</param>
@@ -271,7 +290,19 @@ namespace Grand.Framework.Controllers
 
             return Json(gridModel);
         }
-
+        /// <summary>
+        /// Error's json data for kendo grid
+        /// </summary>
+        /// <param name="modelState">Model state</param>
+        /// <returns>Error's json data</returns>
+        protected JsonResult ErrorForKendoGridJson(ModelStateDictionary modelState)
+        {
+            var gridModel = new DataSourceResult
+            {
+                Errors = ModelState.SerializeErrors()
+            };
+            return Json(gridModel);
+        }
         /// <summary>
         /// Display "Edit" (manage) link (in public store)
         /// </summary>

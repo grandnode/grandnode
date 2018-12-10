@@ -2,11 +2,8 @@
 @using Grand.Core.Domain.Discounts;
 @using Grand.Framework.UI;
 
-
-
-
 @{
-
+<vc:admin-widget widget-zone="discount_details_requirements_top" additional-data="Model" />
     if (!String.IsNullOrEmpty(Model.Id))
     {
 
@@ -206,4 +203,5 @@
             @T("Admin.Promotions.Discounts.Requirements.SaveBeforeEdit")
         </div>
     }
+<vc:admin-widget widget-zone="discount_details_requirements_bottom" additional-data="Model" />
 }

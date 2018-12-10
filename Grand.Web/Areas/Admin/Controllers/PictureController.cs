@@ -1,5 +1,7 @@
 ﻿using Grand.Framework.Security;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Media;
+using Grand.Services.Security;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.IO;
@@ -7,6 +9,7 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Files)]
     public partial class PictureController : BaseAdminController
     {
         private readonly IPictureService _pictureService;

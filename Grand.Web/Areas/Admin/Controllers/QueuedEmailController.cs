@@ -3,6 +3,7 @@ using Grand.Core.Domain.Messages;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
@@ -16,27 +17,25 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.MessageQueue)]
     public partial class QueuedEmailController : BaseAdminController
 	{
 		private readonly IQueuedEmailService _queuedEmailService;
         private readonly IEmailAccountService _emailAccountService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
         private readonly IWorkContext _workContext;
 
 		public QueuedEmailController(IQueuedEmailService queuedEmailService,
             IEmailAccountService emailAccountService,
             IDateTimeHelper dateTimeHelper, 
             ILocalizationService localizationService,
-            IPermissionService permissionService,
             IWorkContext workContext)
 		{
             this._queuedEmailService = queuedEmailService;
             this._emailAccountService = emailAccountService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
-            this._permissionService = permissionService;
             this._workContext = workContext;
 		}
 
@@ -47,9 +46,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
 		public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageQueue))
-                return AccessDeniedView();
-
 		    var model = new QueuedEmailListModel
 		    {
                 //default value
@@ -61,9 +57,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 		[HttpPost]
 		public IActionResult QueuedEmailList(DataSourceRequest command, QueuedEmailListModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageQueue))
-                return AccessDeniedView();
-
             DateTime? startDateValue = (model.SearchStartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.SearchStartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
@@ -107,9 +100,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
 		public IActionResult Edit(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageQueue))
-                return AccessDeniedView();
-
 			var email = _queuedEmailService.GetQueuedEmailById(id);
             if (email == null)
                 //No email found with the specified id
@@ -133,9 +123,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public IActionResult Edit(QueuedEmailModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageQueue))
-                return AccessDeniedView();
-
             var email = _queuedEmailService.GetQueuedEmailById(model.Id);
             if (email == null)
                 //No email found with the specified id
@@ -166,9 +153,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ActionName("Edit"), FormValueRequired("requeue")]
         public IActionResult Requeue(QueuedEmailModel queuedEmailModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageQueue))
-                return AccessDeniedView();
-
             var queuedEmail = _queuedEmailService.GetQueuedEmailById(queuedEmailModel.Id);
             if (queuedEmail == null)
                 //No email found with the specified id
@@ -204,9 +188,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 	    [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageQueue))
-                return AccessDeniedView();
-
 			var email = _queuedEmailService.GetQueuedEmailById(id);
             if (email == null)
                 //No email found with the specified id
@@ -221,9 +202,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult DeleteSelected(ICollection<string> selectedIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageQueue))
-                return AccessDeniedView();
-
             if (selectedIds != null)
             {
                 var queuedEmails = _queuedEmailService.GetQueuedEmailsByIds(selectedIds.ToArray());
@@ -238,11 +216,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("delete-all")]
         public IActionResult DeleteAll()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageQueue))
-                return AccessDeniedView();
-
             _queuedEmailService.DeleteAllEmails();
-
             SuccessNotification(_localizationService.GetResource("Admin.System.QueuedEmails.DeletedAll"));
             return RedirectToAction("List");
         }

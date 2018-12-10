@@ -14,13 +14,13 @@
         });
     });
 </script>
-
+<vc:admin-widget widget-zone="currency_details_top" additional-data="Model" />
 <div id="currency-edit">
     <ul>
-        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+        <li tab-index="0">
             @T("Admin.Configuration.Currencies.Info")
         </li>
-        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+        <li tab-index="1">
             @T("Admin.Configuration.Currencies.Stores")
         </li>
     </ul>
@@ -31,6 +31,7 @@
         <partial name="_TabStores" model="Model" />
     </div>
 </div>
+<vc:admin-widget widget-zone="currency_details_bottom" additional-data="Model" />
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "currency-edit");

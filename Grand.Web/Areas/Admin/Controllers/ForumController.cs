@@ -1,5 +1,6 @@
 ﻿using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Forums;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
@@ -12,21 +13,19 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.Forums)]
     public partial class ForumController : BaseAdminController
     {
         private readonly IForumService _forumService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
-        private readonly IPermissionService _permissionService;
 
         public ForumController(IForumService forumService,
-            IDateTimeHelper dateTimeHelper, ILocalizationService localizationService,
-            IPermissionService permissionService)
+            IDateTimeHelper dateTimeHelper, ILocalizationService localizationService)
         {
             this._forumService = forumService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
-            this._permissionService = permissionService;
         }
 
         #region List
@@ -38,18 +37,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
-                return AccessDeniedView();
-
             return View();
         }
 
         [HttpPost]
         public IActionResult ForumGroupList(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
-                return AccessDeniedView();
-
             var forumGroups = _forumService.GetAllForumGroups();
             var gridModel = new DataSourceResult
             {
@@ -68,9 +61,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ForumList(string forumGroupId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
-                return AccessDeniedView();
-
             var forumGroup = _forumService.GetForumGroupById(forumGroupId);
             if (forumGroup == null)
                 throw new Exception("Forum group cannot be loaded");
@@ -96,18 +86,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult CreateForumGroup()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
-                return AccessDeniedView();
-
             return View(new ForumGroupModel { DisplayOrder = 1 });
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult CreateForumGroup(ForumGroupModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var forumGroup = model.ToEntity();
@@ -125,9 +109,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult CreateForum()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
-                return AccessDeniedView();
-
             var model = new ForumModel();
             foreach (var forumGroup in _forumService.GetAllForumGroups())
             {
@@ -141,9 +122,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult CreateForum(ForumModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
-                return AccessDeniedView();
-
             if (ModelState.IsValid)
             {
                 var forum = model.ToEntity();
@@ -170,9 +148,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult EditForumGroup(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
-                return AccessDeniedView();
-
             var forumGroup = _forumService.GetForumGroupById(id);
             if (forumGroup == null)
                 //No forum group found with the specified id
@@ -185,9 +160,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult EditForumGroup(ForumGroupModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
-                return AccessDeniedView();
-
             var forumGroup = _forumService.GetForumGroupById(model.Id);
             if (forumGroup == null)
                 //No forum group found with the specified id
@@ -209,9 +181,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult EditForum(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
-                return AccessDeniedView();
-
             var forum = _forumService.GetForumById(id);
             if (forum == null)
                 //No forum found with the specified id
@@ -229,9 +198,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public IActionResult EditForum(ForumModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
-                return AccessDeniedView();
-
             var forum = _forumService.GetForumById(model.Id);
             if (forum == null)
                 //No forum found with the specified id
@@ -263,9 +229,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult DeleteForumGroup(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
-                return AccessDeniedView();
-
             var forumGroup = _forumService.GetForumGroupById(id);
             if (forumGroup == null)
                 //No forum group found with the specified id
@@ -280,9 +243,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult DeleteForum(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
-                return AccessDeniedView();
-
             var forum = _forumService.GetForumById(id);
             if (forum == null)
                 //No forum found with the specified id

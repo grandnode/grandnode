@@ -18,6 +18,7 @@
                         <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
                         <a href="@Url.Action("List", "Currency", new {liveRates = true})" class="btn blue">@T("Admin.Configuration.Currencies.GetLiveRates")</a>
                         <a href="@Url.Action("Create")" class="btn green"><i class="fa fa-plus"></i><span class="hidden-xs"> @T("Admin.Common.AddNew") </span></a>
+                        <vc:admin-widget widget-zone="currency_list_buttons" additional-data="null" />
                     </div>
                 </div>
                 <div class="portlet-body form">

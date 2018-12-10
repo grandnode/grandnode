@@ -17,18 +17,18 @@
 </script>
 <div id="interactiveform-edit" style="display:none">
     <ul>
-        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+        <li tab-index="0">
             @T("Admin.Promotions.InteractiveForms.Info")
         </li>
-        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+        <li tab-index="1">
             @T("Admin.Promotions.InteractiveForms.Attribute")
         </li>
     </ul>
     <div>
-        @Html.Partial("_CreateOrUpdate.TabInfo", Model)
+       <partial name="_CreateOrUpdate.TabInfo" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdate.TabValues", Model)
+       <partial name="_CreateOrUpdate.TabValues" model="Model" />
     </div>
 </div>
 @{

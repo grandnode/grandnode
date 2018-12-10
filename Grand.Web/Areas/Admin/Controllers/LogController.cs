@@ -1,40 +1,30 @@
-﻿using Grand.Core;
-using Grand.Core.Domain.Logging;
-using Grand.Core.Infrastructure;
-using Grand.Framework.Controllers;
-using Grand.Framework.Extensions;
+﻿using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
-using Grand.Services.Customers;
-using Grand.Services.Helpers;
+using Grand.Framework.Security.Authorization;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Security;
 using Grand.Web.Areas.Admin.Models.Logging;
+using Grand.Web.Areas.Admin.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
+    [PermissionAuthorize(PermissionSystemName.SystemLog)]
     public partial class LogController : BaseAdminController
     {
+        private readonly ILogViewModelService _logViewModelService;
         private readonly ILogger _logger;
-        private readonly IWorkContext _workContext;
         private readonly ILocalizationService _localizationService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IPermissionService _permissionService;
 
-        public LogController(ILogger logger, IWorkContext workContext,
-            ILocalizationService localizationService, IDateTimeHelper dateTimeHelper,
-            IPermissionService permissionService)
+        public LogController(ILogViewModelService logViewModelService, ILogger logger, 
+            ILocalizationService localizationService)
         {
+            this._logViewModelService = logViewModelService;
             this._logger = logger;
-            this._workContext = workContext;
             this._localizationService = localizationService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._permissionService = permissionService;
         }
 
         public IActionResult Index()
@@ -44,55 +34,18 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public IActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
-                return AccessDeniedView();
-
-            var model = new LogListModel();
-            model.AvailableLogLevels = LogLevel.Debug.ToSelectList(false).ToList();
-            model.AvailableLogLevels.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-
+            var model = _logViewModelService.PrepareLogListModel();
             return View(model);
         }
 
         [HttpPost]
         public IActionResult LogList(DataSourceRequest command, LogListModel model)
         {
-
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
-                return AccessDeniedView();
-
-            DateTime? createdOnFromValue = (model.CreatedOnFrom == null) ? null
-                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnFrom.Value, _dateTimeHelper.CurrentTimeZone);
-
-            DateTime? createdToFromValue = (model.CreatedOnTo == null) ? null
-                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
-
-            LogLevel? logLevel = model.LogLevelId > 0 ? (LogLevel?)(model.LogLevelId) : null;
-
-
-            var logItems = _logger.GetAllLogs(createdOnFromValue, createdToFromValue, model.Message,
-                logLevel, command.Page - 1, command.PageSize);
+            var logItems = _logViewModelService.PrepareLogModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
-                Data = logItems.Select(x => new LogModel
-                {
-                    Id = x.Id,
-                    LogLevel = x.LogLevel.GetLocalizedEnum(_localizationService, _workContext),
-                    ShortMessage = x.ShortMessage,
-                    //little hack here:
-                    //ensure that FullMessage is not returned
-                    //otherwise, we can get the following error if log records have too long FullMessage:
-                    //"Error during serialization or deserialization using the JSON JavaScriptSerializer. The length of the string exceeds the value set on the maxJsonLength property. "
-                    //also it improves performance
-                    //FullMessage = x.FullMessage,
-                    FullMessage = "",
-                    IpAddress = x.IpAddress,
-                    CustomerId = x.CustomerId,
-                    PageUrl = x.PageUrl,
-                    ReferrerUrl = x.ReferrerUrl,
-                    CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
-                }),
-                Total = logItems.TotalCount
+                Data = logItems.logModels.ToList(),
+                Total = logItems.totalCount
             };
 
             return Json(gridModel);
@@ -102,9 +55,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         [FormValueRequired("clearall")]
         public IActionResult ClearAll()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
-                return AccessDeniedView();
-
             _logger.ClearLog();
 
             SuccessNotification(_localizationService.GetResource("Admin.System.Log.Cleared"));
@@ -113,27 +63,12 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public new IActionResult View(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
-                return AccessDeniedView();
-
             var log = _logger.GetLogById(id);
             if (log == null)
                 //No log found with the specified id
                 return RedirectToAction("List");
 
-            var model = new LogModel
-            {
-                Id = log.Id,
-                LogLevel = log.LogLevel.GetLocalizedEnum(_localizationService, _workContext),
-                ShortMessage = log.ShortMessage,
-                FullMessage = log.FullMessage,
-                IpAddress = log.IpAddress,
-                CustomerId = log.CustomerId,
-                CustomerEmail = !String.IsNullOrEmpty(log.CustomerId) ? EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(log.CustomerId)?.Email: "",
-                PageUrl = log.PageUrl,
-                ReferrerUrl = log.ReferrerUrl,
-                CreatedOn = _dateTimeHelper.ConvertToUserTime(log.CreatedOnUtc, DateTimeKind.Utc)
-            };
+            var model = _logViewModelService.PrepareLogModel(log);
 
             return View(model);
         }
@@ -141,35 +76,34 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
-                return AccessDeniedView();
-
             var log = _logger.GetLogById(id);
             if (log == null)
                 //No log found with the specified id
                 return RedirectToAction("List");
-
-            _logger.DeleteLog(log);
-
-
-            SuccessNotification(_localizationService.GetResource("Admin.System.Log.Deleted"));
-            return RedirectToAction("List");
+            if (ModelState.IsValid)
+            {
+                _logger.DeleteLog(log);
+                SuccessNotification(_localizationService.GetResource("Admin.System.Log.Deleted"));
+                return RedirectToAction("List");
+            }
+            ErrorNotification(ModelState);
+            return this.View(id);
         }
 
         [HttpPost]
         public IActionResult DeleteSelected(ICollection<string> selectedIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
-                return AccessDeniedView();
-
-            if (selectedIds != null)
+            if (ModelState.IsValid)
             {
-                var logItems = _logger.GetLogByIds(selectedIds.ToArray());
-                foreach (var logItem in logItems)
-                    _logger.DeleteLog(logItem);
+                if (selectedIds != null)
+                {
+                    var logItems = _logger.GetLogByIds(selectedIds.ToArray());
+                    foreach (var logItem in logItems)
+                        _logger.DeleteLog(logItem);
+                }
+                return Json(new { Result = true });
             }
-
-            return Json(new { Result = true});
+            return ErrorForKendoGridJson(ModelState);
         }
     }
 }

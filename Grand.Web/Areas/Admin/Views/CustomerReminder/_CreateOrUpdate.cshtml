@@ -33,30 +33,30 @@
 
 <div id="customerreminder-edit" style="display:none">
     <ul>
-        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+        <li tab-index="0">
             @T("Admin.Customers.CustomerReminder.Info")
         </li>
-        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+        <li tab-index="1">
             @T("Admin.Customers.CustomerReminder.Conditions")
         </li>
-        <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+        <li tab-index="2">
             @T("Admin.Customers.CustomerReminder.Levels")
         </li>
-        <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
+        <li tab-index="3">
             @T("Admin.Customers.CustomerReminder.History")
         </li>
     </ul>
     <div>
-        @Html.Partial("_CreateOrUpdate.TabInfo", Model)
+       <partial name="_CreateOrUpdate.TabInfo" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdate.TabConditions", Model)
+       <partial name="_CreateOrUpdate.TabConditions" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdate.TabLevels", Model)
+       <partial name="_CreateOrUpdate.TabLevels" model="Model" />
     </div>
     <div>
-        @Html.Partial("_CreateOrUpdate.TabHistory", Model)
+       <partial name="_CreateOrUpdate.TabHistory" model="Model" />
     </div>
 </div>
 @{

@@ -20,10 +20,11 @@
                     </div>
                     <div class="actions">
                         <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                        <vc:admin-widget widget-zone="country_state_details_buttons" additional-data="null" />
                     </div>
                 </div>
                 <div class="portlet-body form">
-                    @Html.Partial("_CreateOrUpdateState", Model)
+                   <partial name="_CreateOrUpdateState" model="Model" />
                 </div>
             </div>
         </div>

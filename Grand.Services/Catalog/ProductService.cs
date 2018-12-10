@@ -377,7 +377,6 @@ namespace Grand.Services.Catalog
                 .Set(x => x.GiftCardTypeId, product.GiftCardTypeId)
                 .Set(x => x.Gtin, product.Gtin)
                 .Set(x => x.HasSampleDownload, product.HasSampleDownload)
-                .Set(x => x.HasTierPrices, product.HasTierPrices)
                 .Set(x => x.HasUserAgreement, product.HasUserAgreement)
                 .Set(x => x.Height, product.Height)
                 .Set(x => x.IncBothDate, product.IncBothDate)
@@ -624,7 +623,7 @@ namespace Grand.Services.Catalog
             bool? featuredProducts = null,
             decimal? priceMin = null,
             decimal? priceMax = null,
-            string productTagId = "",
+            string productTag = "",
             string keywords = null,
             bool searchDescriptions = false,
             bool searchSku = true,
@@ -640,7 +639,7 @@ namespace Grand.Services.Catalog
                 pageIndex, pageSize, categoryIds, manufacturerId,
                 storeId, vendorId, warehouseId,
                 productType, visibleIndividuallyOnly, markedAsNewOnly, featuredProducts,
-                priceMin, priceMax, productTagId, keywords, searchDescriptions, searchSku,
+                priceMin, priceMax, productTag, keywords, searchDescriptions, searchSku,
                 searchProductTags, languageId, filteredSpecs,
                 orderBy, showHidden, overridePublished);
         }
@@ -693,7 +692,7 @@ namespace Grand.Services.Catalog
             bool? featuredProducts = null,
             decimal? priceMin = null,
             decimal? priceMax = null,
-            string productTagId = "",
+            string productTag = "",
             string keywords = null,
             bool searchDescriptions = false,
             bool searchSku = true,
@@ -876,9 +875,9 @@ namespace Grand.Services.Catalog
             }
 
             //tag filtering
-            if (!String.IsNullOrEmpty(productTagId))
+            if (!String.IsNullOrEmpty(productTag))
             {
-                filter = filter & builder.Where(x => x.ProductTags.Any(y => y == productTagId));
+                filter = filter & builder.Where(x => x.ProductTags.Any(y => y == productTag));
             }
 
 
@@ -1207,33 +1206,7 @@ namespace Grand.Services.Catalog
             _eventPublisher.EntityUpdated(product);
 
         }
-
-
-        /// <summary>
-        /// Update HasTierPrices property (used for performance optimization)
-        /// </summary>
-        /// <param name="product">Product</param>
-        public virtual void UpdateHasTierPricesProperty(string productId)
-        {
-            var product = GetProductById(productId);
-            if (product == null)
-                throw new ArgumentNullException("product");
-
-            product.HasTierPrices = product.TierPrices.Any();
-
-            var filter = Builders<Product>.Filter.Eq("Id", product.Id);
-            var update = Builders<Product>.Update
-                    .Set(x => x.HasTierPrices, product.HasTierPrices);
-
-            _productRepository.Collection.UpdateOneAsync(filter, update);
-
-            //event notification
-            _eventPublisher.EntityUpdated(product);
-
-            //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
-        }
-
+        
         /// <summary>
         /// Update Interval properties
         /// </summary>
@@ -2236,7 +2209,7 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("productTag");
            
             var updatebuilder = Builders<Product>.Update;
-            var update = updatebuilder.AddToSet(p => p.ProductTags, productTag.Id);
+            var update = updatebuilder.AddToSet(p => p.ProductTags, productTag.Name);
             _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productTag.ProductId), update);
 
             var builder = Builders<ProductTag>.Filter;
@@ -2259,7 +2232,7 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("productTag");
 
             var updatebuilder = Builders<Product>.Update;
-            var update = updatebuilder.Pull(p => p.ProductTags, productTag.Id);
+            var update = updatebuilder.Pull(p => p.ProductTags, productTag.Name);
             _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productTag.ProductId), update);
 
             var builder = Builders<ProductTag>.Filter;
@@ -2368,7 +2341,6 @@ namespace Grand.Services.Catalog
         }
 
         #endregion
-
 
         #region Personalized products
 
