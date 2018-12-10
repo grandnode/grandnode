@@ -487,14 +487,14 @@ textarea.form-control.k-input {
     cursor: pointer;
 }
 
-.tt-suggestion.tt-is-under-cursor {
-    color: #fff;
-    background-color: #0097cf;
-}
+    .tt-suggestion.tt-is-under-cursor {
+        color: #fff;
+        background-color: #0097cf;
+    }
 
-.tt-suggestion p {
-    margin: 0;
-}
+    .tt-suggestion p {
+        margin: 0;
+    }
 
 .admin-search-input-container {
     display: flex;
@@ -504,6 +504,22 @@ textarea.form-control.k-input {
 
 #searchInput {
     margin: 10px;
+}
+
+.AllowedTokens {
+    height: 200px;
+    overflow: scroll;
+    overflow-x: hidden;
+    padding: 3px;
+    margin-top: 5px;
+}
+
+.AllowedTokens .btn {
+    margin: 2px;
+}
+
+.mt-5 {
+    margin-top: 5px;
 }
 
 @media screen and (max-width: 1300px) {
@@ -517,4 +533,4 @@ textarea.form-control.k-input {
     .popup .mt-mobile-10 {
         margin-top: 10px;
     }
-}   
+}

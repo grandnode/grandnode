@@ -1,6 +1,7 @@
 ﻿@model MessageTemplateModel
 @{
     Html.AddScriptParts("~/content/codemirror/codemirror.js", excludeFromBundle: true);
+    Html.AddScriptParts("~/content/codemirror/mode/xml/xml.js", excludeFromBundle: true);
     Html.AddCssFileParts("~/content/codemirror/codemirror.css", excludeFromBundle: true);
 }
 
@@ -52,7 +53,7 @@
             <div class="form-group">
                 <admin-label asp-for="@Model.Locales[item].Body" />
                 <div class="col-md-9 col-sm-9">
-                    <admin-input asp-for="@Model.Locales[item].Body" />
+                    <admin-input asp-for="@Model.Locales[item].Body" asp-template="Codemirror"/>
                     <span asp-validation-for="@Model.Locales[item].Body"></span>
                 </div>
             </div>
@@ -93,10 +94,10 @@
                     <div class="AllowedTokens">
                         @foreach (var token in Model.AllowedTokens)
                                     {
-                            <button type="button" class="btn btn-info">@token</button>
+                            <button type="button" onclick="AddTokenToEditor(this)" class="btn btn-info">@token</button>
                                     }
                     </div>
-                    <textarea asp-for="Body" name="templateBody" id="templateBody"></textarea>
+                    <admin-input asp-for="Body" asp-template="Codemirror" />
                     <span asp-validation-for="Body"></span>
                 </div>
             </div>
@@ -158,12 +159,6 @@
 </div>
 <script type="text/javascript">
         $(document).ready(function () {
-            var editor = CodeMirror.fromTextArea(templateBody, {
-                mode: "xml",
-                lineNumbers: true,
-                htmlMode: true
-            });
-
             $("#@Html.FieldIdFor(model => model.HasAttachedDownload)").change(toggleHasAttachedDownload);
             $("#@Html.FieldIdFor(model => model.SendImmediately)").click(sendImmediately);
             toggleHasAttachedDownload();
@@ -190,6 +185,13 @@
                 $('#pnl-send-after').show();
     }
 
+    function AddTokenToEditor(e) {
+        var cm = $('.CodeMirror')[0].CodeMirror;
+        var doc = cm.getDoc();
+        var cursor = doc.getCursor(); // gets the line number in the cursor position
+        doc.replaceRange(text, cursor);
+    }
+
     function SearchTokens(e) {
         var searchVal = $(e.target).val();
         var TokensPnl = $(e.target).closest(".form-group").find(".AllowedTokens");
@@ -203,15 +205,3 @@
              });
     }
 </script>
-<style>
-    .AllowedTokens {
-        height: 200px;
-        overflow: scroll;
-        overflow-x: hidden;
-        padding: 3px;
-    }
-
-        .AllowedTokens .btn {
-            margin: 2px;
-        }
-</style>

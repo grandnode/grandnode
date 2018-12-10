@@ -4397,7 +4397,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "BidUp.CustomerNotification",
                                            Subject = "{{Store.Name}}. Your offer has been outbid.",
-                                           Body = "<p>Hi {{Customer.FullName}}!</p><p>Your offer for product <a href=\"{{Auctions.ProductSeName}}\">{{Auctions.ProductName}}</a> has been outbid. New price is {{Auctions.Price}}.<br />Raise a price by raising one's offer. Auction will be ended on {{Auctions.EndTime}}</p>",
+                                           Body = "<p>Hi {{Customer.FullName}}!</p><p>Your offer for product <a href=\"{{Auctions.ProductSeName}}\">{{Auctions.ProductName}}</a> has been outbid. New price is {{Auctions.Price}}.<br />\r\nRaise a price by raising one's offer. Auction will be ended on {{Auctions.EndTime}}</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4405,7 +4405,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "Blog.BlogComment",
                                            Subject = "{{Store.Name}}. New blog comment.",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />A new blog comment has been created for blog post \"{{BlogComment.BlogPostTitle}}\".</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nA new blog comment has been created for blog post \"{{BlogComment.BlogPostTitle}}\".</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4413,7 +4413,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "Knowledgebase.ArticleComment",
                                            Subject = "{{Store.Name}}. New article comment.",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />A new article comment has been created for article \"{{Article.ArticleTitle}}\".</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nA new article comment has been created for article \"{{Article.ArticleTitle}}\".</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4421,7 +4421,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "Customer.BackInStock",
                                            Subject = "{{Store.Name}}. Back in stock notification",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />Hello {{Customer.FullName}}, <br />Product <a target=\"_blank\" href=\"{{BackInStockSubscription.ProductUrl}}\">{{BackInStockSubscription.ProductName}}</a> is in stock.</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nHello {{Customer.FullName}}, <br />\r\nProduct <a target=\"_blank\" href=\"{{BackInStockSubscription.ProductUrl}}\">{{BackInStockSubscription.ProductName}}</a> is in stock.</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4429,7 +4429,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "CustomerDelete.StoreOwnerNotification",
                                            Subject = "{{Store.Name}}. Customer has been deleted.",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> ,<br />{{Customer.FullName}} ({{Customer.Email}}) has just deleted from your database. </p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> ,<br />\r\n{{Customer.FullName}} ({{Customer.Email}}) has just deleted from your database. </p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4437,7 +4437,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "Customer.EmailValidationMessage",
                                            Subject = "{{Store.Name}}. Email validation",
-                                           Body = "<a href=\"{{Store.URL}}\">{{Store.Name}}</a>  <br />  <br />  To activate your account <a href=\"{{Customer.AccountActivationURL}}\">click here</a>.     <br />  <br />  {{Store.Name}}",
+                                           Body = "<a href=\"{{Store.URL}}\">{{Store.Name}}</a>  <br />\r\n  <br />\r\n  To activate your account <a href=\"{{Customer.AccountActivationURL}}\">click here</a>.     <br />\r\n  <br />\r\n  {{Store.Name}}",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4445,7 +4445,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "Customer.NewPM",
                                            Subject = "{{Store.Name}}. You have received a new private message",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />You have received a new private message.</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nYou have received a new private message.</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4453,7 +4453,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "Customer.PasswordRecovery",
                                            Subject = "{{Store.Name}}. Password recovery",
-                                           Body = "<a href=\"{{Store.URL}}\">{{Store.Name}}</a>  <br />  <br />  To change your password <a href=\"{{Customer.PasswordRecoveryURL}}\">click here</a>.     <br />  <br />  {{Store.Name}}",
+                                           Body = "<a href=\"{{Store.URL}}\">{{Store.Name}}</a>  <br />\r\n  <br />\r\n  To change your password <a href=\"{{Customer.PasswordRecoveryURL}}\">click here</a>.     <br />\r\n  <br />\r\n  {{Store.Name}}",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4461,7 +4461,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "Customer.WelcomeMessage",
                                            Subject = "Welcome to {{Store.Name}}",
-                                           Body = "We welcome you to <a href=\"{{Store.URL}}\"> {{Store.Name}}</a>.<br /><br />You can now take part in the various services we have to offer you. Some of these services include:<br /><br />Permanent Cart - Any products added to your online cart remain there until you remove them, or check them out.<br />Address Book - We can now deliver your products to another address other than yours! This is perfect to send birthday gifts direct to the birthday-person themselves.<br />Order History - View your history of purchases that you have made with us.<br />Products Reviews - Share your opinions on products with our other customers.<br /><br />For help with any of our online services, please email the store-owner: <a href=\"mailto:{{Store.Email}}\">{{Store.Email}}</a>.<br /><br />Note: This email address was provided on our registration page. If you own the email and did not register on our site, please send an email to <a href=\"mailto:{{Store.Email}}\">{{Store.Email}}</a>.",
+                                           Body = "We welcome you to <a href=\"{{Store.URL}}\"> {{Store.Name}}</a>.<br />\r\n<br />\r\nYou can now take part in the various services we have to offer you. Some of these services include:<br />\r\n<br />\r\nPermanent Cart - Any products added to your online cart remain there until you remove them, or check them out.<br />\r\nAddress Book - We can now deliver your products to another address other than yours! This is perfect to send birthday gifts direct to the birthday-person themselves.<br />\r\nOrder History - View your history of purchases that you have made with us.<br />\r\nProducts Reviews - Share your opinions on products with our other customers.<br />\r\n<br />\r\nFor help with any of our online services, please email the store-owner: <a href=\"mailto:{{Store.Email}}\">{{Store.Email}}</a>.<br />\r\n<br />\r\nNote: This email address was provided on our registration page. If you own the email and did not register on our site, please send an email to <a href=\"mailto:{{Store.Email}}\">{{Store.Email}}</a>.",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4469,7 +4469,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "Forums.NewForumPost",
                                            Subject = "{{Store.Name}}. New Post Notification.",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />A new post has been created in the topic <a href=\"{{Forums.TopicURL}}\">\"{{Forums.TopicName}}\"</a> at <a href=\"{{Forums.ForumURL}}\">\"{{Forums.ForumName}}\"</a> forum.<br /><br />Click <a href=\"{{Forums.TopicURL}}\">here</a> for more info.<br /><br />Post author: {{Forums.PostAuthor}}<br />Post body: {{Forums.PostBody}}</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nA new post has been created in the topic <a href=\"{{Forums.TopicURL}}\">\"{{Forums.TopicName}}\"</a> at <a href=\"{{Forums.ForumURL}}\">\"{{Forums.ForumName}}\"</a> forum.<br />\r\n<br />\r\nClick <a href=\"{{Forums.TopicURL}}\">here</a> for more info.<br />\r\n<br />\r\nPost author: {{Forums.PostAuthor}}<br />\r\nPost body: {{Forums.PostBody}}</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4477,7 +4477,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "Forums.NewForumTopic",
                                            Subject = "{{Store.Name}}. New Topic Notification.",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />A new topic <a href=\"{{Forums.TopicURL}}\">\"{{Forums.TopicName}}\"</a> has been created at <a href=\"{{Forums.ForumURL}}\">\"{{Forums.ForumName}}\"</a> forum.<br /><br />Click <a href=\"{{Forums.TopicURL}}\">here</a> for more info.</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nA new topic <a href=\"{{Forums.TopicURL}}\">\"{{Forums.TopicName}}\"</a> has been created at <a href=\"{{Forums.ForumURL}}\">\"{{Forums.ForumName}}\"</a> forum.<br />\r\n<br />\r\nClick <a href=\"{{Forums.TopicURL}}\">here</a> for more info.</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4485,7 +4485,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "GiftCard.Notification",
                                            Subject = "{{GiftCard.SenderName}} has sent you a gift card for {{Store.Name}}",
-                                           Body = "<p>You have received a gift card for {{Store.Name}}</p><p>Dear {{GiftCard.RecipientName}}, <br /><br />{{GiftCard.SenderName}} ({{GiftCard.SenderEmail}}) has sent you a {{GiftCard.Amount}} gift cart for <a href=\"{{Store.URL}}\"> {{Store.Name}}</a></p><p>You gift card code is {{GiftCard.CouponCode}}</p><p>{{GiftCard.Message}}</p>",
+                                           Body = "<p>You have received a gift card for {{Store.Name}}</p><p>Dear {{GiftCard.RecipientName}}, <br />\r\n<br />\r\n{{GiftCard.SenderName}} ({{GiftCard.SenderEmail}}) has sent you a {{GiftCard.Amount}} gift cart for <a href=\"{{Store.URL}}\"> {{Store.Name}}</a></p><p>You gift card code is {{GiftCard.CouponCode}}</p><p>{{GiftCard.Message}}</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4493,7 +4493,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "NewCustomer.Notification",
                                            Subject = "{{Store.Name}}. New customer registration",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />A new customer registered with your store. Below are the customer's details:<br />Full name: {{Customer.FullName}}<br />Email: {{Customer.Email}}</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nA new customer registered with your store. Below are the customer's details:<br />\r\nFull name: {{Customer.FullName}}<br />\r\nEmail: {{Customer.Email}}</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4501,7 +4501,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "NewReturnRequest.CustomerNotification",
                                            Subject = "{{Store.Name}}. New return request.",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />Hello {{Customer.FullName}}!<br /> You have just submitted a new return request. Details are below:<br />Request ID: {{ReturnRequest.ID}}<br />Products:<br />{{ReturnRequest.Products}}<br />Customer comments: {{ReturnRequest.CustomerComment}}<br /><br />Pickup date: {{ReturnRequest.PickupDate}}<br /><br />Pickup address:<br />{{PickupAddress.FirstName}} {{PickupAddress.LastName}}<br />{{PickupAddress.Address1}}<br />{{PickupAddress.City}} {{PickupAddress.ZipPostalCode}}<br />{{PickupAddress.StateProvince}} {{PickupAddress.Country}}<br /></p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nHello {{Customer.FullName}}!<br />\r\n You have just submitted a new return request. Details are below:<br />\r\nRequest ID: {{ReturnRequest.ID}}<br />\r\nProducts:<br />\r\n{{ReturnRequest.Products}}<br />\r\nCustomer comments: {{ReturnRequest.CustomerComment}}<br />\r\n<br />\r\nPickup date: {{ReturnRequest.PickupDate}}<br />\r\n<br />\r\nPickup address:<br />\r\n{{PickupAddress.FirstName}} {{PickupAddress.LastName}}<br />\r\n{{PickupAddress.Address1}}<br />\r\n{{PickupAddress.City}} {{PickupAddress.ZipPostalCode}}<br />\r\n{{PickupAddress.StateProvince}} {{PickupAddress.Country}}<br />\r\n</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4509,7 +4509,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "NewReturnRequest.StoreOwnerNotification",
                                            Subject = "{{Store.Name}}. New return request.",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />{{Customer.FullName}} has just submitted a new return request. Details are below:<br />Request ID: {{ReturnRequest.ID}}<br />Products:<br />{{ReturnRequest.Products}}<br />Customer comments: {{ReturnRequest.CustomerComment}}<br /><br />Pickup date: {{ReturnRequest.PickupDate}}<br /><br />Pickup address:<br />{{PickupAddress.FirstName}} {{PickupAddress.LastName}}<br />{{PickupAddress.Address1}}<br />{{PickupAddress.City}} {{PickupAddress.ZipPostalCode}}<br />{{PickupAddress.StateProvince}} {{PickupAddress.Country}}<br /></p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\n{{Customer.FullName}} has just submitted a new return request. Details are below:<br />\r\nRequest ID: {{ReturnRequest.ID}}<br />\r\nProducts:<br />\r\n{{ReturnRequest.Products}}<br />\r\nCustomer comments: {{ReturnRequest.CustomerComment}}<br />\r\n<br />\r\nPickup date: {{ReturnRequest.PickupDate}}<br />\r\n<br />\r\nPickup address:<br />\r\n{{PickupAddress.FirstName}} {{PickupAddress.LastName}}<br />\r\n{{PickupAddress.Address1}}<br />\r\n{{PickupAddress.City}} {{PickupAddress.ZipPostalCode}}<br />\r\n{{PickupAddress.StateProvince}} {{PickupAddress.Country}}<br />\r\n</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4517,7 +4517,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "News.NewsComment",
                                            Subject = "{{Store.Name}}. New news comment.",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />A new news comment has been created for news \"{{NewsComment.NewsTitle}}\".</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nA new news comment has been created for news \"{{NewsComment.NewsTitle}}\".</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4541,7 +4541,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "NewVATSubmitted.StoreOwnerNotification",
                                            Subject = "{{Store.Name}}. New VAT number is submitted.",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />{{Customer.FullName}} ({{Customer.Email}}) has just submitted a new VAT number. Details are below:<br />VAT number: {{Customer.VatNumber}}<br />VAT number status: {{Customer.VatNumberStatus}}<br />Received name: {{VatValidationResult.Name}}<br />Received address: {{VatValidationResult.Address}}</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\n{{Customer.FullName}} ({{Customer.Email}}) has just submitted a new VAT number. Details are below:<br />\r\nVAT number: {{Customer.VatNumber}}<br />\r\nVAT number status: {{Customer.VatNumberStatus}}<br />\r\nReceived name: {{VatValidationResult.Name}}<br />\r\nReceived address: {{VatValidationResult.Address}}</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4549,7 +4549,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "OrderCancelled.StoreOwnerNotification",
                                            Subject = "{{Store.Name}}. Customer cancelled an order",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br /><br />Customer cancelled an order. Below is the summary of the order. <br /><br />Order Number: {{Order.OrderNumber}}<br />Order Details: <a target=\"_blank\" href=\"{{Order.OrderURLForCustomer}}\">{{Order.OrderURLForCustomer}}</a><br />Date Ordered: {{Order.CreatedOn}}<br /><br /><br /><br />Billing Address<br />{{Order.BillingFirstName}} {{Order.BillingLastName}}<br />{{Order.BillingAddress1}}<br />{{Order.BillingCity}} {{Order.BillingZipPostalCode}}<br />{{Order.BillingStateProvince}} {{Order.BillingCountry}}<br /><br /><br /><br />Shipping Address<br />{{Order.ShippingFirstName}} {{Order.ShippingLastName}}<br />{{Order.ShippingAddress1}}<br />{{Order.ShippingCity}} {{Order.ShippingZipPostalCode}}<br />{{Order.ShippingStateProvince}} {{Order.ShippingCountry}}<br /><br />Shipping Method: {{Order.ShippingMethod}}<br /><br />" + OrderProducts + "</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\n<br />\r\nCustomer cancelled an order. Below is the summary of the order. <br />\r\n<br />\r\nOrder Number: {{Order.OrderNumber}}<br />\r\nOrder Details: <a target=\"_blank\" href=\"{{Order.OrderURLForCustomer}}\">{{Order.OrderURLForCustomer}}</a><br />\r\nDate Ordered: {{Order.CreatedOn}}<br />\r\n<br />\r\n<br />\r\n<br />\r\nBilling Address<br />\r\n{{Order.BillingFirstName}} {{Order.BillingLastName}}<br />\r\n{{Order.BillingAddress1}}<br />\r\n{{Order.BillingCity}} {{Order.BillingZipPostalCode}}<br />\r\n{{Order.BillingStateProvince}} {{Order.BillingCountry}}<br />\r\n<br />\r\n<br />\r\n<br />\r\nShipping Address<br />\r\n{{Order.ShippingFirstName}} {{Order.ShippingLastName}}<br />\r\n{{Order.ShippingAddress1}}<br />\r\n{{Order.ShippingCity}} {{Order.ShippingZipPostalCode}}<br />\r\n{{Order.ShippingStateProvince}} {{Order.ShippingCountry}}<br />\r\n<br />\r\nShipping Method: {{Order.ShippingMethod}}<br />\r\n<br />\r\n" + OrderProducts + "</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4557,7 +4557,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "OrderCancelled.CustomerNotification",
                                            Subject = "{{Store.Name}}. Your order cancelled",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />Hello {{Order.CustomerFullName}}, <br />Your order has been cancelled. Below is the summary of the order. <br /><br />Order Number: {{Order.OrderNumber}}<br />Order Details: <a target=\"_blank\" href=\"{{Order.OrderURLForCustomer}}\">{{Order.OrderURLForCustomer}}</a><br />Date Ordered: {{Order.CreatedOn}}<br /><br /><br /><br />Billing Address<br />{{Order.BillingFirstName}} {{Order.BillingLastName}}<br />{{Order.BillingAddress1}}<br />{{Order.BillingCity}} {{Order.BillingZipPostalCode}}<br />{{Order.BillingStateProvince}} {{Order.BillingCountry}}<br /><br /><br /><br />Shipping Address<br />{{Order.ShippingFirstName}} {{Order.ShippingLastName}}<br />{{Order.ShippingAddress1}}<br />{{Order.ShippingCity}} {{Order.ShippingZipPostalCode}}<br />{{Order.ShippingStateProvince}} {{Order.ShippingCountry}}<br /><br />Shipping Method: {{Order.ShippingMethod}}<br /><br />" + OrderProducts + "</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nHello {{Order.CustomerFullName}}, <br />\r\nYour order has been cancelled. Below is the summary of the order. <br />\r\n<br />\r\nOrder Number: {{Order.OrderNumber}}<br />\r\nOrder Details: <a target=\"_blank\" href=\"{{Order.OrderURLForCustomer}}\">{{Order.OrderURLForCustomer}}</a><br />\r\nDate Ordered: {{Order.CreatedOn}}<br />\r\n<br />\r\n<br />\r\n<br />\r\nBilling Address<br />\r\n{{Order.BillingFirstName}} {{Order.BillingLastName}}<br />\r\n{{Order.BillingAddress1}}<br />\r\n{{Order.BillingCity}} {{Order.BillingZipPostalCode}}<br />\r\n{{Order.BillingStateProvince}} {{Order.BillingCountry}}<br />\r\n<br />\r\n<br />\r\n<br />\r\nShipping Address<br />\r\n{{Order.ShippingFirstName}} {{Order.ShippingLastName}}<br />\r\n{{Order.ShippingAddress1}}<br />\r\n{{Order.ShippingCity}} {{Order.ShippingZipPostalCode}}<br />\r\n{{Order.ShippingStateProvince}} {{Order.ShippingCountry}}<br />\r\n<br />\r\nShipping Method: {{Order.ShippingMethod}}<br />\r\n<br />\r\n" + OrderProducts + "</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4565,7 +4565,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "OrderCompleted.CustomerNotification",
                                            Subject = "{{Store.Name}}. Your order completed",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />Hello {{Order.CustomerFullName}}, <br />Your order has been completed. Below is the summary of the order. <br /><br />Order Number: {{Order.OrderNumber}}<br />Order Details: <a target=\"_blank\" href=\"{{Order.OrderURLForCustomer}}\">{{Order.OrderURLForCustomer}}</a><br />Date Ordered: {{Order.CreatedOn}}<br /><br /><br /><br />Billing Address<br />{{Order.BillingFirstName}} {{Order.BillingLastName}}<br />{{Order.BillingAddress1}}<br />{{Order.BillingCity}} {{Order.BillingZipPostalCode}}<br />{{Order.BillingStateProvince}} {{Order.BillingCountry}}<br /><br /><br /><br />Shipping Address<br />{{Order.ShippingFirstName}} {{Order.ShippingLastName}}<br />{{Order.ShippingAddress1}}<br />{{Order.ShippingCity}} {{Order.ShippingZipPostalCode}}<br />{{Order.ShippingStateProvince}} {{Order.ShippingCountry}}<br /><br />Shipping Method: {{Order.ShippingMethod}}<br /><br />" + OrderProducts + "}</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nHello {{Order.CustomerFullName}}, <br />\r\nYour order has been completed. Below is the summary of the order. <br />\r\n<br />\r\nOrder Number: {{Order.OrderNumber}}<br />\r\nOrder Details: <a target=\"_blank\" href=\"{{Order.OrderURLForCustomer}}\">{{Order.OrderURLForCustomer}}</a><br />\r\nDate Ordered: {{Order.CreatedOn}}<br />\r\n<br />\r\n<br />\r\n<br />\r\nBilling Address<br />\r\n{{Order.BillingFirstName}} {{Order.BillingLastName}}<br />\r\n{{Order.BillingAddress1}}<br />\r\n{{Order.BillingCity}} {{Order.BillingZipPostalCode}}<br />\r\n{{Order.BillingStateProvince}} {{Order.BillingCountry}}<br />\r\n<br />\r\n<br />\r\n<br />\r\nShipping Address<br />\r\n{{Order.ShippingFirstName}} {{Order.ShippingLastName}}<br />\r\n{{Order.ShippingAddress1}}<br />\r\n{{Order.ShippingCity}} {{Order.ShippingZipPostalCode}}<br />\r\n{{Order.ShippingStateProvince}} {{Order.ShippingCountry}}<br />\r\n<br />\r\nShipping Method: {{Order.ShippingMethod}}<br />\r\n<br />\r\n" + OrderProducts + "}</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4573,7 +4573,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "ShipmentDelivered.CustomerNotification",
                                            Subject = "Your order from {{Store.Name}} has been delivered.",
-                                           Body = "<p><a href=\"{{Store.URL}}\"> {{Store.Name}}</a> <br /> <br /> Hello {{Order.CustomerFullName}}, <br /> Good news! You order has been delivered. <br /> Order Number: {{Order.OrderNumber}}<br /> Order Details: <a href=\"{{Order.OrderURLForCustomer}}\" target=\"_blank\">{{Order.OrderURLForCustomer}}</a><br /> Date Ordered: {{Order.CreatedOn}}<br /> <br /> <br /> <br /> Billing Address<br /> {{Order.BillingFirstName}} {{Order.BillingLastName}}<br /> {{Order.BillingAddress1}}<br /> {{Order.BillingCity}} {{Order.BillingZipPostalCode}}<br /> {{Order.BillingStateProvince}} {{Order.BillingCountry}}<br /> <br /> <br /> <br /> Shipping Address<br /> {{Order.ShippingFirstName}} {{Order.ShippingLastName}}<br /> {{Order.ShippingAddress1}}<br /> {{Order.ShippingCity}} {{Order.ShippingZipPostalCode}}<br /> {{Order.ShippingStateProvince}} {{Order.ShippingCountry}}<br /> <br /> Shipping Method: {{Order.ShippingMethod}} <br /> <br /> Delivered Products: <br /> <br />" + ShipmentProducts + "</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\"> {{Store.Name}}</a> <br />\r\n <br />\r\n Hello {{Order.CustomerFullName}}, <br />\r\n Good news! You order has been delivered. <br />\r\n Order Number: {{Order.OrderNumber}}<br />\r\n Order Details: <a href=\"{{Order.OrderURLForCustomer}}\" target=\"_blank\">{{Order.OrderURLForCustomer}}</a><br />\r\n Date Ordered: {{Order.CreatedOn}}<br />\r\n <br />\r\n <br />\r\n <br />\r\n Billing Address<br />\r\n {{Order.BillingFirstName}} {{Order.BillingLastName}}<br />\r\n {{Order.BillingAddress1}}<br />\r\n {{Order.BillingCity}} {{Order.BillingZipPostalCode}}<br />\r\n {{Order.BillingStateProvince}} {{Order.BillingCountry}}<br />\r\n <br />\r\n <br />\r\n <br />\r\n Shipping Address<br />\r\n {{Order.ShippingFirstName}} {{Order.ShippingLastName}}<br />\r\n {{Order.ShippingAddress1}}<br />\r\n {{Order.ShippingCity}} {{Order.ShippingZipPostalCode}}<br />\r\n {{Order.ShippingStateProvince}} {{Order.ShippingCountry}}<br />\r\n <br />\r\n Shipping Method: {{Order.ShippingMethod}} <br />\r\n <br />\r\n Delivered Products: <br />\r\n <br />\r\n" + ShipmentProducts + "</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4581,7 +4581,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "OrderPlaced.CustomerNotification",
                                            Subject = "Order receipt from {{Store.Name}}.",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />Hello {{Order.CustomerFullName}}, <br />Thanks for buying from <a href=\"{{Store.URL}}\">{{Store.Name}}</a>. Below is the summary of the order. <br /><br />Order Number: {{Order.OrderNumber}}<br />Order Details: <a target=\"_blank\" href=\"{{Order.OrderURLForCustomer}}\">{{Order.OrderURLForCustomer}}</a><br />Date Ordered: {{Order.CreatedOn}}<br /><br /><br /><br />Billing Address<br />{{Order.BillingFirstName}} {{Order.BillingLastName}}<br />{{Order.BillingAddress1}}<br />{{Order.BillingCity}} {{Order.BillingZipPostalCode}}<br />{{Order.BillingStateProvince}} {{Order.BillingCountry}}<br /><br /><br /><br />Shipping Address<br />{{Order.ShippingFirstName}} {{Order.ShippingLastName}}<br />{{Order.ShippingAddress1}}<br />{{Order.ShippingCity}} {{Order.ShippingZipPostalCode}}<br />{{Order.ShippingStateProvince}} {{Order.ShippingCountry}}<br /><br />Shipping Method: {{Order.ShippingMethod}}<br /><br />" + OrderProducts + "</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nHello {{Order.CustomerFullName}}, <br />\r\nThanks for buying from <a href=\"{{Store.URL}}\">{{Store.Name}}</a>. Below is the summary of the order. <br />\r\n<br />\r\nOrder Number: {{Order.OrderNumber}}<br />\r\nOrder Details: <a target=\"_blank\" href=\"{{Order.OrderURLForCustomer}}\">{{Order.OrderURLForCustomer}}</a><br />\r\nDate Ordered: {{Order.CreatedOn}}<br />\r\n<br />\r\n<br />\r\n<br />\r\nBilling Address<br />\r\n{{Order.BillingFirstName}} {{Order.BillingLastName}}<br />\r\n{{Order.BillingAddress1}}<br />\r\n{{Order.BillingCity}} {{Order.BillingZipPostalCode}}<br />\r\n{{Order.BillingStateProvince}} {{Order.BillingCountry}}<br />\r\n<br />\r\n<br />\r\n<br />\r\nShipping Address<br />\r\n{{Order.ShippingFirstName}} {{Order.ShippingLastName}}<br />\r\n{{Order.ShippingAddress1}}<br />\r\n{{Order.ShippingCity}} {{Order.ShippingZipPostalCode}}<br />\r\n{{Order.ShippingStateProvince}} {{Order.ShippingCountry}}<br />\r\n<br />\r\nShipping Method: {{Order.ShippingMethod}}<br />\r\n<br />\r\n" + OrderProducts + "</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4589,7 +4589,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "OrderPlaced.StoreOwnerNotification",
                                            Subject = "{{Store.Name}}. Purchase Receipt for Order #{{Order.OrderNumber}}",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />{{Order.CustomerFullName}} ({{Order.CustomerEmail}}) has just placed an order from your store. Below is the summary of the order. <br /><br />Order Number: {{Order.OrderNumber}}<br />Date Ordered: {{Order.CreatedOn}}<br /><br /><br /><br />Billing Address<br />{{Order.BillingFirstName}} {{Order.BillingLastName}}<br />{{Order.BillingAddress1}}<br />{{Order.BillingCity}} {{Order.BillingZipPostalCode}}<br />{{Order.BillingStateProvince}} {{Order.BillingCountry}}<br /><br /><br /><br />Shipping Address<br />{{Order.ShippingFirstName}} {{Order.ShippingLastName}}<br />{{Order.ShippingAddress1}}<br />{{Order.ShippingCity}} {{Order.ShippingZipPostalCode}}<br />{{Order.ShippingStateProvince}} {{Order.ShippingCountry}}<br /><br />Shipping Method: {{Order.ShippingMethod}}<br /><br />" + OrderProducts + "</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\n{{Order.CustomerFullName}} ({{Order.CustomerEmail}}) has just placed an order from your store. Below is the summary of the order. <br />\r\n<br />\r\nOrder Number: {{Order.OrderNumber}}<br />\r\nDate Ordered: {{Order.CreatedOn}}<br />\r\n<br />\r\n<br />\r\n<br />\r\nBilling Address<br />\r\n{{Order.BillingFirstName}} {{Order.BillingLastName}}<br />\r\n{{Order.BillingAddress1}}<br />\r\n{{Order.BillingCity}} {{Order.BillingZipPostalCode}}<br />\r\n{{Order.BillingStateProvince}} {{Order.BillingCountry}}<br />\r\n<br />\r\n<br />\r\n<br />\r\nShipping Address<br />\r\n{{Order.ShippingFirstName}} {{Order.ShippingLastName}}<br />\r\n{{Order.ShippingAddress1}}<br />\r\n{{Order.ShippingCity}} {{Order.ShippingZipPostalCode}}<br />\r\n{{Order.ShippingStateProvince}} {{Order.ShippingCountry}}<br />\r\n<br />\r\nShipping Method: {{Order.ShippingMethod}}<br />\r\n<br />\r\n" + OrderProducts + "</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4597,7 +4597,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "ShipmentSent.CustomerNotification",
                                            Subject = "Your order from {{Store.Name}} has been shipped.",
-                                           Body = "<p><a href=\"{{Store.URL}}\"> {{Store.Name}}</a> <br /><br />Hello {{Order.CustomerFullName}}!, <br />Good news! You order has been shipped. <br />Order Number: {{Order.OrderNumber}}<br />Order Details: <a href=\"{{Order.OrderURLForCustomer}}\" target=\"_blank\">{{Order.OrderURLForCustomer}}</a><br />Date Ordered: {{Order.CreatedOn}}<br /><br /><br /><br />Billing Address<br />{{Order.BillingFirstName}} {{Order.BillingLastName}}<br />{{Order.BillingAddress1}}<br />{{Order.BillingCity}} {{Order.BillingZipPostalCode}}<br />{{Order.BillingStateProvince}} {{Order.BillingCountry}}<br /><br /><br /><br />Shipping Address<br />{{Order.ShippingFirstName}} {{Order.ShippingLastName}}<br />{{Order.ShippingAddress1}}<br />{{Order.ShippingCity}} {{Order.ShippingZipPostalCode}}<br />{{Order.ShippingStateProvince}} {{Order.ShippingCountry}}<br /><br />Shipping Method: {{Order.ShippingMethod}} <br /> <br /> Shipped Products: <br /> <br />" + ShipmentProducts + "}</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\"> {{Store.Name}}</a> <br />\r\n<br />\r\nHello {{Order.CustomerFullName}}!, <br />\r\nGood news! You order has been shipped. <br />\r\nOrder Number: {{Order.OrderNumber}}<br />\r\nOrder Details: <a href=\"{{Order.OrderURLForCustomer}}\" target=\"_blank\">{{Order.OrderURLForCustomer}}</a><br />\r\nDate Ordered: {{Order.CreatedOn}}<br />\r\n<br />\r\n<br />\r\n<br />\r\nBilling Address<br />\r\n{{Order.BillingFirstName}} {{Order.BillingLastName}}<br />\r\n{{Order.BillingAddress1}}<br />\r\n{{Order.BillingCity}} {{Order.BillingZipPostalCode}}<br />\r\n{{Order.BillingStateProvince}} {{Order.BillingCountry}}<br />\r\n<br />\r\n<br />\r\n<br />\r\nShipping Address<br />\r\n{{Order.ShippingFirstName}} {{Order.ShippingLastName}}<br />\r\n{{Order.ShippingAddress1}}<br />\r\n{{Order.ShippingCity}} {{Order.ShippingZipPostalCode}}<br />\r\n{{Order.ShippingStateProvince}} {{Order.ShippingCountry}}<br />\r\n<br />\r\nShipping Method: {{Order.ShippingMethod}} <br />\r\n <br />\r\n Shipped Products: <br />\r\n <br />\r\n" + ShipmentProducts + "}</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4605,7 +4605,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "Product.ProductReview",
                                            Subject = "{{Store.Name}}. New product review.",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />A new product review has been written for product \"{{ProductReview.ProductName}}\".</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nA new product review has been written for product \"{{ProductReview.ProductName}}\".</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4613,7 +4613,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "QuantityBelow.StoreOwnerNotification",
                                            Subject = "{{Store.Name}}. Quantity below notification. {{Product.Name}}",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />{{Product.Name}} (ID: {{Product.ID}}) low quantity. <br /><br />Quantity: {{Product.StockQuantity}}<br /></p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\n{{Product.Name}} (ID: {{Product.ID}}) low quantity. <br />\r\n<br />\r\nQuantity: {{Product.StockQuantity}}<br />\r\n</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4621,7 +4621,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "QuantityBelow.AttributeCombination.StoreOwnerNotification",
                                            Subject = "{{Store.Name}}. Quantity below notification. {{Product.Name}}",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />{{Product.Name}} (ID: {{Product.ID}}) low quantity. <br />{{AttributeCombination.Formatted}}<br />Quantity: {{AttributeCombination.StockQuantity}}<br /></p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\n{{Product.Name}} (ID: {{Product.ID}}) low quantity. <br />\r\n{{AttributeCombination.Formatted}}<br />\r\nQuantity: {{AttributeCombination.StockQuantity}}<br />\r\n</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4629,7 +4629,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "ReturnRequestStatusChanged.CustomerNotification",
                                            Subject = "{{Store.Name}}. Return request status was changed.",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />Hello {{Customer.FullName}},<br />Your return request #{{ReturnRequest.ID}} status has been changed.</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nHello {{Customer.FullName}},<br />\r\nYour return request #{{ReturnRequest.ID}} status has been changed.</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4637,7 +4637,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "Service.EmailAFriend",
                                            Subject = "{{Store.Name}}. Referred Item",
-                                           Body = "<p><a href=\"{{Store.URL}}\"> {{Store.Name}}</a> <br /><br />{{EmailAFriend.Email}} was shopping on {{Store.Name}} and wanted to share the following item with you. <br /><br /><b><a target=\"_blank\" href=\"{{Product.ProductURLForCustomer}}\">{{Product.Name}}</a></b> <br />{{Product.ShortDescription}} <br /><br />For more info click <a target=\"_blank\" href=\"{{Product.ProductURLForCustomer}}\">here</a> <br /><br /><br />{{EmailAFriend.PersonalMessage}}<br /><br />{{Store.Name}}</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\"> {{Store.Name}}</a> <br />\r\n<br />\r\n{{EmailAFriend.Email}} was shopping on {{Store.Name}} and wanted to share the following item with you. <br />\r\n<br />\r\n<b><a target=\"_blank\" href=\"{{Product.ProductURLForCustomer}}\">{{Product.Name}}</a></b> <br />\r\n{{Product.ShortDescription}} <br />\r\n<br />\r\nFor more info click <a target=\"_blank\" href=\"{{Product.ProductURLForCustomer}}\">here</a> <br />\r\n<br />\r\n<br />\r\n{{EmailAFriend.PersonalMessage}}<br />\r\n<br />\r\n{{Store.Name}}</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4645,7 +4645,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "Service.AskQuestion",
                                            Subject = "{{Store.Name}}. Question about a product",
-                                           Body = "<p><a href=\"{{Store.URL}}\"> {{Store.Name}}</a> <br /><br />{{AskQuestion.Email}} wanted to ask question about a product {{Product.Name}}. <br /><br /><b><a target=\"_blank\" href=\"{{Product.ProductURLForCustomer}}\">{{Product.Name}}</a></b> <br />{{Product.ShortDescription}} <br />{{AskQuestion.Message}}<br /> {{AskQuestion.Email}} <br /> {{AskQuestion.FullName}} <br /> {{AskQuestion.Phone}} <br />{{Store.Name}}</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\"> {{Store.Name}}</a> <br />\r\n<br />\r\n{{AskQuestion.Email}} wanted to ask question about a product {{Product.Name}}. <br />\r\n<br />\r\n<b><a target=\"_blank\" href=\"{{Product.ProductURLForCustomer}}\">{{Product.Name}}</a></b> <br />\r\n{{Product.ShortDescription}} <br />\r\n{{AskQuestion.Message}}<br />\r\n {{AskQuestion.Email}} <br />\r\n {{AskQuestion.FullName}} <br />\r\n {{AskQuestion.Phone}} <br />\r\n{{Store.Name}}</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4670,7 +4670,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "Wishlist.EmailAFriend",
                                            Subject = "{{Store.Name}}. Wishlist",
-                                           Body = "<p><a href=\"{{Store.URL}}\"> {{Store.Name}}</a> <br /><br />{{Wishlist.Email}} was shopping on {{Store.Name}} and wanted to share a wishlist with you. <br /><br /><br />For more info click <a target=\"_blank\" href=\"{{Wishlist.URLForCustomer}}\">here</a> <br /><br /><br />{{Wishlist.PersonalMessage}}<br /><br />{{Store.Name}}</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\"> {{Store.Name}}</a> <br />\r\n<br />\r\n{{Wishlist.Email}} was shopping on {{Store.Name}} and wanted to share a wishlist with you. <br />\r\n<br />\r\n<br />\r\nFor more info click <a target=\"_blank\" href=\"{{Wishlist.URLForCustomer}}\">here</a> <br />\r\n<br />\r\n<br />\r\n{{Wishlist.PersonalMessage}}<br />\r\n<br />\r\n{{Store.Name}}</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4678,7 +4678,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "Customer.NewOrderNote",
                                            Subject = "{{Store.Name}}. New order note has been added",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />Hello {{Customer.FullName}}, <br />New order note has been added to your account:<br />\"{{Order.NewNoteText}}\".<br /><a target=\"_blank\" href=\"{{Order.OrderURLForCustomer}}\">{{Order.OrderURLForCustomer}}</a></p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nHello {{Customer.FullName}}, <br />\r\nNew order note has been added to your account:<br />\r\n\"{{Order.NewNoteText}}\".<br />\r\n<a target=\"_blank\" href=\"{{Order.OrderURLForCustomer}}\">{{Order.OrderURLForCustomer}}</a></p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4686,7 +4686,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "Customer.NewCustomerNote",
                                            Subject = "New customer note has been added",
-                                           Body = "<p><br />Hello {{Customer.FullName}}, <br />New customer note has been added to your account:<br />\"{{Customer.NewTitleText}}\".<br /></p>",
+                                           Body = "<p><br />\r\nHello {{Customer.FullName}}, <br />\r\nNew customer note has been added to your account:<br />\r\n\"{{Customer.NewTitleText}}\".<br />\r\n</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4694,7 +4694,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "RecurringPaymentCancelled.StoreOwnerNotification",
                                            Subject = "{{Store.Name}}. Recurring payment cancelled",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />{{Customer.FullName}} ({{Customer.Email}}) has just cancelled a recurring payment ID={{RecurringPayment.ID}}.</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\n{{Customer.FullName}} ({{Customer.Email}}) has just cancelled a recurring payment ID={{RecurringPayment.ID}}.</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4702,7 +4702,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "OrderPlaced.VendorNotification",
                                            Subject = "{{Store.Name}}. Order placed",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />{{Customer.FullName}} ({{Customer.Email}}) has just placed an order. <br /><br />Order Number: {{Order.OrderNumber}}<br />Date Ordered: {{Order.CreatedOn}}<br /><br />" + OrderProducts + "</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\n{{Customer.FullName}} ({{Customer.Email}}) has just placed an order. <br />\r\n<br />\r\nOrder Number: {{Order.OrderNumber}}<br />\r\nDate Ordered: {{Order.CreatedOn}}<br />\r\n<br />\r\n" + OrderProducts + "</p>",
                                            //this template is disabled by default
                                            IsActive = false,
                                            EmailAccountId = eaGeneral.Id,
@@ -4711,7 +4711,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "OrderPaid.StoreOwnerNotification",
                                            Subject = "{{Store.Name}}. Order #{{Order.OrderNumber}} paid",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />Order #{{Order.OrderNumber}} has been just paid<br />Date Ordered: {{Order.CreatedOn}}</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nOrder #{{Order.OrderNumber}} has been just paid<br />\r\nDate Ordered: {{Order.CreatedOn}}</p>",
                                            //this template is disabled by default
                                            IsActive = false,
                                            EmailAccountId = eaGeneral.Id,
@@ -4720,7 +4720,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "OrderPaid.CustomerNotification",
                                            Subject = "{{Store.Name}}. Order #{{Order.OrderNumber}} paid",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />Hello {{Order.CustomerFullName}}, <br />Thanks for buying from <a href=\"{{Store.URL}}\">{{Store.Name}}</a>. Order #{{Order.OrderNumber}} has been just paid. Below is the summary of the order. <br /><br />Order Number: {{Order.OrderNumber}}<br />Order Details: <a href=\"{{Order.OrderURLForCustomer}}\" target=\"_blank\">{{Order.OrderURLForCustomer}}</a><br />Date Ordered: {{Order.CreatedOn}}<br /><br /><br /><br />Billing Address<br />{{Order.BillingFirstName}} {{Order.BillingLastName}}<br />{{Order.BillingAddress1}}<br />{{Order.BillingCity}} {{Order.BillingZipPostalCode}}<br />{{Order.BillingStateProvince}} {{Order.BillingCountry}}<br /><br /><br /><br />Shipping Address<br />{{Order.ShippingFirstName}} {{Order.ShippingLastName}}<br />{{Order.ShippingAddress1}}<br />{{Order.ShippingCity}} {{Order.ShippingZipPostalCode}}<br />{{Order.ShippingStateProvince}} {{Order.ShippingCountry}}<br /><br />Shipping Method: {{Order.ShippingMethod}}<br /><br />" + OrderProducts + "</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nHello {{Order.CustomerFullName}}, <br />\r\nThanks for buying from <a href=\"{{Store.URL}}\">{{Store.Name}}</a>. Order #{{Order.OrderNumber}} has been just paid. Below is the summary of the order. <br />\r\n<br />\r\nOrder Number: {{Order.OrderNumber}}<br />\r\nOrder Details: <a href=\"{{Order.OrderURLForCustomer}}\" target=\"_blank\">{{Order.OrderURLForCustomer}}</a><br />\r\nDate Ordered: {{Order.CreatedOn}}<br />\r\n<br />\r\n<br />\r\n<br />\r\nBilling Address<br />\r\n{{Order.BillingFirstName}} {{Order.BillingLastName}}<br />\r\n{{Order.BillingAddress1}}<br />\r\n{{Order.BillingCity}} {{Order.BillingZipPostalCode}}<br />\r\n{{Order.BillingStateProvince}} {{Order.BillingCountry}}<br />\r\n<br />\r\n<br />\r\n<br />\r\nShipping Address<br />\r\n{{Order.ShippingFirstName}} {{Order.ShippingLastName}}<br />\r\n{{Order.ShippingAddress1}}<br />\r\n{{Order.ShippingCity}} {{Order.ShippingZipPostalCode}}<br />\r\n{{Order.ShippingStateProvince}} {{Order.ShippingCountry}}<br />\r\n<br />\r\nShipping Method: {{Order.ShippingMethod}}<br />\r\n<br />\r\n" + OrderProducts + "</p>",
                                            //this template is disabled by default
                                            IsActive = false,
                                            EmailAccountId = eaGeneral.Id,
@@ -4729,7 +4729,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "OrderPaid.VendorNotification",
                                            Subject = "{{Store.Name}}. Order #{{Order.OrderNumber}} paid",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />Order #{{Order.OrderNumber}} has been just paid. <br /><br />Order Number: {{Order.OrderNumber}}<br />Date Ordered: {{Order.CreatedOn}}<br /><br />" + OrderProducts + "</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nOrder #{{Order.OrderNumber}} has been just paid. <br />\r\n<br />\r\nOrder Number: {{Order.OrderNumber}}<br />\r\nDate Ordered: {{Order.CreatedOn}}<br />\r\n<br />\r\n" + OrderProducts + "</p>",
                                            //this template is disabled by default
                                            IsActive = false,
                                            EmailAccountId = eaGeneral.Id,
@@ -4738,7 +4738,7 @@ namespace Grand.Services.Installation
                                         {
                                            Name = "OrderRefunded.CustomerNotification",
                                            Subject = "{{Store.Name}}. Order #{{Order.OrderNumber}} refunded",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />Hello {{Order.CustomerFullName}}, <br />Thanks for buying from <a href=\"{{Store.URL}}\">{{Store.Name}}</a>. Order #{{Order.OrderNumber}} has been has been refunded. Please allow 7-14 days for the refund to be reflected in your account.<br /><br />Amount refunded: {{Order.AmountRefunded}}<br /><br />Below is the summary of the order. <br /><br />Order Number: {{Order.OrderNumber}}<br />Order Details: <a href=\"{{Order.OrderURLForCustomer}}\" target=\"_blank\">{{Order.OrderURLForCustomer}}</a><br />Date Ordered: {{Order.CreatedOn}}<br /><br /><br /><br />Billing Address<br />{{Order.BillingFirstName}} {{Order.BillingLastName}}<br />{{Order.BillingAddress1}}<br />{{Order.BillingCity}} {{Order.BillingZipPostalCode}}<br />{{Order.BillingStateProvince}} {{Order.BillingCountry}}<br /><br /><br /><br />Shipping Address<br />{{Order.ShippingFirstName}} {{Order.ShippingLastName}}<br />{{Order.ShippingAddress1}}<br />{{Order.ShippingCity}} {{Order.ShippingZipPostalCode}}<br />{{Order.ShippingStateProvince}} {{Order.ShippingCountry}}<br /><br />Shipping Method: {{Order.ShippingMethod}}<br /><br />%Order.Product(s)%</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nHello {{Order.CustomerFullName}}, <br />\r\nThanks for buying from <a href=\"{{Store.URL}}\">{{Store.Name}}</a>. Order #{{Order.OrderNumber}} has been has been refunded. Please allow 7-14 days for the refund to be reflected in your account.<br />\r\n<br />\r\nAmount refunded: {{Order.AmountRefunded}}<br />\r\n<br />\r\nBelow is the summary of the order. <br />\r\n<br />\r\nOrder Number: {{Order.OrderNumber}}<br />\r\nOrder Details: <a href=\"{{Order.OrderURLForCustomer}}\" target=\"_blank\">{{Order.OrderURLForCustomer}}</a><br />\r\nDate Ordered: {{Order.CreatedOn}}<br />\r\n<br />\r\n<br />\r\n<br />\r\nBilling Address<br />\r\n{{Order.BillingFirstName}} {{Order.BillingLastName}}<br />\r\n{{Order.BillingAddress1}}<br />\r\n{{Order.BillingCity}} {{Order.BillingZipPostalCode}}<br />\r\n{{Order.BillingStateProvince}} {{Order.BillingCountry}}<br />\r\n<br />\r\n<br />\r\n<br />\r\nShipping Address<br />\r\n{{Order.ShippingFirstName}} {{Order.ShippingLastName}}<br />\r\n{{Order.ShippingAddress1}}<br />\r\n{{Order.ShippingCity}} {{Order.ShippingZipPostalCode}}<br />\r\n{{Order.ShippingStateProvince}} {{Order.ShippingCountry}}<br />\r\n<br />\r\nShipping Method: {{Order.ShippingMethod}}<br />\r\n<br />\r\n%Order.Product(s)%</p>",
                                            //this template is disabled by default
                                            IsActive = false,
                                            EmailAccountId = eaGeneral.Id,
@@ -4747,7 +4747,7 @@ namespace Grand.Services.Installation
                                         {
                                            Name = "OrderRefunded.StoreOwnerNotification",
                                            Subject = "{{Store.Name}}. Order #{{Order.OrderNumber}} refunded",
-                                           Body = "{{Store.Name}}. Order #{{Order.OrderNumber}} refunded', N'<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />Order #{{Order.OrderNumber}} has been just refunded<br /><br />Amount refunded: {{Order.AmountRefunded}}<br /><br />Date Ordered: {{Order.CreatedOn}}</p>",
+                                           Body = "{{Store.Name}}. Order #{{Order.OrderNumber}} refunded', N'<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nOrder #{{Order.OrderNumber}} has been just refunded<br />\r\n<br />\r\nAmount refunded: {{Order.AmountRefunded}}<br />\r\n<br />\r\nDate Ordered: {{Order.CreatedOn}}</p>",
                                            //this template is disabled by default
                                            IsActive = false,
                                            EmailAccountId = eaGeneral.Id,
@@ -4756,7 +4756,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "VendorAccountApply.StoreOwnerNotification",
                                            Subject = "{{Store.Name}}. New vendor account submitted.",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />{{Customer.FullName}} ({{Customer.Email}}) has just submitted for a vendor account. Details are below:<br />Vendor name: {{Vendor.Name}}<br />Vendor email: {{Vendor.Email}}<br /><br />You can activate it in admin area.</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\n{{Customer.FullName}} ({{Customer.Email}}) has just submitted for a vendor account. Details are below:<br />\r\nVendor name: {{Vendor.Name}}<br />\r\nVendor email: {{Vendor.Email}}<br />\r\n<br />\r\nYou can activate it in admin area.</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4764,7 +4764,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "Vendor.VendorReview",
                                            Subject = "{{Store.Name}}. New vendor review.",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br /><br />A new vendor review has been written.</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nA new vendor review has been written.</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
