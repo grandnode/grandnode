@@ -189,7 +189,7 @@
         var cm = $('.CodeMirror')[0].CodeMirror;
         var doc = cm.getDoc();
         var cursor = doc.getCursor(); // gets the line number in the cursor position
-        doc.replaceRange(text, cursor);
+        doc.replaceRange($(e).text(), cursor);
     }
 
     function SearchTokens(e) {
