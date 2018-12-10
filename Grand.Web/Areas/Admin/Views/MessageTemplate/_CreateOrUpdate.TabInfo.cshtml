@@ -1,4 +1,9 @@
 ﻿@model MessageTemplateModel
+@{
+    Html.AddScriptParts("~/content/codemirror/codemirror.js", excludeFromBundle: true);
+    Html.AddScriptParts("~/content/codemirror/mode/xml/xml.js", excludeFromBundle: true);
+    Html.AddCssFileParts("~/content/codemirror/codemirror.css", excludeFromBundle: true);
+}
 
 <div class="form-horizontal">
     <div class="form-body">
@@ -8,7 +13,7 @@
                 @if (!String.IsNullOrEmpty(Model.Id))
                 {
                     <label class="control-label">@Model.Name</label>
-                        <input asp-for="Name" type="hidden" />
+                    <input asp-for="Name" type="hidden" />
                 }
                 else
                 {
@@ -48,19 +53,10 @@
             <div class="form-group">
                 <admin-label asp-for="@Model.Locales[item].Body" />
                 <div class="col-md-9 col-sm-9">
-                    <admin-input asp-for="@Model.Locales[item].Body" asp-template="RichEditor" />
+                    <admin-input asp-for="@Model.Locales[item].Body" asp-template="Codemirror"/>
                     <span asp-validation-for="@Model.Locales[item].Body"></span>
                 </div>
             </div>
-            @if (!String.IsNullOrEmpty(Model.Id))
-            {
-                <div class="form-group">
-                    <label class="col-md-3 col-sm-3 control-label">@T("Admin.ContentManagement.MessageTemplates.Test")</label>
-                    <div class="col-md-9 col-sm-9">
-                        <input type="button" class="btn green" value="@T("Admin.ContentManagement.MessageTemplates.Test")" onclick="setLocation('@(Url.Action("TestTemplate", new { id = Model.Id, languageId = Model.Locales[item].LanguageId }))')" />
-                    </div>
-                </div>
-            }
             <div class="form-group">
                 <admin-label asp-for="@Model.Locales[item].EmailAccountId" />
                 <div class="col-md-9 col-sm-9">
@@ -97,25 +93,14 @@
                     </div>
                     <div class="AllowedTokens">
                         @foreach (var token in Model.AllowedTokens)
-                        {
+                                    {
                             <button type="button" onclick="AddTokenToEditor(this)" class="btn btn-info">@token</button>
-                        }
+                                    }
                     </div>
-                    <admin-input asp-for="Body" asp-template="RichEditor"/>
+                    <admin-input asp-for="Body" asp-template="Codemirror" />
                     <span asp-validation-for="Body"></span>
                 </div>
             </div>
-            @if (!String.IsNullOrEmpty(Model.Id))
-            {
-                <div class="form-group">
-                    <label class="col-md-3 col-sm-3 control-label">
-                        @T("Admin.ContentManagement.MessageTemplates.Test")
-                    </label>
-                    <div class="col-md-9 col-sm-9">
-                        <input type="button" class="btn green" value="@T("Admin.ContentManagement.MessageTemplates.Test")" onclick="setLocation('@(Url.Action("TestTemplate", new { id = Model.Id }))')" />
-                    </div>
-                </div>
-            }
             <div class="form-group">
                 <admin-label asp-for="EmailAccountId" />
                 <div class="col-md-9 col-sm-9">
@@ -182,9 +167,6 @@
             $("input").click(function (e) {
                 onInputFocus = $(e.target);
             });
-            setTimeout(function () {
-                tinyMCE.editors[0].focus();
-            }, 2000)
         });
 
         function toggleHasAttachedDownload() {
@@ -203,6 +185,13 @@
                 $('#pnl-send-after').show();
     }
 
+    function AddTokenToEditor(e) {
+        var cm = $('.CodeMirror')[0].CodeMirror;
+        var doc = cm.getDoc();
+        var cursor = doc.getCursor(); // gets the line number in the cursor position
+        doc.replaceRange(text, cursor);
+    }
+
     function SearchTokens(e) {
         var searchVal = $(e.target).val();
         var TokensPnl = $(e.target).closest(".form-group").find(".AllowedTokens");
@@ -214,20 +203,5 @@
                     $(c).hide();
                 }
              });
-
-    }
-    function AddTokenToEditor(e) {
-        tinyMCE.activeEditor.execCommand('mceInsertContent', false, $(e).text());
     }
 </script>
-<style>
-.AllowedTokens {
-    height: 200px;
-    overflow: scroll;
-    overflow-x: hidden;
-    padding: 3px;
-}
-.AllowedTokens .btn {
-    margin: 2px;
-}
-</style>

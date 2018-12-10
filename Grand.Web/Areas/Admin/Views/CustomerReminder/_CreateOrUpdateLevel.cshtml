@@ -2,7 +2,7 @@
 <input asp-for="Id" type="hidden" />
 <input asp-for="CustomerReminderId" type="hidden" />
 
-@{ 
+@{
     var validationSummary = Html.ValidationSummary(false);
     if (!string.IsNullOrEmpty(validationSummary.ToString()))
     {
@@ -12,14 +12,14 @@
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-                <admin-label asp-for="Level" />
+            <admin-label asp-for="Level" />
             <div class="col-md-9 col-sm-9">
                 <admin-input asp-for="Level" />
                 <span asp-validation-for="Level"></span>
             </div>
         </div>
         <div class="form-group">
-                <admin-label asp-for="Name" />
+            <admin-label asp-for="Name" />
             <div class="col-md-9 col-sm-9">
                 <admin-input asp-for="Name" />
                 <span asp-validation-for="Name"></span>
@@ -50,40 +50,72 @@
             </div>
         </div>
         <div class="form-group">
-                <admin-label asp-for="EmailAccounts" />
+            <admin-label asp-for="EmailAccounts" />
             <div class="col-md-9 col-sm-9">
                 <admin-select asp-for="EmailAccountId" asp-items="Model.EmailAccounts" />
                 <span asp-validation-for="EmailAccountId"></span>
             </div>
         </div>
         <div class="form-group">
-                <admin-label asp-for="BccEmailAddresses" />
+            <admin-label asp-for="BccEmailAddresses" />
             <div class="col-md-9 col-sm-9">
                 <admin-input asp-for="BccEmailAddresses" />
                 <span asp-validation-for="BccEmailAddresses"></span>
             </div>
         </div>
         <div class="form-group">
-                <admin-label asp-for="Subject" />
+            <admin-label asp-for="Subject" />
             <div class="col-md-9 col-sm-9">
                 <admin-input asp-for="Subject" />
                 <span asp-validation-for="Subject"></span>
             </div>
         </div>
         <div class="form-group">
-                <admin-label asp-for="AllowedTokens" />
+            <admin-label asp-for="Body" />
             <div class="col-md-9 col-sm-9">
-                <label class="control-label" style="text-align:left">@Html.DisplayFor(model => model.AllowedTokens)</label> 
-            </div>
-        </div>
-        <div class="form-group">
-                <admin-label asp-for="Body" />
-            <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="Body" asp-template="RichEditor"/>
+                <div>
+                    <label>@T("Admin.ContentManagement.MessageTemplates.Fields.AllowedTokens")</label>
+                    <input type="search" name="SearchTokens" class="form-control SearchTokens" placeholder="@T("Search")" />
+                </div>
+                <div class="AllowedTokens">
+                    @foreach (var token in Model.AllowedTokens)
+                    {
+                        <button type="button" onclick="AddTokenToEditor(this)" class="btn btn-info">@token</button>
+                    }
+                </div>
+                <admin-input asp-for="Body" asp-template="RichEditor" />
                 <span asp-validation-for="Body"></span>
             </div>
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    function SearchTokens(e) {
+        var searchVal = $(e.target).val();
+        var TokensPnl = $(e.target).closest(".form-group").find(".AllowedTokens");
+        $(TokensPnl).find(".btn").show()
+            .each(function (i, c) {
+                var Token = $(c).text();
+                if (Token.search(new RegExp(searchVal, "i")) == -1) {
+                    $(c).hide();
+                }
+            });
 
+    }
 
+    function AddTokenToEditor(e) {
+        tinyMCE.activeEditor.execCommand('mceInsertContent', false, $(e).text());
+    }
+</script>
+<style>
+    .AllowedTokens {
+        height: 200px;
+        overflow: scroll;
+        overflow-x: hidden;
+        padding: 3px;
+    }
+
+        .AllowedTokens .btn {
+            margin: 2px;
+        }
+</style>

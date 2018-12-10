@@ -1,0 +1,24 @@
+<table border="0" style="width:100%;">
+<tr style="background-color:#b9babe; text-align:center;">
+<th>Name</th>
+<th>Quantity</th>
+</tr>
+
+{% for item in Shipment.ShipmentItems -%}
+<tr style="background-color: #ebecee; text-align: center;">
+<td style="padding: 0.6em 0.4em;text-align: left;">{{item.ProductName}}
+{% if item.AttributeDescription != null and item.AttributeDescription != "" %}
+<br />
+{{item.AttributeDescription}}
+{% endif %}
+
+{% if item.ShowSkuOnProductDetailsPage and item.ProductSku != null and item.ProductSku != "" %}
+<br />
+Sku: {{item.ProductSku}}
+{% endif %}
+
+</td>
+<td style="padding: 0.6em 0.4em; text-align: center;">{{item.Quantity}}</td>
+</tr>
+{% endfor -%}
+</table>

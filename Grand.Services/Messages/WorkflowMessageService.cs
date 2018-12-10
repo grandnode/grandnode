@@ -17,12 +17,12 @@ using Grand.Services.Common;
 using Grand.Services.Customers;
 using Grand.Services.Events;
 using Grand.Services.Localization;
+using Grand.Services.Messages.DotLiquidDrops;
 using Grand.Services.Orders;
 using Grand.Services.Stores;
 using Grand.Services.Vendors;
 using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 
@@ -52,7 +52,7 @@ namespace Grand.Services.Messages
         public WorkflowMessageService(IMessageTemplateService messageTemplateService,
             IQueuedEmailService queuedEmailService,
             ILanguageService languageService,
-            ITokenizer tokenizer, 
+            ITokenizer tokenizer,
             IEmailAccountService emailAccountService,
             IMessageTokenProvider messageTokenProvider,
             IStoreService storeService,
@@ -156,18 +156,17 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -192,18 +191,17 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = customer.Email;
             var toName = customer.GetFullName();
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens, 
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -228,19 +226,17 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
-
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = customer.Email;
             var toName = customer.GetFullName();
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -265,19 +261,17 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
-
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = customer.Email;
             var toName = customer.GetFullName();
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -300,19 +294,18 @@ namespace Grand.Services.Messages
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(customerNote.CustomerId);
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddCustomerNoteTokens(tokens, customerNote);
+
+            LiquidObject liquidObject = new LiquidObject();
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(tokens, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = customer.Email;
             var toName = string.Format("{0} {1}", customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName), customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName));
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -345,21 +338,20 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddOrderTokens(tokens, order, languageId, vendor.Id);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId, vendor.Id);
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
-            if(customer != null)
-                _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            if (customer != null)
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = vendor.Email;
             var toName = vendor.Name;
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -384,20 +376,20 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddOrderTokens(tokens, order, languageId);
+
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(tokens, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -423,20 +415,20 @@ namespace Grand.Services.Messages
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddOrderTokens(tokens, order, languageId);
+
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(tokens, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -465,20 +457,20 @@ namespace Grand.Services.Messages
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddOrderTokens(tokens, order, languageId);
+
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(tokens, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = order.BillingAddress.Email;
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName,
                 attachmentFilePath,
                 attachmentFileName);
@@ -511,20 +503,19 @@ namespace Grand.Services.Messages
 
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
 
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddOrderTokens(tokens, order, languageId, vendor.Id);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId, vendor.Id);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(tokens, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = vendor.Email;
             var toName = vendor.Name;
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -553,20 +544,20 @@ namespace Grand.Services.Messages
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddOrderTokens(tokens, order, languageId);
+
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(tokens, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = order.BillingAddress.Email;
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName,
                 attachmentFilePath,
                 attachmentFileName);
@@ -597,21 +588,21 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddShipmentTokens(tokens, shipment, languageId);
-            _messageTokenProvider.AddOrderTokens(tokens, order, languageId);
+
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddShipmentTokens(liquidObject, shipment, languageId);
+            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(tokens, customer);
-            
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = order.BillingAddress.Email;
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -640,21 +631,21 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddShipmentTokens(tokens, shipment, languageId);
-            _messageTokenProvider.AddOrderTokens(tokens, order, languageId);
+
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddShipmentTokens(liquidObject, shipment, languageId);
+            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(tokens, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = order.BillingAddress.Email;
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -684,20 +675,19 @@ namespace Grand.Services.Messages
 
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
 
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddOrderTokens(tokens, order, languageId);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(tokens, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = order.BillingAddress.Email;
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName,
                 attachmentFilePath,
                 attachmentFileName);
@@ -726,20 +716,19 @@ namespace Grand.Services.Messages
 
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
 
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddOrderTokens(tokens, order, languageId);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(tokens, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = order.BillingAddress.Email;
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -766,20 +755,19 @@ namespace Grand.Services.Messages
 
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
 
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddOrderTokens(tokens, order, languageId);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(tokens, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = order.BillingAddress.Email;
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -804,21 +792,20 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddOrderTokens(tokens, order, languageId);
-            _messageTokenProvider.AddOrderRefundedTokens(tokens, order, refundedAmount);
+
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(tokens, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
         /// <summary>
@@ -845,21 +832,19 @@ namespace Grand.Services.Messages
 
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
 
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddOrderTokens(tokens, order, languageId);
-            _messageTokenProvider.AddOrderRefundedTokens(tokens, order, refundedAmount);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(tokens, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = order.BillingAddress.Email;
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -873,7 +858,7 @@ namespace Grand.Services.Messages
         {
             if (orderNote == null)
                 throw new ArgumentNullException("orderNote");
-           
+
             var order = EngineContext.Current.Resolve<IOrderService>().GetOrderById(orderNote.OrderId);
 
             var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
@@ -887,21 +872,20 @@ namespace Grand.Services.Messages
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddOrderNoteTokens(tokens, orderNote);
-            _messageTokenProvider.AddOrderTokens(tokens, order, languageId);
+
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(tokens, customer);
-            
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = order.BillingAddress.Email;
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -928,22 +912,21 @@ namespace Grand.Services.Messages
 
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(recurringPayment.InitialOrder.CustomerId);
 
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddOrderTokens(tokens, recurringPayment.InitialOrder, languageId);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddOrderTokens(liquidObject, recurringPayment.InitialOrder, languageId);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(tokens, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
-            _messageTokenProvider.AddRecurringPaymentTokens(tokens, recurringPayment);
+            _messageTokenProvider.AddRecurringPaymentTokens(liquidObject, recurringPayment);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -973,18 +956,17 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddNewsLetterSubscriptionTokens(tokens, subscription);
-            
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddNewsLetterSubscriptionTokens(liquidObject, subscription);
+
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = subscription.Email;
             var toName = "";
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -1010,23 +992,22 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddNewsLetterSubscriptionTokens(tokens, subscription);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddNewsLetterSubscriptionTokens(liquidObject, subscription);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = subscription.Email;
             var toName = "";
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
         #endregion
-        
+
         #region Send a message to a friend, ask question
 
         /// <summary>
@@ -1058,21 +1039,22 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
-            _messageTokenProvider.AddProductTokens(tokens, product, languageId);
-            tokens.Add(new Token("EmailAFriend.PersonalMessage", personalMessage, true));
-            tokens.Add(new Token("EmailAFriend.Email", customerEmail));
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+            _messageTokenProvider.AddProductTokens(liquidObject, product, languageId);
+
+            var liquidEmailAFriend = new LiquidEmailAFriend();
+            liquidEmailAFriend.SetProperties(personalMessage, customerEmail);
+            liquidObject.EmailAFriend = new LiquidEmailAFriend();
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = friendsEmail;
             var toName = "";
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -1101,20 +1083,18 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
-            tokens.Add(new Token("Wishlist.PersonalMessage", personalMessage, true));
-            tokens.Add(new Token("Wishlist.Email", customerEmail));
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+            _messageTokenProvider.AddShoppingCartTokens(liquidObject, customer, personalMessage, customerEmail);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = friendsEmail;
             var toName = "";
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -1148,27 +1128,25 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
-            _messageTokenProvider.AddProductTokens(tokens, product, languageId);
-            tokens.Add(new Token("AskQuestion.Message", message, true));
-            tokens.Add(new Token("AskQuestion.Email", customerEmail));
-            tokens.Add(new Token("AskQuestion.FullName", fullName));
-            tokens.Add(new Token("AskQuestion.Phone", phone));
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+            _messageTokenProvider.AddProductTokens(liquidObject, product, languageId);
+            LiquidAskQuestion liquidAskQuestion = new LiquidAskQuestion();
+            liquidAskQuestion.SetProperties(message, customerEmail, fullName, phone);
+            liquidObject.AskAQuestion = liquidAskQuestion;
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             //store in database
             if (_commonSettings.StoreInDatabaseContactUsForm)
             {
                 var subject = messageTemplate.GetLocalized(mt => mt.Subject, languageId);
                 var body = messageTemplate.GetLocalized(mt => mt.Body, languageId);
-                //Replace subject and body tokens 
-                var subjectReplaced = _tokenizer.Replace(subject, tokens, false);
-                var bodyReplaced = _tokenizer.Replace(body, tokens, true);
+
+                var subjectReplaced = LiquidExtensions.Render(liquidObject, subject);
+                var bodyReplaced = LiquidExtensions.Render(liquidObject, body);
 
                 var contactus = new ContactUs()
                 {
@@ -1183,13 +1161,14 @@ namespace Grand.Services.Messages
                     EmailAccountId = emailAccount.Id,
                     IpAddress = EngineContext.Current.Resolve<IWebHelper>().GetCurrentIpAddress()
                 };
+
                 EngineContext.Current.Resolve<IContactUsService>().InsertContactUs(contactus);
             }
 
             var toEmail = emailAccount.Email;
             var toName = "";
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -1218,21 +1197,21 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(returnRequest.CustomerId);
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
-            _messageTokenProvider.AddReturnRequestTokens(tokens, returnRequest, order);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            if (customer != null)
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+
+            _messageTokenProvider.AddReturnRequestTokens(liquidObject, returnRequest, order);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -1257,25 +1236,25 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(returnRequest.CustomerId);
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
-            _messageTokenProvider.AddReturnRequestTokens(tokens, returnRequest, order);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            if (customer != null)
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+
+            _messageTokenProvider.AddReturnRequestTokens(liquidObject, returnRequest, order);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
-            string toEmail = customer.IsGuest() ? 
+            string toEmail = customer.IsGuest() ?
                 order.BillingAddress.Email :
                 customer.Email;
             var toName = customer.IsGuest() ?
                 order.BillingAddress.FirstName :
                 customer.GetFullName();
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -1301,16 +1280,16 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(returnRequest.CustomerId);
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
-            _messageTokenProvider.AddReturnRequestTokens(tokens, returnRequest, order);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            if (customer != null)
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+
+            _messageTokenProvider.AddReturnRequestTokens(liquidObject, returnRequest, order);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = customer.IsGuest() ?
                 order.BillingAddress.Email :
@@ -1319,7 +1298,7 @@ namespace Grand.Services.Messages
                 order.BillingAddress.FirstName :
                 customer.GetFullName();
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -1351,20 +1330,18 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddForumTopicTokens(tokens, forumTopic);
-            _messageTokenProvider.AddForumTokens(tokens, forum);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddForumTokens(liquidObject, forum, forumTopic);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = customer.Email;
             var toName = customer.GetFullName();
 
-            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            return SendNotification(messageTemplate, emailAccount, languageId, liquidObject, toEmail, toName);
         }
 
         /// <summary>
@@ -1389,7 +1366,7 @@ namespace Grand.Services.Messages
             var store = _storeContext.CurrentStore;
 
             var messageTemplate = GetActiveMessageTemplate("Forums.NewForumPost", store.Id);
-            if (messageTemplate == null )
+            if (messageTemplate == null)
             {
                 return 0;
             }
@@ -1397,22 +1374,19 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddForumPostTokens(tokens, forumPost);
-            _messageTokenProvider.AddForumTopicTokens(tokens, forumTopic,
-                friendlyForumTopicPageIndex, forumPost.Id);
-            _messageTokenProvider.AddForumTokens(tokens, forum);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddForumTokens(liquidObject, forum, forumTopic, forumPost, friendlyForumTopicPageIndex);
+            _messageTokenProvider.AddForumTokens(liquidObject, forum);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
-          
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
+
             var toEmail = customer.Email;
             var toName = customer.GetFullName();
 
-            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            return SendNotification(messageTemplate, emailAccount, languageId, liquidObject, toEmail, toName);
         }
 
         /// <summary>
@@ -1431,7 +1405,7 @@ namespace Grand.Services.Messages
             var store = _storeService.GetStoreById(privateMessage.StoreId) ?? _storeContext.CurrentStore;
 
             var messageTemplate = GetActiveMessageTemplate("Customer.NewPM", store.Id);
-            if (messageTemplate == null )
+            if (messageTemplate == null)
             {
                 return 0;
             }
@@ -1439,21 +1413,20 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddPrivateMessageTokens(tokens, privateMessage);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddPrivateMessageTokens(liquidObject, privateMessage);
             var tocustomer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(privateMessage.ToCustomerId);
             if (tocustomer != null)
-                _messageTokenProvider.AddCustomerTokens(tokens, tocustomer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, tocustomer);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
-           
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
+
             var toEmail = tocustomer.Email;
             var toName = tocustomer.GetFullName();
 
-            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            return SendNotification(messageTemplate, emailAccount, languageId, liquidObject, toEmail, toName);
         }
 
         #endregion
@@ -1484,19 +1457,18 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
-            _messageTokenProvider.AddVendorTokens(tokens, vendor);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+            _messageTokenProvider.AddVendorTokens(liquidObject, vendor);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -1521,18 +1493,17 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddVendorTokens(tokens, vendor);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddVendorTokens(liquidObject, vendor);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
 
-            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+            return SendNotification(messageTemplate, emailAccount, languageId, liquidObject, toEmail, toName);
         }
 
 
@@ -1549,7 +1520,7 @@ namespace Grand.Services.Messages
 
             Store store = null;
             var order = giftCard.PurchasedWithOrderItem != null ?
-                EngineContext.Current.Resolve<IOrderService>().GetOrderByOrderItemId(giftCard.PurchasedWithOrderItem.Id) : 
+                EngineContext.Current.Resolve<IOrderService>().GetOrderByOrderItemId(giftCard.PurchasedWithOrderItem.Id) :
                 null;
             if (order != null)
                 store = _storeService.GetStoreById(order.StoreId);
@@ -1565,20 +1536,19 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddGiftCardTokens(tokens, giftCard);
-            
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddGiftCardTokens(liquidObject, giftCard);
+
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
             var toEmail = giftCard.RecipientEmail;
             var toName = giftCard.RecipientName;
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
-        
+
         /// <summary>
         /// Sends a product review notification message to a store owner
         /// </summary>
@@ -1601,20 +1571,20 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(productReview.CustomerId);
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddProductReviewTokens(tokens, productReview);
+
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddProductReviewTokens(liquidObject, productReview);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(tokens, customer);
-            
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -1642,22 +1612,22 @@ namespace Grand.Services.Messages
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(vendorReview.CustomerId);
             var vendor = EngineContext.Current.Resolve<IVendorService>().GetVendorById(vendorReview.VendorId);
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddVendorReviewTokens(tokens, vendorReview);
-            if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
-            _messageTokenProvider.AddVendorTokens(tokens, vendor);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddVendorReviewTokens(liquidObject, vendorReview);
+            if (customer != null)
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+
+            _messageTokenProvider.AddVendorTokens(liquidObject, vendor);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = vendor.Email;
             var toName = vendor.Name;
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -1667,9 +1637,9 @@ namespace Grand.Services.Messages
         /// <param name="product">Product</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendQuantityBelowStoreOwnerNotification(Product product,  string languageId)
+        public virtual int SendQuantityBelowStoreOwnerNotification(Product product, string languageId)
         {
-            if (product== null)
+            if (product == null)
                 throw new ArgumentNullException("product");
 
             var store = _storeContext.CurrentStore;
@@ -1682,17 +1652,17 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddProductTokens(tokens, product, languageId);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddProductTokens(liquidObject, product, languageId);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -1719,18 +1689,18 @@ namespace Grand.Services.Messages
 
             var product = EngineContext.Current.Resolve<IProductService>().GetProductById(combination.ProductId);
 
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddProductTokens(tokens, product, languageId);
-            _messageTokenProvider.AddAttributeCombinationTokens(tokens, combination, languageId);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddProductTokens(liquidObject, product, languageId);
+            _messageTokenProvider.AddAttributeCombinationTokens(liquidObject, combination, languageId);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -1758,20 +1728,20 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
-            tokens.Add(new Token("VatValidationResult.Name", vatName));
-            tokens.Add(new Token("VatValidationResult.Address", vatAddress));
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+            LiquidVatValidationResult liquidVatValidationResult = new LiquidVatValidationResult();
+            liquidVatValidationResult.SetProperties(vatName, vatAddress);
+            liquidObject.VatValidationResult = liquidVatValidationResult;
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -1798,16 +1768,15 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -1832,22 +1801,21 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddBlogCommentTokens(store.Id, tokens, blogComment);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddBlogCommentTokens(store.Id, liquidObject, blogComment);
 
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(blogComment.CustomerId);
             if (customer != null && customer.IsRegistered())
-                _messageTokenProvider.AddCustomerTokens(tokens, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -1872,22 +1840,21 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddArticleCommentTokens(store.Id, tokens, articleComment);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddArticleCommentTokens(store.Id, liquidObject, articleComment);
 
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(articleComment.CustomerId);
             if (customer != null && customer.IsRegistered())
-                _messageTokenProvider.AddCustomerTokens(tokens, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -1912,21 +1879,20 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddNewsCommentTokens(store.Id, tokens, newsComment);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddNewsCommentTokens(store.Id, liquidObject, newsComment);
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(newsComment.CustomerId);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(tokens, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -1951,22 +1917,21 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(subscription.CustomerId);
             if (customer != null)
-                _messageTokenProvider.AddCustomerTokens(tokens, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
-            _messageTokenProvider.AddBackInStockTokens(tokens, subscription);
+            _messageTokenProvider.AddBackInStockTokens(liquidObject, subscription);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
-            
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
+
             var toEmail = customer.Email;
             var toName = customer.GetFullName();
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -2008,17 +1973,15 @@ namespace Grand.Services.Messages
                 fromName = senderName;
             }
 
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
-            tokens.Add(new Token("ContactUs.SenderEmail", senderEmail));
-            tokens.Add(new Token("ContactUs.SenderName", senderName));
-            tokens.Add(new Token("ContactUs.Body", body, true));
-            tokens.Add(new Token("ContactUs.AttributeDescription", attrInfo, true));
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+            LiquidContactUs liquidContactUs = new LiquidContactUs();
+            liquidContactUs.SetProperties(senderEmail, senderName, body, attrInfo);
+            liquidObject.ContactUs = liquidContactUs;
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
@@ -2046,7 +2009,7 @@ namespace Grand.Services.Messages
 
 
 
-            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+            return SendNotification(messageTemplate, emailAccount, languageId, liquidObject, toEmail, toName,
                 fromEmail: fromEmail,
                 fromName: fromName,
                 subject: subject,
@@ -2090,7 +2053,7 @@ namespace Grand.Services.Messages
             {
                 fromEmail = emailAccount.Email;
                 fromName = emailAccount.DisplayName;
-                
+
             }
             else
             {
@@ -2098,17 +2061,15 @@ namespace Grand.Services.Messages
                 fromName = senderName;
             }
 
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
-
-            tokens.Add(new Token("ContactUs.SenderEmail", senderEmail));
-            tokens.Add(new Token("ContactUs.SenderName", senderName));
-            tokens.Add(new Token("ContactUs.Body", body, true));
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+            LiquidContactUs liquidContactUs = new LiquidContactUs();
+            liquidContactUs.SetProperties(senderEmail, senderName, body, "");
+            liquidObject.ContactUs = liquidContactUs;
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = vendor.Email;
             var toName = vendor.Name;
@@ -2132,7 +2093,7 @@ namespace Grand.Services.Messages
                 EngineContext.Current.Resolve<IContactUsService>().InsertContactUs(contactus);
             }
 
-            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+            return SendNotification(messageTemplate, emailAccount, languageId, liquidObject, toEmail, toName,
                 fromEmail: fromEmail,
                 fromName: fromName,
                 subject: subject,
@@ -2141,7 +2102,7 @@ namespace Grand.Services.Messages
         }
 
         public virtual int SendNotification(MessageTemplate messageTemplate,
-            EmailAccount emailAccount, string languageId, IEnumerable<Token> tokens,
+            EmailAccount emailAccount, string languageId, LiquidObject liquidObject,
             string toEmailAddress, string toName,
             string attachmentFilePath = null, string attachmentFileName = null,
             string replyToEmailAddress = null, string replyToName = null,
@@ -2158,9 +2119,9 @@ namespace Grand.Services.Messages
 
             var body = messageTemplate.GetLocalized(mt => mt.Body, languageId);
 
-            //Replace subject and body tokens 
-            var subjectReplaced = _tokenizer.Replace(subject, tokens, false);
-            var bodyReplaced = _tokenizer.Replace(body, tokens, true);
+            var subjectReplaced = LiquidExtensions.Render(liquidObject, subject);
+            var bodyReplaced = LiquidExtensions.Render(liquidObject, body);
+
             //limit name length
             toName = CommonHelper.EnsureMaximumLength(toName, 300);
             var email = new QueuedEmail
@@ -2194,11 +2155,11 @@ namespace Grand.Services.Messages
         /// </summary>
         /// <param name="messageTemplateId">Message template identifier</param>
         /// <param name="sendToEmail">Send to email</param>
-        /// <param name="tokens">Tokens</param>
+        /// <param name="liquidObject">Tokens</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendTestEmail(string messageTemplateId, string sendToEmail, 
-            List<Token> tokens, string languageId)
+        public virtual int SendTestEmail(string messageTemplateId, string sendToEmail,
+            LiquidObject liquidObject, string languageId)
         {
             var messageTemplate = _messageTemplateService.GetMessageTemplateById(messageTemplateId);
             if (messageTemplate == null)
@@ -2208,10 +2169,10 @@ namespace Grand.Services.Messages
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 sendToEmail, null);
         }
 
@@ -2242,13 +2203,13 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
             var product = EngineContext.Current.Resolve<IProductService>().GetProductById(cartItem.ProductId);
-            _messageTokenProvider.AddProductTokens(tokens, product, languageId);
+            _messageTokenProvider.AddProductTokens(liquidObject, product, languageId);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = customer.Email;
             var toName = customer.GetFullName();
@@ -2257,7 +2218,7 @@ namespace Grand.Services.Messages
                 toEmail = emailAccount.Email;
 
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -2283,14 +2244,14 @@ namespace Grand.Services.Messages
 
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddOrderTokens(tokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = string.Empty;
             var toName = string.Empty;
@@ -2310,7 +2271,7 @@ namespace Grand.Services.Messages
             }
 
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
 
         }
@@ -2334,13 +2295,12 @@ namespace Grand.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
-            //tokens
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = customer.Email;
             var toName = customer.GetFullName();
@@ -2349,7 +2309,7 @@ namespace Grand.Services.Messages
                 toEmail = emailAccount.Email;
 
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -2383,19 +2343,19 @@ namespace Grand.Services.Messages
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddAuctionTokens(tokens, product, bid);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
-            _messageTokenProvider.AddProductTokens(tokens, product, languageId);
-            _messageTokenProvider.AddStoreTokens(tokens, _storeService.GetStoreById(storeId), emailAccount);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddAuctionTokens(liquidObject, product, bid);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+            _messageTokenProvider.AddProductTokens(liquidObject, product, languageId);
+            _messageTokenProvider.AddStoreTokens(liquidObject, _storeService.GetStoreById(storeId), emailAccount);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = customer.Email;
             var toName = customer.GetFullName();
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -2415,15 +2375,15 @@ namespace Grand.Services.Messages
                 return 0;
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
-            var tokensDefault = new List<Token>();
             var store = _storeService.GetStoreById(storeId);
 
-            _messageTokenProvider.AddAuctionTokens(tokensDefault, product, bid);
-            _messageTokenProvider.AddProductTokens(tokensDefault, product, languageId);
-            _messageTokenProvider.AddStoreTokens(tokensDefault, store, emailAccount);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddAuctionTokens(liquidObject, product, bid);
+            _messageTokenProvider.AddProductTokens(liquidObject, product, languageId);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
 
             var customerService = EngineContext.Current.Resolve<ICustomerService>();
-            var bids = EngineContext.Current.Resolve<IAuctionService>().GetBidsByProductId(bid.ProductId).Where(x=>x.CustomerId != bid.CustomerId).GroupBy(x=>x.CustomerId);
+            var bids = EngineContext.Current.Resolve<IAuctionService>().GetBidsByProductId(bid.ProductId).Where(x => x.CustomerId != bid.CustomerId).GroupBy(x => x.CustomerId);
             foreach (var item in bids)
             {
                 var customer = customerService.GetCustomerById(item.Key);
@@ -2433,17 +2393,15 @@ namespace Grand.Services.Messages
                     languageId = customer.GetAttribute<string>(SystemCustomerAttributeNames.LanguageId);
                 }
 
-                var tokens = new List<Token>();
-                tokens.AddRange(tokensDefault);
-                _messageTokenProvider.AddCustomerTokens(tokens, customer);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
                 //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
                 var toEmail = customer.Email;
                 var toName = customer.GetFullName();
                 SendNotification(messageTemplate, emailAccount,
-                    languageId, tokens,
+                    languageId, liquidObject,
                     toEmail, toName);
             }
 
@@ -2465,14 +2423,14 @@ namespace Grand.Services.Messages
                 return 0;
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
-            var tokensDefault = new List<Token>();
             var store = _storeService.GetStoreById(storeId);
 
-            _messageTokenProvider.AddProductTokens(tokensDefault, product, languageId);
-            _messageTokenProvider.AddStoreTokens(tokensDefault, store, emailAccount);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddProductTokens(liquidObject, product, languageId);
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
 
             var customerService = EngineContext.Current.Resolve<ICustomerService>();
-            var bids = EngineContext.Current.Resolve<IAuctionService>().GetBidsByProductId(product.Id).Where(x=>x.CustomerId != customerId).GroupBy(x => x.CustomerId);
+            var bids = EngineContext.Current.Resolve<IAuctionService>().GetBidsByProductId(product.Id).Where(x => x.CustomerId != customerId).GroupBy(x => x.CustomerId);
             foreach (var item in bids)
             {
                 var customer = customerService.GetCustomerById(item.Key);
@@ -2483,17 +2441,15 @@ namespace Grand.Services.Messages
                         languageId = customer.GetAttribute<string>(SystemCustomerAttributeNames.LanguageId);
                     }
 
-                    var tokens = new List<Token>();
-                    tokens.AddRange(tokensDefault);
-                    _messageTokenProvider.AddCustomerTokens(tokens, customer);
+                    _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
                     //event notification
-                    _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+                    _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
                     var toEmail = customer.Email;
                     var toName = customer.GetFullName();
                     SendNotification(messageTemplate, emailAccount,
-                        languageId, tokens,
+                        languageId, liquidObject,
                         toEmail, toName);
                 }
             }
@@ -2526,18 +2482,18 @@ namespace Grand.Services.Messages
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddAuctionTokens(tokens, product, bid);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
-            _messageTokenProvider.AddStoreTokens(tokens, _storeService.GetStoreById(storeId), emailAccount);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddAuctionTokens(liquidObject, product, bid);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+            _messageTokenProvider.AddStoreTokens(liquidObject, _storeService.GetStoreById(storeId), emailAccount);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
 
@@ -2575,18 +2531,18 @@ namespace Grand.Services.Messages
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddAuctionTokens(tokens, product, bid);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
-            _messageTokenProvider.AddStoreTokens(tokens, _storeService.GetStoreById(storeId), emailAccount);
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddAuctionTokens(liquidObject, product, bid);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+            _messageTokenProvider.AddStoreTokens(liquidObject, _storeService.GetStoreById(storeId), emailAccount);
 
             //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = customer.Email;
             var toName = customer.GetFullName();
             return SendNotification(messageTemplate, emailAccount,
-                languageId, tokens,
+                languageId, liquidObject,
                 toEmail, toName);
         }
         #endregion

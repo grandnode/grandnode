@@ -1,4 +1,5 @@
-﻿using Grand.Core;
+﻿using DotLiquid;
+using Grand.Core;
 using Grand.Core.Data;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Messages;
@@ -10,6 +11,7 @@ using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Messages;
+using Grand.Services.Messages.DotLiquidDrops;
 using Grand.Services.Stores;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -89,20 +91,20 @@ namespace Grand.Services.Customers
 
             //retrieve message template data
             var bcc = reminderLevel.BccEmailAddresses;
-            var subject = reminderLevel.Subject;
-            var body = reminderLevel.Body;
 
-            var tokens = new List<Token>();
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+            _messageTokenProvider.AddShoppingCartTokens(liquidObject, customer);
 
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
-            _messageTokenProvider.AddShoppingCartTokens(tokens, customer);
-            _messageTokenProvider.AddRecommendedProductsTokens(tokens, customer);
-            _messageTokenProvider.AddRecentlyViewedProductsTokens(tokens, customer);
+            var hash = Hash.FromAnonymousObject(liquidObject);
 
-            //Replace subject and body tokens 
-            var subjectReplaced = _tokenizer.Replace(subject, tokens, false);
-            var bodyReplaced = _tokenizer.Replace(body, tokens, true);
+            Template bodyTemplate = Template.Parse(reminderLevel.Body);
+            var body = bodyTemplate.Render(hash);
+
+            Template subjectTemplate = Template.Parse(reminderLevel.Subject);
+            var subject = subjectTemplate.Render(hash);
+
             //limit name length
             var toName = CommonHelper.EnsureMaximumLength(customer.GetFullName(), 300);
             var email = new QueuedEmail
@@ -116,8 +118,8 @@ namespace Grand.Services.Customers
                 ReplyToName = string.Empty,
                 CC = string.Empty,
                 Bcc = bcc,
-                Subject = subjectReplaced,
-                Body = bodyReplaced,
+                Subject = subject,
+                Body = body,
                 AttachmentFilePath = "",
                 AttachmentFileName = "",
                 AttachedDownloadId = "",
@@ -131,29 +133,25 @@ namespace Grand.Services.Customers
 
             return true;
         }
+
         protected bool SendEmail(Customer customer, Order order, CustomerReminder customerReminder, string reminderlevelId)
         {
-
             var reminderLevel = customerReminder.Levels.FirstOrDefault(x => x.Id == reminderlevelId);
             var emailAccount = _emailAccountService.GetEmailAccountById(reminderLevel.EmailAccountId);
             var store = customer.ShoppingCartItems.Count > 0 ? _storeService.GetStoreById(customer.ShoppingCartItems.FirstOrDefault().StoreId) : _storeService.GetAllStores().FirstOrDefault();
 
             //retrieve message template data
             var bcc = reminderLevel.BccEmailAddresses;
-            var subject = reminderLevel.Subject;
-            var body = reminderLevel.Body;
 
-            var tokens = new List<Token>();
+            LiquidObject liquidObject = new LiquidObject();
+            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+            _messageTokenProvider.AddShoppingCartTokens(liquidObject, customer);
+            _messageTokenProvider.AddOrderTokens(liquidObject, order, order.CustomerLanguageId);
 
-            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddCustomerTokens(tokens, customer);
-            _messageTokenProvider.AddShoppingCartTokens(tokens, customer);
-            _messageTokenProvider.AddRecommendedProductsTokens(tokens, customer);
-            _messageTokenProvider.AddOrderTokens(tokens, order, order.CustomerLanguageId);
+            var body = LiquidExtensions.Render(liquidObject, reminderLevel.Body);
+            var subject = LiquidExtensions.Render(liquidObject, reminderLevel.Subject);
 
-            //Replace subject and body tokens 
-            var subjectReplaced = _tokenizer.Replace(subject, tokens, false);
-            var bodyReplaced = _tokenizer.Replace(body, tokens, true);
             //limit name length
             var toName = CommonHelper.EnsureMaximumLength(customer.GetFullName(), 300);
             var email = new QueuedEmail
@@ -167,8 +165,8 @@ namespace Grand.Services.Customers
                 ReplyToName = string.Empty,
                 CC = string.Empty,
                 Bcc = bcc,
-                Subject = subjectReplaced,
-                Body = bodyReplaced,
+                Subject = subject,
+                Body = body,
                 AttachmentFilePath = "",
                 AttachmentFileName = "",
                 AttachedDownloadId = "",
@@ -688,8 +686,8 @@ namespace Grand.Services.Customers
                 foreach (var customer in customers)
                 {
                     var history = (from hc in _customerReminderHistoryRepository.Table
-                                    where hc.CustomerId == customer.Id && hc.CustomerReminderId == reminder.Id
-                                    select hc).ToList();
+                                   where hc.CustomerId == customer.Id && hc.CustomerReminderId == reminder.Id
+                                   select hc).ToList();
                     if (history.Any())
                     {
                         var activereminderhistory = history.FirstOrDefault(x => x.HistoryStatus == CustomerReminderHistoryStatusEnum.Started);
@@ -781,8 +779,8 @@ namespace Grand.Services.Customers
                 foreach (var customer in customers)
                 {
                     var history = (from hc in _customerReminderHistoryRepository.Table
-                                    where hc.CustomerId == customer.Id && hc.CustomerReminderId == reminder.Id
-                                    select hc).ToList();
+                                   where hc.CustomerId == customer.Id && hc.CustomerReminderId == reminder.Id
+                                   select hc).ToList();
                     if (history.Any())
                     {
                         var activereminderhistory = history.FirstOrDefault(x => x.HistoryStatus == CustomerReminderHistoryStatusEnum.Started);
@@ -873,8 +871,8 @@ namespace Grand.Services.Customers
                 foreach (var customer in customers)
                 {
                     var history = (from hc in _customerReminderHistoryRepository.Table
-                                    where hc.CustomerId == customer.Id && hc.CustomerReminderId == reminder.Id
-                                    select hc).ToList();
+                                   where hc.CustomerId == customer.Id && hc.CustomerReminderId == reminder.Id
+                                   select hc).ToList();
                     if (history.Any())
                     {
                         var activereminderhistory = history.FirstOrDefault(x => x.HistoryStatus == CustomerReminderHistoryStatusEnum.Started);
@@ -965,8 +963,8 @@ namespace Grand.Services.Customers
                 foreach (var customer in customers)
                 {
                     var history = (from hc in _customerReminderHistoryRepository.Table
-                                    where hc.CustomerId == customer.Id && hc.CustomerReminderId == reminder.Id
-                                    select hc).ToList();
+                                   where hc.CustomerId == customer.Id && hc.CustomerReminderId == reminder.Id
+                                   select hc).ToList();
                     if (history.Any())
                     {
                         var activereminderhistory = history.FirstOrDefault(x => x.HistoryStatus == CustomerReminderHistoryStatusEnum.Started);
@@ -1064,8 +1062,8 @@ namespace Grand.Services.Customers
                 foreach (var customer in customers)
                 {
                     var history = (from hc in _customerReminderHistoryRepository.Table
-                                    where hc.CustomerId == customer.Id && hc.CustomerReminderId == reminder.Id
-                                    select hc).ToList();
+                                   where hc.CustomerId == customer.Id && hc.CustomerReminderId == reminder.Id
+                                   select hc).ToList();
                     if (history.Any())
                     {
                         var activereminderhistory = history.FirstOrDefault(x => x.HistoryStatus == CustomerReminderHistoryStatusEnum.Started);
@@ -1120,8 +1118,8 @@ namespace Grand.Services.Customers
                 }
 
                 var activehistory = (from hc in _customerReminderHistoryRepository.Table
-                                        where hc.CustomerReminderId == reminder.Id && hc.Status == (int)CustomerReminderHistoryStatusEnum.Started
-                                        select hc).ToList();
+                                     where hc.CustomerReminderId == reminder.Id && hc.Status == (int)CustomerReminderHistoryStatusEnum.Started
+                                     select hc).ToList();
 
                 foreach (var activereminderhistory in activehistory)
                 {

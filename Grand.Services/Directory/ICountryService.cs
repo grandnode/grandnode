@@ -38,7 +38,6 @@ namespace Grand.Services.Directory
         /// <returns>Countries</returns>
         IList<Country> GetAllCountriesForShipping(string languageId = "", bool showHidden = false);
 
-
         /// <summary>
         /// Gets a country 
         /// </summary>

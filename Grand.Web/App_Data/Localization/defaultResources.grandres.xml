@@ -9394,10 +9394,10 @@
     <Value>Edit message template details</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.AllowedTokens">
-    <Value>Allowed message tokens</Value>
+    <Value>Allowed message tokens (some might not be available in this template)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.AllowedTokens.Hint">
-    <Value>This is a list of the message tokens you can use in your emails.</Value>
+    <Value>This is a list of the message tokens you can use in your emails. If a token is not available for this template it will result in blank space.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.AttachedDownload">
     <Value>Attached static file</Value>
@@ -9491,36 +9491,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Stores">
     <Value>Stores</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Test">
-    <Value>Test template</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Test.BackToTemplate">
-    <Value>back to template</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Test.Send">
-    <Value>Send</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Test.SendTo">
-    <Value>Send email to</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Test.SendTo.Hint">
-    <Value>Send test email to ensure that everything is properly configured.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Test.Success">
-    <Value>Email has been successfully queued.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Test.Tokens">
-    <Value>Tokens</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Test.Tokens.Description">
-    <Value>Please enter tokens you want to be replaced below</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Test.Tokens.Hint">
-    <Value>Enter tokens.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.TestDetails">
-    <Value>Send test email</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Updated">
     <Value>The message template has been updated successfully.</Value>
@@ -13093,10 +13063,10 @@
     <Value>Email address</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.AllowedTokens">
-    <Value>Allowed message tokens</Value>
+    <Value>Allowed message tokens (some might not be available in this template)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.AllowedTokens.Hint">
-    <Value>This is a list of the message tokens you can use in your campaign emails.</Value>
+    <Value>This is a list of the message tokens you can use in your campaign emails. If a token is not available for this template it will result in blank space.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.Body">
     <Value>Body</Value>

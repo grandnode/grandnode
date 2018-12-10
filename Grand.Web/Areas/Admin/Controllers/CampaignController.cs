@@ -21,7 +21,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 {
     [PermissionAuthorize(PermissionSystemName.Campaigns)]
     public partial class CampaignController : BaseAdminController
-	{
+    {
         private readonly ICampaignService _campaignService;
         private readonly ICampaignViewModelService _campaignViewModelService;
         private readonly IEmailAccountService _emailAccountService;
@@ -57,10 +57,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
-		public IActionResult List()
+        public IActionResult List()
         {
             return View();
-		}
+        }
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command)
@@ -96,7 +96,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             var gridModel = new DataSourceResult
             {
-                Data = history.Select(x => new {
+                Data = history.Select(x => new
+                {
                     Email = x.Email,
                     SentDate = x.CreatedDateUtc,
                 }),
@@ -111,7 +112,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 var campaign = _campaignService.GetCampaignById(campaignId);
                 var customers = _campaignService.CustomerSubscriptions(campaign);
-                string result = _exportManager.ExportNewsletterSubscribersToTxt(customers.Select(x=>x.Email).ToList());
+                string result = _exportManager.ExportNewsletterSubscribersToTxt(customers.Select(x => x.Email).ToList());
 
                 string fileName = String.Format("newsletter_emails_campaign_{0}_{1}.txt", campaign.Name, CommonHelper.GenerateRandomDigitCode(4));
                 return File(Encoding.UTF8.GetBytes(result), "text/csv", fileName);
@@ -145,7 +146,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-		public IActionResult Edit(string id)
+        public IActionResult Edit(string id)
         {
             var campaign = _campaignService.GetCampaignById(id);
             if (campaign == null)
@@ -154,7 +155,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             var model = _campaignViewModelService.PrepareCampaignModel(campaign);
             return View(model);
-		}
+        }
 
         [HttpPost]
         [ParameterBasedOnFormName("save-continue", "continueEditing")]
@@ -177,9 +178,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             model = _campaignViewModelService.PrepareCampaignModel(model);
             return View(model);
-		}
+        }
 
-        [HttpPost,ActionName("Edit")]
+        [HttpPost, ActionName("Edit")]
         [FormValueRequired("send-test-email")]
         public IActionResult SendTestEmail(CampaignModel model)
         {
@@ -257,7 +258,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-		[HttpPost]
+        [HttpPost]
         public IActionResult Delete(string id)
         {
             var campaign = _campaignService.GetCampaignById(id);

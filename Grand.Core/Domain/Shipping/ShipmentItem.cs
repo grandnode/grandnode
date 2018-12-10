@@ -34,6 +34,5 @@ namespace Grand.Core.Domain.Shipping
         /// Gets or sets the warehouse identifier
         /// </summary>
         public string WarehouseId { get; set; }
-
     }
 }
