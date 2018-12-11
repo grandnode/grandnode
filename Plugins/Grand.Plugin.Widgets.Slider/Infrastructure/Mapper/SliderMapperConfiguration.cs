@@ -39,12 +39,12 @@ namespace Grand.Plugin.Widgets.Slider.Infrastructure.Mapper
         public SliderMapperConfiguration()
         {
             CreateMap<SlideModel, PictureSlider>()
-                .ForMember(dest => dest.ObjectEntry, mo => mo.ResolveUsing(x=>SetObjectEntry(x)))
+                .ForMember(dest => dest.ObjectEntry, mo => mo.MapFrom(x=>SetObjectEntry(x)))
                 .ForMember(dest => dest.Locales, mo => mo.Ignore());
 
             CreateMap<PictureSlider, SlideModel>()
-                .ForMember(dest => dest.CategoryId, mo => mo.ResolveUsing(x => GetCategoryId(x)))
-                .ForMember(dest => dest.ManufacturerId, mo => mo.ResolveUsing(x => GetManufacturerId(x)))
+                .ForMember(dest => dest.CategoryId, mo => mo.MapFrom(x => GetCategoryId(x)))
+                .ForMember(dest => dest.ManufacturerId, mo => mo.MapFrom(x => GetManufacturerId(x)))
                 .ForMember(dest => dest.Locales, mo => mo.Ignore());
 
             CreateMap<SlideListModel, PictureSlider>()
@@ -54,7 +54,7 @@ namespace Grand.Plugin.Widgets.Slider.Infrastructure.Mapper
             CreateMap<PictureSlider, SlideListModel>()
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
                 .ForMember(dest => dest.PictureUrl, mo => mo.Ignore())
-                .ForMember(dest => dest.ObjectType, mo => mo.ResolveUsing(y=>y.SliderType.ToString()));
+                .ForMember(dest => dest.ObjectType, mo => mo.MapFrom(y=>y.SliderType.ToString()));
         }
         public int Order
         {

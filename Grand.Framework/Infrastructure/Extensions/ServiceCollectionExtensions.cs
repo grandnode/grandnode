@@ -234,10 +234,14 @@ namespace Grand.Framework.Infrastructure.Extensions
         public static IMvcBuilder AddGrandMvc(this IServiceCollection services)
         {
             //add basic MVC feature
-            var mvcBuilder = services.AddMvc();
+            var mvcBuilder = services.AddMvc(options =>
+            {
+                // https://blogs.msdn.microsoft.com/webdev/2018/08/27/asp-net-core-2-2-0-preview1-endpoint-routing/
+                options.EnableEndpointRouting = false;
+            });
 
             //set compatibility version
-            mvcBuilder.SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_1);
+            mvcBuilder.SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_2);
 
             var config = services.BuildServiceProvider().GetRequiredService<GrandConfig>();
 
