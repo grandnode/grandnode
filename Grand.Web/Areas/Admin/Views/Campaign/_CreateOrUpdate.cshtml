@@ -3,6 +3,19 @@
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 <vc:admin-widget widget-zone="campaign_details_top" additional-data="Model" />
+<script>
+    $(document).ready(function () {
+        $('#campaign-edit').show();
+        $("#campaign-edit").kendoTabStrip({
+            animation: {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
 <div id="campaign-edit" style="display:none">
     <ul>
         <li tab-index="0">
@@ -38,19 +51,7 @@
     </div>
 </div>
 <vc:admin-widget widget-zone="campaign_details_bottom" additional-data="Model" />
-<script>
-    $(document).ready(function () {
-        $('#campaign-edit').show();
-        $("#campaign-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
-    });
-</script>
+
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "campaign-edit");
