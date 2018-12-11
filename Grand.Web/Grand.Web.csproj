@@ -8,6 +8,7 @@
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
     <ServerGarbageCollection>false</ServerGarbageCollection>
     <TieredCompilation>true</TieredCompilation>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Grand.Core\Grand.Core.csproj" />
