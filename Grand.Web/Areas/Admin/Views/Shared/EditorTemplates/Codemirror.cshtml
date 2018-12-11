@@ -5,6 +5,7 @@
 <script>
     $(document).ready(function () {
         var textarea = $('#@Html.IdForModel()')[0];
+        console.log(textarea);
         var editor = CodeMirror.fromTextArea(textarea, {
             mode: "xml",
             lineNumbers: true
