@@ -1,8 +1,10 @@
 ﻿using DotLiquid;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Directory;
+using Grand.Core.Infrastructure;
 using Grand.Services.Catalog;
 using Grand.Services.Directory;
+using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops
 {
@@ -15,19 +17,16 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
 
-        public LiquidAuction(IPriceFormatter priceFormatter,
-            CurrencySettings currencySettings,
-            ICurrencyService currencyService)
+        public LiquidAuction(Product product, Bid bid = null)
         {
-            this._priceFormatter = priceFormatter;
-            this._currencySettings = currencySettings;
-            this._currencyService = currencyService;
-        }
+            this._priceFormatter = EngineContext.Current.Resolve<IPriceFormatter>();
+            this._currencyService = EngineContext.Current.Resolve<ICurrencyService>();
+            this._currencySettings = EngineContext.Current.Resolve<CurrencySettings>();
 
-        public void SetProperties(Product product, Bid bid = null)
-        {
             this._product = product;
             this._bid = bid;
+
+            AdditionalTokens = new Dictionary<string, string>();
         }
 
         public string ProductName
@@ -53,5 +52,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
         {
             get { return _product.SeName; }
         }
+
+        public IDictionary<string, string> AdditionalTokens { get; set; }
     }
 }

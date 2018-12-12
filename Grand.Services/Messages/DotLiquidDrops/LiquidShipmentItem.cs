@@ -6,7 +6,7 @@ using Grand.Core.Infrastructure;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
-using Grand.Services.Shipping;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 
@@ -26,23 +26,21 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly CatalogSettings _catalogSettings;
 
-        public LiquidShipmentItem()
+        public LiquidShipmentItem(ShipmentItem shipmentItem, Shipment shipment, string languageId)
         {
             this._productService = EngineContext.Current.Resolve<IProductService>();
             this._orderService = EngineContext.Current.Resolve<IOrderService>();
             this._productAttributeParser = EngineContext.Current.Resolve<IProductAttributeParser>();
             this._catalogSettings = EngineContext.Current.Resolve<CatalogSettings>();
-        }
 
-        public void SetProperties(ShipmentItem shipmentItem, Shipment shipment, string languageId)
-        {
             this._shipmentItem = shipmentItem;
             this._languageId = languageId;
-
             this._shipment = shipment;
             this._order = _orderService.GetOrderById(_shipment.OrderId);
             this._orderItem = _order.OrderItems.Where(x => x.Id == _shipmentItem.OrderItemId).FirstOrDefault();
             this._product = _productService.GetProductById(_orderItem.ProductId);
+
+            AdditionalTokens = new Dictionary<string, string>();
         }
 
         public bool ShowSkuOnProductDetailsPage
@@ -139,5 +137,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
                 return _shipmentItem.WarehouseId;
             }
         }
+
+        public IDictionary<string, string> AdditionalTokens { get; set; }
     }
 }

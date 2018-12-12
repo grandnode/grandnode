@@ -1,4 +1,5 @@
 ﻿using DotLiquid;
+using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops
 {
@@ -9,12 +10,14 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private string fullName;
         private string phone;
 
-        public void SetProperties(string message, string email, string fullName, string phone)
+        public LiquidAskQuestion(string message, string email, string fullName, string phone)
         {
             this.message = message;
             this.email = email;
             this.fullName = fullName;
             this.phone = phone;
+
+            AdditionalTokens = new Dictionary<string, string>();
         }
 
         public string Email
@@ -36,5 +39,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
         {
             get { return phone; }
         }
+
+        public IDictionary<string, string> AdditionalTokens { get; set; }
     }
 }

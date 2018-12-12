@@ -11,9 +11,6 @@ using Grand.Services.Shipping;
 using Grand.Services.Stores;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
 
 namespace Grand.Services.Messages.DotLiquidDrops
 {
@@ -32,38 +29,29 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private readonly MessageTemplatesSettings _templatesSettings;
         private readonly CatalogSettings _catalogSettings;
 
-        public LiquidShipment(ILocalizationService localizationService,
-            IOrderService orderService,
-            IStoreContext storeContext,
-            IStoreService storeService,
-            IProductAttributeParser productAttributeParser,
-            ShippingSettings shippingSettings,
-            MessageTemplatesSettings templatesSettings,
-            CatalogSettings catalogSettings)
+        public LiquidShipment(Shipment shipment, string languageId = "")
         {
-            this._localizationService = localizationService;
-            this._orderService = orderService;
-            this._storeContext = storeContext;
-            this._storeService = storeService;
-            this._shippingSettings = shippingSettings;
-            this._templatesSettings = templatesSettings;
-            this._catalogSettings = catalogSettings;
-            this._productAttributeParser = productAttributeParser;
-        }
+            this._localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+            this._orderService = EngineContext.Current.Resolve<IOrderService>();
+            this._storeContext = EngineContext.Current.Resolve<IStoreContext>();
+            this._storeService = EngineContext.Current.Resolve<IStoreService>();
+            this._productAttributeParser = EngineContext.Current.Resolve<IProductAttributeParser>();
+            this._shippingSettings = EngineContext.Current.Resolve<ShippingSettings>();
+            this._templatesSettings = EngineContext.Current.Resolve<MessageTemplatesSettings>();
+            this._catalogSettings = EngineContext.Current.Resolve<CatalogSettings>();
 
-        public void SetProperties(Shipment shipment, string languageId = "")
-        {
             this._shipment = shipment;
             this._languageId = languageId;
 
             this._shipmentItems = new List<LiquidShipmentItem>();
             foreach (var shipmentItem in shipment.ShipmentItems)
             {
-                var liquidShipmentItem = new LiquidShipmentItem();
-                liquidShipmentItem.SetProperties(shipmentItem, shipment, languageId);
-                this._shipmentItems.Add(liquidShipmentItem);
+                this._shipmentItems.Add(new LiquidShipmentItem(shipmentItem, shipment, languageId));
             }
+                       
+            AdditionalTokens = new Dictionary<string, string>();
         }
+
         public ICollection<LiquidShipmentItem> ShipmentItems
         {
             get { return _shipmentItems; }
@@ -131,5 +119,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
             return useSsl ? store.SecureUrl : store.Url;
         }
+
+        public IDictionary<string, string> AdditionalTokens { get; set; }
     }
 }

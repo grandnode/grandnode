@@ -1,9 +1,18 @@
 ﻿using DotLiquid;
+using System.Collections.Generic;
 
 namespace Grand.Core.Domain.Messages
 {
-    public class LiquidObject
+    /// <summary>
+    /// An object that acumulates all DotLiquid Drops
+    /// </summary>
+    public partial class LiquidObject
     {
+        public LiquidObject()
+        {
+            AdditionalTokens = new Dictionary<string, string>();
+        }
+
         public Drop AttributeCombination { get; set; }
 
         public Drop Auction { get; set; }
@@ -53,5 +62,7 @@ namespace Grand.Core.Domain.Messages
         public Drop VatValidationResult { get; set; }
 
         public Drop ContactUs { get; set; }
+
+        public IDictionary<string, string> AdditionalTokens { get; set; }
     }
 }

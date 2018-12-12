@@ -2,6 +2,7 @@
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Infrastructure;
 using Grand.Services.Catalog;
+using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops
 {
@@ -9,9 +10,11 @@ namespace Grand.Services.Messages.DotLiquidDrops
     {
         private ProductReview _productReview;
 
-        public void SetProperties(ProductReview productReview)
+        public LiquidProductReview(ProductReview productReview)
         {
             this._productReview = productReview;
+
+            AdditionalTokens = new Dictionary<string, string>();
         }
 
         public string ProductName
@@ -22,5 +25,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
                 return product.Name;
             }
         }
+
+        public IDictionary<string, string> AdditionalTokens { get; set; }
     }
 }

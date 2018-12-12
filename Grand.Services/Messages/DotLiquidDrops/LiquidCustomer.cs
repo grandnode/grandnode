@@ -12,6 +12,7 @@ using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Stores;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -32,28 +33,18 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private readonly MessageTemplatesSettings _templatesSettings;
         private readonly CatalogSettings _catalogSettings;
 
-        public LiquidCustomer(ICustomerAttributeFormatter customerAttributeFormatter,
-            IStoreService storeService,
-            IStoreContext storeContext,
-            ILocalizationService localizationService,
-            ILanguageService languageService,
-            MessageTemplatesSettings templatesSettings,
-            CatalogSettings catalogSettings,
-            CustomerNote customerNote = null)
+        public LiquidCustomer(Customer customer, CustomerNote customerNote = null)
         {
-            this._customerAttributeFormatter = customerAttributeFormatter;
-            this._storeService = storeService;
-            this._storeContext = storeContext;
-            this._customerNote = customerNote;
-            this._localizationService = localizationService;
-            this._languageService = languageService;
-            this._templatesSettings = templatesSettings;
-            this._catalogSettings = catalogSettings;
-        }
+            this._customerAttributeFormatter = EngineContext.Current.Resolve<ICustomerAttributeFormatter>();
+            this._storeService = EngineContext.Current.Resolve<IStoreService>();
+            this._storeContext = EngineContext.Current.Resolve<IStoreContext>();
+            this._localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+            this._languageService = EngineContext.Current.Resolve<ILanguageService>();
+            this._templatesSettings = EngineContext.Current.Resolve<MessageTemplatesSettings>();
+            this._catalogSettings = EngineContext.Current.Resolve<CatalogSettings>();
 
-        public void SetProperties(Customer customer, CustomerNote customerNote = null)
-        {
             this._customer = customer;
+            this._customerNote = customerNote;
 
             string languageId = _languageService.GetAllLanguages().FirstOrDefault().Id;
             if (customer.GenericAttributes.FirstOrDefault(x => x.Key == "LanguageId") != null)
@@ -62,7 +53,8 @@ namespace Grand.Services.Messages.DotLiquidDrops
             }
 
             this._languageId = languageId;
-            var test = _customer.GetFullName();
+
+            AdditionalTokens = new Dictionary<string, string>();
         }
 
         public string Email
@@ -270,5 +262,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
             result = sb.ToString();
             return result;
         }
+
+        public IDictionary<string, string> AdditionalTokens { get; set; }
     }
 }

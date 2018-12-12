@@ -4,6 +4,7 @@ using Grand.Core.Infrastructure;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
 using System;
+using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops
 {
@@ -11,9 +12,11 @@ namespace Grand.Services.Messages.DotLiquidDrops
     {
         private Vendor _vendor;
 
-        public void SetProperties(Vendor vendor)
+        public LiquidVendor(Vendor vendor)
         {
             this._vendor = vendor;
+
+            AdditionalTokens = new Dictionary<string, string>();
         }
 
         public string Name
@@ -75,5 +78,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
         {
             get { return !String.IsNullOrEmpty(_vendor.Address?.CountryId) ? EngineContext.Current.Resolve<ICountryService>().GetCountryById(_vendor.Address?.CountryId).GetLocalized(x => x.Name) : ""; }
         }
+
+        public IDictionary<string, string> AdditionalTokens { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using Grand.Services.Customers;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
 using System;
+using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops
 {
@@ -20,24 +21,22 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private readonly IStoreService _storeService;
         private readonly IStoreContext _storeContext;
 
-        public LiquidForum(IStoreService storeService,
-            IStoreContext storeContext)
-        {
-            this._storeService = storeService;
-            this._storeContext = storeContext;
-        }
-
-        public void SetProperties(Forum forum,
+        public LiquidForum(Forum forum,
             ForumTopic forumTopic,
             ForumPost forumPost,
             int? friendlyForumTopicPageIndex = null,
             string appendedPostIdentifierAnchor = "")
         {
+            this._storeService = EngineContext.Current.Resolve<IStoreService>();
+            this._storeContext = EngineContext.Current.Resolve<IStoreContext>();
+
             this._forumTopic = forumTopic;
             this._forumPost = forumPost;
             this._forum = forum;
             this._friendlyForumTopicPageIndex = friendlyForumTopicPageIndex;
             this._appendedPostIdentifierAnchor = appendedPostIdentifierAnchor;
+
+            AdditionalTokens = new Dictionary<string, string>();
         }
 
         public string TopicURL
@@ -95,5 +94,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
             return useSsl ? store.SecureUrl : store.Url;
         }
+
+        public IDictionary<string, string> AdditionalTokens { get; set; }
     }
 }

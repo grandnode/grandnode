@@ -185,152 +185,175 @@ namespace Grand.Services.Messages
 
         public void AddStoreTokens(LiquidObject liquidObject, Store store, EmailAccount emailAccount)
         {
-            var liquidStore = EngineContext.Current.Resolve<LiquidStore>();
-            liquidStore.SetProperties(store, emailAccount);
+            var liquidStore = new LiquidStore(store, emailAccount);
             liquidObject.Store = liquidStore;
+
+            _eventPublisher.EntityTokensAdded(store, liquidStore, liquidObject);
         }
 
         public void AddOrderTokens(LiquidObject liquidObject, Order order, string languageId,
             string vendorId = "", OrderNote orderNote = null, decimal refundedAmount = 0)
         {
-            var liquidOrder = EngineContext.Current.Resolve<LiquidOrder>();
-            liquidOrder.SetProperties(order, languageId, vendorId, orderNote, refundedAmount);
+            var liquidOrder = new LiquidOrder(order, languageId, vendorId, orderNote, refundedAmount);
             liquidObject.Order = liquidOrder;
+
+            _eventPublisher.EntityTokensAdded(order, liquidOrder, liquidObject);
         }
 
         public void AddShipmentTokens(LiquidObject liquidObject, Shipment shipment, string languageId)
         {
-            var liquidShipment = EngineContext.Current.Resolve<LiquidShipment>();
-            liquidShipment.SetProperties(shipment, languageId);
+            var liquidShipment = new LiquidShipment(shipment, languageId);
             liquidObject.Shipment = liquidShipment;
+
+            _eventPublisher.EntityTokensAdded(shipment, liquidShipment, liquidObject);
         }
 
         public void AddRecurringPaymentTokens(LiquidObject liquidObject, RecurringPayment recurringPayment)
         {
-            var liquidRecurringPayment = EngineContext.Current.Resolve<LiquidRecurringPayment>();
-            liquidRecurringPayment.SetProperties(recurringPayment);
+            var liquidRecurringPayment = new LiquidRecurringPayment(recurringPayment);
             liquidObject.RecurringPayment = liquidRecurringPayment;
+
+            _eventPublisher.EntityTokensAdded(recurringPayment, liquidRecurringPayment, liquidObject);
         }
 
         public void AddReturnRequestTokens(LiquidObject liquidObject, ReturnRequest returnRequest, Order order)
         {
-            var liquidReturnRequest = EngineContext.Current.Resolve<LiquidReturnRequest>();
-            liquidReturnRequest.SetProperties(returnRequest, order);
+            var liquidReturnRequest = new LiquidReturnRequest(returnRequest, order);
             liquidObject.ReturnRequest = liquidReturnRequest;
+
+            _eventPublisher.EntityTokensAdded(returnRequest, liquidReturnRequest, liquidObject);
         }
 
         public void AddGiftCardTokens(LiquidObject liquidObject, GiftCard giftCard)
         {
-            var liquidGiftCart = EngineContext.Current.Resolve<LiquidGiftCard>();
-            liquidGiftCart.SetProperties(giftCard);
+            var liquidGiftCart = new LiquidGiftCard(giftCard);
             liquidObject.GiftCard = liquidGiftCart;
 
+            _eventPublisher.EntityTokensAdded(giftCard, liquidGiftCart, liquidObject);
         }
 
         public void AddCustomerTokens(LiquidObject liquidObject, Customer customer, CustomerNote customerNote = null)
         {
-            var liquidCustomer = EngineContext.Current.Resolve<LiquidCustomer>();
-            liquidCustomer.SetProperties(customer, customerNote);
+            var liquidCustomer = new LiquidCustomer(customer, customerNote);
             liquidObject.Customer = liquidCustomer;
+
+            _eventPublisher.EntityTokensAdded(customer, liquidCustomer, liquidObject);
+            _eventPublisher.EntityTokensAdded(customerNote, liquidCustomer, liquidObject);
         }
 
         public void AddShoppingCartTokens(LiquidObject liquidObject, Customer customer, string personalMessage = "", string customerEmail = "")
         {
-            var liquidShoppingCart = EngineContext.Current.Resolve<LiquidShoppingCart>();
-            liquidShoppingCart.SetProperties(customer, personalMessage, customerEmail);
+            var liquidShoppingCart = new LiquidShoppingCart(customer, personalMessage, customerEmail);
             liquidObject.ShoppingCart = liquidShoppingCart;
+
+            _eventPublisher.EntityTokensAdded(customer, liquidShoppingCart, liquidObject);
         }
 
         public void AddVendorTokens(LiquidObject liquidObject, Vendor vendor)
         {
-            var liquidVendor = EngineContext.Current.Resolve<LiquidVendor>();
-            liquidVendor.SetProperties(vendor);
+            var liquidVendor = new LiquidVendor(vendor);
             liquidObject.Vendor = liquidVendor;
+
+            _eventPublisher.EntityTokensAdded(vendor, liquidVendor, liquidObject);
         }
 
         public void AddNewsLetterSubscriptionTokens(LiquidObject liquidObject, NewsLetterSubscription subscription)
         {
-            var liquidNewsletterSubscription = EngineContext.Current.Resolve<LiquidNewsLetterSubscription>();
-            liquidNewsletterSubscription.SetProperties(subscription);
+            var liquidNewsletterSubscription = new LiquidNewsLetterSubscription(subscription);
             liquidObject.NewsletterSubscription = liquidNewsletterSubscription;
+
+            _eventPublisher.EntityTokensAdded(subscription, liquidNewsletterSubscription, liquidObject);
         }
 
         public void AddProductReviewTokens(LiquidObject liquidObject, ProductReview productReview)
         {
-            var liquidProductReview = EngineContext.Current.Resolve<LiquidProductReview>();
-            liquidProductReview.SetProperties(productReview);
+            var liquidProductReview = new LiquidProductReview(productReview);
             liquidObject.ProductReview = liquidProductReview;
+
+            _eventPublisher.EntityTokensAdded(productReview, liquidProductReview, liquidObject);
         }
 
         public void AddVendorReviewTokens(LiquidObject liquidObject, VendorReview vendorReview)
         {
-            var liquidVendorReview = EngineContext.Current.Resolve<LiquidVendorReview>();
-            liquidVendorReview.SetProperties(vendorReview);
+            var liquidVendorReview = new LiquidVendorReview(vendorReview);
             liquidObject.VendorReview = liquidVendorReview;
+
+            _eventPublisher.EntityTokensAdded(vendorReview, liquidVendorReview, liquidObject);
         }
 
         public void AddBlogCommentTokens(string storeId, LiquidObject liquidObject, BlogComment blogComment)
         {
-            var liquidBlogComment = EngineContext.Current.Resolve<LiquidBlogComment>();
-            liquidBlogComment.SetProperties(blogComment, storeId);
+            var liquidBlogComment = new LiquidBlogComment(blogComment, storeId);
             liquidObject.BlogComment = liquidBlogComment;
+
+            _eventPublisher.EntityTokensAdded(blogComment, liquidBlogComment, liquidObject);
         }
 
         public void AddArticleCommentTokens(string storeId, LiquidObject liquidObject, KnowledgebaseArticleComment articleComment)
         {
-            var liquidKnowledgebase = EngineContext.Current.Resolve<LiquidKnowledgebase>();
-            liquidKnowledgebase.SetProperties(articleComment, storeId);
+            var liquidKnowledgebase = new LiquidKnowledgebase(articleComment, storeId);
             liquidObject.Knowledgebase = liquidKnowledgebase;
+
+            _eventPublisher.EntityTokensAdded(articleComment, liquidKnowledgebase, liquidObject);
         }
 
         public void AddNewsCommentTokens(string storeId, LiquidObject liquidObject, NewsComment newsComment)
         {
-            var liquidNewsComment = EngineContext.Current.Resolve<LiquidNewsComment>();
-            liquidNewsComment.SetProperties(newsComment, storeId);
+            var liquidNewsComment = new LiquidNewsComment(newsComment, storeId);
             liquidObject.NewsComment = liquidNewsComment;
+
+            _eventPublisher.EntityTokensAdded(newsComment, liquidNewsComment, liquidObject);
         }
 
         public void AddProductTokens(LiquidObject liquidObject, Product product, string languageId)
         {
-            var liquidProduct = EngineContext.Current.Resolve<LiquidProduct>();
-            liquidProduct.SetProperties(product, languageId);
+            var liquidProduct = new LiquidProduct(product, languageId);
             liquidObject.Product = liquidProduct;
+
+            _eventPublisher.EntityTokensAdded(product, liquidProduct, liquidObject);
         }
 
         public void AddAttributeCombinationTokens(LiquidObject liquidObject, ProductAttributeCombination combination, string languageId)
         {
-            var liquidAttributeCombination = EngineContext.Current.Resolve<LiquidAttributeCombination>();
-            liquidAttributeCombination.SetProperties(combination, languageId);
+            var liquidAttributeCombination = new LiquidAttributeCombination(combination, languageId);
             liquidObject.AttributeCombination = liquidAttributeCombination;
+
+            _eventPublisher.EntityTokensAdded(combination, liquidAttributeCombination, liquidObject);
         }
 
         public void AddForumTokens(LiquidObject liquidObject, Forum forum, ForumTopic forumTopic = null, ForumPost forumPost = null,
             int? friendlyForumTopicPageIndex = null, string appendedPostIdentifierAnchor = "")
         {
-            var liquidForum = EngineContext.Current.Resolve<LiquidForum>();
-            liquidForum.SetProperties(forum, forumTopic, forumPost, friendlyForumTopicPageIndex, appendedPostIdentifierAnchor);
+            var liquidForum = new LiquidForum(forum, forumTopic, forumPost, friendlyForumTopicPageIndex, appendedPostIdentifierAnchor);
             liquidObject.Forum = liquidForum;
+
+            _eventPublisher.EntityTokensAdded(forum, liquidForum, liquidObject);
+            _eventPublisher.EntityTokensAdded(forumTopic, liquidForum, liquidObject);
+            _eventPublisher.EntityTokensAdded(forumPost, liquidForum, liquidObject);
         }
 
         public void AddPrivateMessageTokens(LiquidObject liquidObject, PrivateMessage privateMessage)
         {
-            var liquidPrivateMessage = EngineContext.Current.Resolve<LiquidPrivateMessage>();
-            liquidPrivateMessage.SetProperties(privateMessage);
+            var liquidPrivateMessage = new LiquidPrivateMessage(privateMessage);
             liquidObject.PrivateMessage = liquidPrivateMessage;
+
+            _eventPublisher.EntityTokensAdded(privateMessage, liquidPrivateMessage, liquidObject);
         }
 
         public void AddBackInStockTokens(LiquidObject liquidObject, BackInStockSubscription subscription)
         {
-            var liquidBackInStockSubscription = EngineContext.Current.Resolve<LiquidBackInStockSubscription>();
-            liquidBackInStockSubscription.SetProperties(subscription);
+            var liquidBackInStockSubscription = new LiquidBackInStockSubscription(subscription);
             liquidObject.BackInStockSubscription = liquidBackInStockSubscription;
+
+            _eventPublisher.EntityTokensAdded(subscription, liquidBackInStockSubscription, liquidObject);
         }
 
         public void AddAuctionTokens(LiquidObject liquidObject, Product product, Bid bid)
         {
-            var liquidAuction = EngineContext.Current.Resolve<LiquidAuction>();
-            liquidAuction.SetProperties(product, bid);
+            var liquidAuction = new LiquidAuction(product, bid);
             liquidObject.Auction = liquidAuction;
+
+            _eventPublisher.EntityTokensAdded(bid, liquidAuction, liquidObject);
         }
 
         #endregion

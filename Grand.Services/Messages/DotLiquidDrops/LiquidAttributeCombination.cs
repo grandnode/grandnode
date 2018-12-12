@@ -3,6 +3,7 @@ using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Infrastructure;
 using Grand.Services.Catalog;
+using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops
 {
@@ -15,19 +16,16 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private readonly IWorkContext _workContext;
         private readonly IProductAttributeParser _productAttributeParser;
 
-        public LiquidAttributeCombination(
-            IWorkContext workContext,
-            IProductAttributeParser productAttributeParser)
+        public LiquidAttributeCombination(ProductAttributeCombination combination, string languageId)
         {
-            this._workContext = workContext;
-            this._productAttributeParser = productAttributeParser;
-        }
+            this._workContext = EngineContext.Current.Resolve<IWorkContext>();
+            this._productAttributeParser = EngineContext.Current.Resolve<IProductAttributeParser>();
 
-        public void SetProperties(ProductAttributeCombination combination, string languageId)
-        {
             this._combination = combination;
             this._languageId = languageId;
             this._product = EngineContext.Current.Resolve<IProductService>().GetProductById(combination.ProductId);
+            
+            AdditionalTokens = new Dictionary<string, string>();
         }
 
         public string Formatted
@@ -53,5 +51,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
         {
             get { return _combination.StockQuantity.ToString(); }
         }
+
+        public IDictionary<string, string> AdditionalTokens { get; set; }
     }
 }

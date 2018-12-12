@@ -11,6 +11,7 @@ using Grand.Services.Media;
 using Grand.Services.Orders;
 using Grand.Services.Stores;
 using System;
+using System.Collections.Generic;
 using System.Net;
 
 namespace Grand.Services.Messages.DotLiquidDrops
@@ -33,7 +34,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private readonly ILanguageService _languageService;
         private readonly CatalogSettings _catalogSettings;
 
-        public LiquidOrderItem()
+        public LiquidOrderItem(OrderItem orderItem, Order order, string lanugageId)
         {
             this._productService = EngineContext.Current.Resolve<IProductService>();
             this._downloadService = EngineContext.Current.Resolve<IDownloadService>();
@@ -45,14 +46,13 @@ namespace Grand.Services.Messages.DotLiquidDrops
             this._currencyService = EngineContext.Current.Resolve<ICurrencyService>();
             this._languageService = EngineContext.Current.Resolve<ILanguageService>();
             this._catalogSettings = EngineContext.Current.Resolve<CatalogSettings>();
-        }
 
-        public void SetProperties(OrderItem orderItem, Order order, string lanugageId)
-        {
             this._orderItem = orderItem;
             this._languageId = lanugageId;
             this._order = _orderService.GetOrderByOrderItemId(_orderItem.Id);
             this._product = _productService.GetProductById(orderItem.ProductId);
+
+            AdditionalTokens = new Dictionary<string, string>();
         }
 
         public string UnitPrice
@@ -418,5 +418,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
             return useSsl ? store.SecureUrl : store.Url;
         }
+
+        public IDictionary<string, string> AdditionalTokens { get; set; }
     }
 }

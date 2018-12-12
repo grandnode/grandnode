@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using DotLiquid;
 
 namespace Grand.Core.Domain.Messages
 {
@@ -86,20 +86,24 @@ namespace Grand.Core.Domain.Messages
     /// A container for tokens that are added.
     /// </summary>
     /// <typeparam name="T">Entity type</typeparam>
-    /// <typeparam name="U"></typeparam>
-    public class EntityTokensAddedEvent<T, U> where T : ParentEntity
+    /// <param name="liquidDrop">DotLiquid Drop, e.g. LiquidOrder</param>
+    /// <param name="liquidObject">An object that acumulates all DotLiquid Drops</param>
+    public class EntityTokensAddedEvent<T> where T : ParentEntity
     {
         private readonly T _entity;
-        private readonly IList<U> _tokens;
+        private readonly Drop _liquidDrop;
+        private readonly LiquidObject _liquidObject;
 
-        public EntityTokensAddedEvent(T entity, IList<U> tokens)
+        public EntityTokensAddedEvent(T entity, Drop liquidDrop, LiquidObject liquidObject)
         {
             _entity = entity;
-            _tokens = tokens;
+            _liquidDrop = liquidDrop;
+            _liquidObject = liquidObject;
         }
 
         public T Entity { get { return _entity; } }
-        public IList<U> Tokens { get { return _tokens; } }
+        public Drop LiquidDrop { get { return _liquidDrop; } }
+        public LiquidObject LiquidObject { get { return _liquidObject; } }
     }
 
     /// <summary>

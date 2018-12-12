@@ -1,7 +1,7 @@
-﻿using Grand.Core;
+﻿using DotLiquid;
+using Grand.Core;
 using Grand.Core.Domain.Messages;
 using Grand.Services.Events;
-using Grand.Services.Messages.DotLiquidDrops;
 
 namespace Grand.Services.Messages
 {
@@ -27,9 +27,9 @@ namespace Grand.Services.Messages
             eventPublisher.Publish(new EmailUnsubscribedEvent(email));
         }
 
-        public static void EntityTokensAdded<T, U>(this IEventPublisher eventPublisher, T entity, System.Collections.Generic.IList<U> tokens) where T : ParentEntity
+        public static void EntityTokensAdded<T>(this IEventPublisher eventPublisher, T entity, Drop liquidDrop, LiquidObject liquidObject) where T : ParentEntity
         {
-            eventPublisher.Publish(new EntityTokensAddedEvent<T, U>(entity, tokens));
+            eventPublisher.Publish(new EntityTokensAddedEvent<T>(entity, liquidDrop, liquidObject));
         }
 
         public static void MessageTokensAdded(this IEventPublisher eventPublisher, MessageTemplate message, LiquidObject liquidObject)

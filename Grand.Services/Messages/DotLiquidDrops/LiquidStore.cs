@@ -2,7 +2,9 @@
 using Grand.Core.Domain;
 using Grand.Core.Domain.Messages;
 using Grand.Core.Domain.Stores;
+using Grand.Core.Infrastructure;
 using Grand.Services.Localization;
+using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops
 {
@@ -13,15 +15,14 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         private readonly StoreInformationSettings _storeInformationSettings;
 
-        public LiquidStore(StoreInformationSettings storeInformationSettings)
+        public LiquidStore(Store store, EmailAccount emailAccount = null)
         {
-            this._storeInformationSettings = storeInformationSettings;
-        }
+            this._storeInformationSettings = EngineContext.Current.Resolve<StoreInformationSettings>();
 
-        public void SetProperties(Store store, EmailAccount emailAccount = null)
-        {
             this._store = store;
             this._emailAccount = emailAccount;
+
+            AdditionalTokens = new Dictionary<string, string>();
         }
 
         public string Name
@@ -93,5 +94,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
         {
             get { return _storeInformationSettings.PinterestLink; }
         }
+
+        public IDictionary<string, string> AdditionalTokens { get; set; }
     }
 }

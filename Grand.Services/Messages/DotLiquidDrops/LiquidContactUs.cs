@@ -1,4 +1,5 @@
 ﻿using DotLiquid;
+using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops
 {
@@ -9,12 +10,14 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private string body;
         private string attributeDescription;
 
-        public void SetProperties(string senderEmail, string senderName, string body, string attributeDescription)
+        public LiquidContactUs(string senderEmail, string senderName, string body, string attributeDescription)
         {
             this.senderEmail = senderEmail;
             this.senderName = senderName;
             this.body = body;
             this.attributeDescription = attributeDescription;
+
+            AdditionalTokens = new Dictionary<string, string>();
         }
 
         public string SenderEmail
@@ -36,5 +39,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
         {
             get { return attributeDescription; }
         }
+
+        public IDictionary<string, string> AdditionalTokens { get; set; }
     }
 }

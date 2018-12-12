@@ -6,6 +6,7 @@ using Grand.Services.News;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
 using System;
+using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops
 {
@@ -18,18 +19,16 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
 
-        public LiquidNewsComment(IStoreContext storeContext,
-            IStoreService storeService)
+        public LiquidNewsComment(NewsComment newsComment, string storeId)
         {
-            this._storeContext = storeContext;
-            this._storeService = storeService;
-        }
+            this._storeContext = EngineContext.Current.Resolve<IStoreContext>();
+            this._storeService = EngineContext.Current.Resolve<IStoreService>();
 
-        public void SetProperties(NewsComment newsComment, string storeId)
-        {
             this._newsComment = newsComment;
             this._newsItem = EngineContext.Current.Resolve<INewsService>().GetNewsById(newsComment.NewsItemId);
             this._storeId = storeId;
+                       
+            AdditionalTokens = new Dictionary<string, string>();
         }
 
         public string NewsTitle
@@ -67,5 +66,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
             return useSsl ? store.SecureUrl : store.Url;
         }
+
+        public IDictionary<string, string> AdditionalTokens { get; set; }
     }
 }

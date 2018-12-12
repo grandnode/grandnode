@@ -11,6 +11,7 @@ using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -31,30 +32,21 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly MessageTemplatesSettings _templatesSettings;
 
-        public LiquidReturnRequest(ILocalizationService localizationService,
-            IWorkContext workContext,
-            IOrderService orderService,
-            ICurrencyService currencyService,
-            IPriceFormatter priceFormatter,
-            ILanguageService languageService,
-            IAddressAttributeFormatter addressAttributeFormatter,
-            MessageTemplatesSettings templatesSettings)
+        public LiquidReturnRequest(ReturnRequest returnRequest, Order order)
         {
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._orderService = orderService;
-            this._currencyService = currencyService;
-            this._priceFormatter = priceFormatter;
-            this._languageService = languageService;
-            this._addressAttributeFormatter = addressAttributeFormatter;
-            this._templatesSettings = templatesSettings;
-        }
+            this._localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+            this._workContext = EngineContext.Current.Resolve<IWorkContext>();
+            this._orderService = EngineContext.Current.Resolve<IOrderService>();
+            this._currencyService = EngineContext.Current.Resolve<ICurrencyService>();
+            this._priceFormatter = EngineContext.Current.Resolve<IPriceFormatter>();
+            this._languageService = EngineContext.Current.Resolve<ILanguageService>();
+            this._addressAttributeFormatter = EngineContext.Current.Resolve<IAddressAttributeFormatter>();
+            this._templatesSettings = EngineContext.Current.Resolve<MessageTemplatesSettings>();
 
-        public void SetProperties(ReturnRequest returnRequest,
-            Order order)
-        {
             this._returnRequest = returnRequest;
             this._order = order;
+                       
+            AdditionalTokens = new Dictionary<string, string>();
         }
 
         public string Id
@@ -215,5 +207,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
             sb.AppendLine("</table>");
             return sb.ToString();
         }
+
+        public IDictionary<string, string> AdditionalTokens { get; set; }
     }
 }

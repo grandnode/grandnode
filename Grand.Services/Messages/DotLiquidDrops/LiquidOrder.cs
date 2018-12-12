@@ -66,43 +66,25 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private readonly TaxSettings _taxSettings;
         private readonly CurrencySettings _currencySettings;
 
-        public LiquidOrder(IAddressAttributeFormatter addressAttributeFormatter,
-            IPaymentService paymentService,
-            ILocalizationService localizationService,
-            IWorkContext workContext,
-            IPriceFormatter priceFormatter,
-            ICurrencyService currencyService,
-            IDownloadService downloadService,
-            IProductAttributeParser productAttributeParser,
-            IStoreService storeService,
-            IStoreContext storeContext,
-            ILanguageService languageService,
-            IDateTimeHelper dateTimeHelper,
-            MessageTemplatesSettings templatesSettings,
-            CatalogSettings catalogSettings,
-            TaxSettings taxSettings,
-            CurrencySettings currencySettings)
+        public LiquidOrder(Order order, string languageId = "", string vendorId = "", OrderNote orderNote = null, decimal refundedAmount = 0)
         {
-            this._addressAttributeFormatter = addressAttributeFormatter;
-            this._paymentService = paymentService;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._priceFormatter = priceFormatter;
-            this._currencyService = currencyService;
-            this._downloadService = downloadService;
-            this._productAttributeParser = productAttributeParser;
-            this._storeService = storeService;
-            this._storeContext = storeContext;
-            this._languageService = languageService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._templatesSettings = templatesSettings;
-            this._catalogSettings = catalogSettings;
-            this._taxSettings = taxSettings;
-            this._currencySettings = currencySettings;
-        }
+            this._addressAttributeFormatter = EngineContext.Current.Resolve<IAddressAttributeFormatter>();
+            this._paymentService = EngineContext.Current.Resolve<IPaymentService>();
+            this._localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+            this._workContext = EngineContext.Current.Resolve<IWorkContext>();
+            this._priceFormatter = EngineContext.Current.Resolve<IPriceFormatter>();
+            this._currencyService = EngineContext.Current.Resolve<ICurrencyService>();
+            this._downloadService = EngineContext.Current.Resolve<IDownloadService>();
+            this._productAttributeParser = EngineContext.Current.Resolve<IProductAttributeParser>();
+            this._storeService = EngineContext.Current.Resolve<IStoreService>();
+            this._storeContext = EngineContext.Current.Resolve<IStoreContext>();
+            this._languageService = EngineContext.Current.Resolve<ILanguageService>();
+            this._dateTimeHelper = EngineContext.Current.Resolve<IDateTimeHelper>();
+            this._templatesSettings = EngineContext.Current.Resolve<MessageTemplatesSettings>();
+            this._catalogSettings = EngineContext.Current.Resolve<CatalogSettings>();
+            this._taxSettings = EngineContext.Current.Resolve<TaxSettings>();
+            this._currencySettings = EngineContext.Current.Resolve<CurrencySettings>();
 
-        public void SetProperties(Order order, string languageId = "", string vendorId = "", OrderNote orderNote = null, decimal refundedAmount = 0)
-        {
             this._order = order;
             this._languageId = languageId;
             this._vendorId = vendorId;
@@ -113,12 +95,12 @@ namespace Grand.Services.Messages.DotLiquidDrops
             this._orderItems = new List<LiquidOrderItem>();
             foreach (var orderItem in order.OrderItems)
             {
-                var liquidOrderItem = new LiquidOrderItem();
-                liquidOrderItem.SetProperties(orderItem, order, languageId);
-                this._orderItems.Add(liquidOrderItem);
+                this._orderItems.Add(new LiquidOrderItem(orderItem, order, languageId));
             }
 
             CalculateSubTotals();
+
+            AdditionalTokens = new Dictionary<string, string>();
         }
 
         private void CalculateSubTotals()
@@ -668,5 +650,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
             return useSsl ? store.SecureUrl : store.Url;
         }
+
+        public IDictionary<string, string> AdditionalTokens { get; set; }
     }
 }

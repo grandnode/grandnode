@@ -1,6 +1,7 @@
 ﻿using DotLiquid;
 using Grand.Core.Domain.Forums;
 using Grand.Services.Forums;
+using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops
 {
@@ -8,9 +9,11 @@ namespace Grand.Services.Messages.DotLiquidDrops
     {
         private PrivateMessage _privateMessage;
 
-        public void SetProperties(PrivateMessage privateMessage)
+        public LiquidPrivateMessage(PrivateMessage privateMessage)
         {
             this._privateMessage = privateMessage;
+
+            AdditionalTokens = new Dictionary<string, string>();
         }
 
         public string Subject
@@ -22,5 +25,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
         {
             get { return _privateMessage.FormatPrivateMessageText(); }
         }
+
+        public IDictionary<string, string> AdditionalTokens { get; set; }
     }
 }

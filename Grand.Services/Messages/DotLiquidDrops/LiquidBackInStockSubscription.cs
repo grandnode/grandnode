@@ -6,6 +6,7 @@ using Grand.Services.Catalog;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
 using System;
+using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops
 {
@@ -13,20 +14,19 @@ namespace Grand.Services.Messages.DotLiquidDrops
     {
         private BackInStockSubscription _backInStockSubscription;
         private Product _product;
+
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
 
-        public LiquidBackInStockSubscription(IStoreContext storeContext,
-            IStoreService storeService)
+        public LiquidBackInStockSubscription(BackInStockSubscription backInStockSubscription)
         {
-            this._storeContext = storeContext;
-            this._storeService = storeService;
-        }
+            this._storeContext = EngineContext.Current.Resolve<IStoreContext>();
+            this._storeService = EngineContext.Current.Resolve<IStoreService>();
 
-        public void SetProperties(BackInStockSubscription backInStockSubscription)
-        {
             this._backInStockSubscription = backInStockSubscription;
             this._product = EngineContext.Current.Resolve<IProductService>().GetProductById(_backInStockSubscription.ProductId);
+
+            AdditionalTokens = new Dictionary<string, string>();
         }
 
         public string ProductName
@@ -54,5 +54,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
             return useSsl ? store.SecureUrl : store.Url;
         }
+
+        public IDictionary<string, string> AdditionalTokens { get; set; }
     }
 }

@@ -1043,10 +1043,7 @@ namespace Grand.Services.Messages
             _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
             _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
             _messageTokenProvider.AddProductTokens(liquidObject, product, languageId);
-
-            var liquidEmailAFriend = new LiquidEmailAFriend();
-            liquidEmailAFriend.SetProperties(personalMessage, customerEmail);
-            liquidObject.EmailAFriend = new LiquidEmailAFriend();
+            liquidObject.EmailAFriend = new LiquidEmailAFriend(personalMessage, customerEmail);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
@@ -1132,9 +1129,7 @@ namespace Grand.Services.Messages
             _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
             _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
             _messageTokenProvider.AddProductTokens(liquidObject, product, languageId);
-            LiquidAskQuestion liquidAskQuestion = new LiquidAskQuestion();
-            liquidAskQuestion.SetProperties(message, customerEmail, fullName, phone);
-            liquidObject.AskAQuestion = liquidAskQuestion;
+            liquidObject.AskAQuestion = new LiquidAskQuestion(message, customerEmail, fullName, phone);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
@@ -1731,9 +1726,7 @@ namespace Grand.Services.Messages
             LiquidObject liquidObject = new LiquidObject();
             _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
             _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
-            LiquidVatValidationResult liquidVatValidationResult = new LiquidVatValidationResult();
-            liquidVatValidationResult.SetProperties(vatName, vatAddress);
-            liquidObject.VatValidationResult = liquidVatValidationResult;
+            liquidObject.VatValidationResult = new LiquidVatValidationResult(vatName, vatAddress);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
@@ -1976,9 +1969,7 @@ namespace Grand.Services.Messages
             LiquidObject liquidObject = new LiquidObject();
             _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
             _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
-            LiquidContactUs liquidContactUs = new LiquidContactUs();
-            liquidContactUs.SetProperties(senderEmail, senderName, body, attrInfo);
-            liquidObject.ContactUs = liquidContactUs;
+            liquidObject.ContactUs = new LiquidContactUs(senderEmail, senderName, body, attrInfo);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
@@ -2064,9 +2055,7 @@ namespace Grand.Services.Messages
             LiquidObject liquidObject = new LiquidObject();
             _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
             _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
-            LiquidContactUs liquidContactUs = new LiquidContactUs();
-            liquidContactUs.SetProperties(senderEmail, senderName, body, "");
-            liquidObject.ContactUs = liquidContactUs;
+            liquidObject.ContactUs = new LiquidContactUs(senderEmail, senderName, body, "");
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);

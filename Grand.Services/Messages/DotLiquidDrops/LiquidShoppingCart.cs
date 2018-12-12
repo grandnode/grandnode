@@ -7,6 +7,7 @@ using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Services.Media;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -24,17 +25,12 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private ILanguageService _languageService;
         private MessageTemplatesSettings _templatesSettings;
 
-        public LiquidShoppingCart(ILanguageService languageService,
-            ILocalizationService localizationService,
-            MessageTemplatesSettings templatessSettings)
+        public LiquidShoppingCart(Customer customer, string personalMessage = "", string customerEmail = "")
         {
-            this._localizationService = localizationService;
-            this._languageService = languageService;
-            this._templatesSettings = templatessSettings;
-        }
+            this._localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+            this._languageService = EngineContext.Current.Resolve<ILanguageService>();
+            this._templatesSettings = EngineContext.Current.Resolve<MessageTemplatesSettings>();
 
-        public void SetProperties(Customer customer, string personalMessage = "", string customerEmail = "")
-        {
             this._customer = customer;
 
             string languageId = _languageService.GetAllLanguages().FirstOrDefault().Id;
@@ -46,6 +42,8 @@ namespace Grand.Services.Messages.DotLiquidDrops
             this._languageId = languageId;
             this._personalMessage = personalMessage;
             this._customerEmail = customerEmail;
+
+            AdditionalTokens = new Dictionary<string, string>();
         }
 
         public string ShoppingCartProducts
@@ -124,5 +122,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
             result = sb.ToString();
             return result;
         }
+
+        public IDictionary<string, string> AdditionalTokens { get; set; }
     }
 }

@@ -2,12 +2,14 @@
 using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Directory;
+using Grand.Core.Infrastructure;
 using Grand.Services.Catalog;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
 using System;
+using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops
 {
@@ -22,23 +24,18 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private readonly IStoreService _storeService;
         private readonly CurrencySettings _currencySettings;
 
-        public LiquidProduct(IStoreContext storeContext,
-            IStoreService storeService,
-            CurrencySettings currencySettings,
-            ICurrencyService currencyService,
-            IPriceFormatter priceFormatter)
+        public LiquidProduct(Product product, string languageId)
         {
-            this._storeContext = storeContext;
-            this._storeService = storeService;
-            this._currencySettings = currencySettings;
-            this._currencyService = currencyService;
-            this._priceFormatter = priceFormatter;
-        }
+            this._storeContext = EngineContext.Current.Resolve<IStoreContext>();
+            this._storeService = EngineContext.Current.Resolve<IStoreService>();
+            this._currencySettings = EngineContext.Current.Resolve<CurrencySettings>();
+            this._currencyService = EngineContext.Current.Resolve<ICurrencyService>();
+            this._priceFormatter = EngineContext.Current.Resolve<IPriceFormatter>();
 
-        public void SetProperties(Product product, string languageId)
-        {
             this._product = product;
             this._languageId = languageId;
+
+            AdditionalTokens = new Dictionary<string, string>();
         }
 
         public string Id
@@ -95,5 +92,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
             return useSsl ? store.SecureUrl : store.Url;
         }
+
+        public IDictionary<string, string> AdditionalTokens { get; set; }
     }
 }

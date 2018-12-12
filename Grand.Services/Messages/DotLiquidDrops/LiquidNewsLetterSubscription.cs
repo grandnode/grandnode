@@ -1,8 +1,10 @@
 ﻿using DotLiquid;
 using Grand.Core;
 using Grand.Core.Domain.Messages;
+using Grand.Core.Infrastructure;
 using Grand.Services.Stores;
 using System;
+using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops
 {
@@ -13,16 +15,14 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private readonly IStoreService _storeService;
         private readonly IStoreContext _storeContext;
 
-        public LiquidNewsLetterSubscription(IStoreService storeService,
-            IStoreContext storeContext)
+        public LiquidNewsLetterSubscription(NewsLetterSubscription subscription)
         {
-            this._storeContext = storeContext;
-            this._storeService = storeService;
-        }
+            this._storeContext = EngineContext.Current.Resolve<IStoreContext>();
+            this._storeService = EngineContext.Current.Resolve<IStoreService>();
 
-        public void SetProperties(NewsLetterSubscription subscription)
-        {
             this._subscription = subscription;
+
+            AdditionalTokens = new Dictionary<string, string>();
         }
 
         public string Email
@@ -65,5 +65,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
             return useSsl ? store.SecureUrl : store.Url;
         }
+
+        public IDictionary<string, string> AdditionalTokens { get; set; }
     }
 }
