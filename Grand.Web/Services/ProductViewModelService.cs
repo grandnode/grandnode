@@ -1719,7 +1719,7 @@ namespace Grand.Web.Services
         {
             var productIds = _cacheManager.Get(string.Format(ModelCacheEventConsumer.PRODUCTS_RELATED_IDS_KEY, productId, _storeContext.CurrentStore.Id),
                () =>
-                   _productService.GetProductById(productId).RelatedProducts.Select(x => x.ProductId2).ToArray()
+                   _productService.GetProductById(productId).RelatedProducts.OrderBy(x=>x.DisplayOrder).Select(x => x.ProductId2).ToArray()
                    );
 
             //load products
