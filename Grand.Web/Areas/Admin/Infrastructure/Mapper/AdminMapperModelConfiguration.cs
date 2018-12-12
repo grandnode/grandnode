@@ -748,6 +748,14 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.ConditionType, mo => mo.Ignore());
 
+            //user api
+            CreateMap<UserApi, UserApiModel>()
+                .ForMember(dest => dest.Password, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            CreateMap<UserApiModel, UserApi>()
+                .ForMember(dest => dest.Password, mo => mo.Ignore())
+                .ForMember(dest => dest.Id, mo => mo.Ignore());
+
             //product attributes
             CreateMap<ProductAttribute, ProductAttributeModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
@@ -941,7 +949,6 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<ReturnRequestActionModel, ReturnRequestAction>()
                 .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()))
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
-
 
             //category template
             CreateMap<CategoryTemplate, CategoryTemplateModel>()

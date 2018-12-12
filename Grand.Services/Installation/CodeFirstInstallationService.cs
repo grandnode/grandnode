@@ -83,6 +83,7 @@ namespace Grand.Services.Installation
         private readonly IRepository<CustomerTagProduct> _customerTagProductRepository;
         private readonly IRepository<CustomerHistoryPassword> _customerHistoryPasswordRepository;
         private readonly IRepository<CustomerNote> _customerNoteRepository;
+        private readonly IRepository<UserApi> _userapiRepository;
         private readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
         private readonly IRepository<CheckoutAttribute> _checkoutAttributeRepository;
         private readonly IRepository<ProductAttribute> _productAttributeRepository;
@@ -186,6 +187,7 @@ namespace Grand.Services.Installation
             IRepository<CustomerTagProduct> customerTagProductRepository,
             IRepository<CustomerHistoryPassword> customerHistoryPasswordRepository,
             IRepository<CustomerNote> customerNoteRepository,
+            IRepository<UserApi> userapiRepository,
             IRepository<SpecificationAttribute> specificationAttributeRepository,
             IRepository<CheckoutAttribute> checkoutAttributeRepository,
             IRepository<ProductAttribute> productAttributeRepository,
@@ -284,6 +286,7 @@ namespace Grand.Services.Installation
             this._customerTagProductRepository = customerTagProductRepository;
             this._customerHistoryPasswordRepository = customerHistoryPasswordRepository;
             this._customerNoteRepository = customerNoteRepository;
+            this._userapiRepository = userapiRepository;
             this._specificationAttributeRepository = specificationAttributeRepository;
             this._checkoutAttributeRepository = checkoutAttributeRepository;
             this._productAttributeRepository = productAttributeRepository;
@@ -11088,6 +11091,8 @@ namespace Grand.Services.Installation
             //customer note
             _customerNoteRepository.Collection.Indexes.CreateOne(new CreateIndexModel<CustomerNote>((Builders<CustomerNote>.IndexKeys.Ascending(x => x.CustomerId).Descending(x => x.CreatedOnUtc)), new CreateIndexOptions() { Name = "CustomerId", Unique = false, Background = true }));
 
+            //user api
+            _userapiRepository.Collection.Indexes.CreateOne(new CreateIndexModel<UserApi>((Builders<UserApi>.IndexKeys.Ascending(x => x.Email)), new CreateIndexOptions() { Name = "Email", Unique = true, Background = true }));
 
             //specificationAttribute
             _specificationAttributeRepository.Collection.Indexes.CreateOne(new CreateIndexModel<SpecificationAttribute>((Builders<SpecificationAttribute>.IndexKeys.Ascending(x => x.DisplayOrder)), new CreateIndexOptions() { Name = "DisplayOrder" }));

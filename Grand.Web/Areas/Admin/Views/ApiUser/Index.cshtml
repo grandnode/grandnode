@@ -1,0 +1,143 @@
+﻿@{
+    //page title
+    ViewBag.Title = T("Admin.System.APIUsers").Text;
+}
+<antiforgery-token />
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light form-fit">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-tasks"></i>
+                    @T("Admin.System.APIUsers")
+                </div>
+                <vc:admin-widget widget-zone="api_user_list_buttons" additional-data="null" />
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal">
+                    <div class="form-body">
+                        <div class="portlet-body">
+                            <div id="apiuser-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script>
+        $(document).ready(function () {
+            $("#apiuser-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("List", "ApiUser"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        create: {
+                            url: "@Html.Raw(Url.Action("Insert", "ApiUser"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        update: {
+                            url:"@Html.Raw(Url.Action("Update", "ApiUser"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        destroy: {
+                            url: "@Html.Raw(Url.Action("Delete", "ApiUser"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors",
+                        model: {
+                            id: "Id",
+                            fields: {
+                                Email: { editable: true, type: "string" },
+                                Password: { editable: true, type: "string" },
+                                IsActive: { editable: true, type: "boolean" },
+                                Id: { editable: false, type: "string" }
+                            }
+                        }
+                    },
+                    requestEnd: function (e) {
+                        if (e.type == "create" || e.type == "update") {
+                            this.read();
+                        }
+                    },
+                    error: function (e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    numeric: false,
+                    previousNext: false,
+                    info: false
+                },
+                toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
+                editable: {
+                    confirmation: true,
+                    mode: "inline"
+                },
+                edit: OnEdit,
+                scrollable: false,
+                columns: [{
+                    field: "Email",
+                    title: "@T("Admin.System.UserApi.Email")",
+                    width: 300,
+                }, {
+                    field: "Password",
+                    title: "@T("Admin.System.UserApi.Password")",
+                    width: 300,
+                    template: '****'
+                }, {
+                    field: "IsActive",
+                    title: "@T("Admin.System.UserApi.IsActive")",
+                    width: 100,
+                    template: '# if(IsActive) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+                }, {
+                    command: [{
+                        name: "edit",
+                        text: {
+                            edit: "@T("Admin.Common.Edit")",
+                            update: "@T("Admin.Common.Update")",
+                            cancel: "@T("Admin.Common.Cancel")"
+                        }
+                    }, {
+                        name: "destroy",
+                        text: "@T("Admin.Common.Delete")"
+                    }],
+                    width: 200
+                }]
+            });
+        });
+        function OnEdit(e) {
+            // Make sure it's not a new entry
+            if (!e.model.isNew()) {
+                var cell = $('[name="Email"]');
+                cell.attr("readonly", true);
+                cell.attr("enabled", false)
+            }
+            else {
+                var cell = $('[name="Email"]');
+                cell.attr("readonly", false);
+                cell.attr("enabled", true)
+            }
+        }
+    </script>

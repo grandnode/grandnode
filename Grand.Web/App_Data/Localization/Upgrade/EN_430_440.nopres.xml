@@ -23,4 +23,23 @@
   <LocaleResource Name="Admin.Orders.Shipments.BackToList">
     <Value>Back to shipment list</Value>
   </LocaleResource>
+
+  <LocaleResource Name="Admin.System.UserApi.Email.Required">
+    <Value>Email is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.UserApi.Email">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.UserApi.Password">
+    <Value>Password</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.UserApi.IsActive">
+    <Value>Is active</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.UserApi.Email.CustomerNotExist">
+    <Value>No customer account found</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.APIUsers">
+    <Value>Manage api users</Value>
+  </LocaleResource>
 </Language>

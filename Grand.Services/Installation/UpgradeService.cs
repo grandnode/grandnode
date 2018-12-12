@@ -1207,6 +1207,12 @@ namespace Grand.Services.Installation
             }
 
             #endregion
+
+            #region User api
+
+            EngineContext.Current.Resolve<IRepository<UserApi>>().Collection.Indexes.CreateOne(new CreateIndexModel<UserApi>((Builders<UserApi>.IndexKeys.Ascending(x => x.Email)), new CreateIndexOptions() { Name = "Email", Unique = true, Background = true }));
+
+            #endregion
         }
 
         private void InstallStringResources(string filenames)

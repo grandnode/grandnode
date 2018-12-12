@@ -14259,6 +14259,9 @@
   <LocaleResource Name="Admin.System">
     <Value>System</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.APIUsers">
+    <Value>Manage api users</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.ContactForm">
     <Value>Message Contact form</Value>
   </LocaleResource>
@@ -15047,6 +15050,18 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.Templates.Topic.ViewPath.Required">
     <Value>View path is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.UserApi.Email">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.UserApi.Email.CustomerNotExist">
+    <Value>No customer account found</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.UserApi.IsActive">
+    <Value>Is active</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.UserApi.Password">
+    <Value>Password</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings">
     <Value>Warnings</Value>
