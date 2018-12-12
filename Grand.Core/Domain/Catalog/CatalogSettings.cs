@@ -236,6 +236,11 @@ namespace Grand.Core.Domain.Catalog
         /// Gets or sets a minimum search term length
         /// </summary>
         public int ProductSearchTermMinimumLength { get; set; }
+
+        /// <summary>
+        /// Gets or sets save search autocomplete
+        /// </summary>
+        public bool SaveSearchAutoComplete { get; set; }
         
         /// <summary>
         /// Gets or sets a value indicating whether to show bestsellers on home page

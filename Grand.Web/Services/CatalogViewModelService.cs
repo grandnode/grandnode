@@ -1382,7 +1382,7 @@ namespace Grand.Web.Services
                 }
             }
             //search term statistics
-            if (!String.IsNullOrEmpty(term))
+            if (!String.IsNullOrEmpty(term) && _catalogSettings.SaveSearchAutoComplete)
             {
                 Task.Run(() =>
                 {
