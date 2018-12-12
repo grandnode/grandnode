@@ -30,6 +30,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Services
 {
@@ -1254,7 +1255,7 @@ namespace Grand.Web.Services
             var model = new List<SearchAutoCompleteModel>();
             var productNumber = _catalogSettings.ProductSearchAutoCompleteNumberOfProducts > 0 ?
                 _catalogSettings.ProductSearchAutoCompleteNumberOfProducts : 10;
-
+            var storeId = _storeContext.CurrentStore.Id;
             var categoryIds = new List<string>();
             if (!string.IsNullOrEmpty(categoryId))
             {
@@ -1267,7 +1268,7 @@ namespace Grand.Web.Services
             }
 
             var products = _productService.SearchProducts(
-                storeId: _storeContext.CurrentStore.Id,
+                storeId: storeId,
                 keywords: term,
                 categoryIds: categoryIds,
                 searchSku: _catalogSettings.SearchBySku,
@@ -1367,7 +1368,7 @@ namespace Grand.Web.Services
 
             if (_catalogSettings.ShowBlogPostsInSearchAutoComplete)
             {
-                var posts = _blogService.GetAllBlogPosts(storeId: _storeContext.CurrentStore.Id, pageSize: productNumber, blogPostName: term);
+                var posts = _blogService.GetAllBlogPosts(storeId: storeId, pageSize: productNumber, blogPostName: term);
                 foreach (var item in posts)
                 {
                     model.Add(new SearchAutoCompleteModel()
@@ -1380,7 +1381,29 @@ namespace Grand.Web.Services
                     });
                 }
             }
-
+            //search term statistics
+            if (!String.IsNullOrEmpty(term))
+            {
+                Task.Run(() =>
+                {
+                    var searchTerm = _searchTermService.GetSearchTermByKeyword(term, _storeContext.CurrentStore.Id);
+                    if (searchTerm != null)
+                    {
+                        searchTerm.Count++;
+                        _searchTermService.UpdateSearchTerm(searchTerm);
+                    }
+                    else
+                    {
+                        searchTerm = new SearchTerm
+                        {
+                            Keyword = term,
+                            StoreId = storeId,
+                            Count = 1
+                        };
+                        _searchTermService.InsertSearchTerm(searchTerm);
+                    }
+                });
+            }
             return model;
         }
 
