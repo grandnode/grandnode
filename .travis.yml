@@ -1,7 +1,8 @@
 language: csharp
 solution: GrandNode.sln
+dist: xenial
 mono: none
-dotnet: 2.2.100
+dotnet: 2.2.101
 
 services:
  - mongodb
