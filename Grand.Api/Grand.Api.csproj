@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="sample\**" />
+    <EmbeddedResource Remove="sample\**" />
+    <None Remove="sample\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Grand.Core\Grand.Core.csproj" />
     <ProjectReference Include="..\Grand.Framework\Grand.Framework.csproj" />
   </ItemGroup>

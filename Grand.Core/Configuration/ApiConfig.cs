@@ -11,5 +11,6 @@
         public bool ValidateLifetime { get; set; }
         public bool ValidateIssuerSigningKey { get; set; }
         public int ExpiryInMinutes { get; set; }
+        public bool SystemModel { get; set; }
     }
 }

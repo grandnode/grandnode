@@ -57,7 +57,13 @@ namespace Grand.Api.Utilities
 
         public JwtTokenBuilder AddClaims(Dictionary<string, string> claims)
         {
-            this.claims.Union(claims);
+            foreach (var item in claims)
+            {
+                if (!this.claims.ContainsKey(item.Key) && !string.IsNullOrEmpty(item.Value))
+                {
+                    this.claims.Add(item.Key, item.Value);
+                }
+            }
             return this;
         }
 
