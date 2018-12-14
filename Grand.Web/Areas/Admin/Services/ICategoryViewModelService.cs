@@ -10,7 +10,7 @@ namespace Grand.Web.Areas.Admin.Services
         List<TreeNode> PrepareCategoryNodeListModel();
         (IEnumerable<CategoryModel> categoryListModel, int totalCount) PrepareCategoryListModel(CategoryListModel model, int pageIndex, int pageSize);
         CategoryModel PrepareCategoryModel();
-        CategoryModel PrepareCategoryModel(CategoryModel model);
+        CategoryModel PrepareCategoryModel(CategoryModel model, Category category);
         Category InsertCategoryModel(CategoryModel model);
         Category UpdateCategoryModel(Category category, CategoryModel model);
         (IEnumerable<CategoryModel.CategoryProductModel> categoryProductModels, int totalCount) PrepareCategoryProductModel(string categoryId, int pageIndex, int pageSize);

@@ -196,14 +196,14 @@ namespace Grand.Web.Areas.Admin.Services
             return model;
         }
 
-        public virtual CategoryModel PrepareCategoryModel(CategoryModel model)
+        public virtual CategoryModel PrepareCategoryModel(CategoryModel model, Category category)
         {
             //templates
             PrepareTemplatesModel(model);
             //categories
             PrepareAllCategoriesModel(model);
             //discounts
-            PrepareDiscountModel(model, null, true);
+            PrepareDiscountModel(model, category, false);
             return model;
         }
 

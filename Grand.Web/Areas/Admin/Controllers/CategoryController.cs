@@ -129,7 +129,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model = _categoryViewModelService.PrepareCategoryModel(model);
+            model = _categoryViewModelService.PrepareCategoryModel(model, null);
             //ACL
             model.PrepareACLModel(null, true, _customerService);
             //Stores
@@ -156,7 +156,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 locale.MetaTitle = category.GetLocalized(x => x.MetaTitle, languageId, false, false);
                 locale.SeName = category.GetSeName(languageId, false, false);
             });
-            model = _categoryViewModelService.PrepareCategoryModel(model);
+            model = _categoryViewModelService.PrepareCategoryModel(model, category);
             //ACL
             model.PrepareACLModel(category, false, _customerService);
             //Stores
@@ -189,7 +189,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model = _categoryViewModelService.PrepareCategoryModel(model);
+            model = _categoryViewModelService.PrepareCategoryModel(model, category);
             //ACL
             model.PrepareACLModel(category, true, _customerService);
             //Stores
