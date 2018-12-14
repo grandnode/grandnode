@@ -15,7 +15,7 @@
             <span class="col-form-label text-prompt">
                 @textPrompt
             </span>
-            <div id="@string.Format("checkout_attribute_label_{0}", attribute.Id)" class="col-12 px-0 d-flex">
+            <div id="@string.Format("checkout_attribute_label_{0}", attribute.Id)" class="col-12 px-0">
 
                 @switch (attribute.AttributeControlType)
                 {
@@ -214,7 +214,7 @@
                         break;
                     case AttributeControlType.ColorSquares:
                         {
-                            <ul class="option-list color-squares pl-0 d-flex" id="color-squares-@(attribute.Id)">
+                            <ul class="option-list color-squares pl-0" id="color-squares-@(attribute.Id)">
                                 @foreach (var attributeValue in attribute.Values)
                                 {
                                     var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
