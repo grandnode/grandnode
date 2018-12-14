@@ -51,7 +51,8 @@
                     @if (!string.IsNullOrEmpty(review.ReplyText))
                     {
                         <div class="reply-content">
-                            <blockquote class="blockquote-footer">
+                            <blockquote class="administration-response">
+                                <h5 class="administration-response-header">@T("Reviews.AdministrationResponse")</h5>
                                 @Html.Raw(Grand.Core.Html.HtmlHelper.FormatText(review.ReplyText, false, true, false, false, false, false))
                                 <p>@review.Signature</p>
                             </blockquote>

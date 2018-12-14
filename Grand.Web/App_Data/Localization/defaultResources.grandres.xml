@@ -19614,4 +19614,7 @@
   <LocaleResource Name="Products.QuickView">
     <Value>Quick View</Value>
   </LocaleResource>
+  <LocaleResource Name="Reviews.AdministrationResponse">
+    <Value>Administration response</Value>
+  </LocaleResource>
 </Language>

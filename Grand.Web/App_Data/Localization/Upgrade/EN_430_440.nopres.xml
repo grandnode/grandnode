@@ -42,4 +42,7 @@
   <LocaleResource Name="Admin.System.APIUsers">
     <Value>Manage api users</Value>
   </LocaleResource>
+  <LocaleResource Name="Reviews.AdministrationResponse">
+    <Value>Administration response</Value>
+  </LocaleResource>
 </Language>
