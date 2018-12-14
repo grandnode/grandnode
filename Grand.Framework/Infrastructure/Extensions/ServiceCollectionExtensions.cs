@@ -26,7 +26,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
 using System;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 
@@ -49,6 +48,8 @@ namespace Grand.Framework.Infrastructure.Extensions
             services.ConfigureStartupConfig<GrandConfig>(configuration.GetSection("Grand"));
             //add hosting configuration parameters
             services.ConfigureStartupConfig<HostingConfig>(configuration.GetSection("Hosting"));
+            //add api configuration parameters
+            services.ConfigureStartupConfig<ApiConfig>(configuration.GetSection("Api"));
             //add accessor to HttpContext
             services.AddHttpContextAccessor();
 

@@ -10,6 +10,7 @@
     <TieredCompilation>true</TieredCompilation>    
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Grand.Api\Grand.Api.csproj" />
     <ProjectReference Include="..\Grand.Core\Grand.Core.csproj" />
     <ProjectReference Include="..\Grand.Data\Grand.Data.csproj" />
     <ProjectReference Include="..\Grand.Framework\Grand.Framework.csproj" />
