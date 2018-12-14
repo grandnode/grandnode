@@ -81,9 +81,12 @@
                                                 for (var j = 0; j < Model.ConditionModel.ConditionAttributes[i].Values.Count; j++)
                                                 {
                                                     <div>
-                                                        <input type="hidden" asp-for="@Model.ConditionModel.ConditionAttributes[i].Values[j].Value" />
-                                                        <admin-input asp-for="@Model.ConditionModel.ConditionAttributes[i].Values[j].Selected" />
-                                                        <admin-label asp-for="@Model.ConditionModel.ConditionAttributes[i].Values[j].Selected" />
+                                                        <label class="mt-checkbox mt-checkbox-outline">
+                                                            <input type="hidden" asp-for="@Model.ConditionModel.ConditionAttributes[i].Values[j].Value" />
+                                                            <admin-input asp-for="@Model.ConditionModel.ConditionAttributes[i].Values[j].Selected" />
+                                                            @Model.ConditionModel.ConditionAttributes[i].Values[j].Text
+                                                            <span></span>
+                                                        </label>
                                                     </div>
                                                 }
                                                 break;
