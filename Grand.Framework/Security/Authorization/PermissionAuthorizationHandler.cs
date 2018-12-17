@@ -23,7 +23,17 @@ namespace Grand.Framework.Security.Authorization
             {
                 var redirectContext = context.Resource as AuthorizationFilterContext;
                 var httpContext = _contextAccessor.HttpContext;
-                redirectContext.Result = new RedirectToActionResult("AccessDenied", "Security", new { pageUrl = httpContext.Request.Path });
+
+                string authHeader = httpContext.Request.Headers["Authorization"];
+                var apirequest = authHeader != null && authHeader.Split(' ')[0] == "Bearer";
+                if (apirequest)
+                {
+                    redirectContext.Result = new ForbidResult();
+                }
+                else
+                {
+                    redirectContext.Result = new RedirectToActionResult("AccessDenied", "Security", new { pageUrl = httpContext.Request.Path });
+                }
             }
             context.Succeed(requirement);
             return Task.CompletedTask;

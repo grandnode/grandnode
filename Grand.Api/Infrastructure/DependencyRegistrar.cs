@@ -11,6 +11,7 @@ namespace Grand.Api.Infrastructure
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, GrandConfig config)
         {
             builder.RegisterType<TokenService>().As<ITokenService>().InstancePerLifetimeScope();
+            builder.RegisterType<CategoryApiService>().As<ICategoryApiService>().InstancePerLifetimeScope();
         }
         public int Order => 5;
     }

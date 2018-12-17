@@ -3,16 +3,11 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="sample\**" />
-    <EmbeddedResource Remove="sample\**" />
-    <None Remove="sample\**" />
-  </ItemGroup>
-
+  
   <ItemGroup>
     <ProjectReference Include="..\Grand.Core\Grand.Core.csproj" />
     <ProjectReference Include="..\Grand.Framework\Grand.Framework.csproj" />
+    <ProjectReference Include="..\Grand.Services\Grand.Services.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.2.0" />

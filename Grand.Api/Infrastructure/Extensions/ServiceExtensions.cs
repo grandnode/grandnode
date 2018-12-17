@@ -25,7 +25,7 @@ namespace Grand.Api.Infrastructure.Extensions
                     .AllowCredentials());
             });
         }
-        public static void ConfigureJwt(this IServiceCollection services, ApiConfig config)
+        public static void AddAuthenticationJwtBearer(this IServiceCollection services, ApiConfig config)
         {
             //Token Jwt
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

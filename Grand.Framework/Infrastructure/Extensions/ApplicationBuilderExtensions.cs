@@ -65,6 +65,13 @@ namespace Grand.Framework.Infrastructure.Extensions
                     if (exception == null)
                         return Task.CompletedTask;
 
+                    string authHeader = context.Request.Headers["Authorization"];
+                    var apirequest = authHeader != null && authHeader.Split(' ')[0] == "Bearer";
+                    if (apirequest)
+                    {
+                        context.Response.WriteAsync(exception.Message).Wait();
+                        return Task.CompletedTask;
+                    }
                     try
                     {
                         //check whether database is installed
@@ -94,8 +101,11 @@ namespace Grand.Framework.Infrastructure.Extensions
         {
             application.UseStatusCodePages(async context =>
             {
+                string authHeader = context.HttpContext.Request.Headers["Authorization"];
+                var apirequest = authHeader != null && authHeader.Split(' ')[0] == "Bearer";
+
                 //handle 404 Not Found
-                if (context.HttpContext.Response.StatusCode == 404)
+                if (!apirequest && context.HttpContext.Response.StatusCode == 404)
                 {
                     var webHelper = EngineContext.Current.Resolve<IWebHelper>();
                     if (!webHelper.IsStaticResource())
@@ -162,13 +172,13 @@ namespace Grand.Framework.Infrastructure.Extensions
         {
             application.UseMiddleware<InstallUrlMiddleware>();
         }
-        
+
         /// <summary>
         /// Congifure authentication
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseGrandAuthentication(this IApplicationBuilder application)
-        {                    
+        {
             application.UseMiddleware<AuthenticationMiddleware>();
         }
 

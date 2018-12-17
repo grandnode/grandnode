@@ -173,8 +173,7 @@ namespace Grand.Services.Catalog
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(category);
-
+            _eventPublisher.EntityDeleted(category);
         }
 
         /// <summary>

@@ -9,7 +9,7 @@ namespace Grand.Framework.Security.Authorization
 
         public PermissionAuthorizeAttribute(string permission) => Permission = permission;
 
-        // Get or set the Age property by manipulating the underlying Policy property
+        // Get or set the permision property by manipulating the underlying Policy property
         public string Permission
         {
             get
