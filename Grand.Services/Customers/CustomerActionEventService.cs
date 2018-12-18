@@ -269,7 +269,7 @@ namespace Grand.Services.Customers
                     cond = item.UrlReferrer.Select(x => x.Name).Contains(previousUrl);
                 }
 
-                if(item.CustomerActionConditionType == CustomerActionConditionTypeEnum.Store)
+                if (item.CustomerActionConditionType == CustomerActionConditionTypeEnum.Store)
                 {
                     cond = ConditionStores(item, _storeContext.CurrentStore.Id);
                 }
@@ -658,7 +658,7 @@ namespace Grand.Services.Customers
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomerId = customerId,
                 CustomerActionId = action.Id,
-                Name = form.Name,
+                Name = form.GetLocalized(x => x.Name),
                 PopupTypeId = (int)PopupType.InteractiveForm
             };
             _popupService.InsertPopupActive(formactive);
@@ -666,7 +666,7 @@ namespace Grand.Services.Customers
 
         protected string PrepareDataInteractiveForm(InteractiveForm form)
         {
-            var body = form.Body;
+            var body = form.GetLocalized(x => x.Body);
             body += "<input type=\"hidden\" name=\"Id\" value=\"" + form.Id + "\">";
             foreach (var item in form.FormAttributes)
             {
@@ -675,7 +675,7 @@ namespace Grand.Services.Customers
                     string _style = string.Format("{0}", item.Style);
                     string _class = string.Format("{0} {1}", "form-control", item.Class);
                     string _value = item.DefaultValue;
-                    var textbox = string.Format("<input type=\"text\"  name=\"{0}\" class=\"{1}\" style=\"{2}\" value=\"{3}\" {4}>", item.SystemName, _class, _style ,_value, item.IsRequired ? "required" : "");
+                    var textbox = string.Format("<input type=\"text\"  name=\"{0}\" class=\"{1}\" style=\"{2}\" value=\"{3}\" {4}>", item.SystemName, _class, _style, _value, item.IsRequired ? "required" : "");
                     body = body.Replace(string.Format("%{0}%", item.SystemName), textbox);
                 }
                 if (item.AttributeControlType == FormControlType.MultilineTextbox)
@@ -695,7 +695,7 @@ namespace Grand.Services.Customers
                         string _class = string.Format("{0} {1}", "custom-control-input", item.Class);
 
                         checkbox += "<label class=\"custom-control custom-checkbox\">";
-                        checkbox += string.Format("<input type=\"checkbox\" class=\"{0}\" style=\"{1}\" {2} id=\"{3}\" name=\"{4}\" value=\"{5}\" >", _class, _style, 
+                        checkbox += string.Format("<input type=\"checkbox\" class=\"{0}\" style=\"{1}\" {2} id=\"{3}\" name=\"{4}\" value=\"{5}\" >", _class, _style,
                             itemcheck.IsPreSelected ? "checked" : "", itemcheck.Id, item.SystemName, itemcheck.GetLocalized(x => x.Name));
                         checkbox += "<span class=\"custom-control-indicator\"></span>";
                         checkbox += string.Format("<span class=\"custom-control-description\">{0}</span>", itemcheck.GetLocalized(x => x.Name));
@@ -821,7 +821,7 @@ namespace Grand.Services.Customers
                 }
 
             }
-            
+
         }
 
         public virtual void Url(Customer customer, string currentUrl, string previousUrl)
@@ -877,7 +877,7 @@ namespace Grand.Services.Customers
 
                 }
             }
-            
+
         }
         public virtual void Registration(Customer customer)
         {
