@@ -1,4 +1,5 @@
-﻿using Grand.Api.Extensions;
+﻿using Grand.Api.DTOs.Catalog;
+using Grand.Api.Extensions;
 using Grand.Data;
 using Grand.Services.Catalog;
 using Grand.Services.Media;
@@ -17,7 +18,7 @@ namespace Grand.Api.Services
         private readonly IUrlRecordService _urlRecordService;
         private readonly IPictureService _pictureService;
 
-        private IMongoCollection<Api.Model.Catalog.Category> _category;
+        private IMongoCollection<CategoryDTO> _category;
 
         public CategoryApiService(IMongoDBContext mongoDBContext, ICategoryService categoryService, IUrlRecordService urlRecordService, IPictureService pictureService)
         {
@@ -26,19 +27,19 @@ namespace Grand.Api.Services
             _urlRecordService = urlRecordService;
             _pictureService = pictureService;
 
-            _category = _mongoDBContext.Database().GetCollection<Grand.Api.Model.Catalog.Category>(typeof(Core.Domain.Catalog.Category).Name);
+            _category = _mongoDBContext.Database().GetCollection<CategoryDTO>(typeof(Core.Domain.Catalog.Category).Name);
         }
-        public virtual Api.Model.Catalog.Category GetById(string id)
+        public virtual CategoryDTO GetById(string id)
         {
             return _category.AsQueryable().FirstOrDefault(x => x.Id == id);
         }
 
-        public virtual IMongoQueryable<Api.Model.Catalog.Category> GetCategories()
+        public virtual IMongoQueryable<CategoryDTO> GetCategories()
         {
             return _category.AsQueryable();
         }
 
-        public virtual Api.Model.Catalog.Category InsertCategory(Api.Model.Catalog.Category model)
+        public virtual CategoryDTO InsertCategory(CategoryDTO model)
         {
             var category = model.ToEntity();
             category.CreatedOnUtc = DateTime.UtcNow;
@@ -52,7 +53,7 @@ namespace Grand.Api.Services
             return category.ToModel();
         }
 
-        public virtual Api.Model.Catalog.Category UpdateCategory(Api.Model.Catalog.Category model)
+        public virtual CategoryDTO UpdateCategory(CategoryDTO model)
         {
             var category = _categoryService.GetCategoryById(model.Id);
             string prevPictureId = category.PictureId;
@@ -82,7 +83,7 @@ namespace Grand.Api.Services
             return category.ToModel();
         }
 
-        public virtual void DeleteCategory(Api.Model.Catalog.Category model)
+        public virtual void DeleteCategory(CategoryDTO model)
         {
             var category = _categoryService.GetCategoryById(model.Id);
             if (category != null)

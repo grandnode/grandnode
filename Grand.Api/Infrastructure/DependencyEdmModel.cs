@@ -1,7 +1,8 @@
 ﻿using Grand.Api.Infrastructure.DependencyManagement;
-using Grand.Api.Model.Catalog;
+using Grand.Api.DTOs;
 using Grand.Core.Configuration;
 using Microsoft.AspNet.OData.Builder;
+using Grand.Api.DTOs.Catalog;
 
 namespace Grand.Api.Infrastructure
 {
@@ -14,8 +15,8 @@ namespace Grand.Api.Infrastructure
             {
                 #region Category model
 
-                builder.EntitySet<Category>(typeof(Category).Name);
-                builder.EntityType<Category>().Count().Filter().OrderBy().Expand().Select().Page();
+                builder.EntitySet<CategoryDTO>("Category");
+                builder.EntityType<CategoryDTO>().Count().Filter().OrderBy().Page();
 
                 #endregion
             }

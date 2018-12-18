@@ -1,4 +1,6 @@
-﻿using Grand.Core.Infrastructure.Mapper;
+﻿using Grand.Api.DTOs.Catalog;
+using Grand.Core.Domain.Catalog;
+using Grand.Core.Infrastructure.Mapper;
 
 namespace Grand.Api.Extensions
 {
@@ -14,17 +16,17 @@ namespace Grand.Api.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
-        public static Grand.Api.Model.Catalog.Category ToModel(this Grand.Core.Domain.Catalog.Category entity)
+        public static CategoryDTO ToModel(this Category entity)
         {
-            return entity.MapTo<Grand.Core.Domain.Catalog.Category, Grand.Api.Model.Catalog.Category>();
+            return entity.MapTo<Category, CategoryDTO>();
         }
 
-        public static Grand.Core.Domain.Catalog.Category ToEntity(this Grand.Api.Model.Catalog.Category model)
+        public static Category ToEntity(this CategoryDTO model)
         {
-            return model.MapTo<Grand.Api.Model.Catalog.Category, Grand.Core.Domain.Catalog.Category>();
+            return model.MapTo<CategoryDTO, Category>();
         }
 
-        public static Grand.Core.Domain.Catalog.Category ToEntity(this Grand.Api.Model.Catalog.Category model, Grand.Core.Domain.Catalog.Category destination)
+        public static Grand.Core.Domain.Catalog.Category ToEntity(this CategoryDTO model, Category destination)
         {
             return model.MapTo(destination);
         }

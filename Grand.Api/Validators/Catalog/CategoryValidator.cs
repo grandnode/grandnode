@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Grand.Api.Model.Catalog;
+using Grand.Api.DTOs.Catalog;
 using Grand.Framework.Extensions;
 using Grand.Framework.Validators;
 using Grand.Services.Catalog;
@@ -8,7 +8,7 @@ using Grand.Services.Media;
 
 namespace Grand.Api.Validators.Catalog
 {
-    public class CategoryValidator : BaseGrandValidator<Category>
+    public class CategoryValidator : BaseGrandValidator<CategoryDTO>
     {
         public CategoryValidator(ILocalizationService localizationService, IPictureService pictureService, ICategoryService categoryService, ICategoryTemplateService categoryTemplateService)
         {

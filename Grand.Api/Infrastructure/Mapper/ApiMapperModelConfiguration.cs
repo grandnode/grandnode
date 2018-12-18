@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Grand.Api.DTOs.Catalog;
+using Grand.Core.Domain.Catalog;
 using Grand.Core.Infrastructure.Mapper;
 
 namespace Grand.Api.Infrastructure.Mapper
@@ -8,7 +10,7 @@ namespace Grand.Api.Infrastructure.Mapper
 
         public ApiMapperModelConfiguration()
         {
-            CreateMap<Grand.Api.Model.Catalog.Category, Grand.Core.Domain.Catalog.Category>()
+            CreateMap<CategoryDTO, Category>()
                 .ForMember(dest => dest.SubjectToAcl, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomerRoles, mo => mo.Ignore())
                 .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore())
@@ -19,7 +21,7 @@ namespace Grand.Api.Infrastructure.Mapper
                 .ForMember(dest => dest.AppliedDiscounts, mo => mo.Ignore())
                 .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
 
-            CreateMap<Grand.Core.Domain.Catalog.Category, Grand.Api.Model.Catalog.Category>()
+            CreateMap<Category, CategoryDTO>()
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
         }
 

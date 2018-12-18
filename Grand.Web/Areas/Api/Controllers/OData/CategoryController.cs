@@ -1,4 +1,4 @@
-﻿using Grand.Api.Model.Catalog;
+﻿using Grand.Api.DTOs.Catalog;
 using Grand.Api.Services;
 using Grand.Services.Security;
 using Microsoft.AspNetCore.Mvc;
@@ -39,7 +39,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Category model)
+        public IActionResult Post([FromBody] CategoryDTO model)
         {
             if (!_permissionService.Authorize(PermissionSystemName.Categories))
                 return Forbid();
