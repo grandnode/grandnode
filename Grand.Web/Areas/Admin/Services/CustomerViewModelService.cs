@@ -965,7 +965,7 @@ namespace Grand.Web.Areas.Admin.Services
                 {
                     //remove role
                     if (customer.CustomerRoles.Count(cr => cr.Id == customerRole.Id) > 0)
-                        customer.CustomerRoles.Remove(customerRole);
+                        customer.CustomerRoles.Remove(customer.CustomerRoles.First(x=>x.Id == customerRole.Id));
                 }
             }
             _customerService.UpdateCustomerinAdminPanel(customer);
