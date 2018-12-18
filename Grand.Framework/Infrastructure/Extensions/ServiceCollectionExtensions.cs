@@ -224,6 +224,7 @@ namespace Grand.Framework.Infrastructure.Extensions
 
 
             services.AddSingleton<IAuthorizationPolicyProvider, PermisionPolicyProvider>();
+            services.AddSingleton<IAuthorizationHandler, ApiSchemeAuthorizationHandler>();
             services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
         }
 

@@ -1,10 +1,8 @@
 ﻿using Grand.Api.Infrastructure.Extensions;
-using Grand.Core;
 using Grand.Core.Configuration;
 using Grand.Core.Infrastructure;
 using Grand.Services.Authentication;
 using Grand.Services.Authentication.External;
-using Grand.Services.Stores;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;

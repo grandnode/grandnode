@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
@@ -26,6 +27,12 @@ namespace Grand.Framework.Security.Authorization
                 return Task.FromResult(policy.Build());
             }
 
+            if(policyName == JwtBearerDefaults.AuthenticationScheme)
+            {
+                var policy = new AuthorizationPolicyBuilder();
+                policy.AddRequirements(new ApiAuthorizationSchemeRequirement());
+                return Task.FromResult(policy.Build());
+            }
             return FallbackPolicyProvider.GetPolicyAsync(policyName);
         }
     }

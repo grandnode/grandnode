@@ -10,7 +10,7 @@ namespace Grand.Api.Infrastructure
 {
     public partial class AuthenticationStartup : IGrandStartup
     {
-        public int Order => 502;
+        public int Order => 505;
 
         public void Configure(IApplicationBuilder application)
         {
