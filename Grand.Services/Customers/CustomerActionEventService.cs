@@ -637,11 +637,11 @@ namespace Grand.Services.Customers
         {
             var banneractive = new PopupActive()
             {
-                Body = banner.Body,
+                Body = banner.GetLocalized(x => x.Body),
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomerId = customerId,
                 CustomerActionId = action.Id,
-                Name = banner.Name,
+                Name = banner.GetLocalized(x => x.Name),
                 PopupTypeId = (int)PopupType.Banner
             };
             _popupService.InsertPopupActive(banneractive);
