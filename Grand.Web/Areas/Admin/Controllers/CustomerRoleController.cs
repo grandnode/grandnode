@@ -145,6 +145,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     _customerRoleViewModelService.DeleteCustomerRole(customerRole);
                     SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerRoles.Deleted"));
+                    return RedirectToAction("List");
                 }
                 ErrorNotification(ModelState);
                 return RedirectToAction("Edit", new { id = customerRole.Id });
