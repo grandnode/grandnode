@@ -34,19 +34,6 @@ namespace Grand.Web.Areas.Api.Validators.Common
             }).WithMessage(("User not exists or password is wrong"));
             RuleFor(x => x).Must((x, context) =>
             {
-                if (!string.IsNullOrEmpty(x.StoreId))
-                {
-                    var strore = storeService.GetStoreById(x.StoreId);
-                    if (strore != null)
-                    {
-                        return true;
-                    }
-                    return false;
-                }
-                return true;
-            }).WithMessage(("Store not exists"));
-            RuleFor(x => x).Must((x, context) =>
-            {
                 if (!string.IsNullOrEmpty(x.Email))
                 {
                     var customer = customerService.GetCustomerByEmail(x.Email.ToLowerInvariant());

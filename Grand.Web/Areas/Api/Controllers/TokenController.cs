@@ -22,7 +22,6 @@ namespace Grand.Web.Areas.Api.Controllers
         {
             var claims = new Dictionary<string, string>();
             claims.Add("Email", model.Email);
-            claims.Add("StoreId", model.StoreId);
 
             var token = await _tokenService.GenerateToken(claims);
             return Content(token);

@@ -10,7 +10,7 @@ namespace Grand.Api.Infrastructure
 {
     public partial class AuthenticationStartup : IGrandStartup
     {
-        public int Order => 400;
+        public int Order => 502;
 
         public void Configure(IApplicationBuilder application)
         {
@@ -28,7 +28,7 @@ namespace Grand.Api.Infrastructure
                 services.ConfigureCors();
 
                 //add authentication bearer
-                services.AddAuthenticationJwtBearer(apiConfig);
+                //services.AddAuthenticationJwtBearer(apiConfig);
 
                 //Add OData
                 services.AddOData();

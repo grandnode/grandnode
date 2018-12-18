@@ -37,6 +37,7 @@ namespace Grand.Framework
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly CurrencySettings _currencySettings;
         private readonly IGrandAuthenticationService _authenticationService;
+        private readonly IApiAuthenticationService _apiauthenticationService;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
@@ -62,6 +63,7 @@ namespace Grand.Framework
         public WebWorkContext(IHttpContextAccessor httpContextAccessor, 
             CurrencySettings currencySettings,
             IGrandAuthenticationService authenticationService,
+            IApiAuthenticationService apiauthenticationService,
             ICurrencyService currencyService,
             ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
@@ -76,6 +78,7 @@ namespace Grand.Framework
             this._httpContextAccessor = httpContextAccessor;
             this._currencySettings = currencySettings;
             this._authenticationService = authenticationService;
+            this._apiauthenticationService = apiauthenticationService;
             this._currencyService = currencyService;
             this._customerService = customerService;
             this._genericAttributeService = genericAttributeService;
@@ -207,6 +210,19 @@ namespace Grand.Framework
                 {
                     //try to get registered user
                     customer = _authenticationService.GetAuthenticatedCustomer();
+                }
+
+                if (customer == null)
+                {
+                    //try to get api user
+                    customer = _apiauthenticationService.GetAuthenticatedCustomer();
+                    //if customer comes from api, doesn't need to create cookies
+                    if (customer != null)
+                    {
+                        //cache the found customer
+                        _cachedCustomer = customer;
+                        return _cachedCustomer;
+                    }
                 }
 
                 if (customer != null && !customer.Deleted && customer.Active)

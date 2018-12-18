@@ -8,6 +8,5 @@ namespace Grand.Web.Areas.Api.Models.Common
     {
         public string Email { get; set; }
         public string Password { get; set; }
-        public string StoreId { get; set; }
     }
 }
