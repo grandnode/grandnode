@@ -54,7 +54,7 @@ namespace Grand.Api.Infrastructure
                         {
                             //authenticate
                             apiauthenticationService.SignIn(email);
-                        }                        
+                        }
                         return Task.CompletedTask;
                     },
                 };

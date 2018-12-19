@@ -222,9 +222,7 @@ namespace Grand.Framework.Infrastructure.Extensions
             foreach (var instance in externalAuthInstances)
                 instance.Configure(authenticationBuilder);
 
-
             services.AddSingleton<IAuthorizationPolicyProvider, PermisionPolicyProvider>();
-            services.AddSingleton<IAuthorizationHandler, ApiSchemeAuthorizationHandler>();
             services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
         }
 
@@ -294,6 +292,7 @@ namespace Grand.Framework.Infrastructure.Extensions
 
             //add MiniProfiler services
             services.AddMiniProfiler(options => {
+                options.IgnoredPaths.Add("/api");
                 var memoryCache = EngineContext.Current.Resolve<IMemoryCache>();
                 options.Storage = new StackExchange.Profiling.Storage.MemoryCacheStorage(memoryCache, TimeSpan.FromMinutes(60));
                 //determine who can access the MiniProfiler results

@@ -10,11 +10,13 @@ namespace Grand.Api.Infrastructure
 {
     public partial class AuthenticationStartup : IGrandStartup
     {
-        public int Order => 505;
-
         public void Configure(IApplicationBuilder application)
         {
-            
+            var apiConfig = application.ApplicationServices.GetService<ApiConfig>();
+            if (apiConfig.Enabled)
+            {
+                application.UseCors("CorsPolicy");
+            }
         }
 
         public void ConfigureServices(IServiceCollection services,
@@ -27,16 +29,11 @@ namespace Grand.Api.Infrastructure
                 //cors
                 services.ConfigureCors();
 
-                //add authentication bearer
-                //services.AddAuthenticationJwtBearer(apiConfig);
-
                 //Add OData
                 services.AddOData();
                 services.AddODataQueryFilter();
             }
         }
-
-        
-
+        public int Order => 505;
     }
 }

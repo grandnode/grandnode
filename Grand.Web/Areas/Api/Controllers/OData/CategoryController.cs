@@ -1,23 +1,26 @@
 ﻿using Grand.Api.DTOs.Catalog;
 using Grand.Api.Services;
-using Grand.Framework.Security.Authorization;
 using Grand.Services.Security;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Grand.Web.Areas.Api.Controllers.OData
 {
-    [PermissionAuthorize(PermissionSystemName.Categories)]
     public partial class CategoryController : BaseODataController
     {
         private readonly ICategoryApiService _categoryApiService;
-        public CategoryController(ICategoryApiService categoryApiService)
+        private readonly IPermissionService _permissionService;
+        public CategoryController(ICategoryApiService categoryApiService, IPermissionService permissionService)
         {
             _categoryApiService = categoryApiService;
+            _permissionService = permissionService;
         }
 
         [HttpGet]
         public IActionResult Get(string key)
         {
+            if (!_permissionService.Authorize(PermissionSystemName.Categories))
+                return Forbid();
+
             var category = _categoryApiService.GetById(key);
             if (category == null)
                 return NotFound();
@@ -28,12 +31,18 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         [HttpGet]
         public IActionResult Get()
         {
+            if (!_permissionService.Authorize(PermissionSystemName.Categories))
+                return Forbid();
+
             return Ok(_categoryApiService.GetCategories());
         }
 
         [HttpPost]
         public IActionResult Post([FromBody] CategoryDTO model)
         {
+            if (!_permissionService.Authorize(PermissionSystemName.Categories))
+                return Forbid();
+
             if (ModelState.IsValid)
             {
                 if (string.IsNullOrEmpty(model.Id))
@@ -48,6 +57,9 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         [HttpDelete]
         public IActionResult Delete(string key)
         {
+            if (!_permissionService.Authorize(PermissionSystemName.Categories))
+                return Forbid();
+
             var category = _categoryApiService.GetById(key);
             if (category == null)
             {
