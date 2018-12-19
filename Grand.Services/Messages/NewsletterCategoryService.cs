@@ -104,6 +104,7 @@ namespace Grand.Services.Messages
         {
             var query = from p in _newsletterCategoryRepository.Table
                         where !p.LimitedToStores || p.Stores.Contains(storeId)
+                        orderby p.DisplayOrder
                         select p;
             return query.ToList();
         }
