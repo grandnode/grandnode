@@ -31,7 +31,7 @@ namespace Grand.Core.Domain.Messages
 
         public Drop NewsComment { get; set; }
 
-        public Drop NewsletterSubscription { get; set; }
+        public Drop NewsLetterSubscription { get; set; }
 
         public Drop Order { get; set; }
 

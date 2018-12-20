@@ -260,7 +260,7 @@ namespace Grand.Services.Messages
         public void AddNewsLetterSubscriptionTokens(LiquidObject liquidObject, NewsLetterSubscription subscription)
         {
             var liquidNewsletterSubscription = new LiquidNewsLetterSubscription(subscription);
-            liquidObject.NewsletterSubscription = liquidNewsletterSubscription;
+            liquidObject.NewsLetterSubscription = liquidNewsletterSubscription;
 
             _eventPublisher.EntityTokensAdded(subscription, liquidNewsletterSubscription, liquidObject);
         }
