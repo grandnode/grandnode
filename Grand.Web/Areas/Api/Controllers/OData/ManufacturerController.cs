@@ -1,6 +1,7 @@
 ﻿using Grand.Api.DTOs.Catalog;
 using Grand.Api.Services;
 using Grand.Services.Security;
+using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Grand.Web.Areas.Api.Controllers.OData
@@ -29,6 +30,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         }
 
         [HttpGet]
+        [EnableQuery]
         public IActionResult Get()
         {
             if (!_permissionService.Authorize(PermissionSystemName.Manufacturers))
