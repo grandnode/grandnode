@@ -8,7 +8,7 @@ using Grand.Services.Media;
 
 namespace Grand.Api.Validators.Catalog
 {
-    public class CategoryValidator : BaseGrandValidator<CategoryDTO>
+    public class CategoryValidator : BaseGrandValidator<CategoryDto>
     {
         public CategoryValidator(ILocalizationService localizationService, IPictureService pictureService, ICategoryService categoryService, ICategoryTemplateService categoryTemplateService)
         {

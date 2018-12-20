@@ -18,7 +18,7 @@ namespace Grand.Api.Services
         private readonly IUrlRecordService _urlRecordService;
         private readonly IPictureService _pictureService;
 
-        private IMongoCollection<CategoryDTO> _category;
+        private IMongoCollection<CategoryDto> _category;
 
         public CategoryApiService(IMongoDBContext mongoDBContext, ICategoryService categoryService, IUrlRecordService urlRecordService, IPictureService pictureService)
         {
@@ -27,19 +27,19 @@ namespace Grand.Api.Services
             _urlRecordService = urlRecordService;
             _pictureService = pictureService;
 
-            _category = _mongoDBContext.Database().GetCollection<CategoryDTO>(typeof(Core.Domain.Catalog.Category).Name);
+            _category = _mongoDBContext.Database().GetCollection<CategoryDto>(typeof(Core.Domain.Catalog.Category).Name);
         }
-        public virtual CategoryDTO GetById(string id)
+        public virtual CategoryDto GetById(string id)
         {
             return _category.AsQueryable().FirstOrDefault(x => x.Id == id);
         }
 
-        public virtual IMongoQueryable<CategoryDTO> GetCategories()
+        public virtual IMongoQueryable<CategoryDto> GetCategories()
         {
             return _category.AsQueryable();
         }
 
-        public virtual CategoryDTO InsertCategory(CategoryDTO model)
+        public virtual CategoryDto InsertCategory(CategoryDto model)
         {
             var category = model.ToEntity();
             category.CreatedOnUtc = DateTime.UtcNow;
@@ -53,7 +53,7 @@ namespace Grand.Api.Services
             return category.ToModel();
         }
 
-        public virtual CategoryDTO UpdateCategory(CategoryDTO model)
+        public virtual CategoryDto UpdateCategory(CategoryDto model)
         {
             var category = _categoryService.GetCategoryById(model.Id);
             string prevPictureId = category.PictureId;
@@ -83,7 +83,7 @@ namespace Grand.Api.Services
             return category.ToModel();
         }
 
-        public virtual void DeleteCategory(CategoryDTO model)
+        public virtual void DeleteCategory(CategoryDto model)
         {
             var category = _categoryService.GetCategoryById(model.Id);
             if (category != null)

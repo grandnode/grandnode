@@ -38,7 +38,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] CategoryDTO model)
+        public IActionResult Post([FromBody] CategoryDto model)
         {
             if (!_permissionService.Authorize(PermissionSystemName.Categories))
                 return Forbid();
