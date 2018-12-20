@@ -18,7 +18,7 @@ namespace Grand.Api.Services
         private readonly IUrlRecordService _urlRecordService;
         private readonly IPictureService _pictureService;
 
-        private readonly IMongoCollection<ManufacturerDto> _Manufacturer;
+        private readonly IMongoCollection<ManufacturerDto> _manufacturer;
 
         public ManufacturerApiService(IMongoDBContext mongoDBContext, IManufacturerService manufacturerService, IUrlRecordService urlRecordService, IPictureService pictureService)
         {
@@ -27,16 +27,16 @@ namespace Grand.Api.Services
             _urlRecordService = urlRecordService;
             _pictureService = pictureService;
 
-            _Manufacturer = _mongoDBContext.Database().GetCollection<ManufacturerDto>(typeof(Core.Domain.Catalog.Manufacturer).Name);
+            _manufacturer = _mongoDBContext.Database().GetCollection<ManufacturerDto>(typeof(Core.Domain.Catalog.Manufacturer).Name);
         }
         public virtual ManufacturerDto GetById(string id)
         {
-            return _Manufacturer.AsQueryable().FirstOrDefault(x => x.Id == id);
+            return _manufacturer.AsQueryable().FirstOrDefault(x => x.Id == id);
         }
 
         public virtual IMongoQueryable<ManufacturerDto> GetManufacturers()
         {
-            return _Manufacturer.AsQueryable();
+            return _manufacturer.AsQueryable();
         }
 
         public virtual ManufacturerDto InsertManufacturer(ManufacturerDto model)
