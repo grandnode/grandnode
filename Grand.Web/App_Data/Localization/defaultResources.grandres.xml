@@ -1044,6 +1044,9 @@
   <LocaleResource Name="ActivityLog.SendPM">
     <Value>PM (from admin panel) {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.SendPmFromAdminPanel">
+    <Value>Send pm from admin panel</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.UpdateKnowledgebaseArticle">
     <Value>Updated knowledgebase article ('{0}')</Value>
   </LocaleResource>

@@ -45,4 +45,7 @@
   <LocaleResource Name="Reviews.AdministrationResponse">
     <Value>Administration response</Value>
   </LocaleResource>
+  <LocaleResource Name="activitylog.sendpmfromadminpanel">
+    <Value>Send pm from admin panel</Value>
+  </LocaleResource>
 </Language>
