@@ -18,7 +18,7 @@ namespace Grand.Api.Services
         private readonly IUrlRecordService _urlRecordService;
         private readonly IPictureService _pictureService;
 
-        private IMongoCollection<ManufacturerDto> _Manufacturer;
+        private readonly IMongoCollection<ManufacturerDto> _Manufacturer;
 
         public ManufacturerApiService(IMongoDBContext mongoDBContext, IManufacturerService manufacturerService, IUrlRecordService urlRecordService, IPictureService pictureService)
         {

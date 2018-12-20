@@ -18,7 +18,7 @@ namespace Grand.Api.Services
         private readonly IUrlRecordService _urlRecordService;
         private readonly IPictureService _pictureService;
 
-        private IMongoCollection<CategoryDto> _category;
+        private readonly IMongoCollection<CategoryDto> _category;
 
         public CategoryApiService(IMongoDBContext mongoDBContext, ICategoryService categoryService, IUrlRecordService urlRecordService, IPictureService pictureService)
         {
