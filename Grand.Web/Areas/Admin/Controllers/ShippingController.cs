@@ -745,7 +745,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     {
                         if (shippingMethod.RestrictedCountries.FirstOrDefault(c => c.Id == country.Id) != null)
                         {
-                            shippingMethod.RestrictedCountries.Remove(country);
+                            shippingMethod.RestrictedCountries.Remove(shippingMethod.RestrictedCountries.FirstOrDefault(x=>x.Id ==  country.Id));
                             _shippingService.UpdateShippingMethod(shippingMethod);
                         }
                     }
