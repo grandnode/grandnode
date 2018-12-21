@@ -18,19 +18,24 @@ namespace Grand.Web.Areas.Admin.Controllers
     public partial class ProductTagsController : BaseAdminController
     {
         private readonly IProductTagService _productTagService;
+        private readonly IProductService _productService;
         private readonly ILanguageService _languageService;
 
-        public ProductTagsController(IProductTagService productTagService, ILanguageService languageService)
+        public ProductTagsController(IProductTagService productTagService, IProductService productService, ILanguageService languageService)
         {
             this._productTagService = productTagService;
+            this._productService = productService;
             this._languageService = languageService;
         }
 
         public IActionResult Index()
         {
+            return RedirectToAction("List");
+        }
+        public IActionResult List()
+        {
             return View();
         }
-
         [HttpPost]
         public IActionResult List(DataSourceRequest command)
         {
@@ -49,6 +54,24 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 Data = tags.PagedForCommand(command),
                 Total = tags.Count
+            };
+
+            return Json(gridModel);
+        }
+        [HttpPost]
+        public IActionResult Products(string tagId, DataSourceRequest command)
+        {
+            var tag = _productTagService.GetProductTagById(tagId);
+
+            var products = _productService.SearchProducts(pageIndex: command.Page - 1, pageSize: command.PageSize, productTag: tag.Name, orderBy: Core.Domain.Catalog.ProductSortingEnum.NameAsc);
+            var gridModel = new DataSourceResult
+            {
+                Data = products.Select(x => new
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                }),
+                Total = products.TotalCount
             };
 
             return Json(gridModel);

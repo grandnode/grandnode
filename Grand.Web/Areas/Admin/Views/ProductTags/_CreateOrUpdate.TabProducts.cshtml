@@ -1,0 +1,64 @@
+﻿@inject AdminAreaSettings adminAreaSettings
+@model ProductTagModel
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div id="product-tags-grid"></div>
+    </div>
+</div>
+<script>
+        $(document).ready(function () {
+            $("#product-tags-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("Products", "ProductTags", new { tagId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors",
+                        model: {
+                            id: "Id",
+                            fields: {
+                                Name: { editable: true, type: "string" },
+                                Id: { editable: false, type: "string" }
+                            }
+                        }
+                    },
+                    requestEnd: function (e) {
+                        if (e.type == "create" || e.type == "update") {
+                            this.read();
+                        }
+                    },
+                    error: function (e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(adminAreaSettings.DefaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
+                },
+                editable: {
+                    confirmation: true,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "Name",
+                    title: "@T("Admin.Catalog.ProductTags.Fields.ProductName")",
+                    width: 300,
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Product/Edit/")/#=Id#">#=Name#</a>',
+                }]
+            });
+        });
+</script>

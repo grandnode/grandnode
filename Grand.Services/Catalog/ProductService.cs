@@ -594,7 +594,7 @@ namespace Grand.Services.Catalog
         /// <param name="featuredProducts">A value indicating whether loaded products are marked as featured (relates only to categories and manufacturers). 0 to load featured products only, 1 to load not featured products only, null to load all products</param>
         /// <param name="priceMin">Minimum price; null to load all records</param>
         /// <param name="priceMax">Maximum price; null to load all records</param>
-        /// <param name="productTagId">Product tag identifier; "" to load all records</param>
+        /// <param name="productTag">Product tag name; "" to load all records</param>
         /// <param name="keywords">Keywords</param>
         /// <param name="searchDescriptions">A value indicating whether to search by a specified "keyword" in product descriptions</param>
         /// <param name="searchSku">A value indicating whether to search by a specified "keyword" in product SKU</param>
@@ -661,7 +661,7 @@ namespace Grand.Services.Catalog
         /// <param name="featuredProducts">A value indicating whether loaded products are marked as featured (relates only to categories and manufacturers). 0 to load featured products only, 1 to load not featured products only, null to load all products</param>
         /// <param name="priceMin">Minimum price; null to load all records</param>
         /// <param name="priceMax">Maximum price; null to load all records</param>
-        /// <param name="productTagId">Product tag identifier; "" to load all records</param>
+        /// <param name="productTag">Product tag name; "" to load all records</param>
         /// <param name="keywords">Keywords</param>
         /// <param name="searchDescriptions">A value indicating whether to search by a specified "keyword" in product descriptions</param>
         /// <param name="searchSku">A value indicating whether to search by a specified "keyword" in product SKU</param>

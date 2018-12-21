@@ -4383,6 +4383,9 @@
   <LocaleResource Name="Admin.Catalog.ProductTags">
     <Value>Product tags</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.BackToList">
+    <Value>Back to tag list</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductTags.EditTagDetails">
     <Value>Edit product tag details</Value>
   </LocaleResource>
@@ -4397,6 +4400,15 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductTags.Fields.ProductCount">
     <Value>Tagged products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.Fields.ProductName">
+    <Value>Product name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.Info">
+    <Value>Product tag info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.Products">
+    <Value>Products</Value>
   </LocaleResource>
   <LocaleResource Name="admin.catalog.stores.fields.name">
     <Value>Store name</Value>

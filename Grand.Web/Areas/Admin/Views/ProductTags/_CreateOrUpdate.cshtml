@@ -1,39 +1,47 @@
 ﻿@model ProductTagModel
+@inject IEventPublisher eventPublisher
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
-@if (ViewBag.RefreshPage == true)
-{
-    <script type="text/javascript">
-        try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
-        catch (e){}
-        window.close();
-    </script>
-}
-    <vc:admin-widget widget-zone="product_details_tag_top" additional-data="Model" />
-@(Html.LocalizedEditor<ProductTagModel, ProductTagLocalizedModel>("producttag-localized",
-@<div class="form-horizontal">
-     <div class="form-body">
-         <div class="form-group">
-             <admin-label asp-for="@Model.Locales[item].Name" class="col-sm-3 control-label"/>
-             <div class="col-md-9 col-sm-9">
-                 <admin-input asp-for="@Model.Locales[item].Name" />
-                 <span asp-validation-for="@Model.Locales[item].Name"></span>
-             </div>
-         </div>
-         <input asp-for="@Model.Locales[item].LanguageId" type="hidden" />
-     </div>
-</div>
-,
-@<div class="form-horizontal">
-    <div class="form-body">
-        <div class="form-group">
-            <admin-label asp-for="Name" />
-            <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="Name" />
-                <span asp-validation-for="Name"></span>
-            </div>
-        </div>
+
+<vc:admin-widget widget-zone="product_details_tag_top" additional-data="Model" />
+
+<script>
+    $(document).ready(function () {
+        $("#tag-edit").kendoTabStrip({
+            animation: {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
+<div id="tag-edit">
+    <ul>
+        <li tab-index="0">
+            @T("Admin.Catalog.ProductTags.Info")
+        </li>
+        <li tab-index="1">
+            @T("Admin.Catalog.ProductTags.Products")
+        </li>
+    </ul>
+    <div>
+        <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+    </div>
+    <div>
+        <partial name="_CreateOrUpdate.TabProducts" model="Model" />
     </div>
 </div>
-))
- <vc:admin-widget widget-zone="product_details_tag_bottom" additional-data="Model" />
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "tag-edit");
+    eventPublisher.Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+<vc:admin-widget widget-zone="product_details_tag_bottom" additional-data="Model" />
