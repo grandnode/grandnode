@@ -22,11 +22,11 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!_permissionService.Authorize(PermissionSystemName.Manufacturers))
                 return Forbid();
 
-            var Manufacturer = _manufacturerApiService.GetById(key);
-            if (Manufacturer == null)
+            var manufacturer = _manufacturerApiService.GetById(key);
+            if (manufacturer == null)
                 return NotFound();
 
-            return Ok(Manufacturer);
+            return Ok(manufacturer);
         }
 
         [HttpGet]
@@ -62,12 +62,12 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             if (!_permissionService.Authorize(PermissionSystemName.Manufacturers))
                 return Forbid();
 
-            var Manufacturer = _manufacturerApiService.GetById(key);
-            if (Manufacturer == null)
+            var manufacturer = _manufacturerApiService.GetById(key);
+            if (manufacturer == null)
             {
                 return NotFound();
             }
-            _manufacturerApiService.DeleteManufacturer(Manufacturer);
+            _manufacturerApiService.DeleteManufacturer(manufacturer);
             return Ok();
         }
     }

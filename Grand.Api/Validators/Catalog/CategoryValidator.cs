@@ -12,8 +12,8 @@ namespace Grand.Api.Validators.Catalog
     {
         public CategoryValidator(ILocalizationService localizationService, IPictureService pictureService, ICategoryService categoryService, ICategoryTemplateService categoryTemplateService)
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Api.Catalog.Categories.Fields.Name.Required"));
-            RuleFor(x => x.PageSizeOptions).Must(FluentValidationUtilities.PageSizeOptionsValidator).WithMessage(localizationService.GetResource("Api.Catalog.Categories.Fields.PageSizeOptions.ShouldHaveUniqueItems"));
+            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Api.Catalog.Category.Fields.Name.Required"));
+            RuleFor(x => x.PageSizeOptions).Must(FluentValidationUtilities.PageSizeOptionsValidator).WithMessage(localizationService.GetResource("Api.Catalog.Category.Fields.PageSizeOptions.ShouldHaveUniqueItems"));
             RuleFor(x => x).Must((x, context) =>
             {
                 if (!string.IsNullOrEmpty(x.PictureId))
@@ -23,7 +23,7 @@ namespace Grand.Api.Validators.Catalog
                         return false;
                 }
                 return true;
-            }).WithMessage(localizationService.GetResource("Api.Catalog.Categories.Fields.PictureId.NotExists"));
+            }).WithMessage(localizationService.GetResource("Api.Catalog.Category.Fields.PictureId.NotExists"));
 
             RuleFor(x => x).Must((x, context) =>
             {
@@ -34,7 +34,7 @@ namespace Grand.Api.Validators.Catalog
                         return false;
                 }
                 return true;
-            }).WithMessage(localizationService.GetResource("Api.Catalog.Categories.Fields.ParentCategoryId.NotExists"));
+            }).WithMessage(localizationService.GetResource("Api.Catalog.Category.Fields.ParentCategoryId.NotExists"));
 
             RuleFor(x => x).Must((x, context) =>
             {
@@ -45,7 +45,7 @@ namespace Grand.Api.Validators.Catalog
                         return false;
                 }
                 return true;
-            }).WithMessage(localizationService.GetResource("Api.Catalog.Categories.Fields.CategoryTemplateId.NotExists"));
+            }).WithMessage(localizationService.GetResource("Api.Catalog.Category.Fields.CategoryTemplateId.NotExists"));
 
             RuleFor(x => x).Must((x, context) =>
             {
@@ -56,7 +56,7 @@ namespace Grand.Api.Validators.Catalog
                         return false;
                 }
                 return true;
-            }).WithMessage(localizationService.GetResource("Api.Catalog.Categories.Fields.Id.NotExists"));
+            }).WithMessage(localizationService.GetResource("Api.Catalog.Category.Fields.Id.NotExists"));
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Grand.Api.Infrastructure
             builder.RegisterType<TokenService>().As<ITokenService>().InstancePerLifetimeScope();
             builder.RegisterType<CategoryApiService>().As<ICategoryApiService>().InstancePerLifetimeScope();
             builder.RegisterType<ManufacturerApiService>().As<IManufacturerApiService>().InstancePerLifetimeScope();
+            builder.RegisterType<CustomerRoleApiService>().As<ICustomerRoleApiService>().InstancePerLifetimeScope();
         }
         public int Order => 5;
     }

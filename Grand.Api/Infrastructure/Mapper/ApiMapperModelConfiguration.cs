@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Grand.Api.DTOs.Catalog;
+using Grand.Api.DTOs.Customers;
 using Grand.Core.Domain.Catalog;
+using Grand.Core.Domain.Customers;
 using Grand.Core.Infrastructure.Mapper;
 
 namespace Grand.Api.Infrastructure.Mapper
@@ -42,6 +44,16 @@ namespace Grand.Api.Infrastructure.Mapper
                 .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
 
             CreateMap<Manufacturer, ManufacturerDto>()
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+
+            #endregion
+
+            #region CustomerRole
+
+            CreateMap<CustomerRoleDto, CustomerRole>()
+                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+
+            CreateMap<CustomerRole, CustomerRoleDto>()
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
 
             #endregion

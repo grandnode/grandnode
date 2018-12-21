@@ -1,5 +1,7 @@
 ﻿using Grand.Api.DTOs.Catalog;
+using Grand.Api.DTOs.Customers;
 using Grand.Core.Domain.Catalog;
+using Grand.Core.Domain.Customers;
 using Grand.Core.Infrastructure.Mapper;
 
 namespace Grand.Api.Extensions
@@ -51,5 +53,22 @@ namespace Grand.Api.Extensions
 
         #endregion
 
+        #region Customer Role
+        public static CustomerRoleDto ToModel(this CustomerRole entity)
+        {
+            return entity.MapTo<CustomerRole, CustomerRoleDto>();
+        }
+
+        public static CustomerRole ToEntity(this CustomerRoleDto model)
+        {
+            return model.MapTo<CustomerRoleDto, CustomerRole>();
+        }
+
+        public static CustomerRole ToEntity(this CustomerRoleDto model, CustomerRole destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
     }
 }

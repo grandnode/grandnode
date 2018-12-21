@@ -138,7 +138,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (customerRole == null)
                 //No customer role found with the specified id
                 return RedirectToAction("List");
-            
+            if (customerRole.IsSystemRole)
+                ModelState.AddModelError("", "You can't delete system role");
             try
             {
                 if (ModelState.IsValid)

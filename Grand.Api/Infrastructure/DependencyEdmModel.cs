@@ -1,4 +1,5 @@
 ﻿using Grand.Api.DTOs.Catalog;
+using Grand.Api.DTOs.Customers;
 using Grand.Api.Infrastructure.DependencyManagement;
 using Grand.Core.Configuration;
 using Microsoft.AspNet.OData.Builder;
@@ -23,6 +24,13 @@ namespace Grand.Api.Infrastructure
 
                 builder.EntitySet<ManufacturerDto>("Manufacturer");
                 builder.EntityType<ManufacturerDto>().Count().Filter().OrderBy().Page();
+
+                #endregion
+
+                #region Customer Role model
+
+                builder.EntitySet<CustomerRoleDto>("CustomerRole");
+                builder.EntityType<CustomerRoleDto>().Count().Filter().OrderBy().Page();
 
                 #endregion
             }
