@@ -326,7 +326,8 @@ namespace Grand.Services.Localization
                 throw new ArgumentNullException("localizationService");
             if (languageService == null)
                 throw new ArgumentNullException("languageService");
-
+            if (string.IsNullOrEmpty(resourceName))
+                resourceName = resourceName.ToLowerInvariant();
             foreach (var lang in languageService.GetAllLanguages(true))
             {
                 var lsr = localizationService.GetLocaleStringResourceByName(resourceName, lang.Id, false);
@@ -369,7 +370,8 @@ namespace Grand.Services.Localization
                 throw new ArgumentNullException("localizationService");
             if (languageService == null)
                 throw new ArgumentNullException("languageService");
-            
+            if (string.IsNullOrEmpty(resourceName))
+                resourceName = resourceName.ToLowerInvariant();
             foreach (var lang in languageService.GetAllLanguages(true))
             {
                 if (!String.IsNullOrEmpty(languageCulture) && !languageCulture.Equals(lang.LanguageCulture))
@@ -456,8 +458,12 @@ namespace Grand.Services.Localization
                 throw new ArgumentException("Plugin descriptor cannot be loaded");
 
             string systemName = plugin.PluginDescriptor.SystemName;
+
             //localized value
             string resourceName = string.Format("Plugins.FriendlyName.{0}", systemName);
+            if (string.IsNullOrEmpty(resourceName))
+                resourceName = resourceName.ToLowerInvariant();
+
             var resource = localizationService.GetLocaleStringResourceByName(resourceName, languageId, false);
 
             if (resource != null)
