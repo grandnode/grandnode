@@ -34,6 +34,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace Grand.Services.Installation
@@ -1212,6 +1213,39 @@ namespace Grand.Services.Installation
 
             EngineContext.Current.Resolve<IRepository<UserApi>>().Collection.Indexes.CreateOne(new CreateIndexModel<UserApi>((Builders<UserApi>.IndexKeys.Ascending(x => x.Email)), new CreateIndexOptions() { Name = "Email", Unique = true, Background = true }));
 
+            #endregion
+
+            #region Update message templates (tokens)
+
+            string ReplaceValue(string value)
+            {
+                string Evaluator(Match match)
+                {
+                    return $"{{{{{match.Value.Replace("%", "")}}}}}";
+                }
+                MatchEvaluator evaluator = new MatchEvaluator(Evaluator);
+                return Regex.Replace(value, @"%([A-Za-z0-9_.]*?)%", new MatchEvaluator(Evaluator));
+            }
+
+            string orderProducts = File.ReadAllText(CommonHelper.MapPath("~/App_Data/Upgrade/Order.Products.txt"));
+            string shipmentProducts = File.ReadAllText(CommonHelper.MapPath("~/App_Data/Upgrade/Shipment.Products.txt"));
+
+            var messagetemplateService = EngineContext.Current.Resolve<Grand.Services.Messages.IMessageTemplateService>();
+            var messagetemplates = messagetemplateService.GetAllMessageTemplates(string.Empty);
+            foreach (var messagetemplate in messagetemplates)
+            {
+                messagetemplate.Subject = ReplaceValue(messagetemplate.Subject);
+                if(messagetemplate.Body.Contains("%Order.Product(s)%"))
+                {
+                    messagetemplate.Body = messagetemplate.Body.Replace("%Order.Product(s)%", orderProducts);
+                }
+                if (messagetemplate.Body.Contains("%Shipment.Product(s)%"))
+                {
+                    messagetemplate.Body = messagetemplate.Body.Replace("%Shipment.Product(s)%", shipmentProducts);
+                }
+                messagetemplate.Body = ReplaceValue(messagetemplate.Body);
+                messagetemplateService.UpdateMessageTemplate(messagetemplate);
+            }
             #endregion
         }
 
