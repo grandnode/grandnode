@@ -14,29 +14,77 @@ namespace Grand.Services.Authentication
         private readonly ApiConfig _apiConfig;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ICustomerService _customerService;
+        private readonly IUserApiService _userApiService;
+
         private Customer _cachedCustomer;
 
+        private string _errorMessage;
+        private string _email;
+
         public ApiAuthenticationService(ApiConfig apiConfig, IHttpContextAccessor httpContextAccessor,
-            ICustomerService customerService)
+            ICustomerService customerService, IUserApiService userApiService)
         {
             this._apiConfig = apiConfig;
             this._httpContextAccessor = httpContextAccessor;
             this._customerService = customerService;
+            this._userApiService = userApiService;
+        }
+
+        /// <summary>
+        /// Valid
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        public virtual bool Valid(TokenValidatedContext context)
+        {
+            _email = context.Principal.Claims.ToList().FirstOrDefault(x => x.Type == "Email")?.Value;
+
+            if (string.IsNullOrEmpty(_email))
+            {
+                _errorMessage = "Email not exists in the context";
+                return false;
+            }
+            var customer = _customerService.GetCustomerByEmail(_email);
+            if (customer == null || !customer.Active || customer.Deleted)
+            {
+                _errorMessage = "Email not exists/or not active in the customer table";
+                return false;
+            }
+            var userapi = _userApiService.GetUserByEmail(_email);
+            if (userapi == null || !userapi.IsActive)
+            {
+                _errorMessage = "User api not exists/or not active in the user api table";
+                return false;
+            }
+            return true;
+        }
+
+        public virtual void SignIn()
+        {
+            SignIn(_email);
         }
 
         /// <summary>
         /// Sign in
         /// </summary>
-        /// <param name="customer">Customer</param>
+        ///<param name="email">Email</param>
         public virtual void SignIn(string email)
         {
-            if (string.IsNullOrEmpty(email))
+            if (string.IsNullOrEmpty(_email))
                 throw new ArgumentNullException(nameof(email));
 
             var customer = _customerService.GetCustomerByEmail(email);
             if (customer != null)
                 _cachedCustomer = customer;
+        }
 
+
+        /// <summary>
+        /// Get error message
+        /// </summary>
+        /// <returns></returns>
+        public virtual string ErrorMessage()
+        {
+            return _errorMessage;
         }
 
         /// <summary>

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using System.Linq;
+using System;
 using System.Threading.Tasks;
 
 namespace Grand.Api.Infrastructure
@@ -48,12 +48,17 @@ namespace Grand.Api.Infrastructure
                     },
                     OnTokenValidated = context =>
                     {
-                        var apiauthenticationService = EngineContext.Current.Resolve<IApiAuthenticationService>();
-                        var email = context.Principal.Claims.ToList().FirstOrDefault(x => x.Type == "Email")?.Value;
-                        if (!string.IsNullOrEmpty(email))
+                        try
                         {
-                            //authenticate
-                            apiauthenticationService.SignIn(email);
+                            var apiAuthenticationService = EngineContext.Current.Resolve<IApiAuthenticationService>();
+                            if (apiAuthenticationService.Valid(context))
+                                apiAuthenticationService.SignIn();
+                            else
+                                throw new Exception(apiAuthenticationService.ErrorMessage());
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception(ex.Message);
                         }
                         return Task.CompletedTask;
                     },
