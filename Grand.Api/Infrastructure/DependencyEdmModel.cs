@@ -33,6 +33,14 @@ namespace Grand.Api.Infrastructure
                 builder.EntityType<CustomerRoleDto>().Count().Filter().OrderBy().Page();
 
                 #endregion
+
+                #region Product attribute model
+
+                builder.EntitySet<ProductAttributeDto>("ProductAttribute");
+                builder.EntityType<ProductAttributeDto>().Count().Filter().OrderBy().Page();
+                builder.ComplexType<PredefinedProductAttributeValueDto>();
+
+                #endregion
             }
         }
         public int Order => 0;

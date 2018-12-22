@@ -12,10 +12,6 @@ namespace Grand.Core.Domain.Catalog
         {
             Locales = new List<LocalizedProperty>();
         }
-        /// <summary>
-        /// Gets or sets the product attribute identifier
-        /// </summary>
-        public string ProductAttributeId { get; set; }
 
         /// <summary>
         /// Gets or sets the product attribute name

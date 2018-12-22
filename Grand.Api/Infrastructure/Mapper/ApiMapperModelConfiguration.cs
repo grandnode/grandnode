@@ -57,6 +57,24 @@ namespace Grand.Api.Infrastructure.Mapper
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
 
             #endregion
+
+            #region Product attribute 
+
+            CreateMap<ProductAttributeDto, ProductAttribute>()
+                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+
+            CreateMap<ProductAttribute, ProductAttributeDto>()
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+
+            CreateMap<PredefinedProductAttributeValue, PredefinedProductAttributeValueDto>()
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+
+            CreateMap<PredefinedProductAttributeValueDto, PredefinedProductAttributeValue>()
+                .ForMember(dest => dest.Id, mo => mo.Ignore())
+                .ForMember(dest => dest.Locales, mo => mo.Ignore());
+
+            #endregion
+
         }
 
         public int Order => 1;
