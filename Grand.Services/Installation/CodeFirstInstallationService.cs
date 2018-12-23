@@ -5621,31 +5621,26 @@ namespace Grand.Services.Installation
 
                 Name = "13.0''",
                 DisplayOrder = 2,
-                SpecificationAttributeId = sa1.Id,
             });
             sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
                 Name = "13.3''",
                 DisplayOrder = 3,
-                SpecificationAttributeId = sa1.Id,
             });
             sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
                 Name = "14.0''",
                 DisplayOrder = 4,
-                SpecificationAttributeId = sa1.Id,
             });
             sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
                 Name = "15.0''",
                 DisplayOrder = 4,
-                SpecificationAttributeId = sa1.Id,
             });
             sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
                 Name = "15.6''",
                 DisplayOrder = 5,
-                SpecificationAttributeId = sa1.Id,
             });
             _specificationAttributeRepository.Update(sa1);
 
@@ -5660,14 +5655,12 @@ namespace Grand.Services.Installation
             {
                 Name = "Intel Core i5",
                 DisplayOrder = 1,
-                SpecificationAttributeId = sa1.Id,
             });
 
             sa2.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
                 Name = "Intel Core i7",
                 DisplayOrder = 2,
-                SpecificationAttributeId = sa2.Id,
             });
             _specificationAttributeRepository.Update(sa2);
 
@@ -5682,19 +5675,16 @@ namespace Grand.Services.Installation
             {
                 Name = "4 GB",
                 DisplayOrder = 1,
-                SpecificationAttributeId = sa3.Id,
             });
             sa3.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
                 Name = "8 GB",
                 DisplayOrder = 2,
-                SpecificationAttributeId = sa3.Id,
             });
             sa3.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
                 Name = "16 GB",
                 DisplayOrder = 3,
-                SpecificationAttributeId = sa3.Id,
             });
             _specificationAttributeRepository.Update(sa3);
 
@@ -5709,19 +5699,16 @@ namespace Grand.Services.Installation
             {
                 Name = "128 GB",
                 DisplayOrder = 7,
-                SpecificationAttributeId = sa4.Id,
             });
             sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
                 Name = "500 GB",
                 DisplayOrder = 4,
-                SpecificationAttributeId = sa4.Id,
             });
             sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
                 Name = "1 TB",
                 DisplayOrder = 3,
-                SpecificationAttributeId = sa4.Id,
             });
             _specificationAttributeRepository.Update(sa4);
 

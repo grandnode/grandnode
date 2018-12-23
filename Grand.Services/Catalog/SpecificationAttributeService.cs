@@ -194,12 +194,11 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("specificationAttributeOption");
 
             var builder = Builders<Product>.Update;
-            var updatefilter = builder.PullFilter(x => x.ProductSpecificationAttributes, 
-                y => y.SpecificationAttributeId == specificationAttributeOption.SpecificationAttributeId
-                                                    && y.SpecificationAttributeOptionId == specificationAttributeOption.Id);
+            var updatefilter = builder.PullFilter(x => x.ProductSpecificationAttributes,
+                y => y.SpecificationAttributeOptionId == specificationAttributeOption.Id);
             var result = _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter).Result;
 
-            var specificationAttribute = GetSpecificationAttributeById(specificationAttributeOption.SpecificationAttributeId);
+            var specificationAttribute = GetSpecificationAttributeByOptionId(specificationAttributeOption.Id);
             var sao = specificationAttribute.SpecificationAttributeOptions.Where(x => x.Id == specificationAttributeOption.Id).FirstOrDefault();
             if (sao == null)
                 throw new ArgumentException("No specification attribute option found with the specified id");
@@ -296,14 +295,14 @@ namespace Grand.Services.Catalog
         /// <param name="productId">Product identifier; "" to load all records</param>
         /// <param name="specificationAttributeOptionId">The specification attribute option identifier; "" to load all records</param>
         /// <returns>Count</returns>
-        public virtual int GetProductSpecificationAttributeCount(string productId = "", string specificationAttributeId = "", string specificationAttributeOptionId = "")
+        public virtual int GetProductSpecificationAttributeCount(string productId = "", string specificationAttributeOptionId = "")
         {
             var query = _productRepository.Table;
 
             if (!String.IsNullOrEmpty(productId))
                 query = query.Where(psa => psa.Id == productId);
-            if (!String.IsNullOrEmpty(specificationAttributeId))
-                query = query.Where(psa => psa.ProductSpecificationAttributes.Any(x=>x.SpecificationAttributeId == specificationAttributeId && x.SpecificationAttributeOptionId == specificationAttributeOptionId));
+            if (!String.IsNullOrEmpty(specificationAttributeOptionId))
+                query = query.Where(psa => psa.ProductSpecificationAttributes.Any(x => x.SpecificationAttributeOptionId == specificationAttributeOptionId));
 
             return query.Count();
         }

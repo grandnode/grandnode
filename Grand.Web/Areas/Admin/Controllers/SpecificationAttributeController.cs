@@ -181,7 +181,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         var model = x.ToModel();
                         //in order to save performance to do not check whether a product is deleted, etc
                         model.NumberOfAssociatedProducts = _specificationAttributeService
-                            .GetProductSpecificationAttributeCount("", x.SpecificationAttributeId, x.Id);
+                            .GetProductSpecificationAttributeCount("", x.Id);
                         return model;
                     }),
                 Total = options.Count()
@@ -273,11 +273,11 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         //delete
         [HttpPost]
-        public IActionResult OptionDelete(string id, string specificationAttributeId)
+        public IActionResult OptionDelete(string id)
         {
             if (ModelState.IsValid)
             {
-                var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(specificationAttributeId);
+                var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeByOptionId(id);
                 var sao = specificationAttribute.SpecificationAttributeOptions.Where(x => x.Id == id).FirstOrDefault();
                 if (sao == null)
                     throw new ArgumentException("No specification attribute option found with the specified id");

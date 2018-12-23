@@ -88,7 +88,7 @@ namespace Grand.Services.Catalog
         /// <param name="productId">Product identifier; "" to load all records</param>
         /// <param name="specificationAttributeOptionId">The specification attribute option identifier; "" to load all records</param>
         /// <returns>Count</returns>
-        int GetProductSpecificationAttributeCount(string productId = "", string specificationAttributeId = "", string specificationAttributeOptionId = "");
+        int GetProductSpecificationAttributeCount(string productId = "", string specificationAttributeOptionId = "");
 
         #endregion
     }

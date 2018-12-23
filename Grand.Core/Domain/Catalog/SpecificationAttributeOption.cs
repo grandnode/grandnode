@@ -12,10 +12,6 @@ namespace Grand.Core.Domain.Catalog
         {
             Locales = new List<LocalizedProperty>();
         }
-        /// <summary>
-        /// Gets or sets the specification attribute identifier
-        /// </summary>
-        public string SpecificationAttributeId { get; set; }
 
         /// <summary>
         /// Gets or sets the name
