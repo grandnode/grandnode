@@ -227,9 +227,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit
-        public IActionResult OptionEditPopup(string id, string specificationAttributeId)
+        public IActionResult OptionEditPopup(string id)
         {
-            var sao = _specificationAttributeService.GetSpecificationAttributeById(specificationAttributeId).SpecificationAttributeOptions.Where(x=>x.Id == id).FirstOrDefault();
+            var sao = _specificationAttributeService.GetSpecificationAttributeByOptionId(id).SpecificationAttributeOptions.Where(x=>x.Id == id).FirstOrDefault();
             if (sao == null)
                 //No specification attribute option found with the specified id
                 return RedirectToAction("List");
@@ -248,7 +248,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult OptionEditPopup(SpecificationAttributeOptionModel model)
         {
-            var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(model.SpecificationAttributeId);
+            var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeByOptionId(model.Id);
             var sao = specificationAttribute.SpecificationAttributeOptions.Where(x=>x.Id == model.Id).FirstOrDefault();
             if (sao == null)
                 //No specification attribute option found with the specified id

@@ -71,7 +71,7 @@ namespace Grand.Api.Extensions
 
         #endregion
 
-        #region Product attrbute
+        #region Product attribute
         public static ProductAttributeDto ToModel(this ProductAttribute entity)
         {
             return entity.MapTo<ProductAttribute, ProductAttributeDto>();
@@ -89,5 +89,22 @@ namespace Grand.Api.Extensions
 
         #endregion
 
+        #region Specification attribute
+        public static SpecificationAttributeDto ToModel(this SpecificationAttribute entity)
+        {
+            return entity.MapTo<SpecificationAttribute, SpecificationAttributeDto>();
+        }
+
+        public static SpecificationAttribute ToEntity(this SpecificationAttributeDto model)
+        {
+            return model.MapTo<SpecificationAttributeDto, SpecificationAttribute>();
+        }
+
+        public static SpecificationAttribute ToEntity(this SpecificationAttributeDto model, SpecificationAttribute destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
     }
 }

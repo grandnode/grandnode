@@ -41,6 +41,14 @@ namespace Grand.Api.Infrastructure
                 builder.ComplexType<PredefinedProductAttributeValueDto>();
 
                 #endregion
+
+                #region Product attribute model
+
+                builder.EntitySet<SpecificationAttributeDto>("SpecificationAttribute");
+                builder.EntityType<SpecificationAttributeDto>().Count().Filter().OrderBy().Page();
+                builder.ComplexType<SpecificationAttributeOptionDto>();
+
+                #endregion
             }
         }
         public int Order => 0;

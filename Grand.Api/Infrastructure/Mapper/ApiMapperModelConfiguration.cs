@@ -70,7 +70,22 @@ namespace Grand.Api.Infrastructure.Mapper
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
 
             CreateMap<PredefinedProductAttributeValueDto, PredefinedProductAttributeValue>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore())
+                .ForMember(dest => dest.Locales, mo => mo.Ignore());
+
+            #endregion
+
+            #region Specification attribute 
+
+            CreateMap<SpecificationAttributeDto, SpecificationAttribute>()
+                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
+
+            CreateMap<SpecificationAttribute, SpecificationAttributeDto>()
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+
+            CreateMap<SpecificationAttributeOption, SpecificationAttributeOptionDto>()
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+
+            CreateMap<SpecificationAttributeOptionDto, SpecificationAttributeOption>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore());
 
             #endregion
