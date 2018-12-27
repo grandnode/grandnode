@@ -2,6 +2,7 @@
 using Grand.Api.DTOs.Catalog;
 using Grand.Api.DTOs.Customers;
 using Grand.Core.Domain.Catalog;
+using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Infrastructure.Mapper;
 using Grand.Services.Common;
@@ -140,6 +141,14 @@ namespace Grand.Api.Infrastructure.Mapper
                 .ForMember(dest => dest.ZipPostalCode, mo => mo.MapFrom(src => src.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode, "")))
                 .ForMember(dest => dest.CountryId, mo => mo.MapFrom(src => src.GetAttribute<string>(SystemCustomerAttributeNames.CountryId, "")))
                 .ForMember(dest => dest.CustomerRoles, mo => mo.MapFrom(src => src.CustomerRoles.Select(x=>x.Id)))
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+
+            CreateMap<AddressDto, Address>()
+                .ForMember(dest => dest.CustomAttributes, mo => mo.Ignore())
+                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomerId, mo => mo.Ignore());
+
+            CreateMap<Address, AddressDto>()
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
 
             #endregion

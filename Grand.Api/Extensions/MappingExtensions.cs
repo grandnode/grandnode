@@ -1,6 +1,7 @@
 ﻿using Grand.Api.DTOs.Catalog;
 using Grand.Api.DTOs.Customers;
 using Grand.Core.Domain.Catalog;
+using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Infrastructure.Mapper;
 
@@ -123,6 +124,24 @@ namespace Grand.Api.Extensions
         {
             return model.MapTo(destination);
         }
+
+        #endregion
+
+        #region Customer address
+        public static AddressDto ToModel(this Address entity)
+        {
+            return entity.MapTo<Address, AddressDto>();
+        }
+
+        public static Address ToEntity(this AddressDto model)
+        {
+            return model.MapTo<AddressDto, Address>();
+        }
+        public static Address ToEntity(this AddressDto model, Address destination)
+        {
+            return model.MapTo(destination);
+        }
+
 
         #endregion
     }

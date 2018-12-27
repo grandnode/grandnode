@@ -48,6 +48,20 @@ namespace Grand.Api.Infrastructure
 
             builder.EntitySet<CustomerDto>("Customer");
             var customer = builder.EntityType<CustomerDto>();
+            builder.ComplexType<AddressDto>();
+
+            ActionConfiguration addAddress = customer.Action("AddAddress");
+            addAddress.Parameter<AddressDto>("address");
+            addAddress.Returns<AddressDto>();
+
+            ActionConfiguration updateAddress = customer.Action("UpdateAddress");
+            updateAddress.Parameter<AddressDto>("address");
+            updateAddress.Returns<AddressDto>();
+
+            ActionConfiguration deleteAddress = customer.Action("DeleteAddress");
+            deleteAddress.Parameter<string>("addressId");
+            deleteAddress.Returns<bool>();
+
             //api/Customer(email)/ChangePassword - body contains text with password
             ActionConfiguration changePassword = customer.Action("ChangePassword");
             changePassword.Returns<bool>();

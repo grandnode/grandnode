@@ -105,5 +105,29 @@ namespace Grand.Api.Services
             if (customer != null)
                 _customerService.DeleteCustomer(customer);
         }
+
+        public virtual AddressDto InsertAddress(CustomerDto customer, AddressDto model)
+        {
+            var address = model.ToEntity();
+            address.Id = "";
+            address.CustomerId = customer.Id;
+            _customerService.InsertAddress(address);
+            return address.ToModel();
+        }
+        public virtual AddressDto UpdateAddress(CustomerDto customer, AddressDto model)
+        {
+            var address = _customerService.GetCustomerById(customer.Id)?.Addresses.FirstOrDefault(x => x.Id == model.Id);
+            address = model.ToEntity(address);
+            address.CustomerId = customer.Id;
+            _customerService.UpdateAddress(address);
+            return address.ToModel();
+        }
+        public virtual void DeleteAddress(CustomerDto customer, AddressDto model)
+        {
+            var address = _customerService.GetCustomerById(customer.Id)?.Addresses.FirstOrDefault(x => x.Id == model.Id);
+            address.CustomerId = customer.Id;
+            _customerService.DeleteAddress(address);
+        }
+
     }
 }

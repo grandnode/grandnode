@@ -13,6 +13,7 @@ namespace Grand.Api.DTOs.Customers
         {
             this.CustomerGuid = Guid.NewGuid();
             this.CustomerRoles = new List<string>();
+            this.Addresses = new List<AddressDto>();
         }
         public Guid CustomerGuid { get; set; }
         public string Username { get; set; }
@@ -41,5 +42,6 @@ namespace Grand.Api.DTOs.Customers
         public string VatNumberStatusId { get; set; }
         public string Signature { get; set; }
         public IList<string> CustomerRoles { get; set; }
+        public IList<AddressDto> Addresses { get; set; }
     }
 }

@@ -3,8 +3,10 @@ using Grand.Api.Services;
 using Grand.Core.Domain.Customers;
 using Grand.Services.Customers;
 using Grand.Services.Security;
+using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
+using System.Linq;
 
 namespace Grand.Web.Areas.Api.Controllers.OData
 {
@@ -67,11 +69,73 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             _customerApiService.DeleteCustomer(customer);
             return Ok();
         }
+        //api/Customer(email)/AddAddress
+        [HttpPost]
+        public IActionResult AddAddress(string key, [FromBody] AddressDto address)
+        {
+            if (!_permissionService.Authorize(PermissionSystemName.Customers))
+                return Forbid();
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var customer = _customerApiService.GetByEmail(key);
+            if (customer == null)
+                return NotFound();
+
+            address = _customerApiService.InsertAddress(customer, address);
+            return Ok(address);
+        }
+
+        //api/Customer(email)/UpdateAddress
+        [HttpPost]
+        public IActionResult UpdateAddress(string key, [FromBody] AddressDto address)
+        {
+            if (!_permissionService.Authorize(PermissionSystemName.Customers))
+                return Forbid();
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var customer = _customerApiService.GetByEmail(key);
+            if (customer == null)
+                return NotFound();
+
+            address = _customerApiService.UpdateAddress(customer, address);
+            return Ok(address);
+        }
+        //api/Customer(email)/DeleteAddress
+        //body: { "@odata.context": "http://localhost:16592/api/$metadata#Edm.String", "addressId": "xxx" }
+        [HttpPost]
+        public IActionResult DeleteAddress(string key,  [FromBody]ODataActionParameters parameters)
+        {
+            if (!_permissionService.Authorize(PermissionSystemName.Customers))
+                return Forbid();
+
+            var addressId = parameters.FirstOrDefault(x => x.Key == "addressId").Value;
+            if (addressId == null)
+                return NotFound();
+
+            var customer = _customerApiService.GetByEmail(key);
+            if (customer == null)
+                return NotFound();
+
+            var address = customer.Addresses.FirstOrDefault(x => x.Id == addressId.ToString());
+            if (address == null)
+                return NotFound();
+
+            _customerApiService.DeleteAddress(customer, address);
+            return Ok(true);
+        }
+
 
         //api/Customer(email)/ChangePassword - body contains text with password
         [HttpPost]
         public IActionResult ChangePassword(string key)
         {
+            if (!_permissionService.Authorize(PermissionSystemName.Customers))
+                return Forbid();
+
             using (StreamReader stream = new StreamReader(HttpContext.Request.Body))
             {
                 string password = stream.ReadToEnd();
