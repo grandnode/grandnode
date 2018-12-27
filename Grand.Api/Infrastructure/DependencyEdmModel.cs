@@ -44,6 +44,16 @@ namespace Grand.Api.Infrastructure
 
         protected void RegisterCustomers(ODataConventionModelBuilder builder)
         {
+            #region Customer
+
+            builder.EntitySet<CustomerDto>("Customer");
+            var customer = builder.EntityType<CustomerDto>();
+            //api/Customer(email)/ChangePassword - body contains text with password
+            ActionConfiguration changePassword = customer.Action("ChangePassword");
+            changePassword.Returns<bool>();
+
+            #endregion
+
             #region Customer Role model
 
             builder.EntitySet<CustomerRoleDto>("CustomerRole");

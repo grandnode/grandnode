@@ -53,24 +53,6 @@ namespace Grand.Api.Extensions
 
         #endregion
 
-        #region Customer Role
-        public static CustomerRoleDto ToModel(this CustomerRole entity)
-        {
-            return entity.MapTo<CustomerRole, CustomerRoleDto>();
-        }
-
-        public static CustomerRole ToEntity(this CustomerRoleDto model)
-        {
-            return model.MapTo<CustomerRoleDto, CustomerRole>();
-        }
-
-        public static CustomerRole ToEntity(this CustomerRoleDto model, CustomerRole destination)
-        {
-            return model.MapTo(destination);
-        }
-
-        #endregion
-
         #region Product attribute
         public static ProductAttributeDto ToModel(this ProductAttribute entity)
         {
@@ -101,6 +83,43 @@ namespace Grand.Api.Extensions
         }
 
         public static SpecificationAttribute ToEntity(this SpecificationAttributeDto model, SpecificationAttribute destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
+
+        #region Customer Role
+        public static CustomerRoleDto ToModel(this CustomerRole entity)
+        {
+            return entity.MapTo<CustomerRole, CustomerRoleDto>();
+        }
+
+        public static CustomerRole ToEntity(this CustomerRoleDto model)
+        {
+            return model.MapTo<CustomerRoleDto, CustomerRole>();
+        }
+
+        public static CustomerRole ToEntity(this CustomerRoleDto model, CustomerRole destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
+
+        #region Customer
+
+        public static CustomerDto ToModel(this Customer entity)
+        {
+            return entity.MapTo<Customer, CustomerDto>();
+        }
+
+        public static Customer ToEntity(this CustomerDto model)
+        {
+            return model.MapTo<CustomerDto, Customer>();
+        }
+
+        public static Customer ToEntity(this CustomerDto model, Customer destination)
         {
             return model.MapTo(destination);
         }
