@@ -7,6 +7,7 @@ namespace Grand.Api.Services
     {
         ProductAttributeDto GetById(string id);
         IMongoQueryable<ProductAttributeDto> GetProductAttributes();
+        ProductAttributeDto InsertOrUpdateProductAttribute(ProductAttributeDto model);
         ProductAttributeDto InsertProductAttribute(ProductAttributeDto model);
         ProductAttributeDto UpdateProductAttribute(ProductAttributeDto model);
         void DeleteProductAttribute(ProductAttributeDto model);

@@ -47,10 +47,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
             if (ModelState.IsValid)
             {
-                if (string.IsNullOrEmpty(model.Id))
-                    model = _specificationAttributeApiService.InsertSpecificationAttribute(model);
-                else
-                    model = _specificationAttributeApiService.UpdateSpecificationAttribute(model);
+                model = _specificationAttributeApiService.InsertOrUpdateSpecificationAttribute(model);
                 return Created(model);
             }
             return BadRequest(ModelState);

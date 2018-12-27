@@ -39,6 +39,15 @@ namespace Grand.Api.Services
             return _manufacturer.AsQueryable();
         }
 
+        public virtual ManufacturerDto InsertOrUpdateManufacturer(ManufacturerDto model)
+        {
+            if (string.IsNullOrEmpty(model.Id))
+                model = InsertManufacturer(model);
+            else
+                model = UpdateManufacturer(model);
+
+            return model;
+        }
         public virtual ManufacturerDto InsertManufacturer(ManufacturerDto model)
         {
             var manufacturer = model.ToEntity();

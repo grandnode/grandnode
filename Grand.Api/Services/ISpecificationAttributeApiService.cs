@@ -7,6 +7,7 @@ namespace Grand.Api.Services
     {
         SpecificationAttributeDto GetById(string id);
         IMongoQueryable<SpecificationAttributeDto> GetSpecificationAttributes();
+        SpecificationAttributeDto InsertOrUpdateSpecificationAttribute(SpecificationAttributeDto model);
         SpecificationAttributeDto InsertSpecificationAttribute(SpecificationAttributeDto model);
         SpecificationAttributeDto UpdateSpecificationAttribute(SpecificationAttributeDto model);
         void DeleteSpecificationAttribute(SpecificationAttributeDto model);

@@ -47,10 +47,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
             if (ModelState.IsValid)
             {
-                if (string.IsNullOrEmpty(model.Id))
-                    model = _categoryApiService.InsertCategory(model);
-                else
-                    model = _categoryApiService.UpdateCategory(model);
+                model = _categoryApiService.InsertOrUpdateCategory(model);
                 return Created(model);
             }
             return BadRequest(ModelState);

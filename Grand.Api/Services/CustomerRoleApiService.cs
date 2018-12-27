@@ -29,7 +29,15 @@ namespace Grand.Api.Services
         {
             return _customerRole.AsQueryable();
         }
+        public virtual CustomerRoleDto InsertOrUpdateCustomerRole(CustomerRoleDto model)
+        {
+            if (string.IsNullOrEmpty(model.Id))
+                model = InsertCustomerRole(model);
+            else
+                model = UpdateCustomerRole(model);
 
+            return model;
+        }
         public virtual CustomerRoleDto InsertCustomerRole(CustomerRoleDto model)
         {
             var customerRole = model.ToEntity();

@@ -47,10 +47,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
             if (ModelState.IsValid)
             {
-                if (string.IsNullOrEmpty(model.Id))
-                    model = _customerRoleApiService.InsertCustomerRole(model);
-                else
-                    model = _customerRoleApiService.UpdateCustomerRole(model);
+                model = _customerRoleApiService.InsertOrUpdateCustomerRole(model);
                 return Created(model);
             }
             return BadRequest(ModelState);

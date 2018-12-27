@@ -47,10 +47,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
             if (ModelState.IsValid)
             {
-                if (string.IsNullOrEmpty(model.Id))
-                    model = _manufacturerApiService.InsertManufacturer(model);
-                else
-                    model = _manufacturerApiService.UpdateManufacturer(model);
+                model = _manufacturerApiService.InsertOrUpdateManufacturer(model);
                 return Created(model);
             }
             return BadRequest(ModelState);

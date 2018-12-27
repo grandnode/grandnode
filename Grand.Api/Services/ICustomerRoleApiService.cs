@@ -7,6 +7,7 @@ namespace Grand.Api.Services
     {
         CustomerRoleDto GetById(string id);
         IMongoQueryable<CustomerRoleDto> GetCustomerRoles();
+        CustomerRoleDto InsertOrUpdateCustomerRole(CustomerRoleDto model);
         CustomerRoleDto InsertCustomerRole(CustomerRoleDto model);
         CustomerRoleDto UpdateCustomerRole(CustomerRoleDto model);
         void DeleteCustomerRole(CustomerRoleDto model);

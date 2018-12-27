@@ -24,12 +24,19 @@ namespace Grand.Api.Services
         {
             return _productAttribute.AsQueryable().FirstOrDefault(x => x.Id == id);
         }
-
         public virtual IMongoQueryable<ProductAttributeDto> GetProductAttributes()
         {
             return _productAttribute.AsQueryable();
         }
+        public virtual ProductAttributeDto InsertOrUpdateProductAttribute(ProductAttributeDto model)
+        {
+            if (string.IsNullOrEmpty(model.Id))
+                model = InsertProductAttribute(model);
+            else
+                model = UpdateProductAttribute(model);
 
+            return model;
+        }
         public virtual ProductAttributeDto InsertProductAttribute(ProductAttributeDto model)
         {
             var productAttribute = model.ToEntity();

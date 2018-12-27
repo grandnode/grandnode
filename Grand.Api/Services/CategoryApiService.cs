@@ -38,7 +38,15 @@ namespace Grand.Api.Services
         {
             return _category.AsQueryable();
         }
+        public virtual CategoryDto InsertOrUpdateCategory(CategoryDto model)
+        {
+            if (string.IsNullOrEmpty(model.Id))
+                model = InsertCategory(model);
+            else
+                model = UpdateCategory(model);
 
+            return model;
+        }
         public virtual CategoryDto InsertCategory(CategoryDto model)
         {
             var category = model.ToEntity();

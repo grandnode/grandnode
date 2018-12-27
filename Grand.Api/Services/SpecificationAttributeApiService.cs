@@ -28,6 +28,15 @@ namespace Grand.Api.Services
         {
             return _specificationAttribute.AsQueryable();
         }
+        public virtual SpecificationAttributeDto InsertOrUpdateSpecificationAttribute(SpecificationAttributeDto model)
+        {
+            if (string.IsNullOrEmpty(model.Id))
+                model = InsertSpecificationAttribute(model);
+            else
+                model = UpdateSpecificationAttribute(model);
+
+            return model;
+        }
         public virtual SpecificationAttributeDto InsertSpecificationAttribute(SpecificationAttributeDto model)
         {
             var specificationAttribute = model.ToEntity();

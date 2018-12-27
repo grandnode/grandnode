@@ -7,6 +7,7 @@ namespace Grand.Api.Services
     {
         CategoryDto GetById(string id);
         IMongoQueryable<CategoryDto> GetCategories();
+        CategoryDto InsertOrUpdateCategory(CategoryDto model);
         CategoryDto InsertCategory(CategoryDto model);
         CategoryDto UpdateCategory(CategoryDto model);
         void DeleteCategory(CategoryDto model);
