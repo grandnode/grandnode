@@ -8,5 +8,7 @@ namespace Grand.Api.Services
         IMongoQueryable<LanguageDto> GetLanguages();
         IMongoQueryable<CurrencyDto> GetCurrencies();
         IMongoQueryable<StoreDto> GetStores();
+        IMongoQueryable<CountryDto> GetCountries();
+        IMongoQueryable<StateProvinceDto> GetStates();
     }
 }

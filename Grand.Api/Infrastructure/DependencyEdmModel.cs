@@ -31,6 +31,20 @@ namespace Grand.Api.Infrastructure
             builder.EntityType<StoreDto>().Count().Filter().OrderBy().Page();
 
             #endregion
+
+            #region Country model
+
+            builder.EntitySet<CountryDto>("Country");
+            builder.EntityType<CountryDto>().Count().Filter().OrderBy().Page();
+
+            #endregion
+
+            #region State province model
+
+            builder.EntitySet<StateProvinceDto>("StateProvince");
+            builder.EntityType<StateProvinceDto>().Count().Filter().OrderBy().Page();
+
+            #endregion
         }
 
         protected void RegisterCatalog(ODataConventionModelBuilder builder)
