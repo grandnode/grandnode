@@ -124,6 +124,27 @@ namespace Grand.Api.Infrastructure
             builder.EntityType<WarehouseDto>().Count().Filter().OrderBy().Page();
 
             #endregion
+
+            #region Delivery date model
+
+            builder.EntitySet<DeliveryDateDto>("DeliveryDate");
+            builder.EntityType<DeliveryDateDto>().Count().Filter().OrderBy().Page();
+
+            #endregion
+
+            #region Pickup point model
+
+            builder.EntitySet<PickupPointDto>("PickupPoint");
+            builder.EntityType<PickupPointDto>().Count().Filter().OrderBy().Page();
+
+            #endregion
+
+            #region Shipping method model
+
+            builder.EntitySet<ShippingMethodDto>("ShippingMethod");
+            builder.EntityType<ShippingMethodDto>().Count().Filter().OrderBy().Page();
+
+            #endregion
         }
 
         public void Register(ODataConventionModelBuilder builder, ApiConfig apiConfig)
