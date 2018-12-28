@@ -6,5 +6,6 @@ namespace Grand.Api.Services
     public interface ICommonApiService
     {
         IMongoQueryable<LanguageDto> GetLanguages();
+        IMongoQueryable<CurrencyDto> GetCurrencies();
     }
 }

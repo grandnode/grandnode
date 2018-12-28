@@ -17,6 +17,13 @@ namespace Grand.Api.Infrastructure
             builder.EntityType<LanguageDto>().Count().Filter().OrderBy().Page();
 
             #endregion
+
+            #region Currency model
+
+            builder.EntitySet<CurrencyDto>("Currency");
+            builder.EntityType<CurrencyDto>().Count().Filter().OrderBy().Page();
+
+            #endregion
         }
 
         protected void RegisterCatalog(ODataConventionModelBuilder builder)
