@@ -10,14 +10,16 @@ namespace Grand.Api.Infrastructure
     {
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, GrandConfig config)
         {
-            builder.RegisterType<CommonApiService>().As<ICommonApiService>().InstancePerLifetimeScope();
             builder.RegisterType<TokenService>().As<ITokenService>().InstancePerLifetimeScope();
+
+            builder.RegisterType<CommonApiService>().As<ICommonApiService>().InstancePerLifetimeScope();
             builder.RegisterType<CategoryApiService>().As<ICategoryApiService>().InstancePerLifetimeScope();
             builder.RegisterType<ManufacturerApiService>().As<IManufacturerApiService>().InstancePerLifetimeScope();
             builder.RegisterType<CustomerRoleApiService>().As<ICustomerRoleApiService>().InstancePerLifetimeScope();
             builder.RegisterType<ProductAttributeApiService>().As<IProductAttributeApiService>().InstancePerLifetimeScope();
             builder.RegisterType<SpecificationAttributeApiService>().As<ISpecificationAttributeApiService>().InstancePerLifetimeScope();
             builder.RegisterType<CustomerApiService>().As<ICustomerApiService>().InstancePerLifetimeScope();
+            builder.RegisterType<ShippingApiService>().As<IShippingApiService>().InstancePerLifetimeScope();
         }
         public int Order => 5;
     }

@@ -1,6 +1,7 @@
 ﻿using Grand.Api.DTOs.Catalog;
 using Grand.Api.DTOs.Common;
 using Grand.Api.DTOs.Customers;
+using Grand.Api.DTOs.Shipping;
 using Grand.Api.Infrastructure.DependencyManagement;
 using Grand.Core.Configuration;
 using Microsoft.AspNet.OData.Builder;
@@ -115,6 +116,16 @@ namespace Grand.Api.Infrastructure
             #endregion
         }
 
+        protected void RegisterShipping(ODataConventionModelBuilder builder)
+        {
+            #region Warehouse model
+
+            builder.EntitySet<WarehouseDto>("Warehouse");
+            builder.EntityType<WarehouseDto>().Count().Filter().OrderBy().Page();
+
+            #endregion
+        }
+
         public void Register(ODataConventionModelBuilder builder, ApiConfig apiConfig)
         {
             if (apiConfig.SystemModel)
@@ -122,6 +133,7 @@ namespace Grand.Api.Infrastructure
                 RegisterCommon(builder);
                 RegisterCatalog(builder);
                 RegisterCustomers(builder);
+                RegisterShipping(builder);
             }
         }
 
