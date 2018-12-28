@@ -24,6 +24,13 @@ namespace Grand.Api.Infrastructure
             builder.EntityType<CurrencyDto>().Count().Filter().OrderBy().Page();
 
             #endregion
+
+            #region Store model
+
+            builder.EntitySet<StoreDto>("Store");
+            builder.EntityType<StoreDto>().Count().Filter().OrderBy().Page();
+
+            #endregion
         }
 
         protected void RegisterCatalog(ODataConventionModelBuilder builder)

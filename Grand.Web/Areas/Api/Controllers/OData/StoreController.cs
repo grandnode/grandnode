@@ -6,12 +6,12 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Api.Controllers.OData
 {
-    public partial class CurrencyController : BaseODataController
+    public partial class StoreController : BaseODataController
     {
         private readonly ICommonApiService _commonApiService;
         private readonly IPermissionService _permissionService;
 
-        public CurrencyController(ICommonApiService commonApiService, IPermissionService permissionService)
+        public StoreController(ICommonApiService commonApiService, IPermissionService permissionService)
         {
             _commonApiService = commonApiService;
             _permissionService = permissionService;
@@ -20,24 +20,24 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         [HttpGet]
         public IActionResult Get(string key)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Currencies))
+            if (!_permissionService.Authorize(PermissionSystemName.Stores))
                 return Forbid();
 
-            var currency = _commonApiService.GetCurrencies().FirstOrDefault(x => x.Id == key);
-            if (currency == null)
+            var store = _commonApiService.GetStores().FirstOrDefault(x => x.Id == key);
+            if (store == null)
                 return NotFound();
 
-            return Ok(currency);
+            return Ok(store);
         }
 
         [HttpGet]
         [EnableQuery]
         public IActionResult Get()
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Currencies))
+            if (!_permissionService.Authorize(PermissionSystemName.Stores))
                 return Forbid();
 
-            return Ok(_commonApiService.GetCurrencies());
+            return Ok(_commonApiService.GetStores());
         }
     }
 }
