@@ -1,4 +1,5 @@
 ﻿using Grand.Api.DTOs.Catalog;
+using Grand.Api.DTOs.Common;
 using Grand.Api.DTOs.Customers;
 using Grand.Api.Infrastructure.DependencyManagement;
 using Grand.Core.Configuration;
@@ -8,6 +9,16 @@ namespace Grand.Api.Infrastructure
 {
     public class DependencyEdmModel : IDependencyEdmModel
     {
+        protected void RegisterCommon(ODataConventionModelBuilder builder)
+        {
+            #region Language model
+
+            builder.EntitySet<LanguageDto>("Language");
+            builder.EntityType<LanguageDto>().Count().Filter().OrderBy().Page();
+
+            #endregion
+        }
+
         protected void RegisterCatalog(ODataConventionModelBuilder builder)
         {
             #region Category model
@@ -81,10 +92,12 @@ namespace Grand.Api.Infrastructure
         {
             if (apiConfig.SystemModel)
             {
+                RegisterCommon(builder);
                 RegisterCatalog(builder);
                 RegisterCustomers(builder);
             }
         }
+
         public int Order => 0;
     }
 }
