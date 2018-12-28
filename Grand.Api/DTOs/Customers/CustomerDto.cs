@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace Grand.Api.DTOs.Customers
 {
     [Validator(typeof(CustomerValidator))]
-    public partial class CustomerDto : BaseGrandEntityModel
+    public partial class CustomerDto : BaseApiEntityModel
     {
         public CustomerDto()
         {

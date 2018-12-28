@@ -6,7 +6,7 @@ using System;
 namespace Grand.Api.DTOs.Customers
 {
     [Validator(typeof(AddressValidator))]
-    public partial class AddressDto: BaseGrandEntityModel
+    public partial class AddressDto: BaseApiEntityModel
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

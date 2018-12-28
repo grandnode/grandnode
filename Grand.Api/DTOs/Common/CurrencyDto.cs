@@ -3,7 +3,7 @@ using System;
 
 namespace Grand.Api.DTOs.Common
 {
-    public partial class CurrencyDto : BaseGrandEntityModel
+    public partial class CurrencyDto : BaseApiEntityModel
     {
         public string Name { get; set; }
         public string CurrencyCode { get; set; }

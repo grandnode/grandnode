@@ -68,7 +68,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             _customerApiService.DeleteCustomer(customer);
             return Ok();
         }
-        //api/Customer(email)/AddAddress
+        //odata/Customer(email)/AddAddress
         [HttpPost]
         public IActionResult AddAddress(string key, [FromBody] AddressDto address)
         {
@@ -86,7 +86,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             return Ok(address);
         }
 
-        //api/Customer(email)/UpdateAddress
+        //odata/Customer(email)/UpdateAddress
         [HttpPost]
         public IActionResult UpdateAddress(string key, [FromBody] AddressDto address)
         {
@@ -103,7 +103,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             address = _customerApiService.UpdateAddress(customer, address);
             return Ok(address);
         }
-        //api/Customer(email)/DeleteAddress
+        //odata/Customer(email)/DeleteAddress
         //body: { "addressId": "xxx" }
         [HttpPost]
         public IActionResult DeleteAddress(string key, [FromBody] ODataActionParameters parameters)
@@ -128,7 +128,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         }
 
 
-        //api/Customer(email)/SetPassword
+        //odata/Customer(email)/SetPassword
         //body: { "password": "123456" }
         [HttpPost]
         public IActionResult SetPassword(string key, [FromBody] ODataActionParameters parameters)

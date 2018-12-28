@@ -29,8 +29,7 @@ namespace Grand.Api.Infrastructure.Mapper
                 .ForMember(dest => dest.AppliedDiscounts, mo => mo.Ignore())
                 .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
 
-            CreateMap<Category, CategoryDto>()
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            CreateMap<Category, CategoryDto>();
 
             #endregion
 
@@ -47,8 +46,7 @@ namespace Grand.Api.Infrastructure.Mapper
                 .ForMember(dest => dest.AppliedDiscounts, mo => mo.Ignore())
                 .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
 
-            CreateMap<Manufacturer, ManufacturerDto>()
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            CreateMap<Manufacturer, ManufacturerDto>();
 
             #endregion
 
@@ -57,8 +55,7 @@ namespace Grand.Api.Infrastructure.Mapper
             CreateMap<CustomerRoleDto, CustomerRole>()
                 .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
 
-            CreateMap<CustomerRole, CustomerRoleDto>()
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            CreateMap<CustomerRole, CustomerRoleDto>();
 
             #endregion
 
@@ -67,11 +64,9 @@ namespace Grand.Api.Infrastructure.Mapper
             CreateMap<ProductAttributeDto, ProductAttribute>()
                 .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
 
-            CreateMap<ProductAttribute, ProductAttributeDto>()
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            CreateMap<ProductAttribute, ProductAttributeDto>();
 
-            CreateMap<PredefinedProductAttributeValue, PredefinedProductAttributeValueDto>()
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            CreateMap<PredefinedProductAttributeValue, PredefinedProductAttributeValueDto>();
 
             CreateMap<PredefinedProductAttributeValueDto, PredefinedProductAttributeValue>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore());
@@ -83,11 +78,9 @@ namespace Grand.Api.Infrastructure.Mapper
             CreateMap<SpecificationAttributeDto, SpecificationAttribute>()
                 .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
 
-            CreateMap<SpecificationAttribute, SpecificationAttributeDto>()
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            CreateMap<SpecificationAttribute, SpecificationAttributeDto>();
 
-            CreateMap<SpecificationAttributeOption, SpecificationAttributeOptionDto>()
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            CreateMap<SpecificationAttributeOption, SpecificationAttributeOptionDto>();
 
             CreateMap<SpecificationAttributeOptionDto, SpecificationAttributeOption>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore());
@@ -124,7 +117,7 @@ namespace Grand.Api.Infrastructure.Mapper
                 .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
 
             CreateMap<Customer, CustomerDto>()
-                .ForMember(dest => dest.FirstName, mo=>mo.MapFrom(src => src.GetAttribute<string>(SystemCustomerAttributeNames.FirstName, "")))
+                .ForMember(dest => dest.FirstName, mo => mo.MapFrom(src => src.GetAttribute<string>(SystemCustomerAttributeNames.FirstName, "")))
                 .ForMember(dest => dest.LastName, mo => mo.MapFrom(src => src.GetAttribute<string>(SystemCustomerAttributeNames.LastName, "")))
                 .ForMember(dest => dest.City, mo => mo.MapFrom(src => src.GetAttribute<string>(SystemCustomerAttributeNames.City, "")))
                 .ForMember(dest => dest.Company, mo => mo.MapFrom(src => src.GetAttribute<string>(SystemCustomerAttributeNames.Company, "")))
@@ -140,16 +133,13 @@ namespace Grand.Api.Infrastructure.Mapper
                 .ForMember(dest => dest.VatNumberStatusId, mo => mo.MapFrom(src => src.GetAttribute<string>(SystemCustomerAttributeNames.VatNumberStatusId, "")))
                 .ForMember(dest => dest.ZipPostalCode, mo => mo.MapFrom(src => src.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode, "")))
                 .ForMember(dest => dest.CountryId, mo => mo.MapFrom(src => src.GetAttribute<string>(SystemCustomerAttributeNames.CountryId, "")))
-                .ForMember(dest => dest.CustomerRoles, mo => mo.MapFrom(src => src.CustomerRoles.Select(x=>x.Id)))
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                .ForMember(dest => dest.CustomerRoles, mo => mo.MapFrom(src => src.CustomerRoles.Select(x => x.Id)));
 
             CreateMap<AddressDto, Address>()
                 .ForMember(dest => dest.CustomAttributes, mo => mo.Ignore())
-                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore())
-                .ForMember(dest => dest.CustomerId, mo => mo.Ignore());
+                .ForMember(dest => dest.GenericAttributes, mo => mo.Ignore());
 
-            CreateMap<Address, AddressDto>()
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            CreateMap<Address, AddressDto>();
 
             #endregion
 

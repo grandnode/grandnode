@@ -1,4 +1,5 @@
-﻿using Grand.Api.Infrastructure.Extensions;
+﻿using Grand.Api.Constants;
+using Grand.Api.Infrastructure.Extensions;
 using Grand.Core.Configuration;
 using Grand.Core.Infrastructure;
 using Microsoft.AspNet.OData.Extensions;
@@ -15,7 +16,7 @@ namespace Grand.Api.Infrastructure
             var apiConfig = application.ApplicationServices.GetService<ApiConfig>();
             if (apiConfig.Enabled)
             {
-                application.UseCors("CorsPolicy");
+                application.UseCors(Configurations.CorsPolicyName);
             }
         }
 

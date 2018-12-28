@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Grand.Api.DTOs.Catalog
 {
     [Validator(typeof(SpecificationAttributeValidator))]
-    public partial class SpecificationAttributeDto: BaseGrandEntityModel
+    public partial class SpecificationAttributeDto: BaseApiEntityModel
     {
         public SpecificationAttributeDto()
         {
@@ -17,7 +17,7 @@ namespace Grand.Api.DTOs.Catalog
         public IList<SpecificationAttributeOptionDto> SpecificationAttributeOptions { get; set; }
 
     }
-    public partial class SpecificationAttributeOptionDto : BaseGrandEntityModel
+    public partial class SpecificationAttributeOptionDto : BaseApiEntityModel
     {
         public string Name { get; set; }
         public int DisplayOrder { get; set; }

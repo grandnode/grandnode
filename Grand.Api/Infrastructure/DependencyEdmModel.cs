@@ -87,7 +87,6 @@ namespace Grand.Api.Infrastructure
             deleteAddress.Parameter<string>("addressId");
             deleteAddress.Returns<bool>();
 
-            //api/Customer(email)/ChangePassword - body contains text with password
             ActionConfiguration changePassword = customer.Action("SetPassword");
             changePassword.Parameter<string>("password");
             changePassword.Returns<bool>();

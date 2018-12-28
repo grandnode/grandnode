@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Grand.Api.Constants;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Grand.Api.Infrastructure.Extensions
 {
@@ -8,7 +9,7 @@ namespace Grand.Api.Infrastructure.Extensions
         {
             services.AddCors(options =>
             {
-                options.AddPolicy("CorsPolicy",
+                options.AddPolicy(Configurations.CorsPolicyName,
                     builder => builder.AllowAnyOrigin()
                     .AllowAnyMethod()
                     .AllowAnyHeader()

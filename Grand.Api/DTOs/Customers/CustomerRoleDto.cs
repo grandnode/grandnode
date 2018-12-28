@@ -5,7 +5,7 @@ using Grand.Framework.Mvc.Models;
 namespace Grand.Api.DTOs.Customers
 {
     [Validator(typeof(CustomerRoleValidator))]
-    public partial class CustomerRoleDto : BaseGrandEntityModel
+    public partial class CustomerRoleDto : BaseApiEntityModel
     {
         public string Name { get; set; }
         public bool FreeShipping { get; set; }

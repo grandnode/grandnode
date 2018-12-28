@@ -5,7 +5,7 @@ using Grand.Framework.Mvc.Models;
 namespace Grand.Api.DTOs.Catalog
 {
     [Validator(typeof(ManufacturerValidator))]
-    public partial class ManufacturerDto: BaseGrandEntityModel
+    public partial class ManufacturerDto: BaseApiEntityModel
     {
         public string Name { get; set; }
         public string SeName { get; set; }

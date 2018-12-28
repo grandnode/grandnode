@@ -1,4 +1,5 @@
-﻿using Grand.Api.Infrastructure.DependencyManagement;
+﻿using Grand.Api.Constants;
+using Grand.Api.Infrastructure.DependencyManagement;
 using Grand.Core.Configuration;
 using Grand.Core.Infrastructure;
 using Grand.Framework.Mvc.Routing;
@@ -23,8 +24,8 @@ namespace Grand.Api.Infrastructure
                 //OData
                 var serviceProvider = EngineContext.Current.Resolve<IServiceProvider>();
                 IEdmModel model = GetEdmModel(serviceProvider, apiConfig);
-                routeBuilder.Count().Filter().OrderBy().MaxTop(null);
-                routeBuilder.MapODataServiceRoute("ODataRoute", "api", model);
+                routeBuilder.Count().Filter().OrderBy().MaxTop(Configurations.MaxLimit);
+                routeBuilder.MapODataServiceRoute(Configurations.ODataRouteName, Configurations.ODataRoutePrefix, model);
                 routeBuilder.EnableDependencyInjection();
             }
         }
@@ -32,7 +33,7 @@ namespace Grand.Api.Infrastructure
         private IEdmModel GetEdmModel(IServiceProvider serviceProvider, ApiConfig apiConfig)
         {
             var builder = new ODataConventionModelBuilder(serviceProvider);
-            builder.Namespace = "Default";
+            builder.Namespace = Configurations.ODataModelBuilderNamespace;
             RegisterDependencies(builder, apiConfig);
             return builder.GetEdmModel();
         }

@@ -2,7 +2,7 @@
 
 namespace Grand.Api.DTOs.Common
 {
-    public partial class LanguageDto : BaseGrandEntityModel
+    public partial class LanguageDto : BaseApiEntityModel
     {
         public string Name { get; set; }
         public string LanguageCulture { get; set; }

@@ -2,7 +2,7 @@
 
 namespace Grand.Api.DTOs.Common
 {
-    public partial class StoreDto : BaseGrandEntityModel
+    public partial class StoreDto : BaseApiEntityModel
     {
         public string Name { get; set; }
         public string Url { get; set; }

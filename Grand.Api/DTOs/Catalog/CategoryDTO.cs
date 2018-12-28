@@ -5,7 +5,7 @@ using Grand.Framework.Mvc.Models;
 namespace Grand.Api.DTOs.Catalog
 {
     [Validator(typeof(CategoryValidator))]
-    public partial class CategoryDto: BaseGrandEntityModel
+    public partial class CategoryDto: BaseApiEntityModel
     {
         public string Name { get; set; }
         public string Description { get; set; }
