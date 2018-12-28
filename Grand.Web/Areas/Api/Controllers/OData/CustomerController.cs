@@ -5,7 +5,6 @@ using Grand.Services.Customers;
 using Grand.Services.Security;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Mvc;
-using System.IO;
 using System.Linq;
 
 namespace Grand.Web.Areas.Api.Controllers.OData
@@ -40,7 +39,7 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
             return Ok(customer);
         }
-       
+
         [HttpPost]
         public IActionResult Post([FromBody] CustomerDto model)
         {
@@ -105,9 +104,9 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             return Ok(address);
         }
         //api/Customer(email)/DeleteAddress
-        //body: { "@odata.context": "http://localhost:16592/api/$metadata#Edm.String", "addressId": "xxx" }
+        //body: { "addressId": "xxx" }
         [HttpPost]
-        public IActionResult DeleteAddress(string key,  [FromBody]ODataActionParameters parameters)
+        public IActionResult DeleteAddress(string key, [FromBody] ODataActionParameters parameters)
         {
             if (!_permissionService.Authorize(PermissionSystemName.Customers))
                 return Forbid();
@@ -129,28 +128,26 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         }
 
 
-        //api/Customer(email)/ChangePassword - body contains text with password
+        //api/Customer(email)/SetPassword
+        //body: { "password": "123456" }
         [HttpPost]
-        public IActionResult ChangePassword(string key)
+        public IActionResult SetPassword(string key, [FromBody] ODataActionParameters parameters)
         {
             if (!_permissionService.Authorize(PermissionSystemName.Customers))
                 return Forbid();
 
-            using (StreamReader stream = new StreamReader(HttpContext.Request.Body))
+            var password = parameters.FirstOrDefault(x => x.Key == "password").Value;
+            if (password == null)
+                return NotFound();
+
+            var changePassRequest = new ChangePasswordRequest(key, false, _customerSettings.DefaultPasswordFormat, password.ToString());
+            var changePassResult = _customerRegistrationService.ChangePassword(changePassRequest);
+            if (!changePassResult.Success)
             {
-                string password = stream.ReadToEnd();
-                if(!string.IsNullOrEmpty(password))
-                {
-                    var changePassRequest = new ChangePasswordRequest(key, false, _customerSettings.DefaultPasswordFormat, password);
-                    var changePassResult = _customerRegistrationService.ChangePassword(changePassRequest);
-                    if (!changePassResult.Success)
-                    {
-                        return BadRequest(string.Join(',', changePassResult.Errors));
-                    }
-                    return Ok(true);
-                }
-                return Ok(false);
+                return BadRequest(string.Join(',', changePassResult.Errors));
             }
+            return Ok(true);
+
         }
     }
 }
