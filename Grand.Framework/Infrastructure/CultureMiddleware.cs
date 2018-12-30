@@ -1,5 +1,4 @@
-﻿using Grand.Core;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Globalization;
 using System.Threading.Tasks;
@@ -33,17 +32,11 @@ namespace Grand.Framework.Infrastructure
         /// Invoke middleware actions
         /// </summary>
         /// <param name="context">HTTP context</param>
-        /// <param name="webHelper">Web helper</param>
-        /// <param name="workContext">Work context</param>
         /// <returns>Task</returns>
-        public Task Invoke(HttpContext context, IWebHelper webHelper)
+        public Task Invoke(HttpContext context)
         {
-            //set culture
-            if (webHelper.IsStaticResource())
-                _next(context);
-
-            var adminAreaUrl = $"{webHelper.GetStoreLocation()}admin";
-            if (webHelper.GetThisPageUrl(false).StartsWith(adminAreaUrl, StringComparison.InvariantCultureIgnoreCase))
+            //set culture in admin area
+            if (context.Request.Path.Value.StartsWith("/admin", StringComparison.InvariantCultureIgnoreCase))
             {
                 var culture = new CultureInfo("en-US");
                 CultureInfo.CurrentCulture = culture;
