@@ -19,7 +19,5 @@ namespace Grand.Framework.Validators
         {
             EngineContext.Current.Resolve<IEventPublisher>().Publish(this);
         }
-
-
     }
 }

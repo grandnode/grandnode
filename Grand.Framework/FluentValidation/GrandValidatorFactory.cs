@@ -26,7 +26,7 @@ namespace Grand.Framework.FluentValidation
                 return null;
 
             //try to create instance of the validator
-            var instance = EngineContext.Current.ResolveUnregistered(validatorAttribute.ValidatorType);
+            var instance = EngineContext.Current.Resolve(validatorAttribute.ValidatorType);
 
             return instance as IValidator;
         }

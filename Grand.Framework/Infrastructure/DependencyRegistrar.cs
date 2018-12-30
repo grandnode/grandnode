@@ -1,6 +1,6 @@
 using Autofac;
-using Autofac.Builder;
 using Autofac.Core;
+using FluentValidation;
 using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Configuration;
@@ -36,7 +36,6 @@ using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Media;
 using Grand.Services.Messages;
-using Grand.Services.Messages.DotLiquidDrops;
 using Grand.Services.News;
 using Grand.Services.Orders;
 using Grand.Services.Payments;
@@ -52,7 +51,6 @@ using Grand.Services.Topics;
 using Grand.Services.Vendors;
 using MongoDB.Driver;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -318,6 +316,11 @@ namespace Grand.Framework.Infrastructure
                         return isMatch;
                     }, typeof(IConsumer<>)))
                     .InstancePerLifetimeScope();
+            }
+            var validators = typeFinder.FindClassesOfType(typeof(IValidator)).ToList();
+            foreach (var validator in validators)
+            {
+                builder.RegisterType(validator);
             }
 
             builder.RegisterType<ResourceManager>().As<IResourceManager>().InstancePerLifetimeScope();
