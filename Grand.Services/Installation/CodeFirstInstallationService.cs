@@ -5223,7 +5223,7 @@ namespace Grand.Services.Installation
                 GenderEnabled = true,
                 DateOfBirthEnabled = true,
                 DateOfBirthRequired = false,
-                DateOfBirthMinimumAge = null,
+                DateOfBirthMinimumAge = 0,
                 CompanyEnabled = true,
                 StreetAddressEnabled = false,
                 StreetAddress2Enabled = false,

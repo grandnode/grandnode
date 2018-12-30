@@ -347,19 +347,24 @@ namespace Grand.Services.Configuration
                 var key = type.Name + "." + prop.Name;
                 //load by store
                 var setting = GetSettingByKey<string>(key, storeId: storeId, loadSharedValueIfNotFound: true);
-                if (setting == null)
+                if (setting == null || setting.Length == 0)
                     continue;
 
-                if (!TypeDescriptor.GetConverter(prop.PropertyType).CanConvertFrom(typeof(string)))
+                var converter = TypeDescriptor.GetConverter(prop.PropertyType);
+
+                if (!converter.CanConvertFrom(typeof(string)))
                     continue;
-
-                if (!TypeDescriptor.GetConverter(prop.PropertyType).IsValid(setting))
-                    continue;
-
-                var value = TypeDescriptor.GetConverter(prop.PropertyType).ConvertFromInvariantString(setting);
-
-                //set property
-                prop.SetValue(settings, value, null);
+                try
+                {
+                    var value = converter.ConvertFromInvariantString(setting);
+                    //set property
+                    prop.SetValue(settings, value, null);
+                }
+                catch (Exception ex)
+                {
+                    var msg = $"Could not convert setting {key} to type {prop.PropertyType.FullName}";
+                    Core.Infrastructure.EngineContext.Current.Resolve<Logging.ILogger>().InsertLog(Core.Domain.Logging.LogLevel.Error, msg, ex.Message);
+                }
             }
 
             return settings as ISettings;
