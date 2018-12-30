@@ -18,6 +18,7 @@ namespace Grand.Plugin.Shipping.ByWeight
             builder.RegisterType<ShippingByWeightService>().As<IShippingByWeightService>().InstancePerLifetimeScope();
             //base shipping controller
             builder.RegisterType<ShippingByWeightController>();
+            builder.RegisterType<ByWeightShippingComputationMethod>().InstancePerLifetimeScope();
         }
 
         public int Order

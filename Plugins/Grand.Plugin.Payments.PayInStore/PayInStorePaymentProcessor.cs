@@ -1,5 +1,4 @@
-using System;
-using System.Collections.Generic;
+using Grand.Core;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Payments;
 using Grand.Core.Plugins;
@@ -9,8 +8,8 @@ using Grand.Services.Localization;
 using Grand.Services.Orders;
 using Grand.Services.Payments;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
-using Grand.Core;
+using System;
+using System.Collections.Generic;
 
 namespace Grand.Plugin.Payments.PayInStore
 {
@@ -194,10 +193,10 @@ namespace Grand.Plugin.Payments.PayInStore
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PayInStore.AdditionalFeePercentage", "Additional fee. Use percentage");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PayInStore.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
 
-            
+
             base.Install();
         }
-        
+
         public override void Uninstall()
         {
             //settings

@@ -1,11 +1,7 @@
 using Autofac;
-using Autofac.Core;
 using Grand.Core.Configuration;
-using Grand.Core.Data;
 using Grand.Core.Infrastructure;
 using Grand.Core.Infrastructure.DependencyManagement;
-using Grand.Data;
-using Grand.Plugin.Payments.PayInStore.Controllers;
 
 namespace Grand.Plugin.Payments.PayInStore
 {
@@ -13,8 +9,7 @@ namespace Grand.Plugin.Payments.PayInStore
     {
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, GrandConfig config)
         {
-            //base payment controller
-            builder.RegisterType<PaymentPayInStoreController>();
+            builder.RegisterType<PayInStorePaymentProcessor>().InstancePerLifetimeScope();
         }
 
         public int Order

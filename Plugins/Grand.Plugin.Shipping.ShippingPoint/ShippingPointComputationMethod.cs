@@ -1,25 +1,22 @@
-﻿using System;
-using Grand.Core;
+﻿using Grand.Core;
+using Grand.Core.Domain.Customers;
+using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Plugins;
+using Grand.Plugin.Shipping.ShippingPoint.Services;
 using Grand.Services.Catalog;
+using Grand.Services.Common;
 using Grand.Services.Configuration;
+using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Shipping;
 using Grand.Services.Shipping.Tracking;
-using System.Collections.Generic;
-using Grand.Plugin.Shipping.ShippingPoint.Controllers;
-using Grand.Plugin.Shipping.ShippingPoint.Services;
-using Grand.Core.Domain.Orders;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Grand.Services.Common;
-using Grand.Core.Domain.Customers;
-using System.Text;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Xml.Serialization;
-using Grand.Services.Directory;
 
 namespace Grand.Plugin.Shipping.ShippingPoint
 {
@@ -79,7 +76,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint
 
             var response = new GetShippingOptionResponse();
 
-            
+
             response.ShippingOptions.Add(new ShippingOption()
             {
                 Name = _localizationService.GetResource("Plugins.Shipping.ShippingPoint.PluginName"),
@@ -131,7 +128,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.ShippingPointName", "Point Name");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.Address", "Address");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.MethodAndFee", "{0} ({1})");
-            
+
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.AddNew", "Add New Point");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.RequiredShippingPointName", "Shipping Point Name Is Required");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.RequiredDescription", "Description Is Required");
@@ -139,7 +136,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.SelectShippingOption", "Select Shipping Option");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.ChooseShippingPoint", "Choose Shipping Point");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShippingPoint.SelectBeforeProceed", "Select Shipping Option Before Proceed");
-            
+
             base.Install();
         }
 
