@@ -503,7 +503,7 @@ namespace Grand.Services.Tax
             {
                 if (isTaxable)
                 {
-                    productPrice.UnitPriceWihoutDiscInclTax = CalculatePrice(unitPricewithoutDisc, taxRate, false);
+                    productPrice.UnitPriceWihoutDiscInclTax = CalculatePrice(unitPricewithoutDisc, taxRate, true);
                     productPrice.UnitPriceWihoutDiscExclTax = unitPricewithoutDisc;
 
                     productPrice.UnitPriceInclTax = CalculatePrice(unitPrice, taxRate, true);
