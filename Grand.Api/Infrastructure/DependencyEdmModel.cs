@@ -46,6 +46,15 @@ namespace Grand.Api.Infrastructure
             builder.EntityType<StateProvinceDto>().Count().Filter().OrderBy().Page();
 
             #endregion
+
+            #region Templates model
+
+            builder.EntitySet<MessageTemplateDto>("CategoryTemplate");
+            builder.EntitySet<MessageTemplateDto>("ManufacturerTemplate");
+            builder.EntitySet<MessageTemplateDto>("ProductTemplate");
+            builder.EntityType<MessageTemplateDto>().Count().Filter().OrderBy().Page();
+
+            #endregion
         }
 
         protected void RegisterCatalog(ODataConventionModelBuilder builder)

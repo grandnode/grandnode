@@ -10,5 +10,8 @@ namespace Grand.Api.Services
         IMongoQueryable<StoreDto> GetStores();
         IMongoQueryable<CountryDto> GetCountries();
         IMongoQueryable<StateProvinceDto> GetStates();
+        IMongoQueryable<MessageTemplateDto> GetCategoryMessageTemplate();
+        IMongoQueryable<MessageTemplateDto> GetManufacturerMessageTemplate();
+        IMongoQueryable<MessageTemplateDto> GetProductMessageTemplate();
     }
 }

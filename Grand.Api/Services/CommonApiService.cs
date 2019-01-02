@@ -43,5 +43,17 @@ namespace Grand.Api.Services
         {
             return _stateProvinceDto.AsQueryable();
         }
+        public virtual IMongoQueryable<MessageTemplateDto> GetCategoryMessageTemplate()
+        {
+            return _mongoDBContext.Database().GetCollection<MessageTemplateDto>(typeof(Core.Domain.Catalog.CategoryTemplate).Name).AsQueryable();
+        }
+        public virtual IMongoQueryable<MessageTemplateDto> GetManufacturerMessageTemplate()
+        {
+            return _mongoDBContext.Database().GetCollection<MessageTemplateDto>(typeof(Core.Domain.Catalog.ManufacturerTemplate).Name).AsQueryable();
+        }
+        public virtual IMongoQueryable<MessageTemplateDto> GetProductMessageTemplate()
+        {
+            return _mongoDBContext.Database().GetCollection<MessageTemplateDto>(typeof(Core.Domain.Catalog.ProductTemplate).Name).AsQueryable();
+        }
     }
 }
