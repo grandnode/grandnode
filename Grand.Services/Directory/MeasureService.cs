@@ -66,6 +66,10 @@ namespace Grand.Services.Directory
         /// </summary>
         private const string MEASUREUNITS_PATTERN_KEY = "Grand.measureunit.";
 
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
+        private const string PRODUCTS_PATTERN_KEY = "Grand.product.";
         #endregion
 
         #region Fields
@@ -482,6 +486,7 @@ namespace Grand.Services.Directory
             _measureUnitRepository.Delete(measureUnit);
 
             _cacheManager.RemoveByPattern(MEASUREUNITS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityDeleted(measureUnit);
