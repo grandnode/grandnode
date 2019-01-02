@@ -24,6 +24,7 @@ namespace Grand.Plugin.Shipping.ByWeight
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly ISettingService _settingService;
         private readonly IWebHelper _webHelper;
+        private readonly IWorkContext _workContext;
         #endregion
 
         #region Ctor
@@ -32,13 +33,15 @@ namespace Grand.Plugin.Shipping.ByWeight
             IPriceCalculationService priceCalculationService,
             ShippingByWeightSettings shippingByWeightSettings,
             ISettingService settingService,
-            IWebHelper webHelper)
+            IWebHelper webHelper,
+            IWorkContext workContext)
         {
             this._shippingService = shippingService;
             this._storeContext = storeContext;
             this._priceCalculationService = priceCalculationService;
             this._settingService = settingService;
             this._webHelper = webHelper;
+            this._workContext = workContext;
         }
         #endregion
 
@@ -126,7 +129,7 @@ namespace Grand.Plugin.Shipping.ByWeight
             }
             decimal weight = _shippingService.GetTotalWeight(getShippingOptionRequest);
 
-            var shippingMethods = _shippingService.GetAllShippingMethods(countryId);
+            var shippingMethods = _shippingService.GetAllShippingMethods(countryId, _workContext.CurrentCustomer);
             foreach (var shippingMethod in shippingMethods)
             {
                 decimal? rate = GetRate(subTotal, weight, shippingMethod.Id,
