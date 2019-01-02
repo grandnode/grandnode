@@ -64,11 +64,20 @@ namespace Grand.Api.Infrastructure
             builder.EntitySet<ProductDto>("Product");
             var product = builder.EntityType<ProductDto>();
             product.Count().Filter().OrderBy().Page();
+            builder.ComplexType<ProductCategoryDto>();
+            builder.ComplexType<ProductManufacturerDto>();
+            builder.ComplexType<ProductPictureDto>();
+            builder.ComplexType<ProductSpecificationAttributeDto>();
+            builder.ComplexType<ProductTierPriceDto>();
+            builder.ComplexType<ProductWarehouseInventoryDto>();
+            builder.ComplexType<ProductAttributeMappingDto>();
+            builder.ComplexType<ProductAttributeValueDto>();
+            builder.ComplexType<ProductAttributeCombinationDto>();
 
             //update stock for product
             ActionConfiguration updateStock = product.Action("UpdateStock");
             updateStock.Parameter<string>("WarehouseId");
-            updateStock.Parameter<int>("Stock");
+            updateStock.Parameter<int>("Stock").Required();
             updateStock.Returns<bool>();
 
             #endregion

@@ -4,12 +4,26 @@ using Grand.Core.Domain.Catalog;
 using Grand.Framework.Mvc.Models;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
+using System.Collections.Generic;
 
 namespace Grand.Api.DTOs.Catalog
 {
     [Validator(typeof(ProductValidator))]
-    public partial class ProductDto: BaseApiEntityModel
+    public partial class ProductDto : BaseApiEntityModel
     {
+        public ProductDto()
+        {
+            this.Categories = new List<ProductCategoryDto>();
+            this.Manufacturers = new List<ProductManufacturerDto>();
+            this.Pictures = new List<ProductPictureDto>();
+            this.SpecificationAttribute = new List<ProductSpecificationAttributeDto>();
+            this.TierPrices = new List<ProductTierPriceDto>();
+            this.WarehouseInventory = new List<ProductWarehouseInventoryDto>();
+            this.AttributeMappings = new List<ProductAttributeMappingDto>();
+            this.AttributeCombinations = new List<ProductAttributeCombinationDto>();
+            this.Tags = new List<string>();
+            this.AppliedDiscounts = new List<string>();
+        }
         [BsonElement("ProductTypeId")]
         public ProductType ProductType { get; set; }
         public string ParentGroupedProductId { get; set; }
@@ -126,6 +140,24 @@ namespace Grand.Api.DTOs.Catalog
         public int Sold { get; set; }
         public Int64 Viewed { get; set; }
         public int OnSale { get; set; }
-        public string Flag { get; set; }        
+        public string Flag { get; set; }
+        [BsonElement("ProductCategories")]
+        public IList<ProductCategoryDto> Categories { get; set; }
+        [BsonElement("ProductManufacturers")]
+        public IList<ProductManufacturerDto> Manufacturers { get; set; }
+        [BsonElement("ProductPictures")]
+        public IList<ProductPictureDto> Pictures { get; set; }
+        [BsonElement("ProductSpecificationAttributes")]
+        public IList<ProductSpecificationAttributeDto> SpecificationAttribute { get; set; }
+        public IList<ProductTierPriceDto> TierPrices { get; set; }
+        [BsonElement("ProductWarehouseInventory")]
+        public IList<ProductWarehouseInventoryDto> WarehouseInventory { get; set; }
+        [BsonElement("ProductAttributeMappings")]
+        public IList<ProductAttributeMappingDto> AttributeMappings { get; set; }
+        [BsonElement("ProductAttributeCombinations")]
+        public IList<ProductAttributeCombinationDto> AttributeCombinations { get; set; }
+        [BsonElement("ProductTags")]
+        public IList<string> Tags { get; set; }
+        public IList<string> AppliedDiscounts { get; set; }
     }
 }
