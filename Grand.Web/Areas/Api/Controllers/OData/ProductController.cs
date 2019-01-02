@@ -3,6 +3,7 @@ using Grand.Api.Services;
 using Grand.Services.Security;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace Grand.Web.Areas.Api.Controllers.OData
 {
@@ -67,6 +68,36 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             _productApiService.DeleteProduct(product);
 
             return Ok();
+        }
+
+        //odata/Product(id)/UpdateStock
+        //body: { "WarehouseId": "", "Stock": 10 }
+        [HttpPost]
+        public IActionResult UpdateStock(string key, [FromBody] ODataActionParameters parameters)
+        {
+            if (!_permissionService.Authorize(PermissionSystemName.Customers))
+                return Forbid();
+
+            var product = _productApiService.GetById(key);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            if (parameters == null)
+                return NotFound();
+
+            var warehouseId = parameters.FirstOrDefault(x => x.Key == "WarehouseId").Value;
+            var stock = parameters.FirstOrDefault(x => x.Key == "Stock").Value;
+            if (stock != null)
+            {
+                if (int.TryParse(stock.ToString(), out int stockqty))
+                {
+                    _productApiService.UpdateStock(product, warehouseId?.ToString(), stockqty);
+                    return Ok(true);
+                }
+            }
+            return Ok(false);
         }
     }
 }

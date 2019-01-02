@@ -62,9 +62,17 @@ namespace Grand.Api.Infrastructure
             #region Product model
 
             builder.EntitySet<ProductDto>("Product");
-            builder.EntityType<ProductDto>().Count().Filter().OrderBy().Page();
+            var product = builder.EntityType<ProductDto>();
+            product.Count().Filter().OrderBy().Page();
+
+            //update stock for product
+            ActionConfiguration updateStock = product.Action("UpdateStock");
+            updateStock.Parameter<string>("WarehouseId");
+            updateStock.Parameter<int>("Stock");
+            updateStock.Returns<bool>();
 
             #endregion
+
             #region Category model
 
             builder.EntitySet<CategoryDto>("Category");

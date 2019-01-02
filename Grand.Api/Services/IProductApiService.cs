@@ -11,5 +11,6 @@ namespace Grand.Api.Services
         ProductDto InsertProduct(ProductDto model);
         ProductDto UpdateProduct(ProductDto model);
         void DeleteProduct(ProductDto model);
+        void UpdateStock(ProductDto model, string warehouseId, int stock);
     }
 }
