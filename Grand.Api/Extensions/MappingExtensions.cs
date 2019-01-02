@@ -19,7 +19,27 @@ namespace Grand.Api.Extensions
             return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
 
+        #region Product
+
+        public static ProductDto ToModel(this Product entity)
+        {
+            return entity.MapTo<Product, ProductDto>();
+        }
+
+        public static Product ToEntity(this ProductDto model)
+        {
+            return model.MapTo<ProductDto, Product>();
+        }
+
+        public static Product ToEntity(this ProductDto model, Product destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
+
         #region Category
+
         public static CategoryDto ToModel(this Category entity)
         {
             return entity.MapTo<Category, CategoryDto>();
@@ -34,6 +54,7 @@ namespace Grand.Api.Extensions
         {
             return model.MapTo(destination);
         }
+
         #endregion
 
         #region Manufacturer

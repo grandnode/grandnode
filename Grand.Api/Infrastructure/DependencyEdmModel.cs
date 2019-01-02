@@ -59,6 +59,12 @@ namespace Grand.Api.Infrastructure
 
         protected void RegisterCatalog(ODataConventionModelBuilder builder)
         {
+            #region Product model
+
+            builder.EntitySet<ProductDto>("Product");
+            builder.EntityType<ProductDto>().Count().Filter().OrderBy().Page();
+
+            #endregion
             #region Category model
 
             builder.EntitySet<CategoryDto>("Category");
