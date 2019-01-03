@@ -10,8 +10,7 @@ namespace Grand.Web.Services
         CustomerOrderListModel PrepareCustomerOrderList();
         OrderDetailsModel PrepareOrderDetails(Order order);
         ShipmentDetailsModel PrepareShipmentDetails(Shipment shipment);
-
         CustomerRewardPointsModel PrepareCustomerRewardPoints(Customer customer);
-
+        void InsertOrderNote(AddOrderNoteModel model);
     }
 }

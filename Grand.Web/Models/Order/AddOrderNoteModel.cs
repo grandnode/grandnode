@@ -7,6 +7,7 @@ namespace Grand.Web.Models.Order
     [Validator(typeof(AddOrderNoteValidator))]
     public class AddOrderNoteModel : BaseGrandModel
     {
+        public string OrderId { get; set; }
         public string Note { get; set; }
     }
 }

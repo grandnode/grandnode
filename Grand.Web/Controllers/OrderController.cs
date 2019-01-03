@@ -182,14 +182,22 @@ namespace Grand.Web.Controllers
         //My account / Order details page / Add order note
         public virtual IActionResult AddOrderNote(string orderId)
         {
+            if (!_orderSettings.AllowCustomerToAddOrderNote)
+                return RedirectToRoute("HomePage");
+
+            var order = _orderService.GetOrderById(orderId);
+            if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
+                return Challenge();
+
             var model = new AddOrderNoteModel();
+            model.OrderId = orderId;
             return View("AddOrderNote", model);
         }
 
         //My account / Order details page / Add order note
         [HttpPost]
         [PublicAntiForgery]
-        public virtual IActionResult AddOrderNote(string orderId, AddOrderNoteModel model)
+        public virtual IActionResult AddOrderNote(AddOrderNoteModel model)
         {
             if (!_orderSettings.AllowCustomerToAddOrderNote)
                 return RedirectToRoute("HomePage");
@@ -199,21 +207,14 @@ namespace Grand.Web.Controllers
                 return View("AddOrderNote", model);
             }
 
-            var order = _orderService.GetOrderById(orderId);
+            var order = _orderService.GetOrderById(model.OrderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return Challenge();
 
-            _orderService.InsertOrderNote(new OrderNote
-            {
-                CreatedOnUtc = DateTime.UtcNow,
-                DisplayToCustomer = true,
-                Note = model.Note,
-                OrderId = orderId,
-                CreatedByCustomer = true
-            });
+            _orderViewModelService.InsertOrderNote(model);
 
             AddNotification(Framework.UI.NotifyType.Success, _localizationService.GetResource("OrderNote.Added"), true);
-            return RedirectToRoute("OrderDetails", orderId);
+            return RedirectToRoute("OrderDetails", model.OrderId);
         }
 
         //My account / Order details page / re-order

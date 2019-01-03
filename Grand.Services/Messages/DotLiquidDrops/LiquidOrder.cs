@@ -32,7 +32,6 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private Order _order;
         private string _languageId;
         private Language _language;
-        private string _vendorId;
         private decimal _refundedAmount;
         private OrderNote _orderNote;
         private ICollection<LiquidOrderItem> _orderItems;
@@ -66,7 +65,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private readonly TaxSettings _taxSettings;
         private readonly CurrencySettings _currencySettings;
 
-        public LiquidOrder(Order order, string languageId = "", string vendorId = "", OrderNote orderNote = null, decimal refundedAmount = 0)
+        public LiquidOrder(Order order, string languageId = "", OrderNote orderNote = null, decimal refundedAmount = 0)
         {
             this._addressAttributeFormatter = EngineContext.Current.Resolve<IAddressAttributeFormatter>();
             this._paymentService = EngineContext.Current.Resolve<IPaymentService>();
@@ -87,7 +86,6 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
             this._order = order;
             this._languageId = languageId;
-            this._vendorId = vendorId;
             this._orderNote = orderNote;
             this._refundedAmount = refundedAmount;
             this._language = _languageService.GetLanguageById(_languageId);

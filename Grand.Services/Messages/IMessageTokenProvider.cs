@@ -16,8 +16,7 @@ namespace Grand.Services.Messages
     public partial interface IMessageTokenProvider
     {
         void AddStoreTokens(LiquidObject liquidObject, Store store, EmailAccount emailAccount);
-        void AddOrderTokens(LiquidObject liquidObject, Order order, string languageId,
-            string vendorId = "", OrderNote orderNote = null, decimal refundedAmount = 0);
+        void AddOrderTokens(LiquidObject liquidObject, Order order, string languageId, OrderNote orderNote = null, decimal refundedAmount = 0);
         void AddShipmentTokens(LiquidObject liquidObject, Shipment shipment, string languageId);
         void AddRecurringPaymentTokens(LiquidObject liquidObject, RecurringPayment recurringPayment);
         void AddReturnRequestTokens(LiquidObject liquidObject, ReturnRequest returnRequest, Order orderItem);

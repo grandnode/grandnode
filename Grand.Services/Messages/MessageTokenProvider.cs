@@ -14,7 +14,6 @@ using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Stores;
 using Grand.Core.Domain.Tax;
 using Grand.Core.Domain.Vendors;
-using Grand.Core.Infrastructure;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Customers;
@@ -191,10 +190,9 @@ namespace Grand.Services.Messages
             _eventPublisher.EntityTokensAdded(store, liquidStore, liquidObject);
         }
 
-        public void AddOrderTokens(LiquidObject liquidObject, Order order, string languageId,
-            string vendorId = "", OrderNote orderNote = null, decimal refundedAmount = 0)
+        public void AddOrderTokens(LiquidObject liquidObject, Order order, string languageId, OrderNote orderNote = null, decimal refundedAmount = 0)
         {
-            var liquidOrder = new LiquidOrder(order, languageId, vendorId, orderNote, refundedAmount);
+            var liquidOrder = new LiquidOrder(order, languageId, orderNote, refundedAmount);
             liquidObject.Order = liquidOrder;
 
             _eventPublisher.EntityTokensAdded(order, liquidOrder, liquidObject);

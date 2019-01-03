@@ -10,6 +10,7 @@ using Grand.Services.Directory;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Media;
+using Grand.Services.Messages;
 using Grand.Services.Orders;
 using Grand.Services.Payments;
 using Grand.Services.Seo;
@@ -557,6 +558,21 @@ namespace Grand.Web.Services
 
             return model;
         }
+        public virtual void InsertOrderNote(AddOrderNoteModel model)
+        {
+            var orderNote = new OrderNote
+            {
+                CreatedOnUtc = DateTime.UtcNow,
+                DisplayToCustomer = true,
+                Note = model.Note,
+                OrderId = model.OrderId,
+                CreatedByCustomer = true
+            };
+            _orderService.InsertOrderNote(orderNote);
 
+            //email
+            Core.Infrastructure.EngineContext.Current.Resolve<IWorkflowMessageService>().SendNewOrderNoteAddedCustomerNotification(
+                orderNote, _workContext.WorkingLanguage.Id);
+        }
     }
 }
