@@ -620,8 +620,9 @@ namespace Grand.Web.Infrastructure.Cache
         /// </summary>
         /// <remarks>
         /// {0} : language ID
+        /// {1} : current store ID
         /// </remarks>
-        public const string HOMEPAGE_POLLS_MODEL_KEY = "Grand.pres.poll.homepage-{0}";
+        public const string HOMEPAGE_POLLS_MODEL_KEY = "Grand.pres.poll.homepage-{0}-{1}";
         /// <summary>
         /// Key for polls by system name
         /// </summary>

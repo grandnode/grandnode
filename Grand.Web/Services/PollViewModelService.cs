@@ -86,7 +86,7 @@ namespace Grand.Web.Services
         }
         public virtual List<PollModel> PrepareHomePagePoll()
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.HOMEPAGE_POLLS_MODEL_KEY, _workContext.WorkingLanguage.Id);
+            var cacheKey = string.Format(ModelCacheEventConsumer.HOMEPAGE_POLLS_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
                 _pollService.GetPolls(_storeContext.CurrentStore.Id, true)
                 .Select(x => PreparePoll(x, false))
