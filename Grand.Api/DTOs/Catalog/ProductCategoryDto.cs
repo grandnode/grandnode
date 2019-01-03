@@ -1,9 +1,13 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using FluentValidation.Attributes;
+using Grand.Api.Validators.Catalog;
+using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Api.DTOs.Catalog
 {
-    public partial class ProductCategoryDto : BaseApiEntityModel
+    [Validator(typeof(ProductCategoryValidator))]
+    public partial class ProductCategoryDto
     {
+        [Key]
         public string CategoryId { get; set; }
         public bool IsFeaturedProduct { get; set; }
     }

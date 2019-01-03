@@ -5,12 +5,13 @@ using Grand.Core.Domain.Common;
 using Grand.Framework.Validators;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;
+using Grand.Services.Vendors;
 
 namespace Grand.Api.Validators.Catalog
 {
     public class ProductValidator : BaseGrandValidator<ProductDto>
     {
-        public ProductValidator(ILocalizationService localizationService, IProductService productService, IProductTemplateService productTemplateService, CommonSettings commonSettings)
+        public ProductValidator(ILocalizationService localizationService, IProductService productService, IProductTemplateService productTemplateService, IVendorService vendorService, CommonSettings commonSettings)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Api.Catalog.Product.Fields.Name.Required"));
             RuleFor(x => x.ProductType).IsInEnum().WithMessage(localizationService.GetResource("Api.Catalog.Product.Fields.ProductType.Required"));
@@ -48,6 +49,18 @@ namespace Grand.Api.Validators.Catalog
                 }
                 return true;
             }).WithMessage(localizationService.GetResource("Api.Catalog.Product.Fields.ProductTemplateId.NotExists"));
+
+            RuleFor(x => x).Must((x, context) =>
+            {
+                if (!string.IsNullOrEmpty(x.VendorId))
+                {
+                    var vendor = vendorService.GetVendorById(x.VendorId);
+                    if (vendor == null)
+                        return false;
+                }
+                return true;
+            }).WithMessage(localizationService.GetResource("Api.Catalog.Product.Fields.VendorId.NotExists"));
+
 
             RuleFor(x => x).Must((x, context) =>
             {

@@ -16,17 +16,20 @@ namespace Grand.Api.Services
     {
         private readonly IMongoDBContext _mongoDBContext;
         private readonly IProductService _productService;
+        private readonly ICategoryService _categoryService;
+        private readonly IManufacturerService _manufacturerService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
 
         private readonly IMongoCollection<ProductDto> _product;
 
-
-        public ProductApiService(IMongoDBContext mongoDBContext, IProductService productService, IUrlRecordService urlRecordService, 
-            IBackInStockSubscriptionService backInStockSubscriptionService)
+        public ProductApiService(IMongoDBContext mongoDBContext, IProductService productService, ICategoryService categoryService, IManufacturerService manufacturerService,
+            IUrlRecordService urlRecordService, IBackInStockSubscriptionService backInStockSubscriptionService)
         {
             _mongoDBContext = mongoDBContext;
             _productService = productService;
+            _categoryService = categoryService;
+            _manufacturerService = manufacturerService;
             _urlRecordService = urlRecordService;
             _backInStockSubscriptionService = backInStockSubscriptionService;
             _product = _mongoDBContext.Database().GetCollection<ProductDto>(typeof(Core.Domain.Catalog.Product).Name);
@@ -164,6 +167,71 @@ namespace Grand.Api.Services
                 }
                 BackInStockNotifications(product, prevStockQuantity, prevMultiWarehouseStock);
             }
+        }
+
+        public virtual void InsertProductCategory(ProductDto product, ProductCategoryDto model)
+        {
+            var productCategory = new ProductCategory
+            {
+                ProductId = product.Id,
+                CategoryId = model.CategoryId,
+                IsFeaturedProduct = model.IsFeaturedProduct,
+            };
+            _categoryService.InsertProductCategory(productCategory);
+        }
+        public virtual void UpdateProductCategory(ProductDto product, ProductCategoryDto model)
+        {
+            var productdb = _productService.GetProductById(product.Id);
+            var productCategory = productdb.ProductCategories.Where(x => x.CategoryId == model.CategoryId).FirstOrDefault();
+            if (productCategory == null)
+                throw new ArgumentException("No product category mapping found with the specified id");
+
+            productCategory.CategoryId = model.CategoryId;
+            productCategory.ProductId = product.Id;
+            productCategory.IsFeaturedProduct = model.IsFeaturedProduct;
+            _categoryService.UpdateProductCategory(productCategory);
+        }
+        public virtual void DeleteProductCategory(ProductDto product, string categoryId)
+        {
+            var productdb = _productService.GetProductById(product.Id);
+            var productCategory = productdb.ProductCategories.Where(x => x.CategoryId == categoryId).FirstOrDefault();
+            if (productCategory == null)
+                throw new ArgumentException("No product category mapping found with the specified id");
+
+            productCategory.ProductId = product.Id;
+            _categoryService.DeleteProductCategory(productCategory);
+        }
+        public virtual void InsertProductManufacturer(ProductDto product, ProductManufacturerDto model)
+        {
+            var productManufacturer = new ProductManufacturer
+            {
+                ProductId = product.Id,
+                ManufacturerId = model.ManufacturerId,
+                IsFeaturedProduct = model.IsFeaturedProduct,
+            };
+            _manufacturerService.InsertProductManufacturer(productManufacturer);
+        }
+        public virtual void UpdateProductManufacturer(ProductDto product, ProductManufacturerDto model)
+        {
+            var productdb = _productService.GetProductById(product.Id);
+            var productManufacturer = productdb.ProductManufacturers.Where(x => x.ManufacturerId == model.ManufacturerId).FirstOrDefault();
+            if (productManufacturer == null)
+                throw new ArgumentException("No product manufacturer mapping found with the specified id");
+
+            productManufacturer.ManufacturerId = model.ManufacturerId;
+            productManufacturer.ProductId = product.Id;
+            productManufacturer.IsFeaturedProduct = model.IsFeaturedProduct;
+            _manufacturerService.UpdateProductManufacturer(productManufacturer);
+        }
+        public virtual void DeleteProductManufacturer(ProductDto product, string manufacturerId)
+        {
+            var productdb = _productService.GetProductById(product.Id);
+            var productManufacturer = productdb.ProductManufacturers.Where(x => x.ManufacturerId == manufacturerId).FirstOrDefault();
+            if (productManufacturer == null)
+                throw new ArgumentException("No product manufacturer mapping found with the specified id");
+
+            productManufacturer.ProductId = product.Id;
+            _manufacturerService.DeleteProductManufacturer(productManufacturer);
         }
 
     }

@@ -80,6 +80,36 @@ namespace Grand.Api.Infrastructure
             updateStock.Parameter<int>("Stock").Required();
             updateStock.Returns<bool>();
 
+            //insert/update/delete category
+            #region Product category
+            ActionConfiguration createCategory = product.Action("CreateProductCategory");
+            createCategory.Parameter<ProductCategoryDto>("productCategory");
+            createCategory.Returns<bool>();
+
+            ActionConfiguration updateCategory = product.Action("UpdateProductCategory");
+            updateCategory.Parameter<ProductCategoryDto>("productCategory");
+            updateCategory.Returns<bool>();
+
+            ActionConfiguration deleteCategory = product.Action("DeleteProductCategory");
+            deleteCategory.Parameter<string>("CategoryId").Required();
+            deleteCategory.Returns<bool>();
+            #endregion
+
+            //insert/update/delete manufacturer
+            #region Product manufacturer
+            ActionConfiguration createManufacturer = product.Action("CreateProductManufacturer");
+            createManufacturer.Parameter<ProductManufacturerDto>("productManufacturer");
+            createManufacturer.Returns<bool>();
+
+            ActionConfiguration updateManufacturer = product.Action("UpdateProductManufacturer");
+            updateManufacturer.Parameter<ProductManufacturerDto>("productManufacturer");
+            updateManufacturer.Returns<bool>();
+
+            ActionConfiguration deleteManufacturer = product.Action("DeleteProductManufacturer");
+            deleteManufacturer.Parameter<string>("ManufacturerId").Required();
+            deleteManufacturer.Returns<bool>();
+            #endregion
+
             #endregion
 
             #region Category model
