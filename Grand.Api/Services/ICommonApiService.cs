@@ -10,6 +10,9 @@ namespace Grand.Api.Services
         IMongoQueryable<StoreDto> GetStores();
         IMongoQueryable<CountryDto> GetCountries();
         IMongoQueryable<StateProvinceDto> GetStates();
+        IMongoQueryable<PictureDto> GetPictures();
+        PictureDto InsertPicture(PictureDto pictureDto);
+        void DeletePicture(PictureDto pictureDto);
         IMongoQueryable<MessageTemplateDto> GetCategoryMessageTemplate();
         IMongoQueryable<MessageTemplateDto> GetManufacturerMessageTemplate();
         IMongoQueryable<MessageTemplateDto> GetProductMessageTemplate();

@@ -55,12 +55,16 @@ namespace Grand.Api.Infrastructure
             builder.EntityType<MessageTemplateDto>().Count().Filter().OrderBy().Page();
 
             #endregion
+
+            #region Picture model
+
+            builder.EntitySet<PictureDto>("Picture");
+            builder.EntityType<PictureDto>().Count().Filter().OrderBy().Page();
+
+            #endregion
         }
-
-        protected void RegisterCatalog(ODataConventionModelBuilder builder)
+        protected void RegisterProduct(ODataConventionModelBuilder builder)
         {
-            #region Product model
-
             builder.EntitySet<ProductDto>("Product");
             var product = builder.EntityType<ProductDto>();
             product.Count().Filter().OrderBy().Page();
@@ -110,8 +114,38 @@ namespace Grand.Api.Infrastructure
             deleteManufacturer.Returns<bool>();
             #endregion
 
+            //insert/update/delete picture
+            #region Product picture
+            ActionConfiguration createPicture = product.Action("CreateProductPicture");
+            createPicture.Parameter<ProductPictureDto>("productPicture");
+            createPicture.Returns<bool>();
+
+            ActionConfiguration updatePicture = product.Action("UpdateProductPicture");
+            updatePicture.Parameter<ProductPictureDto>("productPicture");
+            updatePicture.Returns<bool>();
+
+            ActionConfiguration deletePicture = product.Action("DeleteProductPicture");
+            deletePicture.Parameter<string>("PictureId").Required();
+            deletePicture.Returns<bool>();
             #endregion
 
+            #region Product specification
+            ActionConfiguration createSpecification = product.Action("CreateProductSpecification");
+            createSpecification.Parameter<ProductSpecificationAttributeDto>("productSpecification");
+            createSpecification.Returns<bool>();
+
+            ActionConfiguration updateSpecification = product.Action("UpdateProductSpecification");
+            updateSpecification.Parameter<ProductSpecificationAttributeDto>("productSpecification");
+            updateSpecification.Returns<bool>();
+
+            ActionConfiguration deleteSpecification = product.Action("DeleteProductSpecification");
+            deleteSpecification.Parameter<string>("Id").Required();
+            deleteSpecification.Returns<bool>();
+            #endregion
+        }
+
+        protected void RegisterCatalog(ODataConventionModelBuilder builder)
+        {
             #region Category model
 
             builder.EntitySet<CategoryDto>("Category");
@@ -214,6 +248,7 @@ namespace Grand.Api.Infrastructure
             if (apiConfig.SystemModel)
             {
                 RegisterCommon(builder);
+                RegisterProduct(builder);
                 RegisterCatalog(builder);
                 RegisterCustomers(builder);
                 RegisterShipping(builder);

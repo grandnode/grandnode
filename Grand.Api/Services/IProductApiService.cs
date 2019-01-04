@@ -20,5 +20,14 @@ namespace Grand.Api.Services
         void InsertProductManufacturer(ProductDto product, ProductManufacturerDto model);
         void UpdateProductManufacturer(ProductDto product, ProductManufacturerDto model);
         void DeleteProductManufacturer(ProductDto product, string manufacturerId);
+
+        void InsertProductPicture(ProductDto product, ProductPictureDto model);
+        void UpdateProductPicture(ProductDto product, ProductPictureDto model);
+        void DeleteProductPicture(ProductDto product, string pictureId);
+
+        void InsertProductSpecification(ProductDto product, ProductSpecificationAttributeDto model);
+        void UpdateProductSpecification(ProductDto product, ProductSpecificationAttributeDto model);
+        void DeleteProductSpecification(ProductDto product, string id);
+
     }
 }

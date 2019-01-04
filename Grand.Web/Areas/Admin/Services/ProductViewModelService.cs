@@ -2796,7 +2796,6 @@ namespace Grand.Web.Areas.Admin.Services
 
             _productService.UpdateProductPicture(productPicture);
 
-
             _pictureService.UpdatePicture(picture.Id,
                 _pictureService.LoadPictureBinary(picture),
                 picture.MimeType,

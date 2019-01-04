@@ -1,5 +1,5 @@
 ﻿using Grand.Api.Infrastructure.Extensions;
-using Grand.Api.Utilities;
+using Grand.Api.Jwt;
 using Grand.Core.Configuration;
 using System.Collections.Generic;
 using System.Threading.Tasks;

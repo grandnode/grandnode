@@ -1,8 +1,10 @@
 ﻿using Grand.Api.DTOs.Catalog;
+using Grand.Api.DTOs.Common;
 using Grand.Api.DTOs.Customers;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
+using Grand.Core.Domain.Media;
 using Grand.Core.Infrastructure.Mapper;
 
 namespace Grand.Api.Extensions
@@ -163,6 +165,15 @@ namespace Grand.Api.Extensions
             return model.MapTo(destination);
         }
 
+
+        #endregion
+
+        #region Picture
+
+        public static PictureDto ToModel(this Picture entity)
+        {
+            return entity.MapTo<Picture, PictureDto>();
+        }
 
         #endregion
     }

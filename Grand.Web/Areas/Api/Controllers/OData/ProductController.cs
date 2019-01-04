@@ -100,9 +100,14 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             return Ok(false);
         }
 
+        #region Product category
+
         [HttpPost]
         public IActionResult CreateProductCategory(string key, [FromBody] ProductCategoryDto productCategory)
         {
+            if (productCategory == null)
+                return NotFound();
+
             if (!_permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
@@ -118,9 +123,6 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
             if (ModelState.IsValid)
             {
-                if (productCategory == null)
-                    return NotFound();
-
                 _productApiService.InsertProductCategory(product, productCategory);
                 return Ok(true);
             }
@@ -129,6 +131,9 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         [HttpPost]
         public IActionResult UpdateProductCategory(string key, [FromBody] ProductCategoryDto productCategory)
         {
+            if (productCategory == null)
+                return NotFound();
+
             if (!_permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
@@ -144,24 +149,20 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
             if (ModelState.IsValid)
             {
-                if (productCategory == null)
-                    return NotFound();
-
                 _productApiService.UpdateProductCategory(product, productCategory);
 
                 return Ok(true);
             }
             return BadRequest(ModelState);
         }
-
         [HttpPost]
         public IActionResult DeleteProductCategory(string key, [FromBody] ODataActionParameters parameters)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
-                return Forbid();
-
             if (parameters == null)
                 return NotFound();
+
+            if (!_permissionService.Authorize(PermissionSystemName.Products))
+                return Forbid();
 
             var product = _productApiService.GetById(key);
             if (product == null)
@@ -186,9 +187,16 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             return NotFound();
         }
 
+        #endregion
+
+        #region Product manufacturer
+
         [HttpPost]
         public IActionResult CreateProductManufacturer(string key, [FromBody] ProductManufacturerDto productManufacturer)
         {
+            if (productManufacturer == null)
+                return NotFound();
+
             if (!_permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
@@ -204,9 +212,6 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
             if (ModelState.IsValid)
             {
-                if (productManufacturer == null)
-                    return NotFound();
-
                 _productApiService.InsertProductManufacturer(product, productManufacturer);
                 return Ok(true);
             }
@@ -215,6 +220,9 @@ namespace Grand.Web.Areas.Api.Controllers.OData
         [HttpPost]
         public IActionResult UpdateProductManufacturer(string key, [FromBody] ProductManufacturerDto productManufacturer)
         {
+            if (productManufacturer == null)
+                return NotFound();
+
             if (!_permissionService.Authorize(PermissionSystemName.Products))
                 return Forbid();
 
@@ -230,24 +238,20 @@ namespace Grand.Web.Areas.Api.Controllers.OData
 
             if (ModelState.IsValid)
             {
-                if (productManufacturer == null)
-                    return NotFound();
-
                 _productApiService.UpdateProductManufacturer(product, productManufacturer);
 
                 return Ok(true);
             }
             return BadRequest(ModelState);
         }
-
         [HttpPost]
         public IActionResult DeleteProductManufacturer(string key, [FromBody] ODataActionParameters parameters)
         {
-            if (!_permissionService.Authorize(PermissionSystemName.Products))
-                return Forbid();
-
             if (parameters == null)
                 return NotFound();
+
+            if (!_permissionService.Authorize(PermissionSystemName.Products))
+                return Forbid();
 
             var product = _productApiService.GetById(key);
             if (product == null)
@@ -271,5 +275,184 @@ namespace Grand.Web.Areas.Api.Controllers.OData
             }
             return NotFound();
         }
+
+        #endregion
+
+        #region Product picture
+
+        [HttpPost]
+        public IActionResult CreateProductPicture(string key, [FromBody] ProductPictureDto productPicture)
+        {
+            if (productPicture == null)
+                return NotFound();
+
+            if (!_permissionService.Authorize(PermissionSystemName.Products))
+                return Forbid();
+
+            var product = _productApiService.GetById(key);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            var pp = product.Pictures.Where(x => x.PictureId == productPicture.PictureId).FirstOrDefault();
+            if (pp != null)
+                ModelState.AddModelError("", "Product picture mapping found with the specified pictureid");
+
+            if (ModelState.IsValid)
+            {
+                _productApiService.InsertProductPicture(product, productPicture);
+                return Ok(true);
+            }
+            return BadRequest(ModelState);
+        }
+        [HttpPost]
+        public IActionResult UpdateProductPicture(string key, [FromBody] ProductPictureDto productPicture)
+        {
+            if (productPicture == null)
+                return NotFound();
+
+            if (!_permissionService.Authorize(PermissionSystemName.Products))
+                return Forbid();
+
+            var product = _productApiService.GetById(key);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            var pp = product.Pictures.Where(x => x.PictureId == productPicture.PictureId).FirstOrDefault();
+            if (pp == null)
+                ModelState.AddModelError("", "No product picture mapping found with the specified id");
+
+            if (ModelState.IsValid)
+            {
+                _productApiService.UpdateProductPicture(product, productPicture);
+                return Ok(true);
+            }
+            return BadRequest(ModelState);
+        }
+        [HttpPost]
+        public IActionResult DeleteProductPicture(string key, [FromBody] ODataActionParameters parameters)
+        {
+            if (parameters == null)
+                return NotFound();
+
+            if (!_permissionService.Authorize(PermissionSystemName.Products))
+                return Forbid();
+
+            var product = _productApiService.GetById(key);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            var pictureId = parameters.FirstOrDefault(x => x.Key == "PictureId").Value;
+            if (pictureId != null)
+            {
+                var pp = product.Pictures.Where(x => x.PictureId == pictureId.ToString()).FirstOrDefault();
+                if (pp == null)
+                    ModelState.AddModelError("", "No product picture mapping found with the specified id");
+
+                if (ModelState.IsValid)
+                {
+                    _productApiService.DeleteProductPicture(product, pictureId.ToString());
+                    return Ok(true);
+                }
+                return BadRequest(ModelState);
+            }
+            return NotFound();
+        }
+
+        #endregion
+
+        #region Product specification
+
+        [HttpPost]
+        public IActionResult CreateProductSpecification(string key, [FromBody] ProductSpecificationAttributeDto productSpecification)
+        {
+            if (productSpecification == null)
+                return NotFound();
+
+            if (!_permissionService.Authorize(PermissionSystemName.Products))
+                return Forbid();
+
+            var product = _productApiService.GetById(key);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            var psa = product.SpecificationAttribute.Where(x => x.Id == productSpecification.Id).FirstOrDefault();
+            if (psa != null)
+                ModelState.AddModelError("", "Product specification mapping found with the specified id");
+
+            if (ModelState.IsValid)
+            {
+                _productApiService.InsertProductSpecification(product, productSpecification);
+                return Ok(true);
+            }
+            return BadRequest(ModelState);
+        }
+        [HttpPost]
+        public IActionResult UpdateProductSpecification(string key, [FromBody] ProductSpecificationAttributeDto productSpecification)
+        {
+            if (productSpecification == null)
+                return NotFound();
+
+            if (!_permissionService.Authorize(PermissionSystemName.Products))
+                return Forbid();
+
+            var product = _productApiService.GetById(key);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            var psa = product.SpecificationAttribute.Where(x => x.Id == productSpecification.Id).FirstOrDefault();
+            if (psa == null)
+                ModelState.AddModelError("", "No product specification mapping found with the specified id");
+
+            if (ModelState.IsValid)
+            {
+                _productApiService.UpdateProductSpecification(product, productSpecification);
+                return Ok(true);
+            }
+            return BadRequest(ModelState);
+        }
+        [HttpPost]
+        public IActionResult DeleteProductSpecification(string key, [FromBody] ODataActionParameters parameters)
+        {
+            if (parameters == null)
+                return NotFound();
+
+            if (!_permissionService.Authorize(PermissionSystemName.Products))
+                return Forbid();
+
+            var product = _productApiService.GetById(key);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            var specificationId = parameters.FirstOrDefault(x => x.Key == "Id").Value;
+            if (specificationId != null)
+            {
+                var psa = product.SpecificationAttribute.Where(x => x.Id == specificationId.ToString()).FirstOrDefault();
+                if (psa == null)
+                    ModelState.AddModelError("", "No product picture specification found with the specified id");
+
+                if (ModelState.IsValid)
+                {
+                    _productApiService.DeleteProductSpecification(product, specificationId.ToString());
+                    return Ok(true);
+                }
+                return BadRequest(ModelState);
+            }
+            return NotFound();
+        }
+
+        #endregion
+
     }
 }

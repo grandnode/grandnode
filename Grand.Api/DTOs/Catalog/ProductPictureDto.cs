@@ -1,9 +1,13 @@
-﻿using Grand.Framework.Mvc.Models;
+﻿using FluentValidation.Attributes;
+using Grand.Api.Validators.Catalog;
+using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Api.DTOs.Catalog
 {
-    public partial class ProductPictureDto : BaseApiEntityModel
+    [Validator(typeof(ProductPictureValidator))]
+    public partial class ProductPictureDto
     {
+        [Key]
         public string PictureId { get; set; }
         public int DisplayOrder { get; set; }
         public string MimeType { get; set; }

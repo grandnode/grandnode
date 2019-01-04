@@ -3,6 +3,7 @@ using Grand.Api.Extensions;
 using Grand.Core.Domain.Catalog;
 using Grand.Data;
 using Grand.Services.Catalog;
+using Grand.Services.Media;
 using Grand.Services.Seo;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -18,18 +19,23 @@ namespace Grand.Api.Services
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
+        private readonly IPictureService _pictureService;
+        private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
 
         private readonly IMongoCollection<ProductDto> _product;
 
         public ProductApiService(IMongoDBContext mongoDBContext, IProductService productService, ICategoryService categoryService, IManufacturerService manufacturerService,
-            IUrlRecordService urlRecordService, IBackInStockSubscriptionService backInStockSubscriptionService)
+            IPictureService pictureService, ISpecificationAttributeService specificationAttributeService, IUrlRecordService urlRecordService,
+            IBackInStockSubscriptionService backInStockSubscriptionService)
         {
             _mongoDBContext = mongoDBContext;
             _productService = productService;
             _categoryService = categoryService;
             _manufacturerService = manufacturerService;
+            _pictureService = pictureService;
+            _specificationAttributeService = specificationAttributeService;
             _urlRecordService = urlRecordService;
             _backInStockSubscriptionService = backInStockSubscriptionService;
             _product = _mongoDBContext.Database().GetCollection<ProductDto>(typeof(Core.Domain.Catalog.Product).Name);
@@ -234,5 +240,124 @@ namespace Grand.Api.Services
             _manufacturerService.DeleteProductManufacturer(productManufacturer);
         }
 
+        public virtual void InsertProductPicture(ProductDto product, ProductPictureDto model)
+        {
+            var picture = _pictureService.GetPictureById(model.PictureId);
+            if (picture != null)
+            {
+                _pictureService.UpdatePicture(picture.Id, _pictureService.LoadPictureBinary(picture),
+                picture.MimeType,
+                picture.SeoFilename,
+                model.AltAttribute,
+                model.TitleAttribute);
+
+                _productService.InsertProductPicture(new ProductPicture
+                {
+                    PictureId = model.PictureId,
+                    ProductId = product.Id,
+                    DisplayOrder = model.DisplayOrder,
+                    AltAttribute = model.AltAttribute,
+                    MimeType = picture.MimeType,
+                    SeoFilename = model.SeoFilename,
+                    TitleAttribute = model.TitleAttribute
+                });
+                _pictureService.SetSeoFilename(model.PictureId, _pictureService.GetPictureSeName(product.Name));
+            }
+        }
+        public virtual void UpdateProductPicture(ProductDto product, ProductPictureDto model)
+        {
+            var productdb = _productService.GetProductById(product.Id);
+
+            var productPicture = productdb.ProductPictures.Where(x => x.PictureId == model.PictureId).FirstOrDefault();
+            if (productPicture == null)
+                throw new ArgumentException("No product picture found with the specified id");
+            productPicture.ProductId = product.Id;
+
+            var picture = _pictureService.GetPictureById(productPicture.PictureId);
+            if (picture == null)
+                throw new ArgumentException("No picture found with the specified id");
+
+            productPicture.DisplayOrder = model.DisplayOrder;
+            productPicture.MimeType = picture.MimeType;
+            productPicture.SeoFilename = model.SeoFilename;
+            productPicture.AltAttribute = model.AltAttribute;
+            productPicture.TitleAttribute = model.TitleAttribute;
+
+            _productService.UpdateProductPicture(productPicture);
+
+            _pictureService.UpdatePicture(picture.Id,
+                _pictureService.LoadPictureBinary(picture),
+                picture.MimeType,
+                model.SeoFilename,
+                model.AltAttribute,
+                model.TitleAttribute);
+        }
+        public virtual void DeleteProductPicture(ProductDto product, string pictureId)
+        {
+            var productdb = _productService.GetProductById(product.Id);
+
+            var productPicture = productdb.ProductPictures.Where(x => x.PictureId == pictureId).FirstOrDefault();
+            if (productPicture == null)
+                throw new ArgumentException("No product picture found with the specified pictureid");
+            productPicture.ProductId = product.Id;
+            _productService.DeleteProductPicture(productPicture);
+        }
+
+        public virtual void InsertProductSpecification(ProductDto product, ProductSpecificationAttributeDto model)
+        {
+            //we allow filtering only for "Option" attribute type
+            if (model.AttributeType != SpecificationAttributeType.Option)
+            {
+                model.AllowFiltering = false;
+                model.SpecificationAttributeOptionId = null;
+            }
+
+            var psa = new ProductSpecificationAttribute
+            {
+                AttributeTypeId = (int)model.AttributeType,
+                SpecificationAttributeOptionId = model.SpecificationAttributeOptionId,
+                SpecificationAttributeId = model.SpecificationAttributeId,
+                ProductId = product.Id,
+                CustomValue = model.CustomValue,
+                AllowFiltering = model.AllowFiltering,
+                ShowOnProductPage = model.ShowOnProductPage,
+                DisplayOrder = model.DisplayOrder,
+            };
+            _specificationAttributeService.InsertProductSpecificationAttribute(psa);
+        }
+        public virtual void UpdateProductSpecification(ProductDto product, ProductSpecificationAttributeDto model)
+        {
+            var productdb = _productService.GetProductById(product.Id);
+            var psa = productdb.ProductSpecificationAttributes.FirstOrDefault(x => x.Id == model.Id);
+            if (psa != null)
+            {
+                if (model.AttributeType == SpecificationAttributeType.Option)
+                {
+                    psa.AllowFiltering = model.AllowFiltering;
+                    psa.SpecificationAttributeOptionId = model.SpecificationAttributeOptionId;
+                }
+                else
+                {
+                    psa.CustomValue = model.CustomValue;
+                }
+                psa.SpecificationAttributeId = model.SpecificationAttributeId;
+                psa.SpecificationAttributeOptionId = model.SpecificationAttributeOptionId;
+                psa.AttributeTypeId = (int)model.AttributeType;
+                psa.ShowOnProductPage = model.ShowOnProductPage;
+                psa.DisplayOrder = model.DisplayOrder;
+                psa.ProductId = product.Id;
+                _specificationAttributeService.UpdateProductSpecificationAttribute(psa);
+            }
+        }
+        public virtual void DeleteProductSpecification(ProductDto product, string id)
+        {
+            var productdb = _productService.GetProductById(product.Id);
+            var psa = productdb.ProductSpecificationAttributes.FirstOrDefault(x => x.Id == id);
+            if (psa != null)
+            {
+                psa.ProductId = product.Id;
+                _specificationAttributeService.DeleteProductSpecificationAttribute(psa);
+            }
+        }
     }
 }

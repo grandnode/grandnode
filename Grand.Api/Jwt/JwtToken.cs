@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace Grand.Api.Utilities
+namespace Grand.Api.Jwt
 {
     public sealed class JwtToken
     {

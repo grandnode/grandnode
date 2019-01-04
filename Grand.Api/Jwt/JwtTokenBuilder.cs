@@ -5,7 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 
-namespace Grand.Api.Utilities
+namespace Grand.Api.Jwt
 {
     public sealed class JwtTokenBuilder
     {

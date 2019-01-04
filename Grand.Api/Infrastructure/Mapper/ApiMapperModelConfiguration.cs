@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Grand.Api.DTOs.Catalog;
+using Grand.Api.DTOs.Common;
 using Grand.Api.DTOs.Customers;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
+using Grand.Core.Domain.Media;
 using Grand.Core.Infrastructure.Mapper;
 using Grand.Services.Common;
 using System;
@@ -182,6 +184,15 @@ namespace Grand.Api.Infrastructure.Mapper
 
             #endregion
 
+            #region Picture
+
+            CreateMap<PictureDto, Picture>()
+                .ForMember(dest => dest.GenericAttributes, mo=> mo.Ignore());
+
+            CreateMap<Picture, PictureDto>()
+                .ForMember(dest => dest.PictureBinary, mo => mo.Ignore());
+
+            #endregion
         }
 
         public int Order => 1;
