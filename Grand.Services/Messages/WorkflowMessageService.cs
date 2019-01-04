@@ -340,7 +340,7 @@ namespace Grand.Services.Messages
 
             LiquidObject liquidObject = new LiquidObject();
             _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId);
+            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId, vendorId: vendor.Id);
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
             if (customer != null)
                 _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
@@ -505,7 +505,7 @@ namespace Grand.Services.Messages
 
             LiquidObject liquidObject = new LiquidObject();
             _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId);
+            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId, vendorId: vendor.Id);
             if (customer != null)
                 _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 

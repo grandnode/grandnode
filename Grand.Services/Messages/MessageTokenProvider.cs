@@ -190,9 +190,9 @@ namespace Grand.Services.Messages
             _eventPublisher.EntityTokensAdded(store, liquidStore, liquidObject);
         }
 
-        public void AddOrderTokens(LiquidObject liquidObject, Order order, string languageId, OrderNote orderNote = null, decimal refundedAmount = 0)
+        public void AddOrderTokens(LiquidObject liquidObject, Order order, string languageId, OrderNote orderNote = null, string vendorId = "", decimal refundedAmount = 0)
         {
-            var liquidOrder = new LiquidOrder(order, languageId, orderNote, refundedAmount);
+            var liquidOrder = new LiquidOrder(order, languageId, orderNote, vendorId, refundedAmount);
             liquidObject.Order = liquidOrder;
 
             _eventPublisher.EntityTokensAdded(order, liquidOrder, liquidObject);

@@ -65,7 +65,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private readonly TaxSettings _taxSettings;
         private readonly CurrencySettings _currencySettings;
 
-        public LiquidOrder(Order order, string languageId = "", OrderNote orderNote = null, decimal refundedAmount = 0)
+        public LiquidOrder(Order order, string languageId = "", OrderNote orderNote = null, string vendorId = "", decimal refundedAmount = 0)
         {
             this._addressAttributeFormatter = EngineContext.Current.Resolve<IAddressAttributeFormatter>();
             this._paymentService = EngineContext.Current.Resolve<IPaymentService>();
@@ -91,7 +91,14 @@ namespace Grand.Services.Messages.DotLiquidDrops
             this._language = _languageService.GetLanguageById(_languageId);
 
             this._orderItems = new List<LiquidOrderItem>();
-            foreach (var orderItem in order.OrderItems)
+            var tempItems = order.OrderItems.ToList();
+
+            if (!string.IsNullOrEmpty(vendorId))
+            {
+                tempItems = tempItems.Where(x => x.VendorId == vendorId).ToList();
+            }
+
+            foreach (var orderItem in tempItems)
             {
                 this._orderItems.Add(new LiquidOrderItem(orderItem, order, languageId));
             }
