@@ -424,7 +424,7 @@ namespace Grand.Web.Services
                     orderItemModel.UnitPrice = _priceFormatter.FormatPrice(unitPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, _workContext.WorkingLanguage, false);
                     orderItemModel.UnitPriceValue = unitPriceExclTaxInCustomerCurrency;
 
-                    var unitPriceExclWithDiscTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceWithoutDiscInclTax, order.CurrencyRate);
+                    var unitPriceExclWithDiscTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceWithoutDiscExclTax, order.CurrencyRate);
                     orderItemModel.UnitPriceWithoutDiscount = _priceFormatter.FormatPrice(unitPriceExclWithDiscTaxInCustomerCurrency, true, order.CustomerCurrencyCode, _workContext.WorkingLanguage, true);
                     orderItemModel.UnitPriceWithoutDiscountValue = unitPriceExclWithDiscTaxInCustomerCurrency;
 

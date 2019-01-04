@@ -229,6 +229,9 @@ namespace Grand.Services.Tax
             {
                 result = price - (price) / (100 + percent) * percent;
             }
+            if (result == decimal.Zero)
+                return 0;
+
             return result;
         }
 
