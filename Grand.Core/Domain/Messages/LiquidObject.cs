@@ -15,7 +15,7 @@ namespace Grand.Core.Domain.Messages
 
         public Drop AttributeCombination { get; set; }
 
-        public Drop Auction { get; set; }
+        public Drop Auctions { get; set; }
 
         public Drop BackInStockSubscription { get; set; }
 

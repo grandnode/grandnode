@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops
 {
-    public partial class LiquidAuction : Drop
+    public partial class LiquidAuctions : Drop
     {
         private Product _product;
         private Bid _bid;
@@ -17,7 +17,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
 
-        public LiquidAuction(Product product, Bid bid = null)
+        public LiquidAuctions(Product product, Bid bid = null)
         {
             this._priceFormatter = EngineContext.Current.Resolve<IPriceFormatter>();
             this._currencyService = EngineContext.Current.Resolve<ICurrencyService>();

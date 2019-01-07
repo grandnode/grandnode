@@ -134,7 +134,7 @@ namespace Grand.Services.Messages
             var allowedTokens = LiquidExtensions.GetTokens(
                 typeof(LiquidAskQuestion),
                 typeof(LiquidAttributeCombination),
-                typeof(LiquidAuction),
+                typeof(LiquidAuctions),
                 typeof(LiquidBackInStockSubscription),
                 typeof(LiquidBlogComment),
                 typeof(LiquidContactUs),
@@ -348,10 +348,10 @@ namespace Grand.Services.Messages
 
         public void AddAuctionTokens(LiquidObject liquidObject, Product product, Bid bid)
         {
-            var liquidAuction = new LiquidAuction(product, bid);
-            liquidObject.Auction = liquidAuction;
+            var liquidAuctions = new LiquidAuctions(product, bid);
+            liquidObject.Auctions = liquidAuctions;
 
-            _eventPublisher.EntityTokensAdded(bid, liquidAuction, liquidObject);
+            _eventPublisher.EntityTokensAdded(bid, liquidAuctions, liquidObject);
         }
 
         #endregion
