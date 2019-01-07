@@ -322,7 +322,7 @@
                                                         location.href='@Url.RouteUrl("Checkout")'
                                                     }
                                                 });
-                                                $('#checkout').click(function () {
+                                                $('#checkout').click(function (e) {
                                                     //terms of service
                                                     if (checkTermOfService()) {
                                                         $('#shopping-cart-form').attr('action', '@Url.RouteUrl("StartCheckout")');
