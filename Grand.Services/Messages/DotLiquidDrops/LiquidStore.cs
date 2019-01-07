@@ -30,7 +30,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get { return _store.GetLocalized(x => x.Name); }
         }
 
-        public string Url
+        public string URL
         {
             get { return _store.Url; }
         }
