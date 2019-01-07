@@ -1384,7 +1384,7 @@ namespace Grand.Web.Services
 
             model.StartPrice = product.StartPrice;
             model.HighestBidValue = product.HighestBid;
-            model.AddToCart.IsAuction = true;
+            model.AddToCart.IsAuction = product.ProductType == ProductType.Auction; ;
             model.EndTime = product.AvailableEndDateTimeUtc;
             model.AuctionEnded = product.AuctionEnded;
 
