@@ -1,5 +1,6 @@
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Payments;
+using Grand.Services.Discounts;
 using Grand.Services.Orders;
 using System;
 using System.Collections.Generic;
@@ -61,8 +62,9 @@ namespace Grand.Services.Payments
             if (usePercentage)
             {
                 //percentage
-                var orderTotalWithoutPaymentFee = orderTotalCalculationService.GetShoppingCartTotal(cart, usePaymentMethodAdditionalFee: false);
-                result = (decimal)((((float)orderTotalWithoutPaymentFee) * ((float)fee)) / 100f);
+                orderTotalCalculationService.GetShoppingCartSubTotal(cart, true, out decimal discountAmount, out List<AppliedDiscount> appliedDiscounts,
+                    out decimal subTotalWithoutDiscount, out decimal subTotalWithDiscount);
+                result = (decimal)((((float)subTotalWithDiscount) * ((float)fee)) / 100f);
             }
             else
             {
