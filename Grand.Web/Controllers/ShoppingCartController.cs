@@ -298,7 +298,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("HomePage");
 
             var item = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart && sci.Id == id)
+                .Where(sci => (sci.ShoppingCartType == ShoppingCartType.ShoppingCart) && sci.Id == id)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .FirstOrDefault();
 
@@ -320,7 +320,7 @@ namespace Grand.Web.Controllers
             else
             {
                 var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
                 .LimitPerStore(_storeContext.CurrentStore.Id).ToList();
 
                 var shoppingcartmodel = new ShoppingCartModel();
