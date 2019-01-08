@@ -293,6 +293,7 @@ namespace Grand.Framework.Infrastructure.Extensions
             //add MiniProfiler services
             services.AddMiniProfiler(options => {
                 options.IgnoredPaths.Add("/api");
+                options.IgnoredPaths.Add("/odata");
                 var memoryCache = EngineContext.Current.Resolve<IMemoryCache>();
                 options.Storage = new StackExchange.Profiling.Storage.MemoryCacheStorage(memoryCache, TimeSpan.FromMinutes(60));
                 //determine who can access the MiniProfiler results
