@@ -36,29 +36,38 @@ namespace Grand.Api.Validators.Customers
             }).WithMessage(localizationService.GetResource("Api.Customers.CustomerRole.Fields.Id.NotExists"));
             RuleFor(x => x).Must((x, context) =>
             {
-                var customerRole = customerService.GetCustomerRoleById(x.Id);
-                if (customerRole.IsSystemRole && !x.Active)
+                if (!string.IsNullOrEmpty(x.Id))
                 {
-                    return false;
+                    var customerRole = customerService.GetCustomerRoleById(x.Id);
+                    if (customerRole.IsSystemRole && !x.Active)
+                    {
+                        return false;
+                    }
                 }
                 return true;
             }).WithMessage(localizationService.GetResource("Api.Customers.CustomerRoles.Fields.Active.CantEditSystem"));
             RuleFor(x => x).Must((x, context) =>
             {
-                var customerRole = customerService.GetCustomerRoleById(x.Id);
-                if (customerRole.IsSystemRole && !customerRole.SystemName.Equals(x.SystemName, StringComparison.OrdinalIgnoreCase))
+                if (!string.IsNullOrEmpty(x.Id))
                 {
-                    return false;
+                    var customerRole = customerService.GetCustomerRoleById(x.Id);
+                    if (customerRole.IsSystemRole && !customerRole.SystemName.Equals(x.SystemName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return false;
+                    }
                 }
                 return true;
             }).WithMessage(localizationService.GetResource("Api.Customers.CustomerRoles.Fields.SystemName.CantEditSystem"));
             RuleFor(x => x).Must((x, context) =>
             {
-                var customerRole = customerService.GetCustomerRoleById(x.Id);
-                if (SystemCustomerRoleNames.Registered.Equals(customerRole.SystemName, StringComparison.OrdinalIgnoreCase) &&
-                        !String.IsNullOrEmpty(x.PurchasedWithProductId))
+                if (!string.IsNullOrEmpty(x.Id))
                 {
-                    return false;
+                    var customerRole = customerService.GetCustomerRoleById(x.Id);
+                    if (SystemCustomerRoleNames.Registered.Equals(customerRole.SystemName, StringComparison.OrdinalIgnoreCase) &&
+                            !String.IsNullOrEmpty(x.PurchasedWithProductId))
+                    {
+                        return false;
+                    }
                 }
                 return true;
             }).WithMessage(localizationService.GetResource("Api.Customers.CustomerRoles.Fields.PurchasedWithProduct.Registered"));
