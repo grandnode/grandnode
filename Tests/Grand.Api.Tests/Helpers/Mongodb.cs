@@ -1,4 +1,6 @@
-﻿using MongoDB.Bson.Serialization.Conventions;
+﻿using Grand.Services.Tests;
+using MongoDB.Bson.Serialization.Conventions;
+using MongoDB.Driver;
 
 namespace Grand.Api.Tests.Helpers
 {
@@ -9,6 +11,13 @@ namespace Grand.Api.Tests.Helpers
             var cp = new ConventionPack();
             cp.Add(new IgnoreExtraElementsConvention(true));
             ConventionRegistry.Register("ApplicationConventions", cp, t => true);
+        }
+
+        public static (IMongoClient client, IMongoDatabase database) MongoDbClient()
+        {
+            var client = DriverTestConfiguration.Client;
+            var database = client.GetDatabase(DriverTestConfiguration.DatabaseNamespace.DatabaseName);
+            return (client, database);
         }
     }
 }
