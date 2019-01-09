@@ -210,6 +210,13 @@ namespace Grand.Api.Infrastructure
             builder.EntityType<CustomerRoleDto>().Count().Filter().OrderBy().Page();
 
             #endregion
+
+            #region Vendors
+
+            builder.EntitySet<VendorDto>("Vendor");
+            builder.EntityType<VendorDto>().Count().Filter().OrderBy().Page();
+
+            #endregion
         }
 
         protected void RegisterShipping(ODataConventionModelBuilder builder)

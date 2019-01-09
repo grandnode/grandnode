@@ -1,8 +1,11 @@
 ﻿using Grand.Api.DTOs.Customers;
 using Grand.Api.Extensions;
 using Grand.Core.Domain.Customers;
+using Grand.Data;
 using Grand.Services.Common;
 using Grand.Services.Customers;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using System;
 using System.Linq;
 
@@ -10,12 +13,18 @@ namespace Grand.Api.Services
 {
     public partial class CustomerApiService : ICustomerApiService
     {
+        private readonly IMongoDBContext _mongoDBContext;
         private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
-        public CustomerApiService(ICustomerService customerService, IGenericAttributeService genericAttributeService)
+        private readonly IMongoCollection<VendorDto> _vendor;
+
+        public CustomerApiService(IMongoDBContext mongoDBContext, ICustomerService customerService, IGenericAttributeService genericAttributeService)
         {
+            _mongoDBContext = mongoDBContext;
             _customerService = customerService;
             _genericAttributeService = genericAttributeService;
+
+            _vendor = _mongoDBContext.Database().GetCollection<VendorDto>(typeof(Core.Domain.Vendors.Vendor).Name);
         }
 
         protected void SaveCustomerAttributes(CustomerDto model, Customer customer)
@@ -56,12 +65,11 @@ namespace Grand.Api.Services
                 var role = _customerService.GetCustomerRoleById(item);
                 if (role != null)
                 {
-                    customer.CustomerRoles.Remove(customer.CustomerRoles.FirstOrDefault(x=>x.Id == role.Id));
+                    customer.CustomerRoles.Remove(customer.CustomerRoles.FirstOrDefault(x => x.Id == role.Id));
                     role.CustomerId = customer.Id;
                     _customerService.DeleteCustomerRoleInCustomer(role);
                 }
             }
-
         }
 
         public virtual CustomerDto GetByEmail(string email)
@@ -130,5 +138,18 @@ namespace Grand.Api.Services
             _customerService.DeleteAddress(address);
         }
 
+        #region Vendors
+
+        public virtual VendorDto GetVendorById(string id)
+        {
+            return _vendor.AsQueryable().FirstOrDefault(x => x.Id == id);
+        }
+
+        public virtual IMongoQueryable<VendorDto> GetVendors()
+        {
+            return _vendor.AsQueryable();
+        }
+
+        #endregion
     }
 }
