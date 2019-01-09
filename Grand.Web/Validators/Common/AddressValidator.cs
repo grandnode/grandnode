@@ -75,7 +75,7 @@ namespace Grand.Web.Validators.Common
             }
             if (addressSettings.CityRequired && addressSettings.CityEnabled)
             {
-                RuleFor(x => x.City).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.City.Required"));
+                RuleFor(x => x.City).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.City.Required"));               
             }
             if (addressSettings.PhoneRequired && addressSettings.PhoneEnabled)
             {

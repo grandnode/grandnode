@@ -1322,9 +1322,9 @@ namespace Grand.Web.Controllers
                 }
                 else
                 {
+                    ModelState.Clear();
                     //new address
                     TryUpdateModelAsync(model.NewAddress, "ShippingNewAddress");
-
                     //custom address attributes
                     var customAttributes = _addressViewModelService.ParseCustomAddressAttributes(form);
                     var customAttributeWarnings = _addressViewModelService.GetAttributeWarnings(customAttributes);
