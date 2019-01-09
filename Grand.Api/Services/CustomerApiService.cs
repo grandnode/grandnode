@@ -109,6 +109,7 @@ namespace Grand.Api.Services
         public virtual AddressDto InsertAddress(CustomerDto customer, AddressDto model)
         {
             var address = model.ToEntity();
+            address.CreatedOnUtc = DateTime.UtcNow;
             address.Id = "";
             address.CustomerId = customer.Id;
             _customerService.InsertAddress(address);
