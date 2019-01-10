@@ -3,6 +3,8 @@ using Grand.Api.Extensions;
 using Grand.Core.Domain.Catalog;
 using Grand.Data;
 using Grand.Services.Catalog;
+using Grand.Services.Localization;
+using Grand.Services.Logging;
 using Grand.Services.Media;
 using Grand.Services.Seo;
 using MongoDB.Driver;
@@ -23,12 +25,14 @@ namespace Grand.Api.Services
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
+        private readonly ICustomerActivityService _customerActivityService;
+        private readonly ILocalizationService _localizationService;
 
         private readonly IMongoCollection<ProductDto> _product;
 
         public ProductApiService(IMongoDBContext mongoDBContext, IProductService productService, ICategoryService categoryService, IManufacturerService manufacturerService,
             IPictureService pictureService, ISpecificationAttributeService specificationAttributeService, IUrlRecordService urlRecordService,
-            IBackInStockSubscriptionService backInStockSubscriptionService)
+            IBackInStockSubscriptionService backInStockSubscriptionService, ICustomerActivityService customerActivityService, ILocalizationService localizationService)
         {
             _mongoDBContext = mongoDBContext;
             _productService = productService;
@@ -38,6 +42,9 @@ namespace Grand.Api.Services
             _specificationAttributeService = specificationAttributeService;
             _urlRecordService = urlRecordService;
             _backInStockSubscriptionService = backInStockSubscriptionService;
+            _customerActivityService = customerActivityService;
+            _localizationService = localizationService;
+
             _product = _mongoDBContext.Database().GetCollection<ProductDto>(typeof(Core.Domain.Catalog.Product).Name);
         }
 
@@ -111,6 +118,10 @@ namespace Grand.Api.Services
             //search engine name
             _urlRecordService.SaveSlug(product, model.SeName, "");
             _productService.UpdateProduct(product);
+
+            //activity log
+            _customerActivityService.InsertActivity("AddNewProduct", product.Id, _localizationService.GetResource("ActivityLog.AddNewProduct"), product.Name);
+
             return product.ToModel();
         }
 
@@ -124,15 +135,25 @@ namespace Grand.Api.Services
             product.SeName = model.SeName;
             //search engine name
             _urlRecordService.SaveSlug(product, model.SeName, "");
-
+            //update product
             _productService.UpdateProduct(product);
+
+            //activity log
+            _customerActivityService.InsertActivity("EditProduct", product.Id, _localizationService.GetResource("ActivityLog.EditProduct"), product.Name);
+
             return product.ToModel();
         }
         public virtual void DeleteProduct(ProductDto model)
         {
             var product = _productService.GetProductById(model.Id);
             if (product != null)
+            {
                 _productService.DeleteProduct(product);
+
+                //activity log
+                _customerActivityService.InsertActivity("DeleteProduct", product.Id, _localizationService.GetResource("ActivityLog.DeleteProduct"), product.Name);
+
+            }
         }
 
         public virtual void UpdateStock(ProductDto model, string warehouseId, int stock)
@@ -172,6 +193,10 @@ namespace Grand.Api.Services
                     }
                 }
                 BackInStockNotifications(product, prevStockQuantity, prevMultiWarehouseStock);
+
+                //activity log
+                _customerActivityService.InsertActivity("EditProduct", product.Id, _localizationService.GetResource("ActivityLog.EditProduct"), product.Name);
+
             }
         }
 

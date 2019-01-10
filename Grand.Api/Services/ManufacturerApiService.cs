@@ -2,6 +2,8 @@
 using Grand.Api.Extensions;
 using Grand.Data;
 using Grand.Services.Catalog;
+using Grand.Services.Localization;
+using Grand.Services.Logging;
 using Grand.Services.Media;
 using Grand.Services.Seo;
 using MongoDB.Driver;
@@ -17,15 +19,20 @@ namespace Grand.Api.Services
         private readonly IManufacturerService _manufacturerService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IPictureService _pictureService;
+        private readonly ICustomerActivityService _customerActivityService;
+        private readonly ILocalizationService _localizationService;
 
         private readonly IMongoCollection<ManufacturerDto> _manufacturer;
 
-        public ManufacturerApiService(IMongoDBContext mongoDBContext, IManufacturerService manufacturerService, IUrlRecordService urlRecordService, IPictureService pictureService)
+        public ManufacturerApiService(IMongoDBContext mongoDBContext, IManufacturerService manufacturerService, IUrlRecordService urlRecordService, IPictureService pictureService,
+            ICustomerActivityService customerActivityService, ILocalizationService localizationService)
         {
             _mongoDBContext = mongoDBContext;
             _manufacturerService = manufacturerService;
             _urlRecordService = urlRecordService;
             _pictureService = pictureService;
+            _customerActivityService = customerActivityService;
+            _localizationService = localizationService;
 
             _manufacturer = _mongoDBContext.Database().GetCollection<ManufacturerDto>(typeof(Core.Domain.Catalog.Manufacturer).Name);
         }
@@ -59,6 +66,9 @@ namespace Grand.Api.Services
             _manufacturerService.UpdateManufacturer(manufacturer);
             _urlRecordService.SaveSlug(manufacturer, model.SeName, "");
 
+            //activity log
+            _customerActivityService.InsertActivity("AddNewManufacturer", manufacturer.Id, _localizationService.GetResource("ActivityLog.AddNewManufacturer"), manufacturer.Name);
+
             return manufacturer.ToModel();
         }
 
@@ -88,6 +98,8 @@ namespace Grand.Api.Services
                 if (picture != null)
                     _pictureService.SetSeoFilename(picture.Id, _pictureService.GetPictureSeName(manufacturer.Name));
             }
+            //activity log
+            _customerActivityService.InsertActivity("EditManufacturer", manufacturer.Id, _localizationService.GetResource("ActivityLog.EditManufacturer"), manufacturer.Name);
 
             return manufacturer.ToModel();
         }
@@ -96,7 +108,12 @@ namespace Grand.Api.Services
         {
             var manufacturer = _manufacturerService.GetManufacturerById(model.Id);
             if (manufacturer != null)
+            {
                 _manufacturerService.DeleteManufacturer(manufacturer);
+
+                //activity log
+                _customerActivityService.InsertActivity("DeleteManufacturer", manufacturer.Id, _localizationService.GetResource("ActivityLog.DeleteManufacturer"), manufacturer.Name);
+            }
         }
 
        

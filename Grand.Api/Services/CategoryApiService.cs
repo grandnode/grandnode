@@ -2,6 +2,8 @@
 using Grand.Api.Extensions;
 using Grand.Data;
 using Grand.Services.Catalog;
+using Grand.Services.Localization;
+using Grand.Services.Logging;
 using Grand.Services.Media;
 using Grand.Services.Seo;
 using MongoDB.Driver;
@@ -17,15 +19,20 @@ namespace Grand.Api.Services
         private readonly ICategoryService _categoryService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IPictureService _pictureService;
+        private readonly ICustomerActivityService _customerActivityService;
+        private readonly ILocalizationService _localizationService;
 
         private readonly IMongoCollection<CategoryDto> _category;
 
-        public CategoryApiService(IMongoDBContext mongoDBContext, ICategoryService categoryService, IUrlRecordService urlRecordService, IPictureService pictureService)
+        public CategoryApiService(IMongoDBContext mongoDBContext, ICategoryService categoryService, IUrlRecordService urlRecordService, IPictureService pictureService,
+            ICustomerActivityService customerActivityService, ILocalizationService localizationService)
         {
             _mongoDBContext = mongoDBContext;
             _categoryService = categoryService;
             _urlRecordService = urlRecordService;
             _pictureService = pictureService;
+            _customerActivityService = customerActivityService;
+            _localizationService = localizationService;
 
             _category = _mongoDBContext.Database().GetCollection<CategoryDto>(typeof(Core.Domain.Catalog.Category).Name);
         }
@@ -58,6 +65,9 @@ namespace Grand.Api.Services
             _categoryService.UpdateCategory(category);
             _urlRecordService.SaveSlug(category, model.SeName, "");
 
+            //activity log
+            _customerActivityService.InsertActivity("AddNewCategory", category.Id, _localizationService.GetResource("ActivityLog.AddNewCategory"), category.Name);
+
             return category.ToModel();
         }
 
@@ -87,6 +97,8 @@ namespace Grand.Api.Services
                 if (picture != null)
                     _pictureService.SetSeoFilename(picture.Id, _pictureService.GetPictureSeName(category.Name));
             }
+            //activity log
+            _customerActivityService.InsertActivity("EditCategory", category.Id, _localizationService.GetResource("ActivityLog.EditCategory"), category.Name);
 
             return category.ToModel();
         }
@@ -95,7 +107,12 @@ namespace Grand.Api.Services
         {
             var category = _categoryService.GetCategoryById(model.Id);
             if (category != null)
+            {
                 _categoryService.DeleteCategory(category);
+
+                //activity log
+                _customerActivityService.InsertActivity("DeleteCategory", category.Id, _localizationService.GetResource("ActivityLog.DeleteCategory"), category.Name);
+            }
         }
 
        

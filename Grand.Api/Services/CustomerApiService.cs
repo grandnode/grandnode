@@ -4,6 +4,8 @@ using Grand.Core.Domain.Customers;
 using Grand.Data;
 using Grand.Services.Common;
 using Grand.Services.Customers;
+using Grand.Services.Localization;
+using Grand.Services.Logging;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -16,14 +18,19 @@ namespace Grand.Api.Services
         private readonly IMongoDBContext _mongoDBContext;
         private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly ICustomerActivityService _customerActivityService;
+        private readonly ILocalizationService _localizationService;
+
         private readonly IMongoCollection<VendorDto> _vendor;
 
-        public CustomerApiService(IMongoDBContext mongoDBContext, ICustomerService customerService, IGenericAttributeService genericAttributeService)
+        public CustomerApiService(IMongoDBContext mongoDBContext, ICustomerService customerService, IGenericAttributeService genericAttributeService,
+            ICustomerActivityService customerActivityService, ILocalizationService localizationService)
         {
             _mongoDBContext = mongoDBContext;
             _customerService = customerService;
             _genericAttributeService = genericAttributeService;
-
+            _customerActivityService = customerActivityService;
+            _localizationService = localizationService;
             _vendor = _mongoDBContext.Database().GetCollection<VendorDto>(typeof(Core.Domain.Vendors.Vendor).Name);
         }
 
@@ -94,6 +101,9 @@ namespace Grand.Api.Services
             _customerService.InsertCustomer(customer);
             SaveCustomerAttributes(model, customer);
             SaveCustomerRoles(model, customer);
+
+            //activity log
+            _customerActivityService.InsertActivity("AddNewCustomer", customer.Id, _localizationService.GetResource("ActivityLog.AddNewCustomer"), customer.Id);
             return customer.ToModel();
         }
 
@@ -104,6 +114,10 @@ namespace Grand.Api.Services
             _customerService.UpdateCustomer(customer);
             SaveCustomerAttributes(model, customer);
             SaveCustomerRoles(model, customer);
+
+            //activity log
+            _customerActivityService.InsertActivity("EditCustomer", customer.Id, _localizationService.GetResource("ActivityLog.EditCustomer"), customer.Id);
+
             return customer.ToModel();
         }
 
@@ -111,7 +125,11 @@ namespace Grand.Api.Services
         {
             var customer = _customerService.GetCustomerById(model.Id);
             if (customer != null)
+            {
                 _customerService.DeleteCustomer(customer);
+                //activity log
+                _customerActivityService.InsertActivity("DeleteCustomer", customer.Id, _localizationService.GetResource("ActivityLog.DeleteCustomer"), customer.Id);
+            }
         }
 
         public virtual AddressDto InsertAddress(CustomerDto customer, AddressDto model)

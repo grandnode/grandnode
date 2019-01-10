@@ -1,10 +1,11 @@
-﻿using Grand.Api.DTOs.Catalog;
-using Grand.Api.Services;
+﻿using Grand.Api.Services;
 using Grand.Api.Tests.Helpers;
 using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
 using Grand.Data;
 using Grand.Services.Catalog;
+using Grand.Services.Localization;
+using Grand.Services.Logging;
 using Grand.Services.Media;
 using Grand.Services.Seo;
 using Grand.Services.Tests;
@@ -25,7 +26,11 @@ namespace Grand.Api.Tests.ServicesTests
         private IUrlRecordService _urlRecordService;
         private IPictureService _pictureService;
 
-        private IMongoCollection<CategoryDto> _category;
+        private ILocalizationService _localizationService;
+        private ICustomerActivityService _customerActivityService;
+
+
+        //private IMongoCollection<CategoryDto> _category;
         private IRepository<Category> _categoryRepo;
 
         private string _id1 = "5c349ef4d595601e04da9dfc";
@@ -52,7 +57,13 @@ namespace Grand.Api.Tests.ServicesTests
             var pictureService = new Mock<IPictureService>();
             _pictureService = pictureService.Object;
 
-            _categoryApiService = new CategoryApiService(_mongoDBContext, _categoryService, _urlRecordService, _pictureService);
+            var localizationService = new Mock<ILocalizationService>();
+            _localizationService = localizationService.Object;
+
+            var customerActivityService = new Mock<ICustomerActivityService>();
+            _customerActivityService = customerActivityService.Object;
+
+            _categoryApiService = new CategoryApiService(_mongoDBContext, _categoryService, _urlRecordService, _pictureService, _customerActivityService, _localizationService);
 
         }
         private void InitCategoryRepo()

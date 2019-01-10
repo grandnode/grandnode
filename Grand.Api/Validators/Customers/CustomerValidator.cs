@@ -34,6 +34,16 @@ namespace Grand.Api.Validators.Customers
                 return true;
             }).WithMessage(localizationService.GetResource("Username is already registered"));
 
+            RuleFor(x => x).Must((x, context) =>
+            {
+                var customer = customerService.GetCustomerByGuid(x.CustomerGuid);
+                if (customer != null && customer.Id != x.Id)
+                {
+                    return false;
+                }
+                return true;
+            }).WithMessage(localizationService.GetResource("Guid is already exists"));
+
 
             //form fields
             if (customerSettings.CountryEnabled && customerSettings.CountryRequired)
