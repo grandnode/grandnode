@@ -140,7 +140,7 @@ namespace Grand.Services.Messages
                 typeof(LiquidContactUs),
                 typeof(LiquidCustomer),
                 typeof(LiquidEmailAFriend),
-                typeof(LiquidForum),
+                typeof(LiquidForums),
                 typeof(LiquidGiftCard),
                 typeof(LiquidKnowledgebase),
                 typeof(LiquidNewsComment),
@@ -322,8 +322,8 @@ namespace Grand.Services.Messages
         public void AddForumTokens(LiquidObject liquidObject, Forum forum, ForumTopic forumTopic = null, ForumPost forumPost = null,
             int? friendlyForumTopicPageIndex = null, string appendedPostIdentifierAnchor = "")
         {
-            var liquidForum = new LiquidForum(forum, forumTopic, forumPost, friendlyForumTopicPageIndex, appendedPostIdentifierAnchor);
-            liquidObject.Forum = liquidForum;
+            var liquidForum = new LiquidForums(forum, forumTopic, forumPost, friendlyForumTopicPageIndex, appendedPostIdentifierAnchor);
+            liquidObject.Forums = liquidForum;
 
             _eventPublisher.EntityTokensAdded(forum, liquidForum, liquidObject);
             _eventPublisher.EntityTokensAdded(forumTopic, liquidForum, liquidObject);

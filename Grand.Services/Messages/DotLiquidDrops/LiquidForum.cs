@@ -3,6 +3,7 @@ using Grand.Core;
 using Grand.Core.Domain.Forums;
 using Grand.Core.Infrastructure;
 using Grand.Services.Customers;
+using Grand.Services.Forums;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
 using System;
@@ -10,7 +11,7 @@ using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops
 {
-    public partial class LiquidForum : Drop
+    public partial class LiquidForums : Drop
     {
         private ForumTopic _forumTopic;
         private ForumPost _forumPost;
@@ -21,7 +22,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private readonly IStoreService _storeService;
         private readonly IStoreContext _storeContext;
 
-        public LiquidForum(Forum forum,
+        public LiquidForums(Forum forum,
             ForumTopic forumTopic,
             ForumPost forumPost,
             int? friendlyForumTopicPageIndex = null,
@@ -61,6 +62,14 @@ namespace Grand.Services.Messages.DotLiquidDrops
             {
                 var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(_forumPost.CustomerId);
                 return customer.FormatUserName();
+            }
+        }
+
+        public string PostBody
+        {
+            get
+            {
+                return _forumPost.FormatPostText();
             }
         }
 

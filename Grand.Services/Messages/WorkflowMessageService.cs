@@ -795,7 +795,7 @@ namespace Grand.Services.Messages
 
             LiquidObject liquidObject = new LiquidObject();
             _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId);
+            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId, refundedAmount: refundedAmount);
             if (customer != null)
                 _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
@@ -834,7 +834,7 @@ namespace Grand.Services.Messages
 
             LiquidObject liquidObject = new LiquidObject();
             _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId);
+            _messageTokenProvider.AddOrderTokens(liquidObject, order, languageId, refundedAmount: refundedAmount);
             if (customer != null)
                 _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
@@ -1372,7 +1372,6 @@ namespace Grand.Services.Messages
             LiquidObject liquidObject = new LiquidObject();
             _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
             _messageTokenProvider.AddForumTokens(liquidObject, forum, forumTopic, forumPost, friendlyForumTopicPageIndex);
-            _messageTokenProvider.AddForumTokens(liquidObject, forum);
             _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
             //event notification
