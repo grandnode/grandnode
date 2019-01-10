@@ -8,7 +8,6 @@ using Grand.Services.Catalog;
 using Grand.Services.Customers;
 using Grand.Services.ExportImport;
 using Grand.Services.Localization;
-using Grand.Services.Logging;
 using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
@@ -35,7 +34,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IStoreService _storeService;
         private readonly IExportManager _exportManager;
-        private readonly ICustomerActivityService _customerActivityService;
         private readonly IWorkContext _workContext;
         private readonly IImportManager _importManager;
 
@@ -44,14 +42,13 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Constructors
 
         public CategoryController(
-            ICategoryService categoryService, 
+            ICategoryService categoryService,
             ICategoryViewModelService categoryViewModelService,
             ICustomerService customerService,
             ILanguageService languageService,
             ILocalizationService localizationService,
             IStoreService storeService,
             IExportManager exportManager,
-            ICustomerActivityService customerActivityService,
             IWorkContext workContext,
             IImportManager importManager)
         {
@@ -62,7 +59,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._localizationService = localizationService;
             this._storeService = storeService;
             this._exportManager = exportManager;
-            this._customerActivityService = customerActivityService;
             this._workContext = workContext;
             this._importManager = importManager;
         }
@@ -84,7 +80,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command, CategoryListModel model)
-        {            
+        {
             var categories = _categoryViewModelService.PrepareCategoryListModel(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -100,7 +96,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         public IActionResult NodeList()
-        {            
+        {
             var model = _categoryViewModelService.PrepareCategoryNodeListModel();
             return Json(model);
         }
@@ -110,7 +106,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Create / Edit / Delete
 
         public IActionResult Create()
-        {            
+        {
             var model = _categoryViewModelService.PrepareCategoryModel();
             //locales
             AddLocales(_languageService, model.Locales);
@@ -208,11 +204,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                _categoryService.DeleteCategory(category);
-
-                //activity log
-                _customerActivityService.InsertActivity("DeleteCategory", category.Id, _localizationService.GetResource("ActivityLog.DeleteCategory"), category.Name);
-
+                _categoryViewModelService.DeleteCategory(category);
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Categories.Deleted"));
             }
             return RedirectToAction("List");

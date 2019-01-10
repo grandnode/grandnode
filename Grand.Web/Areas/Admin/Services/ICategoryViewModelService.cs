@@ -13,6 +13,7 @@ namespace Grand.Web.Areas.Admin.Services
         CategoryModel PrepareCategoryModel(CategoryModel model, Category category);
         Category InsertCategoryModel(CategoryModel model);
         Category UpdateCategoryModel(Category category, CategoryModel model);
+        void DeleteCategory(Category category);
         (IEnumerable<CategoryModel.CategoryProductModel> categoryProductModels, int totalCount) PrepareCategoryProductModel(string categoryId, int pageIndex, int pageSize);
         ProductCategory UpdateProductCategoryModel(CategoryModel.CategoryProductModel model);
         void DeleteProductCategoryModel(string id, string productId);

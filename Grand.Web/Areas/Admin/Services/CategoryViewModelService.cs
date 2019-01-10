@@ -282,7 +282,12 @@ namespace Grand.Web.Areas.Admin.Services
             _customerActivityService.InsertActivity("EditCategory", category.Id, _localizationService.GetResource("ActivityLog.EditCategory"), category.Name);
             return category;
         }
-
+        public virtual void DeleteCategory(Category category)
+        {
+            _categoryService.DeleteCategory(category);
+            //activity log
+            _customerActivityService.InsertActivity("DeleteCategory", category.Id, _localizationService.GetResource("ActivityLog.DeleteCategory"), category.Name);
+        }
         public virtual (IEnumerable<CategoryModel.CategoryProductModel> categoryProductModels, int totalCount) PrepareCategoryProductModel(string categoryId, int pageIndex, int pageSize)
         {
             var productCategories = _categoryService.GetProductCategoriesByCategoryId(categoryId,
