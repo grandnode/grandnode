@@ -1372,7 +1372,6 @@ namespace Grand.Services.Messages
             LiquidObject liquidObject = new LiquidObject();
             _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
             _messageTokenProvider.AddForumTokens(liquidObject, forum, forumTopic, forumPost, friendlyForumTopicPageIndex);
-            _messageTokenProvider.AddForumTokens(liquidObject, forum);
             _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
 
             //event notification

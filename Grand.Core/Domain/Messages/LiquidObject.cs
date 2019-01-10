@@ -23,7 +23,7 @@ namespace Grand.Core.Domain.Messages
 
         public Drop Customer { get; set; }
 
-        public Drop Forum { get; set; }
+        public Drop Forums { get; set; }
 
         public Drop GiftCard { get; set; }
 
