@@ -1,4 +1,5 @@
 ﻿using DotLiquid;
+using Grand.Core;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Messages;
 using Grand.Core.Domain.Orders;
@@ -6,6 +7,7 @@ using Grand.Core.Infrastructure;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Services.Media;
+using Grand.Services.Stores;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,15 +23,19 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private string _personalMessage;
         private string _customerEmail;
 
-        private ILocalizationService _localizationService;
-        private ILanguageService _languageService;
-        private MessageTemplatesSettings _templatesSettings;
+        private readonly ILocalizationService _localizationService;
+        private readonly ILanguageService _languageService;
+        private readonly IStoreContext _storeContext;
+        private readonly IStoreService _storeService;
+        private readonly MessageTemplatesSettings _templatesSettings;
 
         public LiquidShoppingCart(Customer customer, string personalMessage = "", string customerEmail = "")
         {
             this._localizationService = EngineContext.Current.Resolve<ILocalizationService>();
             this._languageService = EngineContext.Current.Resolve<ILanguageService>();
             this._templatesSettings = EngineContext.Current.Resolve<MessageTemplatesSettings>();
+            this._storeContext = EngineContext.Current.Resolve<IStoreContext>();
+            this._storeService = EngineContext.Current.Resolve<IStoreService>();
 
             this._customer = customer;
 
@@ -64,6 +70,25 @@ namespace Grand.Services.Messages.DotLiquidDrops
         public string WishlistProductsWithPictures
         {
             get { return ShoppingCartWishListProductListToHtmlTable(_customer, _languageId, false, true); }
+        }
+
+        public string WishlistPersonalMessage
+        {
+            get { return _personalMessage; }
+        }
+
+        public string WishlistEmail
+        {
+            get { return _customerEmail; }
+        }
+
+        public string WishlistURLForCustomer
+        {
+            get
+            {
+                var wishlistUrl = string.Format("{0}wishlist/{1}", GetStoreUrl(), _customer.CustomerGuid);
+                return wishlistUrl;
+            }
         }
 
         protected virtual string ShoppingCartWishListProductListToHtmlTable(Customer customer, string languageId, bool cart, bool withPicture)
@@ -121,6 +146,16 @@ namespace Grand.Services.Messages.DotLiquidDrops
             sb.AppendLine("</table>");
             result = sb.ToString();
             return result;
+        }
+
+        protected virtual string GetStoreUrl(string storeId = "", bool useSsl = false)
+        {
+            var store = _storeService.GetStoreById(storeId) ?? _storeContext.CurrentStore;
+
+            if (store == null)
+                throw new Exception("No store could be loaded");
+
+            return useSsl ? store.SecureUrl : store.Url;
         }
 
         public IDictionary<string, string> AdditionalTokens { get; set; }

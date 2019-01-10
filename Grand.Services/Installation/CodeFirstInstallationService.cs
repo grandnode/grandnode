@@ -4416,7 +4416,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "Knowledgebase.ArticleComment",
                                            Subject = "{{Store.Name}}. New article comment.",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nA new article comment has been created for article \"{{Article.ArticleTitle}}\".</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nA new article comment has been created for article \"{{Knowledgebase.ArticleCommentTitle}}\".</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4504,7 +4504,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "NewReturnRequest.CustomerNotification",
                                            Subject = "{{Store.Name}}. New return request.",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nHello {{Customer.FullName}}!<br />\r\n You have just submitted a new return request. Details are below:<br />\r\nRequest ID: {{ReturnRequest.ID}}<br />\r\nProducts:<br />\r\n{{ReturnRequest.Products}}<br />\r\nCustomer comments: {{ReturnRequest.CustomerComment}}<br />\r\n<br />\r\nPickup date: {{ReturnRequest.PickupDate}}<br />\r\n<br />\r\nPickup address:<br />\r\n{{PickupAddress.FirstName}} {{PickupAddress.LastName}}<br />\r\n{{PickupAddress.Address1}}<br />\r\n{{PickupAddress.City}} {{PickupAddress.ZipPostalCode}}<br />\r\n{{PickupAddress.StateProvince}} {{PickupAddress.Country}}<br />\r\n</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nHello {{Customer.FullName}}!<br />\r\n You have just submitted a new return request. Details are below:<br />\r\nRequest ID: {{ReturnRequest.Id}}<br />\r\nProducts:<br />\r\n{{ReturnRequest.Products}}<br />\r\nCustomer comments: {{ReturnRequest.CustomerComment}}<br />\r\n<br />\r\nPickup date: {{ReturnRequest.PickupDate}}<br />\r\n<br />\r\nPickup address:<br />\r\n{{ReturnRequest.PickupAddressFirstName}} {{ReturnRequest.PickupAddressLastName}}<br />\r\n{{ReturnRequest.PickupAddressAddress1}}<br />\r\n{{ReturnRequest.PickupAddressCity}} {{ReturnRequest.PickupAddressZipPostalCode}}<br />\r\n{{ReturnRequest.PickupAddressStateProvince}} {{ReturnRequest.PickupAddressCountry}}<br />\r\n</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4512,7 +4512,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "NewReturnRequest.StoreOwnerNotification",
                                            Subject = "{{Store.Name}}. New return request.",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\n{{Customer.FullName}} has just submitted a new return request. Details are below:<br />\r\nRequest ID: {{ReturnRequest.ID}}<br />\r\nProducts:<br />\r\n{{ReturnRequest.Products}}<br />\r\nCustomer comments: {{ReturnRequest.CustomerComment}}<br />\r\n<br />\r\nPickup date: {{ReturnRequest.PickupDate}}<br />\r\n<br />\r\nPickup address:<br />\r\n{{PickupAddress.FirstName}} {{PickupAddress.LastName}}<br />\r\n{{PickupAddress.Address1}}<br />\r\n{{PickupAddress.City}} {{PickupAddress.ZipPostalCode}}<br />\r\n{{PickupAddress.StateProvince}} {{PickupAddress.Country}}<br />\r\n</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\n{{Customer.FullName}} has just submitted a new return request. Details are below:<br />\r\nRequest ID: {{ReturnRequest.Id}}<br />\r\nProducts:<br />\r\n{{ReturnRequest.Products}}<br />\r\nCustomer comments: {{ReturnRequest.CustomerComment}}<br />\r\n<br />\r\nPickup date: {{ReturnRequest.PickupDate}}<br />\r\n<br />\r\nPickup address:<br />\r\n{{ReturnRequest.PickupAddressFirstName}} {{ReturnRequest.PickupAddressLastName}}<br />\r\n{{ReturnRequest.PickupAddressAddress1}}<br />\r\n{{ReturnRequest.PickupAddressCity}} {{ReturnRequest.PickupAddressZipPostalCode}}<br />\r\n{{ReturnRequest.PickupAddressStateProvince}} {{ReturnRequest.PickupAddressCountry}}<br />\r\n</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4632,7 +4632,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "ReturnRequestStatusChanged.CustomerNotification",
                                            Subject = "{{Store.Name}}. Return request status was changed.",
-                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nHello {{Customer.FullName}},<br />\r\nYour return request #{{ReturnRequest.ID}} status has been changed.</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\">{{Store.Name}}</a> <br />\r\n<br />\r\nHello {{Customer.FullName}},<br />\r\nYour return request #{{ReturnRequest.Id}} status has been changed.</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4656,7 +4656,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "Service.ContactUs",
                                            Subject = "{{Store.Name}}. Contact us",
-                                           Body = string.Format("<p>From {{ContactUs.SenderName}} - {{ContactUs.SenderEmail}} {0} {{ContactUs.Body}}{0}</p>{0}", Environment.NewLine),
+                                           Body = "<p>From {{ContactUs.SenderName}} - {{ContactUs.SenderEmail}}<br /><br />{{ContactUs.Body}}</p><br />",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4664,7 +4664,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "Service.ContactVendor",
                                            Subject = "{{Store.Name}}. Contact us",
-                                           Body = string.Format("<p>From {{ContactUs.SenderName}} - {{ContactUs.SenderEmail}} {0} {{ContactUs.Body}}{0}</p>{0}", Environment.NewLine),
+                                           Body = "<p>From {{ContactUs.SenderName}} - {{ContactUs.SenderEmail}}<br /><br />{{ContactUs.Body}}</p><br />",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4673,7 +4673,7 @@ namespace Grand.Services.Installation
                                        {
                                            Name = "Wishlist.EmailAFriend",
                                            Subject = "{{Store.Name}}. Wishlist",
-                                           Body = "<p><a href=\"{{Store.URL}}\"> {{Store.Name}}</a> <br />\r\n<br />\r\n{{Wishlist.Email}} was shopping on {{Store.Name}} and wanted to share a wishlist with you. <br />\r\n<br />\r\n<br />\r\nFor more info click <a target=\"_blank\" href=\"{{Wishlist.URLForCustomer}}\">here</a> <br />\r\n<br />\r\n<br />\r\n{{Wishlist.PersonalMessage}}<br />\r\n<br />\r\n{{Store.Name}}</p>",
+                                           Body = "<p><a href=\"{{Store.URL}}\"> {{Store.Name}}</a> <br />\r\n<br />\r\n{{ShoppingCart.WishlistEmail}} was shopping on {{Store.Name}} and wanted to share a wishlist with you. <br />\r\n<br />\r\n<br />\r\nFor more info click <a target=\"_blank\" href=\"{{ShoppingCart.WishlistURLForCustomer}}\">here</a> <br />\r\n<br />\r\n<br />\r\n{{ShoppingCart.WishlistPersonalMessage}}<br />\r\n<br />\r\n{{Store.Name}}</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
