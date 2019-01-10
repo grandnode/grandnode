@@ -13,7 +13,6 @@ using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Grand.Web.Areas.Admin.Models.Customers;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -95,9 +94,10 @@ namespace Grand.Web.Areas.Admin.Services
         }
         public virtual void DeleteCustomerRole(CustomerRole customerRole)
         {
+            _customerService.DeleteCustomerRole(customerRole);
+
             //activity log
             _customerActivityService.InsertActivity("DeleteCustomerRole", customerRole.Id, _localizationService.GetResource("ActivityLog.DeleteCustomerRole"), customerRole.Name);
-            _customerService.DeleteCustomerRole(customerRole);
         }
         public virtual CustomerRoleModel.AssociateProductToCustomerRoleModel PrepareAssociateProductToCustomerRoleModel()
         {
