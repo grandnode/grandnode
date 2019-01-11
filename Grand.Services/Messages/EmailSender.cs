@@ -144,16 +144,16 @@ namespace Grand.Services.Messages
             {
                 using (var smtpClient = new SmtpClient())
                 {
+                    smtpClient.ServerCertificateValidationCallback = (s, c, h, e) => emailAccount.UseServerCertificateValidation;
                     await smtpClient.ConnectAsync(
                         emailAccount.Host,
                         emailAccount.Port,
-                        emailAccount.EnableSsl ? SecureSocketOptions.SslOnConnect : SecureSocketOptions.None
+                        (SecureSocketOptions)emailAccount.SecureSocketOptionsId
                         ).ConfigureAwait(false);
 
                     await smtpClient.AuthenticateAsync(
-                        emailAccount.UseDefaultCredentials ?
-                            CredentialCache.DefaultNetworkCredentials :
-                            new NetworkCredential(emailAccount.Username, emailAccount.Password)
+                        emailAccount.Username, 
+                        emailAccount.Password
                         ).ConfigureAwait(false);
 
                     await smtpClient.SendAsync(message).ConfigureAwait(false);
