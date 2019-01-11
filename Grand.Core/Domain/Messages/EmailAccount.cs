@@ -38,14 +38,15 @@ namespace Grand.Core.Domain.Messages
         public string Password { get; set; }
 
         /// <summary>
-        /// Gets or sets a value that controls whether the SmtpClient uses Secure Sockets Layer (SSL) to encrypt the connection
+        /// Gets or sets a value that the remote certificate is invalid according to the validation procedure.
+        /// https://github.com/jstedfast/MailKit/blob/master/FAQ.md#InvalidSslCertificate
         /// </summary>
-        public bool EnableSsl { get; set; }
+        public bool UseServerCertificateValidation { get; set; }
 
         /// <summary>
-        /// Gets or sets a value that controls whether the default system credentials of the application are sent with requests.
+        /// Provides a way of specifying the SSL and/or TLS encryption that should be used for a connection
         /// </summary>
-        public bool UseDefaultCredentials { get; set; }
+        public int SecureSocketOptionsId { get; set; }
 
         /// <summary>
         /// Gets a friendly email account name
@@ -59,5 +60,8 @@ namespace Grand.Core.Domain.Messages
                 return this.Email;
             }
         }
+
+
+
     }
 }

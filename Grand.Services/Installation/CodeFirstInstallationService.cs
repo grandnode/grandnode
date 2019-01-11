@@ -4346,8 +4346,8 @@ namespace Grand.Services.Installation
                                            Port = 25,
                                            Username = "123",
                                            Password = "123",
-                                           EnableSsl = false,
-                                           UseDefaultCredentials = false
+                                           SecureSocketOptionsId = 1,
+                                           UseServerCertificateValidation = true
                                        },
                                };
             _emailAccountRepository.Insert(emailAccounts);

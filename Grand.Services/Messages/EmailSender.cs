@@ -1,11 +1,12 @@
 ﻿using Grand.Core.Domain.Messages;
 using Grand.Services.Media;
+using MailKit.Net.Smtp;
+using MailKit.Security;
+using MimeKit;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Mail;
 
 namespace Grand.Services.Messages
 {
@@ -45,13 +46,13 @@ namespace Grand.Services.Messages
             string attachmentFilePath = null, string attachmentFileName = null,
             string attachedDownloadId = "")
         {
-            var message = new MailMessage();
+            var message = new MimeMessage();
             //from, to, reply to
-            message.From = new MailAddress(fromAddress, fromName);
-            message.To.Add(new MailAddress(toAddress, toName));
+            message.From.Add(new MailboxAddress(fromName, fromAddress));
+            message.To.Add(new MailboxAddress(toName, toAddress));
             if (!String.IsNullOrEmpty(replyTo))
             {
-                message.ReplyToList.Add(new MailAddress(replyTo, replyToName));
+                message.ReplyTo.Add(new MailboxAddress(replyToName, replyTo));
             }
 
             //BCC
@@ -59,7 +60,7 @@ namespace Grand.Services.Messages
             {
                 foreach (var address in bcc.Where(bccValue => !String.IsNullOrWhiteSpace(bccValue)))
                 {
-                    message.Bcc.Add(address.Trim());
+                    message.Bcc.Add(new MailboxAddress(address.Trim()));
                 }
             }
 
@@ -68,28 +69,22 @@ namespace Grand.Services.Messages
             {
                 foreach (var address in cc.Where(ccValue => !String.IsNullOrWhiteSpace(ccValue)))
                 {
-                    message.CC.Add(address.Trim());
+                    message.Cc.Add(new MailboxAddress(address.Trim()));
                 }
             }
 
-            //content
+            //subject
             message.Subject = subject;
-            message.Body = body;
-            message.IsBodyHtml = true;
+
+            //content
+            var builder = new BodyBuilder();
+            builder.HtmlBody = body;
 
             //create  the file attachment for this e-mail message
             if (!String.IsNullOrEmpty(attachmentFilePath) &&
                 File.Exists(attachmentFilePath))
             {
-                var attachment = new Attachment(attachmentFilePath);
-                attachment.ContentDisposition.CreationDate = File.GetCreationTime(attachmentFilePath);
-                attachment.ContentDisposition.ModificationDate = File.GetLastWriteTime(attachmentFilePath);
-                attachment.ContentDisposition.ReadDate = File.GetLastAccessTime(attachmentFilePath);
-                if (!String.IsNullOrEmpty(attachmentFileName))
-                {
-                    attachment.Name = attachmentFileName;
-                }
-                message.Attachments.Add(attachment);
+                builder.Attachments.Add(attachmentFilePath);
             }
             //another attachment?
             if (!String.IsNullOrEmpty(attachedDownloadId))
@@ -102,29 +97,20 @@ namespace Grand.Services.Messages
                     {
                         string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : download.Id;
                         fileName += download.Extension;
-
-
-                        var ms = new MemoryStream(download.DownloadBinary);
-                        var attachment = new Attachment(ms, fileName);
-                        attachment.ContentDisposition.CreationDate = DateTime.UtcNow;
-                        attachment.ContentDisposition.ModificationDate = DateTime.UtcNow;
-                        attachment.ContentDisposition.ReadDate = DateTime.UtcNow;
-                        message.Attachments.Add(attachment);
+                        builder.Attachments.Add(fileName, download.DownloadBinary);
                     }
                 }
             }
+            message.Body = builder.ToMessageBody();
 
             //send email
             using (var smtpClient = new SmtpClient())
             {
-                smtpClient.UseDefaultCredentials = emailAccount.UseDefaultCredentials;
-                smtpClient.Host = emailAccount.Host;
-                smtpClient.Port = emailAccount.Port;
-                smtpClient.EnableSsl = emailAccount.EnableSsl;
-                smtpClient.Credentials = emailAccount.UseDefaultCredentials ?
-                                    CredentialCache.DefaultNetworkCredentials :
-                                    new NetworkCredential(emailAccount.Username, emailAccount.Password);
+                smtpClient.ServerCertificateValidationCallback = (s, c, h, e) => emailAccount.UseServerCertificateValidation;
+                smtpClient.Connect(emailAccount.Host, emailAccount.Port, (SecureSocketOptions)emailAccount.SecureSocketOptionsId);
+                smtpClient.Authenticate(emailAccount.Username, emailAccount.Password);
                 smtpClient.Send(message);
+                smtpClient.Disconnect(true);
             }
         }
 

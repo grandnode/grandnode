@@ -61,4 +61,19 @@
   <LocaleResource Name="Admin.Catalog.ProductTags.BackToList">
     <Value>Back to tag list</Value>
   </LocaleResource>
+
+  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.UseServerCertificateValidation">
+    <Value>The remote certificate is invalid</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.UseServerCertificateValidation.hint">
+    <Value>Gets or sets a value that the remote certificate is invalid according to the validation procedure</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.SecureSocketOptions">
+    <Value>Secure socket options (specify the SSL and/or TLS encryption)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.SecureSocketOptions.hint">
+    <Value>Provides a way of specifying the SSL and/or TLS encryption that should be used for a connection</Value>
+  </LocaleResource>
+  
 </Language>
