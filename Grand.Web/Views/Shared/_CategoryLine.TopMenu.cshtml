@@ -12,7 +12,10 @@
         }
         @Model.Category.Name
     </a>
-    <label class="badge @Model.Category.FlagStyle">@Model.Category.Flag</label>
+    @if (!string.IsNullOrEmpty(Model.Category.FlagStyle))
+    {
+        <label class="badge @Model.Category.FlagStyle">@Model.Category.Flag</label>
+    }
     @{
         //subcategories
         var subCategories =

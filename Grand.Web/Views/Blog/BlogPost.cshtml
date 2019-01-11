@@ -27,7 +27,7 @@
         <h4 class="card-header border-bottom-0 pb-0">@Model.Title</h4>
         <div class="card-body pt-0">
             <div class="post-date generalMarginSupporter text-muted">
-                <strong><i class="far fa-clock mr-2"></i>@Model.CreatedOn.ToString("D")</strong>
+                <strong><em class="far fa-clock mr-2"></em>@Model.CreatedOn.ToString("D")</strong>
             </div>
             @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_before_body", additionalData = Model.Id })
             <div class="post-body">
