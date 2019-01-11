@@ -1,6 +1,6 @@
 ﻿using Grand.Core.Domain.Messages;
-using Grand.Services.Media;
 using Grand.Services.Logging;
+using Grand.Services.Media;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 
 
 namespace Grand.Services.Messages
@@ -46,7 +45,7 @@ namespace Grand.Services.Messages
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         /// <param name="attachedDownloadId">Attachment download ID (another attachedment)</param>
-        public virtual async void SendEmail(EmailAccount emailAccount, string subject, string body,
+        public virtual void SendEmail(EmailAccount emailAccount, string subject, string body,
             string fromAddress, string fromName, string toAddress, string toName,
              string replyToAddress = null, string replyToName = null,
             IEnumerable<string> bccAddresses = null, IEnumerable<string> ccAddresses = null,
@@ -98,7 +97,7 @@ namespace Grand.Services.Messages
                 {
                     Content = new MimeContent(File.OpenRead(attachmentFilePath), ContentEncoding.Default),
                     ContentDisposition = new ContentDisposition(ContentDisposition.Attachment)
-                    { 
+                    {
                         CreationDate = File.GetCreationTime(attachmentFilePath),
                         ModificationDate = File.GetLastWriteTime(attachmentFilePath),
                         ReadDate = File.GetLastAccessTime(attachmentFilePath)
@@ -140,29 +139,15 @@ namespace Grand.Services.Messages
             message.Body = builder.ToMessageBody();
 
             //send email
-            try
+            using (var smtpClient = new SmtpClient())
             {
-                using (var smtpClient = new SmtpClient())
-                {
-                    smtpClient.ServerCertificateValidationCallback = (s, c, h, e) => emailAccount.UseServerCertificateValidation;
-                    await smtpClient.ConnectAsync(
-                        emailAccount.Host,
-                        emailAccount.Port,
-                        (SecureSocketOptions)emailAccount.SecureSocketOptionsId
-                        ).ConfigureAwait(false);
-
-                    await smtpClient.AuthenticateAsync(
-                        emailAccount.Username, 
-                        emailAccount.Password
-                        ).ConfigureAwait(false);
-
-                    await smtpClient.SendAsync(message).ConfigureAwait(false);
-                    await smtpClient.DisconnectAsync(true).ConfigureAwait(false);
-                }
-            } catch (Exception exc)
-            {
-                _logger.Error(string.Format("Error sending e-mail. {0}", exc.Message), exc);
+                smtpClient.ServerCertificateValidationCallback = (s, c, h, e) => emailAccount.UseServerCertificateValidation;
+                smtpClient.Connect(emailAccount.Host, emailAccount.Port, (SecureSocketOptions)emailAccount.SecureSocketOptionsId);
+                smtpClient.Authenticate(emailAccount.Username, emailAccount.Password);
+                smtpClient.Send(message);
+                smtpClient.Disconnect(true);
             }
+
         }
     }
 }
