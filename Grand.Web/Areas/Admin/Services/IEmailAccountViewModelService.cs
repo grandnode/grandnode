@@ -9,6 +9,6 @@ namespace Grand.Web.Areas.Admin.Services
         EmailAccount InsertEmailAccountModel(EmailAccountModel model);
         EmailAccount UpdateEmailAccountModel(EmailAccount emailAccount, EmailAccountModel model);
         EmailAccount ChangePasswordEmailAccountModel(EmailAccount emailAccount, EmailAccountModel model);
-        void SenTestEmail(EmailAccount emailAccount, EmailAccountModel model);
+        void SendTestEmail(EmailAccount emailAccount, EmailAccountModel model);
     }
 }

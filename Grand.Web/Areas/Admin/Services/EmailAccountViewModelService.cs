@@ -42,7 +42,7 @@ namespace Grand.Web.Areas.Admin.Services
             _emailAccountService.UpdateEmailAccount(emailAccount);
             return emailAccount;
         }
-        public virtual void SenTestEmail(EmailAccount emailAccount, EmailAccountModel model)
+        public virtual void SendTestEmail(EmailAccount emailAccount, EmailAccountModel model)
         {
             string subject = "Testing email functionality.";
             string body = "Email works fine.";

@@ -154,7 +154,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     throw new GrandException("Enter test email address");
                 if (ModelState.IsValid)
                 {
-                    _emailAccountViewModelService.SenTestEmail(emailAccount, model);
+                    _emailAccountViewModelService.SendTestEmail(emailAccount, model);
                     SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.SendTestEmail.Success"), false);
                 }
                 else
