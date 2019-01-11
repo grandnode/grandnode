@@ -1,21 +1,20 @@
-﻿using Grand.Plugin.Widgets.Slider.Models;
+﻿using Grand.Framework.Controllers;
+using Grand.Framework.Kendoui;
+using Grand.Framework.Mvc;
+using Grand.Framework.Mvc.Filters;
+using Grand.Plugin.Widgets.Slider.Models;
+using Grand.Plugin.Widgets.Slider.Services;
+using Grand.Services.Catalog;
 using Grand.Services.Localization;
 using Grand.Services.Media;
-using Grand.Services.Stores;
-using Grand.Framework.Controllers;
-using Grand.Framework.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc;
-using Grand.Plugin.Widgets.Slider.Services;
-using Grand.Framework.Kendoui;
-using System.Linq;
-using Grand.Plugin.Widgets.Slider.Domain;
 using Grand.Services.Security;
-using System;
+using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Extensions;
-using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Grand.Services.Catalog;
-using Grand.Framework.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Grand.Plugin.Widgets.Slider.Controllers
 {
@@ -106,7 +105,7 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
-            var sliders = _sliderService.GetPictureSliders();           
+            var sliders = _sliderService.GetPictureSliders();
             var gridModel = new DataSourceResult
             {
                 Data = sliders.Select(x =>

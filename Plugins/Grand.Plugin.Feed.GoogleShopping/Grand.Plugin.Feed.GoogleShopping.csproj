@@ -39,9 +39,6 @@
     <ProjectReference Include="..\..\Grand.Services\Grand.Services.csproj">
       <Private>false</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\Grand.Web\Grand.Web.csproj">
-      <Private>false</Private>
-    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>
