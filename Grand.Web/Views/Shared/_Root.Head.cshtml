@@ -6,7 +6,7 @@
     //X-UA-Compatible tag
     if (commonSettings.RenderXuaCompatible)
     {
-        Html.AppendHeadCustomParts(string.Format("<meta http-equiv=\"X-UA-Compatible\" content=\"{0}\"/>", commonSettings.XuaCompatibleValue));
+        Html.AppendHeadCustomParts(string.Format("<meta http-equiv=\"X-UA-Compatible\" content=\"{0}\">", commonSettings.XuaCompatibleValue));
     }
     //custom tag(s);
     if (!string.IsNullOrEmpty(seoSettings.CustomHeadTags))
@@ -19,11 +19,11 @@
 <html lang="@(this.WorkingLanguage())  @(this.ShouldUseRtlTheme() ? Html.Raw(" dir=\"rtl\"") : null)">
 <head>
     <title>@Html.GrandTitle(true)</title>
-    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-    <meta name="description" content="@(Html.GrandMetaDescription())" />
-    <meta name="keywords" content="@(Html.GrandMetaKeywords())" />
-    <meta name="generator" content="grandnode" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8">
+    <meta name="description" content="@(Html.GrandMetaDescription())">
+    <meta name="keywords" content="@(Html.GrandMetaKeywords())">
+    <meta name="generator" content="grandnode">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     @Html.GrandHeadCustom()
     @*This is used so that themes can inject content into the header*@
     <partial name="Head" />

@@ -55,23 +55,19 @@
             </div>
         </div>
         <div class="form-group">
-            <admin-label asp-for="EnableSsl" />
+            <admin-label asp-for="UseServerCertificateValidation" />
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
-                    <admin-input asp-for="EnableSsl" />
+                    <admin-input asp-for="UseServerCertificateValidation" />
                     <span></span>
                 </label>
-                <span asp-validation-for="EnableSsl"></span>
+                <span asp-validation-for="UseServerCertificateValidation"></span>
             </div>
         </div>
         <div class="form-group">
-            <admin-label asp-for="UseDefaultCredentials" />
+            <admin-label asp-for="SecureSocketOptionsId" />
             <div class="col-md-9 col-sm-9">
-                <label class="mt-checkbox mt-checkbox-outline">
-                    <admin-input asp-for="UseDefaultCredentials" />
-                    <span></span>
-                </label>
-                <span asp-validation-for="UseDefaultCredentials"></span>
+                <admin-select asp-for="SecureSocketOptionsId" asp-items="((MailKit.Security.SecureSocketOptions)Model.SecureSocketOptionsId).ToSelectList()" />
             </div>
         </div>
         @if (!String.IsNullOrEmpty(Model.Id))

@@ -1,5 +1,4 @@
 ﻿using Grand.Core.Domain.Tasks;
-using Grand.Core.Infrastructure;
 using Grand.Services.Logging;
 using Grand.Services.Messages;
 using System;
@@ -14,15 +13,17 @@ namespace Grand.Services.Tasks
         private readonly IQueuedEmailService _queuedEmailService;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
+        private readonly IEmailAccountService _emailAccountService;
         private readonly object _lock = new object();
 
 
         public QueuedMessagesSendScheduleTask(IQueuedEmailService queuedEmailService,
-            IEmailSender emailSender, ILogger logger)
+            IEmailSender emailSender, ILogger logger, IEmailAccountService emailAccountService)
         {
             this._queuedEmailService = queuedEmailService;
             this._emailSender = emailSender;
             this._logger = logger;
+            this._emailAccountService = emailAccountService;
         }
 
         /// <summary>
@@ -45,7 +46,7 @@ namespace Grand.Services.Tasks
 
                     try
                     {
-                        var emailAccount = EngineContext.Current.Resolve<IEmailAccountService>().GetEmailAccountById(queuedEmail.EmailAccountId);
+                        var emailAccount = _emailAccountService.GetEmailAccountById(queuedEmail.EmailAccountId);
                         _emailSender.SendEmail(emailAccount,
                             queuedEmail.Subject,
                             queuedEmail.Body,

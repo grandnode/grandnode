@@ -1,14 +1,15 @@
 ﻿using Grand.Core.Domain.Messages;
 using Grand.Services.Media;
 using Grand.Services.Logging;
+using MailKit.Net.Smtp;
+using MailKit.Security;
 using MimeKit;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using MailKit.Net.Smtp;
-using MailKit.Security;
+
 
 namespace Grand.Services.Messages
 {
@@ -80,17 +81,18 @@ namespace Grand.Services.Messages
                 }
             }
 
-            //content
+            //subject
             message.Subject = subject;
-            var builder = new BodyBuilder
-            {
-                HtmlBody = body
-            };
+
+            //content
+            var builder = new BodyBuilder();
+            builder.HtmlBody = body;
 
             //create  the file attachment for this e-mail message
             if (!String.IsNullOrEmpty(attachmentFilePath) &&
                 File.Exists(attachmentFilePath))
             {
+
                 // TODO: should probably include a check for the attachmentFileName not being null or white space
                 var attachment = new MimePart(_mimeMappingService.Map(attachmentFileName))
                 {
@@ -105,6 +107,7 @@ namespace Grand.Services.Messages
                     FileName = Path.GetFileName(attachmentFilePath),
                 };
                 builder.Attachments.Add(attachment);
+
             }
             //another attachment?
             if (!String.IsNullOrEmpty(attachedDownloadId))
@@ -117,7 +120,6 @@ namespace Grand.Services.Messages
                     {
                         string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : download.Id;
                         fileName += download.Extension;
-
                         var ms = new MemoryStream(download.DownloadBinary);
                         var attachment = new MimePart(download.ContentType ?? _mimeMappingService.Map(fileName))
                         {
@@ -135,6 +137,7 @@ namespace Grand.Services.Messages
                     }
                 }
             }
+            message.Body = builder.ToMessageBody();
 
             //send email
             try
@@ -161,6 +164,5 @@ namespace Grand.Services.Messages
                 _logger.Error(string.Format("Error sending e-mail. {0}", exc.Message), exc);
             }
         }
-
     }
 }

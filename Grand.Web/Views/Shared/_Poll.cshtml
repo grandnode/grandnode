@@ -27,7 +27,7 @@
     else
     {
         <fieldset class="rate">
-            <legend class="d-none">Radio buttons</legend>
+            <legend class="d-none">@Model.Name</legend>
             @foreach (var item in Model.Answers)
             {
                 <label for="pollanswers-@(item.Id)-@(Model.Id)" class="custom-control custom-radio">

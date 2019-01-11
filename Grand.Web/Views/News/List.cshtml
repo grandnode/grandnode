@@ -25,7 +25,7 @@
                     <h4 class="card-header border-bottom-0 pb-0">@item.Title</h4>
                     </a>
                     <div class="card-body pt-0">
-                        <h6 class="card-subtitle text-muted"><i class="far fa-clock mr-2"></i>@item.CreatedOn.ToString("D")</h6>
+                        <h6 class="card-subtitle text-muted"><em class="far fa-clock mr-2"></em>@item.CreatedOn.ToString("D")</h6>
                         @Html.Raw(item.Short)
                         <div class="buttons pt-3 text-center">
                             <a class="btn btn-sm btn-primary read-more" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">@T("News.MoreInfo")</a>

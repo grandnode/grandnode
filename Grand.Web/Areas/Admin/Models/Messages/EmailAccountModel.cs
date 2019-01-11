@@ -31,11 +31,11 @@ namespace Grand.Web.Areas.Admin.Models.Messages
         
         public string Password { get; set; }
 
-        [GrandResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.EnableSsl")]
-        public bool EnableSsl { get; set; }
+        [GrandResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.UseServerCertificateValidation")]
+        public bool UseServerCertificateValidation { get; set; }
 
-        [GrandResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.UseDefaultCredentials")]
-        public bool UseDefaultCredentials { get; set; }
+        [GrandResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.SecureSocketOptions")]
+        public int SecureSocketOptionsId { get; set; }
 
         [GrandResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.IsDefaultEmailAccount")]
         public bool IsDefaultEmailAccount { get; set; }

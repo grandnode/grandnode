@@ -5049,12 +5049,6 @@
   <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.Email.Hint">
     <Value>This is the from address for all outgoing emails from your store e.g. 'sales@yourstore.com'.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.EnableSsl">
-    <Value>SSL</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.EnableSsl.Hint">
-    <Value>Check to use Secure Sockets Layer (SSL) to encrypt the SMTP connection.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.Host">
     <Value>Host</Value>
   </LocaleResource>
@@ -5085,6 +5079,12 @@
   <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.Port.Hint">
     <Value>This is the SMTP port of your mail server. This is usually port 25.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.SecureSocketOptions">
+    <Value>Secure socket options (specify the SSL and/or TLS encryption)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.SecureSocketOptions.hint">
+    <Value>Provides a way of specifying the SSL and/or TLS encryption that should be used for a connection</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.SendTestEmailTo">
     <Value>Send email to</Value>
   </LocaleResource>
@@ -5094,17 +5094,17 @@
   <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.SendTestEmailTo.Hint">
     <Value>Send test email to ensure that everything is properly configured.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.UseDefaultCredentials">
-    <Value>Use default credentials</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.UseDefaultCredentials.Hint">
-    <Value>Check to use default credentials for the connection</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.Username">
     <Value>User</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.Username.Hint">
     <Value>This is the username you use to authenticate to your mail server.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.UseServerCertificateValidation">
+    <Value>The remote certificate is invalid</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.UseServerCertificateValidation.hint">
+    <Value>Gets or sets a value that the remote certificate is invalid according to the validation procedure</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.EmailAccounts.SendTestEmail">
     <Value>Send Test Email (save settings first by clicking "Save" button)</Value>
