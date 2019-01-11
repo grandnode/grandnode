@@ -1,6 +1,6 @@
-﻿<header>
+﻿<header role="presentation">
     @await Component.InvokeAsync("Widget", new { widgetZone = "header" })
-    <nav class="navbar fixed-top navbar-light bg-dark navUp p-0">
+    <nav class="navbar fixed-top navbar-light bg-dark navUp p-0" role="navigation">
         <ul class="mobile-top-menu d-lg-none d-flex mb-0 w-100">
             <li class="logo-mobile"><span class="logo-mobile-holder"></span></li>
             <li class="nav-item d-flex align-items-center d-lg-none mobile-search" data-toggle="modal" data-target="#searchModal">

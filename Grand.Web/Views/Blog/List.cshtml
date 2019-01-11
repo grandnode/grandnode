@@ -49,7 +49,7 @@
                         <h4 class="card-header">@item.Title</h4>
                     </a>
                     <div class="card-body pt-2">
-                        <h6 class="card-subtitle text-muted"><i class="far fa-clock mr-2"></i>@item.CreatedOn.ToString("D")</h6>
+                        <h6 class="card-subtitle text-muted"><em class="far fa-clock mr-2"></em>@item.CreatedOn.ToString("D")</h6>
                         @await Component.InvokeAsync("Widget", new { widgetZone = "bloglist_page_before_post_body", additionalData = item.Id })
                         @*//post content*@
                         @Html.Raw(!String.IsNullOrEmpty(item.BodyOverview) ? item.BodyOverview : item.Body)
