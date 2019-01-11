@@ -49,6 +49,7 @@ using Grand.Services.Tasks;
 using Grand.Services.Tax;
 using Grand.Services.Topics;
 using Grand.Services.Vendors;
+using Microsoft.AspNetCore.StaticFiles;
 using MongoDB.Driver;
 using System;
 using System.Linq;
@@ -208,6 +209,11 @@ namespace Grand.Framework.Infrastructure
 
             builder.RegisterType<LanguageService>().As<ILanguageService>().InstancePerLifetimeScope();
             builder.RegisterType<DownloadService>().As<IDownloadService>().InstancePerLifetimeScope();
+            // TODO: Consider replacing service with static entry if EmailSender is the only user/caller
+            var provider = new FileExtensionContentTypeProvider();
+            builder.RegisterType<MimeMappingService>().As<IMimeMappingService>()
+                .WithParameter(new TypedParameter(typeof(FileExtensionContentTypeProvider), provider))
+                .InstancePerLifetimeScope();
 
             //picture service
             var useAzureBlobStorage = !String.IsNullOrEmpty(config.AzureBlobStorageConnectionString);

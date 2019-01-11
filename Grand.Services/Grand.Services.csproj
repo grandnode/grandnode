@@ -16,6 +16,7 @@
     <PackageReference Include="Google.Apis" Version="1.36.1" />
     <PackageReference Include="Google.Apis.AnalyticsReporting.v4" Version="1.36.1.1391" />
     <PackageReference Include="iTextSharp.LGPLv2.Core" Version="1.4.5" />
+    <PackageReference Include="MailKit" Version="2.1.2" />
     <PackageReference Include="MaxMind.GeoIP2" Version="3.0.0" />
     <PackageReference Include="System.ServiceModel.Duplex" Version="4.5.3" />
     <PackageReference Include="System.ServiceModel.Http" Version="4.5.3" />

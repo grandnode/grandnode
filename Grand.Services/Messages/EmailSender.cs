@@ -1,11 +1,14 @@
 ﻿using Grand.Core.Domain.Messages;
 using Grand.Services.Media;
+using Grand.Services.Logging;
+using MimeKit;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Mail;
+using MailKit.Net.Smtp;
+using MailKit.Security;
 
 namespace Grand.Services.Messages
 {
@@ -14,11 +17,15 @@ namespace Grand.Services.Messages
     /// </summary>
     public partial class EmailSender : IEmailSender
     {
+        private readonly ILogger _logger;
         private readonly IDownloadService _downloadService;
+        private readonly IMimeMappingService _mimeMappingService;
 
-        public EmailSender(IDownloadService downloadService)
+        public EmailSender(ILogger logger, IDownloadService downloadService, IMimeMappingService mimeMappingService)
         {
             this._downloadService = downloadService;
+            this._mimeMappingService = mimeMappingService;
+            this._logger = logger;
         }
 
         /// <summary>
@@ -38,58 +45,66 @@ namespace Grand.Services.Messages
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         /// <param name="attachedDownloadId">Attachment download ID (another attachedment)</param>
-        public virtual void SendEmail(EmailAccount emailAccount, string subject, string body,
+        public virtual async void SendEmail(EmailAccount emailAccount, string subject, string body,
             string fromAddress, string fromName, string toAddress, string toName,
-             string replyTo = null, string replyToName = null,
-            IEnumerable<string> bcc = null, IEnumerable<string> cc = null,
+             string replyToAddress = null, string replyToName = null,
+            IEnumerable<string> bccAddresses = null, IEnumerable<string> ccAddresses = null,
             string attachmentFilePath = null, string attachmentFileName = null,
             string attachedDownloadId = "")
+
         {
-            var message = new MailMessage();
+            var message = new MimeMessage();
             //from, to, reply to
-            message.From = new MailAddress(fromAddress, fromName);
-            message.To.Add(new MailAddress(toAddress, toName));
-            if (!String.IsNullOrEmpty(replyTo))
+            message.From.Add(new MailboxAddress(fromName, fromAddress));
+            message.To.Add(new MailboxAddress(toName, toAddress));
+            if (!String.IsNullOrEmpty(replyToAddress))
             {
-                message.ReplyToList.Add(new MailAddress(replyTo, replyToName));
+                message.ReplyTo.Add(new MailboxAddress(replyToName, replyToAddress));
             }
 
             //BCC
-            if (bcc != null)
+            if (bccAddresses != null && bccAddresses.Any())
             {
-                foreach (var address in bcc.Where(bccValue => !String.IsNullOrWhiteSpace(bccValue)))
+                foreach (var address in bccAddresses.Where(bccValue => !String.IsNullOrWhiteSpace(bccValue)))
                 {
-                    message.Bcc.Add(address.Trim());
+                    message.Bcc.Add(new MailboxAddress(address.Trim()));
                 }
             }
 
             //CC
-            if (cc != null)
+            if (ccAddresses != null && ccAddresses.Any())
             {
-                foreach (var address in cc.Where(ccValue => !String.IsNullOrWhiteSpace(ccValue)))
+                foreach (var address in ccAddresses.Where(ccValue => !String.IsNullOrWhiteSpace(ccValue)))
                 {
-                    message.CC.Add(address.Trim());
+                    message.Cc.Add(new MailboxAddress(address.Trim()));
                 }
             }
 
             //content
             message.Subject = subject;
-            message.Body = body;
-            message.IsBodyHtml = true;
+            var builder = new BodyBuilder
+            {
+                HtmlBody = body
+            };
 
             //create  the file attachment for this e-mail message
             if (!String.IsNullOrEmpty(attachmentFilePath) &&
                 File.Exists(attachmentFilePath))
             {
-                var attachment = new Attachment(attachmentFilePath);
-                attachment.ContentDisposition.CreationDate = File.GetCreationTime(attachmentFilePath);
-                attachment.ContentDisposition.ModificationDate = File.GetLastWriteTime(attachmentFilePath);
-                attachment.ContentDisposition.ReadDate = File.GetLastAccessTime(attachmentFilePath);
-                if (!String.IsNullOrEmpty(attachmentFileName))
+                // TODO: should probably include a check for the attachmentFileName not being null or white space
+                var attachment = new MimePart(_mimeMappingService.Map(attachmentFileName))
                 {
-                    attachment.Name = attachmentFileName;
-                }
-                message.Attachments.Add(attachment);
+                    Content = new MimeContent(File.OpenRead(attachmentFilePath), ContentEncoding.Default),
+                    ContentDisposition = new ContentDisposition(ContentDisposition.Attachment)
+                    { 
+                        CreationDate = File.GetCreationTime(attachmentFilePath),
+                        ModificationDate = File.GetLastWriteTime(attachmentFilePath),
+                        ReadDate = File.GetLastAccessTime(attachmentFilePath)
+                    },
+                    ContentTransferEncoding = ContentEncoding.Base64,
+                    FileName = Path.GetFileName(attachmentFilePath),
+                };
+                builder.Attachments.Add(attachment);
             }
             //another attachment?
             if (!String.IsNullOrEmpty(attachedDownloadId))
@@ -103,28 +118,47 @@ namespace Grand.Services.Messages
                         string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : download.Id;
                         fileName += download.Extension;
 
-
                         var ms = new MemoryStream(download.DownloadBinary);
-                        var attachment = new Attachment(ms, fileName);
-                        attachment.ContentDisposition.CreationDate = DateTime.UtcNow;
-                        attachment.ContentDisposition.ModificationDate = DateTime.UtcNow;
-                        attachment.ContentDisposition.ReadDate = DateTime.UtcNow;
-                        message.Attachments.Add(attachment);
+                        var attachment = new MimePart(download.ContentType ?? _mimeMappingService.Map(fileName))
+                        {
+                            Content = new MimeContent(ms, ContentEncoding.Default),
+                            ContentDisposition = new ContentDisposition(ContentDisposition.Attachment)
+                            {
+                                CreationDate = DateTime.UtcNow,
+                                ModificationDate = DateTime.UtcNow,
+                                ReadDate = DateTime.UtcNow
+                            },
+                            ContentTransferEncoding = ContentEncoding.Base64,
+                            FileName = fileName,
+                        };
+                        builder.Attachments.Add(attachment);
                     }
                 }
             }
 
             //send email
-            using (var smtpClient = new SmtpClient())
+            try
             {
-                smtpClient.UseDefaultCredentials = emailAccount.UseDefaultCredentials;
-                smtpClient.Host = emailAccount.Host;
-                smtpClient.Port = emailAccount.Port;
-                smtpClient.EnableSsl = emailAccount.EnableSsl;
-                smtpClient.Credentials = emailAccount.UseDefaultCredentials ?
-                                    CredentialCache.DefaultNetworkCredentials :
-                                    new NetworkCredential(emailAccount.Username, emailAccount.Password);
-                smtpClient.Send(message);
+                using (var smtpClient = new SmtpClient())
+                {
+                    await smtpClient.ConnectAsync(
+                        emailAccount.Host,
+                        emailAccount.Port,
+                        emailAccount.EnableSsl ? SecureSocketOptions.SslOnConnect : SecureSocketOptions.None
+                        ).ConfigureAwait(false);
+
+                    await smtpClient.AuthenticateAsync(
+                        emailAccount.UseDefaultCredentials ?
+                            CredentialCache.DefaultNetworkCredentials :
+                            new NetworkCredential(emailAccount.Username, emailAccount.Password)
+                        ).ConfigureAwait(false);
+
+                    await smtpClient.SendAsync(message).ConfigureAwait(false);
+                    await smtpClient.DisconnectAsync(true).ConfigureAwait(false);
+                }
+            } catch (Exception exc)
+            {
+                _logger.Error(string.Format("Error sending e-mail. {0}", exc.Message), exc);
             }
         }
 
