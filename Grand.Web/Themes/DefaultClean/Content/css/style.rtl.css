@@ -1,5 +1,4 @@
-﻿/* designed by GrandNode - progr. MM */
-* {
+﻿* {
     text-align: right !important;
 }
 ::-webkit-scrollbar {
@@ -3402,8 +3401,6 @@ width: 50% !important;
         font-size: 10px;
     }
     product-subtotal, .unit-price {
-        /* top: -8px; */
-        /* text-align: center !important; */
         position: relative;
     }
     .quantity .td-title {
