@@ -18,6 +18,9 @@ namespace Grand.Framework.Infrastructure
         /// <param name="configuration">Configuration root of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
+            //add healthChecks
+            services.AddGrandHealthChecks();
+
             //add miniprofiler
             services.AddGrandMiniProfiler();
 
@@ -37,6 +40,9 @@ namespace Grand.Framework.Infrastructure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
+            //add HealthChecks
+            application.UseGrandHealthChecks();
+
             //add MiniProfiler
             application.UseProfiler();
 

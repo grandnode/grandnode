@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.IO;
@@ -333,6 +334,15 @@ namespace Grand.Framework.Infrastructure.Extensions
                 });
             }
 
+        }
+
+        public static void AddGrandHealthChecks(this IServiceCollection services)
+        {
+            var hcBuilder = services.AddHealthChecks();
+            hcBuilder.AddCheck("self", () => HealthCheckResult.Healthy());
+            hcBuilder.AddMongoDb(DataSettingsHelper.ConnectionString(),
+                   name: "mongodb-check",
+                   tags: new string[] { "mongodb" });
         }
     }
 }
