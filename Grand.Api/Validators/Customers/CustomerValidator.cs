@@ -22,7 +22,7 @@ namespace Grand.Api.Validators.Customers
                     return false;
                 }
                 return true;
-            }).WithMessage(localizationService.GetResource("Email is already registered"));
+            }).WithMessage(localizationService.GetResource("Api.Customers.Customer.Fields.Email.Registered"));
 
             RuleFor(x => x).Must((x, context) =>
             {
@@ -32,7 +32,7 @@ namespace Grand.Api.Validators.Customers
                     return false;
                 }
                 return true;
-            }).WithMessage(localizationService.GetResource("Username is already registered"));
+            }).WithMessage(localizationService.GetResource("Api.Customers.Customer.Fields.Username.Registered"));
 
             RuleFor(x => x).Must((x, context) =>
             {
@@ -42,7 +42,7 @@ namespace Grand.Api.Validators.Customers
                     return false;
                 }
                 return true;
-            }).WithMessage(localizationService.GetResource("Guid is already exists"));
+            }).WithMessage(localizationService.GetResource("Api.Customers.Customer.Fields.Guid.Exists"));
 
 
             //form fields

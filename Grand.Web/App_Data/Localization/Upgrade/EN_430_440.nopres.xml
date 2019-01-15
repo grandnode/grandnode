@@ -23,7 +23,6 @@
   <LocaleResource Name="Admin.Orders.Shipments.BackToList">
     <Value>Back to shipment list</Value>
   </LocaleResource>
-
   <LocaleResource Name="Admin.System.UserApi.Email.Required">
     <Value>Email is required</Value>
   </LocaleResource>
@@ -48,7 +47,6 @@
   <LocaleResource Name="activitylog.sendpmfromadminpanel">
     <Value>Send pm from admin panel</Value>
   </LocaleResource>
-
   <LocaleResource Name="Admin.Catalog.ProductTags.Info">
     <Value>Product tag info</Value>
   </LocaleResource>
@@ -61,19 +59,232 @@
   <LocaleResource Name="Admin.Catalog.ProductTags.BackToList">
     <Value>Back to tag list</Value>
   </LocaleResource>
-
   <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.UseServerCertificateValidation">
     <Value>The remote certificate is invalid</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.UseServerCertificateValidation.hint">
     <Value>Gets or sets a value that the remote certificate is invalid according to the validation procedure</Value>
   </LocaleResource>
-
   <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.SecureSocketOptions">
     <Value>Secure socket options (specify the SSL and/or TLS encryption)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.SecureSocketOptions.hint">
     <Value>Provides a way of specifying the SSL and/or TLS encryption that should be used for a connection</Value>
   </LocaleResource>
-  
+  <LocaleResource Name="admin.system.userapi.email.required">
+    <Value>E-mail is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.Category.Fields.Name.Required">
+    <Value>Category name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.Category.Fields.PageSizeOptions.ShouldHaveUniqueItems">
+    <Value>Page size should have unique items</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.Category.Fields.PictureId.NotExists">
+    <Value>Picture Id does not exist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.Category.Fields.ParentCategoryId.NotExists">
+    <Value>Category Id does not exist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.Category.Fields.CategoryTemplateId.NotExists">
+    <Value>Category Template Id does not exist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.Category.Fields.Id.NotExists">
+    <Value>Category Id does not exist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.Manufacturer.Fields.Name.Required">
+    <Value>Manufacturer name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.Manufacturer.Fields.PageSizeOptions.ShouldHaveUniqueItems">
+    <Value>Page size should have unique items</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.Manufacturer.Fields.PictureId.NotExists">
+    <Value>Picture Id does not exist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.Manufacturer.Fields.ManufacturerTemplateId.NotExists">
+    <Value>Manufacturer template Id does not exist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.Manufacturer.Fields.Id.NotExists">
+    <Value>Manufacturer Id does not exist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.ProductAttribute.Fields.Name.Required">
+    <Value>Product attribute name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.ProductAttribute.Fields.Id.NotExists">
+    <Value>Product attribute Id does not exist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.PredefinedProductAttributeValue.Fields.Name.Required">
+    <Value>Predefined product attribute value name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.ProductCategory.Fields.CategoryId.NotExists">
+    <Value>Category Id does not exist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.ProductManufacturer.Fields.ManufacturerId.NotExists">
+    <Value>Manufacturer Id does not exist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.ProductPicture.Fields.PictureId.NotExists">
+    <Value>Picture Id does not exist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.ProductSpecificationAttribute.Fields.SpecificationAttributeId.NotExists">
+    <Value>Specification attribute Id does not exist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.ProductSpecificationAttribute.Fields.SpecificationAttributeOptionId.NotExists">
+    <Value>Specification attribute option Id does not exist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.Product.Fields.Name.Required">
+    <Value>Product name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.Product.Fields.ProductType.Required">
+    <Value>Product type is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.Product.Fields.BackorderMode.Required">
+    <Value>Backorder mode is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.Product.Fields.DownloadActivationType.Required">
+    <Value>Download activation type is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.Product.Fields.IntervalUnitType.Required">
+    <Value>Interval unit type is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.Product.Fields.GiftCardType.Required">
+    <Value>Gift card type is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.Product.Fields.LowStockActivity.Required">
+    <Value>Low stock activity is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.Product.Fields.ManageInventoryMethod.Required">
+    <Value>Manage inventory method is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.Product.Fields.RecurringCyclePeriod.Required">
+    <Value>Recurring cycle period is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.Products.Cannoteditauction">
+    <Value>Cannot edit auction</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.Products.Fields.AvailableEndDateTime.Required">
+    <Value>Available end date time is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.Product.Fields.ParentGroupedProductId.NotExists">
+    <Value>Parent grouped product Id does not exist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.Product.Fields.ProductTemplateId.NotExists">
+    <Value>Product template Id does not exist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.Product.Fields.VendorId.NotExists">
+    <Value>Vendor Id does not exist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.Product.Fields.Id.NotExists">
+    <Value>Product Id does not exist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.SpecificationAttribute.Fields.Name.Required">
+    <Value>Specification attribute name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.SpecificationAttribute.Fields.Id.NotExists">
+    <Value>Specification attribute Id does not exist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Catalog.SpecificationAttributeOptions.Fields.Name.Required">
+    <Value>Specification attribute option name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Common.Picture.Fields.PictureBinary.Required">
+    <Value>Picture binary is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Common.Picture.Fields.MimeType.Required">
+    <Value>MIME Type is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Common.Picture.Fields.Id.NotRequired">
+    <Value>Picture Id is not required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Customers.Address.Fields.FirstName.Required">
+    <Value>First name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Customers.Address.Fields.LastName.Required">
+    <Value>Last name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Customers.Address.Fields.Email.Required">
+    <Value>E-mail is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Customers.Address.Common.WrongEmail">
+    <Value>Wrong email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Customers.Address.Fields.Country.Required">
+    <Value>Country is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Customers.Address.Fields.StateProvince.Required">
+    <Value>State province is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Customers.Address.Fields.Company.Required">
+    <Value>Company name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Customers.Address.Fields.VatNumber.Required">
+    <Value>VAT Number is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Customers.Address.Fields.StreetAddress.Required">
+    <Value>Street address is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Customers.Address.Fields.StreetAddress2.Required">
+    <Value>Street address 2 is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Customers.Address.Fields.ZipPostalCode.Required">
+    <Value>Zip postal code is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Customers.Address.Fields.City.Required">
+    <Value>City is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Customers.Address.Fields.Phone.Required">
+    <Value>Phone is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Customers.Address.Fields.Fax.Required">
+    <Value>Fax is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Customers.CustomerRole.Fields.Name.Required">
+    <Value>Customer role name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Customers.CustomerRole.Fields.PurchasedWithProductId.NotExists">
+    <Value>Purchased with Product Id does not exist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Customers.CustomerRole.Fields.Id.NotExists">
+    <Value>Customer role Id does not exist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Customers.CustomerRoles.Fields.Active.CantEditSystem">
+    <Value>You can not edit system roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Customers.CustomerRoles.Fields.PurchasedWithProduct.Registered">
+    <Value>You cannot specify "Purchased with product" value for "Registered" customer role</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Customers.Customer.Fields.Country.Required">
+    <Value>Country is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Customers.Customer.Fields.StateProvince.Required">
+    <Value>State province is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Customers.Customer.Customers.Customers.Fields.Company.Required">
+    <Value>Company name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Customers.Customer.Customers.Customers.Fields.StreetAddress.Required">
+    <Value>Street address is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Customers.Customer.Customers.Customers.Fields.StreetAddress2.Required">
+    <Value>Street address 2 is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Customers.Customer.Customers.Customers.Fields.ZipPostalCode.Required">
+    <Value>Zip/Postal Code is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Customers.Customer.Customers.Customers.Fields.City.Required">
+    <Value>City is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Customers.Customer.Customers.Customers.Fields.Phone.Required">
+    <Value>Phone is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Customers.Customer.Customers.Customers.Fields.Fax.Required">
+    <Value>Fax is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Customers.Customer.Fields.Email.Registered">
+    <Value>Email is already registered</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Customers.Customer.Fields.Username.Registered">
+    <Value>Username is already registered</Value>
+  </LocaleResource>
+  <LocaleResource Name="Api.Customers.Customer.Fields.Guid.Exists">
+    <Value>Guid exists</Value>
+  </LocaleResource>
 </Language>
