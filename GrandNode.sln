@@ -59,7 +59,7 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Api", "Grand.Api\Grand.Api.csproj", "{BDC75DE4-FB40-4BFD-91DC-215E3AA64071}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Api.Tests", "Tests\Grand.Api.Tests\Grand.Api.Tests.csproj", "{66673B1E-AA53-43DC-9905-90DC30EABE96}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Api.Tests", "Tests\Grand.Api.Tests\Grand.Api.Tests.csproj", "{66673B1E-AA53-43DC-9905-90DC30EABE96}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

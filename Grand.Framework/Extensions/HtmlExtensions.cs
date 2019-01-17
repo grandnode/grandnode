@@ -125,7 +125,7 @@ namespace Grand.Framework
 
             var window = new StringBuilder();
             window.AppendLine(string.Format("<div id='{0}' style='display:none;'>", modalId));
-            window.AppendLine(helper.Partial("Delete", deleteConfirmationModel).ToHtmlString());
+            window.AppendLine(helper.PartialAsync("Delete", deleteConfirmationModel).Result.ToHtmlString());
             window.AppendLine("</div>");
             window.AppendLine("<script>");
             window.AppendLine("$(document).ready(function() {");
