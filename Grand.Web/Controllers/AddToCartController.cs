@@ -238,7 +238,7 @@ namespace Grand.Web.Controllers
                         {
                             success = true,
                             message = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToTheWishlist.Link"), Url.RouteUrl("Wishlist")),
-                            html = this.RenderPartialViewToString("_AddToCart", addtoCartModel),
+                            html = this.RenderPartialViewToString("_PopupAddToCart", addtoCartModel),
                             updatetopwishlistsectionhtml = updatetopwishlistsectionhtml,
                         });
                     }
@@ -272,7 +272,7 @@ namespace Grand.Web.Controllers
                         {
                             success = true,
                             message = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToTheCart.Link"), Url.RouteUrl("ShoppingCart")),
-                            html = this.RenderPartialViewToString("_AddToCart", addtoCartModel),
+                            html = this.RenderPartialViewToString("_PopupAddToCart", addtoCartModel),
                             updatetopcartsectionhtml = updatetopcartsectionhtml,
                             updateflyoutcartsectionhtml = updateflyoutcartsectionhtml
                         });
@@ -587,7 +587,7 @@ namespace Grand.Web.Controllers
                         {
                             success = true,
                             message = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToTheCart.Link"), Url.RouteUrl("ShoppingCart")),
-                            html = this.RenderPartialViewToString("_AddToCart", addtoCartModel),
+                            html = this.RenderPartialViewToString("_PopupAddToCart", addtoCartModel),
                             updatetopcartsectionhtml = updatetopcartsectionhtml,
                             updateflyoutcartsectionhtml = updateflyoutcartsectionhtml,
                             refreshreservation = product.ProductType == ProductType.Reservation && product.IntervalUnitType != IntervalUnit.Day
@@ -677,7 +677,7 @@ namespace Grand.Web.Controllers
             {
                 success = true,
                 message = _localizationService.GetResource("ShoppingCart.Yourbidhasbeenplaced"),
-                html = this.RenderPartialViewToString("_AddToCart", addtoCartModel)
+                html = this.RenderPartialViewToString("_PopupAddToCart", addtoCartModel)
             });
         }
 
