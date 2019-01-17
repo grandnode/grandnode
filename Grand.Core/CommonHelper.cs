@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Hosting;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -272,7 +273,7 @@ namespace Grand.Core
         /// <summary>
         /// Gets or sets application base path
         /// </summary>
-        internal static string BaseDirectory { get; set; }
+        internal static string BaseDirectory => HostingEnvironment.ContentRootPath;
 
         /// <summary>
         ///  Depth-first recursive delete, with handling for descendant directories open in Windows Explorer.
@@ -304,5 +305,7 @@ namespace Grand.Core
                 Directory.Delete(path, true);
             }
         }
+
+        public static IHostingEnvironment HostingEnvironment { get; set; }
     }
 }

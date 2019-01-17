@@ -145,7 +145,7 @@ namespace Grand.Core.Infrastructure
             var provider = services.BuildServiceProvider();
             var hostingEnvironment = provider.GetRequiredService<IHostingEnvironment>();
             var grandConfig = provider.GetRequiredService<GrandConfig>();
-            CommonHelper.BaseDirectory = hostingEnvironment.ContentRootPath;
+            CommonHelper.HostingEnvironment = hostingEnvironment;
 
             //register mongo mappings
             MongoDBMapperConfiguration.RegisterMongoDBMappings(grandConfig);
