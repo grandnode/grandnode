@@ -1904,7 +1904,11 @@ pagination .pagination a:not([href]) {
         font-family: Font Awesome\ 5 Free;
         font-weight: 900;
     }
-
+    .block-account-navigation .list .customer-forum a::before {
+        content: "\f46c";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+    }
     .block-account-navigation .list li a:before {
         position: absolute;
         width: 50px;
