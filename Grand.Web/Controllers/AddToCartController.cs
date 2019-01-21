@@ -554,7 +554,7 @@ namespace Grand.Web.Controllers
                             success = true,
                             message = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToTheWishlist.Link"), Url.RouteUrl("Wishlist")),
                             updatetopwishlistsectionhtml = updatetopwishlistsectionhtml,
-                            html = this.RenderPartialViewToString("_AddToCart", addtoCartModel),
+                            html = this.RenderPartialViewToString("_PopupAddToCart", addtoCartModel),
                         });
                     }
                 case ShoppingCartType.ShoppingCart:
