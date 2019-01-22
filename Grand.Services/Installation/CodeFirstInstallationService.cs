@@ -5993,7 +5993,7 @@ namespace Grand.Services.Installation
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_digital_downloads.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Digital downloads")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
-                ShowOnHomePage = true,
+                ShowOnHomePage = false,
                 DisplayOrder = 4,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
@@ -6014,6 +6014,7 @@ namespace Grand.Services.Installation
                 PriceRanges = "-25;25-50;50-;",
                 IncludeInTopMenu = true,
                 Published = true,
+                ShowOnHomePage = true,
                 DisplayOrder = 5,
                 Flag = "Promo!",
                 FlagStyle = "bg-success",
