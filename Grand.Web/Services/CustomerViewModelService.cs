@@ -758,7 +758,7 @@ namespace Grand.Web.Services
                     bid.CurrentBidAmount = priceFormatter.FormatPrice(amount);
                     bid.CurrentBidAmountValue = amount;
                     bid.HighestBidder = product.HighestBidder == customer.Id;
-                    bid.EndBidDate = product.AvailableEndDateTimeUtc.HasValue ? product.AvailableEndDateTimeUtc.Value : DateTime.MaxValue;
+                    bid.EndBidDate = product.AvailableEndDateTimeUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(product.AvailableEndDateTimeUtc.Value, DateTimeKind.Utc) : DateTime.MaxValue;
                     bid.ProductName = product.GetLocalized(x => x.Name);
                     bid.ProductSeName = product.GetSeName();
                     bid.BidAmountValue = item.Max(x => x.Amount);

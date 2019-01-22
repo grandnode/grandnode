@@ -4,6 +4,8 @@ using Grand.Core.Domain.Directory;
 using Grand.Core.Infrastructure;
 using Grand.Services.Catalog;
 using Grand.Services.Directory;
+using Grand.Services.Helpers;
+using System;
 using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops
@@ -16,13 +18,14 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private readonly IPriceFormatter _priceFormatter;
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
+        private readonly IDateTimeHelper _dateTimeHelper;
 
         public LiquidAuctions(Product product, Bid bid = null)
         {
             this._priceFormatter = EngineContext.Current.Resolve<IPriceFormatter>();
             this._currencyService = EngineContext.Current.Resolve<ICurrencyService>();
             this._currencySettings = EngineContext.Current.Resolve<CurrencySettings>();
-
+            this._dateTimeHelper = EngineContext.Current.Resolve<IDateTimeHelper>();
             this._product = product;
             this._bid = bid;
 
@@ -45,7 +48,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public string EndTime
         {
-            get { return _product.AvailableEndDateTimeUtc.ToString(); }
+            get { return _dateTimeHelper.ConvertToUserTime(_product.AvailableEndDateTimeUtc.Value, DateTimeKind.Utc).ToString(); }
         }
 
         public string ProductSeName
