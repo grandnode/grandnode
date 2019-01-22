@@ -150,3 +150,16 @@ namespace Grand.Plugin.DiscountRequirements.HasOneProduct.Models
         #endregion
     }
 }
+
+namespace Grand.Plugin.DiscountRules.ShoppingCart.Models
+{
+    public class RequirementModel
+    {
+        [GrandResourceDisplayName("Plugins.DiscountRules.ShoppingCart.Fields.Amount")]
+        public decimal SpentAmount { get; set; }
+
+        public string DiscountId { get; set; }
+
+        public string RequirementId { get; set; }
+    }
+}

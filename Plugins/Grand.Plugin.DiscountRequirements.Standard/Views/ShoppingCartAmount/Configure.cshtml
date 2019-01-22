@@ -1,0 +1,45 @@
+﻿@{
+    Layout = "";
+}
+@model Grand.Plugin.DiscountRules.ShoppingCart.Models.RequirementModel
+@using Grand.Framework;
+
+<script type="text/javascript">
+        $(document).ready(function () {
+            $('#saveShoppingCartrequirement@(Model.RequirementId)').click(function () {
+                var spentAmount = $("#@Html.IdFor(model => model.SpentAmount)").val();
+                var discountId = '@Model.DiscountId';
+                var requirementId = '@Model.RequirementId';
+                $.ajax({
+                    cache:false,
+                    type: "POST",
+                    url: "@(Url.Action("Configure", "ShoppingCartAmount"))",
+                    data: { "discountId": discountId, "discountRequirementId": requirementId, "spentAmount": spentAmount },
+                    success: function (data) {
+                         $('#pnl-save-requirement-result@(Model.RequirementId)').fadeIn("slow").delay(1000).fadeOut("slow");
+                         //notify parent if it's a new requirement
+                         @if (String.IsNullOrEmpty(Model.RequirementId))
+                         {
+                            <text>$("#discountRequirementContainer").trigger('grandnewdiscountruleadded', [data.NewRequirementId]);</text>
+                         }
+                    },
+                    error:function (xhr, ajaxOptions, thrownError){
+                        alert('@Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(T("Admin.Promotions.Discounts.Requirements.FailedToSave").Text))');
+                    }
+                });
+            });
+        });
+</script>
+
+<div class="form-horizontal">
+    <div class="form-group">
+        <admin-label asp-for="SpentAmount" />
+        <div class="col-md-9 col-sm-9">
+            <div>
+                @Html.EditorFor(model => model.SpentAmount) <input type="button" id="saveShoppingCartrequirement@(Model.RequirementId)" class="k-button"
+                                                                   value="@T("Admin.Common.Save")" />
+            </div>
+            <div id="pnl-save-requirement-result@(Model.RequirementId)" style="display:none;">@T("Admin.Promotions.Discounts.Requirements.Saved")</div>
+        </div>
+    </div>
+</div>

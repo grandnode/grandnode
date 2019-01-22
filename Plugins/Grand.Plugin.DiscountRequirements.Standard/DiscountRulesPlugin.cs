@@ -8,6 +8,7 @@ using Grand.Services.Discounts;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
 using System.Collections.Generic;
+using Grand.Plugin.DiscountRequirements.ShoppingCart;
 
 namespace Grand.Plugin.DiscountRequirements.CustomerRoles
 {
@@ -34,6 +35,7 @@ namespace Grand.Plugin.DiscountRequirements.CustomerRoles
                 new HadSpentAmountDiscountRequirementRule(_settingService,_orderService,_localizationService,_webHelper),
                 new HasAllProductsDiscountRequirementRule(_settingService),
                 new HasOneProductDiscountRequirementRule(_settingService),
+                new ShoppingCartDiscountRequirementRule(_settingService)
             };
             return rules;
         }
@@ -59,6 +61,11 @@ namespace Grand.Plugin.DiscountRequirements.CustomerRoles
             this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRequirements.HasOneProduct.Fields.Products.Hint", "The comma-separated list of product identifiers (e.g. 77, 123, 156). You can find a product ID on its details page. You can also specify the comma-separated list of product identifiers with quantities ({Product ID}:{Quantity}. for example, 77:1, 123:2, 156:3). And you can also specify the comma-separated list of product identifiers with quantity range ({Product ID}:{Min quantity}-{Max quantity}. for example, 77:1-3, 123:2-5, 156:3-8).");
             this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRequirements.HasOneProduct.Fields.Products.AddNew", "Add product");
             this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRequirements.HasOneProduct.Fields.Products.Choose", "Choose");
+
+            //Shipping cart
+            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.ShoppingCart.Fields.Amount", "Required spent amount");
+            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.ShoppingCart.Fields.Amount.Hint", "Discount will be applied if the subtotal  in shopping cart is x.xx.");
+
             base.Install();
         }
 
