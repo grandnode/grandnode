@@ -9,8 +9,9 @@ using Grand.Services.Localization;
 using Grand.Services.Orders;
 using System.Collections.Generic;
 using Grand.Plugin.DiscountRequirements.ShoppingCart;
+using Grand.Plugin.DiscountRequirements.CustomerRoles;
 
-namespace Grand.Plugin.DiscountRequirements.CustomerRoles
+namespace Grand.Plugin.DiscountRequirements.Standard
 {
     public partial class DiscountRequirementsPlugin : BasePlugin, IDiscount
     {
