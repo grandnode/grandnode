@@ -82,6 +82,11 @@ namespace Grand.Core.Configuration
         public string PluginsIgnoredDuringInstallation { get; set; }
 
         /// <summary>
+        /// Allow recompiling views on file change
+        /// </summary>
+        public bool AllowRecompilingViewsOnFileChange { get; set; }
+
+        /// <summary>
         /// Enable scripting C# applications to execute code.
         /// </summary>
         public bool UseRoslynScripts { get; set; }

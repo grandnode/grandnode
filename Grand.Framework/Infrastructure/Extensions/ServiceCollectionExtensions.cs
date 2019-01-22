@@ -209,7 +209,7 @@ namespace Grand.Framework.Infrastructure.Extensions
                 options.AccessDeniedPath = GrandCookieAuthenticationDefaults.AccessDeniedPath;
                 options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
             });
-            
+
             //register external authentication plugins now
             var typeFinder = new WebAppTypeFinder();
             var externalAuthConfigurations = typeFinder.FindClassesOfType<IExternalAuthenticationRegistrar>();
@@ -241,10 +241,14 @@ namespace Grand.Framework.Infrastructure.Extensions
                 options.EnableEndpointRouting = false;
             });
 
+            var config = services.BuildServiceProvider().GetRequiredService<GrandConfig>();
+
+            //Allow recompiling views on file change
+            if (config.AllowRecompilingViewsOnFileChange)
+                mvcBuilder.AddRazorOptions(options => options.AllowRecompilingViewsOnFileChange = true);
+
             //set compatibility version
             mvcBuilder.SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_2);
-
-            var config = services.BuildServiceProvider().GetRequiredService<GrandConfig>();
 
             if (config.UseHsts)
             {
@@ -292,7 +296,8 @@ namespace Grand.Framework.Infrastructure.Extensions
                 return;
 
             //add MiniProfiler services
-            services.AddMiniProfiler(options => {
+            services.AddMiniProfiler(options =>
+            {
                 options.IgnoredPaths.Add("/api");
                 options.IgnoredPaths.Add("/odata");
                 var memoryCache = EngineContext.Current.Resolve<IMemoryCache>();
