@@ -695,6 +695,7 @@ namespace Grand.Web.Areas.Admin.Services
                 IsTaxExempt = model.IsTaxExempt,
                 FreeShipping = model.FreeShipping,
                 Active = model.Active,
+                StoreId = _storeContext.CurrentStore.Id,
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
             };

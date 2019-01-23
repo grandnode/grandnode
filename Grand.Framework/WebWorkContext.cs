@@ -268,7 +268,7 @@ namespace Grand.Framework
                 {
                     //create guest if not exists
                     string referrer = _httpContextAccessor?.HttpContext?.Request?.Headers[HeaderNames.Referer];
-                    customer = _customerService.InsertGuestCustomer(referrer);
+                    customer = _customerService.InsertGuestCustomer(_storeContext.CurrentStore, referrer);
                 }
 
                 if (!customer.Deleted && customer.Active)

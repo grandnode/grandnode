@@ -5,13 +5,15 @@ using Grand.Framework.Validators;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
+using Grand.Services.Stores;
 using System.Linq;
 
 namespace Grand.Api.Validators.Customers
 {
     public class CustomerValidator : BaseGrandValidator<CustomerDto>
     {
-        public CustomerValidator(ILocalizationService localizationService, IStateProvinceService stateProvinceService, ICustomerService customerService, CustomerSettings customerSettings)
+        public CustomerValidator(ILocalizationService localizationService, IStateProvinceService stateProvinceService, 
+            ICustomerService customerService, IStoreService storeService, CustomerSettings customerSettings)
         {
 
             RuleFor(x => x).Must((x, context) =>
@@ -43,6 +45,16 @@ namespace Grand.Api.Validators.Customers
                 }
                 return true;
             }).WithMessage(localizationService.GetResource("Api.Customers.Customer.Fields.Guid.Exists"));
+
+            RuleFor(x => x).Must((x, context) =>
+            {
+                var store = storeService.GetStoreById(x.StoreId);
+                if (store != null)
+                {
+                    return true;
+                }
+                return false;
+            }).WithMessage(localizationService.GetResource("Api.Customers.Customer.Fields.StoreId.NotExists"));
 
 
             //form fields

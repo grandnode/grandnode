@@ -2,6 +2,7 @@ using Grand.Core;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Orders;
+using Grand.Core.Domain.Stores;
 using System;
 using System.Collections.Generic;
 
@@ -116,7 +117,7 @@ namespace Grand.Services.Customers
         /// Insert a guest customer
         /// </summary>
         /// <returns>Customer</returns>
-        Customer InsertGuestCustomer(string urlreferrer = "");
+        Customer InsertGuestCustomer(Store store, string urlreferrer = "");
 
         /// <summary>
         /// Insert a customer

@@ -233,6 +233,7 @@ namespace Grand.Services.Customers
             request.Customer.Username = request.Username;
             request.Customer.Email = request.Email;
             request.Customer.PasswordFormat = request.PasswordFormat;
+            request.Customer.StoreId = request.StoreId;
 
             switch (request.PasswordFormat)
             {

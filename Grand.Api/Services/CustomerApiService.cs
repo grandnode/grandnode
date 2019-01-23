@@ -98,6 +98,9 @@ namespace Grand.Api.Services
             var customer = model.ToEntity();
             customer.CreatedOnUtc = DateTime.UtcNow;
             customer.LastActivityDateUtc = DateTime.UtcNow;
+            if (string.IsNullOrEmpty(customer.Username))
+                customer.Username = customer.Email;
+
             _customerService.InsertCustomer(customer);
             SaveCustomerAttributes(model, customer);
             SaveCustomerRoles(model, customer);

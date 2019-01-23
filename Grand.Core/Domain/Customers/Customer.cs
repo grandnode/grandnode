@@ -80,9 +80,14 @@ namespace Grand.Core.Domain.Customers
         public string AffiliateId { get; set; }
 
         /// <summary>
-        /// Gets or sets the vendor identifier with which this customer is associated (maganer)
+        /// Gets or sets the vendor identifier with which this customer is associated (manager)
         /// </summary>
         public string VendorId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the store identifier 
+        /// </summary>
+        public string StoreId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the customer is active

@@ -23,6 +23,7 @@ namespace Grand.Api.DTOs.Customers
         public bool FreeShipping { get; set; }
         public string AffiliateId { get; set; }
         public string VendorId { get; set; }
+        public string StoreId { get; set; }
         public bool Active { get; set; }
         public bool Deleted { get; set; }
         public string Gender { get; set; }

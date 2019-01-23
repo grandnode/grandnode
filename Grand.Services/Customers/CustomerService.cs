@@ -8,6 +8,7 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Forums;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
+using Grand.Core.Domain.Stores;
 using Grand.Services.Common;
 using Grand.Services.Events;
 using MongoDB.Bson;
@@ -404,12 +405,13 @@ namespace Grand.Services.Customers
         /// Insert a guest customer
         /// </summary>
         /// <returns>Customer</returns>
-        public virtual Customer InsertGuestCustomer(string urlreferrer = "")
+        public virtual Customer InsertGuestCustomer(Store store, string urlreferrer = "")
         {
             var customer = new Customer
             {
                 CustomerGuid = Guid.NewGuid(),
                 Active = true,
+                StoreId = store.Id,
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
                 UrlReferrer = urlreferrer
@@ -499,6 +501,7 @@ namespace Grand.Services.Customers
                 .Set(x => x.PasswordFormatId, customer.PasswordFormatId)
                 .Set(x => x.PasswordSalt, customer.PasswordSalt)
                 .Set(x => x.Active, customer.Active)
+                .Set(x => x.StoreId, customer.StoreId)
                 .Set(x => x.Password, customer.Password)
                 .Set(x => x.PasswordChangeDateUtc, customer.PasswordChangeDateUtc)
                 .Set(x => x.Username, string.IsNullOrEmpty(customer.Username) ? "" : customer.Username.ToLower())
@@ -647,7 +650,8 @@ namespace Grand.Services.Customers
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, customer.Id);
             var update = Builders<Customer>.Update
-                .Set(x => x.Active, customer.Active);
+                .Set(x => x.Active, customer.Active)
+                .Set(x => x.StoreId, customer.StoreId);
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
         }
 

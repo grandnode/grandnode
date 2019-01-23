@@ -393,7 +393,7 @@ namespace Grand.Web.Controllers
                 _authenticationService.SignOut();
                 
                 //Save a new record
-                _workContext.CurrentCustomer = _customerService.InsertGuestCustomer();
+                _workContext.CurrentCustomer = _customerService.InsertGuestCustomer(_storeContext.CurrentStore);
             }
             var customer = _workContext.CurrentCustomer;
 
@@ -699,6 +699,7 @@ namespace Grand.Web.Controllers
 
             //activate user account
             customer.Active = true;
+            customer.StoreId = _storeContext.CurrentStore.Id;
             _customerService.UpdateActive(customer);
             _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.AccountActivationToken, "");
             
