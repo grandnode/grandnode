@@ -1235,7 +1235,7 @@ namespace Grand.Services.Installation
             foreach (var messagetemplate in messagetemplates)
             {
                 messagetemplate.Subject = ReplaceValue(messagetemplate.Subject);
-                if(messagetemplate.Body.Contains("%Order.Product(s)%"))
+                if (messagetemplate.Body.Contains("%Order.Product(s)%"))
                 {
                     messagetemplate.Body = messagetemplate.Body.Replace("%Order.Product(s)%", orderProducts);
                 }
@@ -1247,6 +1247,27 @@ namespace Grand.Services.Installation
                 messagetemplateService.UpdateMessageTemplate(messagetemplate);
             }
             #endregion
+
+            #region Insert message template
+
+            var eaGeneral = EngineContext.Current.Resolve<IRepository<EmailAccount>>().Table.FirstOrDefault();
+            if (eaGeneral == null)
+                throw new Exception("Default email account cannot be loaded");
+            var messageTemplates = new List<MessageTemplate>
+            {
+                new MessageTemplate
+                {
+                    Name = "AuctionExpired.StoreOwnerNotification",
+                    Subject = "Your auction to product {{Product.Name}}  has expired.",
+                    Body = "Hello, <br> Your auction to product {{Product.Name}} has expired without bid.",
+                    //this template is disabled by default
+                    IsActive = false,
+                    EmailAccountId = eaGeneral.Id,
+                }
+            };
+            EngineContext.Current.Resolve<IRepository<MessageTemplate>>().Insert(messageTemplates);
+            #endregion
+
         }
 
         private void InstallStringResources(string filenames)

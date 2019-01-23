@@ -4398,6 +4398,14 @@ namespace Grand.Services.Installation
                                        },
                                     new MessageTemplate
                                        {
+                                           Name = "AuctionExpired.StoreOwnerNotification",
+                                           Subject = "Your auction to product {{Product.Name}}  has expired.",
+                                           Body = "Hello, <br> Your auction to product {{Product.Name}} has expired without bid.",
+                                           IsActive = false,
+                                           EmailAccountId = eaGeneral.Id,
+                                       },
+                                    new MessageTemplate
+                                       {
                                            Name = "BidUp.CustomerNotification",
                                            Subject = "{{Store.Name}}. Your offer has been outbid.",
                                            Body = "<p>Hi {{Customer.FullName}}!</p><p>Your offer for product <a href=\"{{Store.URL}}{{Auctions.ProductSeName}}\">{{Auctions.ProductName}}</a> has been outbid. New price is {{Auctions.Price}}.<br />\r\nRaise a price by raising one's offer. Auction will be ended on {{Auctions.EndTime}}</p>",

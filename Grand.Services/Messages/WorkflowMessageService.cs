@@ -2311,40 +2311,43 @@ namespace Grand.Services.Messages
                 throw new ArgumentNullException("product");
 
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(bid.CustomerId);
-
-            if (string.IsNullOrEmpty(languageId))
+            if (customer != null)
             {
-                languageId = customer.GetAttribute<string>(SystemCustomerAttributeNames.LanguageId);
+                if (string.IsNullOrEmpty(languageId))
+                {
+                    languageId = customer.GetAttribute<string>(SystemCustomerAttributeNames.LanguageId);
+                }
+
+                string storeId = bid.StoreId;
+                if (string.IsNullOrEmpty(storeId))
+                {
+                    storeId = _storeContext.CurrentStore.Id;
+                }
+
+                languageId = EnsureLanguageIsActive(languageId, storeId);
+
+                var messageTemplate = GetActiveMessageTemplate("AuctionEnded.CustomerNotificationWin", storeId);
+                if (messageTemplate == null)
+                    return 0;
+
+                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+
+                LiquidObject liquidObject = new LiquidObject();
+                _messageTokenProvider.AddAuctionTokens(liquidObject, product, bid);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+                _messageTokenProvider.AddProductTokens(liquidObject, product, languageId);
+                _messageTokenProvider.AddStoreTokens(liquidObject, _storeService.GetStoreById(storeId), emailAccount);
+
+                //event notification
+                _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
+
+                var toEmail = customer.Email;
+                var toName = customer.GetFullName();
+                return SendNotification(messageTemplate, emailAccount,
+                    languageId, liquidObject,
+                    toEmail, toName);
             }
-
-            string storeId = bid.StoreId;
-            if (string.IsNullOrEmpty(storeId))
-            {
-                storeId = _storeContext.CurrentStore.Id;
-            }
-
-            languageId = EnsureLanguageIsActive(languageId, storeId);
-
-            var messageTemplate = GetActiveMessageTemplate("AuctionEnded.CustomerNotificationWin", storeId);
-            if (messageTemplate == null)
-                return 0;
-
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
-
-            LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddAuctionTokens(liquidObject, product, bid);
-            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
-            _messageTokenProvider.AddProductTokens(liquidObject, product, languageId);
-            _messageTokenProvider.AddStoreTokens(liquidObject, _storeService.GetStoreById(storeId), emailAccount);
-
-            //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
-
-            var toEmail = customer.Email;
-            var toName = customer.GetFullName();
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, liquidObject,
-                toEmail, toName);
+            return 0;
         }
 
         public virtual int SendAuctionEndedCustomerNotificationLost(Product product, string languageId, Bid bid)
@@ -2352,47 +2355,50 @@ namespace Grand.Services.Messages
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            string storeId = bid.StoreId;
-            if (string.IsNullOrEmpty(storeId))
+            var customerwin = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(bid.CustomerId);
+            if (customerwin != null)
             {
-                storeId = _storeContext.CurrentStore.Id;
-            }
-
-            var messageTemplate = GetActiveMessageTemplate("AuctionEnded.CustomerNotificationLost", storeId);
-            if (messageTemplate == null)
-                return 0;
-
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
-            var store = _storeService.GetStoreById(storeId);
-
-            LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddAuctionTokens(liquidObject, product, bid);
-            _messageTokenProvider.AddProductTokens(liquidObject, product, languageId);
-            _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-
-            var customerService = EngineContext.Current.Resolve<ICustomerService>();
-            var bids = EngineContext.Current.Resolve<IAuctionService>().GetBidsByProductId(bid.ProductId).Where(x => x.CustomerId != bid.CustomerId).GroupBy(x => x.CustomerId);
-            foreach (var item in bids)
-            {
-                var customer = customerService.GetCustomerById(item.Key);
-
-                if (string.IsNullOrEmpty(languageId))
+                string storeId = bid.StoreId;
+                if (string.IsNullOrEmpty(storeId))
                 {
-                    languageId = customer.GetAttribute<string>(SystemCustomerAttributeNames.LanguageId);
+                    storeId = _storeContext.CurrentStore.Id;
                 }
 
-                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+                var messageTemplate = GetActiveMessageTemplate("AuctionEnded.CustomerNotificationLost", storeId);
+                if (messageTemplate == null)
+                    return 0;
 
-                //event notification
-                _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
+                var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                var store = _storeService.GetStoreById(storeId);
 
-                var toEmail = customer.Email;
-                var toName = customer.GetFullName();
-                SendNotification(messageTemplate, emailAccount,
-                    languageId, liquidObject,
-                    toEmail, toName);
+                LiquidObject liquidObject = new LiquidObject();
+                _messageTokenProvider.AddAuctionTokens(liquidObject, product, bid);
+                _messageTokenProvider.AddProductTokens(liquidObject, product, languageId);
+                _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
+
+                var customerService = EngineContext.Current.Resolve<ICustomerService>();
+                var bids = EngineContext.Current.Resolve<IAuctionService>().GetBidsByProductId(bid.ProductId).Where(x => x.CustomerId != bid.CustomerId).GroupBy(x => x.CustomerId);
+                foreach (var item in bids)
+                {
+                    var customer = customerService.GetCustomerById(item.Key);
+
+                    if (string.IsNullOrEmpty(languageId))
+                    {
+                        languageId = customer.GetAttribute<string>(SystemCustomerAttributeNames.LanguageId);
+                    }
+
+                    _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+
+                    //event notification
+                    _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
+
+                    var toEmail = customer.Email;
+                    var toName = customer.GetFullName();
+                    SendNotification(messageTemplate, emailAccount,
+                        languageId, liquidObject,
+                        toEmail, toName);
+                }
             }
-
             return 0;
         }
 
@@ -2449,37 +2455,52 @@ namespace Grand.Services.Messages
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(bid.CustomerId);
-
-            if (string.IsNullOrEmpty(languageId))
-            {
-                languageId = customer.GetAttribute<string>(SystemCustomerAttributeNames.LanguageId);
-            }
-
-            string storeId = bid.StoreId;
-            if (string.IsNullOrEmpty(storeId))
-            {
-                storeId = _storeContext.CurrentStore.Id;
-            }
-
-            languageId = EnsureLanguageIsActive(languageId, storeId);
-
-            var messageTemplate = GetActiveMessageTemplate("AuctionEnded.StoreOwnerNotification", storeId);
-            if (messageTemplate == null)
-                return 0;
-
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
-
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddAuctionTokens(liquidObject, product, bid);
-            _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
-            _messageTokenProvider.AddStoreTokens(liquidObject, _storeService.GetStoreById(storeId), emailAccount);
+            MessageTemplate messageTemplate = null;
+            EmailAccount emailAccount = null;
+
+            if (bid != null)
+            {
+                var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(bid.CustomerId);
+
+                if (string.IsNullOrEmpty(languageId))
+                {
+                    languageId = customer.GetAttribute<string>(SystemCustomerAttributeNames.LanguageId);
+                }
+
+                string storeId = bid.StoreId;
+                if (string.IsNullOrEmpty(storeId))
+                {
+                    storeId = _storeContext.CurrentStore.Id;
+                }
+
+                languageId = EnsureLanguageIsActive(languageId, storeId);
+
+                messageTemplate = GetActiveMessageTemplate("AuctionEnded.StoreOwnerNotification", storeId);
+                if (messageTemplate == null)
+                    return 0;
+
+                emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                _messageTokenProvider.AddAuctionTokens(liquidObject, product, bid);
+                _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
+                _messageTokenProvider.AddStoreTokens(liquidObject, _storeService.GetStoreById(storeId), emailAccount);
+            }
+            else
+            {
+                messageTemplate = GetActiveMessageTemplate("AuctionExpired.StoreOwnerNotification", "");
+                if (messageTemplate == null)
+                    return 0;
+
+                emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+                _messageTokenProvider.AddProductTokens(liquidObject, product, "");
+            }
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
+
             return SendNotification(messageTemplate, emailAccount,
                 languageId, liquidObject,
                 toEmail, toName);

@@ -49,8 +49,11 @@ namespace Grand.Services.Tasks
                 {
                     var bid = _auctionService.GetBidsByProductId(auctionToEnd.Id).OrderByDescending(x => x.Amount).FirstOrDefault();
                     if (bid == null)
-                        throw new ArgumentNullException("bid");
-
+                    {
+                        _auctionService.UpdateAuctionEnded(auctionToEnd, true);
+                        _workflowMessageService.SendAuctionEndedStoreOwnerNotification(auctionToEnd, _localizationSettings.DefaultAdminLanguageId, null);
+                        continue;
+                    }
                     var warnings = _shoppingCartService.AddToCart(_customerService.GetCustomerById(bid.CustomerId), bid.ProductId, Core.Domain.Orders.ShoppingCartType.Auctions,
                         bid.StoreId, customerEnteredPrice: bid.Amount);
 
