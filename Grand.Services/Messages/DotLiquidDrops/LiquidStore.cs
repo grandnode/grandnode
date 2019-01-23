@@ -32,7 +32,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public string URL
         {
-            get { return _store.Url; }
+            get { return _store.SslEnabled ? _store.SecureUrl : _store.Url; }
         }
 
         public string Email
