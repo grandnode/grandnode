@@ -32,16 +32,7 @@ namespace Grand.Framework.Security.Authorization
                 {
                     var redirectContext = context.Resource as AuthorizationFilterContext;
                     var httpContext = _contextAccessor.HttpContext;
-                    string authHeader = httpContext?.Request?.Headers["Authorization"];
-                    var apirequest = authHeader != null && authHeader.Split(' ')[0] == JwtBearerDefaults.AuthenticationScheme;
-                    if (apirequest)
-                    {
-                        redirectContext.Result = new ForbidResult(JwtBearerDefaults.AuthenticationScheme);
-                    }
-                    else
-                    {
-                        redirectContext.Result = new RedirectToActionResult("AccessDenied", "Security", new { pageUrl = httpContext.Request.Path });
-                    }
+                    redirectContext.Result = new RedirectToActionResult("AccessDenied", "Security", new { pageUrl = httpContext.Request.Path });
                 }
                 context.Succeed(requirement);
             }
