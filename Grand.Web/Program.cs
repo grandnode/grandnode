@@ -7,14 +7,13 @@ namespace Grand.Web
     {
         public static void Main(string[] args)
         {
-            var host = WebHost.CreateDefaultBuilder(args)
+            CreateWebHostBuilder(args).Build().Run();
+        }
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
                 .UseKestrel(options => options.AddServerHeader = false)
                 .CaptureStartupErrors(true)
                 .UseSetting(WebHostDefaults.PreventHostingStartupKey, "true")
-                .UseStartup<Startup>()
-                .Build();
-
-            host.Run();
-        }
+                .UseStartup<Startup>();
     }
 }

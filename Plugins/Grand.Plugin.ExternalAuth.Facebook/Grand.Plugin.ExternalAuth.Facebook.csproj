@@ -6,6 +6,7 @@
     <Authors>UNIT-SOFT Sp. z o.o.</Authors>
     <Company>UNIT-SOFT Sp. z o.o.</Company>
     <PackageProjectUrl>https://grandnode.com/</PackageProjectUrl>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -32,7 +33,14 @@
       <Private>false</Private>
     </ProjectReference>
   </ItemGroup>
-
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="2.2.0" />
+  </ItemGroup>
+  <Target Name="FilterCopyLocalItems" AfterTargets="ResolveLockFileCopyLocalProjectDeps">
+    <ItemGroup>
+      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(Filename)' != 'Microsoft.AspNetCore.Authentication.Facebook'" />
+    </ItemGroup>
+  </Target>
   <ItemGroup>
     <None Update="Content\facebookstyles.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

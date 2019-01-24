@@ -10,7 +10,7 @@
     <partial name="_ForumHeader" />
     @foreach (var forumGroup in Model.ForumGroups)
     {
-        Html.RenderPartial("_ForumGroup", forumGroup);
+        await Html.RenderPartialAsync("_ForumGroup", forumGroup);
     }
     @await Component.InvokeAsync("ForumActiveDiscussionsSmall")
 </div>

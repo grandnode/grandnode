@@ -7,8 +7,12 @@
     <PackageProjectUrl>https://grandnode.com/</PackageProjectUrl>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
     <ServerGarbageCollection>false</ServerGarbageCollection>
-    <TieredCompilation>true</TieredCompilation>    
+    <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Grand.Api\Grand.Api.csproj" />
     <ProjectReference Include="..\Grand.Core\Grand.Core.csproj" />
@@ -19,10 +23,40 @@
   <ItemGroup>
     <Content Include="App_Data\**" CopyToPublishDirectory="PreserveNewest" Exclude="App_Data\appsettings.json;App_Data\DataProtectionKeys\*.xml;App_Data\Settings.txt;App_Data\InstalledPlugins.txt;" />
     <Content Include="Themes\**" CopyToPublishDirectory="PreserveNewest" Exclude="Themes\**\*.config;Themes\**\*.cshtml" />
-    <Content Include="Plugins\**" CopyToPublishDirectory="PreserveNewest" Exclude="Plugins\**\*.cshtml;Plugins\**\*.json;Plugins\bin\**" />
     <Content Include="Roslyn\**" CopyToPublishDirectory="PreserveNewest" Exclude="Roslyn\**\*.dll" />
     <Content Include="logs\**" CopyToPublishDirectory="PreserveNewest" />
     <Content Remove="wwwroot\content\images\thumbs\*.jpeg;wwwroot\content\images\thumbs\*.jpg;wwwroot\content\images\thumbs\*.png" />
     <Content Remove="wwwroot\bundles\*.css;wwwroot\bundles\*.js" />
   </ItemGroup>
+  <ItemGroup>
+
+    <_ViewsFiles Include="$(MSBuildProjectDirectory)/Views/**/*" />
+    <DotnetPublishFiles Include="@(_ViewsFiles)">
+      <DestinationRelativePath>Views/%(RecursiveDir)%(Filename)%(Extension)</DestinationRelativePath>
+    </DotnetPublishFiles>
+
+    <_ThemeFiles Include="$(MSBuildProjectDirectory)/Themes/**/*" />
+    <DotnetPublishFiles Include="@(_ThemeFiles)">
+      <DestinationRelativePath>Themes/%(RecursiveDir)%(Filename)%(Extension)</DestinationRelativePath>
+    </DotnetPublishFiles>
+
+    <_AdminFiles Include="$(MSBuildProjectDirectory)/Areas/Admin/Views/**/*" />
+    <DotnetPublishFiles Include="@(_AdminFiles)">
+      <DestinationRelativePath>Areas/Admin/Views/%(RecursiveDir)%(Filename)%(Extension)</DestinationRelativePath>
+    </DotnetPublishFiles>
+
+    <_PluginsFiles Include="$(MSBuildProjectDirectory)/Plugins/**/*" />
+    <DotnetPublishFiles Include="@(_PluginsFiles)">
+      <DestinationRelativePath>Plugins/%(RecursiveDir)%(Filename)%(Extension)</DestinationRelativePath>
+    </DotnetPublishFiles>
+
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Plugins\**" />
+    <Compile Remove="Plugins\**" />
+    <EmbeddedResource Remove="Plugins\**" />
+    <None Remove="Plugins\**" />
+  </ItemGroup>
+
 </Project>
