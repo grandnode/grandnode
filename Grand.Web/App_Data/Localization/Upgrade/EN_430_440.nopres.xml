@@ -287,4 +287,17 @@
   <LocaleResource Name="Api.Customers.Customer.Fields.Guid.Exists">
     <Value>Guid exists</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.Scheme">
+    <Value>Http request scheme</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.Scheme.Hint">
+    <Value>Http request scheme</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.IsHttps">
+    <Value>Http scheme is https</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.IsHttps.Hint">
+    <Value>Http scheme is https</Value>
+  </LocaleResource>
+
 </Language>

@@ -1,4 +1,7 @@
 ﻿@model SystemInfoModel
+
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextAccessor;
+
 @{
     //page title
     ViewBag.Title = T("Admin.System.SystemInfo").Text;
@@ -61,6 +64,18 @@
                                         <admin-label asp-for="UtcTime" />
                                         <div class="col-md-9 col-sm-9">
                                             <label class="control-label">@Model.UtcTime.ToString("F")</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <admin-label asp-for="RequestScheme" />
+                                        <div class="col-md-9 col-sm-9">
+                                            <label class="control-label">@httpContextAccessor.HttpContext.Request.Scheme</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <admin-label asp-for="IsHttps" />
+                                        <div class="col-md-9 col-sm-9">
+                                            <label class="control-label">@httpContextAccessor.HttpContext.Request.IsHttps</label>
                                         </div>
                                     </div>
                                     <div class="form-group">

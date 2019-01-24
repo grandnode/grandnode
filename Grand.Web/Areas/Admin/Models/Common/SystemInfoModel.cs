@@ -35,6 +35,12 @@ namespace Grand.Web.Areas.Admin.Models.Common
         [GrandResourceDisplayName("Admin.System.SystemInfo.UTCTime")]
         public DateTime UtcTime { get; set; }
 
+        [GrandResourceDisplayName("Admin.System.SystemInfo.Scheme")]
+        public string RequestScheme { get; set; }
+
+        [GrandResourceDisplayName("Admin.System.SystemInfo.IsHttps")]
+        public bool IsHttps { get; set; }
+
         [GrandResourceDisplayName("Admin.System.SystemInfo.ServerVariables")]
         public IList<ServerVariableModel> ServerVariables { get; set; }
 

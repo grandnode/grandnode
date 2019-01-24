@@ -14943,11 +14943,11 @@
   <LocaleResource Name="Admin.System.SystemInfo.HTTPHOST.Hint">
     <Value>HTTP_HOST is used when you have run a multi-store solution to determine the current store.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.System.SystemInfo.IsFullTrust">
-    <Value>Is full trust level</Value>
+  <LocaleResource Name="Admin.System.SystemInfo.IsHttps">
+    <Value>Http scheme is https</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.System.SystemInfo.IsFullTrust.Hint">
-    <Value>Is full trust level</Value>
+  <LocaleResource Name="Admin.System.SystemInfo.IsHttps.Hint">
+    <Value>Http scheme is https</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.LoadedAssemblies">
     <Value>Loaded assemblies</Value>
@@ -14966,6 +14966,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.OperatingSystem.Hint">
     <Value>Operating system</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.Scheme">
+    <Value>Http request scheme</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.Scheme.Hint">
+    <Value>Http request scheme</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.ServerLocalTime">
     <Value>Server local time</Value>
