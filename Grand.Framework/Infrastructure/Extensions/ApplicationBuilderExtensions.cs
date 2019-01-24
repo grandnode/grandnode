@@ -210,10 +210,11 @@ namespace Grand.Framework.Infrastructure.Extensions
                         ctx.Context.Response.Headers.Append(HeaderNames.CacheControl, grandConfig.StaticFilesCacheControl);
                 }
             });
+
             //themes
             application.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Themes")),
+                FileProvider = new PhysicalFileProvider(CommonHelper.MapPath("Themes")),
                 RequestPath = new PathString("/Themes"),
                 OnPrepareResponse = ctx =>
                 {
@@ -224,7 +225,7 @@ namespace Grand.Framework.Infrastructure.Extensions
             //plugins
             application.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Plugins")),
+                FileProvider = new PhysicalFileProvider(CommonHelper.MapPath("Plugins")),
                 RequestPath = new PathString("/Plugins"),
                 OnPrepareResponse = ctx =>
                 {
