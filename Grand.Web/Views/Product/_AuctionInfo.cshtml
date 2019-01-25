@@ -6,17 +6,17 @@
         <div class="form-group">
             @if (Model.EndTime.HasValue)
             {
-                <div>
-                    @if (Model.EndTime > DateTime.UtcNow)
-                    {
-                        <label class="d-inline-block">@T("AddToCart.Timeleft"): </label>
-                        <div class="d-inline-block" data-countdown="@Model.EndTime.Value.ToLocalTime().ToString("yyyy-MM-dd HH:mm")"></div>
-                    }
-                    else
-                    {
-                        <label>@T("ShoppingCart.Auctionends"): @Model.EndTime.Value.ToLocalTime()</label>
-                    }
-                </div>
+            <div>
+                @if (Model.EndTime > DateTime.UtcNow)
+                {
+                    <label class="d-inline-block">@T("AddToCart.Timeleft"): </label>
+                    <div class="d-inline-block" data-countdown="@Model.EndTime.Value.ToString("yyyy-MM-dd HH:mm UTC")" ></div>
+                }
+                else
+                {
+                    <label>@T("ShoppingCart.Auctionends"): @Model.EndTime.Value</label>
+                }
+            </div>
             }
             @if (Model.EndTime > DateTime.UtcNow)
             {

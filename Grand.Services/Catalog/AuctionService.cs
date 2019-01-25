@@ -149,15 +149,6 @@ namespace Grand.Services.Catalog
         public virtual void NewBid(Customer customer, Product product, Store store, Language language, decimal amount)
         {
             var latestbid = GetLatestBid(product.Id);
-            if (latestbid != null)
-            {
-                if (latestbid.CustomerId != customer.Id)
-                {
-                    var workflowmessageService = EngineContext.Current.Resolve<IWorkflowMessageService>();
-                    workflowmessageService.SendOutBidCustomerNotification(product, language.Id, latestbid);
-                }
-            }
-
             InsertBid(new Bid
             {
                 Date = DateTime.UtcNow,
@@ -166,6 +157,17 @@ namespace Grand.Services.Catalog
                 ProductId = product.Id,
                 StoreId = store.Id
             });
+
+            if (latestbid != null)
+            {
+                if (latestbid.CustomerId != customer.Id)
+                {
+                    latestbid.Amount = amount;
+                    var workflowmessageService = EngineContext.Current.Resolve<IWorkflowMessageService>();
+                    workflowmessageService.SendOutBidCustomerNotification(product, language.Id, latestbid);
+                }
+            }
+
 
             product.HighestBid = amount;
             UpdateHighestBid(product, amount, customer.Id);
