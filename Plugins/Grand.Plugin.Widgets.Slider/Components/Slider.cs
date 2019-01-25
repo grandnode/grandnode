@@ -46,7 +46,7 @@ namespace Grand.Plugin.Widgets.Slider.ViewComponents
         protected void PrepareModel(IList<PictureSlider> sliders, PublicInfoModel model)
         {
             int i = 1;
-            foreach (var item in sliders)
+            foreach (var item in sliders.OrderBy(x=>x.DisplayOrder))
             {
                 model.Slide.Add(new PublicInfoModel.Slider()
                 {

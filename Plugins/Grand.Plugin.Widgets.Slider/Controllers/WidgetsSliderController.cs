@@ -9,7 +9,6 @@ using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Security;
 using Grand.Services.Stores;
-using Grand.Web.Areas.Admin.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
