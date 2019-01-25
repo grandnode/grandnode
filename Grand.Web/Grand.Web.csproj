@@ -28,30 +28,18 @@
     <Content Remove="wwwroot\content\images\thumbs\*.jpeg;wwwroot\content\images\thumbs\*.jpg;wwwroot\content\images\thumbs\*.png" />
     <Content Remove="wwwroot\bundles\*.css;wwwroot\bundles\*.js" />
   </ItemGroup>
-  <ItemGroup>
-
-    <_ViewsFiles Include="$(MSBuildProjectDirectory)/Views/**/*" />
-    <DotnetPublishFiles Include="@(_ViewsFiles)">
-      <DestinationRelativePath>Views/%(RecursiveDir)%(Filename)%(Extension)</DestinationRelativePath>
-    </DotnetPublishFiles>
-
-    <_ThemeFiles Include="$(MSBuildProjectDirectory)/Themes/**/*" />
-    <DotnetPublishFiles Include="@(_ThemeFiles)">
-      <DestinationRelativePath>Themes/%(RecursiveDir)%(Filename)%(Extension)</DestinationRelativePath>
-    </DotnetPublishFiles>
-
-    <_AdminFiles Include="$(MSBuildProjectDirectory)/Areas/Admin/Views/**/*" />
-    <DotnetPublishFiles Include="@(_AdminFiles)">
-      <DestinationRelativePath>Areas/Admin/Views/%(RecursiveDir)%(Filename)%(Extension)</DestinationRelativePath>
-    </DotnetPublishFiles>
-
-    <_PluginsFiles Include="$(MSBuildProjectDirectory)/Plugins/**/*" />
-    <DotnetPublishFiles Include="@(_PluginsFiles)">
-      <DestinationRelativePath>Plugins/%(RecursiveDir)%(Filename)%(Extension)</DestinationRelativePath>
-    </DotnetPublishFiles>
-
-  </ItemGroup>
-
+  <Target Name="PublishViews" BeforeTargets="PrepareForPublish">
+    <ItemGroup>
+      <FolderViews Include="Views/**/*" />
+      <ThemeViews Include="Themes/**/*" />
+      <AdminViews Include="Areas/Admin/Views/**/*" />
+      <PluginFiles Include="Plugins/**/*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(FolderViews)" DestinationFolder="$(PublishDir)/Views/%(RecursiveDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(ThemeViews)" DestinationFolder="$(PublishDir)/Themes/%(RecursiveDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(AdminViews)" DestinationFolder="$(PublishDir)/Areas/Admin/Views/%(RecursiveDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(PluginFiles)" DestinationFolder="$(PublishDir)/Plugins/%(RecursiveDir)" SkipUnchangedFiles="true" />
+  </Target>  
   <ItemGroup>
     <Content Remove="Plugins\**" />
     <Compile Remove="Plugins\**" />
