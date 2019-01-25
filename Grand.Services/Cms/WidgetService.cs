@@ -89,11 +89,7 @@ namespace Grand.Services.Cms
         /// <returns>Widgets</returns>
         public virtual IList<IWidgetPlugin> LoadAllWidgets(string storeId = "")
         {
-            var cacheKey = string.Format("Grand.pres.widget-store-{0}", storeId);
-            return _cacheManager.Get(cacheKey, () =>
-            {
-                return _pluginFinder.GetPlugins<IWidgetPlugin>(storeId: storeId).ToList();
-            });
+           return _pluginFinder.GetPlugins<IWidgetPlugin>(storeId: storeId).ToList();
         }
         
         #endregion
