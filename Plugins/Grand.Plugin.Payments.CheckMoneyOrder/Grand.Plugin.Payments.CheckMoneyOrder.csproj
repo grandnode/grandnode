@@ -6,6 +6,7 @@
     <Authors>UNIT-SOFT Sp. z o.o.</Authors>
     <Company>UNIT-SOFT Sp. z o.o.</Company>
     <PackageProjectUrl>https://grandnode.com/</PackageProjectUrl>
+    <TieredCompilation>true</TieredCompilation>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

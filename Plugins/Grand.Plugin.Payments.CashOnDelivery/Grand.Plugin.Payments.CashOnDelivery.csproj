@@ -6,6 +6,7 @@
     <Company>UNIT-SOFT Sp. z o.o.</Company>
     <Copyright>Copyright © UNIT-SOFT Sp. z o.o.</Copyright>
     <PackageProjectUrl>https://grandnode.com/</PackageProjectUrl>
+    <TieredCompilation>true</TieredCompilation>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

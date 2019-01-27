@@ -7,6 +7,7 @@
     <Company>UNIT-SOFT Sp. z o.o.</Company>
     <PackageProjectUrl>https://grandnode.com/</PackageProjectUrl>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <TieredCompilation>true</TieredCompilation>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
