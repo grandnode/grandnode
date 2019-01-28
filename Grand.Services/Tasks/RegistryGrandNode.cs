@@ -137,7 +137,7 @@ namespace Grand.Services.Tasks
                 bool runTask = true;
                 //is web farm enabled (multiple instances)?
                 var grandConfig = EngineContext.Current.Resolve<GrandConfig>();
-                if (grandConfig.MultipleInstancesEnabled)
+                if (grandConfig.MultipleInstancesEnabled && !manualstart)
                 {
                     var machineNameProvider = EngineContext.Current.Resolve<IMachineNameProvider>();
                     var machineName = machineNameProvider.GetMachineName();
@@ -151,6 +151,8 @@ namespace Grand.Services.Tasks
                     if (!string.IsNullOrEmpty(scheduleTask.LeasedByMachineName) && (machineName != scheduleTask.LeasedByMachineName))
                     {
                         runTask = false;
+                        scheduleTask.LastStartUtc = DateTime.UtcNow;
+                        scheduleTask.LastNonSuccessEndUtc = DateTime.UtcNow;
                     }
                 }
                 if (runTask == true)
