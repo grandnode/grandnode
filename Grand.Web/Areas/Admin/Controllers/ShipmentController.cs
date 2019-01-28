@@ -360,7 +360,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             _shipmentViewModelService.LogShipment(shipment.Id, $"A shipment #{shipment.ShipmentNumber} has been deleted");
 
             SuccessNotification(_localizationService.GetResource("Admin.Orders.Shipments.Deleted"));
-            return RedirectToAction("List");
+
+            return RedirectToAction("Edit", "Order", new { Id = order.Id });
         }
 
         [HttpPost, ActionName("ShipmentDetails")]
