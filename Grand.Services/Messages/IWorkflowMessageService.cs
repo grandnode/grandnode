@@ -8,7 +8,7 @@ using Grand.Core.Domain.News;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Vendors;
-using Grand.Services.Messages.DotLiquidDrops;
+using System.Collections.Generic;
 
 namespace Grand.Services.Messages
 {
@@ -92,9 +92,10 @@ namespace Grand.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
+        /// <param name="attachments">Attachments ident</param>
         /// <returns>Queued email identifier</returns>
         int SendOrderPaidCustomerNotification(Order order, string languageId,
-            string attachmentFilePath = null, string attachmentFileName = null);
+            string attachmentFilePath = null, string attachmentFileName = null, IEnumerable<string> attachments = null);
 
         /// <summary>
         /// Sends an order paid notification to a vendor
@@ -112,9 +113,10 @@ namespace Grand.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
+        /// <param name="attachments">Attachments ident</param>
         /// <returns>Queued email identifier</returns>
         int SendOrderPlacedCustomerNotification(Order order, string languageId,
-            string attachmentFilePath = null, string attachmentFileName = null);
+            string attachmentFilePath = null, string attachmentFileName = null, IEnumerable<string> attachments = null);
 
         /// <summary>
         /// Sends a shipment sent notification to a customer
@@ -139,9 +141,10 @@ namespace Grand.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
+        /// <param name="attachments">Attachments ident</param>
         /// <returns>Queued email identifier</returns>
         int SendOrderCompletedCustomerNotification(Order order, string languageId,
-            string attachmentFilePath = null, string attachmentFileName = null);
+            string attachmentFilePath = null, string attachmentFileName = null, IEnumerable<string> attachments = null);
 
         /// <summary>
         /// Sends an order cancelled notification to a customer
@@ -546,11 +549,13 @@ namespace Grand.Services.Messages
         /// <param name="messageTemplate">Message template</param>
         /// <param name="emailAccount">Email account</param>
         /// <param name="languageId">Language identifier</param>
+        /// <param name="liquidObject">LiquidObject</param>
         /// <param name="tokens">Tokens</param>
         /// <param name="toEmailAddress">Recipient email address</param>
         /// <param name="toName">Recipient name</param>
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name</param>
+        /// <param name="attachedDownloads">Attached downloads ident</param>
         /// <param name="replyToEmailAddress">"Reply to" email</param>
         /// <param name="replyToName">"Reply to" name</param>
         /// <param name="fromEmail">Sender email. If specified, then it overrides passed "emailAccount" details</param>
@@ -561,6 +566,7 @@ namespace Grand.Services.Messages
             EmailAccount emailAccount, string languageId, LiquidObject liquidObject,
             string toEmailAddress, string toName,
             string attachmentFilePath = null, string attachmentFileName = null,
+            IEnumerable<string> attachedDownloads = null,
             string replyToEmailAddress = null, string replyToName = null,
             string fromEmail = null, string fromName = null, string subject = null);
 

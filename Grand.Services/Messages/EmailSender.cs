@@ -50,7 +50,7 @@ namespace Grand.Services.Messages
              string replyToAddress = null, string replyToName = null,
             IEnumerable<string> bccAddresses = null, IEnumerable<string> ccAddresses = null,
             string attachmentFilePath = null, string attachmentFileName = null,
-            string attachedDownloadId = "")
+            IEnumerable<string> attachedDownloads = null)
 
         {
             var message = new MimeMessage();
@@ -109,30 +109,33 @@ namespace Grand.Services.Messages
 
             }
             //another attachment?
-            if (!String.IsNullOrEmpty(attachedDownloadId))
+            if (attachedDownloads != null)
             {
-                var download = _downloadService.GetDownloadById(attachedDownloadId);
-                if (download != null)
+                foreach (var attachedDownloadId in attachedDownloads)
                 {
-                    //we do not support URLs as attachments
-                    if (!download.UseDownloadUrl)
+                    var download = _downloadService.GetDownloadById(attachedDownloadId);
+                    if (download != null)
                     {
-                        string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : download.Id;
-                        fileName += download.Extension;
-                        var ms = new MemoryStream(download.DownloadBinary);
-                        var attachment = new MimePart(download.ContentType ?? _mimeMappingService.Map(fileName))
+                        //we do not support URLs as attachments
+                        if (!download.UseDownloadUrl)
                         {
-                            Content = new MimeContent(ms, ContentEncoding.Default),
-                            ContentDisposition = new ContentDisposition(ContentDisposition.Attachment)
+                            string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : download.Id;
+                            fileName += download.Extension;
+                            var ms = new MemoryStream(download.DownloadBinary);
+                            var attachment = new MimePart(download.ContentType ?? _mimeMappingService.Map(fileName))
                             {
-                                CreationDate = DateTime.UtcNow,
-                                ModificationDate = DateTime.UtcNow,
-                                ReadDate = DateTime.UtcNow
-                            },
-                            ContentTransferEncoding = ContentEncoding.Base64,
-                            FileName = fileName,
-                        };
-                        builder.Attachments.Add(attachment);
+                                Content = new MimeContent(ms, ContentEncoding.Default),
+                                ContentDisposition = new ContentDisposition(ContentDisposition.Attachment)
+                                {
+                                    CreationDate = DateTime.UtcNow,
+                                    ModificationDate = DateTime.UtcNow,
+                                    ReadDate = DateTime.UtcNow
+                                },
+                                ContentTransferEncoding = ContentEncoding.Base64,
+                                FileName = fileName,
+                            };
+                            builder.Attachments.Add(attachment);
+                        }
                     }
                 }
             }

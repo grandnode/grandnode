@@ -726,9 +726,13 @@ namespace Grand.Services.Orders
                     _pdfService.PrintOrderToPdf(order, "") : null;
                 var orderCompletedAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderCompletedEmail ?
                     "order.pdf" : null;
+
+                var orderCompletedAttachments = _orderSettings.AttachPdfInvoiceToOrderCompletedEmail && _orderSettings.AttachPdfInvoiceToBinary ?
+                    new List<string> { _pdfService.SaveOrderToBinary(order, "") } : new List<string>();
+
                 int orderCompletedCustomerNotificationQueuedEmailId = _workflowMessageService
                     .SendOrderCompletedCustomerNotification(order, order.CustomerLanguageId, orderCompletedAttachmentFilePath,
-                    orderCompletedAttachmentFileName);
+                    orderCompletedAttachmentFileName, orderCompletedAttachments);
                 if (orderCompletedCustomerNotificationQueuedEmailId > 0)
                 {
                     _orderService.InsertOrderNote(new OrderNote
@@ -820,12 +824,17 @@ namespace Grand.Services.Orders
                 //we should not send it for free ($0 total) orders?
                 //remove this "if" statement if you want to send it in this case
 
-                var orderPaidAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderPaidEmail ?
-                    _pdfService.PrintOrderToPdf(order, "") : null;
-                var orderPaidAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderPaidEmail ?
+                var orderPaidAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderPaidEmail && !_orderSettings.AttachPdfInvoiceToBinary ?
+                    _pdfService.PrintOrderToPdf(order, "") 
+                    : null;
+                var orderPaidAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderPaidEmail && !_orderSettings.AttachPdfInvoiceToBinary ?
                     "order.pdf" : null;
+
+                var orderPaidAttachments = _orderSettings.AttachPdfInvoiceToOrderPaidEmail && _orderSettings.AttachPdfInvoiceToBinary ?
+                    new List<string> { _pdfService.SaveOrderToBinary(order, "") } : new List<string>();
+
                 _workflowMessageService.SendOrderPaidCustomerNotification(order, order.CustomerLanguageId,
-                    orderPaidAttachmentFilePath, orderPaidAttachmentFileName);
+                    orderPaidAttachmentFilePath, orderPaidAttachmentFileName, orderPaidAttachments);
 
                 _workflowMessageService.SendOrderPaidStoreOwnerNotification(order, _localizationSettings.DefaultAdminLanguageId);
                 var vendors = GetVendorsInOrder(order);
@@ -1690,12 +1699,15 @@ namespace Grand.Services.Orders
                         });
                     }
 
-                    var orderPlacedAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderPlacedEmail ?
+                    var orderPlacedAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderPlacedEmail && !_orderSettings.AttachPdfInvoiceToBinary ?
                         _pdfService.PrintOrderToPdf(order, order.CustomerLanguageId) : null;
-                    var orderPlacedAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderPlacedEmail ?
+                    var orderPlacedAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderPlacedEmail && !_orderSettings.AttachPdfInvoiceToBinary ?
                         "order.pdf" : null;
+                    var orderPlacedAttachments = _orderSettings.AttachPdfInvoiceToOrderPlacedEmail && _orderSettings.AttachPdfInvoiceToBinary ?
+                        new List<string> { _pdfService.SaveOrderToBinary(order, order.CustomerLanguageId) } : new List<string>();
+
                     int orderPlacedCustomerNotificationQueuedEmailId = _workflowMessageService
-                        .SendOrderPlacedCustomerNotification(order, order.CustomerLanguageId, orderPlacedAttachmentFilePath, orderPlacedAttachmentFileName);
+                        .SendOrderPlacedCustomerNotification(order, order.CustomerLanguageId, orderPlacedAttachmentFilePath, orderPlacedAttachmentFileName, orderPlacedAttachments);
                     if (orderPlacedCustomerNotificationQueuedEmailId > 0)
                     {
                         _orderService.InsertOrderNote(new OrderNote

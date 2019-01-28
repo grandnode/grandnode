@@ -66,12 +66,15 @@ namespace Grand.Core.Domain.Orders
         /// <summary>
         /// Gets or sets a value indicating we should attach PDF invoice to "Order paid" email
         /// </summary>
-        public bool AttachPdfInvoiceToOrderPaidEmail { get; set; }
+        public bool AttachPdfInvoiceToOrderPaidEmail { get; set; }    
         /// <summary>
         /// Gets or sets a value indicating we should attach PDF invoice to "Order completed" email
         /// </summary>
         public bool AttachPdfInvoiceToOrderCompletedEmail { get; set; }
-
+        /// <summary>
+        /// Gets or sets a value indicating we should attach PDF invoice to binary field
+        /// </summary>
+        public bool AttachPdfInvoiceToBinary { get; set; }
         /// <summary>
         /// Gets or sets a value indicating whether "Return requests" are allowed
         /// </summary>

@@ -21,6 +21,15 @@ namespace Grand.Services.Common
         string PrintOrderToPdf(Order order, string languageId, string vendorId = "");
 
         /// <summary>
+        /// Save an order PDF
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <param name="languageId">Language identifier; 0 to use a language used when placing an order</param>
+        /// <param name="vendorId">Vendor identifier to limit products; 0 to to print all products. If specified, then totals won't be printed</param>
+        /// <returns>A download ident</returns>
+        string SaveOrderToBinary(Order order, string languageId, string vendorId = "");
+
+        /// <summary>
         /// Print orders to PDF
         /// </summary>
         /// <param name="stream">Stream</param>

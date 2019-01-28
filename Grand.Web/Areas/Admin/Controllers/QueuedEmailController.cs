@@ -173,7 +173,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 Body = queuedEmail.Body,
                 AttachmentFilePath = queuedEmail.AttachmentFilePath,
                 AttachmentFileName = queuedEmail.AttachmentFileName,
-                AttachedDownloadId = queuedEmail.AttachedDownloadId,
+                AttachedDownloads = queuedEmail.AttachedDownloads,
                 CreatedOnUtc = DateTime.UtcNow,
                 EmailAccountId = queuedEmail.EmailAccountId,
                 DontSendBeforeDateUtc = (queuedEmailModel.SendImmediately || !queuedEmailModel.DontSendBeforeDate.HasValue) ?

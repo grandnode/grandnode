@@ -122,7 +122,7 @@ namespace Grand.Services.Customers
                 Body = body,
                 AttachmentFilePath = "",
                 AttachmentFileName = "",
-                AttachedDownloadId = "",
+                AttachedDownloads = null,
                 CreatedOnUtc = DateTime.UtcNow,
                 EmailAccountId = emailAccount.Id,
             };
@@ -169,7 +169,7 @@ namespace Grand.Services.Customers
                 Body = body,
                 AttachmentFilePath = "",
                 AttachmentFileName = "",
-                AttachedDownloadId = "",
+                AttachedDownloads = null,
                 CreatedOnUtc = DateTime.UtcNow,
                 EmailAccountId = emailAccount.Id,
             };

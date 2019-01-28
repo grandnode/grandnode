@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Grand.Core.Domain.Messages
 {
@@ -7,6 +8,10 @@ namespace Grand.Core.Domain.Messages
     /// </summary>
     public partial class QueuedEmail : BaseEntity
     {
+        public QueuedEmail()
+        {
+            this.AttachedDownloads = new List<string>();
+        }
         /// <summary>
         /// Gets or sets the priority
         /// </summary>
@@ -73,9 +78,9 @@ namespace Grand.Core.Domain.Messages
         public string AttachmentFileName { get; set; }
 
         /// <summary>
-        /// Gets or sets the download identifier of attached file
+        /// Gets or sets the download identifiers of attached file
         /// </summary>
-        public string AttachedDownloadId { get; set; }
+        public IList<string> AttachedDownloads { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of item creation in UTC

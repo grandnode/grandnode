@@ -50,7 +50,7 @@ namespace Grand.Services.Common
         private readonly IStoreContext _storeContext;
         private readonly ISettingService _settingContext;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
-
+        private readonly IDownloadService _downloadService;
         private readonly CatalogSettings _catalogSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly MeasureSettings _measureSettings;
@@ -62,23 +62,24 @@ namespace Grand.Services.Common
 
         #region Ctor
 
-        public PdfService(ILocalizationService localizationService, 
+        public PdfService(ILocalizationService localizationService,
             ILanguageService languageService,
             IWorkContext workContext,
             IOrderService orderService,
             IPaymentService paymentService,
             IDateTimeHelper dateTimeHelper,
             IPriceFormatter priceFormatter,
-            ICurrencyService currencyService, 
+            ICurrencyService currencyService,
             IMeasureService measureService,
             IPictureService pictureService,
-            IProductService productService, 
+            IProductService productService,
             IProductAttributeParser productAttributeParser,
             IStoreService storeService,
             IStoreContext storeContext,
             ISettingService settingContext,
             IAddressAttributeFormatter addressAttributeFormatter,
-            CatalogSettings catalogSettings, 
+            IDownloadService downloadService,
+            CatalogSettings catalogSettings,
             CurrencySettings currencySettings,
             MeasureSettings measureSettings,
             PdfSettings pdfSettings,
@@ -99,6 +100,7 @@ namespace Grand.Services.Common
             this._productAttributeParser = productAttributeParser;
             this._storeService = storeService;
             this._storeContext = storeContext;
+            this._downloadService = downloadService;
             this._settingContext = settingContext;
             this._addressAttributeFormatter = addressAttributeFormatter;
             this._currencySettings = currencySettings;
@@ -143,7 +145,7 @@ namespace Grand.Services.Common
             //if we need the element to be opposite, like logo etc`.
             if (!isOpposite)
                 return lang.Rtl ? Element.ALIGN_RIGHT : Element.ALIGN_LEFT;
-            
+
             return lang.Rtl ? Element.ALIGN_LEFT : Element.ALIGN_RIGHT;
         }
 
@@ -171,6 +173,38 @@ namespace Grand.Services.Common
                 PrintOrdersToPdf(fileStream, orders, languageId, vendorId);
             }
             return filePath;
+        }
+
+        /// <summary>
+        /// Save an order to PDF
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <param name="languageId">Language identifier; 0 to use a language used when placing an order</param>
+        /// <param name="vendorId">Vendor ident</param>
+        /// <returns>A download ident</returns>
+        public virtual string SaveOrderToBinary(Order order, string languageId, string vendorId = "")
+        {
+            if (order == null)
+                throw new ArgumentNullException("order");
+
+            string fileName = string.Format("order_{0}_{1}.pdf", order.OrderGuid, CommonHelper.GenerateRandomDigitCode(4));
+            string downloadId = string.Empty;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                var orders = new List<Order>();
+                orders.Add(order);
+                PrintOrdersToPdf(ms, orders, languageId, vendorId);
+                var download = new Core.Domain.Media.Download
+                {
+                    Filename = fileName,
+                    Extension = ".pdf",
+                    DownloadBinary = ms.ToArray(),
+                    ContentType = "application/pdf",
+                };
+                _downloadService.InsertDownload(download);
+                downloadId = download.Id;
+            }
+            return downloadId;
         }
 
         /// <summary>
@@ -235,7 +269,7 @@ namespace Grand.Services.Common
 
                 //store info
                 var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-                var anchor = new Anchor(store.Url.Trim(new [] { '/' }), font);
+                var anchor = new Anchor(store.Url.Trim(new[] { '/' }), font);
                 anchor.Reference = store.Url;
 
                 var cellHeader = new PdfPCell(new Phrase(String.Format(_localizationService.GetResource("PDFInvoice.Order#", lang.Id), order.OrderNumber), titleFont));
@@ -270,7 +304,7 @@ namespace Grand.Services.Common
                     cellLogo.AddElement(logo);
                     headerTable.AddCell(cellLogo);
                 }
-                doc.Add(headerTable); 
+                doc.Add(headerTable);
 
                 #endregion
 
@@ -316,7 +350,7 @@ namespace Grand.Services.Common
                     billingAddress.AddCell(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.VATNumber", lang.Id), order.VatNumber), font));
 
                 //custom attributes
-                var customBillingAddressAttributes = _addressAttributeFormatter.FormatAttributes( order.BillingAddress.CustomAttributes);
+                var customBillingAddressAttributes = _addressAttributeFormatter.FormatAttributes(order.BillingAddress.CustomAttributes);
                 if (!String.IsNullOrEmpty(customBillingAddressAttributes))
                 {
                     //TODO: we should add padding to each line (in case if we have sevaral custom address attributes)
@@ -355,7 +389,7 @@ namespace Grand.Services.Common
 
                 if (order.ShippingStatus != ShippingStatus.ShippingNotRequired)
                 {
-                   
+
                     if (!order.PickUpInStore)
                     {
                         if (order.ShippingAddress == null)
@@ -394,26 +428,26 @@ namespace Grand.Services.Common
                     }
                     else
                         if (order.PickupPoint != null)
+                    {
+                        if (order.PickupPoint.Address != null)
                         {
-                            if (order.PickupPoint.Address != null)
+                            shippingAddress.AddCell(new Paragraph(_localizationService.GetResource("PDFInvoice.Pickup", lang.Id), titleFont));
+                            if (!string.IsNullOrEmpty(order.PickupPoint.Address.Address1))
+                                shippingAddress.AddCell(new Paragraph(string.Format("   {0}", string.Format(_localizationService.GetResource("PDFInvoice.Address", lang.Id), order.PickupPoint.Address.Address1)), font));
+                            if (!string.IsNullOrEmpty(order.PickupPoint.Address.City))
+                                shippingAddress.AddCell(new Paragraph(string.Format("   {0}", order.PickupPoint.Address.City), font));
+                            if (!string.IsNullOrEmpty(order.PickupPoint.Address.CountryId))
                             {
-                                shippingAddress.AddCell(new Paragraph(_localizationService.GetResource("PDFInvoice.Pickup", lang.Id), titleFont));
-                                if (!string.IsNullOrEmpty(order.PickupPoint.Address.Address1))
-                                    shippingAddress.AddCell(new Paragraph(string.Format("   {0}", string.Format(_localizationService.GetResource("PDFInvoice.Address", lang.Id), order.PickupPoint.Address.Address1)), font));
-                                if (!string.IsNullOrEmpty(order.PickupPoint.Address.City))
-                                    shippingAddress.AddCell(new Paragraph(string.Format("   {0}", order.PickupPoint.Address.City), font));
-                                if (!string.IsNullOrEmpty(order.PickupPoint.Address.CountryId))
-                                {
-                                    var country = EngineContext.Current.Resolve<ICountryService>().GetCountryById(order.PickupPoint.Address.CountryId);
-                                    if (country != null)
-                                        shippingAddress.AddCell(new Paragraph(string.Format("   {0}", country.Name), font));
-                                }
-                                if (!string.IsNullOrEmpty(order.PickupPoint.Address.ZipPostalCode))
-                                    shippingAddress.AddCell(new Paragraph(string.Format("   {0}", order.PickupPoint.Address.ZipPostalCode), font));
-
-                                shippingAddress.AddCell(new Paragraph(" "));
+                                var country = EngineContext.Current.Resolve<ICountryService>().GetCountryById(order.PickupPoint.Address.CountryId);
+                                if (country != null)
+                                    shippingAddress.AddCell(new Paragraph(string.Format("   {0}", country.Name), font));
                             }
+                            if (!string.IsNullOrEmpty(order.PickupPoint.Address.ZipPostalCode))
+                                shippingAddress.AddCell(new Paragraph(string.Format("   {0}", order.PickupPoint.Address.ZipPostalCode), font));
+
+                            shippingAddress.AddCell(new Paragraph(" "));
                         }
+                    }
 
                     shippingAddress.AddCell(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.ShippingMethod", lang.Id), order.ShippingMethod), font));
                     shippingAddress.AddCell(new Paragraph());
@@ -449,14 +483,14 @@ namespace Grand.Services.Common
                 if (lang.Rtl)
                 {
                     productsTable.SetWidths(_catalogSettings.ShowSkuOnProductDetailsPage
-                        ? new[] {15, 10, 15, 15, 45}
-                        : new[] {20, 10, 20, 50});
+                        ? new[] { 15, 10, 15, 15, 45 }
+                        : new[] { 20, 10, 20, 50 });
                 }
                 else
                 {
                     productsTable.SetWidths(_catalogSettings.ShowSkuOnProductDetailsPage
-                        ? new[] {45, 15, 15, 10, 15}
-                        : new[] {50, 20, 10, 20});
+                        ? new[] { 45, 15, 15, 10, 15 }
+                        : new[] { 50, 20, 10, 20 });
                 }
 
                 //product name
@@ -513,7 +547,7 @@ namespace Grand.Services.Common
                         var attributesParagraph = new Paragraph(HtmlHelper.ConvertHtmlToPlainText(orderItem.AttributeDescription, true, true), attributesFont);
                         pAttribTable.AddCell(attributesParagraph);
                     }
-                    
+
                     productsTable.AddCell(pAttribTable);
 
                     //SKU
@@ -549,7 +583,7 @@ namespace Grand.Services.Common
                     productsTable.AddCell(cellProductItem);
 
                     //total
-                    string subTotal = string.Empty; 
+                    string subTotal = string.Empty;
                     if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
                     {
                         //including tax
@@ -818,7 +852,7 @@ namespace Grand.Services.Common
                         .OrderByDescending(on => on.CreatedOnUtc)
                         .ToList();
                     if (orderNotes.Any())
-                    { 
+                    {
                         var notesHeader = new PdfPTable(1);
                         notesHeader.RunDirection = GetDirection(lang);
                         notesHeader.WidthPercentage = 100f;
@@ -832,11 +866,11 @@ namespace Grand.Services.Common
                         notesTable.RunDirection = GetDirection(lang);
                         if (lang.Rtl)
                         {
-                            notesTable.SetWidths(new[] {70, 30});
+                            notesTable.SetWidths(new[] { 70, 30 });
                         }
                         else
                         {
-                            notesTable.SetWidths(new[] {30, 70});
+                            notesTable.SetWidths(new[] { 30, 70 });
                         }
                         notesTable.WidthPercentage = 100f;
 
@@ -957,7 +991,7 @@ namespace Grand.Services.Common
             }
             doc.Close();
         }
-        
+
         /// <summary>
         /// Print packaging slips to PDF
         /// </summary>
@@ -994,13 +1028,13 @@ namespace Grand.Services.Common
             var font = GetFont();
             var attributesFont = GetFont();
             attributesFont.SetStyle(Font.ITALIC);
-            
+
             int shipmentCount = shipments.Count;
             int shipmentNum = 0;
 
             foreach (var shipment in shipments)
             {
-                
+
                 var order = EngineContext.Current.Resolve<IOrderService>().GetOrderById(shipment.OrderId);
 
                 if (String.IsNullOrEmpty(languageId))
@@ -1023,7 +1057,7 @@ namespace Grand.Services.Common
                 {
                     if (order.ShippingAddress == null)
                         throw new GrandException(string.Format("Shipping is required, but address is not available. Order ID = {0}", order.Id));
-                    
+
                     if (_addressSettings.CompanyEnabled && !String.IsNullOrEmpty(order.ShippingAddress.Company))
                         addressTable.AddCell(new Paragraph(String.Format(_localizationService.GetResource("PDFPackagingSlip.Company", lang.Id),
                                     order.ShippingAddress.Company), font));
@@ -1048,7 +1082,7 @@ namespace Grand.Services.Common
 
                     if (_addressSettings.CountryEnabled && !String.IsNullOrEmpty(order.ShippingAddress.CountryId))
                         addressTable.AddCell(new Paragraph(String.Format("{0}", !String.IsNullOrEmpty(order.ShippingAddress.CountryId)
-                                        ? EngineContext.Current.Resolve <ICountryService>().GetCountryById(order.ShippingAddress.CountryId).GetLocalized(x => x.Name, lang.Id)
+                                        ? EngineContext.Current.Resolve<ICountryService>().GetCountryById(order.ShippingAddress.CountryId).GetLocalized(x => x.Name, lang.Id)
                                         : ""), font));
 
                     //custom attributes
@@ -1060,25 +1094,25 @@ namespace Grand.Services.Common
                 }
                 else
                     if (order.PickupPoint != null)
+                {
+                    if (order.PickupPoint.Address != null)
                     {
-                        if (order.PickupPoint.Address != null)
+                        addressTable.AddCell(new Paragraph(_localizationService.GetResource("PDFInvoice.Pickup", lang.Id), titleFont));
+                        if (!string.IsNullOrEmpty(order.PickupPoint.Address.Address1))
+                            addressTable.AddCell(new Paragraph(string.Format("   {0}", string.Format(_localizationService.GetResource("PDFInvoice.Address", lang.Id), order.PickupPoint.Address.Address1)), font));
+                        if (!string.IsNullOrEmpty(order.PickupPoint.Address.City))
+                            addressTable.AddCell(new Paragraph(string.Format("   {0}", order.PickupPoint.Address.City), font));
+                        if (!string.IsNullOrEmpty(order.PickupPoint.Address.CountryId))
                         {
-                            addressTable.AddCell(new Paragraph(_localizationService.GetResource("PDFInvoice.Pickup", lang.Id), titleFont));
-                            if (!string.IsNullOrEmpty(order.PickupPoint.Address.Address1))
-                                addressTable.AddCell(new Paragraph(string.Format("   {0}", string.Format(_localizationService.GetResource("PDFInvoice.Address", lang.Id), order.PickupPoint.Address.Address1)), font));
-                            if (!string.IsNullOrEmpty(order.PickupPoint.Address.City))
-                                addressTable.AddCell(new Paragraph(string.Format("   {0}", order.PickupPoint.Address.City), font));
-                            if (!string.IsNullOrEmpty(order.PickupPoint.Address.CountryId))
-                            {
-                                var country = EngineContext.Current.Resolve<ICountryService>().GetCountryById(order.PickupPoint.Address.CountryId);
-                                if (country != null)
-                                    addressTable.AddCell(new Paragraph(string.Format("   {0}", country.Name), font));
-                            }
-                            if (!string.IsNullOrEmpty(order.PickupPoint.Address.ZipPostalCode))
-                                addressTable.AddCell(new Paragraph(string.Format("   {0}", order.PickupPoint.Address.ZipPostalCode), font));
-                            addressTable.AddCell(new Paragraph(" "));
+                            var country = EngineContext.Current.Resolve<ICountryService>().GetCountryById(order.PickupPoint.Address.CountryId);
+                            if (country != null)
+                                addressTable.AddCell(new Paragraph(string.Format("   {0}", country.Name), font));
                         }
+                        if (!string.IsNullOrEmpty(order.PickupPoint.Address.ZipPostalCode))
+                            addressTable.AddCell(new Paragraph(string.Format("   {0}", order.PickupPoint.Address.ZipPostalCode), font));
+                        addressTable.AddCell(new Paragraph(" "));
                     }
+                }
 
                 addressTable.AddCell(new Paragraph(" "));
 
@@ -1091,15 +1125,15 @@ namespace Grand.Services.Common
                 if (lang.Rtl)
                 {
                     productsTable.RunDirection = PdfWriter.RUN_DIRECTION_RTL;
-                    productsTable.SetWidths(new[] {20, 20, 60});
+                    productsTable.SetWidths(new[] { 20, 20, 60 });
                 }
                 else
                 {
-                    productsTable.SetWidths(new[] {60, 20, 20});
+                    productsTable.SetWidths(new[] { 60, 20, 20 });
                 }
 
                 //product name
-                var cell = new PdfPCell(new Phrase(_localizationService.GetResource("PDFPackagingSlip.ProductName", lang.Id),font));
+                var cell = new PdfPCell(new Phrase(_localizationService.GetResource("PDFPackagingSlip.ProductName", lang.Id), font));
                 cell.BackgroundColor = BaseColor.LightGray;
                 cell.HorizontalAlignment = Element.ALIGN_CENTER;
                 productsTable.AddCell(cell);
@@ -1137,7 +1171,7 @@ namespace Grand.Services.Common
                         var attributesParagraph = new Paragraph(HtmlHelper.ConvertHtmlToPlainText(orderItem.AttributeDescription, true, true), attributesFont);
                         productAttribTable.AddCell(attributesParagraph);
                     }
-                    
+
                     productsTable.AddCell(productAttribTable);
 
                     //SKU

@@ -23,6 +23,7 @@ using Grand.Services.Stores;
 using Grand.Services.Vendors;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 
@@ -439,9 +440,10 @@ namespace Grand.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
+        /// <param name="attachments">Attachments ident</param>
         /// <returns>Queued email identifier</returns>
         public virtual int SendOrderPaidCustomerNotification(Order order, string languageId,
-            string attachmentFilePath = null, string attachmentFileName = null)
+            string attachmentFilePath = null, string attachmentFileName = null, IEnumerable<string> attachments = null)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -473,7 +475,8 @@ namespace Grand.Services.Messages
                 languageId, liquidObject,
                 toEmail, toName,
                 attachmentFilePath,
-                attachmentFileName);
+                attachmentFileName,
+                attachments);
         }
 
         /// <summary>
@@ -528,7 +531,7 @@ namespace Grand.Services.Messages
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         /// <returns>Queued email identifier</returns>
         public virtual int SendOrderPlacedCustomerNotification(Order order, string languageId,
-            string attachmentFilePath = null, string attachmentFileName = null)
+            string attachmentFilePath = null, string attachmentFileName = null, IEnumerable<string> attachments = null)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -560,7 +563,8 @@ namespace Grand.Services.Messages
                 languageId, liquidObject,
                 toEmail, toName,
                 attachmentFilePath,
-                attachmentFileName);
+                attachmentFileName,
+                attachments);
         }
 
         /// <summary>
@@ -656,9 +660,10 @@ namespace Grand.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
+        /// <param name="attachments">Attachments ident</param>
         /// <returns>Queued email identifier</returns>
         public virtual int SendOrderCompletedCustomerNotification(Order order, string languageId,
-            string attachmentFilePath = null, string attachmentFileName = null)
+            string attachmentFilePath = null, string attachmentFileName = null, IEnumerable<string> attachments = null)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -690,7 +695,8 @@ namespace Grand.Services.Messages
                 languageId, liquidObject,
                 toEmail, toName,
                 attachmentFilePath,
-                attachmentFileName);
+                attachmentFileName,
+                attachments);
         }
 
         /// <summary>
@@ -2093,6 +2099,7 @@ namespace Grand.Services.Messages
             EmailAccount emailAccount, string languageId, LiquidObject liquidObject,
             string toEmailAddress, string toName,
             string attachmentFilePath = null, string attachmentFileName = null,
+            IEnumerable<string> attachedDownloads = null,
             string replyToEmailAddress = null, string replyToName = null,
             string fromEmail = null, string fromName = null, string subject = null)
         {
@@ -2109,6 +2116,12 @@ namespace Grand.Services.Messages
 
             var subjectReplaced = LiquidExtensions.Render(liquidObject, subject);
             var bodyReplaced = LiquidExtensions.Render(liquidObject, body);
+
+            var attachments = new List<string>();
+            if (attachedDownloads != null)
+                attachments.AddRange(attachedDownloads);
+            if (!string.IsNullOrEmpty(messageTemplate.AttachedDownloadId))
+                attachments.Add(messageTemplate.AttachedDownloadId);
 
             //limit name length
             toName = CommonHelper.EnsureMaximumLength(toName, 300);
@@ -2127,7 +2140,7 @@ namespace Grand.Services.Messages
                 Body = bodyReplaced,
                 AttachmentFilePath = attachmentFilePath,
                 AttachmentFileName = attachmentFileName,
-                AttachedDownloadId = messageTemplate.AttachedDownloadId,
+                AttachedDownloads = attachments,
                 CreatedOnUtc = DateTime.UtcNow,
                 EmailAccountId = emailAccount.Id,
                 DontSendBeforeDateUtc = !messageTemplate.DelayBeforeSend.HasValue ? null

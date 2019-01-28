@@ -60,7 +60,7 @@ namespace Grand.Services.Tasks
                            cc,
                            queuedEmail.AttachmentFilePath,
                            queuedEmail.AttachmentFileName,
-                           queuedEmail.AttachedDownloadId);
+                           queuedEmail.AttachedDownloads);
 
                         queuedEmail.SentOnUtc = DateTime.UtcNow;
                     }
