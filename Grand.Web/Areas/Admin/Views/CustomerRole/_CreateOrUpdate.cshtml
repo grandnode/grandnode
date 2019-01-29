@@ -16,7 +16,7 @@
         });
     });
     function toggleRemoveButton() {
-        if ($('#@Html.FieldIdFor(model => model.PurchasedWithProductId)').val() > 0) {
+        if ($('#@Html.FieldIdFor(model => model.PurchasedWithProductId)').val() != '' ) {
             $('#purchased-with-product-name-remove').show();
         }
         else {

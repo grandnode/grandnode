@@ -76,7 +76,7 @@
                     $(document).ready(function () {
                         $('#purchased-with-product-name-remove').click(function () {
                             $('#purchased-with-product-name').text('');
-                            $("#@Html.FieldIdFor(model => model.PurchasedWithProductId)").val(0);
+                            $("#@Html.FieldIdFor(model => model.PurchasedWithProductId)").val('');
                             toggleRemoveButton();
                             //return false to don't reload a page
                             return false;
