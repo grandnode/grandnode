@@ -52,6 +52,7 @@
             </div>
             @if (Model.AlreadyFilteredItems.Any())
             {
+                
                 <div class="filtered-items">
                         <ul class="pl-0">
                             <li class="title">
@@ -59,9 +60,11 @@
                             </li>
                             @foreach (var item in Model.AlreadyFilteredItems)
                             {
-                                <li class="item">
-                                    <strong>@(item.SpecificationAttributeName):</strong> @item.SpecificationAttributeOptionName
-                                </li>
+                            <li class="item">
+                                <strong>@(item.SpecificationAttributeName):</strong>
+                                <a class="" href="@item.FilterUrl"> @item.SpecificationAttributeOptionName</a>
+                               
+                            </li>
                             }
                         </ul>
                         <div class="remove-filter mb-1">

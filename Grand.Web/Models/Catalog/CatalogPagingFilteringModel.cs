@@ -60,7 +60,7 @@ namespace Grand.Web.Models.Catalog
         /// Product sorting
         /// </summary>
         public string ViewMode { get; set; }
-        
+
 
         #endregion
 
@@ -136,7 +136,7 @@ namespace Grand.Web.Models.Catalog
                 var range = webHelper.QueryString<string>(QUERYSTRINGPARAM);
                 if (String.IsNullOrEmpty(range))
                     return null;
-                string[] fromTo = range.Trim().Split(new [] { '-' });
+                string[] fromTo = range.Trim().Split(new[] { '-' });
                 if (fromTo.Length == 2)
                 {
                     decimal? from = null;
@@ -208,7 +208,7 @@ namespace Grand.Web.Models.Catalog
                     this.Enabled = false;
                 }
             }
-            
+
             #endregion
 
             #region Properties
@@ -278,7 +278,7 @@ namespace Grand.Web.Models.Catalog
                 if (String.IsNullOrWhiteSpace(alreadyFilteredSpecsStr))
                     return result;
 
-                foreach (var spec in alreadyFilteredSpecsStr.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                foreach (var spec in alreadyFilteredSpecsStr.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     if (!result.Contains(spec))
                         result.Add(spec);
@@ -335,12 +335,17 @@ namespace Grand.Web.Models.Catalog
                 //get already filtered specification options
                 var alreadyFilteredOptions = allFilters.Where(x => alreadyFilteredSpecOptionIds.Contains(x.SpecificationAttributeOptionId));
                 AlreadyFilteredItems = alreadyFilteredOptions.Select(x =>
-                    new SpecificationFilterItem
+                {
+                    var queryString = string.Format("{0}={1}", QUERYSTRINGPARAM, GenerateFilteredSpecQueryParam(alreadyFilteredOptions.Where(y => y.SpecificationAttributeOptionId != x.SpecificationAttributeOptionId).Select(z => z.SpecificationAttributeOptionId).ToList()));
+                    var filterUrl = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true), queryString, null);
+                    return new SpecificationFilterItem
                     {
                         SpecificationAttributeName = x.SpecificationAttributeName,
                         SpecificationAttributeOptionName = x.SpecificationAttributeOptionName,
-                        SpecificationAttributeOptionColorRgb = x.SpecificationAttributeOptionColorRgb
-                    }).ToList();
+                        SpecificationAttributeOptionColorRgb = x.SpecificationAttributeOptionColorRgb,
+                        FilterUrl = ExcludeQueryStringParams(filterUrl, webHelper)
+                    };
+                }).ToList();
 
                 //get not filtered specification options
                 NotFilteredItems = allFilters.Except(alreadyFilteredOptions).Select(x =>

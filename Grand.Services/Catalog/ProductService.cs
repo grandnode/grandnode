@@ -91,6 +91,7 @@ namespace Grand.Services.Catalog
         private readonly IRepository<CustomerProduct> _customerProductRepository;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductAttributeParser _productAttributeParser;
+        private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly ILanguageService _languageService;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IDataProvider _dataProvider;
@@ -123,12 +124,13 @@ namespace Grand.Services.Catalog
             IRepository<CustomerProduct> customerProductRepository,
             IProductAttributeService productAttributeService,
             IProductAttributeParser productAttributeParser,
+            ISpecificationAttributeService specificationAttributeService,
             ILanguageService languageService,
             IWorkflowMessageService workflowMessageService,
-            IDataProvider dataProvider, 
+            IDataProvider dataProvider,
             IWorkContext workContext,
             IStoreContext storeContext,
-            LocalizationSettings localizationSettings, 
+            LocalizationSettings localizationSettings,
             CommonSettings commonSettings,
             CatalogSettings catalogSettings,
             IEventPublisher eventPublisher,
@@ -148,11 +150,12 @@ namespace Grand.Services.Catalog
             this._productDeletedRepository = productDeletedRepository;
             this._productAttributeService = productAttributeService;
             this._productAttributeParser = productAttributeParser;
+            this._specificationAttributeService = specificationAttributeService;
             this._languageService = languageService;
             this._workflowMessageService = workflowMessageService;
             this._dataProvider = dataProvider;
             this._workContext = workContext;
-            this._storeContext= storeContext;
+            this._storeContext = storeContext;
             this._localizationSettings = localizationSettings;
             this._commonSettings = commonSettings;
             this._catalogSettings = catalogSettings;
@@ -164,7 +167,7 @@ namespace Grand.Services.Catalog
         }
 
         #endregion
-        
+
         #region Methods
 
         #region Products
@@ -187,7 +190,7 @@ namespace Grand.Services.Catalog
             var builderRelated = Builders<Product>.Update;
             var updatefilterRelated = builderRelated.PullFilter(x => x.RelatedProducts, y => y.ProductId2 == product.Id);
             var resultRelated = _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilterRelated).Result;
-            
+
             //delete cross sales product
             var builderCross = Builders<Product>.Update;
             var updatefilterCross = builderCross.Pull(x => x.CrossSellProduct, product.Id);
@@ -195,7 +198,7 @@ namespace Grand.Services.Catalog
 
             //delete customer role product
             var filtersCrp = Builders<CustomerRoleProduct>.Filter;
-            var filterCrp = filtersCrp.Eq(x => x.ProductId, product.Id);            
+            var filterCrp = filtersCrp.Eq(x => x.ProductId, product.Id);
             _customerRoleProductRepository.Collection.DeleteManyAsync(filterCrp);
 
             //delete review
@@ -206,7 +209,7 @@ namespace Grand.Services.Catalog
             //delete url
             var filters = Builders<UrlRecord>.Filter;
             var filter = filters.Eq(x => x.EntityId, product.Id);
-            filter = filter & filters.Eq(x=>x.EntityName, "Product");
+            filter = filter & filters.Eq(x => x.EntityName, "Product");
             _urlRecordRepository.Collection.DeleteManyAsync(filter);
 
             //insert to deleted products
@@ -227,12 +230,12 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <returns>Products</returns>
         public virtual IList<Product> GetAllProductsDisplayedOnHomePage()
-        {            
+        {
             var builder = Builders<Product>.Filter;
             var filter = builder.Eq(x => x.Published, true);
             filter = filter & builder.Eq(x => x.ShowOnHomePage, true);
             filter = filter & builder.Eq(x => x.VisibleIndividually, true);
-            var query = _productRepository.Collection.Find(filter).SortBy(x => x.DisplayOrder).ThenBy(x=>x.Name);
+            var query = _productRepository.Collection.Find(filter).SortBy(x => x.DisplayOrder).ThenBy(x => x.Name);
             var products = query.ToList();
             return products;
         }
@@ -245,7 +248,7 @@ namespace Grand.Services.Catalog
         public virtual Product GetProductById(string productId)
         {
             if (String.IsNullOrEmpty(productId))
-                return null;            
+                return null;
             string key = string.Format(PRODUCTS_BY_ID_KEY, productId);
             return _cacheManager.Get(key, () => _productRepository.GetById(productId));
         }
@@ -299,7 +302,7 @@ namespace Grand.Services.Catalog
         public virtual IPagedList<Product> GetProductsByDiscount(string discountId, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = from c in _productRepository.Table
-                        where c.AppliedDiscounts.Any(x=>x == discountId)
+                        where c.AppliedDiscounts.Any(x => x == discountId)
                         select c;
 
             return new PagedList<Product>(query, pageIndex, pageSize);
@@ -320,7 +323,7 @@ namespace Grand.Services.Catalog
 
             //clear cache
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
-            
+
             //event notification
             _eventPublisher.EntityInserted(product);
         }
@@ -450,8 +453,8 @@ namespace Grand.Services.Catalog
 
             var result = _productRepository.Collection.UpdateOneAsync(filter, update).Result;
 
-            if(oldProduct.AdditionalShippingCharge!=product.AdditionalShippingCharge ||
-                oldProduct.IsFreeShipping!=product.IsFreeShipping ||
+            if (oldProduct.AdditionalShippingCharge != product.AdditionalShippingCharge ||
+                oldProduct.IsFreeShipping != product.IsFreeShipping ||
                 oldProduct.IsGiftCard != product.IsGiftCard ||
                 oldProduct.IsShipEnabled != product.IsShipEnabled ||
                 oldProduct.IsTaxExempt != product.IsTaxExempt ||
@@ -484,7 +487,7 @@ namespace Grand.Services.Catalog
 
             //cache
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
-                        
+
             //event notification
             _eventPublisher.EntityUpdated(product);
         }
@@ -558,7 +561,7 @@ namespace Grand.Services.Catalog
             ////category filtering
             if (categoryIds != null && categoryIds.Any())
             {
-                filter = filter & builder.Where(p => p.ProductCategories.Any(x=> categoryIds.Contains(x.CategoryId)));
+                filter = filter & builder.Where(p => p.ProductCategories.Any(x => categoryIds.Contains(x.CategoryId)));
             }
 
             if (!_catalogSettings.IgnoreAcl)
@@ -680,7 +683,7 @@ namespace Grand.Services.Catalog
             out IList<string> filterableSpecificationAttributeOptionIds,
             bool loadFilterableSpecificationAttributeOptionIds = false,
             int pageIndex = 0,
-            int pageSize = int.MaxValue,  
+            int pageSize = int.MaxValue,
             IList<string> categoryIds = null,
             string manufacturerId = "",
             string storeId = "",
@@ -704,9 +707,9 @@ namespace Grand.Services.Catalog
             bool? overridePublished = null)
         {
             filterableSpecificationAttributeOptionIds = new List<string>();
-            
+
             //validate "categoryIds" parameter
-            if (categoryIds !=null && categoryIds.Contains(""))
+            if (categoryIds != null && categoryIds.Contains(""))
                 categoryIds.Remove("");
 
             //Access control list. Allowed customer roles
@@ -717,6 +720,7 @@ namespace Grand.Services.Catalog
             //products
             var builder = Builders<Product>.Filter;
             var filter = FilterDefinition<Product>.Empty;
+            var filterSpecification = FilterDefinition<Product>.Empty;
 
             //category filtering
             if (categoryIds != null && categoryIds.Any())
@@ -805,7 +809,7 @@ namespace Grand.Services.Catalog
             //searching by keyword
             if (!String.IsNullOrWhiteSpace(keywords))
             {
-                if(_commonSettings.UseFullTextSearch)
+                if (_commonSettings.UseFullTextSearch)
                 {
                     keywords = "\"" + keywords + "\"";
                     keywords = keywords.Replace("+", "\" \"");
@@ -837,7 +841,7 @@ namespace Grand.Services.Catalog
                                 );
                     }
                 }
-                
+
             }
 
             if (!showHidden && !_catalogSettings.IgnoreAcl)
@@ -847,29 +851,18 @@ namespace Grand.Services.Catalog
 
             if (!String.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations)
             {
-                filter = filter & builder.Where(x => x.Stores.Any(y=>y == storeId) || !x.LimitedToStores);
+                filter = filter & builder.Where(x => x.Stores.Any(y => y == storeId) || !x.LimitedToStores);
 
             }
-
-            //search by specs
-            if (filteredSpecs != null && filteredSpecs.Any())
-            {
-                foreach (var item in filteredSpecs)
-                {
-                    filter = filter & builder.Where(x => x.ProductSpecificationAttributes.Any(y => y.SpecificationAttributeOptionId == item));
-                }
-            }
-
             //vendor filtering
             if (!String.IsNullOrEmpty(vendorId))
             {
                 filter = filter & builder.Where(x => x.VendorId == vendorId);
             }
-
             //warehouse filtering
             if (!String.IsNullOrEmpty(warehouseId))
             {
-                filter = filter & (builder.Where(x => x.UseMultipleWarehouses && x.ProductWarehouseInventory.Any(y=>y.WarehouseId == warehouseId)) |
+                filter = filter & (builder.Where(x => x.UseMultipleWarehouses && x.ProductWarehouseInventory.Any(y => y.WarehouseId == warehouseId)) |
                     builder.Where(x => !x.UseMultipleWarehouses && x.WarehouseId == warehouseId));
 
             }
@@ -880,8 +873,34 @@ namespace Grand.Services.Catalog
                 filter = filter & builder.Where(x => x.ProductTags.Any(y => y == productTag));
             }
 
+            filterSpecification = filter;
 
-            var builderSort = Builders<Product>.Sort.Descending(x=>x.CreatedOnUtc);
+            //search by specs
+            if (filteredSpecs != null && filteredSpecs.Any())
+            {
+                var spec = new HashSet<string>();
+                Dictionary<string, List<string>> dictionary = new Dictionary<string, List<string>>();
+                foreach (string key in filteredSpecs)
+                {
+                    var specification = _specificationAttributeService.GetSpecificationAttributeByOptionId(key);
+                    spec.Add(specification.Id);
+                    if (!dictionary.ContainsKey(specification.Id))
+                    {
+                        //add
+                        dictionary.Add(specification.Id, new List<string>());
+                        filterSpecification = filterSpecification & builder.Where(x => x.ProductSpecificationAttributes.Any(y => y.SpecificationAttributeId == specification.Id));
+                    }
+                    dictionary[specification.Id].Add(key);
+                }
+
+                foreach (var item in dictionary)
+                {
+                    filter = filter & builder.Where(x => x.ProductSpecificationAttributes.Any(y => y.SpecificationAttributeId == item.Key 
+                    && item.Value.Contains(y.SpecificationAttributeOptionId)));
+                }
+            }
+
+            var builderSort = Builders<Product>.Sort.Descending(x => x.CreatedOnUtc);
 
             if (orderBy == ProductSortingEnum.Position && categoryIds != null && categoryIds.Any())
             {
@@ -944,14 +963,14 @@ namespace Grand.Services.Catalog
             if (loadFilterableSpecificationAttributeOptionIds && !_catalogSettings.IgnoreFilterableSpecAttributeOption)
             {
                 IList<string> specyfication = new List<string>();
-                var filterSpecExists = filter &
+                var filterSpecExists = filterSpecification &
                     builder.Where(x => x.ProductSpecificationAttributes.Count > 0);
                 var productSpec = _productRepository.Collection.Find(filterSpecExists).Limit(1);
-                if (productSpec!=null)
+                if (productSpec != null)
                 {
                     var qspec = _productRepository.Collection
                     .Aggregate()
-                    .Match(filter)
+                    .Match(filterSpecification)
                     .Unwind(x => x.ProductSpecificationAttributes)
                     .Project(new BsonDocument
                         {
@@ -979,14 +998,14 @@ namespace Grand.Services.Catalog
                         specyfication.Add(so);
                     }
                 }
-                    
+
                 filterableSpecificationAttributeOptionIds = specyfication;
             }
 
             return products;
 
             #endregion
-            
+
         }
 
         /// <summary>
@@ -1087,8 +1106,19 @@ namespace Grand.Services.Catalog
                            p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStockByAttributes &&
                            (vendorId == "" || p.VendorId == vendorId)
                            from c in p.ProductAttributeCombinations
-                           select new ProductAttributeCombination() { ProductId = p.Id, StockQuantity = c.StockQuantity, AttributesXml = c.AttributesXml, AllowOutOfStockOrders = c.AllowOutOfStockOrders,
-                            Id = c.Id, Gtin = c.Gtin, ManufacturerPartNumber = c.ManufacturerPartNumber, NotifyAdminForQuantityBelow = c.NotifyAdminForQuantityBelow, OverriddenPrice = c.OverriddenPrice, Sku = c.Sku};
+                           select new ProductAttributeCombination()
+                           {
+                               ProductId = p.Id,
+                               StockQuantity = c.StockQuantity,
+                               AttributesXml = c.AttributesXml,
+                               AllowOutOfStockOrders = c.AllowOutOfStockOrders,
+                               Id = c.Id,
+                               Gtin = c.Gtin,
+                               ManufacturerPartNumber = c.ManufacturerPartNumber,
+                               NotifyAdminForQuantityBelow = c.NotifyAdminForQuantityBelow,
+                               OverriddenPrice = c.OverriddenPrice,
+                               Sku = c.Sku
+                           };
 
             var query2_2 = from c in query2_1
                            where c.StockQuantity <= 0
@@ -1097,7 +1127,7 @@ namespace Grand.Services.Catalog
             combinations = query2_2.ToList();
         }
 
-        
+
         /// <summary>
         /// Gets a product by SKU
         /// </summary>
@@ -1206,7 +1236,7 @@ namespace Grand.Services.Catalog
             _eventPublisher.EntityUpdated(product);
 
         }
-        
+
         /// <summary>
         /// Update Interval properties
         /// </summary>
@@ -1304,10 +1334,10 @@ namespace Grand.Services.Catalog
                                     .Set(x => x.Published, product.Published)
                                     .CurrentDate("UpdatedOnUtc");
                             _productRepository.Collection.UpdateOneAsync(filter2, update2);
-                            
+
                             //cache
                             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
-                            if(product.ShowOnHomePage)
+                            if (product.ShowOnHomePage)
                                 _cacheManager.RemoveByPattern(PRODUCTS_SHOWONHOMEPAGE);
 
                             //event notification
@@ -1325,7 +1355,7 @@ namespace Grand.Services.Catalog
                     {
                         switch (product.LowStockActivity)
                         {
-                            case LowStockActivity.DisableBuyButton:                                
+                            case LowStockActivity.DisableBuyButton:
                                 var filter = Builders<Product>.Filter.Eq("Id", product.Id);
                                 var update = Builders<Product>.Update
                                         .Set(x => x.DisableBuyButton, product.DisableBuyButton)
@@ -1392,12 +1422,12 @@ namespace Grand.Services.Catalog
                     }
                 }
             }
-            if(product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByBundleProducts)
+            if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByBundleProducts)
             {
                 foreach (var item in product.BundleProducts)
                 {
                     var p1 = GetProductById(item.ProductId);
-                    if(p1 != null && p1.ManageInventoryMethod==ManageInventoryMethod.ManageStock)
+                    if (p1 != null && p1.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
                     {
                         AdjustInventory(p1, quantityToChange * item.Quantity, warehouseId);
                     }
@@ -1418,7 +1448,7 @@ namespace Grand.Services.Catalog
                     }
                 }
             }
-            
+
         }
 
         /// <summary>
@@ -1445,7 +1475,7 @@ namespace Grand.Services.Catalog
 
             Action pass = () =>
             {
-                foreach (var item in productInventory.Where(x=>x.WarehouseId == warehouseId || string.IsNullOrEmpty(warehouseId)))
+                foreach (var item in productInventory.Where(x => x.WarehouseId == warehouseId || string.IsNullOrEmpty(warehouseId)))
                 {
                     var selectQty = Math.Min(item.StockQuantity - item.ReservedQuantity, qty);
                     item.ReservedQuantity += selectQty;
@@ -1465,10 +1495,10 @@ namespace Grand.Services.Catalog
                 var pwi = productInventory[0];
                 pwi.ReservedQuantity += qty;
             }
-            
+
             var filter = Builders<Product>.Filter.Eq("Id", product.Id);
             var update = Builders<Product>.Update
-                    .Set(x => x.ProductWarehouseInventory, productInventory)                    
+                    .Set(x => x.ProductWarehouseInventory, productInventory)
                     .CurrentDate("UpdatedOnUtc");
             _productRepository.Collection.UpdateOneAsync(filter, update);
 
@@ -1696,7 +1726,7 @@ namespace Grand.Services.Catalog
                 _productRepository.Collection.UpdateOneAsync(filter, update);
             }
             //manage stock by attributes
-            if(product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
+            if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
             {
                 var combination = product.ProductAttributeCombinations.FirstOrDefault(x => x.AttributesXml == AttributeXML);
                 if (combination == null)
@@ -1725,7 +1755,7 @@ namespace Grand.Services.Catalog
 
             }
             //manage stock by bundle products
-            if(product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByBundleProducts)
+            if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByBundleProducts)
             {
                 foreach (var item in product.BundleProducts)
                 {
@@ -1757,7 +1787,7 @@ namespace Grand.Services.Catalog
 
             if (shipmentItem == null)
                 throw new ArgumentNullException("shipmentItem");
-            
+
             //only products with "use multiple warehouses" are handled this way
             if (product.ManageInventoryMethod == ManageInventoryMethod.DontManageStock)
                 return 0;
@@ -1871,7 +1901,7 @@ namespace Grand.Services.Catalog
             _eventPublisher.EntityDeleted(relatedProduct);
         }
 
-        
+
         public virtual void InsertRelatedProduct(RelatedProduct relatedProduct)
         {
             if (relatedProduct == null)
@@ -2029,7 +2059,7 @@ namespace Grand.Services.Catalog
             _eventPublisher.EntityInserted(crossSellProduct);
         }
 
-       
+
         /// <summary>
         /// Gets a cross-sells
         /// </summary>
@@ -2080,9 +2110,9 @@ namespace Grand.Services.Catalog
             return result;
         }
         #endregion
-        
+
         #region Tier prices
-        
+
         /// <summary>
         /// Deletes a tier price
         /// </summary>
@@ -2207,7 +2237,7 @@ namespace Grand.Services.Catalog
         {
             if (productTag == null)
                 throw new ArgumentNullException("productTag");
-           
+
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.AddToSet(p => p.ProductTags, productTag.Name);
             _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productTag.ProductId), update);
@@ -2288,7 +2318,7 @@ namespace Grand.Services.Catalog
         public virtual IList<Product> GetRecommendedProducts(string[] customerRoleIds)
         {
 
-            return _cacheManager.Get(string.Format(PRODUCTS_CUSTOMER_ROLE, string.Join(",", customerRoleIds)), 
+            return _cacheManager.Get(string.Format(PRODUCTS_CUSTOMER_ROLE, string.Join(",", customerRoleIds)),
                 () =>
                 {
                     var query = from cr in _customerRoleProductRepository.Table
@@ -2416,14 +2446,14 @@ namespace Grand.Services.Catalog
             return content;
         }
 
-        
+
 
         public virtual int RatingSumProduct(string productId, string storeId)
         {
             var query = from p in _productReviewRepository.Table
                         where p.ProductId == productId && p.IsApproved && (p.StoreId == storeId || p.StoreId == "")
                         group p by true into g
-                        select new { Sum = g.Sum(x=>x.Rating) };
+                        select new { Sum = g.Sum(x => x.Rating) };
             var content = query.ToListAsync().Result;
             return content.Count > 0 ? content.FirstOrDefault().Sum : 0;
         }
@@ -2465,7 +2495,7 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("productReview");
 
             _productReviewRepository.Delete(productReview);
-            
+
             //event notification
             _eventPublisher.EntityDeleted(productReview);
         }
