@@ -69,7 +69,6 @@ namespace Grand.Services.Tasks
                     else
                     {
                         _logger.InsertLog(Core.Domain.Logging.LogLevel.Error, $"EndAuctionTask - Product {auctionToEnd.Name}", string.Join(",", warnings.ToArray()));
-                        throw new ArgumentNullException($"EndAuctionTask - Product: {auctionToEnd.Name} - {string.Join(", ", warnings.ToArray())}");
                     }
                 }
             }
