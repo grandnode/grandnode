@@ -1,21 +1,22 @@
-﻿#! "netcoreapp2.1"
+﻿#! "netcoreapp2.2"
 #r "Grand.Core"
 #r "Grand.Services"
 
 using System;
 using Grand.Core.Domain.Messages;
 using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Stores;
 using Grand.Services.Events;
-using Grand.Services.Messages;
 
 /* Sample code to add new token message (message email) to the order */
 
-public class EntityTokensAddedEventConsumer : IConsumer<EntityTokensAddedEvent<Order, Token>>
+public class OrderTokenTest : IConsumer<EntityTokensAddedEvent<Order>>
 {
-    public void HandleEvent(EntityTokensAddedEvent<Order, Token> eventMessage)
+
+    public void HandleEvent(EntityTokensAddedEvent<Order> eventMessage)
     {
-        eventMessage.Tokens.Add(new Token("order", "my value"));
+        eventMessage.LiquidObject.AdditionalTokens.Add("NewOrderNumber", $"{eventMessage.Entity.CreatedOnUtc.Year}/{eventMessage.Entity.OrderNumber}");
+        //in message templates you can put new token {{AdditionalTokens["NewOrderNumber"]}}
     }
 }
+
 
