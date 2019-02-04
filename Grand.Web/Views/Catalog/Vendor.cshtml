@@ -21,34 +21,34 @@
                 <img class="card-img-top img-fluid" alt="@Model.PictureModel.AlternateText" src="@Model.PictureModel.ImageUrl" title="@Model.PictureModel.Title">
             </div>
             <div class="col-sm-8 align-items-center d-flex">
-                <h1 class="h2">
-                    @Model.Name
-                </h1>
+                <div>
+                    <h2 class="w-100">
+                        @Model.Name
+                    </h2>
+                    @if (Model.AllowCustomersToContactVendors)
+                    {
+                        <input type="button" value="@T("ContactVendor")" class="btn btn-sm btn-info contact-vendor-button float-xs-right" onclick="setLocation('@Url.RouteUrl("ContactVendor", new { vendorId = Model.Id })')" />
+                    }
+                    @await Component.InvokeAsync("Widget", new { widgetZone = "vendordetails_top", additionalData = Model.Id })
+                    @*description*@
+                    @if (!String.IsNullOrWhiteSpace(Model.Description))
+                    {
+                        <article class="text-xs-center generalMarginSupporter vendor-description">
+                            @Html.Raw(Model.Description)
+                        </article>
+                    }
+                    @*review*@
+                    @if (Model.VendorReviewOverview.AllowCustomerReviews)
+                    {
+                        <div>
+                            <partial name="_VendorReviewOverview" model="Model.VendorReviewOverview" />
+                        </div>
+                    }
+                </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-7 col-sm-12">
-                @if (Model.AllowCustomersToContactVendors)
-                {
-                    <input type="button" value="@T("ContactVendor")" class="btn btn-sm btn-secondary contact-vendor-button float-xs-right" onclick="setLocation('@Url.RouteUrl("ContactVendor", new { vendorId = Model.Id })')" />
-                }
-                @await Component.InvokeAsync("Widget", new { widgetZone = "vendordetails_top", additionalData = Model.Id })
-                @*description*@
-                @if (!String.IsNullOrWhiteSpace(Model.Description))
-                {
-                    <article class="text-xs-center generalMarginSupporter vendor-description">
-                        @Html.Raw(Model.Description)
-                    </article>
-                }
-                @*review*@
-                @if (Model.VendorReviewOverview.AllowCustomerReviews)
-                {
-                    <div>
-                        <partial name="_VendorReviewOverview" model="Model.VendorReviewOverview" />
-                    </div>
-                }
-            </div>
-            <div class="col-md-5 col-sm-12">
+            <div class="col-md-12 col-sm-12">
                 @if (Model.Address != null)
                 {
 
@@ -56,20 +56,21 @@
                         @if (Model.Address.CompanyEnabled && !String.IsNullOrEmpty(Model.Address.Company))
                         {
                             <li class="company">
-                                <label>@T("Address.Fields.Company"):</label>
+                                <label class="col-form-label">@T("Address.Fields.Company"):</label>
                                 @Model.Address.Company
                             </li>
                         }
                         @if (Model.Address.StreetAddressEnabled && !String.IsNullOrEmpty(Model.Address.Address1))
                         {
                             <li class="address1">
-                                <label>@T("Address.Fields.Address1"):</label>
+                                <label class="col-form-label w-100">@T("Address.Fields.Address1"):</label>
                                 @Model.Address.Address1
                             </li>
                         }
                         @if (Model.Address.StreetAddress2Enabled && !String.IsNullOrEmpty(Model.Address.Address2))
                         {
                             <li class="address2">
+                                <label class="col-form-label">@T("Address.Fields.Address2"):</label>
                                 @Model.Address.Address2
                             </li>
                         }
@@ -116,14 +117,14 @@
                         @if (Model.Address.PhoneEnabled && !String.IsNullOrEmpty(Model.Address.PhoneNumber))
                         {
                             <li class="phone">
-                                <label>@T("Address.Fields.PhoneNumber"):</label>
+                                <label class="col-form-label">@T("Address.Fields.PhoneNumber"):</label>
                                 @Model.Address.PhoneNumber
                             </li>
                         }
                         @if (Model.Address.FaxEnabled && !String.IsNullOrEmpty(Model.Address.FaxNumber))
                         {
                             <li class="fax">
-                                <label>@T("Address.Fields.FaxNumber"):</label>
+                                <label class="col-form-label">@T("Address.Fields.FaxNumber"):</label>
                                 @Model.Address.FaxNumber
                             </li>
                         }

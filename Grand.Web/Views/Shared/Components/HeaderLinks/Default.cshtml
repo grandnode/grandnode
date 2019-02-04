@@ -3,52 +3,49 @@
 @await Component.InvokeAsync("Widget", new { widgetZone = "header_links_before" })
 @if (Model.IsAuthenticated)
 {
-    <li class="nav-item">
-        <a class="nav-link ico-account d-none d-lg-flex" href="@Url.RouteUrl("CustomerInfo")">
-            <span class="align-self-center"><span class="fa fa-user"></span></span>
-            <span class="d-none d-lg-block">@T("Account.MyAccount")</span>
-        </a>
-    </li>
-    <li class="nav-item d-none d-lg-block">
-        <a class="nav-link ico-logout" href="@Url.RouteUrl("Logout")">
-            <span class="align-self-center"><span class="fa fa-power-off"></span></span>
-            <span class="d-none d-lg-block">@T("Account.Logout")</span>
-        </a>
-    </li>
-    <li class="nav-item col d-flex d-lg-none align-self-start" id="mobile-hl-opener">
+    @await Component.InvokeAsync("AdminHeaderLinks")
+    <li class="nav-item col d-flex">
         <a class="ico-account nav-link d-flex justify-content-center" href="@Url.RouteUrl("CustomerInfo")">
-            <span class="align-self-center"><span class="fa fa-user"></span></span>
-            <span class="d-none d-lg-block">@T("Account.MyAccount")</span>
-            <span class="d-lg-none d-block text-muted mt-1 mobile-desc">@T("Account.MyAccount")</span>
+            <span class="hl-label"><span class="material-icons mat">account_circle</span></span>
+            <span class="d-flex align-items-center mobile-desc">@T("Account.MyAccount")</span>
         </a>
     </li>
-    <li class="nav-item col d-flex d-lg-none align-self-start">
+    <li class="nav-item col d-flex">
         <a class="nav-link ico-logout" href="@Url.RouteUrl("Logout")">
-            <span class="align-self-center"><span class="fa fa-power-off"></span></span>
-            <span class="d-none d-lg-block">@T("Account.Logout")</span>
-            <span class="d-lg-none d-block text-muted mt-1 mobile-desc">@T("Account.Logout")</span>
+            <span class="hl-label">
+                <span class="material-icons mat">
+                    lock
+                </span>
+            </span>
+            <span class="d-flex align-items-center mobile-desc">@T("Account.Logout")</span>
         </a>
     </li>
 }
 else
 {
-    <li class="nav-item d-none d-lg-block"><a class="nav-link ico-login" href="@Url.RouteUrl("Login")"><span class="fa fa-user align-self-center"></span><span class="d-none d-lg-block">@T("Account.Login")</span></a></li>
-    <li class="nav-item col d-flex d-lg-none justify-content-center align-self-start">
-        <a class="nav-link ico-login admin" href="@Url.RouteUrl("Login")">
-            <span class="fa fa-user align-self-center"></span>
-            <span class="d-none d-lg-block">@T("Account.Login")</span>
-            <span class="d-lg-none d-block text-muted mt-1 mobile-desc">@T("Account.Login")</span>
+    <li class="nav-item col d-flex">
+        <a class="nav-link" href="@Url.RouteUrl("Login")">
+            <span class="hl-label">
+                <span class="material-icons mat">
+                    lock_open
+                </span>
+            </span>
+            <span class="d-flex align-items-center mobile-desc">@T("Account.Login")</span>
         </a>
     </li>
 }
 @if (Model.AllowPrivateMessages)
 {
-    <li class="nav-item col inbox-col">
-        <a class="nav-link ico-inbox" href="@Url.RouteUrl("PrivateMessages", new { tab = "" })">
-            <span class="fa fa-envelope align-self-center"></span>
-            <span class="inbox-label d-none d-lg-block">@T("PrivateMessages.Inbox")</span>
-            <span class="inbox-unread d-none d-lg-block">@Model.UnreadPrivateMessages</span>
-            <span class="d-lg-none d-block text-muted mt-1 mobile-desc">@T("PrivateMessages.Inbox")</span>
+    <li class="nav-item col d-flex">
+        <a class="nav-link" href="@Url.RouteUrl("PrivateMessages", new { tab = "" })">
+            <span class="hl-label">
+                <span class="material-icons mat">
+                    message
+                </span>
+            </span>
+            <span class="inbox-label d-none d-lg-flex align-items-center">@T("PrivateMessages.Inbox")</span>
+            <span class="inbox-unread d-none d-lg-flex align-items-center">@Model.UnreadPrivateMessages</span>
+            <span class="d-lg-none d-flex align-items-center text-muted mobile-desc">@T("PrivateMessages.Inbox")</span>
         </a>
     </li>
 }
@@ -56,14 +53,15 @@ else
 {
     <li class="nav-item col wishlist-container">
         <a class="nav-link" href="@Url.RouteUrl("Wishlist")">
-            <span class="wishlist-label align-self-center">
-                <span class="far fa-heart"></span>
+            <span class="wishlist-label hl-label">
+                <span class="material-icons mat">
+                    favorite_border
+                </span>
             </span>
-            <span class="d-none d-lg-block wish-name">
+            <span class="d-flex align-items-center wish-name mobile-desc">
                 @T("Wishlist")
             </span>
             <span class="wishlist-qty d-none d-lg-flex">@T("Wishlist.HeaderQuantity", Model.WishlistItems)</span>
-            <span class="d-lg-none d-block text-muted mt-1 mobile-desc">@T("Wishlist")</span>
         </a>
     </li>
 }
@@ -71,19 +69,17 @@ else
 {
     <li class="nav-item col" id="topcartlink">
         <div class="btn-group dropdown">
-            <a class="nav-link dropdown-toggle">
-                <span class="cart-label align-self-center">
-                    <span class="fa fa-shopping-cart"></span>
+            <a class="nav-link js-offcanvas-trigger" data-offcanvas-trigger="right" href="#right">
+                <span class="cart-label hl-label">
+                    <span class="material-icons mat">
+                        shopping_cart
+                    </span>
                 </span>
-                <span class="d-none d-lg-block cart-name">
+                <span class="d-flex align-items-center cart-name mobile-desc">
                     @T("ShoppingCart")
                 </span>
                 <span class="cart-qty">@T("ShoppingCart.HeaderQuantity", Model.ShoppingCartItems)</span>
-                <span class="d-lg-none d-block text-muted mt-1 mobile-desc">@T("shoppingcart")</span>
             </a>
-        </div>
-        <div class="fly-cart-container">
-            @await Component.InvokeAsync("FlyoutShoppingCart")
         </div>
     </li>
 }
@@ -97,5 +93,4 @@ else
             });
     </script>
 }
-
 

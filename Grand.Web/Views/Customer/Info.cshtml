@@ -58,7 +58,8 @@
         }
     });
 </script>
-<div class="page account-page customer-info-page pl-lg-3">
+<div class="page account-page customer-info-page pl-lg-3 pt-3 pt-lg-0">
+    <a class="js-offcanvas-trigger blog-filter filter-button btn btn-outline-info d-lg-none d-flex mb-3" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="material-icons">tune</span><span class="ml-3">@T("Account.Navigation")</span></a>
     @if (customerSettings.AllowUsersToExportData)
     {
         <button type="button" class="btn btn-info btn-sm float-sm-right" onclick="location.href='/customer/export'">
@@ -156,7 +157,7 @@
                                 <span asp-validation-for="Username"></span>
                                 @if (Model.CheckUsernameAvailabilityEnabled)
                                 {
-                                    <partial name="_CheckUsernameAvailability"/>
+                                    <partial name="_CheckUsernameAvailability" />
                                 }
                             </div>
                         </fieldset>
@@ -422,7 +423,7 @@
             </div>
         }
 
-        
+
         <div class="generalMarginSupporter">
             <input type="submit" value="@T("Common.Save")" name="save-info-button" class="btn btn-secondary save-customer-info-button" />
         </div>

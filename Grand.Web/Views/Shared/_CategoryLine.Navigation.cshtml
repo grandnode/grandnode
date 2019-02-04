@@ -37,7 +37,7 @@
         @Model.Category.Name
         @if (Model.Category.NumberOfProducts.HasValue)
         {
-            <text> </text>@T("Categories.TotalProducts", Model.Category.NumberOfProducts.Value)
+            <span class="total">@T("Categories.TotalProducts", Model.Category.NumberOfProducts.Value)</span>
         }
     </a>
     @{

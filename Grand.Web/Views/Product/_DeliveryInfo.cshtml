@@ -5,7 +5,7 @@
     <div class="delivery generalMarginSupporter">
         @if (Model.FreeShippingNotificationEnabled && Model.IsFreeShipping)
         {
-            <div class="btn btn-sm btn-secondary free-shipping"><i class="fas fa-truck"></i> @T("Products.FreeShipping")</div>
+        <div class="free-shipping d-inline-flex align-items-center"><span class="material-icons mat mr-2">local_shipping</span>  @T("Products.FreeShipping")</div>
         }
         @if (!string.IsNullOrWhiteSpace(Model.DeliveryDate))
         {
@@ -16,12 +16,12 @@
         }
         @if (Model.NotReturnable)
         {
-            <div class="btn btn-sm btn-secondary free-shipping"><i class="fas fa-ban"></i> @T("Products.NotReturnable")</div>
+            <div class="d-inline-flex align-items-center"><span class="material-icons mat mr-2">local_shipping</span> @T("Products.NotReturnable")</div>
         }
         @if (Model.AdditionalShippingCharge > 0 && !Model.IsFreeShipping)
         {
             <div class="additional-shipping-charge btn btn-sm btn-secondary">
-                <i class="fas fa-truck"></i>
+                <span class="material-icons mat">local_shipping</span>
                 <span class="label">@T("Products.AdditionalShippingCharge")</span>
                 <span class="value">@Model.AdditionalShippingChargeStr</span>
             </div>

@@ -10,127 +10,130 @@
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Auctions })
 }
 
-<div class="page account-page auction-list-page pl-lg-3">
+<div class="page account-page auction-list-page pl-lg-3 pt-3 pt-lg-0">
+    <a class="js-offcanvas-trigger blog-filter filter-button btn btn-outline-info d-lg-none d-flex mb-3" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="material-icons">tune</span><span class="ml-3">@T("Account.Navigation")</span></a>
     <h1 class="h2 generalTitle">@T("Account.CustomerAuctions")</h1>
-        @if (Model.ProductBidList.Any())
-        {
-            <ul class="nav nav-tabs" id="auctions" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#ongoing" role="tab" aria-controls="ongoing">@T("Account.Auctions.Tab.Ongoing")</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#ended" role="tab" aria-controls="ended">@T("Account.Auctions.Tab.Ended")</a>
-                </li>
-            </ul>
-            <div class="tab-content mt-3">
-                <div class="tab-pane active" id="ongoing" role="tabpanel">
-                    @if (Model.ProductBidList.Where(x => !x.Ended).Any())
-                    {
-                    <table class="table table-striped">
-                      <thead>
-                        <tr>
-                          <th scope="col">@T("Account.CustomerAuctions.ProductName")</th>
-                          <th scope="col">@T("Account.CustomerAuctions.Status")</th>
-                          <th scope="col">@T("Account.CustomerAuctions.Highestbid")</th>
-                          <th scope="col">@T("Account.CustomerAuctions.AuctionEndTime")</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        @{ var ongoing = Model.ProductBidList.Where(x => !x.Ended); }
-                        @foreach (var item in ongoing)
-                        {
+    @if (Model.ProductBidList.Any())
+    {
+        <ul class="nav nav-tabs" id="auctions" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#ongoing" role="tab" aria-controls="ongoing">@T("Account.Auctions.Tab.Ongoing")</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#ended" role="tab" aria-controls="ended">@T("Account.Auctions.Tab.Ended")</a>
+            </li>
+        </ul>
+        <div class="tab-content mt-3">
+            <div class="tab-pane active" id="ongoing" role="tabpanel">
+                @if (Model.ProductBidList.Where(x => !x.Ended).Any())
+                {
+                    <table class="table table-striped table-responsive">
+                        <thead>
                             <tr>
-                                <th scope="row">
-                                    <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
-                                </th>
+                                <th scope="col">@T("Account.CustomerAuctions.ProductName")</th>
+                                <th scope="col">@T("Account.CustomerAuctions.Status")</th>
+                                <th scope="col">@T("Account.CustomerAuctions.Highestbid")</th>
+                                <th scope="col">@T("Account.CustomerAuctions.AuctionEndTime")</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ var ongoing = Model.ProductBidList.Where(x => !x.Ended); }
+                            @foreach (var item in ongoing)
+                            {
+                                <tr>
+                                    <th scope="row">
+                                        <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
+                                    </th>
+                                    <td>
+                                        @if (item.HighestBidder)
+                                        {
+                                            <span class="text-success">@T("Account.CustomerAuctions.Status.HighestBidder")</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-danger">@T("Account.CustomerAuctions.Status.Outbid")</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @item.CurrentBidAmount
+                                    @if (item.CurrentBidAmountValue > item.BidAmountValue)
+                                    {
+                                        <small>(@item.BidAmount)</small>
+                                    }
+                                </td>
+                                <td>@item.EndBidDate.ToLocalTime()</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="no-data">
+                        @T("Account.Auctions.NoOngoingAuctions")
+                    </div>
+                }
+            </div>
+            <div class="tab-pane" id="ended" role="tabpanel">
+                @if (Model.ProductBidList.Where(x => x.Ended).Any())
+                {
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">@T("Account.CustomerAuctions.ProductName")</th>
+                                <th scope="col">@T("Account.CustomerAuctions.Highestbid")</th>
+                                <th scope="col">@T("Account.CustomerAuctions.AuctionEndTime")</th>
+                                <th scope="col">@T("Account.CustomerAuctions.Status")</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ var ended = Model.ProductBidList.Where(x => x.Ended); }
+                            @foreach (var item in ended)
+                            {
+                                <tr>
+                                    <th scope="row">
+                                        <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
+                                    </th>
+                                    <td>
+                                        @item.CurrentBidAmount
+                                    @if (item.CurrentBidAmountValue > item.BidAmountValue)
+                                    {
+                                        <small>(@item.BidAmount)</small>
+                                    }
+                                </td>
+                                <td>@item.EndBidDate.ToLocalTime()</td>
                                 <td>
                                     @if (item.HighestBidder)
                                     {
                                         <span class="text-success">@T("Account.CustomerAuctions.Status.HighestBidder")</span>
+                                        @if (!string.IsNullOrEmpty(item.OrderId))
+                                        {
+                                            <a href="@Url.RouteUrl("OrderDetails", new { orderId = item.OrderId })">@T("Account.CustomerOrders.OrderDetails")</a>
+                                        }
                                     }
                                     else
                                     {
                                         <span class="text-danger">@T("Account.CustomerAuctions.Status.Outbid")</span>
                                     }
                                 </td>
-                                <td>@item.CurrentBidAmount
-                                @if (item.CurrentBidAmountValue > item.BidAmountValue)
-                                {
-                                    <small>(@item.BidAmount)</small>
-                                }
-                                </td>
-                                <td>@item.EndBidDate.ToLocalTime()</td>
                             </tr>
                         }
-                      </tbody>
+                        </tbody>
                     </table>
-                    }
-                    else
-                    {
-                        <div class="no-data">
-                            @T("Account.Auctions.NoOngoingAuctions")
-                        </div>
-                    }
-                </div>
-                <div class="tab-pane" id="ended" role="tabpanel">
-                    @if (Model.ProductBidList.Where(x => x.Ended).Any())
-                    {
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th scope="col">@T("Account.CustomerAuctions.ProductName")</th>
-                                    <th scope="col">@T("Account.CustomerAuctions.Highestbid")</th>
-                                    <th scope="col">@T("Account.CustomerAuctions.AuctionEndTime")</th>
-                                    <th scope="col">@T("Account.CustomerAuctions.Status")</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @{ var ended = Model.ProductBidList.Where(x => x.Ended); }
-                                @foreach (var item in ended)
-                                {
-                                    <tr>
-                                        <th scope="row">
-                                            <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
-                                        </th>
-                                        <td>@item.CurrentBidAmount
-                                        @if (item.CurrentBidAmountValue > item.BidAmountValue)
-                                        {
-                                            <small>(@item.BidAmount)</small>
-                                        }
-                                        </td>
-                                        <td>@item.EndBidDate.ToLocalTime()</td>
-                                        <td>
-                                            @if (item.HighestBidder)
-                                            {
-                                                <span class="text-success">@T("Account.CustomerAuctions.Status.HighestBidder")</span>
-                                                @if (!string.IsNullOrEmpty(item.OrderId))
-                                                {
-                                                    <a href="@Url.RouteUrl("OrderDetails", new { orderId = item.OrderId })">@T("Account.CustomerOrders.OrderDetails")</a>
-                                                }
-                                            }
-                                            else
-                                            {
-                                                <span class="text-danger">@T("Account.CustomerAuctions.Status.Outbid")</span>
-                                            }
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    }
-                    else
-                    {
-                        <div class="no-data">
-                            @T("Account.Auctions.NoEndedAuctions")
-                        </div>
-                    }
-                </div>
+                }
+                else
+                {
+                    <div class="no-data">
+                        @T("Account.Auctions.NoEndedAuctions")
+                    </div>
+                }
             </div>
-        }
-        else
-        {
-            <div class="no-data">
-                @T("Account.Auctions.NoAuctions")
-            </div>
-        }
+        </div>
+    }
+    else
+    {
+        <div class="no-data">
+            @T("Account.Auctions.NoAuctions")
+        </div>
+    }
 </div>

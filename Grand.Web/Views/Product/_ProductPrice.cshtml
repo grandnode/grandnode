@@ -50,7 +50,7 @@
             <div class="@if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
         {<text>product-price col-12 d-inline-flex align-items-center</text>}
         else
-        {<text>non-discounted-price col-12</text>}">
+        {<text>non-discounted-price col-12 d-flex align-items-center</text>}">
                 @if ((!String.IsNullOrWhiteSpace(Model.OldPrice) || !String.IsNullOrWhiteSpace(Model.PriceWithDiscount)) && Model.IsAuction)
                 {
                     @*display "Price:" label if we have old price or discounted one*@
@@ -62,7 +62,14 @@
                     {
                         <strong class="actual-price">@T("Products.BuyNowPrice"):</strong>
                     }
-                    <strong class="actual-price">@Html.Raw(Model.Price)</strong>
+                    @if (!String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
+                    {
+                        <span class="actual-price">@Html.Raw(Model.Price)</span>
+                    }
+                    else
+                    {
+                        <strong class="actual-price">@Html.Raw(Model.Price)</strong>
+                    }
                 </span>
                 @if (!String.IsNullOrWhiteSpace(Model.OldPrice))
                 {
@@ -88,9 +95,9 @@
         if (!String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
         {
             @*discounted price*@
-            <div class="product-price discounted-price col-12">
-                <label class="mb-0">@T("Products.Price.WithDiscount"):</label>
-                <span itemprop="price" content="@Model.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)" class="price-value-@(Model.ProductId)">
+            <div class="d-inline-flex align-items-center product-price discounted-price col-12">
+                <label class="mb-0 mr-2">@T("Products.Price.WithDiscount"):</label>
+                <span itemprop="price" content="@Model.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)" class="your-price price-value-@(Model.ProductId)">
                     <strong>@Html.Raw(Model.PriceWithDiscount)</strong>
                 </span>
             </div>

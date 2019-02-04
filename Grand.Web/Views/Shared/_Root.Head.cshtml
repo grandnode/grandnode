@@ -23,7 +23,7 @@
     <meta name="description" content="@(Html.GrandMetaDescription())">
     <meta name="keywords" content="@(Html.GrandMetaKeywords())">
     <meta name="generator" content="grandnode">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     @Html.GrandHeadCustom()
     @*This is used so that themes can inject content into the header*@
     <partial name="Head" />
@@ -42,7 +42,6 @@
 </head>
 <body>
     <resources asp-type="ScriptHeader" />
-    <div class="shadow-layer"></div>
     @RenderBody()
     @Html.GrandCssFiles(this.Url, ResourceLocation.Footer)
     @Html.GrandScripts(this.Url, ResourceLocation.Footer)

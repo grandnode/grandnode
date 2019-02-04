@@ -13,7 +13,7 @@
         <div class="product-tags-list">
             @foreach (var item in Model.Tags)
             {
-                <a class="btn btn-secondary" href="@Url.RouteUrl("ProductsByTagName", new { SeName = item.SeName })" class="btn btn-sm btn-secondary" style="font-size:@(Model.GetFontSize(item))%;">
+                <a class="btn btn-outline-secondary" href="@Url.RouteUrl("ProductsByTagName", new { SeName = item.SeName })" class="btn btn-sm btn-secondary" style="font-size:@(Model.GetFontSize(item))%;">
                     @item.Name
                 </a>
             }

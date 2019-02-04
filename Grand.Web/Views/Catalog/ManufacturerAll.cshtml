@@ -12,15 +12,19 @@
         @foreach (var item in Model)
         {
             <div class="col-12 col-md-6 col-lg-4">
-                <div class="card">
-                    <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })" title="@item.PictureModel.Title">
-                        <img class="img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
-                    </a>
-                    <h4 class="h6 p-3 mb-0 card-title">
+                <div class="card border-0">
+                    <div class="list-picture">
                         <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })" title="@item.PictureModel.Title">
-                            @item.Name
+                            <img class="img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
                         </a>
-                    </h4>
+                    </div>
+                    <div class="list-title mt-3">
+                        <h3 class="h5 card-title m-0 p-0">
+                            <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })">
+                                @item.Name
+                            </a>
+                        </h3>
+                    </div>
                 </div>
             </div>
         }

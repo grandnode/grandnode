@@ -19,11 +19,11 @@
         Selected = Model.CurrentTaxType == TaxDisplayType.ExcludingTax
     });
 }
-<div class="btn-group btn-group-sm float-xs-right pr-1 d-none d-lg-flex tax-type-button">
-    <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
-        <span class="d-none d-lg-block">@taxTypes.FirstOrDefault(x => x.Selected).Text</span>
-        <span class="fa fa-info d-lg-none"></span>
+<div class="btn-group btn-group-sm float-xs-right pr-1 d-flex tax-type-button">
+    <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
+        <span>@taxTypes.FirstOrDefault(x => x.Selected).Text</span>
         <span class="sr-only">Toggle Dropdown</span>
+        <span class="material-icons mat">keyboard_arrow_down</span>
     </button>
     <div class="dropdown-menu dropdown-menu-left tax">
         <ul class="pl-0 mb-0">
@@ -36,19 +36,4 @@
             }
         </ul>
     </div>
-</div>
-<div class="col px-0 tax-list-mobile option-list-mobile text-center">
-    <h6 class="tax-button mobile-option-button mb-0">Tax</h6>
-    <ul class="">
-        @foreach (var item in taxTypes)
-        {
-            var className = item.Selected ? "active" : "";
-            <li class="@className">
-                <a class="nav-link d-flex d-lg-none p-0" href="@item.Value">
-                    @item.Text
-                </a>
-            </li>
-
-        }
-    </ul>
 </div>

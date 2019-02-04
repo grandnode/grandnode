@@ -43,10 +43,8 @@
 {
     @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_manufacturer", additionalData = Model.Id })
 }
-
 <div class="d-lg-flex d-grid flex-md-row mx-0">
-
-    <div class="col-lg-3 col-md-12 generalLeftSide pl-0">
+    <div class="col-lg-3 col-md-12 generalLeftSide pl-lg-0 px-3">
         @if (IsSectionDefined("left"))
         {
             @RenderSection("left")
@@ -69,7 +67,7 @@
             @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_after" })
         }
     </div>
-    <div class="col-lg-9 col-md-12 generalSideRight pl-0 pr-0">
+    <div class="col-lg-9 col-md-12 generalSideRight pl-lg-3 pl-0 pr-0">
         @await Component.InvokeAsync("Widget", new { widgetZone = "main_column_before" })
         @RenderBody()
         @await Component.InvokeAsync("Widget", new { widgetZone = "main_column_after" })

@@ -29,7 +29,7 @@
                 <div class="form-fields">
                     <div class="basic-search">
                         <div class="inputs">
-                            <label asp-for="q">@T("Search.SearchTerm"):</label>
+                            <label class="col-form-label" asp-for="q">@T("Search.SearchTerm"):</label>
                             <input asp-for="q" class="form-control search-text" />
                         </div>
                         @await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_basic" })
@@ -42,58 +42,65 @@
                             </label>
                         </div>
                     </div>
-                    <div class="advanced-search" id="advanced-search-block">
+                    <div class="advanced-search form-row" id="advanced-search-block">
                         @if (Model.AvailableCategories.Any())
                         {
-                            <div class="inputs">
-                                <label asp-for="cid">@T("Search.Category"):</label>
-                                <select asp-for="cid" class="form-control" asp-items="Model.AvailableCategories"></select>
-                            </div>
-                            <div class="inputs reversed">
-                                <label for="isc" class="custom-control custom-checkbox">
-                                    <span class="sr-only">isc</span>
-                                    <input asp-for="isc" class="custom-control-input"/>
-                                    <span class="custom-control-label"></span>
-                                    <span class="custom-control-description">@T("admin.catalog.products.list.searchincludesubcategories.hint")</span>
-                                </label>
-
+                            <div class="col-md-6 col-12">
+                                <div class="inputs">
+                                    <label class="col-form-label" asp-for="cid">@T("Search.Category"):</label>
+                                    <select asp-for="cid" class="form-control" asp-items="Model.AvailableCategories"></select>
+                                </div>
+                                <div class="inputs reversed">
+                                    <label for="isc" class="custom-control custom-checkbox">
+                                        <span class="sr-only">isc</span>
+                                        <input asp-for="isc" class="custom-control-input" />
+                                        <span class="custom-control-label"></span>
+                                        <span class="custom-control-description">@T("admin.catalog.products.list.searchincludesubcategories.hint")</span>
+                                    </label>
+                                </div>
                             </div>
                         }
                         @if (Model.AvailableManufacturers.Any())
                         {
-                            <div class="inputs">
-                                <label asp-for="mid">@T("Search.Manufacturer"):</label>
-                                <select asp-for="mid" class="form-control mb-3" asp-items="Model.AvailableManufacturers"></select>
+                            <div class="col-md-6 col-12">
+                                <div class="inputs">
+                                    <label class="col-form-label" asp-for="mid">@T("Search.Manufacturer"):</label>
+                                    <select asp-for="mid" class="form-control mb-3" asp-items="Model.AvailableManufacturers"></select>
+                                </div>
                             </div>
                         }
                         @if (Model.asv && Model.AvailableVendors.Any())
                         {
-                            <div class="inputs">
-                                <label asp-for="vid">@T("Search.Vendor"):</label>
-                                <select asp-for="vid" class="form-control mb-3" asp-items="Model.AvailableVendors"></select>
+                            <div class="col-md-6 col-12">
+                                <div class="inputs">
+                                    <label class="col-form-label" asp-for="vid">@T("Search.Vendor"):</label>
+                                    <select asp-for="vid" class="form-control mb-3" asp-items="Model.AvailableVendors"></select>
+                                </div>
                             </div>
                         }
-                        <div class="inputs pt-1">
-                            <div class="flex-sm-row">
-                                <label class="col-12 px-0 mt-1">@T("Search.PriceRange"):</label>
-                                <div class="price-range flex-sm-row row">
-                                    <div class="col">
-                                        <label asp-for="pf">@T("Search.PriceRange.From")</label>
-                                        <input asp-for="pf" class="form-control price-from" />
-                                    </div>
-                                    <div class="col">
-                                        <label asp-for="pt">@T("Search.PriceRange.To")</label>
-                                        <input asp-for="pt" class="form-control price-to" />
+                        <div class="col-md-12 col-12">
+                            <div class="inputs pt-1">
+                                <div class="flex-sm-row">
+                                    <label class="col-form-label col-12 px-0 mt-1">@T("Search.PriceRange"):</label>
+                                    <div class="price-range flex-sm-row row">
+                                        <div class="col">
+                                            <label class="col-form-label" asp-for="pf">@T("Search.PriceRange.From")</label>
+                                            <input asp-for="pf" class="form-control price-from" />
+                                        </div>
+                                        <div class="col">
+                                            <label class="col-form-label" asp-for="pt">@T("Search.PriceRange.To")</label>
+                                            <input asp-for="pt" class="form-control price-to" />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="inputs reversed">
-                            <label for="sid" class="custom-control custom-checkbox">
-                                <input asp-for="sid" class="custom-control-input"/>
-                                <span class="custom-control-label"></span>
-                                <span class="custom-control-description">@T("search.searchindescriptions")</span>
-                            </label>
+                            <div class="inputs reversed">
+                                <label for="sid" class="custom-control custom-checkbox">
+                                    <input asp-for="sid" class="custom-control-input"/>
+                                    <span class="custom-control-label"></span>
+                                    <span class="custom-control-description">@T("search.searchindescriptions")</span>
+                                </label>
+                            </div>
                         </div>
                         @await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_advanced" })
                     </div>

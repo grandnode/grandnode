@@ -92,7 +92,7 @@
                                         {
                                             <td class="remove-from-cart">
                                                 <input type="checkbox" id="@T("Remove")-@(item.Id)" name="removefromcart" class="d-none checkbox-u" value="@(item.Id)">
-                                                <label for="@T("Remove")-@(item.Id)">Checkbox 21</label>
+                                                <label for="@T("Remove")-@(item.Id)"></label>
                                                 <p class="remove">@T("Remove")</p>
                                             </td>
                                         }
@@ -100,7 +100,7 @@
                                         {
                                             <td class="remove-from-cart add-to-cart">
                                                 <input type="checkbox" id="@T("account.shoppingcart")-@(item.Id)" name="addtocart" class="d-none checkbox-u" value="@(item.Id)">
-                                                <label for="@T("account.shoppingcart")-@(item.Id)">Checkbox 22</label>
+                                                <label for="@T("account.shoppingcart")-@(item.Id)"></label>
 
                                                 <p class="remove">addToCart</p>
                                             </td>
@@ -231,7 +231,7 @@
                     @if (Model.IsEditable)
                     {
                         <button type="submit" name="updatecart" class="btn btn-info update-wishlist-button">
-                            <i class="fas fa-sync-alt pr-sm-2"></i>
+                            <span class="material-icons pr-sm-2 pr-0">update</span>
                             <span class="d-sm-block d-none">@T("Wishlist.UpdateCart")</span>
                         </button>
                     }
@@ -245,7 +245,7 @@
                     @if (Model.IsEditable && Model.EmailWishlistEnabled)
                     {
                         <button type="button" class="btn btn-secondary email-a-friend-wishlist-button ml-1" onclick="setLocation('@Url.RouteUrl("EmailWishlist")')">
-                            <i class="far fa-envelope pr-sm-2"></i>
+                            <span class="material-icons pr-sm-2 pr-0">local_post_office</span>
                             <span class="hidden-down d-sm-block d-none">@T("Wishlist.EmailAFriend")</span>
                         </button>
                     }

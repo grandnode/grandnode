@@ -39,8 +39,8 @@
                             @foreach (var product in Model.Products)
                             {
                                 <td style="width: @columnWidth;">
-                                    <button type="button" title="@T("Common.Remove")" class="btn btn-sm btn-outline-danger remove-button" onclick="setLocation('@Url.RouteUrl("RemoveProductFromCompareList", new { productId = product.Id })')" >
-                                        <i class="fa fa-times" aria-hidden="true"></i>
+                                    <button type="button" title="@T("Common.Remove")" class="btn btn-sm btn-outline-danger remove-button d-flex align-items-center justify-content-center" onclick="setLocation('@Url.RouteUrl("RemoveProductFromCompareList", new { productId = product.Id })')" >
+                                        <span class="material-icons" aria-hidden="true">close</span>
                                     </button>
                                 </td>
                             }

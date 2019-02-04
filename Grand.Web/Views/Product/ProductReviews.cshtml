@@ -32,31 +32,31 @@
                                     <textarea asp-for="AddProductReview.ReviewText" class="form-control review-text" asp-disabled="@(!Model.AddProductReview.CanCurrentCustomerLeaveReview)"></textarea>
                                     <span asp-validation-for="AddProductReview.ReviewText"></span>
                                 <div class="form-group review-rating d-flex">
-                                    <label asp-for="AddProductReview.Rating" class="col-form-label d-inline-flex">@T("Reviews.Fields.Rating"):</label>
+                                    <label asp-for="AddProductReview.Rating" class="col-form-label d-inline-flex align-items-center">@T("Reviews.Fields.Rating"):</label>
                                     <div class="d-inline-flex justify-content-center rating-options text-center ml-3">
-                                            <label class="custom-control custom-radio d-flex full-star">
+                                            <label class="custom-control pl-0 custom-radio d-flex full-star">
                                                 <input asp-for="AddProductReview.Rating" value="1" type="radio" id="addproductrating_1" class="custom-control-input"/>
-                                                <span class="custom-control-label"></span>
+                                                <span class="custom-control-label material-icons">star</span>
                                                 <span class="custom-control-description"></span>
                                             </label>
-                                            <label class="custom-control custom-radio d-flex full-star">
+                                            <label class="custom-control pl-0 custom-radio d-flex full-star">
                                                 <input asp-for="AddProductReview.Rating" value="2" type="radio" id="addproductrating_2" class="custom-control-input" />
-                                                <span class="custom-control-label"></span>
+                                                <span class="custom-control-label material-icons">star</span>
                                                 <span class="custom-control-description"></span>
                                             </label>
-                                            <label class="custom-control custom-radio d-flex full-star">
+                                            <label class="custom-control pl-0 custom-radio d-flex full-star">
                                                 <input asp-for="AddProductReview.Rating" value="3" type="radio" id="addproductrating_3" class="custom-control-input" />
-                                                <span class="custom-control-label"></span>
+                                                <span class="custom-control-label material-icons">star</span>
                                                 <span class="custom-control-description"></span>
                                             </label>
-                                            <label class="custom-control custom-radio d-flex full-star">
+                                            <label class="custom-control pl-0 custom-radio d-flex full-star">
                                                 <input asp-for="AddProductReview.Rating" value="4" type="radio" id="addproductrating_4" class="custom-control-input" />
-                                                <span class="custom-control-label"></span>
+                                                <span class="custom-control-label material-icons">star</span>
                                                 <span class="custom-control-description"></span>
                                             </label>
-                                            <label class="custom-control custom-radio d-flex full-star">
+                                            <label class="custom-control pl-0 custom-radio d-flex full-star">
                                                 <input asp-for="AddProductReview.Rating" value="5" type="radio" id="addproductrating_5" class="custom-control-input" />
-                                                <span class="custom-control-label"></span>
+                                                <span class="custom-control-label material-icons">star</span>
                                                 <span class="custom-control-description"></span>
                                             </label>
                                         </div>             
@@ -143,10 +143,9 @@
 <script asp-location="Footer">
     $(document).ready(function () {
         $(".rating-options .custom-radio").click(function () {
-            $(".custom-radio").removeClass("full-star");
-            $(".custom-radio").removeClass("empty-star");
-            $(this).prevAll(".custom-radio").addClass("full-star");
-            $(this).nextAll(".custom-radio").addClass("empty-star");
+            $(this).find(".material-icons").text("star");
+            $(this).prevAll('.custom-radio').find(".material-icons").text("star");
+            $(this).nextAll('.custom-radio').find(".material-icons").text("star_border");
         });
     });
 </script>

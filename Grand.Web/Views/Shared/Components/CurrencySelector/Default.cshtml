@@ -6,7 +6,7 @@
 @if (Model.AvailableCurrencies.Count > 1)
 {
 
-    <div class="currency-selector d-none d-lg-block pr-1">
+    <div class="currency-selector d-block pr-1">
          @{   var currencies = Model.AvailableCurrencies.Select(x => new
              {
                  Name = x.Name,
@@ -15,9 +15,10 @@
                  Selected = x.Id.Equals(Model.CurrentCurrencyId)
              });
             <div class="btn-group btn-group-sm float-xs-right">
-                <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
+                <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
                     @currencies.FirstOrDefault(x => x.Selected).Text
                     <span class="sr-only">Toggle Dropdown</span>
+                    <span class="material-icons mat">keyboard_arrow_down</span>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
                     <ul class="pl-0 mb-0">
@@ -32,19 +33,5 @@
                 </div>
             </div>
         }
-    </div>
-    <div class="col px-0 currency-list-mobile option-list-mobile text-center">
-        <h6 class="currency-button mobile-option-button mb-0">Currency</h6>
-        <ul class="">
-            @foreach (var item in currencies)
-            {
-                var className = item.Selected ? "active" : "";
-                <li class="@className">
-                    <a class="nav-link d-flex d-lg-none p-0" href="@item.Value">
-                        @item.Text
-                    </a>
-                </li>
-            }
-        </ul>
     </div>
 }

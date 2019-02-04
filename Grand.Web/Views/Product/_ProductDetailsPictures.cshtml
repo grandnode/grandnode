@@ -1,5 +1,5 @@
 ﻿@model ProductDetailsModel
-<div class="gallery col-12 col-md-6">
+<div class="gallery col-12 col-md-6 pt-lg-0 pt-3">
     <div class="row">
         <div class="zoom picture-@Model.Id mb-1">
             <a title="@Model.DefaultPictureModel.Title"
@@ -81,9 +81,11 @@
             {
                 <script asp-location="Footer">
                     $(document).ready(function () {
-                        $('.picture-@Model.Id').zoom({
-                            url: $('#main-product-img-lightbox-anchor-@Model.Id img').attr('data-fullsize')
-                        });
+                        if ($(window).width() > 768) {
+                            $('.picture-@Model.Id').zoom({
+                                url: $('#main-product-img-lightbox-anchor-@Model.Id img').attr('data-fullsize')
+                            });
+                        }
                         $('.product-standard  .picture-thumbs-@Model.Id').magnificPopup({
                             delegate: 'a',
                             type: 'image',
@@ -104,9 +106,11 @@
                                     function (item) {
                                         $('.picture-@Model.Id .zoomImg').remove();
                                         $('.picture-@Model.Id .img-fluid').attr("src", item.src);
-                                        $('.picture-@Model.Id').zoom({
-                                            url: item.src
-                                        });
+                                        if ($(window).width() > 768) {
+                                            $('.picture-@Model.Id').zoom({
+                                                url: item.src
+                                            });
+                                        }
                                     },
 
                             },
@@ -130,9 +134,11 @@
                                 var href2 = $(this).attr('data-mfp-src');
                                 $("#ModalQuickView #main-product-img-lightbox-anchor-@Model.Id > img").attr("src", href2);
                                 $('#ModalQuickView .picture-@Model.Id .zoomImg').remove();
-                                $('#ModalQuickView .zoom').zoom({
-                                    url: $('#ModalQuickView #main-product-img-lightbox-anchor-@Model.Id a img').attr("src")
-                                });
+                                if ($(window).width() > 768) {
+                                    $('#ModalQuickView .zoom').zoom({
+                                        url: $('#ModalQuickView #main-product-img-lightbox-anchor-@Model.Id a img').attr("src")
+                                    });
+                                }
                         });
                     });
                 </script>
@@ -165,9 +171,11 @@
             {
                 <script asp-location="Footer">
                     $(document).ready(function () {
-                        $('.picture-@Model.Id').zoom({
-                            url: $('#main-product-img-lightbox-anchor-@Model.Id img').attr('data-fullsize')
-                        });
+                        if ($(window).width() > 768) {
+                            $('.picture-@Model.Id').zoom({
+                                url: $('#main-product-img-lightbox-anchor-@Model.Id img').attr('data-fullsize')
+                            });
+                        }
                         $('.product-standard #main-product-img-lightbox-anchor-@Model.Id').attr('href', "@Model.DefaultPictureModel.FullSizeImageUrl");
                         $('.product-standard #main-product-img-lightbox-anchor-@Model.Id').magnificPopup({
                             type: 'image',
@@ -197,3 +205,8 @@
         }
     </div>
 </div>
+@*<script asp-location="Footer">
+    $(document).ready(function () {
+        $('.gallery .picture-@Model.Id').trigger('zoom.destroy');
+    });
+</script>*@

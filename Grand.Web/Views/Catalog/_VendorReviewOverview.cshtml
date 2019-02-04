@@ -9,8 +9,8 @@
 }
 @if (Model.AllowCustomerReviews)
 {
-    <div class="vendor-reviews-overview" @if (Model.TotalReviews > 0) { <text> itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" </text>  }>
-        <div class="vendor-review-box pb-1">
+    <div class="vendor-reviews-overview d-inline-flex align-items-center flex-wrap" @if (Model.TotalReviews > 0) { <text> itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" </text>  }>
+        <div class="vendor-review-box">
             <div class="rating">
             </div>
         </div>
@@ -22,10 +22,10 @@
         @if (Model.TotalReviews > 0)
         {
             <div class="vendor-review-links">
-                <a class="btn btn-secondary btn-sm" href="@Url.RouteUrl("VendorReviews", new { VendorId = Model.VendorId })">
+                <a class="btn btn-sm" href="@Url.RouteUrl("VendorReviews", new { VendorId = Model.VendorId })">
                     @Model.TotalReviews
                     @T("VendorReviews.Overview.Reviews")
-                </a> <span class="separator">|</span> <a class="btn btn-secondary btn-sm" href="@Url.RouteUrl("VendorReviews", new { VendorId = Model.VendorId })">@T("VendorReviews.Overview.AddNew")</a>
+                </a><a class="btn btn-outline-secondary btn-sm" href="@Url.RouteUrl("VendorReviews", new { VendorId = Model.VendorId })">@T("VendorReviews.Overview.AddNew")</a>
             </div>
             @*hidden microdata info*@
         decimal ratingValue = ratingPercent / (decimal)20;
@@ -35,7 +35,7 @@
         else
         {
             <div class="vendor-no-reviews">
-                <a class="btn btn-secondary btn-sm" href="@Url.RouteUrl("VendorReviews", new { VendorId = Model.VendorId })">@T("VendorReviews.Overview.First")</a>
+                <a class="btn btn-sm" href="@Url.RouteUrl("VendorReviews", new { VendorId = Model.VendorId })">@T("VendorReviews.Overview.First")</a>
             </div>
         }
     </div>

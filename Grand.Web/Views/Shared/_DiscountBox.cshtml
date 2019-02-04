@@ -15,7 +15,7 @@
                     <input type="text" id="discountcouponcode" name="discountcouponcode" class="form-control discount-coupon-code">
                     <label for="discountcouponcode" class="sr-only">@T("ShoppingCart.GiftCardCouponCode.Button")</label>
                     <span class="input-group-append">
-                        <button type="button" name="applydiscountcouponcode" id="applydiscountcouponcode" class="btn btn-secondary apply-discount-coupon-code-button"
+                        <button type="button" name="applydiscountcouponcode" id="applydiscountcouponcode" class="btn btn-outline-secondary apply-discount-coupon-code-button"
                                 data-href="@Url.RouteUrl("ApplyDiscountCoupon")">
                             @T("ShoppingCart.DiscountCouponCode.Button")
                         </button>
@@ -36,7 +36,7 @@
 
         @if (!String.IsNullOrEmpty(Model.Message))
         {
-            <div class="card text-white mb-3 @(Model.IsApplied ? "card-success message-success" : "card-danger message-failure") text-center">
+            <div class="card border-0 text-white mb-3 @(Model.IsApplied ? "card-success message-success" : "card-danger message-failure") text-center">
                 <div class="card-body p-3">
                     <blockquote class="card-bodyquote mb-0">
                         <span>@Model.Message</span>
@@ -47,16 +47,14 @@
         @foreach (var discount in Model.AppliedDiscountsWithCodes)
         {
 
-            <div class="card text-white card-success text-center current-code mb-3">
-                <div class="card-body p-3">
-                    <blockquote class="card-bodyquote mb-0">
+            <div class="card border-0 text-white card-success text-center current-code mb-3">
+                <div class="card-body d-inline-flex align-items-center p-3">
                         <span>@string.Format(T("ShoppingCart.DiscountCouponCode.CurrentCode").Text, discount.CouponCode)</span>
                         <button type="button" name="removediscount"
                                 data-href="@Url.RouteUrl("RemoveDiscountCoupon", new { discountId = discount.Id})"
-                                title="@T("Common.Remove")" class="ml-auto btn btn-sm btn-secondary remove-discount-button float-sm-right">
-                            <i class="fa fa-times" aria-hidden="true"></i>
+                                title="@T("Common.Remove")" class="border-0 bg-transparent text-white ml-auto btn btn-sm btn-secondary remove-discount-button float-sm-right">
+                            <span class="material-icons" aria-hidden="true">close</span>
                         </button>
-                    </blockquote>
                 </div>
             </div>
         }

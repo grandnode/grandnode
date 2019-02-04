@@ -16,9 +16,7 @@
 }
 
 <div class="page manufacturer-page">
-    <div class="col-12">
-        <h2 class="generalTitle">@Model.Name</h2>
-    </div>
+    <h2 class="generalTitle">@Model.Name</h2>
     @await Component.InvokeAsync("Widget", new { widgetZone = "manufacturerdetails_top", additionalData = Model.Id })
     @*description*@
     @if (!String.IsNullOrWhiteSpace(Model.Description))
@@ -31,6 +29,7 @@
     @*featured products*@
     @if (Model.FeaturedProducts.Any())
     {
+        <div class="page-separator"></div>
         <div class="col-12 px-0 product-grid featured-product-grid">
             <h2 class="h5">
                 <strong>@T("Products.FeaturedProducts")</strong>
@@ -62,7 +61,7 @@
         if (Model.PagingFilteringContext.ViewMode == "grid")
         {
             <div class="manufactureGrid">
-                <div class="row flex-grid">
+                <div class="row flex-grid px-3">
                     @foreach (var product in Model.Products)
                     {
                         <div class="col-lg-4 col-sm-6 col-6 product-container">

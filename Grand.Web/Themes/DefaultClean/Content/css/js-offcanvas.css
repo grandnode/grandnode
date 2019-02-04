@@ -1,0 +1,215 @@
+/* line 6, ../../src/js-offcanvas.mixins.scss */
+.c-offcanvas {
+  transform: translate3d(0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* line 11, ../../src/js-offcanvas.mixins.scss */
+.c-offcanvas, .c-offcanvas-content-wrap, .c-offcanvas-bg.c-offcanvas-bg--reveal, .c-offcanvas-bg.c-offcanvas-bg--push {
+  transition: transform 300ms cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+/* line 15, ../../src/js-offcanvas.mixins.scss */
+.c-offcanvas.is-open {
+  transform: translate3d(0, 0, 0);
+  visibility: visible;
+}
+
+/**
+ * Offcanvas-content-wrap
+*/
+/* line 11, ../../src/js-offcanvas.scss */
+.c-offcanvas-content-wrap {
+  z-index: 3;
+}
+
+/**
+ * Offcanvas Panel
+*/
+/* line 20, ../../src/js-offcanvas.scss */
+.c-offcanvas {
+  position: fixed;
+  min-height: 100%;
+  max-height: none;
+  top: 0;
+  display: block;
+  background: #fff;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+/* line 35, ../../src/js-offcanvas.scss */
+.c-offcanvas--opening {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+}
+/* line 38, ../../src/js-offcanvas.scss */
+.c-offcanvas.is-closed {
+  max-height: 100%;
+  overflow: hidden;
+  visibility: hidden;
+  box-shadow: none;
+}
+
+/* line 48, ../../src/js-offcanvas.scss */
+.c-offcanvas--overlay {
+  z-index: 1080;
+}
+
+/* line 52, ../../src/js-offcanvas.scss */
+.c-offcanvas--reveal {
+  z-index: 2;
+}
+
+/**
+ * Offcanvas BG-Overlay
+*/
+/* line 59, ../../src/js-offcanvas.scss */
+.c-offcanvas-bg {
+  position: fixed;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 1079;
+  left: -100%;
+  background-color: transparent;
+  transition: background-color 400ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+}
+/* line 69, ../../src/js-offcanvas.scss */
+.c-offcanvas-bg.is-animating, .c-offcanvas-bg.is-open {
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.68);
+  visibility: visible;
+}
+/* line 76, ../../src/js-offcanvas.scss */
+.c-offcanvas-bg.is-closed {
+  visibility: hidden;
+}
+/* line 78, ../../src/js-offcanvas.scss */
+.c-offcanvas-bg--closing.is-animating {
+  background: transparent;
+}
+
+/**
+ * Position Left
+ *
+*/
+/* line 88, ../../src/js-offcanvas.scss */
+.c-offcanvas--left {
+  height: 100%;
+  width: 17em;
+  transform: translate3d(-17em, 0, 0);
+}
+
+/**
+ *  Position Right
+ *
+*/
+/* line 117, ../../src/js-offcanvas.scss */
+.c-offcanvas--right {
+  height: 100%;
+  width: 17em;
+  right: 0;
+  transform: translate3d(17em, 0, 0);
+}
+
+/**
+ * Position Top
+ *
+*/
+/* line 129, ../../src/js-offcanvas.scss */
+.c-offcanvas--top {
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 12.5em;
+  min-height: auto;
+  width: 100%;
+  transform: translate3d(0, -12.5em, 0);
+}
+
+/**
+ * Position Bottom
+ *
+*/
+/* line 139, ../../src/js-offcanvas.scss */
+.c-offcanvas--bottom {
+  top: auto;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 12.5em;
+  min-height: auto;
+  width: 100%;
+  transform: translate3d(0, 12.5em, 0);
+}
+
+/**
+ * Reveal
+ *
+*/
+/* line 148, ../../src/js-offcanvas.scss */
+.c-offcanvas-content-wrap {
+  z-index: 3;
+}
+
+/* line 71, ../../src/js-offcanvas.mixins.scss */
+.c-offcanvas-content-wrap--reveal.c-offcanvas-content-wrap--left.is-open {
+  transform: translate3d(17em, 0, 0);
+}
+/* line 66, ../../src/js-offcanvas.mixins.scss */
+.c-offcanvas-content-wrap--reveal.c-offcanvas-content-wrap--right.is-open {
+  transform: translate3d(-17em, 0, 0);
+}
+
+/* line 166, ../../src/js-offcanvas.scss */
+.c-offcanvas--reveal {
+  z-index: 0;
+  transform: translate3d(0, 0, 0);
+}
+
+/* line 87, ../../src/js-offcanvas.mixins.scss */
+.c-offcanvas-bg.c-offcanvas-bg--reveal.c-offcanvas-bg--left.is-open {
+  transform: translate3d(17em, 0, 0);
+}
+/* line 82, ../../src/js-offcanvas.mixins.scss */
+.c-offcanvas-bg.c-offcanvas-bg--reveal.c-offcanvas-bg--right.is-open {
+  transform: translate3d(-17em, 0, 0);
+}
+
+/**
+ * Push
+ *
+*/
+/* line 192, ../../src/js-offcanvas.scss */
+.c-offcanvas--push {
+  z-index: 6;
+}
+/* line 194, ../../src/js-offcanvas.scss */
+.c-offcanvas--push--opening {
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}
+
+/* line 198, ../../src/js-offcanvas.scss */
+.c-offcanvas-content-wrap {
+  z-index: 3;
+}
+
+/* line 71, ../../src/js-offcanvas.mixins.scss */
+.c-offcanvas-content-wrap--push.c-offcanvas-content-wrap--left.is-open {
+  transform: translate3d(17em, 0, 0);
+}
+/* line 66, ../../src/js-offcanvas.mixins.scss */
+.c-offcanvas-content-wrap--push.c-offcanvas-content-wrap--right.is-open {
+  transform: translate3d(-17em, 0, 0);
+}
+
+/* line 87, ../../src/js-offcanvas.mixins.scss */
+.c-offcanvas-bg.c-offcanvas-bg--push.c-offcanvas-bg--left.is-open {
+  transform: translate3d(17em, 0, 0);
+}
+/* line 82, ../../src/js-offcanvas.mixins.scss */
+.c-offcanvas-bg.c-offcanvas-bg--push.c-offcanvas-bg--right.is-open {
+  transform: translate3d(-17em, 0, 0);
+}
+
+/*# sourceMappingURL=js-offcanvas.css.map */

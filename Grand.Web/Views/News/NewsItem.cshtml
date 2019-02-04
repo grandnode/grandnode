@@ -7,8 +7,9 @@
     Html.AddMetaDescriptionParts(Model.MetaDescription);
     Html.AddMetaKeywordParts(Model.MetaKeywords);
 }
-<div class="page news-item-page mt-3">
-       <div class="card p-3">
+<div class="page news-item-page pt-3 pt-lg-0">
+       <a class="js-offcanvas-trigger blog-filter filter-button btn btn-outline-info d-lg-none d-flex mb-3" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="material-icons">tune</span><span class="ml-3">@T("News") @T("catalog.selectors.fiters")</span></a>
+       <div class="card border-0 px-0 pb-3 pt-0">
             @if (!string.IsNullOrEmpty(Model.PictureModel.ImageUrl))
             {
                 <div class="img-container mb-2">
@@ -17,7 +18,7 @@
             }
         <h1 class="h2 generalTitle mt-0">@Model.Title</h1>
         <div class="news-date">
-            <h5 class="text-muted"><em class="far fa-clock mr-2"></em>@Model.CreatedOn.ToString("D")</h5>
+            <h5 class="text-muted d-inline-flex align-items-center"><span class="material-icons mr-2">alarm</span>@Model.CreatedOn.ToString("D")</h5>
         </div>
         @await Component.InvokeAsync("Widget", new { widgetZone = "newsitem_page_before_body", additionalData = Model.Id })
         <div class="news-body">
@@ -27,7 +28,7 @@
         @await Component.InvokeAsync("Widget", new { widgetZone = "newsitem_page_before_comments", additionalData = Model.Id })
         @if (Model.AllowComments)
         {
-            <fieldset class="new-comment" id="comments">
+            <fieldset class="new-comment py-3 px-0" id="comments">
                     <h5><strong>@T("News.Comments.LeaveYourComment")</strong></h5>
                 <div class="notifications">
                     <div asp-validation-summary="ModelOnly" class="message-error"></div>
@@ -63,7 +64,7 @@
             </fieldset>
                         if (Model.Comments.Any())
                         {
-                            <div class="comment-list text-xs-center text-md-left">
+                            <div class="comment-list py-3 px-0 text-xs-center text-md-left">
                                 <h5><strong>@T("News.Comments")</strong></h5>
                                 <div class="comments">
                                     @foreach (var comment in Model.Comments)

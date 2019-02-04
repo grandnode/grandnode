@@ -9,18 +9,18 @@
 }
 @if (Model.AllowCustomerReviews)
 {
-    <div class="product-reviews-overview" @if (Model.TotalReviews > 0) { <text> itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" </text> }>
-        <div class="product-review-box pb-1 d-inline-block">
+    <div class="product-reviews-overview d-inline-flex align-items-center flex-wrap" @if (Model.TotalReviews > 0) { <text> itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" </text> }>
+        <div class="product-review-box d-inline-block">
             <div class="rating progress10" data-rating="@(ratingPercent)" data-id="rating"></div>
         </div>
         @if (Model.TotalReviews > 0)
         {
-            <span class="product-review-links">
+            <div class="product-review-links">
                 <a class="btn btn-sm pr-0 review-scroll-button" href="#review-tab">
                     @Model.TotalReviews
                     @T("Reviews.Overview.Reviews")
                 </a> 
-            </span>
+            </div>
             @*hidden microdata info*@
         decimal ratingValue = ratingPercent / (decimal)20;
         <span itemprop="ratingValue" style="display: none;">@ratingValue.ToString("0.0", new CultureInfo("en-US"))</span>
@@ -28,9 +28,9 @@
         }
         else
         { 
-            <span class="product-no-reviews">
-                <a class="btn btn-sm" href="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductId })">@T("Reviews.Overview.First")</a>
-            </span>
+            <div class="product-no-reviews">
+                <a class="btn btn-sm px-0" href="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductId })">@T("Reviews.Overview.First")</a>
+            </div>
         }
     </div>
 }

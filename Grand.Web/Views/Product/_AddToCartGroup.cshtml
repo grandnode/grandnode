@@ -19,13 +19,13 @@
         }
         else
         {
-            <div class="col-3 col-lg-2 pl-2">
+            <div class="pr-2">
                 <label class="sr-only" for="addtocart_@(Model.ProductId)_EnteredQuantity">@Model.ProductId</label>
-                <input asp-for="EnteredQuantity" class="form-control qty-input m-0" type="text" />
+                <input asp-for="EnteredQuantity" class="form-control qty-input text-center" />
             </div>
             if (!String.IsNullOrEmpty(Model.MeasureUnit))
             {
-                <div class="col-md-2 col-12">
+                <div class="pr-2">
                     <span class="btn btn-secondary input-group-addon qty-unit">
                         @Model.MeasureUnit
                     </span>
@@ -61,11 +61,9 @@
                         });
                     });
         </script>
-        <div class="col-6 col-md-3 col-lg-2 px-0">
-            <button type="button" id="add-to-cart-button-@Model.ProductId" class="btn btn btn-info add-to-cart-button" data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;">
-                <span class="fa fa-shopping-cart"></span> @T("ShoppingCart.AddToCart").Text
+            <button type="button" id="add-to-cart-button-@Model.ProductId" class="btn btn btn-info add-to-cart-button d-flex align-items-center" data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;">
+                <span class="material-icons mat">shopping_cart</span> @T("ShoppingCart.AddToCart").Text
             </button>
-        </div>
     }
 
     @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_add_info", additionalData = Model.ProductId })

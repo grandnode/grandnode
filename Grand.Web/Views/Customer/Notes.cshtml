@@ -10,7 +10,8 @@
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Notes })
 }
 
-<div class="page account-page auction-list-page pl-lg-3">
+<div class="page account-page auction-list-page pl-lg-3 pt-3 pt-lg-0">
+    <a class="js-offcanvas-trigger blog-filter filter-button btn btn-outline-info d-lg-none d-flex mb-3" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="material-icons">tune</span><span class="ml-3">@T("Account.Navigation")</span></a>
     <h1 class="h2 generalTitle">@T("Account.CustomerNotes")</h1>
     @if (Model.CustomerNoteList.Any())
     {
@@ -38,14 +39,14 @@
                             <a href="@Url.RouteUrl("GetCustomerNoteFile", new { customerNoteId = item.NoteId})">@T("Customer.Notes.Download")</a>
                         </span>
                     </div>
-                } 
-                </div>     
+                }
+            </div>
         }
     }
     else
     {
-        <div class="no-data pt-3">  
-                @T("Account.CustomerNotes.NoExists")
+        <div class="no-data pt-3">
+            @T("Account.CustomerNotes.NoExists")
         </div>
     }
 </div>

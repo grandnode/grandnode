@@ -3,16 +3,12 @@
 @if (Model.Tags.Any())
 {
     <div id="block-popular-blogtags" class="block block-popular-blogtags">
-        <h5 class="generalTitle d-none d-lg-block"><strong>@T("Blog.TagCloud")</strong></h5>
-        <h5 class="bg-light p-3 d-lg-none">
-            <strong>@T("Blog.TagCloud")</strong>
-            <i id="computers" class="fa fa-angle-down fa-1x float-xs-right" aria-hidden="true"></i>
-        </h5>
+        <h5 class="generalTitle"><strong>@T("Blog.TagCloud")</strong></h5>
         <div class="viewBox">
             <div class="product-tags-list">
                 @foreach (var item in Model.Tags)
                 {
-                    <a class="btn btn-sm btn-secondary" href="@Url.RouteUrl("BlogByTag", new { tag = item.Name })" style="font-size:@(Model.GetFontSize(item))%;">
+                    <a class="btn btn-sm btn-outline-secondary" href="@Url.RouteUrl("BlogByTag", new { tag = item.Name })" style="font-size:@(Model.GetFontSize(item))%;">
                         @item.Name
                     </a>
                 }

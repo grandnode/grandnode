@@ -32,7 +32,7 @@
                 }
             </h5>
             <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                <span>&times;</span>
+                <span class="material-icons">close</span>
             </button>
         </div>
         <div class="modal-body px-0 pt-md-3 pt-0 pb-0">
@@ -119,8 +119,8 @@
                                     <label class="pl-3 mb-0">@Model.Price</label>
                                 }
                             </div>
-                            <div class="modal-padding-off w-100 p-3">
-                                <h5 class="text-center w-100 mb-0">@text</h5>
+                            <div class="text-center modal-padding-off w-100 p-3">
+                                <h5 class="w-100 mb-0">@text</h5>
                                 @if (!string.IsNullOrEmpty(Model.SubTotalDiscount))
                                 {
                                     <div class="form-group mb-1 d-flex justify-content-center">

@@ -3,11 +3,7 @@
 @if (Model.Any())
 {
     <section id="block-blog-archive" class="block block-blog-archive mt-1">
-        <h5 class="generalTitle d-none d-lg-block"><strong>@T("Blog.Archive")</strong></h5>
-        <h5 class="bg-light p-3 d-lg-none">
-            <strong>@T("Blog.Archive")</strong>
-            <i id="computers" class="fa fa-angle-down fa-1x float-xs-right" aria-hidden="true"></i>
-        </h5>
+        <h5 class="generalTitle"><strong>@T("Blog.Archive")</strong></h5>
         <div class="viewBox">
             <ul class="list" id="blog-month-list">
                 @foreach (var yearItem in Model)

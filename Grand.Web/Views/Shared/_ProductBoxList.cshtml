@@ -33,11 +33,10 @@
     }
     var addtocomparelink = Url.RouteUrl("AddProductToCompare", new { productId = Model.Id });
 }
-    <div class="card rowHelper col-12 mb-3" data-productid="@Model.Id">
+    <div class="card gen rowHelper col-12 mb-3" data-productid="@Model.Id">
         <div class="row flex-row prod-list">
-            <div class="col-12 col-md-4 col-sm-5">
-                <div class="row">
-                    <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
+            <div class="d-inline-flex img-holder">
+                    <a class="picture" href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
                         <img class="img-fluid" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
                     </a>
                     @if (!string.IsNullOrEmpty(Model.Flag))
@@ -48,10 +47,9 @@
                     {
                         <span class="change-percent bg-success text-white"></span>
                     }
-                </div>
             </div>
-            <div class="col-12 col-md-8 col-sm-7">
-                <div class="card-body text-left">
+            <div class="d-inline-flex">
+                <div class="card-body p-3 text-left">
                     <h2 class="h6 card-title">
                         <strong><a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">@Model.Name</a></strong>
                         @if (Model.ShowSku && !string.IsNullOrEmpty(Model.Sku))
@@ -130,15 +128,17 @@
                         {
                             addToCartText = T("ShoppingCart.PreOrder").Text;
                         }
-                        <input type="button" value="@(addToCartText)" class="btn btn-primary" onclick="AjaxCart.addproducttocart_catalog('@addtocartlink', '@Model.ShowQty', '@Model.Id');return false;" />
+                        <input type="button" value="@(addToCartText)" class="btn btn-info" onclick="AjaxCart.addproducttocart_catalog('@addtocartlink', '@Model.ShowQty', '@Model.Id');return false;" />
                     }
                     else
                     {
                         if (Model.ProductType == ProductType.Auction)
                         {
                             var addToCartText = T("ShoppingCart.Bids").Text;
-                            <button type="button" class="btn btn-primary" onclick="AjaxCart.addproducttocart_catalog('@addtocartlink', 'false', '@Model.Id');return false;">
-                                <span class="fa fa fa-shopping-cart"></span>
+                            <button type="button" class="btn btn-info" onclick="AjaxCart.addproducttocart_catalog('@addtocartlink', 'false', '@Model.Id');return false;">
+                                <span class="material-icons mat">
+                                    gavel
+                                </span>
                                 <span class="d-none d-xl-block">@(addToCartText)</span>
                                 <span class="sr-only">AddToCart</span>
                             </button>
@@ -147,19 +147,25 @@
                     }
                     <button type="button" value="@T("Products.QuickView")" title="@T("Products.QuickView")" class="btn btn-secondary" data-toggle="modal" data-target="ModalQuickView" onclick="AjaxCart.quickview_product('@quickviewurl')">
                         <span class="sr-only">@T("Products.QuickView")</span>
-                        <span class="fas fa-search"></span>
+                        <span class="material-icons mat">
+                            search
+                        </span>
                     </button>
                     @if (!Model.ProductPrice.DisableAddToCompareListButton && Model.ProductType == ProductType.SimpleProduct)
                     {
                         <button type="button" value="@T("ShoppingCart.AddToCompareList")" title="@T("ShoppingCart.AddToCompareList")" class="btn btn-secondary" onclick="AjaxCart.addproducttocomparelist('@addtocomparelink');return false;">
-                            <span class="fa fa-retweet"></span>
+                            <span class="material-icons mat">
+                                repeat
+                            </span>
                             <span class="sr-only">@T("ShoppingCart.AddToCompareList")</span>
                         </button>
                     }
                     @if (!Model.ProductPrice.DisableWishlistButton && Model.ProductType == ProductType.SimpleProduct)
                     {
                         <button type="button" value="@T("ShoppingCart.AddToWishlist")" title="@T("ShoppingCart.AddToWishlist")" class="btn btn-secondary" onclick="AjaxCart.addproducttocart_catalog('@addtowishlistlink', '@Model.ShowQty', '@Model.Id');return false;">
-                            <span class="far fa-heart"></span>
+                            <span class="material-icons mat">
+                                favorite_border
+                            </span>
                             <span class="sr-only">@T("ShoppingCart.AddToWishlist")</span>
                         </button>
                     }

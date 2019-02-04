@@ -2,8 +2,7 @@
 @if (Model.Vendors.Any())
 {
     <div id="block-vendor-navigation" class="block block-vendor-navigation">
-        <h2 class="h5 bg-light p-3 d-lg-none"><strong>@T("Vendors")</strong><i id="Vendors" class="fa fa-angle-down fa-1x float-xs-right"></i></h2>
-            <h2 class="h5 generalTitle d-none d-lg-block"><strong>@T("Vendors")</strong></h2>
+        <h5 class="h5 d-none d-lg-block"><strong>@T("Vendors")</strong></h5>
         <div class="viewBox">
             <ul class="list">
                 @foreach (var vendor in Model.Vendors)
@@ -14,8 +13,8 @@
             </ul>            
             @if (Model.TotalVendors > Model.Vendors.Count)
             {
-                <div class="view-all btn-group-sm m-1 text-xs-left">
-                    <a class="btn btn-success" href="@Url.RouteUrl("VendorList")">@T("Vendors.ViewAll")</a>
+                <div class="view-all btn-group-sm text-xs-left">
+                    <a class="btn btn-outline-info" href="@Url.RouteUrl("VendorList")">@T("Vendors.ViewAll")</a>
                 </div>
             }
         </div>

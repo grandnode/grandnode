@@ -12,16 +12,17 @@
 }
 
 <form asp-route="CustomerAddressEdit" method="post">
-    <div class="page account-page address-edit-page pl-lg-3 mb-3">
-            <h1 class="h2 generalTitle">@T("Account.CustomerAddresses.Edit")</h1>
-            <div asp-validation-summary="ModelOnly" class="message-error"></div>
-            @{
-                var dataDictAddress = new ViewDataDictionary(ViewData);
-                dataDictAddress.TemplateInfo.HtmlFieldPrefix = "Address";
-                <partial name="_CreateOrUpdateAddress" model="Model.Address" view-data="dataDictAddress" />
-            }
-            <div class="buttons generalMarginSupporter">
-                <input type="submit" class="btn btn-info save-address-button" value="@T("Common.Save")" />
-            </div>
+    <div class="page account-page address-edit-page pl-lg-3 mb-3 pt-lg-0 pt-3">
+        <a class="js-offcanvas-trigger blog-filter filter-button btn btn-outline-info d-lg-none d-flex mb-3" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="material-icons">tune</span><span class="ml-3">@T("Account.Navigation")</span></a>
+        <h1 class="h2 generalTitle">@T("Account.CustomerAddresses.Edit")</h1>
+        <div asp-validation-summary="ModelOnly" class="message-error"></div>
+        @{
+            var dataDictAddress = new ViewDataDictionary(ViewData);
+            dataDictAddress.TemplateInfo.HtmlFieldPrefix = "Address";
+            <partial name="_CreateOrUpdateAddress" model="Model.Address" view-data="dataDictAddress" />
+        }
+        <div class="buttons generalMarginSupporter">
+            <input type="submit" class="btn btn-info save-address-button" value="@T("Common.Save")" />
+        </div>
     </div>
 </form>

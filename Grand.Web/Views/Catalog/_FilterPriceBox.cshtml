@@ -27,15 +27,14 @@
     {
         if (selectedItem == null)
         {
-        <div id="block-product-price-filter" class="block product-filter product-price-filter">
-            <h2 class="h5 bg-light p-3 d-lg-none"><strong>@T("Filtering.PriceRangeFilter")</strong><i id="specificationFilter-navigator" class="fa fa-angle-down fa-1x float-sm-right" aria-hidden="true"></i></h2>
-            <h2 class="h5 generalTitle d-none d-lg-block">
+        <div id="block-product-price-filter" class="block product-filter product-price-filter">   
+            <h2 class="h5">
                 <strong>@T("Filtering.PriceRangeFilter")</strong>
             </h2>
             <div class="viewBox">
                 @foreach (var item in Model.Items)
                 {
-                    <a class="btn btn-sm btn-secondary mb-1" href="@item.FilterUrl">@Html.Raw(FormatPriceRangeText(item))</a>
+                    <a class="btn btn-sm btn-outline-info mb-1" href="@item.FilterUrl">@Html.Raw(FormatPriceRangeText(item))</a>
                 }
             </div>
         </div>
@@ -45,11 +44,9 @@
     {
 
         <div id="block-product-price-filter" class="block product-filter product-price-filter">
-            <h2 class="h5 bg-light p-3 d-lg-none"><strong>@T("Filtering.PriceRangeFilter")</strong><i id="specificationFilter-navigator" class="fa fa-angle-down fa-1x ml-auto" aria-hidden="true"></i></h2>
-            <h2 class="h5 generalTitle d-none d-lg-block">
+            <h2 class="h5">
                 <strong>@T("Filtering.PriceRangeFilter")</strong>
             </h2>
-
             <div class="viewbox">
                 <div class="col-12 filtered-items pt-1 pb-1">
                     <div class="row">
@@ -57,7 +54,7 @@
                     </div>
                 </div>
                 <div class="col-12 remove-filter pb-1 mb-1 pl-0">
-                    <a class="btn btn-secondary btn-sm mb-1" href="@Model.RemoveFilterUrl">@T("Filtering.PriceRangeFilter.Remove")</a>
+                    <a class="btn btn-outline-info btn-sm mb-1" href="@Model.RemoveFilterUrl">@T("Filtering.PriceRangeFilter.Remove")</a>
                 </div>
             </div>
         </div>

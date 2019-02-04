@@ -9,71 +9,72 @@
 {
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.RewardPoints })
 }
-<section class="page account-page reward-points-page pl-lg-3">
-        <h1 class="h2 generalTitle">@T("Account.MyAccount") - @T("Account.RewardPoints")</h1>
-        <div class="reward-points-overview">
-            <div class="current-balance text-success">@T("RewardPoints.CurrentBalance", Model.RewardPointsBalance, Model.RewardPointsAmount)</div>
-            @if (Model.MinimumRewardPointsBalance > 0)
-            {
-                <div class="min-balance text-danger">@T("RewardPoints.MinimumBalance", Model.MinimumRewardPointsBalance, Model.MinimumRewardPointsAmount)</div>
-            }
-        </div>
-        <div class="reward-points-history">
-            <h5><strong>@T("RewardPoints.History")</strong></h5>
-            @if (Model.RewardPoints.Any())
-            {
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <colgroup>
-                            <col  />
-                            <col  />
-                            <col  />
-                            <col />
-                        </colgroup>
-                        <thead class="table-inverse">
-                            <tr>
-                                <th class="date">
-                                    @T("RewardPoints.Fields.Date")
-                                </th>
-                                <th class="points">
-                                    @T("RewardPoints.Fields.Points")
-                                </th>
-                                <th class="points-balance">
-                                    @T("RewardPoints.Fields.PointsBalance")
-                                </th>
-                                <th class="message">
-                                    @T("RewardPoints.Fields.Message")
-                                </th>
+<section class="page account-page reward-points-page pl-lg-3 pt-3 pt-lg-0">
+    <a class="js-offcanvas-trigger blog-filter filter-button btn btn-outline-info d-lg-none d-flex mb-3" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="material-icons">tune</span><span class="ml-3">@T("Account.Navigation")</span></a>
+    <h1 class="h2 generalTitle">@T("Account.MyAccount") - @T("Account.RewardPoints")</h1>
+    <div class="reward-points-overview">
+        <div class="current-balance text-success">@T("RewardPoints.CurrentBalance", Model.RewardPointsBalance, Model.RewardPointsAmount)</div>
+        @if (Model.MinimumRewardPointsBalance > 0)
+        {
+            <div class="min-balance text-danger">@T("RewardPoints.MinimumBalance", Model.MinimumRewardPointsBalance, Model.MinimumRewardPointsAmount)</div>
+        }
+    </div>
+    <div class="reward-points-history">
+        <h5><strong>@T("RewardPoints.History")</strong></h5>
+        @if (Model.RewardPoints.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <colgroup>
+                        <col />
+                        <col />
+                        <col />
+                        <col />
+                    </colgroup>
+                    <thead class="table-inverse">
+                        <tr>
+                            <th class="date">
+                                @T("RewardPoints.Fields.Date")
+                            </th>
+                            <th class="points">
+                                @T("RewardPoints.Fields.Points")
+                            </th>
+                            <th class="points-balance">
+                                @T("RewardPoints.Fields.PointsBalance")
+                            </th>
+                            <th class="message">
+                                @T("RewardPoints.Fields.Message")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.RewardPoints.Count; i++)
+                        {
+                            var item = Model.RewardPoints[i];
+                            <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
+                                <td class="date">
+                                    @item.CreatedOn
+                                </td>
+                                <td class="points">
+                                    @item.Points
+                                </td>
+                                <td class="points-balance">
+                                    @item.PointsBalance
+                                </td>
+                                <td class="message">
+                                    @item.Message
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @for (int i = 0; i < Model.RewardPoints.Count; i++)
-                            {
-                                var item = Model.RewardPoints[i];
-                                <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
-                                    <td class="date">
-                                        @item.CreatedOn
-                                    </td>
-                                    <td class="points">
-                                        @item.Points
-                                    </td>
-                                    <td class="points-balance">
-                                        @item.PointsBalance
-                                    </td>
-                                    <td class="message">
-                                        @item.Message
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            }
-            else
-            {
-                <section class="no-data">
-                    @T("RewardPoints.NoHistory")
-                </section>
-            }
-        </div>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <section class="no-data">
+                @T("RewardPoints.NoHistory")
+            </section>
+        }
+    </div>
 </section>

@@ -12,15 +12,15 @@
     //add browser specific CSS files
     if (supportRtl)
     {
-        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/style.rtl.css", themeName));
+        Html.AppendCssFileParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/css/style.rtl.css", themeName));
     }
-
-    Html.AddCssFileParts("~/content/magnific-popup/magnific-popup.css");
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/style.css", themeName));
-    Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/fontawesome-all.min.css", themeName));
-    Html.AppendCssFileParts("~/content/bootstrap/bootstrap.min.css");
-
-
+    Html.AppendCssFileParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/css/js-offcanvas.css", themeName));
+    Html.AppendCssFileParts(ResourceLocation.Head, "~/content/magnific-popup/magnific-popup.css");
+    Html.AppendCssFileParts(ResourceLocation.Head, string.Format("~/Themes/{0}/Content/css/animate.min.css", themeName));
+    Html.AppendCssFileParts(ResourceLocation.Head, "~/content/bootstrap/bootstrap.min.css");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery.magnific-popup.min.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/public.actions.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/public.search.js");
@@ -31,6 +31,7 @@
     Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/public.common.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery.zoom.min.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery.smooth-scroll.min.js");
+    Html.AppendScriptParts(ResourceLocation.Footer, string.Format("~/Themes/{0}/Content/js/js-offcanvas.pkgd.min.js", themeName));
     Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery-migrate-3.0.1.min.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery-ui-1.12.1.custom/jquery-ui.min.js");
     Html.AppendScriptParts(ResourceLocation.Footer, "~/scripts/jquery.validate.unobtrusive.min.js");

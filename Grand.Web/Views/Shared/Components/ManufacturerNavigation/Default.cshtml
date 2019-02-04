@@ -1,9 +1,8 @@
 ﻿@model ManufacturerNavigationModel
 @if (Model.Manufacturers.Any())
 {
-    <div id="block-manufacturer-navigation" class="block block-manufacturer-navigation">
-        <h2 class="h5 bg-light p-3 d-lg-none"><strong>@T("Manufacturers")</strong><i id="Manufacturers" class="fa fa-angle-down fa-1x float-xs-right"></i></h2>
-        <h2 class="h5 generalTitle d-none d-lg-block"><strong>@T("Manufacturers")</strong>
+    <div id="block-manufacturer-navigation" class="block block-manufacturer-navigation">    
+        <h2 class="h5 d-block"><strong>@T("Manufacturers")</strong>
             </h2>
         <div class="viewBox">
             <ul>
@@ -23,7 +22,7 @@
             @if (Model.TotalManufacturers > Model.Manufacturers.Count)
             {
                 <div class="view-all btn-group-sm mb-1">
-                    <a class="btn btn-secondary" href="@Url.RouteUrl("ManufacturerList")">@T("Manufacturers.ViewAll")</a>
+                    <a class="btn btn-outline-info" href="@Url.RouteUrl("ManufacturerList")">@T("Manufacturers.ViewAll")</a>
                 </div>
             }
         </div>

@@ -6,7 +6,7 @@
         <div class="form-group">
             @if (Model.EndTime.HasValue)
             {
-            <div>
+                 <div>
                 @if (Model.EndTime > DateTime.UtcNow)
                 {
                     <label class="d-inline-block">@T("AddToCart.Timeleft"): </label>

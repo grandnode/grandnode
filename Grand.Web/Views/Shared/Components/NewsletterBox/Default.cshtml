@@ -1,37 +1,46 @@
 ﻿@model NewsletterBoxModel
-<div class="newsletter d-flex justify-content-center justify-content-lg-start px-0">
-    <div class="newsletter-subscribe w-100" id="newsletter-subscribe-block">
-        <div class="d-flex flex-row row">
-            <span class="strong h3 col-md-4 col-12 mb-md-0 pl-0">@T("Newsletter.Title")</span>
-            <div class="input-group flex-row col-md-8 col-12 px-md-0">
-                <input class="form-control" asp-for="NewsletterEmail" id="newsletter-email" placeholder="@T("Newsletter.Email.Placeholder")" aria-label="@T("Newsletter.Email.Placeholder")" />
-                <label for="newsletter-email" class="sr-only">newsletter</label>
-                <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" id="newsletter-subscribe-button" type="button" aria-hidden="true"><span class="fas fa-envelope-open"></span></button>
+<div class="newsletter mt-3 bg-info col-12">
+    <div class="d-flex justify-content-center justify-content-lg-start">
+        <div class="newsletter-subscribe container w-100" id="newsletter-subscribe-block">
+            <div class="d-flex flex-row row">
+                <div class="col-lg-7 col-12 px-0 d-flex flex-column align-items-start">
+                    <div class="newsletter-title">
+                        @T("Newsletter.Title")
+                    </div>
+                    <div class="newsletter-desc">
+                        @T("Newsletter.Desc")
+                    </div>
+                </div>
+                <div class="col-lg-5 col-12 px-lg-3 pr-lg-0 px-0 mt-lg-0 mt-3 input-group flex-row align-items-center newsletter-inputs">
+                    <input class="form-control" asp-for="NewsletterEmail" id="newsletter-email" placeholder="@T("Newsletter.Email.Placeholder")" aria-label="@T("Newsletter.Email.Placeholder")" />
+                    <label for="newsletter-email" class="sr-only">newsletter</label>
+                    <div class="input-group-prepend newsletter-button-container">
+                        <button class="btn btn-outline-white d-flex align-items-center" aria-hidden="true" id="newsletter-subscribe-button" type="button"><span class="material-icons mat">local_post_office</span></button>
+                    </div>
+                    @if (Model.AllowToUnsubscribe)
+                    {
+                        <div class="custom-controls-stacked newsletter-subscribe-unsubscribe justify-content-center w-100 pt-1">
+                            <fieldset>
+                                <label for="newsletter_subscribe" class="custom-control custom-radio float-left">
+                                    <input value="newsletter_unsubscribe" id="newsletter_subscribe" name="newsletter_block" type="radio" class="custom-control-input" checked="checked">
+                                    <span class="custom-control-label text-white" for="newsletter_subscribe">@T("Newsletter.Options.Subscribe")</span>
+                                </label>
+                                <label for="newsletter_unsubscribe" class="custom-control custom-radio float-left ml-3">
+                                    <input value="newsletter_unsubscribe" id="newsletter_unsubscribe" name="newsletter_block" type="radio" class="custom-control-input">
+                                    <span class="custom-control-label text-white" for="newsletter_unsubscribe">@T("Newsletter.Options.Unsubscribe")</span>
+                                </label>
+                            </fieldset>
+                        </div>
+                    }
+                    <div class="newsletter-validation text-white text-center w-100">
+                        <span id="subscribe-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
+                        <span asp-validation-for="NewsletterEmail"></span>
+                    </div>
+                    <div class="newsletter-result text-center text-white w-100" id="newsletter-result-block"></div>
                 </div>
             </div>
+            <input type="hidden" id="newsletterbox" data-href="@(Url.RouteUrl("SubscribeNewsletter"))" data-allowtounsubscribe=@Model.AllowToUnsubscribe />
         </div>
-        @if (Model.AllowToUnsubscribe)
-        {
-            <div class="custom-controls-stacked d-flex justify-content-center col-lg-9 offset-lg-3 col-12 pt-1 px-0">
-                <fieldset>
-                    <label for="newsletter_subscribe" class="custom-control custom-radio float-left">
-                        <input value="newsletter_unsubscribe" id="newsletter_subscribe" name="newsletter_block" type="radio" class="custom-control-input" checked="checked">
-                        <span class="custom-control-label" for="newsletter_subscribe">@T("Newsletter.Options.Subscribe")</span>
-                    </label>
-                    <label for="newsletter_unsubscribe" class="custom-control custom-radio float-left ml-3">
-                        <input value="newsletter_unsubscribe" id="newsletter_unsubscribe" name="newsletter_block" type="radio" class="custom-control-input">
-                        <span class="custom-control-label" for="newsletter_unsubscribe">@T("Newsletter.Options.Unsubscribe")</span>
-                    </label>
-                </fieldset>
-            </div>
-        }
-        <div class="col-12 newsletter-validation">
-            <span id="subscribe-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
-            <span asp-validation-for="NewsletterEmail"></span>
-        </div>
-        <input type="hidden" id="newsletterbox" data-href="@(Url.RouteUrl("SubscribeNewsletter"))" data-allowtounsubscribe=@Model.AllowToUnsubscribe />
+
     </div>
-    
 </div>
-<div class="newsletter-result" id="newsletter-result-block"></div>

@@ -1,17 +1,21 @@
 ﻿@model TopMenuModel.CategoryLineModel
 <li class="@(Model.Category.SubCategories.Count() == 0 ? "nav-item": "nav-item dropdown" )">
-    @if (Model.Category.SubCategories.Count() > 0)
-    {
-        <span class="fa fa-angle-down d-lg-none" aria-hidden="true"></span>
-    }
 
-    <a id="@Model.Category.Id-menu" class="pr-3 pl-3 @(Model.Category.SubCategories.Count() == 0 ? "nav-link": "nav-link dropdown-toggle")  @(Model.Category.IncludeInTopMenu ? "": "d-lg-none")" @(Model.Category.SubCategories.Count() == 0 ? "" : "data-toggle=dropdown aria-haspopup=true aria-expanded=false" ) href="@Url.RouteUrl("Category", new { SeName = Model.Category.SeName })">
+    <a id="@Model.Category.Id-menu" class="@(Model.Category.SubCategories.Count() == 0 ? "nav-link": "nav-link dropdown-toggle")  @(Model.Category.IncludeInTopMenu ? "": "d-lg-none")" @(Model.Category.SubCategories.Count() == 0 ? "" : "data-toggle=dropdown aria-haspopup=true aria-expanded=false" ) href="@Url.RouteUrl("Category", new { SeName = Model.Category.SeName })">
         @if (!string.IsNullOrEmpty(Model.Category.Icon))
         {
             <span class="category-icon @Model.Category.Icon"></span>
         }
-        @Model.Category.Name
+        <span>@Model.Category.Name</span>
+        @if (Model.Category.SubCategories.Count() > 0)
+        {
+            <span class="material-icons mat arrow-down">
+                keyboard_arrow_down
+            </span>
+        }
     </a>
+
+
     @if (!string.IsNullOrEmpty(Model.Category.FlagStyle))
     {
         <label class="badge @Model.Category.FlagStyle">@Model.Category.Flag</label>
@@ -28,8 +32,19 @@
             if (subCategories.Any())
             {
                 <ul class="dropdown-menu @levelClass" aria-labelledby="@Model.Category.Id-menu">
-                    <li class="fa fa-times d-lg-none"></li>
-                    <li class="nav-item d-lg-none sub-cat-name-container"><a class="nav-link sub-cat-name d-flex justify-content-center">Sub Category</a></li>
+                    <li class="nav-item cat-back d-lg-none d-inline-flex">
+                        <a class="nav-link justify-content-start align-items-center" onclick="$(this).parent().removeClass('show');">
+                            <span class="material-icons mat">
+                                keyboard_arrow_left
+                            </span>
+                            <span>@T("Mobile.Categories.Back")</span>
+                        </a>
+                    </li>
+                    <li class="nav-item d-lg-none d-inline-flex sub-cat-name-container">
+                        <a class="nav-link sub-cat-name" href="@Url.RouteUrl("Category", new { SeName = Model.Category.SeName })">
+                            <span><strong>@T("Mobile.Category.Show") @Model.Category.Name</strong></span>
+                        </a>
+                    </li>
                     @foreach (var subCategory in subCategories)
                     {
                         var categoryLineModel = new TopMenuModel.CategoryLineModel
@@ -48,8 +63,19 @@
             levelClass = "next-level";
             <div class="sublist-toggle"></div>
             <ul class="dropdown-menu sublist @levelClass">
-                <li class="fa fa-times d-lg-none"></li>
-                <li class="nav-item d-lg-none sub-cat-name-container"><a class="nav-link sub-cat-name d-flex justify-content-center">Sub Category</a></li>
+                <li class="nav-item cat-back d-lg-none d-inline-flex">
+                    <a class="nav-link justify-content-start align-items-center" onclick="$(this).parent().removeClass('show');">
+                        <span class="material-icons mat">
+                            keyboard_arrow_left
+                        </span>
+                        <span>@T("Mobile.Categories.Back")</span>
+                    </a>
+                </li>
+                <li class="nav-item d-lg-none d-inline-flex sub-cat-name-container">
+                    <a class="nav-link sub-cat-name" href="@Url.RouteUrl("Category", new { SeName = Model.Category.SeName })">
+                        <span><strong>@T("Mobile.Category.Show") @Model.Category.Name</strong></span>
+                    </a>
+                </li>
                 @foreach (var subCategory in subCategories)
                 {
                     var categoryLineModel = new TopMenuModel.CategoryLineModel
