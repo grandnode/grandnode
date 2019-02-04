@@ -6,6 +6,11 @@
     public enum TimeIntervalChoice
     {
         /// <summary>
+        /// None
+        /// </summary>
+        None = 0,
+
+        /// <summary>
         /// Every minutes
         /// </summary>
         EveryMinutes = 10,

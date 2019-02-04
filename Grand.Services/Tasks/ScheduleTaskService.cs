@@ -67,6 +67,18 @@ namespace Grand.Services.Tasks
         }
 
         /// <summary>
+        /// Insert the task
+        /// </summary>
+        /// <param name="task">Task</param>
+        public virtual ScheduleTask InsertTask(ScheduleTask task)
+        {
+            if (task == null)
+                throw new ArgumentNullException("task");
+
+            return _taskRepository.Insert(task);
+        }
+
+        /// <summary>
         /// Updates the task
         /// </summary>
         /// <param name="task">Task</param>
@@ -76,6 +88,18 @@ namespace Grand.Services.Tasks
                 throw new ArgumentNullException("task");
 
             _taskRepository.Update(task);
+        }
+
+        /// <summary>
+        /// Delete the task
+        /// </summary>
+        /// <param name="task">Task</param>
+        public virtual void DeleteTask(ScheduleTask task)
+        {
+            if (task == null)
+                throw new ArgumentNullException("task");
+
+            _taskRepository.Delete(task);
         }
     }
 }

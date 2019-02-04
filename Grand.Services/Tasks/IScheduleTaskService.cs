@@ -26,9 +26,21 @@ namespace Grand.Services.Tasks
         IList<ScheduleTask> GetAllTasks();
 
         /// <summary>
+        /// Insert the task
+        /// </summary>
+        /// <param name="task">Task</param>
+        ScheduleTask InsertTask(ScheduleTask task);
+
+        /// <summary>
         /// Updates the task
         /// </summary>
         /// <param name="task">Task</param>
         void UpdateTask(ScheduleTask task);
+
+        /// <summary>
+        /// Delete the task
+        /// </summary>
+        /// <param name="task">Task</param>
+        void DeleteTask(ScheduleTask task);
     }
 }

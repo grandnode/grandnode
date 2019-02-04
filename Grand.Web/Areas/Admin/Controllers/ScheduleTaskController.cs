@@ -115,9 +115,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult EditScheduler(ScheduleTaskModel model)
         {
+            var scheduleTask = _scheduleTaskService.GetTaskById(model.Id);
             if (ModelState.IsValid)
             {
-                var scheduleTask = _scheduleTaskService.GetTaskById(model.Id);
                 scheduleTask.Enabled = model.Enabled;
                 scheduleTask.LeasedByMachineName = model.LeasedByMachineName;
                 scheduleTask.StopOnError = model.StopOnError;
@@ -131,6 +131,9 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _scheduleTaskService.UpdateTask(scheduleTask);
                 return EditScheduler(model.Id);
             }
+            model.ScheduleTaskName = scheduleTask.ScheduleTaskName;
+            model.Type = scheduleTask.Type;
+
             return View(model);
         }
 
