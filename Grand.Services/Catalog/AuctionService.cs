@@ -162,7 +162,6 @@ namespace Grand.Services.Catalog
             {
                 if (latestbid.CustomerId != customer.Id)
                 {
-                    latestbid.Amount = amount;
                     var workflowmessageService = EngineContext.Current.Resolve<IWorkflowMessageService>();
                     workflowmessageService.SendOutBidCustomerNotification(product, language.Id, latestbid);
                 }

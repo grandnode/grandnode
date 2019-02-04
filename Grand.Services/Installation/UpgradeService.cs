@@ -759,7 +759,7 @@ namespace Grand.Services.Installation
                         {
                             Name = "BidUp.CustomerNotification",
                             Subject = "%Store.Name%. Your offer has been outbid.",
-                            Body = "<p>Hi %Customer.FullName%!</p><p>Your offer for product <a href=\"%Auctions.ProductSeName%\">%Auctions.ProductName%</a> has been outbid. New price is %Auctions.Price%.<br />Raise a price by raising one's offer. Auction will be ended on %Auctions.EndTime%</p>",
+                            Body = "<p>Hi %Customer.FullName%!</p><p>Your offer for product <a href=\"%Auctions.ProductSeName%\">%Auctions.ProductName%</a> has been outbid. Your price was %Auctions.Price%.<br />Raise a price by raising one's offer. Auction will be ended on %Auctions.EndTime%</p>",
                             IsActive = true,
                             EmailAccountId = eaGeneral.Id,
                         },
