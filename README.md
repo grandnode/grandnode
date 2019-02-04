@@ -85,3 +85,5 @@ Admin password: 123456
 ## License ##
 
 GrandNode open source edition is licensed under GrandNode Public License Version 3.0. It's available [here](https://github.com/grandnode/grandnode/blob/develop/LICENSE.md).
+
+Cross-browser support is tested by ![Browserstack Logo](https://grandnode.com/content/images/uploaded/browserstack-logo.png)
