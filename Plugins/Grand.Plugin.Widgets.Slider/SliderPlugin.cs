@@ -58,7 +58,8 @@ namespace Grand.Plugin.Widgets.Slider
                 Link = _webHelper.GetStoreLocation(false),
                 Name = "Sample slider 1",
                 Published = true,
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "banner1.jpg"), "image/pjpeg", "banner_1").Id,
+                PictureId = "",
+                Description = "<div class=\"row slideRow\"><div class=\"col-lg-6 offset-lg-6 col-12 offset-0 d-flex flex-column justify-content-center align-items-center px-0\"><div class=\"slide-title animated fadeInRight delay-1s\"><h2 class=\"mb-0 text-white\">GrandNode 4.3 Release</h2></div><div class=\"slide-content mt-3 animated fadeInRight delay-1-5s\"><p>Open Source Cross Platform E-Commerce Solution based on .NET Core 2.1</p></div><div class=\"slide-button mt-3 animated fadeInRight delay-2s\"><a class=\"btn btn-outline-white\" href=\"https://grandnode.com\">Read More</a></div></div></div><p><img src=\"/Plugins/Widgets.Slider/Content/slider/sample-images/banner1.jpg\" alt=\"\" /></p>"
             });
             _pictureSliderRepository.Insert(new PictureSlider()
             {
@@ -66,7 +67,8 @@ namespace Grand.Plugin.Widgets.Slider
                 Link = _webHelper.GetStoreLocation(false),
                 Name = "Sample slider 2",
                 Published = true,
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "banner2.jpg"), "image/pjpeg", "banner_2").Id,
+                PictureId = "",
+                Description = "<div class=\"row slideRow\"><div class=\"container\"><div class=\"row\"><div class=\"col-6 d-flex flex-column justify-content-center align-item-center px-0\"><div class=\"animated zoomIn delay-0-5s\"><img style=\"max-width: 500px;\" src=\"/Plugins/Widgets.Slider/Content/slider/sample-images/banner2.png\" alt=\"\" /></div></div><div class=\"col-6 d-flex flex-column justify-content-center align-items-start px-0\"><div class=\"slide-title text-dark animated bounceInRight delay-0-5s\"><h2 class=\"mt-0\">Apple MacBook Pro 13-inch</h2></div><div class=\"slide-content animated bounceInRight delay-1s\"><p class=\"mb-0\">A groundbreaking Retina display. A new force-sensing trackpad. All-flash architecture. Powerful dual-core and quad-core Intel processors. Together, these features take the notebook to a new level of performance. And they will do the same for you in everything you create.</p></div><div class=\"slide-price animated fadeInRight delay-1-5s d-inline-flex align-items-center justify-content-start w-100  mt-2\"><p class=\"actual\">$1,800.00</p><p class=\"old-price\">$2,200.00</p></div><div class=\"slide-button animated bounceInUp delay-2s mt-3\"><a class=\"btn btn-outline-info\" href=\"/apple-macbook-pro-13-inch\">See More</a></div></div></div></div></div>",
             });
 
             this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.Slider.Added", "Slider added");

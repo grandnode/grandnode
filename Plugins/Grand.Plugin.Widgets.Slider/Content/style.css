@@ -1,0 +1,161 @@
+﻿/* carousel */
+
+#GrandCarousel {
+  width: calc(100vw - 10px);
+}
+
+#GrandCarousel .carousel-item.img-desc,
+#GrandCarousel .carousel-item.img-desc .carousel-caption {
+  height: 500px;
+}
+
+#GrandCarousel .carousel-item.no-wide-img .carousel-caption,
+#GrandCarousel .carousel-item.wide-img .carousel-caption {
+  position: relative;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 0;
+}
+
+#GrandCarousel .carousel-item.wide-img .slide-content {
+  max-width: 90%;
+  margin: 0 auto 0 auto;
+  font-size: 32px;
+  text-align: center;
+  color: #dfdfdf;
+}
+
+#GrandCarousel .carousel-item .slideRow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#GrandCarousel .carousel-item:not(.img-desc) img {
+  width: auto;
+  height: auto;
+  margin: auto;
+}
+
+#GrandCarousel .carousel-item.img-desc img {
+  width: 100%;
+  height: auto;
+  margin: auto;
+}
+
+#GrandCarousel .carousel-item.wide-img .slide-title h2 {
+  font-size: 44px;
+  font-weight: 400;
+  color: #1D1F20;
+}
+
+#GrandCarousel .carousel-item.no-wide-img .slide-title h2 {
+  font-size: 38px;
+  font-weight: 500;
+  color: #1D1F20;
+}
+
+#GrandCarousel .carousel-item .slide-content {
+  font-size: 20px;
+  font-weight: 300;
+  color: #888;
+  text-align: left;
+}
+
+#GrandCarousel .carousel-item .slide-price .actual {
+  font-size: 32px;
+  font-weight: 500;
+  color: #1D1F20;
+  margin-right: 15px;
+  margin-bottom: 0;
+}
+
+#GrandCarousel .carousel-item .slide-price .old-price {
+  font-size: 24px;
+  font-weight: 300;
+  color: #888;
+  text-decoration: line-through;
+  margin-bottom: 0;
+}
+
+#GrandCarousel .btn {
+  font-size: 18px;
+  font-weight: 500;
+  border-width: 2px;
+  padding: 10px 20px;
+}
+
+#GrandCarousel .carousel-control-prev,
+#GrandCarousel .carousel-control-next {
+  top: calc(50% - 25px);
+  width: 5%;
+  height: 50px;
+  color: #1D1F20;
+  font-size: 30px;
+  opacity: 0;
+  transition: all .3s ease;
+}
+
+#GrandCarousel:hover .carousel-control-prev,
+#GrandCarousel:hover .carousel-control-next {
+  opacity: 1;
+}
+
+#GrandCarousel .carousel-control-prev {
+  left: 0;
+}
+
+#GrandCarousel .carousel-control-next {
+  right: 0;
+}
+
+@media screen and (max-width: 1200px) {
+  #GrandCarousel .carousel-item.wide-img .slide-title h2 {
+    font-size: 36px;
+  }
+  #GrandCarousel .carousel-item.wide-img .slide-content {
+    font-size: 20px;
+  }
+  #GrandCarousel .carousel-item.no-wide-img .slide-title h2,
+  #GrandCarousel .carousel-item .slide-price .actual {
+    font-size: 26px;
+  }
+  #GrandCarousel .carousel-item.no-wide-img .slide-content {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 1024px) {
+  #GrandCarousel {
+    width: 100vw;
+  }
+}
+
+@media (max-width: 991px) {
+  #GrandCarousel .carousel-item.img-desc,
+  #GrandCarousel .carousel-item.img-desc .carousel-caption {
+    height: 335px;
+  }
+  #GrandCarousel .carousel-item.no-wide-img .slide-content {
+    display: none
+  }
+  #GrandCarousel .carousel-item.wide-img .slide-content {
+    font-size: 24px;
+  }
+  #GrandCarousel .carousel-item.no-wide-img .slide-title h2 {
+    font-size: 24px;
+  }
+  #GrandCarousel .carousel-item .slide-price .actual {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 767px) {
+  #GrandCarousel {
+    display: none;
+  }
+}
