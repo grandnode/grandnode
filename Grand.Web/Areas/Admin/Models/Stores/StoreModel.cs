@@ -56,6 +56,13 @@ namespace Grand.Web.Areas.Admin.Models.Stores
         
         public string CompanyVat { get; set; }
 
+        [GrandResourceDisplayName("Admin.Configuration.Stores.Fields.CompanyEmail")]
+
+        public string CompanyEmail { get; set; }
+
+        [GrandResourceDisplayName("Admin.Configuration.Stores.Fields.CompanyHours")]
+
+        public string CompanyHours { get; set; }
 
         public IList<StoreLocalizedModel> Locales { get; set; }
         //default language

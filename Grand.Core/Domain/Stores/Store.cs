@@ -75,6 +75,16 @@ namespace Grand.Core.Domain.Stores
         public string CompanyVat { get; set; }
 
         /// <summary>
+        /// Gets or sets the company email
+        /// </summary>
+        public string CompanyEmail { get; set; }
+
+        /// <summary>
+        /// Gets or sets the company opening hours
+        /// </summary>
+        public string CompanyHours { get; set; }
+
+        /// <summary>
         /// Gets or sets the collection of locales
         /// </summary>
         public IList<LocalizedProperty> Locales { get; set; }

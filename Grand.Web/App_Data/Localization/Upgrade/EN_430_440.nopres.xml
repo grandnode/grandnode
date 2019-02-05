@@ -335,4 +335,16 @@
   <LocaleResource Name="Newsletter.Desc">
     <Value>Sign up to newsletter and stay in touch.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.CompanyEmail">
+    <Value>Company email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.CompanyEmail.Hint">
+    <Value>Enter your company email.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.CompanyHours">
+    <Value>Company opening hours</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.CompanyHours.Hint">
+    <Value>Enter your company opening hours.</Value>
+  </LocaleResource>
 </Language>

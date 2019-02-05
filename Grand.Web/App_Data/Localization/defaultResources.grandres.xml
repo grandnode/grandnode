@@ -8700,6 +8700,18 @@
   <LocaleResource Name="Admin.Configuration.Stores.Fields.CompanyAddress.Hint">
     <Value>Enter your company address.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.CompanyEmail">
+    <Value>Company email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.CompanyEmail.Hint">
+    <Value>Enter your company email.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.CompanyHours">
+    <Value>Company opening hours</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.CompanyHours.Hint">
+    <Value>Enter your company opening hours.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.CompanyName">
     <Value>Company name</Value>
   </LocaleResource>
