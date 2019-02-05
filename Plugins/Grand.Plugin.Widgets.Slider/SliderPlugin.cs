@@ -55,7 +55,7 @@ namespace Grand.Plugin.Widgets.Slider
 
             _pictureSliderRepository.Insert(new PictureSlider() {
                 DisplayOrder = 0,
-                Link = _webHelper.GetStoreLocation(false),
+                Link = "",
                 Name = "Sample slider 1",
                 Published = true,
                 PictureId = "",
