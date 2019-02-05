@@ -50,6 +50,9 @@ namespace Grand.Framework.Security.Captcha
         {
             var themes = new[] {"white", "blackglass", "red", "clean", "light", "dark"};
 
+            if (Theme is null)
+                Theme = "";
+
             if (_version == ReCaptchaVersion.Version2)
             {
                 switch (Theme.ToLower())
