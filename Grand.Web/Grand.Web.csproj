@@ -9,6 +9,7 @@
     <ServerGarbageCollection>false</ServerGarbageCollection>
     <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
     <TieredCompilation>true</TieredCompilation>
+    <RazorCompileOnBuild>false</RazorCompileOnBuild>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
@@ -31,14 +32,14 @@
   </ItemGroup>
   <Target Name="PublishViews" BeforeTargets="PrepareForPublish">
     <ItemGroup>
-      <FolderViews Include="Views/**/*" />
+      <!--<FolderViews Include="Views/**/*" />-->
       <ThemeViews Include="Themes/**/*" />
-      <AdminViews Include="Areas/Admin/Views/**/*" />
+      <!--<AdminViews Include="Areas/Admin/Views/**/*" />-->
       <PluginFiles Include="Plugins/**/*" />
     </ItemGroup>
-    <Copy SourceFiles="@(FolderViews)" DestinationFolder="$(PublishDir)/Views/%(RecursiveDir)" SkipUnchangedFiles="true" />
+    <!--<Copy SourceFiles="@(FolderViews)" DestinationFolder="$(PublishDir)/Views/%(RecursiveDir)" SkipUnchangedFiles="true" />-->
     <Copy SourceFiles="@(ThemeViews)" DestinationFolder="$(PublishDir)/Themes/%(RecursiveDir)" SkipUnchangedFiles="true" />
-    <Copy SourceFiles="@(AdminViews)" DestinationFolder="$(PublishDir)/Areas/Admin/Views/%(RecursiveDir)" SkipUnchangedFiles="true" />
+    <!--<Copy SourceFiles="@(AdminViews)" DestinationFolder="$(PublishDir)/Areas/Admin/Views/%(RecursiveDir)" SkipUnchangedFiles="true" />-->
     <Copy SourceFiles="@(PluginFiles)" DestinationFolder="$(PublishDir)/Plugins/%(RecursiveDir)" SkipUnchangedFiles="true" />
   </Target>  
   <ItemGroup>
