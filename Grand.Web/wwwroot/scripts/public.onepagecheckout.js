@@ -302,11 +302,6 @@ var ShippingMethod = {
                 data: $(this.form).serialize(),
                 type: 'post',
                 success: this.nextStep,
-                beforeSend: function () {
-                    $('html, body').animate({
-                        scrollTop: 0
-                    }, 800)
-                },
                 complete: this.resetLoadWaiting,
                 error: Checkout.ajaxFailure
             });
@@ -379,11 +374,6 @@ var PaymentMethod = {
                 data: $(this.form).serialize(),
                 type: 'post',
                 success: this.nextStep,
-                beforeSend: function () {
-                    $('html, body').animate({
-                        scrollTop: 0
-                    }, 800)
-                },
                 complete: this.resetLoadWaiting,
                 error: Checkout.ajaxFailure
             });
@@ -430,11 +420,6 @@ var PaymentInfo = {
             data: $(this.form).serialize(),
             type: 'post',
             success: this.nextStep,
-            beforeSend: function () {
-                $('html, body').animate({
-                    scrollTop: 0
-                }, 800)
-            },
             complete: this.resetLoadWaiting,
             error: Checkout.ajaxFailure
         });
@@ -492,11 +477,6 @@ var ConfirmOrder = {
                 url: this.saveUrl,
                 type: 'post',
                 success: this.nextStep,
-                beforeSend: function () {
-                    $('html, body').animate({
-                        scrollTop: 0
-                    }, 800)
-                },
                 complete: this.resetLoadWaiting,
                 error: Checkout.ajaxFailure
             });
