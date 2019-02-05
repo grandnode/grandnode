@@ -1,8 +1,7 @@
 ﻿@{
     Layout = "_ColumnsOne";
 }
-<div class="page home-page">
-    <div class="page home-page">
+<div class="page home-page custom-container">
         @await Component.InvokeAsync("PushNotificationsRegistration")
         @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_top" })
         @await Component.InvokeAsync("TopicBlock", new { systemName = "HomePageText" })
@@ -26,6 +25,4 @@
         @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_before_poll" })
         @await Component.InvokeAsync("HomePagePolls")
         @await Component.InvokeAsync("Widget", new { widgetZone = "home_page_bottom" })
-    </div>
- 
 </div>
