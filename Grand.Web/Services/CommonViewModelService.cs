@@ -414,9 +414,14 @@ namespace Grand.Web.Services
             );
 
             //model
+            var currentstore = _storeContext.CurrentStore;
             var model = new FooterModel
             {
-                StoreName = _storeContext.CurrentStore.GetLocalized(x => x.Name),
+                StoreName = currentstore.GetLocalized(x => x.Name),
+                CompanyEmail = currentstore.CompanyEmail,
+                CompanyAddress = currentstore.CompanyAddress,
+                CompanyPhone = currentstore.CompanyPhoneNumber,
+                CompanyHours = currentstore.CompanyHours,
                 WishlistEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),
                 ShoppingCartEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
                 SitemapEnabled = _commonSettings.SitemapEnabled,

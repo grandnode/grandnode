@@ -12,6 +12,11 @@ namespace Grand.Web.Models.Common
 
         public string StoreName { get; set; }
 
+        public string CompanyEmail { get; set; }
+        public string CompanyHours { get; set; }
+        public string CompanyAddress { get; set; }
+        public string CompanyPhone { get; set; }
+
         public string FacebookLink { get; set; }
         public string TwitterLink { get; set; }
         public string YoutubeLink { get; set; }

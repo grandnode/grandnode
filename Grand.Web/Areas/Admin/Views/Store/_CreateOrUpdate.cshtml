@@ -70,7 +70,7 @@
                 <em>@T("Admin.Configuration.Stores.Fields.SslEnabled.Hint2")</em>
             </div>
         </div>
-        <div class="form-group" id="pnlSecureUrl">            
+        <div class="form-group" id="pnlSecureUrl">
             <admin-label asp-for="SecureUrl" />
             <div class="col-md-9 col-sm-9">
                 <admin-input asp-for="SecureUrl" />
@@ -124,6 +124,20 @@
             <div class="col-md-9 col-sm-9">
                 <admin-input asp-for="CompanyVat" />
                 <span asp-validation-for="CompanyVat"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="CompanyEmail" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="CompanyEmail" />
+                <span asp-validation-for="CompanyEmail"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <admin-label asp-for="CompanyHours" />
+            <div class="col-md-9 col-sm-9">
+                <admin-input asp-for="CompanyHours" />
+                <span asp-validation-for="CompanyHours"></span>
             </div>
         </div>
         <div class="form-group">
