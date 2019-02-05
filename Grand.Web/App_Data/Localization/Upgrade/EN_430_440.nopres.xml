@@ -299,5 +299,40 @@
   <LocaleResource Name="Admin.System.SystemInfo.IsHttps.Hint">
     <Value>Http scheme is https</Value>
   </LocaleResource>
-
+  <LocaleResource Name="Catalog.Selectors.Items">
+    <Value>Items</Value>
+  </LocaleResource>
+  <LocaleResource Name="Catalog.Selectors.Fiters">
+    <Value>Filters</Value>
+  </LocaleResource>
+  <LocaleResource Name="Catalog.Selectors.Of">
+    <Value>of</Value>
+  </LocaleResource>
+  <LocaleResource Name="Mobile.Category.Back">
+    <Value>Back</Value>
+  </LocaleResource>
+  <LocaleResource Name="Mobile.Category.Show">
+    <Value>Show</Value>
+  </LocaleResource>
+  <LocaleResource Name="Menu.Links">
+    <Value>Links</Value>
+  </LocaleResource>
+  <LocaleResource Name="Mobile.Menu">
+    <Value>Menu</Value>
+  </LocaleResource>
+  <LocaleResource Name="Footer.Aboutus">
+    <Value>About us</Value>
+  </LocaleResource>
+  <LocaleResource Name="Footer.Address.Title">
+    <Value>Address:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Footer.Phone.Title">
+    <Value>Phone:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Footer.Hour.Title">
+    <Value>Hour:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Newsletter.Desc">
+    <Value>Sign up to newsletter and stay in touch.</Value>
+  </LocaleResource>
 </Language>
