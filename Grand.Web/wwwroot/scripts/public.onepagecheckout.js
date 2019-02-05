@@ -144,6 +144,9 @@ var Billing = {
             type: 'post',
             success: this.nextStep,
             complete: this.resetLoadWaiting,
+            complete: $('html, body').animate({
+                scrollTop: 0
+            }, 800),
             error: Checkout.ajaxFailure
         });
     },
@@ -230,6 +233,9 @@ var Shipping = {
             type: 'post',
             success: this.nextStep,
             complete: this.resetLoadWaiting,
+            complete: $('html, body').animate({
+                scrollTop: 0
+            }, 800),
             error: Checkout.ajaxFailure
         });
     },
