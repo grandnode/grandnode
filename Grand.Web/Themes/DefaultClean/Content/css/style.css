@@ -1080,7 +1080,7 @@ nav .nav-item.list-inline {
 	color: #0069d9;
 }
 .dropdown-menu a {
-	padding: 0 15px;
+	padding-left: 15px;
 	width: 100%;
 	letter-spacing: 0.5px;
 }
