@@ -19214,10 +19214,10 @@
     <Value>Select store</Value>
   </LocaleResource>
   <LocaleResource Name="Tax.Exclusive">
-    <Value>Show prices tax exclusive</Value>
+    <Value>Tax exclusive</Value>
   </LocaleResource>
   <LocaleResource Name="Tax.Inclusive">
-    <Value>Show prices tax inclusive</Value>
+    <Value>Tax inclusive</Value>
   </LocaleResource>
   <LocaleResource Name="Tax.SelectType">
     <Value>Tax display type</Value>

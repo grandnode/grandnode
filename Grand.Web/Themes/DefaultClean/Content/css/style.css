@@ -1080,7 +1080,7 @@ nav .nav-item.list-inline {
 	color: #0069d9;
 }
 .dropdown-menu a {
-	padding-left: 15px;
+	padding: 0 15px;
 	width: 100%;
 	letter-spacing: 0.5px;
 }
@@ -1147,7 +1147,7 @@ header .cartCounter .dropdown-menu {
 	min-width: 36px;
 }
 .navUp .tax.dropdown-menu {
-	min-width: 193px;
+	min-width: 130px;
 }
 .dropdown:hover .dropdown-content {
 	display: block;
@@ -4393,7 +4393,7 @@ footer .socicon-pinterest:hover {
     }
     .mobile-menu .dropdowns-container .generalDropDown {
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
     }
     .c-offcanvas--right {
         width: 320px;
