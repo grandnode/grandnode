@@ -97,13 +97,8 @@ namespace Grand.Services.Customers
             _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
             _messageTokenProvider.AddShoppingCartTokens(liquidObject, customer);
 
-            var hash = Hash.FromAnonymousObject(liquidObject);
-
-            Template bodyTemplate = Template.Parse(reminderLevel.Body);
-            var body = bodyTemplate.Render(hash);
-
-            Template subjectTemplate = Template.Parse(reminderLevel.Subject);
-            var subject = subjectTemplate.Render(hash);
+            var body = LiquidExtensions.Render(liquidObject, reminderLevel.Body);
+            var subject = LiquidExtensions.Render(liquidObject, reminderLevel.Subject);
 
             //limit name length
             var toName = CommonHelper.EnsureMaximumLength(customer.GetFullName(), 300);
