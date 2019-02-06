@@ -19897,6 +19897,9 @@
   <LocaleResource Name="Footer.Phone.Title">
     <Value>Phone:</Value>
   </LocaleResource>
+  <LocaleResource Name="Footer.Email.Title">
+    <Value>Email:</Value>
+  </LocaleResource>
   <LocaleResource Name="Footer.Hour.Title">
     <Value>Hour:</Value>
   </LocaleResource>
