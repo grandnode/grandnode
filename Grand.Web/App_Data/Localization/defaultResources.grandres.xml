@@ -19876,7 +19876,7 @@
   <LocaleResource Name="Catalog.Selectors.Of">
     <Value>of</Value>
   </LocaleResource>
-  <LocaleResource Name="Mobile.Category.Back">
+  <LocaleResource Name="Mobile.Categories.Back">
     <Value>Back</Value>
   </LocaleResource>
   <LocaleResource Name="Mobile.Category.Show">
