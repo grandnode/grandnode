@@ -55,6 +55,16 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get { return _store.CompanyPhoneNumber; }
         }
 
+        public string CompanyEmail
+        {
+            get { return _store.CompanyEmail; }
+        }
+
+        public string CompanyHours
+        {
+            get { return _store.CompanyHours; }
+        }
+
         public string CompanyVat
         {
             get { return _store.CompanyVat; }
