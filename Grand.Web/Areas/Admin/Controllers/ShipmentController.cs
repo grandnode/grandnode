@@ -463,11 +463,11 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             try
             {
-                if (!model.ShippedDateUtc.HasValue)
+                if (!model.ShippedDate.HasValue)
                 {
                     throw new Exception("Enter shipped date");
                 }
-                shipment.ShippedDateUtc = model.ShippedDateUtc;
+                shipment.ShippedDateUtc = model.ShippedDate.ConvertToUtcTime();
                 _shipmentService.UpdateShipment(shipment);
                 return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
             }
@@ -531,11 +531,11 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             try
             {
-                if (!model.DeliveryDateUtc.HasValue)
+                if (!model.DeliveryDate.HasValue)
                 {
                     throw new Exception("Enter delivery date");
                 }
-                shipment.DeliveryDateUtc = model.DeliveryDateUtc;
+                shipment.DeliveryDateUtc = model.DeliveryDate.ConvertToUtcTime();
                 _shipmentService.UpdateShipment(shipment);
                 return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
             }

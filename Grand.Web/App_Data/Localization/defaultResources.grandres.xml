@@ -3097,7 +3097,7 @@
     <Value>Available end date</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.AvailableEndDateTime.Hint">
-    <Value>The end of the product's availability in Coordinated Universal Time (UTC).</Value>
+    <Value>The end of the product's availability in the default store time zone.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.AvailableEndDateTime.Required">
     <Value>Available end date is required</Value>
@@ -3112,7 +3112,7 @@
     <Value>Available start date</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.AvailableStartDateTime.Hint">
-    <Value>The start of the product's availability in Coordinated Universal Time (UTC).</Value>
+    <Value>The start of the product's availability in the default store time zone.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.AvailableStores">
     <Value>Stores</Value>
@@ -3156,10 +3156,10 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.BasepriceUnit.Hint">
     <Value>Enter a unit of product.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.EndDateUtc">
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.EndDate">
     <Value>End date</Value>
   </LocaleResource>
-  <LocaleResource Name="admin.catalog.products.fields.calendar.enddateutc.hint">
+  <LocaleResource Name="admin.catalog.products.fields.calendar.enddate.hint">
     <Value>Select the end date of reservations</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.EndTime">
@@ -3204,10 +3204,10 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.Saturday">
     <Value>Saturday</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.StartDateUtc">
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.StartDate">
     <Value>Start date</Value>
   </LocaleResource>
-  <LocaleResource Name="admin.catalog.products.fields.calendar.startdateutc.hint">
+  <LocaleResource Name="admin.catalog.products.fields.calendar.startdate.hint">
     <Value>Select the start date of reservations</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.StartTime">
@@ -3453,17 +3453,17 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.MarkAsNew.Hint">
     <Value>Check to mark this product as New</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.MarkAsNewEndDateTimeUtc">
+  <LocaleResource Name="Admin.Catalog.Products.Fields.MarkAsNewEndDateTime">
     <Value>Mark as new. End date</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.MarkAsNewEndDateTimeUtc.Hint">
-    <Value>Set Product as New to Date in Coordinated Universal Time (UTC).</Value>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.MarkAsNewEndDateTime.Hint">
+    <Value>Set Product as New to Date in the default store time zone.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.MarkAsNewStartDateTimeUtc">
+  <LocaleResource Name="Admin.Catalog.Products.Fields.MarkAsNewStartDateTime">
     <Value>Mark as new. Start date</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.MarkAsNewStartDateTimeUtc.Hint">
-    <Value>Set Product as New from Date in Coordinated Universal Time (UTC).</Value>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.MarkAsNewStartDateTime.Hint">
+    <Value>Set Product as New from Date in the default store time zone.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.MaximumCustomerEnteredPrice">
     <Value>Maximum amount</Value>
@@ -3555,11 +3555,11 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.PictureThumbnailUrl">
     <Value>Picture</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.PreOrderAvailabilityStartDateTimeUtc">
+  <LocaleResource Name="Admin.Catalog.Products.Fields.PreOrderAvailabilityStartDateTime">
     <Value>Pre-order availability start date</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.PreOrderAvailabilityStartDateTimeUtc.Hint">
-    <Value>The availability start date of the product configured for pre-order in Coordinated Universal Time (UTC). 'Pre-order' button will automatically be changed to 'Add to cart' at this moment.</Value>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.PreOrderAvailabilityStartDateTime.Hint">
+    <Value>The availability start date of the product configured for pre-order in the default store time zone. 'Pre-order' button will automatically be changed to 'Add to cart' at this moment.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Price">
     <Value>Price</Value>
@@ -4341,11 +4341,11 @@
   <LocaleResource Name="Admin.Catalog.Products.TierPrices.Fields.CustomerRole.Hint">
     <Value>Select customer role for which the tier price will be available.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.TierPrices.Fields.EndDateTimeUtc">
+  <LocaleResource Name="Admin.Catalog.Products.TierPrices.Fields.EndDateTime">
     <Value>End date</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.TierPrices.Fields.EndDateTimeUtc.Hint">
-    <Value>The end date of the tier price in Coordinated Universal Time (UTC).</Value>
+  <LocaleResource Name="Admin.Catalog.Products.TierPrices.Fields.EndDateTime.Hint">
+    <Value>The end date of the tier price in the default store time zone.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.TierPrices.Fields.Price">
     <Value>Price</Value>
@@ -4359,11 +4359,11 @@
   <LocaleResource Name="Admin.Catalog.Products.TierPrices.Fields.Quantity.Hint">
     <Value>Specify quantity for which this tier price will be available.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.TierPrices.Fields.StartDateTimeUtc">
+  <LocaleResource Name="Admin.Catalog.Products.TierPrices.Fields.StartDateTime">
     <Value>Start date</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.TierPrices.Fields.StartDateTimeUtc.Hint">
-    <Value>The start date of the tier price in Coordinated Universal Time (UTC).</Value>
+  <LocaleResource Name="Admin.Catalog.Products.TierPrices.Fields.StartDateTime.Hint">
+    <Value>The start date of the tier price in the default store time zone.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.TierPrices.Fields.Store">
     <Value>Store</Value>
@@ -8899,7 +8899,7 @@
     <Value>End date</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.EndDate.Hint">
-    <Value>Set the blog post end date in Coordinated Universal Time (UTC). You can also leave it empty.</Value>
+    <Value>Set the blog post end date in the default store time zone. You can also leave it empty.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.Language">
     <Value>Language</Value>
@@ -8947,7 +8947,7 @@
     <Value>Start date</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.StartDate.Hint">
-    <Value>Set the blog post start date in Coordinated Universal Time (UTC). You can also leave it empty.</Value>
+    <Value>Set the blog post start date in the default store time zone. You can also leave it empty.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.Tags">
     <Value>Tags</Value>
@@ -9595,7 +9595,7 @@
     <Value>End date</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.EndDate.Hint">
-    <Value>Set the news item end date in Coordinated Universal Time (UTC). You can also leave it empty.</Value>
+    <Value>Set the news item end date in the default store time zone. You can also leave it empty.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.Full">
     <Value>Full description</Value>
@@ -9667,7 +9667,7 @@
     <Value>Start date</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.StartDate.Hint">
-    <Value>Set the news item start date in Coordinated Universal Time (UTC). You can also leave it empty.</Value>
+    <Value>Set the news item start date in the default store time zone. You can also leave it empty.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.SubjectToAcl">
     <Value>Subject to ACL</Value>
@@ -9775,7 +9775,7 @@
     <Value>End date</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Polls.Fields.EndDate.Hint">
-    <Value>Set the poll end date in Coordinated Universal Time (UTC). You can also leave it empty.</Value>
+    <Value>Set the poll end date in the default store time zone. You can also leave it empty.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Polls.Fields.Language">
     <Value>Language</Value>
@@ -9814,7 +9814,7 @@
     <Value>Start date</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Polls.Fields.StartDate.Hint">
-    <Value>Set the poll start date in Coordinated Universal Time (UTC). You can also leave it empty.</Value>
+    <Value>Set the poll start date in the default store time zone. You can also leave it empty.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Polls.Fields.SubjectToAcl">
     <Value>Subject to ACL</Value>
@@ -10206,11 +10206,11 @@
   <LocaleResource Name="Admin.Customers.CustomerAction.Fields.CustomerTag.hint">
     <Value>Customer tag</Value>
   </LocaleResource>
-  <LocaleResource Name="admin.customers.customeraction.fields.endDateTimeUtc">
-    <Value>End DateTime (Utc)</Value>
+  <LocaleResource Name="admin.customers.customeraction.fields.endDateTime">
+    <Value>End datetime</Value>
   </LocaleResource>
-  <LocaleResource Name="admin.customers.customeraction.fields.endDateTimeUtc.hint">
-    <Value>End DateTime (Utc)</Value>
+  <LocaleResource Name="admin.customers.customeraction.fields.endDateTime.hint">
+    <Value>End datetime</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.CustomerAction.Fields.InteractiveForm">
     <Value>Interactive forms</Value>
@@ -10239,16 +10239,16 @@
   <LocaleResource Name="Admin.Customers.CustomerAction.Fields.ReactionType.hint">
     <Value>Run event when the conditions are met.</Value>
   </LocaleResource>
-  <LocaleResource Name="admin.customers.customeraction.fields.startDateTimeUtc">
-    <Value>Start DateTime (Utc)</Value>
+  <LocaleResource Name="admin.customers.customeraction.fields.startDateTime">
+    <Value>Start DateTime</Value>
   </LocaleResource>
-  <LocaleResource Name="admin.customers.customeraction.fields.startDateTimeUtc.hint">
-    <Value>Start DateTime (Utc)</Value>
+  <LocaleResource Name="admin.customers.customeraction.fields.startDateTime.hint">
+    <Value>Start DateTime</Value>
   </LocaleResource>
   <LocaleResource Name="admin.customers.customeraction.history">
     <Value>History</Value>
   </LocaleResource>
-  <LocaleResource Name="admin.customers.customeraction.history.fields.createdateutc">
+  <LocaleResource Name="admin.customers.customeraction.history.fields.createdate">
     <Value>Create date</Value>
   </LocaleResource>
   <LocaleResource Name="admin.customers.customeraction.history.fields.customer">
@@ -12820,8 +12820,8 @@
   <LocaleResource Name="Admin.Orders.Shipments.DeliveryDate.Button">
     <Value>Set as delivered</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Orders.Shipments.DeliveryDate.EnterUtc">
-    <Value>Date and time should entered in Coordinated Universal Time (UTC)</Value>
+  <LocaleResource Name="Admin.Orders.Shipments.DeliveryDate.Enter">
+    <Value>Date and time should entered in the default store time zone</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.DeliveryDate.Hint">
     <Value>The date this shipment was delivered.</Value>
@@ -12970,8 +12970,8 @@
   <LocaleResource Name="Admin.Orders.Shipments.ShippedDate.Button">
     <Value>Set as shipped</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Orders.Shipments.ShippedDate.EnterUtc">
-    <Value>Date and time should entered in Coordinated Universal Time (UTC)</Value>
+  <LocaleResource Name="Admin.Orders.Shipments.ShippedDate.Enter">
+    <Value>Date and time should entered in the default store time zone</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.ShippedDate.Hint">
     <Value>The date this shipment was shipped.</Value>
@@ -13400,7 +13400,7 @@
     <Value>End date</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.EndDate.Hint">
-    <Value>The end of the discount period in Coordinated Universal Time (UTC).</Value>
+    <Value>The end of the discount period in the default store time zone.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.IsCumulative">
     <Value>Cumulative with other discounts</Value>
@@ -13460,7 +13460,7 @@
     <Value>Start date</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.StartDate.Hint">
-    <Value>The start of the discount period in Coordinated Universal Time (UTC).</Value>
+    <Value>The start of the discount period in the default store time zone.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.TimesUsed">
     <Value>Times used</Value>

@@ -67,11 +67,11 @@
                 <span asp-validation-for="AvailableForPreOrder"></span>
             </div>
         </div>
-        <div class="form-group" id="pnlPreOrderAvailabilityStartDateTimeUtc">
-            <admin-label asp-for="PreOrderAvailabilityStartDateTimeUtc" />
+        <div class="form-group" id="pnlPreOrderAvailabilityStartDateTime">
+            <admin-label asp-for="PreOrderAvailabilityStartDateTime" />
             <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="PreOrderAvailabilityStartDateTimeUtc" />
-                <span asp-validation-for="PreOrderAvailabilityStartDateTimeUtc"></span>
+                <admin-input asp-for="PreOrderAvailabilityStartDateTime" />
+                <span asp-validation-for="PreOrderAvailabilityStartDateTime"></span>
             </div>
         </div>
         <div class="form-group">
@@ -224,8 +224,8 @@
                                 CustomerRoleId: { editable: true, type: "string" },
                                 Quantity: { editable: true, type: "number" },
                                 Price: { editable: true, type: "number" },
-                                StartDateTimeUtc: { editable: true, type: "date" },
-                                EndDateTimeUtc: { editable: true, type: "date" },
+                                StartDateTime: { editable: true, type: "date" },
+                                EndDateTime: { editable: true, type: "date" },
                                 Id: { editable: false, type: "string" }
                             }
                         }
@@ -269,13 +269,13 @@
                     field: "Price",
                     title: "@T("Admin.Catalog.Products.TierPrices.Fields.Price")",
                 }, {
-                    field: "StartDateTimeUtc",
-                    title: "@T("Admin.Catalog.Products.TierPrices.Fields.StartDateTimeUtc")",
+                    field: "StartDateTime",
+                    title: "@T("Admin.Catalog.Products.TierPrices.Fields.StartDateTime")",
                     type: "date",
                     format: "{0:G}"
                 }, {
-                    field: "EndDateTimeUtc",
-                    title: "@T("Admin.Catalog.Products.TierPrices.Fields.EndDateTimeUtc")",
+                    field: "EndDateTime",
+                    title: "@T("Admin.Catalog.Products.TierPrices.Fields.EndDateTime")",
                     type: "date",
                     format: "{0:G}"
                 }, {

@@ -881,6 +881,7 @@ namespace Grand.Web.Areas.Admin.Services
             var product = model.ToEntity();
             product.CreatedOnUtc = DateTime.UtcNow;
             product.UpdatedOnUtc = DateTime.UtcNow;
+
             _productService.InsertProduct(product);
 
             model.SeName = product.ValidateSeName(model.SeName, product.Name, true);
@@ -936,6 +937,7 @@ namespace Grand.Web.Areas.Admin.Services
             //product
             product = model.ToEntity(product);
             product.UpdatedOnUtc = DateTime.UtcNow;
+
             model.SeName = product.ValidateSeName(model.SeName, product.Name, true);
             product.SeName = model.SeName;
             product.Locales = model.Locales.ToLocalizedProperty(product, x => x.Name, _urlRecordService);
@@ -1742,8 +1744,8 @@ namespace Grand.Web.Areas.Admin.Services
                     CustomerRoleId = !string.IsNullOrEmpty(x.CustomerRoleId) ? x.CustomerRoleId : "",
                     Quantity = x.Quantity,
                     Price = x.Price,
-                    StartDateTimeUtc = x.StartDateTimeUtc,
-                    EndDateTimeUtc = x.EndDateTimeUtc
+                    StartDateTime = x.StartDateTimeUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(x.StartDateTimeUtc.Value, DateTimeKind.Utc) : new DateTime?(),
+                    EndDateTime = x.EndDateTimeUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(x.EndDateTimeUtc.Value, DateTimeKind.Utc) : new DateTime?()
                 };
             }).ToList();
             return tierPricesModel;
@@ -1903,7 +1905,7 @@ namespace Grand.Web.Areas.Admin.Services
             var predefinedValues = _productAttributeService.GetPredefinedProductAttributeValues(model.ProductAttributeId);
             foreach (var predefinedValue in predefinedValues)
             {
-                var pav = predefinedValue.ToEntity(); 
+                var pav = predefinedValue.ToEntity();
                 //locales
                 pav.Locales.Clear();
                 var languages = _languageService.GetAllLanguages(true);

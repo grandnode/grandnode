@@ -13,7 +13,7 @@ namespace Grand.Web.Areas.Admin.Validators.Catalog
         {
             RuleFor(x => x.StartTime).NotEmpty().WithMessage(localizationService.GetResource("Admin.Catalog.ProductReservations.Fields.StartTime.Required"));
             RuleFor(x => x.EndTime).NotEmpty().WithMessage(localizationService.GetResource("Admin.Catalog.ProductReservations.Fields.EndTime.Required"));
-            RuleFor(x => x.StartDateUtc).LessThanOrEqualTo(x => x.EndDateUtc).WithMessage(localizationService.GetResource("Admin.Catalog.ProductReservations.Fields.Days.Finaldatemustbegreaterthanstartdate"));
+            RuleFor(x => x.StartDate).LessThanOrEqualTo(x => x.EndDate).WithMessage(localizationService.GetResource("Admin.Catalog.ProductReservations.Fields.Days.Finaldatemustbegreaterthanstartdate"));
             RuleFor(x => x.Interval).GreaterThan(0).WithMessage(localizationService.GetResource("Admin.Catalog.ProductReservations.Fields.Interval.Intervalmustbegreaterthanzero"));
 
             RuleFor(x => x.StartTime).Must((x, context) =>

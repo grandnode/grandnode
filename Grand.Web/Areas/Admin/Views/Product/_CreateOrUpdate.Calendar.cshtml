@@ -9,9 +9,9 @@
         <div class="form-body">
             <div class="form-group">
                 <div class="form-group">
-                    <admin-label asp-for="CalendarModel.StartDateUtc" />
+                    <admin-label asp-for="CalendarModel.StartDate" />
                     <div class="col-md-3 col-sm-3">
-                        <admin-input asp-for="CalendarModel.StartDateUtc" />
+                        <admin-input asp-for="CalendarModel.StartDate" />
                     </div>
                     <div class="col-md-6" id="pnlStartTime">
                         <label class="col-md-3 control-label">@T("Admin.Catalog.Products.Fields.Calendar.StartTime")</label>
@@ -22,9 +22,9 @@
 
                 </div>
                 <div class="form-group">
-                    <admin-label asp-for="CalendarModel.EndDateUtc" />
+                    <admin-label asp-for="CalendarModel.EndDate" />
                     <div class="col-md-3 col-sm-3">
-                        <admin-input asp-for="CalendarModel.EndDateUtc" />
+                        <admin-input asp-for="CalendarModel.EndDate" />
                     </div>
                     <div class="col-md-6" id="pnlEndTime">
                         <label class="col-md-3 control-label">@T("Admin.Catalog.Products.Fields.Calendar.EndTime")</label>
@@ -163,11 +163,11 @@
 
             $("#generateCalendar").click(function () {
 
-                var datepickerFrom = $("#@Html.FieldIdFor(model => model.CalendarModel.StartDateUtc)").data("kendoDatePicker");
+                var datepickerFrom = $("#@Html.FieldIdFor(model => model.CalendarModel.StartDate)").data("kendoDatePicker");
                 var dateFrom = datepickerFrom.value();
                 dateFrom = kendo.toString(dateFrom, "@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern");
 
-                var datepickerTo = $("#@Html.FieldIdFor(model => model.CalendarModel.EndDateUtc)").data("kendoDatePicker");
+                var datepickerTo = $("#@Html.FieldIdFor(model => model.CalendarModel.EndDate)").data("kendoDatePicker");
                 var dateTo = datepickerTo.value();
                 dateTo = kendo.toString(dateTo, "@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern");
 
@@ -195,9 +195,9 @@
 
                 var postData = {
                     productId: '@(Model.Id)',
-                    StartDateUtc: dateFrom,
+                    StartDate: dateFrom,
                     StartTime: hourFrom,
-                    EndDateUtc: dateTo,
+                    EndDate: dateTo,
                     EndTime: hourTo,
                     Interval: interval,
                     IntervalUnit: intervalUnit,
