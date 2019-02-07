@@ -1,5 +1,4 @@
 ﻿using DotLiquid;
-using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Localization;
@@ -51,13 +50,11 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IPaymentService _paymentService;
         private readonly ILocalizationService _localizationService;
-        private readonly IWorkContext _workContext;
         private readonly IPriceFormatter _priceFormatter;
         private readonly ICurrencyService _currencyService;
         private readonly IDownloadService _downloadService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IStoreService _storeService;
-        private readonly IStoreContext _storeContext;
         private readonly ILanguageService _languageService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly MessageTemplatesSettings _templatesSettings;
@@ -70,13 +67,11 @@ namespace Grand.Services.Messages.DotLiquidDrops
             this._addressAttributeFormatter = EngineContext.Current.Resolve<IAddressAttributeFormatter>();
             this._paymentService = EngineContext.Current.Resolve<IPaymentService>();
             this._localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-            this._workContext = EngineContext.Current.Resolve<IWorkContext>();
             this._priceFormatter = EngineContext.Current.Resolve<IPriceFormatter>();
             this._currencyService = EngineContext.Current.Resolve<ICurrencyService>();
             this._downloadService = EngineContext.Current.Resolve<IDownloadService>();
             this._productAttributeParser = EngineContext.Current.Resolve<IProductAttributeParser>();
             this._storeService = EngineContext.Current.Resolve<IStoreService>();
-            this._storeContext = EngineContext.Current.Resolve<IStoreContext>();
             this._languageService = EngineContext.Current.Resolve<ILanguageService>();
             this._dateTimeHelper = EngineContext.Current.Resolve<IDateTimeHelper>();
             this._templatesSettings = EngineContext.Current.Resolve<MessageTemplatesSettings>();
@@ -385,7 +380,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get
             {
                 var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(_order.PaymentMethodSystemName);
-                var paymentMethodName = paymentMethod != null ? paymentMethod.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id) : _order.PaymentMethodSystemName;
+                var paymentMethodName = paymentMethod != null ? paymentMethod.GetLocalizedFriendlyName(_localizationService, _languageId) : _order.PaymentMethodSystemName;
                 return paymentMethodName;
             }
         }
@@ -446,7 +441,8 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get
             {
                 var primaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
-                var refundedAmountStr = _priceFormatter.FormatPrice(_refundedAmount, true, primaryStoreCurrencyCode, false, _workContext.WorkingLanguage);
+                var language = _languageService.GetLanguageById(_languageId);
+                var refundedAmountStr = _priceFormatter.FormatPrice(_refundedAmount, true, primaryStoreCurrencyCode, false, language);
                 return refundedAmountStr;
             }
         }
@@ -648,7 +644,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         protected virtual string GetStoreUrl(string storeId = "", bool useSsl = false)
         {
-            var store = _storeService.GetStoreById(storeId) ?? _storeContext.CurrentStore;
+            var store = _storeService.GetStoreById(storeId) ?? _storeService.GetAllStores().FirstOrDefault();
 
             if (store == null)
                 throw new Exception("No store could be loaded");

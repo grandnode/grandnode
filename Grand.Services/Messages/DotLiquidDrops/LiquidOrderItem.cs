@@ -12,6 +12,7 @@ using Grand.Services.Orders;
 using Grand.Services.Stores;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 
 namespace Grand.Services.Messages.DotLiquidDrops
@@ -25,7 +26,6 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         private readonly IProductService _productService;
         private readonly IDownloadService _downloadService;
-        private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly IOrderService _orderService;
         private readonly IProductAttributeParser _productAttributeParser;
@@ -38,7 +38,6 @@ namespace Grand.Services.Messages.DotLiquidDrops
         {
             this._productService = EngineContext.Current.Resolve<IProductService>();
             this._downloadService = EngineContext.Current.Resolve<IDownloadService>();
-            this._storeContext = EngineContext.Current.Resolve<IStoreContext>();
             this._storeService = EngineContext.Current.Resolve<IStoreService>();
             this._orderService = EngineContext.Current.Resolve<IOrderService>();
             this._productAttributeParser = EngineContext.Current.Resolve<IProductAttributeParser>();
@@ -411,7 +410,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         protected virtual string GetStoreUrl(string storeId = "", bool useSsl = false)
         {
-            var store = _storeService.GetStoreById(storeId) ?? _storeContext.CurrentStore;
+            var store = _storeService.GetStoreById(storeId) ?? _storeService.GetAllStores().FirstOrDefault();
 
             if (store == null)
                 throw new Exception("No store could be loaded");
