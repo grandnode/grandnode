@@ -31,6 +31,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private Order _order;
         private string _languageId;
         private Language _language;
+        private Currency _currency;
         private decimal _refundedAmount;
         private OrderNote _orderNote;
         private ICollection<LiquidOrderItem> _orderItems;
@@ -84,7 +85,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
             this._orderNote = orderNote;
             this._refundedAmount = refundedAmount;
             this._language = _languageService.GetLanguageById(_languageId);
-
+            this._currency = _currencyService.GetCurrencyByCode(order.CustomerCurrencyCode);
             this._orderItems = new List<LiquidOrderItem>();
             var tempItems = order.OrderItems.ToList();
 
@@ -196,7 +197,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
                     _displayTax = !_displayTaxRates;
 
                     var orderTaxInCustomerCurrency = _currencyService.ConvertCurrency(_order.OrderTax, _order.CurrencyRate);
-                    string taxStr = _priceFormatter.FormatPrice(orderTaxInCustomerCurrency, true, _order.CustomerCurrencyCode, false, _language);
+                    string taxStr = _priceFormatter.FormatPrice(orderTaxInCustomerCurrency, true, _currency, _language, _order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax, false);
                     _cusTaxTotal = taxStr;
                 }
             }
@@ -206,13 +207,13 @@ namespace Grand.Services.Messages.DotLiquidDrops
             if (_order.OrderDiscount > decimal.Zero)
             {
                 var orderDiscountInCustomerCurrency = _currencyService.ConvertCurrency(_order.OrderDiscount, _order.CurrencyRate);
-                _cusDiscount = _priceFormatter.FormatPrice(-orderDiscountInCustomerCurrency, true, _order.CustomerCurrencyCode, false, _language);
+                _cusDiscount = _priceFormatter.FormatPrice(-orderDiscountInCustomerCurrency, true, _currency, _language, _order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax, false);
                 _displayDiscount = true;
             }
 
             //total
             var orderTotalInCustomerCurrency = _currencyService.ConvertCurrency(_order.OrderTotal, _order.CurrencyRate);
-            _cusTotal = _priceFormatter.FormatPrice(orderTotalInCustomerCurrency, true, _order.CustomerCurrencyCode, false, _language);
+            _cusTotal = _priceFormatter.FormatPrice(orderTotalInCustomerCurrency, true, _currency, _language, _order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax, false);
         }
 
         public string OrderNumber
