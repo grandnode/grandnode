@@ -7077,12 +7077,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GoogleAnalyticsViewID.hint">
     <Value>ViewID</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GooglePlusLink">
-    <Value>Google+ page URL</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GooglePlusLink.Hint">
-    <Value>Specify your Google+ page URL. Leave empty if you have no such page.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HoneypotEnabled">
     <Value>Enable honeypot</Value>
   </LocaleResource>
@@ -19905,5 +19899,8 @@
   </LocaleResource>
   <LocaleResource Name="Newsletter.Desc">
     <Value>Sign up to newsletter and stay in touch.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Edit">
+    <Value>Edit</Value>
   </LocaleResource>
 </Language>

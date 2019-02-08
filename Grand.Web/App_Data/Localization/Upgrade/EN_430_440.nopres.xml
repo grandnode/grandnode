@@ -440,5 +440,7 @@
   <LocaleResource Name="Admin.Orders.Shipments.ShippedDate.Enter">
     <Value>Date and time should entered in the default store time zone</Value>
   </LocaleResource>
-
+  <LocaleResource Name="Edit">
+    <Value>Edit</Value>
+  </LocaleResource>
 </Language>
