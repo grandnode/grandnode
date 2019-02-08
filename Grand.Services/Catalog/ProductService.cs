@@ -883,14 +883,17 @@ namespace Grand.Services.Catalog
                 foreach (string key in filteredSpecs)
                 {
                     var specification = _specificationAttributeService.GetSpecificationAttributeByOptionId(key);
-                    spec.Add(specification.Id);
-                    if (!dictionary.ContainsKey(specification.Id))
+                    if (specification != null)
                     {
-                        //add
-                        dictionary.Add(specification.Id, new List<string>());
-                        filterSpecification = filterSpecification & builder.Where(x => x.ProductSpecificationAttributes.Any(y => y.SpecificationAttributeId == specification.Id));
+                        spec.Add(specification.Id);
+                        if (!dictionary.ContainsKey(specification.Id))
+                        {
+                            //add
+                            dictionary.Add(specification.Id, new List<string>());
+                            filterSpecification = filterSpecification & builder.Where(x => x.ProductSpecificationAttributes.Any(y => y.SpecificationAttributeId == specification.Id));
+                        }
+                        dictionary[specification.Id].Add(key);
                     }
-                    dictionary[specification.Id].Add(key);
                 }
 
                 foreach (var item in dictionary)
