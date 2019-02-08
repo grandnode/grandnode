@@ -85,11 +85,6 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get { return _storeInformationSettings.YoutubeLink; }
         }
 
-        public string GooglePlusLink
-        {
-            get { return _storeInformationSettings.GooglePlusLink; }
-        }
-
         public string InstagramLink
         {
             get { return _storeInformationSettings.InstagramLink; }

@@ -2380,7 +2380,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.StoreInformationSettings.FacebookLink = storeInformationSettings.FacebookLink;
             model.StoreInformationSettings.TwitterLink = storeInformationSettings.TwitterLink;
             model.StoreInformationSettings.YoutubeLink = storeInformationSettings.YoutubeLink;
-            model.StoreInformationSettings.GooglePlusLink = storeInformationSettings.GooglePlusLink;
             model.StoreInformationSettings.InstagramLink = storeInformationSettings.InstagramLink;
             model.StoreInformationSettings.LinkedInLink = storeInformationSettings.LinkedInLink;
             model.StoreInformationSettings.PinterestLink = storeInformationSettings.PinterestLink;
@@ -2400,7 +2399,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.StoreInformationSettings.FacebookLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.FacebookLink, storeScope);
                 model.StoreInformationSettings.TwitterLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.TwitterLink, storeScope);
                 model.StoreInformationSettings.YoutubeLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.YoutubeLink, storeScope);
-                model.StoreInformationSettings.GooglePlusLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.GooglePlusLink, storeScope);
                 model.StoreInformationSettings.InstagramLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.InstagramLink, storeScope);
                 model.StoreInformationSettings.LinkedInLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.LinkedInLink, storeScope);
                 model.StoreInformationSettings.PinterestLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.PinterestLink, storeScope);
@@ -2569,7 +2567,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             storeInformationSettings.FacebookLink = model.StoreInformationSettings.FacebookLink;
             storeInformationSettings.TwitterLink = model.StoreInformationSettings.TwitterLink;
             storeInformationSettings.YoutubeLink = model.StoreInformationSettings.YoutubeLink;
-            storeInformationSettings.GooglePlusLink = model.StoreInformationSettings.GooglePlusLink;
             storeInformationSettings.InstagramLink = model.StoreInformationSettings.InstagramLink;
             storeInformationSettings.LinkedInLink = model.StoreInformationSettings.LinkedInLink;
             storeInformationSettings.PinterestLink = model.StoreInformationSettings.PinterestLink;
@@ -2622,11 +2619,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(storeInformationSettings, x => x.YoutubeLink, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(storeInformationSettings, x => x.YoutubeLink, storeScope);
-
-            if (model.StoreInformationSettings.GooglePlusLink_OverrideForStore || storeScope == "")
-                _settingService.SaveSetting(storeInformationSettings, x => x.GooglePlusLink, storeScope, false);
-            else if (!String.IsNullOrEmpty(storeScope))
-                _settingService.DeleteSetting(storeInformationSettings, x => x.GooglePlusLink, storeScope);
 
             if (model.StoreInformationSettings.InstagramLink_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(storeInformationSettings, x => x.InstagramLink, storeScope, false);
