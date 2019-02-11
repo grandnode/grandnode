@@ -1135,7 +1135,7 @@ namespace Grand.Services.Messages
             _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
             _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
             _messageTokenProvider.AddProductTokens(liquidObject, product, languageId);
-            liquidObject.AskAQuestion = new LiquidAskQuestion(message, customerEmail, fullName, phone);
+            liquidObject.AskQuestion = new LiquidAskQuestion(message, customerEmail, fullName, phone);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
