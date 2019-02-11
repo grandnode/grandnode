@@ -505,11 +505,6 @@ function productRatingStarFinal(whole, half, empty, elem) {
     $("." + elem + "").html(stars);
 
 };
-// required asterisk position
-//$(".form-group .required").each(function () {
-//    var label_req = $(this).siblings("label");
-//    $(this).insertAfter(label_req);
-//});
 
 function sendcontactusform(urladd) {
     if ($("#product-details-form").valid()) {
@@ -519,7 +514,7 @@ function sendcontactusform(urladd) {
             AskQuestionPhone: $('#AskQuestionPhone').val(),
             AskQuestionMessage: $('#AskQuestionMessage').val(),
             Id: $('#AskQuestionProductId').val(),
-            'g-recaptcha-response': $('#g-recaptcha-response').val()
+            'g-recaptcha-response-value': $("input[id^='g-recaptcha-response']").val()
         };
         addAntiForgeryToken(contactData);
         $.ajax({

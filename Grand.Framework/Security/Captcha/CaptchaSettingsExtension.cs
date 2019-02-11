@@ -9,6 +9,8 @@ namespace Grand.Framework.Security.Captcha
         {
             if (captchaSettings.ReCaptchaVersion == ReCaptchaVersion.Version2)
                 return localizationService.GetResource("Common.WrongCaptchaV2");
+            if (captchaSettings.ReCaptchaVersion == ReCaptchaVersion.Version3)
+                return localizationService.GetResource("Common.WrongCaptchaV3");
             return string.Empty;
         }
     }
