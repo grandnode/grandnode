@@ -12,11 +12,10 @@
         {
             string controlId = string.Format("checkout_attribute_{0}", attribute.Id);
             string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
-            <span class="col-form-label text-prompt">
-                @textPrompt
-            </span>
             <div id="@string.Format("checkout_attribute_label_{0}", attribute.Id)" class="col-12 px-0">
-
+                <span class="col-form-label text-prompt">
+                    @textPrompt
+                </span>
                 @switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.TextBox:
