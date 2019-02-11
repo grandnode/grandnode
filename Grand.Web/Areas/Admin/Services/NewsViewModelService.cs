@@ -51,15 +51,11 @@ namespace Grand.Web.Areas.Admin.Services
 
         public virtual (IEnumerable<NewsItemModel> newsItemModels, int totalCount) PrepareNewsItemModel(NewsItemListModel model, int pageIndex, int pageSize)
         {
-            var news = _newsService.GetAllNews(model.SearchStoreId, pageIndex - 1, pageSize, true);
+            var news = _newsService.GetAllNews(model.SearchStoreId, pageIndex - 1, pageSize, true, true);
             return (news.Select(x =>
             {
                 var m = x.ToModel();
                 m.Full = "";
-                if (x.StartDateUtc.HasValue)
-                    m.StartDate = _dateTimeHelper.ConvertToUserTime(x.StartDateUtc.Value, DateTimeKind.Utc);
-                if (x.EndDateUtc.HasValue)
-                    m.EndDate = _dateTimeHelper.ConvertToUserTime(x.EndDateUtc.Value, DateTimeKind.Utc);
                 m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
                 m.Comments = x.CommentCount;
                 return m;
@@ -68,8 +64,6 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual NewsItem InsertNewsItemModel(NewsItemModel model)
         {
             var newsItem = model.ToEntity();
-            newsItem.StartDateUtc = model.StartDate;
-            newsItem.EndDateUtc = model.EndDate;
             newsItem.CreatedOnUtc = DateTime.UtcNow;
             _newsService.InsertNews(newsItem);
 
@@ -88,8 +82,6 @@ namespace Grand.Web.Areas.Admin.Services
         {
             string prevPictureId = newsItem.PictureId;
             newsItem = model.ToEntity(newsItem);
-            newsItem.StartDateUtc = model.StartDate;
-            newsItem.EndDateUtc = model.EndDate;
             var seName = newsItem.ValidateSeName(model.SeName, model.Title, true);
             newsItem.SeName = seName;
             newsItem.Locales = model.Locales.ToLocalizedProperty(newsItem, x => x.Title, _urlRecordService);

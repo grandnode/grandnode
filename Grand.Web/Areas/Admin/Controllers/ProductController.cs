@@ -2145,8 +2145,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             int _minutesFrom = model.StartTime.Minute;
             int _hourTo = model.EndTime.Hour;
             int _minutesTo = model.EndTime.Minute;
-            DateTime _dateFrom = new DateTime(model.StartDateUtc.Year, model.StartDateUtc.Month, model.StartDateUtc.Day, 0, 0, 0, 0);
-            DateTime _dateTo = new DateTime(model.EndDateUtc.Year, model.EndDateUtc.Month, model.EndDateUtc.Day, 23, 59, 59, 999);
+            DateTime _dateFrom = new DateTime(model.StartDate.Year, model.StartDate.Month, model.StartDate.Day, 0, 0, 0, 0);
+            DateTime _dateTo = new DateTime(model.EndDate.Year, model.EndDate.Month, model.EndDate.Day, 23, 59, 59, 999);
             if ((IntervalUnit)model.IntervalUnit == IntervalUnit.Day)
             {
                 model.Quantity = 1;

@@ -345,7 +345,13 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.AvailableBasepriceUnits, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableBasepriceBaseUnits, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
-                .ForPath(dest => dest.CalendarModel.IncBothDate, mo => mo.MapFrom(x => x.IncBothDate));
+                .ForPath(dest => dest.CalendarModel.IncBothDate, mo => mo.MapFrom(x => x.IncBothDate))
+                .ForMember(dest => dest.MarkAsNewStartDateTime, mo => mo.MapFrom(x => x.MarkAsNewStartDateTimeUtc.ConvertToUserTime()))
+                .ForMember(dest => dest.MarkAsNewEndDateTime, mo => mo.MapFrom(x => x.MarkAsNewEndDateTimeUtc.ConvertToUserTime()))
+                .ForMember(dest => dest.AvailableStartDateTime, mo => mo.MapFrom(x => x.AvailableStartDateTimeUtc.ConvertToUserTime()))
+                .ForMember(dest => dest.AvailableEndDateTime, mo => mo.MapFrom(x => x.AvailableEndDateTimeUtc.ConvertToUserTime()))
+                .ForMember(dest => dest.PreOrderAvailabilityStartDateTime, mo => mo.MapFrom(x => x.PreOrderAvailabilityStartDateTimeUtc.ConvertToUserTime()));
+
             CreateMap<ProductModel, Product>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
@@ -377,7 +383,12 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.AppliedDiscounts, mo => mo.Ignore())
                 .ForMember(dest => dest.Stores, mo => mo.MapFrom(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()))
                 .ForMember(dest => dest.CustomerRoles, mo => mo.MapFrom(x => x.SelectedCustomerRoleIds != null ? x.SelectedCustomerRoleIds.ToList() : new List<string>()))
-                .ForPath(dest => dest.IncBothDate, mo => mo.MapFrom(x => x.CalendarModel.IncBothDate));
+                .ForPath(dest => dest.IncBothDate, mo => mo.MapFrom(x => x.CalendarModel.IncBothDate))
+                .ForMember(dest => dest.MarkAsNewStartDateTimeUtc, mo => mo.MapFrom(x => x.MarkAsNewStartDateTime.ConvertToUtcTime()))
+                .ForMember(dest => dest.MarkAsNewEndDateTimeUtc, mo => mo.MapFrom(x => x.MarkAsNewEndDateTime.ConvertToUtcTime()))
+                .ForMember(dest => dest.AvailableStartDateTimeUtc, mo => mo.MapFrom(x => x.AvailableStartDateTime.ConvertToUtcTime()))
+                .ForMember(dest => dest.AvailableEndDateTimeUtc, mo => mo.MapFrom(x => x.AvailableEndDateTime.ConvertToUtcTime()))
+                .ForMember(dest => dest.PreOrderAvailabilityStartDateTimeUtc, mo => mo.MapFrom(x => x.PreOrderAvailabilityStartDateTime.ConvertToUtcTime()));
 
             //product attributes combination
             CreateMap<ProductAttributeCombination, ProductAttributeCombinationModel>()
@@ -404,9 +415,14 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<TierPrice, ProductModel.TierPriceModel>()
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
-                .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore());
+                .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
+                .ForMember(dest => dest.StartDateTime, mo => mo.MapFrom(x => x.StartDateTimeUtc.ConvertToUserTime()))
+                .ForMember(dest => dest.EndDateTime, mo => mo.MapFrom(x => x.EndDateTimeUtc.ConvertToUserTime()));
+
             CreateMap<ProductModel.TierPriceModel, TierPrice>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore());
+                .ForMember(dest => dest.Id, mo => mo.Ignore())
+                .ForMember(dest => dest.StartDateTimeUtc, mo => mo.MapFrom(x => x.StartDateTime.ConvertToUtcTime()))
+                .ForMember(dest => dest.EndDateTimeUtc, mo => mo.MapFrom(x => x.EndDateTime.ConvertToUtcTime()));
 
             //logs
             CreateMap<Log, LogModel>()
@@ -625,8 +641,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName("", true, false)))
                 .ForMember(dest => dest.Comments, mo => mo.Ignore())
-                .ForMember(dest => dest.StartDate, mo => mo.Ignore())
-                .ForMember(dest => dest.EndDate, mo => mo.Ignore())
+                .ForMember(dest => dest.StartDate, mo => mo.MapFrom(x => x.StartDateUtc.ConvertToUserTime()))
+                .ForMember(dest => dest.EndDate, mo => mo.MapFrom(x => x.EndDateUtc.ConvertToUserTime()))
                 .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
                 .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
@@ -636,16 +652,17 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.Stores, mo => mo.MapFrom(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()))
                 .ForMember(dest => dest.CommentCount, mo => mo.Ignore())
-                .ForMember(dest => dest.StartDateUtc, mo => mo.Ignore())
-                .ForMember(dest => dest.EndDateUtc, mo => mo.Ignore())
+                .ForMember(dest => dest.StartDateUtc, mo => mo.MapFrom(x => x.StartDate.ConvertToUtcTime()))
+                .ForMember(dest => dest.EndDateUtc, mo => mo.MapFrom(x => x.EndDate.ConvertToUtcTime()))
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore());
+
             //news
             CreateMap<NewsItem, NewsItemModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName("", true, false)))
                 .ForMember(dest => dest.Comments, mo => mo.Ignore())
-                .ForMember(dest => dest.StartDate, mo => mo.Ignore())
-                .ForMember(dest => dest.EndDate, mo => mo.Ignore())
+                .ForMember(dest => dest.StartDate, mo => mo.MapFrom(x => x.StartDateUtc.ConvertToUserTime()))
+                .ForMember(dest => dest.EndDate, mo => mo.MapFrom(x => x.EndDateUtc.ConvertToUserTime()))
                 .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
                 .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
@@ -658,16 +675,16 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.NewsComments, mo => mo.Ignore())
                 .ForMember(dest => dest.CommentCount, mo => mo.Ignore())
-                .ForMember(dest => dest.StartDateUtc, mo => mo.Ignore())
-                .ForMember(dest => dest.EndDateUtc, mo => mo.Ignore())
+                .ForMember(dest => dest.StartDateUtc, mo => mo.MapFrom(x => x.StartDate.ConvertToUtcTime()))
+                .ForMember(dest => dest.EndDateUtc, mo => mo.MapFrom(x => x.EndDate.ConvertToUtcTime()))
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.Stores, mo => mo.MapFrom(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()))
                 .ForMember(dest => dest.CustomerRoles, mo => mo.MapFrom(x => x.SelectedCustomerRoleIds != null ? x.SelectedCustomerRoleIds.ToList() : new List<string>()));
             //news
             CreateMap<Poll, PollModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.StartDate, mo => mo.MapFrom(x => x.StartDateUtc))
-                .ForMember(dest => dest.EndDate, mo => mo.MapFrom(x => x.EndDateUtc))
+                .ForMember(dest => dest.StartDate, mo => mo.MapFrom(x => x.StartDateUtc.ConvertToUserTime()))
+                .ForMember(dest => dest.EndDate, mo => mo.MapFrom(x => x.EndDateUtc.ConvertToUserTime()))
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
                 .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
@@ -680,8 +697,8 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.Stores, mo => mo.MapFrom(model => model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>()))
                 .ForMember(dest => dest.CustomerRoles, mo => mo.MapFrom(model => model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>()))
                 .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()))
-                .ForMember(dest => dest.StartDateUtc, mo => mo.MapFrom(x => x.StartDate))
-                .ForMember(dest => dest.EndDateUtc, mo => mo.MapFrom(x => x.EndDate));
+                .ForMember(dest => dest.StartDateUtc, mo => mo.MapFrom(x => x.StartDate.ConvertToUtcTime()))
+                .ForMember(dest => dest.EndDateUtc, mo => mo.MapFrom(x => x.EndDate.ConvertToUtcTime()));
 
             CreateMap<PollAnswer, PollAnswerModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
@@ -710,10 +727,14 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<CustomerAction, CustomerActionModel>()
                 .ForMember(dest => dest.MessageTemplates, mo => mo.Ignore())
                 .ForMember(dest => dest.Banners, mo => mo.Ignore())
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
-            CreateMap<CustomerActionModel, CustomerAction>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore());
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
+                .ForMember(dest => dest.StartDateTime, mo => mo.MapFrom(x => x.StartDateTimeUtc.ConvertToUserTime()))
+                .ForMember(dest => dest.EndDateTime, mo => mo.MapFrom(x => x.EndDateTimeUtc.ConvertToUserTime()));
 
+            CreateMap<CustomerActionModel, CustomerAction>()
+                .ForMember(dest => dest.StartDateTimeUtc, mo => mo.MapFrom(x => x.StartDateTime.ConvertToUtcTime()))
+                .ForMember(dest => dest.EndDateTimeUtc, mo => mo.MapFrom(x => x.EndDateTime.ConvertToUtcTime()))
+                .ForMember(dest => dest.Id, mo => mo.Ignore());
 
             CreateMap<CustomerAction.ActionCondition, CustomerActionConditionModel>()
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
@@ -731,8 +752,15 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
 
             //Customer reminder
             CreateMap<CustomerReminderModel, CustomerReminder>()
+                .ForMember(dest => dest.StartDateTimeUtc, mo => mo.MapFrom(x => x.StartDateTime.ConvertToUtcTime()))
+                .ForMember(dest => dest.EndDateTimeUtc, mo => mo.MapFrom(x => x.EndDateTime.ConvertToUtcTime()))
+                .ForMember(dest => dest.LastUpdateDate, mo => mo.MapFrom(x => x.LastUpdateDate.ConvertToUtcTime()))
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
+
             CreateMap<CustomerReminder, CustomerReminderModel>()
+                .ForMember(dest => dest.StartDateTime, mo => mo.MapFrom(x => x.StartDateTimeUtc.ConvertToUserTime()))
+                .ForMember(dest => dest.EndDateTime, mo => mo.MapFrom(x => x.EndDateTimeUtc.ConvertToUserTime()))
+                .ForMember(dest => dest.LastUpdateDate, mo => mo.MapFrom(x => x.LastUpdateDate.ConvertToUserTime()))
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
 
             CreateMap<CustomerReminder.ReminderLevel, CustomerReminderModel.ReminderLevelModel>()
@@ -903,12 +931,17 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.AvailableDiscountRequirementRules, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableDiscountAmountProviders, mo => mo.Ignore())
                 .ForMember(dest => dest.DiscountRequirementMetaInfos, mo => mo.Ignore())
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
+                .ForMember(dest => dest.StartDate, mo => mo.MapFrom(x => x.StartDateUtc.ConvertToUserTime()))
+                .ForMember(dest => dest.EndDate, mo => mo.MapFrom(x => x.EndDateUtc.ConvertToUserTime()));
+
             CreateMap<DiscountModel, Discount>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore())
                 .ForMember(dest => dest.DiscountType, mo => mo.Ignore())
                 .ForMember(dest => dest.DiscountLimitation, mo => mo.Ignore())
-                .ForMember(dest => dest.DiscountRequirements, mo => mo.Ignore());
+                .ForMember(dest => dest.DiscountRequirements, mo => mo.Ignore())
+                .ForMember(dest => dest.StartDateUtc, mo => mo.MapFrom(x => x.StartDate.ConvertToUtcTime()))
+                .ForMember(dest => dest.EndDateUtc, mo => mo.MapFrom(x => x.EndDate.ConvertToUtcTime()));
 
             //gift cards
             CreateMap<GiftCard, GiftCardModel>()

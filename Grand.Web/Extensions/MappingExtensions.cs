@@ -1,5 +1,6 @@
 ﻿using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
+using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Seo;
 using Grand.Web.Models.Catalog;
@@ -143,6 +144,5 @@ namespace Grand.Web.Extensions
 
             return destination;
         }
-
     }
 }

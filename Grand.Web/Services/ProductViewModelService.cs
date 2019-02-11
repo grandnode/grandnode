@@ -484,7 +484,7 @@ namespace Grand.Web.Services
 
             string cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_SPECS_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id);
             return _cacheManager.Get(cacheKey, () =>
-                product.ProductSpecificationAttributes.Where(x => x.ShowOnProductPage).OrderBy(x=>x.DisplayOrder)
+                product.ProductSpecificationAttributes.Where(x => x.ShowOnProductPage).OrderBy(x => x.DisplayOrder)
                 .Select(psa =>
                 {
                     var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(psa.SpecificationAttributeId);
@@ -1386,6 +1386,8 @@ namespace Grand.Web.Services
             model.HighestBidValue = product.HighestBid;
             model.AddToCart.IsAuction = product.ProductType == ProductType.Auction;
             model.EndTime = product.AvailableEndDateTimeUtc;
+            model.EndTimeLocalTime = product.AvailableEndDateTimeUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(product.AvailableEndDateTimeUtc.Value, DateTimeKind.Utc) : new DateTime?();
+
             model.AuctionEnded = product.AuctionEnded;
 
             #endregion
@@ -1719,7 +1721,7 @@ namespace Grand.Web.Services
         {
             var productIds = _cacheManager.Get(string.Format(ModelCacheEventConsumer.PRODUCTS_RELATED_IDS_KEY, productId, _storeContext.CurrentStore.Id),
                () =>
-                   _productService.GetProductById(productId).RelatedProducts.OrderBy(x=>x.DisplayOrder).Select(x => x.ProductId2).ToArray()
+                   _productService.GetProductById(productId).RelatedProducts.OrderBy(x => x.DisplayOrder).Select(x => x.ProductId2).ToArray()
                    );
 
             //load products

@@ -107,7 +107,7 @@
 
                 </ul>
                 @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_middle", additionalData = Model.Id })
-                <div class="d-flex justify-content-center card-buttons">
+                <div class="d-lg-flex d-none justify-content-center card-buttons">
                     <div class="btn-group">
                         @if (Model.ShowQty)
                         {

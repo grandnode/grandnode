@@ -54,9 +54,9 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual CustomerReminderModel PrepareCustomerReminderModel()
         {
             var model = new CustomerReminderModel();
-            model.StartDateTimeUtc = DateTime.UtcNow;
-            model.EndDateTimeUtc = DateTime.UtcNow.AddMonths(1);
-            model.LastUpdateDate = DateTime.UtcNow.AddDays(-7);
+            model.StartDateTime = DateTime.Now;
+            model.EndDateTime = DateTime.Now.AddMonths(1);
+            model.LastUpdateDate = DateTime.Now.AddDays(-7);
             model.Active = true;
             return model;
         }

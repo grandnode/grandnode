@@ -143,10 +143,12 @@ var Billing = {
             data: $(this.form).serialize(),
             type: 'post',
             success: this.nextStep,
+            beforeSend: function () {
+                $('html, body').animate({
+                    scrollTop: 0
+                }, 800)
+            },
             complete: this.resetLoadWaiting,
-            complete: $('html, body').animate({
-                scrollTop: 0
-            }, 800),
             error: Checkout.ajaxFailure
         });
     },
@@ -232,10 +234,12 @@ var Shipping = {
             data: $(this.form).serialize(),
             type: 'post',
             success: this.nextStep,
+            beforeSend: function () {
+                $('html, body').animate({
+                    scrollTop: 0
+                }, 800)
+            },
             complete: this.resetLoadWaiting,
-            complete: $('html, body').animate({
-                scrollTop: 0
-            }, 800),
             error: Checkout.ajaxFailure
         });
     },

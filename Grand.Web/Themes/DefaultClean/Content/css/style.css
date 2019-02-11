@@ -1147,7 +1147,7 @@ header .cartCounter .dropdown-menu {
 	min-width: 36px;
 }
 .navUp .tax.dropdown-menu {
-	min-width: 193px;
+	min-width: 130px;
 }
 .dropdown:hover .dropdown-content {
 	display: block;
@@ -3673,6 +3673,9 @@ footer .social-icons a span {
 footer .socicon-facebook:hover {
     color: #3b5998;
 }
+footer .socicon-twitter:hover {
+    color: #3b5998;
+}
 footer .socicon-rss:hover {
     color: #28a745;
 }
@@ -3693,6 +3696,9 @@ footer .socicon-pinterest:hover {
 }
 .socicon-facebook:before {
     content: "\e028";
+}
+.socicon-twitter:before {
+    content: "\e08d";
 }
 .socicon-googleplus:before {
     content: "\e038";
@@ -4393,7 +4399,7 @@ footer .socicon-pinterest:hover {
     }
     .mobile-menu .dropdowns-container .generalDropDown {
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
     }
     .c-offcanvas--right {
         width: 320px;

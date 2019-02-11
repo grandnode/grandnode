@@ -391,9 +391,11 @@ namespace Grand.Services.Installation
                     DisplayOrder = 1,
                     //should we set some default company info?
                     CompanyName = "Your company name",
-                    CompanyAddress = "your company country, state, zip, street, etc",
+                    CompanyAddress = "21 West 52nd Street",
                     CompanyPhoneNumber = "(123) 456-78901",
                     CompanyVat = null,
+                    CompanyEmail = "company@email.com",
+                    CompanyHours = "Monday - Sunday / 8:00AM - 18:00PM"
                 },
             };
 
@@ -5285,7 +5287,6 @@ namespace Grand.Services.Installation
                 FacebookLink = "https://www.facebook.com/grandnodecom",
                 TwitterLink = "https://twitter.com/grandnode",
                 YoutubeLink = "http://www.youtube.com/user/grandnode",
-                GooglePlusLink = "https://plus.google.com/104905799281078572776",
                 InstagramLink = "https://www.instagram.com/grandnode/",
                 LinkedInLink = "https://www.linkedin.com/company/grandnode.com/",
                 PinterestLink = "",

@@ -317,13 +317,8 @@ namespace Grand.Services.Messages
                     _messageTokenProvider.AddShoppingCartTokens(liquidObject, customer);
                 }
 
-                var hash = Hash.FromAnonymousObject(liquidObject);
-
-                Template bodyTemplate = Template.Parse(campaign.Body);
-                var body = bodyTemplate.Render(hash);
-
-                Template subjectTemplate = Template.Parse(campaign.Subject);
-                var subject = subjectTemplate.Render(hash);
+                var body = LiquidExtensions.Render(liquidObject, campaign.Body);
+                var subject = LiquidExtensions.Render(liquidObject, campaign.Subject);
 
                 var email = new QueuedEmail
                 {
@@ -373,13 +368,8 @@ namespace Grand.Services.Messages
                 _messageTokenProvider.AddShoppingCartTokens(liquidObject, customer);
             }
 
-            var hash = Hash.FromAnonymousObject(liquidObject);
-
-            Template bodyTemplate = Template.Parse(campaign.Body);
-            var body = bodyTemplate.Render(hash);
-
-            Template subjectTemplate = Template.Parse(campaign.Subject);
-            var subject = subjectTemplate.Render(hash);
+            var body = LiquidExtensions.Render(liquidObject, campaign.Body);
+            var subject = LiquidExtensions.Render(liquidObject, campaign.Subject);
 
             _emailSender.SendEmail(emailAccount, subject, body, emailAccount.Email, emailAccount.DisplayName, email, null);
         }

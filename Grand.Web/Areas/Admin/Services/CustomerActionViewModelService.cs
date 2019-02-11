@@ -140,7 +140,7 @@ namespace Grand.Web.Areas.Admin.Services
             return new SerializeCustomerActionHistory
             {
                 Email = customer != null ? String.IsNullOrEmpty(customer.Email) ? "(unknown)" : customer.Email : "(unknown)",
-                CreateDateUtc = _dateTimeHelper.ConvertToUserTime(history.CreateDateUtc, DateTimeKind.Utc),
+                CreateDate = _dateTimeHelper.ConvertToUserTime(history.CreateDateUtc, DateTimeKind.Utc),
             };
         }
 
@@ -148,8 +148,8 @@ namespace Grand.Web.Areas.Admin.Services
         {
             var model = new CustomerActionModel();
             model.Active = true;
-            model.StartDateTimeUtc = DateTime.UtcNow;
-            model.EndDateTimeUtc = DateTime.UtcNow.AddMonths(1);
+            model.StartDateTime = DateTime.Now;
+            model.EndDateTime = DateTime.Now.AddMonths(1);
             model.ReactionTypeId = (int)CustomerReactionTypeEnum.Banner;
             PrepareReactObjectModel(model);
             return model;

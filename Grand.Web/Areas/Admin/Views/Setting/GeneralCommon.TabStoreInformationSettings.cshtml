@@ -131,16 +131,6 @@
         </div>
         <div class="form-group">
             <div class="col-md-4 col-sm-4 text-right">
-                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.GooglePlusLink_OverrideForStore, model => model.StoreInformationSettings.GooglePlusLink, Model.ActiveStoreScopeConfiguration)
-                <admin-label asp-for="StoreInformationSettings.GooglePlusLink" class="control-label" />
-            </div>
-            <div class="col-md-8 col-sm-8">
-                <admin-input asp-for="StoreInformationSettings.GooglePlusLink" />
-                <span asp-validation-for="StoreInformationSettings.GooglePlusLink"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-4 col-sm-4 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.InstagramLink_OverrideForStore, model => model.StoreInformationSettings.InstagramLink, Model.ActiveStoreScopeConfiguration)
                 <admin-label asp-for="StoreInformationSettings.InstagramLink" class="control-label" />
             </div>

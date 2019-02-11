@@ -150,9 +150,9 @@
 
     function togglePreOrder() {
         if ($('#@Html.FieldIdFor(model => model.AvailableForPreOrder)').is(':checked')) {
-            $('#pnlPreOrderAvailabilityStartDateTimeUtc').show();
+            $('#pnlPreOrderAvailabilityStartDateTime').show();
         } else {
-            $('#pnlPreOrderAvailabilityStartDateTimeUtc').hide();
+            $('#pnlPreOrderAvailabilityStartDateTime').hide();
         }
     }
 
@@ -369,11 +369,11 @@
 
     function toggleMarkAsNew() {
         if ($('#@Html.FieldIdFor(model => model.MarkAsNew)').is(':checked')) {
-            $('#pnlMarkAsNewStartDateTimeUtc').show();
-            $('#pnlMarkAsNewEndDateTimeUtc').show();
+            $('#pnlMarkAsNewStartDateTime').show();
+            $('#pnlMarkAsNewEndDateTime').show();
         } else {
-            $('#pnlMarkAsNewStartDateTimeUtc').hide();
-            $('#pnlMarkAsNewEndDateTimeUtc').hide();
+            $('#pnlMarkAsNewStartDateTime').hide();
+            $('#pnlMarkAsNewEndDateTime').hide();
         }
     }
 
@@ -632,17 +632,17 @@
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            <admin-label asp-for="AvailableStartDateTimeUtc" />
+            <admin-label asp-for="AvailableStartDateTime" />
             <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="AvailableStartDateTimeUtc" />
-                <span asp-validation-for="AvailableStartDateTimeUtc"></span>
+                <admin-input asp-for="AvailableStartDateTime" />
+                <span asp-validation-for="AvailableStartDateTime"></span>
             </div>
         </div>
         <div class="form-group">
-            <admin-label asp-for="AvailableEndDateTimeUtc" />
+            <admin-label asp-for="AvailableEndDateTime" />
             <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="AvailableEndDateTimeUtc" />
-                <span asp-validation-for="AvailableEndDateTimeUtc"></span>
+                <admin-input asp-for="AvailableEndDateTime" />
+                <span asp-validation-for="AvailableEndDateTime"></span>
             </div>
         </div>
         <div class="form-group">
@@ -655,18 +655,18 @@
                 <span asp-validation-for="MarkAsNew"></span>
             </div>
         </div>
-        <div class="form-group" id="pnlMarkAsNewStartDateTimeUtc">
-            <admin-label asp-for="MarkAsNewStartDateTimeUtc" />
+        <div class="form-group" id="pnlMarkAsNewStartDateTime">
+            <admin-label asp-for="MarkAsNewStartDateTime" />
             <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="MarkAsNewStartDateTimeUtc" />
-                <span asp-validation-for="MarkAsNewStartDateTimeUtc"></span>
+                <admin-input asp-for="MarkAsNewStartDateTime" />
+                <span asp-validation-for="MarkAsNewStartDateTime"></span>
             </div>
         </div>
-        <div class="form-group" id="pnlMarkAsNewEndDateTimeUtc">
-            <admin-label asp-for="MarkAsNewEndDateTimeUtc" />
+        <div class="form-group" id="pnlMarkAsNewEndDateTime">
+            <admin-label asp-for="MarkAsNewEndDateTime" />
             <div class="col-md-9 col-sm-9">
-                <admin-input asp-for="MarkAsNewEndDateTimeUtc" />
-                <span asp-validation-for="MarkAsNewEndDateTimeUtc"></span>
+                <admin-input asp-for="MarkAsNewEndDateTime" />
+                <span asp-validation-for="MarkAsNewEndDateTime"></span>
             </div>
         </div>
         <div class="form-group">

@@ -26,12 +26,12 @@ namespace Grand.Web.Areas.Admin.Models.Orders
         public string TrackingNumberUrl { get; set; }
 
         [GrandResourceDisplayName("Admin.Orders.Shipments.ShippedDate")]
-        public string ShippedDate { get; set; }
+        public DateTime? ShippedDate { get; set; }
         public bool CanShip { get; set; }
         public DateTime? ShippedDateUtc { get; set; }
 
         [GrandResourceDisplayName("Admin.Orders.Shipments.DeliveryDate")]
-        public string DeliveryDate { get; set; }
+        public DateTime? DeliveryDate { get; set; }
         public bool CanDeliver { get; set; }
         public DateTime? DeliveryDateUtc { get; set; }
 

@@ -67,13 +67,13 @@ namespace Grand.Web.Areas.Admin.Models.Customers
         public string CustomerTagId { get; set; }
         public IList<SelectListItem> CustomerTags { get; set; }
 
-        [GrandResourceDisplayName("Admin.Customers.CustomerAction.Fields.StartDateTimeUtc")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerAction.Fields.StartDateTime")]
         [UIHint("DateTimeNullable")]
-        public DateTime StartDateTimeUtc { get; set; }
+        public DateTime StartDateTime { get; set; }
 
-        [GrandResourceDisplayName("Admin.Customers.CustomerAction.Fields.EndDateTimeUtc")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerAction.Fields.EndDateTime")]
         [UIHint("DateTimeNullable")]
-        public DateTime EndDateTimeUtc { get; set; }
+        public DateTime EndDateTime { get; set; }
 
     }
 

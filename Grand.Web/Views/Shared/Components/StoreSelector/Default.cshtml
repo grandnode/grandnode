@@ -10,37 +10,25 @@
         Selected = x.Id.Equals(Model.CurrentStoreId),
         Value = webHelper.ModifyQueryString(Url.RouteUrl("ChangeStore", new { store = x.Id }), "returnurl=" + WebUtility.UrlEncode(webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request)), null),
     });
-    <div class="store-selector btn-group btn-group-sm float-xs-right mr-2 d-none d-lg-flex">
-        <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
-            @stores.FirstOrDefault(x => x.Selected).Name
+    <div class="store-selector d-block btn-group btn-group-sm float-xs-right pr-1">
+        <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
+            <span>
+                @stores.FirstOrDefault(x => x.Selected).Name
+            </span>
             <span class="sr-only">Toggle Dropdown</span>
+            <span class="material-icons mat">keyboard_arrow_down</span>
         </button>
         <div class="dropdown-menu dropdown-menu-right">
             <ul class="pl-0 mb-0">
                 @foreach (var item in stores)
                 {
-                    <li>
+                    var className = item.Selected ? "active" : "";
+                    <li class="@className">
                         <a href="@item.Value">@item.Name</a>
                     </li>
                 }
             </ul>
         </div>
     </div>
-
-    <div class="col px-0 store-list-mobile option-list-mobile text-center">
-        <h6 class="store-button mobile-option-button mb-0">@T("Stores")</h6>
-        <ul class="">
-            @foreach (var item in stores)
-            {
-                var className = item.Selected ? "active" : "";
-                <li class="@className">
-                    <a class="nav-link d-flex d-lg-none p-0" href="@item.Value">
-                        @item.Name
-                    </a>
-                </li>
-            }
-        </ul>
-    </div>
-
 
 }

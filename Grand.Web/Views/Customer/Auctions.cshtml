@@ -27,7 +27,7 @@
             <div class="tab-pane active" id="ongoing" role="tabpanel">
                 @if (Model.ProductBidList.Where(x => !x.Ended).Any())
                 {
-                    <table class="table table-striped table-responsive">
+                    <table class="table table-striped">
                         <thead>
                             <tr>
                                 <th scope="col">@T("Account.CustomerAuctions.ProductName")</th>
@@ -61,7 +61,7 @@
                                         <small>(@item.BidAmount)</small>
                                     }
                                 </td>
-                                <td>@item.EndBidDate.ToLocalTime()</td>
+                                <td>@item.EndBidDate</td>
                             </tr>
                         }
                         </tbody>
@@ -101,7 +101,7 @@
                                         <small>(@item.BidAmount)</small>
                                     }
                                 </td>
-                                <td>@item.EndBidDate.ToLocalTime()</td>
+                                <td>@item.EndBidDate</td>
                                 <td>
                                     @if (item.HighestBidder)
                                     {

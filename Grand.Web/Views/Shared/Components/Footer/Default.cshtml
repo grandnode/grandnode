@@ -122,16 +122,17 @@
                 {
                     <li class="list-group-item facebook">
                         <a title="facebook" href="@Model.FacebookLink" rel="noopener" target="_blank">
+                            <span class="socicon-facebook"></span>
                             <span class="sr-only">Facebook</span>
-                            
+
                         </a>
                     </li>
                 }
                 @if (!string.IsNullOrEmpty(Model.TwitterLink))
                 {
                     <li class="list-group-item twitter">
-                        <a href="@Model.TwitterLink" rel="noopener" target="_blank">
-                            <span class="socicon-facebook"></span>
+                        <a title="twitter" href="@Model.TwitterLink" rel="noopener" target="_blank">
+                            <span class="socicon-twitter"></span>
                             <span class="sr-only">twitter</span>
                         </a>
                     </li>
@@ -139,7 +140,7 @@
                 @if (Model.NewsEnabled)
                 {
                     <li class="list-group-item rss">
-                        <a href="@Url.RouteUrl("NewsRSS", new {languageId = Model.WorkingLanguageId})" rel="noopener" target="_blank">
+                        <a title="rss" href="@Url.RouteUrl("NewsRSS", new {languageId = Model.WorkingLanguageId})" rel="noopener" target="_blank">
                             <span class="socicon-rss"></span>
                             <span class="sr-only">@T("NewsRSS")</span>
                         </a>
@@ -148,18 +149,9 @@
                 @if (!string.IsNullOrEmpty(Model.YoutubeLink))
                 {
                     <li class="list-group-item youtube">
-                        <a href="@Model.YoutubeLink" rel="noopener" target="_blank">
+                        <a title="youtube" href="@Model.YoutubeLink" rel="noopener" target="_blank">
                             <span class="socicon-youtube"></span>
                             <span class="sr-only">youtube</span>
-                        </a>
-                    </li>
-                }
-                @if (!string.IsNullOrEmpty(Model.GooglePlusLink))
-                {
-                    <li class="list-group-item google-plus">
-                        <a href="@Model.GooglePlusLink" rel="noopener" target="_blank">
-                            <span class="socicon-googleplus"></span>
-                            <span class="sr-only">google plus</span>
                         </a>
                     </li>
                 }

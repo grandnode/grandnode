@@ -20,7 +20,6 @@ namespace Grand.Web.Models.Common
         public string FacebookLink { get; set; }
         public string TwitterLink { get; set; }
         public string YoutubeLink { get; set; }
-        public string GooglePlusLink { get; set; }
         public string InstagramLink { get; set; }
         public string LinkedInLink { get; set; }
         public string PinterestLink { get; set; }

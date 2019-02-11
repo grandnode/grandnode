@@ -93,6 +93,7 @@ namespace Grand.Web.Models.Catalog
         public decimal StartPrice { get; set; }
         public decimal HighestBidValue { get; set; }
         public DateTime? EndTime { get; set; }
+        public DateTime? EndTimeLocalTime { get; set; }
         public bool AuctionEnded { get; set; }
 
         #region Nested Classes

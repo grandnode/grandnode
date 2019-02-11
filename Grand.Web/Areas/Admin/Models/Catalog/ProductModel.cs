@@ -274,9 +274,9 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.AvailableForPreOrder")]
         public bool AvailableForPreOrder { get; set; }
 
-        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.PreOrderAvailabilityStartDateTimeUtc")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.PreOrderAvailabilityStartDateTime")]
         [UIHint("DateTimeNullable")]
-        public DateTime? PreOrderAvailabilityStartDateTimeUtc { get; set; }
+        public DateTime? PreOrderAvailabilityStartDateTime { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.CallForPrice")]
         public bool CallForPrice { get; set; }
@@ -320,12 +320,12 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.MarkAsNew")]
         public bool MarkAsNew { get; set; }
-        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.MarkAsNewStartDateTimeUtc")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.MarkAsNewStartDateTime")]
         [UIHint("DateTimeNullable")]
-        public DateTime? MarkAsNewStartDateTimeUtc { get; set; }
-        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.MarkAsNewEndDateTimeUtc")]
+        public DateTime? MarkAsNewStartDateTime { get; set; }
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.MarkAsNewEndDateTime")]
         [UIHint("DateTimeNullable")]
-        public DateTime? MarkAsNewEndDateTimeUtc { get; set; }
+        public DateTime? MarkAsNewEndDateTime { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Unit")]
         public string UnitId { get; set; }
@@ -345,11 +345,11 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.AvailableStartDateTime")]
         [UIHint("DateTimeNullable")]
-        public DateTime? AvailableStartDateTimeUtc { get; set; }
+        public DateTime? AvailableStartDateTime { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.AvailableEndDateTime")]
         [UIHint("DateTimeNullable")]
-        public DateTime? AvailableEndDateTimeUtc { get; set; }
+        public DateTime? AvailableEndDateTime { get; set; }
 
         [GrandResourceDisplayName("Admin.Catalog.Products.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
@@ -766,13 +766,13 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             [GrandResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.Price")]
             public decimal Price { get; set; }
 
-            [GrandResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.StartDateTimeUtc")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.StartDateTime")]
             [UIHint("DateTimeNullable")]
-            public DateTime? StartDateTimeUtc { get; set; }
+            public DateTime? StartDateTime { get; set; }
 
-            [GrandResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.EndDateTimeUtc")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.EndDateTime")]
             [UIHint("DateTimeNullable")]
-            public DateTime? EndDateTimeUtc { get; set; }
+            public DateTime? EndDateTime { get; set; }
 
         }
 
@@ -825,17 +825,17 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
                 Quantity = 1;
             }
 
-            [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.StartDateUtc")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.StartDate")]
             [UIHint("Date")]
-            public DateTime StartDateUtc { get; set; }
+            public DateTime StartDate { get; set; }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.StartTime")]
             [UIHint("Time")]
             public DateTime StartTime { get; set; }
 
-            [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.EndDateUtc")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.EndDate")]
             [UIHint("Date")]
-            public DateTime EndDateUtc { get; set; }
+            public DateTime EndDate { get; set; }
             [UIHint("Time")]
 
             [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.EndTime")]

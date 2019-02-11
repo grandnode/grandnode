@@ -23,6 +23,7 @@ using Grand.Core.Plugins;
 using Grand.Services.Authentication.External;
 using Grand.Services.Cms;
 using Grand.Services.Common;
+using Grand.Services.Helpers;
 using Grand.Services.Payments;
 using Grand.Services.Shipping;
 using Grand.Services.Tax;
@@ -141,7 +142,7 @@ namespace Grand.Web.Areas.Admin.Extensions
             return model.MapTo(destination);
         }
 
-        public static ProductAttributeValue  ToEntity(this PredefinedProductAttributeValue model)
+        public static ProductAttributeValue ToEntity(this PredefinedProductAttributeValue model)
         {
             return model.MapTo<PredefinedProductAttributeValue, ProductAttributeValue>();
         }
@@ -917,7 +918,7 @@ namespace Grand.Web.Areas.Admin.Extensions
                 if (attribute.ShouldHaveValues())
                 {
                     //values
-                    var attributeValues = attribute.AddressAttributeValues; 
+                    var attributeValues = attribute.AddressAttributeValues;
                     foreach (var attributeValue in attributeValues)
                     {
                         var attributeValueModel = new AddressModel.AddressAttributeValueModel
@@ -1660,6 +1661,43 @@ namespace Grand.Web.Areas.Admin.Extensions
         public static ReturnRequestAction ToEntity(this ReturnRequestActionModel model, ReturnRequestAction destination)
         {
             return model.MapTo(destination);
+        }
+
+        #endregion
+
+
+        #region Datetime
+        public static DateTime? ConvertToUserTime(this DateTime? datetime)
+        {
+            if (datetime.HasValue)
+            {
+                var dateTimeHelper = Core.Infrastructure.EngineContext.Current.Resolve<IDateTimeHelper>();
+                datetime = dateTimeHelper.ConvertToUserTime(datetime.Value, DateTimeKind.Utc);
+            }
+            return datetime;
+        }
+
+        public static DateTime? ConvertToUtcTime(this DateTime? datetime)
+        {
+            if (datetime.HasValue)
+            {
+                var dateTimeHelper = Core.Infrastructure.EngineContext.Current.Resolve<IDateTimeHelper>();
+                datetime = dateTimeHelper.ConvertToUtcTime(datetime.Value, dateTimeHelper.DefaultStoreTimeZone);
+            }
+            return datetime;
+        }
+        public static DateTime ConvertToUserTime(this DateTime datetime)
+        {
+            var dateTimeHelper = Core.Infrastructure.EngineContext.Current.Resolve<IDateTimeHelper>();
+            datetime = dateTimeHelper.ConvertToUserTime(datetime, DateTimeKind.Utc);
+            return datetime;
+        }
+
+        public static DateTime ConvertToUtcTime(this DateTime datetime)
+        {
+            var dateTimeHelper = Core.Infrastructure.EngineContext.Current.Resolve<IDateTimeHelper>();
+            datetime = dateTimeHelper.ConvertToUtcTime(datetime, dateTimeHelper.DefaultStoreTimeZone);
+            return datetime;
         }
 
         #endregion

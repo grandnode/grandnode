@@ -308,7 +308,7 @@
   <LocaleResource Name="Catalog.Selectors.Of">
     <Value>of</Value>
   </LocaleResource>
-  <LocaleResource Name="Mobile.Category.Back">
+  <LocaleResource Name="Mobile.Categories.Back">
     <Value>Back</Value>
   </LocaleResource>
   <LocaleResource Name="Mobile.Category.Show">
@@ -329,6 +329,9 @@
   <LocaleResource Name="Footer.Phone.Title">
     <Value>Phone:</Value>
   </LocaleResource>
+  <LocaleResource Name="Footer.Email.Title">
+    <Value>Email:</Value>
+  </LocaleResource>
   <LocaleResource Name="Footer.Hour.Title">
     <Value>Hour:</Value>
   </LocaleResource>
@@ -346,5 +349,98 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.CompanyHours.Hint">
     <Value>Enter your company opening hours.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.AvailableStartDateTime.Hint">
+    <Value>The start of the product's availability in the default store time zone.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.AvailableEndDateTime.Hint">
+    <Value>The end of the product's availability in the default store time zone.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.TierPrices.Fields.StartDateTime">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.TierPrices.Fields.StartDateTime.Hint">
+    <Value>The start date of the tier price in the default store time zone.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.TierPrices.Fields.EndDateTime">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.TierPrices.Fields.EndDateTime.Hint">
+    <Value>The end date of the tier price in the default store time zone.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.PreOrderAvailabilityStartDateTime">
+    <Value>Pre-order availability start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.PreOrderAvailabilityStartDateTime.Hint">
+    <Value>The availability start date of the product configured for pre-order in the default store time zone. 'Pre-order' button will automatically be changed to 'Add to cart' at this moment.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.MarkAsNewEndDateTime">
+    <Value>Mark as new. End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.MarkAsNewEndDateTime.Hint">
+    <Value>Set Product as New to Date in the default store time zone.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.MarkAsNewStartDateTime">
+    <Value>Mark as new. Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.MarkAsNewStartDateTime.Hint">
+    <Value>Set Product as New from Date in the default store time zone.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.EndDate.Hint">
+    <Value>The end of the discount period in the default store time zone.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.StartDate.Hint">
+    <Value>The start of the discount period in the default store time zone.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.StartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.fields.calendar.startdate.hint">
+    <Value>Select the start date of reservations</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Calendar.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.fields.calendar.enddate.hint">
+    <Value>Select the end date of reservations</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.StartDate.Hint">
+    <Value>Set the blog post start date in the default store time zone. You can also leave it empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.EndDate.Hint">
+    <Value>Set the blog post end date in the default store time zone. You can also leave it empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.EndDate.Hint">
+    <Value>Set the news item end date in the default store time zone. You can also leave it empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.StartDate.Hint">
+    <Value>Set the news item start date in the default store time zone. You can also leave it empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.EndDate.Hint">
+    <Value>Set the poll end date in the default store time zone. You can also leave it empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.fields.endDateTime">
+    <Value>End datetime</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.fields.endDateTime.hint">
+    <Value>End datetime</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.fields.startDateTime">
+    <Value>Start DateTime</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.fields.startDateTime.hint">
+    <Value>Start DateTime</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.history.fields.createdate">
+    <Value>Create date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.DeliveryDate.Enter">
+    <Value>Date and time should entered in the default store time zone</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ShippedDate.Enter">
+    <Value>Date and time should entered in the default store time zone</Value>
+  </LocaleResource>
+  <LocaleResource Name="Edit">
+    <Value>Edit</Value>
   </LocaleResource>
 </Language>

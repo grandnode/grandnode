@@ -23,7 +23,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 		#region Fields
         private readonly IPollService _pollService;
         private readonly ILanguageService _languageService;
-        private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly IStoreService _storeService;
         private readonly ICustomerService _customerService;
@@ -32,13 +31,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Constructors
 
         public PollController(IPollService pollService, ILanguageService languageService,
-            IDateTimeHelper dateTimeHelper, ILocalizationService localizationService,
+            ILocalizationService localizationService,
             IStoreService storeService,
             ICustomerService customerService)
         {
             this._pollService = pollService;
             this._languageService = languageService;
-            this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
             this._storeService = storeService;
             this._customerService = customerService;
@@ -67,10 +65,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 Data = polls.Select(x =>
                 {
                     var m = x.ToModel();
-                    if (x.StartDateUtc.HasValue)
-                        m.StartDate = _dateTimeHelper.ConvertToUserTime(x.StartDateUtc.Value, DateTimeKind.Utc);
-                    if (x.EndDateUtc.HasValue)
-                        m.EndDate = _dateTimeHelper.ConvertToUserTime(x.EndDateUtc.Value, DateTimeKind.Utc);
                     return m;
                 }),
                 Total = polls.TotalCount

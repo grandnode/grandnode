@@ -82,10 +82,6 @@ namespace Grand.Web.Areas.Admin.Models.Settings
             public string YoutubeLink { get; set; }
             public bool YoutubeLink_OverrideForStore { get; set; }
 
-            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.GooglePlusLink")]
-            public string GooglePlusLink { get; set; }
-            public bool GooglePlusLink_OverrideForStore { get; set; }
-
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.InstagramLink")]
             public string InstagramLink { get; set; }
             public bool InstagramLink_OverrideForStore { get; set; }

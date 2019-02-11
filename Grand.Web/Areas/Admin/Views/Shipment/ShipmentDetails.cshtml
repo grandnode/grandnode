@@ -118,14 +118,23 @@
                             <div class="form-group">
                                 <admin-label asp-for="ShippedDate" />
                                 <div class="col-md-9 col-sm-9">
-                                    <span id="lblShippedDate">@Model.ShippedDate</span>
+                                    <span id="lblShippedDate">
+                                        @if (Model.ShippedDate.HasValue)
+                                        {
+                                            <text>@Model.ShippedDate.Value.ToString()</text>
+                                        }
+                                        else
+                                        {
+                                            <text>@T("Admin.Orders.Shipments.ShippedDate.NotYet")</text>
+                                        }
+                                    </span>
                                     @if (Model.CanShip)
                                     {
                                         <input type="submit" name="setasshipped" value="@T("Admin.Orders.Shipments.ShippedDate.Button")" id="setasshipped" class="btn default" />
                                     }
                                     @if (Model.ShippedDateUtc.HasValue)
                                     {
-                                        <div id="divShippedDate" style="display: inline-block;"><admin-input asp-for="ShippedDateUtc" /> &nbsp;@T("Admin.Orders.Shipments.ShippedDate.EnterUtc")</div>
+                                        <div id="divShippedDate" style="display: inline-block;"><admin-input asp-for="ShippedDate" /> &nbsp;@T("Admin.Orders.Shipments.ShippedDate.Enter")</div>
                                         <input type="submit" value="@T("Admin.Common.Edit")" onclick=" toggleShippedDate(true);return false; " id="btnEditShippedDate" class="btn default" />
                                         <input type="submit" value="@T("Admin.Common.Save")" id="btnSaveShippedDate" name="saveshippeddate" class="btn default" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
                                         <input type="submit" value="@T("Admin.Common.Cancel")" onclick=" toggleShippedDate(false);return false; " id="btnCancelShippedDate" class="btn default" />
@@ -135,14 +144,23 @@
                             <div class="form-group">
                                 <admin-label asp-for="DeliveryDate" />
                                 <div class="col-md-9 col-sm-9">
-                                    <span id="lblDeliveryDate">@Model.DeliveryDate</span>
+                                    <span id="lblDeliveryDate">
+                                        @if (Model.DeliveryDate.HasValue)
+                                        {
+                                            <text>@Model.DeliveryDate.Value.ToString()</text>
+                                        }
+                                        else
+                                        {
+                                            <text>@T("Admin.Orders.Shipments.DeliveryDate.NotYet")</text>
+                                        }
+                                    </span>
                                     @if (Model.CanDeliver)
                                     {
                                         <input type="submit" name="setasdelivered" value="@T("Admin.Orders.Shipments.DeliveryDate.Button")" id="setasdelivered" class="btn default" />
                                     }
                                     @if (Model.DeliveryDateUtc.HasValue)
                                     {
-                                        <div id="divDeliveryDate" style="display: inline-block;"><admin-input asp-for="DeliveryDateUtc" /> &nbsp;@T("Admin.Orders.Shipments.DeliveryDate.EnterUtc")</div>
+                                        <div id="divDeliveryDate" style="display: inline-block;"><admin-input asp-for="DeliveryDate" /> &nbsp;@T("Admin.Orders.Shipments.DeliveryDate.Enter")</div>
                                         <input type="submit" value="@T("Admin.Common.Edit")" onclick=" toggleDeliveryDate(true);return false; " id="btnEditDeliveryDate" class="btn default" />
                                         <input type="submit" value="@T("Admin.Common.Save")" id="btnSaveDeliveryDate" name="savedeliverydate" class="btn default" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
                                         <input type="submit" value="@T("Admin.Common.Cancel")" onclick=" toggleDeliveryDate(false);return false; " id="btnCancelDeliveryDate" class="btn default" />

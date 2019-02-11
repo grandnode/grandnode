@@ -127,8 +127,6 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             var model = newsItem.ToModel();
-            model.StartDate = newsItem.StartDateUtc;
-            model.EndDate = newsItem.EndDateUtc;
             //Store
             model.PrepareStoresMappingModel(newsItem, false, _storeService);
             //ACL
@@ -231,8 +229,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             return ErrorForKendoGridJson(ModelState);
         }
-
-
         #endregion
     }
 }

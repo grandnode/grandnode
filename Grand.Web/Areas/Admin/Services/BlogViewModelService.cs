@@ -81,8 +81,6 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual BlogPostModel PrepareBlogPostModel(BlogPost blogPost)
         {
             var model = blogPost.ToModel();
-            model.StartDate = blogPost.StartDateUtc;
-            model.EndDate = blogPost.EndDateUtc;
             //Store
             model.PrepareStoresMappingModel(blogPost, false, _storeService);
             return model;
@@ -91,8 +89,6 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual BlogPost InsertBlogPostModel(BlogPostModel model)
         {
             var blogPost = model.ToEntity();
-            blogPost.StartDateUtc = model.StartDate;
-            blogPost.EndDateUtc = model.EndDate;
             blogPost.CreatedOnUtc = DateTime.UtcNow;
             _blogService.InsertBlogPost(blogPost);
 
@@ -112,10 +108,7 @@ namespace Grand.Web.Areas.Admin.Services
         public virtual BlogPost UpdateBlogPostModel(BlogPostModel model, BlogPost blogPost)
         {
             string prevPictureId = blogPost.PictureId;
-
             blogPost = model.ToEntity(blogPost);
-            blogPost.StartDateUtc = model.StartDate;
-            blogPost.EndDateUtc = model.EndDate;
             _blogService.UpdateBlogPost(blogPost);
 
             //search engine name

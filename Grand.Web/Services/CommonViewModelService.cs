@@ -429,7 +429,6 @@ namespace Grand.Web.Services
                 FacebookLink = _storeInformationSettings.FacebookLink,
                 TwitterLink = _storeInformationSettings.TwitterLink,
                 YoutubeLink = _storeInformationSettings.YoutubeLink,
-                GooglePlusLink = _storeInformationSettings.GooglePlusLink,
                 InstagramLink = _storeInformationSettings.InstagramLink,
                 LinkedInLink = _storeInformationSettings.LinkedInLink,
                 PinterestLink = _storeInformationSettings.PinterestLink,
