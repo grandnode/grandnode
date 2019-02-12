@@ -443,4 +443,10 @@
   <LocaleResource Name="Edit">
     <Value>Edit</Value>
   </LocaleResource>
+  <LocaleResource Name="Common.WrongCaptchaV3">
+    <Value>The reCAPTCHA response is invalid or malformed. Please try again.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Grand.Framework.Security.Captcha.ReCaptchaVersion.Version3">
+    <Value>Version 3.0</Value>
+  </LocaleResource>
 </Language>

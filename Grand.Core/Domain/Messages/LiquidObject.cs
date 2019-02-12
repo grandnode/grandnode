@@ -57,7 +57,7 @@ namespace Grand.Core.Domain.Messages
 
         public Drop EmailAFriend { get; set; }
 
-        public Drop AskAQuestion { get; set; }
+        public Drop AskQuestion { get; set; }
 
         public Drop VatValidationResult { get; set; }
 

@@ -7,7 +7,7 @@ namespace Grand.Framework.Security.Captcha
 {
     public class GReCaptchaValidator
     {
-        private const string RECAPTCHA_VERIFY_URL_VERSION2 = "https://www.google.com/recaptcha/api/siteverify?secret={0}&response={1}&remoteip={2}";
+        private const string RECAPTCHA_VERIFY_URL = "https://www.google.com/recaptcha/api/siteverify?secret={0}&response={1}&remoteip={2}";
 
         public string SecretKey { get; set; }
         public string RemoteIp { get; set; }
@@ -27,15 +27,7 @@ namespace Grand.Framework.Security.Captcha
             var httpClient = new HttpClient();
             var requestUri = string.Empty;
 
-            switch (_version)
-            {
-                case ReCaptchaVersion.Version2:
-                    requestUri = string.Format(RECAPTCHA_VERIFY_URL_VERSION2, SecretKey, Response, RemoteIp);
-                    break;
-                default:
-                    requestUri = string.Format(RECAPTCHA_VERIFY_URL_VERSION2, SecretKey, Response, RemoteIp);
-                    break;
-            }
+            requestUri = string.Format(RECAPTCHA_VERIFY_URL, SecretKey, Response, RemoteIp);
 
             try
             {
@@ -46,11 +38,12 @@ namespace Grand.Framework.Security.Captcha
                 var taskString = response.Content.ReadAsStringAsync();
                 taskString.Wait();
                 result = ParseResponseResult(taskString.Result);
+
             }
             catch (Exception exc)
             {
                 result = new GReCaptchaResponse { IsValid = false };
-                result.ErrorCodes.Add("Unknown error"+ exc.Message);
+                result.ErrorCodes.Add("Unknown error" + exc.Message);
             }
             finally
             {
@@ -64,14 +57,12 @@ namespace Grand.Framework.Security.Captcha
         {
             var result = new GReCaptchaResponse();
 
-            if (_version == ReCaptchaVersion.Version2)
-            {
-                var resultObject = JObject.Parse(responseString);
-                result.IsValid = resultObject.Value<bool>("success");
-                if (resultObject.Value<JToken>("error-codes") != null &&
-                        resultObject.Value<JToken>("error-codes").Values<string>().Any())
-                        result.ErrorCodes = resultObject.Value<JToken>("error-codes").Values<string>().ToList();
-            }
+            var resultObject = JObject.Parse(responseString);
+            result.IsValid = resultObject.Value<bool>("success");
+
+            if (resultObject.Value<JToken>("error-codes") != null &&
+                    resultObject.Value<JToken>("error-codes").Values<string>().Any())
+                result.ErrorCodes = resultObject.Value<JToken>("error-codes").Values<string>().ToList();
 
             return result;
         }

@@ -30,7 +30,8 @@ namespace Grand.Framework.Mvc.Filters
 
             private const string CHALLENGE_FIELD_KEY = "recaptcha_challenge_field";
             private const string RESPONSE_FIELD_KEY = "recaptcha_response_field";
-            private const string G_RESPONSE_FIELD_KEY = "g-recaptcha-response";
+            private const string G_RESPONSE_FIELD_KEY_V3 = "g-recaptcha-response-value";
+            private const string G_RESPONSE_FIELD_KEY_V2 = "g-recaptcha-response";
 
             #endregion
 
@@ -65,22 +66,35 @@ namespace Grand.Framework.Mvc.Filters
                 //get form values
                 var captchaChallengeValue = context.HttpContext.Request.Form[CHALLENGE_FIELD_KEY];
                 var captchaResponseValue = context.HttpContext.Request.Form[RESPONSE_FIELD_KEY];
-                var gCaptchaResponseValue = context.HttpContext.Request.Form[G_RESPONSE_FIELD_KEY];
+                var gCaptchaResponseValue = string.Empty;
+                foreach (var item in context.HttpContext.Request.Form.Keys)
+                {
+                    if (item.Contains(G_RESPONSE_FIELD_KEY_V3))
+                        gCaptchaResponseValue = context.HttpContext.Request.Form[item];
+                }
 
-                if ((!StringValues.IsNullOrEmpty(captchaChallengeValue) && !StringValues.IsNullOrEmpty(captchaResponseValue)) || !StringValues.IsNullOrEmpty(gCaptchaResponseValue))
+                if(string.IsNullOrEmpty(gCaptchaResponseValue))
+                    gCaptchaResponseValue = context.HttpContext.Request.Form[G_RESPONSE_FIELD_KEY_V2];
+                
+                if ((!StringValues.IsNullOrEmpty(captchaChallengeValue) && !StringValues.IsNullOrEmpty(captchaResponseValue)) || !string.IsNullOrEmpty(gCaptchaResponseValue))
                 {
                     //create CAPTCHA validator
                     var captchaValidtor = new GReCaptchaValidator(_captchaSettings.ReCaptchaVersion)
                     {
                         SecretKey = _captchaSettings.ReCaptchaPrivateKey,
                         RemoteIp = context.HttpContext.Connection.RemoteIpAddress?.ToString(),
-                        Response = !StringValues.IsNullOrEmpty(captchaResponseValue) ? captchaResponseValue : gCaptchaResponseValue,
+                        Response = !StringValues.IsNullOrEmpty(captchaResponseValue) ? captchaResponseValue.ToString() : gCaptchaResponseValue,
                         Challenge = captchaChallengeValue
                     };
 
                     //validate request
                     var recaptchaResponse = captchaValidtor.Validate();
                     isValid = recaptchaResponse.IsValid;
+                    if (!isValid)
+                        foreach (var error in recaptchaResponse.ErrorCodes)
+                        {
+                            context.ModelState.AddModelError("", error);
+                        }
                 }
 
                 return isValid;
