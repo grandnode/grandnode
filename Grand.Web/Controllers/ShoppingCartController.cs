@@ -364,10 +364,7 @@ namespace Grand.Web.Controllers
             var checkoutAttributeWarnings = _shoppingCartService.GetShoppingCartWarnings(cart, checkoutAttributes, true);
             if (checkoutAttributeWarnings.Any())
             {
-                //something wrong, redisplay the page with warnings
-                var model = new ShoppingCartModel();
-                _shoppingCartViewModelService.PrepareShoppingCart(model, cart, validateCheckoutAttributes: true);
-                return View(model);
+                return RedirectToRoute("ShoppingCart", new { checkoutAttributes = true });
             }
 
             //everything is OK
