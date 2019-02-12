@@ -1332,7 +1332,7 @@ pagination .pagination a:not([href]) {
 
 #mobile-menu-opener {
 	width: 30px;
-	height: 30px;
+	height: 23px;
 	-webkit-transform: rotate(0deg);
 	-moz-transform: rotate(0deg);
 	-o-transform: rotate(0deg);
@@ -4330,6 +4330,8 @@ footer .socicon-pinterest:hover {
     .mobile-desc {
         justify-content: center;
         font-size: 9px;
+        line-height: 1;
+        padding: 5px 0 0 0;
         letter-spacing: -.01px;
     }
     #topcartlink .cart-qty:before {
@@ -4367,6 +4369,9 @@ footer .socicon-pinterest:hover {
     }
     .dropdowns-container .dropdown-menu li a {
         color: #888;
+        font-size: 12px;
+        padding: 0 10px;
+        text-align: center;
     }
     .filter-button .c-button__text {
         display: flex;
@@ -4400,6 +4405,7 @@ footer .socicon-pinterest:hover {
     .mobile-menu .dropdowns-container .generalDropDown {
         display: flex;
         justify-content: center;
+        width: 100%;
     }
     .c-offcanvas--right {
         width: 320px;
@@ -4418,12 +4424,16 @@ footer .socicon-pinterest:hover {
         border-radius: 0;
     }
     #pills-menu .navbar-nav {
+        width: 100%;
         padding-left: 0;
     }
     #pills-mobile-tab {
         display: inline-flex;
         flex-wrap: nowrap;
         width: 100%;
+    }
+    #pills-mobile-tabContent.tab-content > .active {
+        display: flex;
     }
     #pills-mobile-tab .nav-item .nav-link:not(.active)::after {
         content: "";
@@ -4620,7 +4630,7 @@ footer .socicon-pinterest:hover {
 		min-width: 700px;
 	}
 	header {
-	    padding-top: 111px;
+	    padding-top: 120px;
         margin-bottom: 15px;
 	}
 	.news-item-page img {
@@ -5463,11 +5473,6 @@ footer .socicon-pinterest:hover {
 	}
 	.product-details-page .associatedItem .add-to-cart-button {
 		margin-top: 0;
-	}
-	.navbar-light .navbar-nav .nav-link {
-		padding-right: 0px;
-		padding-top: 10px;
-		padding-bottom: 10px;
 	}
 	.shopping-cart .subtotal-text,
 	.shopping-cart .unit-price-text {

@@ -169,7 +169,7 @@
                     </div>
                 }
             }
-            <div class="row pb-0 px-3 pt-0">
+            <div class="d-inline-flex pb-0 pt-0">
                 @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_after", additionalData = Model.Id })
                 @if (Model.ProductType != ProductType.Auction)
                 {
