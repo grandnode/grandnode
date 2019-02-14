@@ -866,6 +866,9 @@ ul.ui-autocomplete li img {
 #ModalAddToCart .cross-sell-container .btn-group .btn.btn-primary .fa-shopping-cart {
 	display: block !important;
 }
+.cross-sells .card.gen .card-buttons {
+    display: none;
+}
 /*navbar*/
 
 .navbar-nav .generalDropDown .dropdown-menu ul a:hover {
