@@ -16,5 +16,6 @@ namespace Grand.Web.Models.Blogs
         public string WorkingLanguageId { get; set; }
         public BlogPagingFilteringModel PagingFilteringContext { get; set; }
         public IList<BlogPostModel> BlogPosts { get; set; }
+        public string SearchKeyword { get; set; }
     }
 }

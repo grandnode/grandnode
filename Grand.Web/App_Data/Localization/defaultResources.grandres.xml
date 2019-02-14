@@ -15784,11 +15784,20 @@
   <LocaleResource Name="Blog.MoreInfo">
     <Value>details</Value>
   </LocaleResource>
+  <LocaleResource Name="Blog.ResultsFor">
+    <Value>Results for</Value>
+  </LocaleResource>
   <LocaleResource Name="Blog.RSS">
     <Value>RSS</Value>
   </LocaleResource>
   <LocaleResource Name="Blog.RSS.Hint">
     <Value>Click here to be informed automatically when we add new items to our site</Value>
+  </LocaleResource>
+  <LocaleResource Name="Blog.Search">
+    <Value>Search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Blog.SearchPlaceholder">
+    <Value>Search in blog...</Value>
   </LocaleResource>
   <LocaleResource Name="Blog.TagCloud">
     <Value>Popular blog tags</Value>

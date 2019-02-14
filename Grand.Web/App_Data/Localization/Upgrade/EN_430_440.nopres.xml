@@ -518,4 +518,13 @@
   <LocaleResource Name="admin.contentmanagement.blog.blogcategory.updated">
     <Value>Blog category has been updated</Value>
   </LocaleResource>
+  <LocaleResource Name="Blog.ResultsFor">
+    <Value>Results for</Value>
+  </LocaleResource>
+  <LocaleResource Name="Blog.Search">
+    <Value>Search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Blog.SearchPlaceholder">
+    <Value>Search in blog...</Value>
+  </LocaleResource>
 </Language>

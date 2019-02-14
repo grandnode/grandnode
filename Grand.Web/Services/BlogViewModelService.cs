@@ -163,6 +163,7 @@ namespace Grand.Web.Services
             model.PagingFilteringContext.Month = command.Month;
             model.PagingFilteringContext.CategoryId = command.CategoryId;
             model.WorkingLanguageId = _workContext.WorkingLanguage.Id;
+            model.SearchKeyword = command.SearchKeyword;
 
             if (command.PageSize <= 0) command.PageSize = _blogSettings.PostsPageSize;
             if (command.PageNumber <= 0) command.PageNumber = 1;
@@ -176,7 +177,7 @@ namespace Grand.Web.Services
                 if (String.IsNullOrEmpty(command.Tag))
                 {
                     blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id,
-                        dateFrom, dateTo, command.PageNumber - 1, command.PageSize);
+                        dateFrom, dateTo, command.PageNumber - 1, command.PageSize, blogPostName: model.SearchKeyword);
                 }
                 else
                 {
@@ -187,7 +188,7 @@ namespace Grand.Web.Services
             else
             {
                 blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id,
-                        dateFrom, dateTo, command.PageNumber - 1, command.PageSize, categoryId: command.CategoryId);
+                        dateFrom, dateTo, command.PageNumber - 1, command.PageSize, categoryId: command.CategoryId, blogPostName: model.SearchKeyword);
             }
             model.PagingFilteringContext.LoadPagedList(blogPosts);
 
