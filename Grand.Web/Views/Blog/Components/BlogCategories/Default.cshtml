@@ -1,0 +1,21 @@
+﻿@model IList<BlogPostCategoryModel>
+@using Grand.Web.Models.Blogs
+@if (Model.Any())
+{
+    <section id="block-blog-archive" class="block block-blog-archive mt-1">
+        <h5 class="generalTitle"><strong>@T("Blog.Category")</strong></h5>
+        <div class="viewBox">
+            <ul class="list">
+                @foreach (var category in Model)
+                {
+                    <li>
+                        <a href="@Url.RouteUrl("BlogByCategory", new { categoryid = category.Id })">
+                            @category.Name 
+                            (@(category.BlogPostCount))
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </section>
+}

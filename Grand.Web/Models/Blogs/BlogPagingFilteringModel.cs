@@ -42,6 +42,8 @@ namespace Grand.Web.Models.Blogs
 
         public string Tag { get; set; }
         
+        public string CategoryId { get; set; }
+
         #endregion
     }
 }

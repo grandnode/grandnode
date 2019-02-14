@@ -13,53 +13,6 @@ namespace Grand.Core
     [Serializable]
     public class PagedList<T> : List<T>, IPagedList<T> 
     {
-       
-        public PagedList(IEnumerable<T> source, int pageIndex, int pageSize)
-        {
-            Init(source, pageIndex, pageSize);
-        }
-        public PagedList()
-        {
-        }
-        public PagedList(IMongoQueryable<T> source, int pageIndex, int pageSize)
-        {
-            Init(source, pageIndex, pageSize);
-        }        
-        public PagedList(IAggregateFluent<T> source, int pageIndex, int pageSize)
-        {
-            var range = source.Skip(pageIndex * pageSize).Limit(pageSize+1).ToList();
-            int total = range.Count > pageSize ? range.Count : pageSize;
-            this.TotalCount = source.ToListAsync().Result.Count;
-            if(pageSize > 0)
-                this.TotalPages = total / pageSize;
-
-            if (total % pageSize > 0)
-                TotalPages++;
-
-            this.PageSize = pageSize;
-            this.PageIndex = pageIndex;
-            this.AddRange(range.Take(pageSize));
-        }
-
-        public PagedList(IMongoCollection<T> source, FilterDefinition<T> filterdefinition, SortDefinition<T> sortdefinition, int pageIndex, int pageSize)
-        {
-            TotalCount = (int)source.CountDocuments(filterdefinition);
-            AddRange(source.Find(filterdefinition).Sort(sortdefinition).Skip(pageIndex * pageSize).Limit(pageSize).ToListAsync().Result);
-            if (pageSize > 0)
-            {
-                TotalPages = TotalCount / pageSize;
-                if (TotalCount % pageSize > 0)
-                    TotalPages++;
-            }
-            this.PageSize = pageSize;
-            this.PageIndex = pageIndex;
-        }
-
-        public PagedList(IEnumerable<T> source, int pageIndex, int pageSize, int totalCount)
-        {
-            Init(source, pageIndex, pageSize, totalCount);
-        }       
-
         private void Init(IMongoQueryable<T> source, int pageIndex, int pageSize, int? totalCount = null)
         {
             if (source == null)
@@ -104,6 +57,51 @@ namespace Grand.Core
             AddRange(source);
         }
 
+        public PagedList()
+        {
+        }
+        public PagedList(IEnumerable<T> source, int pageIndex, int pageSize)
+        {
+            Init(source, pageIndex, pageSize);
+        }
+        public PagedList(IMongoQueryable<T> source, int pageIndex, int pageSize)
+        {
+            Init(source, pageIndex, pageSize);
+        }        
+        public PagedList(IAggregateFluent<T> source, int pageIndex, int pageSize)
+        {
+            var range = source.Skip(pageIndex * pageSize).Limit(pageSize+1).ToList();
+            int total = range.Count > pageSize ? range.Count : pageSize;
+            this.TotalCount = source.ToListAsync().Result.Count;
+            if(pageSize > 0)
+                this.TotalPages = total / pageSize;
+
+            if (total % pageSize > 0)
+                TotalPages++;
+
+            this.PageSize = pageSize;
+            this.PageIndex = pageIndex;
+            this.AddRange(range.Take(pageSize));
+        }
+
+        public PagedList(IMongoCollection<T> source, FilterDefinition<T> filterdefinition, SortDefinition<T> sortdefinition, int pageIndex, int pageSize)
+        {
+            TotalCount = (int)source.CountDocuments(filterdefinition);
+            AddRange(source.Find(filterdefinition).Sort(sortdefinition).Skip(pageIndex * pageSize).Limit(pageSize).ToListAsync().Result);
+            if (pageSize > 0)
+            {
+                TotalPages = TotalCount / pageSize;
+                if (TotalCount % pageSize > 0)
+                    TotalPages++;
+            }
+            this.PageSize = pageSize;
+            this.PageIndex = pageIndex;
+        }
+
+        public PagedList(IEnumerable<T> source, int pageIndex, int pageSize, int totalCount)
+        {
+            Init(source, pageIndex, pageSize, totalCount);
+        }       
 
         public int PageIndex { get; private set; }
         public int PageSize { get; private set; }

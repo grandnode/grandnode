@@ -161,6 +161,7 @@ namespace Grand.Web.Services
             var model = new BlogPostListModel();
             model.PagingFilteringContext.Tag = command.Tag;
             model.PagingFilteringContext.Month = command.Month;
+            model.PagingFilteringContext.CategoryId = command.CategoryId;
             model.WorkingLanguageId = _workContext.WorkingLanguage.Id;
 
             if (command.PageSize <= 0) command.PageSize = _blogSettings.PostsPageSize;
@@ -170,15 +171,23 @@ namespace Grand.Web.Services
             DateTime? dateTo = command.GetToMonth();
 
             IPagedList<BlogPost> blogPosts;
-            if (String.IsNullOrEmpty(command.Tag))
+            if (string.IsNullOrEmpty(command.CategoryId))
             {
-                blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id,
-                    dateFrom, dateTo, command.PageNumber - 1, command.PageSize);
+                if (String.IsNullOrEmpty(command.Tag))
+                {
+                    blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id,
+                        dateFrom, dateTo, command.PageNumber - 1, command.PageSize);
+                }
+                else
+                {
+                    blogPosts = _blogService.GetAllBlogPostsByTag(_storeContext.CurrentStore.Id,
+                        command.Tag, command.PageNumber - 1, command.PageSize);
+                }
             }
             else
             {
-                blogPosts = _blogService.GetAllBlogPostsByTag(_storeContext.CurrentStore.Id,
-                    command.Tag, command.PageNumber - 1, command.PageSize);
+                blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id,
+                        dateFrom, dateTo, command.PageNumber - 1, command.PageSize, categoryId: command.CategoryId);
             }
             model.PagingFilteringContext.LoadPagedList(blogPosts);
 
@@ -325,6 +334,27 @@ namespace Grand.Web.Services
                         current = date.Year;
                     }
                 }
+                return model;
+            });
+            return cachedModel;
+        }
+
+        public List<BlogPostCategoryModel> PrepareBlogPostCategoryModel()
+        {
+            var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_CATEGORY_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
+            var cachedModel = _cacheManager.Get(cacheKey, () =>
+            {
+                var model = new List<BlogPostCategoryModel>();
+                var categories = _blogService.GetAllBlogCategories(_storeContext.CurrentStore.Id);
+                foreach (var item in categories)
+                {
+                    model.Add(new BlogPostCategoryModel()
+                    {
+                        Id = item.Id,
+                        Name = item.GetLocalized(x=>x.Name),
+                        BlogPostCount = item.BlogPosts.Count
+                    });
+                }  
                 return model;
             });
             return cachedModel;

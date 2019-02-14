@@ -656,6 +656,19 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.EndDateUtc, mo => mo.MapFrom(x => x.EndDate.ConvertToUtcTime()))
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore());
 
+            //blog categories
+            CreateMap<BlogCategory, BlogCategoryModel>()
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
+                .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+
+            CreateMap<BlogCategoryModel, BlogCategory>()
+                .ForMember(dest => dest.Id, mo => mo.Ignore())
+                .ForMember(dest => dest.Locales, mo => mo.MapFrom(x => x.Locales.ToLocalizedProperty()))
+                .ForMember(dest => dest.BlogPosts, mo => mo.Ignore())
+                .ForMember(dest => dest.Stores, mo => mo.MapFrom(x => x.SelectedStoreIds != null ? x.SelectedStoreIds.ToList() : new List<string>()));
+                
             //news
             CreateMap<NewsItem, NewsItemModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())

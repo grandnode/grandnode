@@ -81,6 +81,14 @@ namespace Grand.Web.Controllers
             var model = _blogViewModelService.PrepareBlogPostListModel(command);
             return View("List", model);
         }
+        public virtual IActionResult BlogByCategory(BlogPagingFilteringModel command)
+        {
+            if (!_blogSettings.Enabled)
+                return RedirectToRoute("HomePage");
+
+            var model = _blogViewModelService.PrepareBlogPostListModel(command);
+            return View("List", model);
+        }
 
         public virtual IActionResult ListRss(string languageId)
         {

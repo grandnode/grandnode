@@ -10,6 +10,8 @@
 }
 @section left {
     @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_blog_before" })
+    @await Component.InvokeAsync("BlogCategories")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_before_blog_archive" })
     @await Component.InvokeAsync("BlogMonths")
     @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_after_blog_archive" })
     @await Component.InvokeAsync("BlogTags")

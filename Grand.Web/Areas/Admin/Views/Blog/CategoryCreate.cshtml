@@ -1,0 +1,31 @@
+﻿@model BlogCategoryModel
+@{    
+    //page title
+    ViewBag.Title = T("Admin.ContentManagement.Blog.BlogCategory.AddNew").Text;
+}
+<form asp-controller="Blog" asp-action="CategoryCreate" method="post">
+    <antiforgery-token />
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-comment"></i>
+                        @T("Admin.ContentManagement.Blog.BlogCategory.AddNew")
+                        <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.ContentManagement.Blog.BlogCategory.BackToList").Text, "List")</small>
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group btn-group-devided">
+                            <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                            <button class="btn btn-success" type="submit" name="save-continue"><i class="fa fa-check-circle"></i> @T("Admin.Common.SaveContinue") </button>
+                        </div>
+                    </div>
+                </div>
+                <vc:admin-widget widget-zone="blog_category_buttons" additional-data="null" />
+                <div class="portlet-body form">
+                    <partial name="_CreateOrUpdateCategory" model="Model" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

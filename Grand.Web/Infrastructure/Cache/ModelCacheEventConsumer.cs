@@ -115,6 +115,10 @@ namespace Grand.Web.Infrastructure.Cache
         IConsumer<EntityInserted<BlogPost>>,
         IConsumer<EntityUpdated<BlogPost>>,
         IConsumer<EntityDeleted<BlogPost>>,
+        //blog post category
+        IConsumer<EntityInserted<BlogCategory>>,
+        IConsumer<EntityUpdated<BlogCategory>>,
+        IConsumer<EntityDeleted<BlogCategory>>,
         //news items
         IConsumer<EntityInserted<NewsItem>>,
         IConsumer<EntityUpdated<NewsItem>>,
@@ -650,6 +654,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// </remarks>
         public const string BLOG_MONTHS_MODEL_KEY = "Grand.pres.blog.months-{0}-{1}";
         public const string BLOG_HOMEPAGE_MODEL_KEY = "Grand.pres.blog.homepage-{0}-{1}";
+        public const string BLOG_CATEGORY_MODEL_KEY = "Grand.pres.blog.category-{0}-{1}";
         public const string BLOG_PATTERN_KEY = "Grand.pres.blog";
 
         /// <summary>
@@ -1266,6 +1271,20 @@ namespace Grand.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(BLOG_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<BlogPost> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(BLOG_PATTERN_KEY);
+        }
+
+        //Blog post category
+        public void HandleEvent(EntityInserted<BlogCategory> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(BLOG_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<BlogCategory> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(BLOG_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<BlogCategory> eventMessage)
         {
             _cacheManager.RemoveByPattern(BLOG_PATTERN_KEY);
         }

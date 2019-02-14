@@ -1,0 +1,99 @@
+﻿@model BlogCategoryModel
+
+@inject AdminAreaSettings adminAreaSettings
+@if (!String.IsNullOrEmpty(Model.Id))
+{
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="posts-grid"></div>
+        </div>
+        <div class="panel-footer">
+            <input type="submit" id="btnAddNewPost" value="@T("Admin.ContentManagement.Blog.BlogCategory.AddNewPost")" onclick="javascript:OpenWindow('@(Url.Action("BlogPostAddPopup", "Blog", new { categoryId = Model.Id, btnId = "btnRefreshPosts", formId = "category-form" }))', 800, 800, true); return false;" class="k-button" />
+            <input type="submit" id="btnRefreshPosts" style="display: none" />
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#posts-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("CategoryPostList", "Blog", new { categoryId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        destroy: {
+                            url: "@Html.Raw(Url.Action("CategoryPostDelete", "Blog", new { categoryId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors",
+                        model: {
+                            id: "Id",
+                            fields: {
+                                Name: {editable: false, type: "string" },
+                                BlogPostId: {editable: false, type: "string" }
+                            }
+                        }
+                    },
+                    requestEnd: function(e) {
+                        if(e.type=="update") {
+                            this.read();
+                        }
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(adminAreaSettings.DefaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                        field: "Name",
+                        title: "@T("Admin.ContentManagement.Blog.BlogCategory.Fields.Post")",
+                        template: '<a class="k-link" href="@Url.Content("~/Admin/Blog/Edit/")#=BlogPostId#">#=Name#</a>',
+                    },{
+                    command: [{
+                        name: "destroy",
+                        text: "@T("Admin.Common.Delete")"
+                    }],
+                }]
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btnRefreshPosts').click(function () {
+                //refresh grid
+                var grid = $("#posts-grid").data('kendoGrid');
+                grid.dataSource.read();
+                //return false to don't reload a page
+                return false;
+            });
+        });
+    </script>
+}
+else
+{
+    <div class="note note-info">
+        @T("Admin.ContentManagement.Blog.BlogCategory.SaveBeforeEdit")
+    </div>
+}

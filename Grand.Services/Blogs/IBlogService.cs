@@ -33,10 +33,11 @@ namespace Grand.Services.Blogs
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <param name="blogPostName">Blog post name</param>
+        /// <param name="categoryId">Category id</param>
         /// <returns>Blog posts</returns>
         IPagedList<BlogPost> GetAllBlogPosts(string storeId = "", 
             DateTime? dateFrom = null, DateTime? dateTo = null, 
-            int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false, string tag = null, string blogPostName = "");
+            int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false, string tag = null, string blogPostName = "", string categoryId = "");
 
         /// <summary>
         /// Gets all blog posts
@@ -100,5 +101,36 @@ namespace Grand.Services.Blogs
 
         IList<BlogComment> GetBlogCommentsByBlogPostId(string blogPostId);
         void DeleteBlogComment(BlogComment blogComment);
+
+        /// <summary>
+        /// Get category by id
+        /// </summary>
+        /// <param name="blogCategoryId">Blog category id</param>
+        /// <returns></returns>
+        BlogCategory GetBlogCategoryById(string blogCategoryId);
+
+        /// <summary>
+        /// Get all blog categories
+        /// </summary>
+        /// <returns></returns>
+        IList<BlogCategory> GetAllBlogCategories(string storeId = "");
+
+        /// <summary>
+        /// Inserts an blog category
+        /// </summary>
+        /// <param name="blogCategory">Blog category</param>
+        BlogCategory InsertBlogCategory(BlogCategory blogCategory);
+
+        /// <summary>
+        /// Updates the blog category
+        /// </summary>
+        /// <param name="blogCategory">Blog category</param>
+        BlogCategory UpdateBlogCategory(BlogCategory blogCategory);
+
+        /// <summary>
+        /// Delete blog category
+        /// </summary>
+        /// <param name="blogCategory">Blog category</param>
+        void DeleteBlogCategory(BlogCategory blogCategory);
     }
 }

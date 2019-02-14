@@ -12,6 +12,7 @@ namespace Grand.Web.Services
         BlogPostListModel PrepareBlogPostListModel(BlogPagingFilteringModel command);
         BlogPostTagListModel PrepareBlogPostTagListModel();
         List<BlogPostYearModel> PrepareBlogPostYearModel();
+        List<BlogPostCategoryModel> PrepareBlogPostCategoryModel();
         BlogComment InsertBlogComment(BlogPostModel model, BlogPost blogPost);
     }
 }

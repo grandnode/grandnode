@@ -8838,6 +8838,72 @@
   <LocaleResource Name="Admin.ContentManagement.Blog">
     <Value>Blog</Value>
   </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.blog.blogcategories">
+    <Value>Blog categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.blog.blogcategory.added">
+    <Value>Blog category has been added</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.blog.blogcategory.addnew">
+    <Value>Add new blog category</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.blog.blogcategory.addnewpost">
+    <Value>Add new blog post</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.blog.blogcategory.backtolist">
+    <Value>back to list</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.blog.blogcategory.deleted">
+    <Value>Blog category has been deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.blog.blogcategory.editblogcategorydetails">
+    <Value>Edit blog category</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.blog.blogcategory.fields.displayorder">
+    <Value>Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.blog.blogcategory.fields.displayorder.hint">
+    <Value>Specify the display order of the blog category</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.blog.blogcategory.fields.name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.blog.blogcategory.fields.name.hint">
+    <Value>Enter the name of the blog category</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.blog.blogcategory.fields.name.required">
+    <Value>Name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.blog.blogcategory.fields.post">
+    <Value>Blog posts</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.blog.blogcategory.info">
+    <Value>Info</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.blog.blogcategory.posts">
+    <Value>Blog posts</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.blog.blogcategory.savebeforeedit">
+    <Value>Save changes before edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.blog.blogcategory.searchblogtitle">
+    <Value>Blog post title</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.blog.blogcategory.searchblogtitle.hint">
+    <Value>Enter the title of the blog</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.blog.blogcategory.searchstore">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.blog.blogcategory.searchstore.hint">
+    <Value>Enter the store name</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.blog.blogcategory.stores">
+    <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.blog.blogcategory.updated">
+    <Value>Blog category has been updated</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts">
     <Value>Blog posts</Value>
   </LocaleResource>
@@ -15679,6 +15745,9 @@
   <LocaleResource Name="Blog.Archive">
     <Value>Blog archive</Value>
   </LocaleResource>
+  <LocaleResource Name="Blog.Category">
+    <Value>Blog categories</Value>
+  </LocaleResource>  
   <LocaleResource Name="Blog.Comments">
     <Value>Comments</Value>
   </LocaleResource>

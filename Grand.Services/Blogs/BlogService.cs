@@ -20,6 +20,7 @@ namespace Grand.Services.Blogs
 
         private readonly IRepository<BlogPost> _blogPostRepository;
         private readonly IRepository<BlogComment> _blogCommentRepository;
+        private readonly IRepository<BlogCategory> _blogCategoryRepository;
         private readonly CatalogSettings _catalogSettings;
         private readonly IEventPublisher _eventPublisher;
 
@@ -29,11 +30,13 @@ namespace Grand.Services.Blogs
 
         public BlogService(IRepository<BlogPost> blogPostRepository,
             IRepository<BlogComment> blogCommentRepository,
-            CatalogSettings catalogSettings, 
+            IRepository<BlogCategory> blogCategoryRepository,
+            CatalogSettings catalogSettings,
             IEventPublisher eventPublisher)
         {
             this._blogPostRepository = blogPostRepository;
             this._blogCommentRepository = blogCommentRepository;
+            this._blogCategoryRepository = blogCategoryRepository;
             this._catalogSettings = catalogSettings;
             this._eventPublisher = eventPublisher;
         }
@@ -79,17 +82,27 @@ namespace Grand.Services.Blogs
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <param name="blogPostName">Blog post name</param>
         /// <returns>Blog posts</returns>
-        public virtual IPagedList<BlogPost> GetAllBlogPosts(string storeId = "", 
+        public virtual IPagedList<BlogPost> GetAllBlogPosts(string storeId = "",
             DateTime? dateFrom = null, DateTime? dateTo = null,
-            int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false, string tag = null, string blogPostName = "")
+            int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false, string tag = null, string blogPostName = "", string categoryId = "")
         {
 
             var query = _blogPostRepository.Table;
 
+            if (!string.IsNullOrEmpty(categoryId))
+            {
+                var category = _blogCategoryRepository.Table.FirstOrDefault(x => x.Id == categoryId);
+                if (category != null)
+                {
+                    var postsIds = category.BlogPosts.Select(x => x.BlogPostId);
+                    query = query.Where(x => postsIds.Contains(x.Id));
+                }
+            }
+
             if (!String.IsNullOrWhiteSpace(blogPostName))
             {
                 query = query.Where
-                    (b => (b.Title != null && b.Title.ToLower().Contains(blogPostName.ToLower())) || 
+                    (b => (b.Title != null && b.Title.ToLower().Contains(blogPostName.ToLower())) ||
                     (b.BodyOverview != null && b.BodyOverview.ToLower().Contains(blogPostName.ToLower())));
             }
             if (dateFrom.HasValue)
@@ -108,16 +121,18 @@ namespace Grand.Services.Blogs
             {
                 query = query.Where(b => b.Stores.Contains(storeId) || !b.LimitedToStores);
             }
-            if(!(String.IsNullOrEmpty(tag)))
+            if (!(String.IsNullOrEmpty(tag)))
             {
                 query = query.Where(x => x.Tags.Contains(tag));
             }
+
             query = query.OrderByDescending(b => b.CreatedOnUtc);
 
             var blogPosts = new PagedList<BlogPost>(query, pageIndex, pageSize);
             return blogPosts;
 
         }
+
 
         /// <summary>
         /// Gets all blog posts
@@ -136,7 +151,7 @@ namespace Grand.Services.Blogs
             tag = tag.Trim();
 
             //we load all records and only then filter them by tag
-            var blogPostsAll = GetAllBlogPosts(storeId: storeId, showHidden: showHidden, tag:tag);
+            var blogPostsAll = GetAllBlogPosts(storeId: storeId, showHidden: showHidden, tag: tag);
             var taggedBlogPosts = new List<BlogPost>();
             foreach (var blogPost in blogPostsAll)
             {
@@ -229,7 +244,7 @@ namespace Grand.Services.Blogs
             //event notification
             _eventPublisher.EntityUpdated(blogPost);
         }
-        
+
         /// <summary>
         /// Gets all comments
         /// </summary>
@@ -296,6 +311,87 @@ namespace Grand.Services.Blogs
 
             _blogCommentRepository.Delete(blogComment);
         }
+
+        #region Blog category
+
+        /// <summary>
+        /// Get category by id
+        /// </summary>
+        /// <param name="blogCategoryId">Blog category id</param>
+        /// <returns></returns>
+        public BlogCategory GetBlogCategoryById(string blogCategoryId)
+        {
+            return _blogCategoryRepository.GetById(blogCategoryId);
+        }
+
+        /// <summary>
+        /// Get all blog categories
+        /// </summary>
+        /// <returns></returns>
+        public virtual IList<BlogCategory> GetAllBlogCategories(string storeId = "")
+        {
+            var query = from c in _blogCategoryRepository.Table
+                        select c;
+
+            if (!String.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations)
+            {
+                query = query.Where(b => b.Stores.Contains(storeId) || !b.LimitedToStores);
+            }
+
+            return query.OrderBy(x => x.DisplayOrder).ToList();
+        }
+
+        /// <summary>
+        /// Inserts an blog category
+        /// </summary>
+        /// <param name="blogCategory">Blog category</param>
+        public virtual BlogCategory InsertBlogCategory(BlogCategory blogCategory)
+        {
+            if (blogCategory == null)
+                throw new ArgumentNullException("blogCategory");
+
+            _blogCategoryRepository.Insert(blogCategory);
+
+            //event notification
+            _eventPublisher.EntityInserted(blogCategory);
+
+            return blogCategory;
+        }
+
+        /// <summary>
+        /// Updates the blog category
+        /// </summary>
+        /// <param name="blogCategory">Blog category</param>
+        public virtual BlogCategory UpdateBlogCategory(BlogCategory blogCategory)
+        {
+            if (blogCategory == null)
+                throw new ArgumentNullException("blogCategory");
+
+            _blogCategoryRepository.Update(blogCategory);
+
+            //event notification
+            _eventPublisher.EntityUpdated(blogCategory);
+
+            return blogCategory;
+        }
+
+        /// <summary>
+        /// Delete blog category
+        /// </summary>
+        /// <param name="blogCategory">Blog category</param>
+        public virtual void DeleteBlogCategory(BlogCategory blogCategory)
+        {
+            if (blogCategory == null)
+                throw new ArgumentNullException("blogCategory");
+
+            _blogCategoryRepository.Delete(blogCategory);
+
+            //event notification
+            _eventPublisher.EntityDeleted(blogCategory);
+        }
+
+        #endregion
+
         #endregion
     }
 }

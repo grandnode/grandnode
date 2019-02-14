@@ -1,0 +1,49 @@
+﻿@model BlogCategoryModel
+@inject IEventPublisher eventPublisher
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+<script>
+    $(document).ready(function () {
+        $("#blog-category-edit").kendoTabStrip({
+            animation: {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
+<div id="blog-category-edit">
+    <ul>
+        <li tab-index="0">
+            @T("Admin.ContentManagement.Blog.BlogCategory.Info")
+        </li>
+        <li tab-index="1">
+            @T("Admin.ContentManagement.Blog.BlogCategory.Posts")
+        </li>
+        <li tab-index="2">
+            @T("Admin.ContentManagement.Blog.BlogCategory.Stores")
+        </li>
+    </ul>
+    <div>
+        <partial name="_CreateOrUpdateCategory.TabInfo" model="Model" />
+    </div>
+    <div>
+        <partial name="_CreateOrUpdateCategory.Posts" model="Model" />
+    </div>
+    <div>
+        <partial name="_TabStores" model="Model" />
+    </div>
+</div>
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "blog-category-edit");
+    eventPublisher.Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+@*save selected tab index*@
+<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">

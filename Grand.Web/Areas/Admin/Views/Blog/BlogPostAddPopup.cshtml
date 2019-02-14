@@ -1,0 +1,162 @@
+﻿@model AddBlogPostCategoryModel
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
+    //page title
+    ViewBag.Title = T("Admin.ContentManagement.Blog.BlogCategory.AddNewPost").Text;
+}
+<form asp-controller="Blog" asp-action="BlogPostAddPopup" method="post"
+      asp-route-CategoryId="@Context.Request.Query["CategoryId"]"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
+    <antiforgery-token />
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-sitemap"></i>
+                        @T("Admin.ContentManagement.Blog.BlogCategory.AddNewPost")
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                <admin-label asp-for="SearchBlogTitle" class="col-sm-4 control-label" />
+                                <div class="col-md-4 col-sm-4">
+                                    <admin-input asp-for="SearchBlogTitle" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <admin-label asp-for="SearchStoreId" class="col-sm-4 control-label" />
+                                <div class="col-md-4 col-sm-4">
+                                    <admin-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-offset-4 col-sm-offset-4 col-md-4 col-sm-4 mt-mobile-10">
+                                    <div class="btn-group btn-group-devided">
+                                        <button class="btn btn-success filter-submit" id="search-posts">
+                                            <i class="fa fa-search"></i> @T("Admin.Common.Search")
+                                        </button>
+                                        <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="blogposts-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (ViewBag.RefreshPage == true)
+    {
+    <script type="text/javascript">
+            try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
+            catch (e){}
+            window.close();
+    </script>
+    }
+</form>
+
+<script>
+    $(document).ready(function () {
+
+        $("#blogposts-grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("BlogPostAddPopupList", "Blog"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: additionalData
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors"
+                },
+                error: function(e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                pageSize: @(adminAreaSettings.DefaultGridPageSize),
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: [@(adminAreaSettings.GridPageSizes)]
+            },
+            editable: {
+                confirmation: false,
+                mode: "inline"
+            },
+            scrollable: false,
+            columns: [{
+                field: "Id",
+                headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
+                headerAttributes: { style: "text-align:center" },
+                template: "<input type='checkbox' name='SelectedBlogPostIds' value='#=Id#' class='checkboxGroups' />",
+                attributes: { style: "text-align:center" },
+                width: 50
+            }, {
+                field: "Name",
+                title: "@T("Admin.ContentManagement.Blog.BlogCategory.Fields.Post")"
+            }]
+        });
+    });
+</script>
+
+<script type="text/javascript">
+        $(document).ready(function() {
+            $('#search-posts').click(function() {
+                var grid = $('#blogposts-grid').data('kendoGrid');
+                grid.dataSource.page(1); //new search. Set page size to 1
+                //grid.dataSource.read(); we already loaded the grid above using "page" function
+                //clear selected checkboxes
+                $('.checkboxGroups').prop('checked', false).change();
+                return false;
+            });
+
+            $("#@Html.FieldIdFor(model => model.SearchBlogTitle)").keydown(function(event) {
+                if (event.keyCode == 13) {
+                    $("#search-posts").click();
+                    return false;
+                }
+            });
+
+            //wire up checkboxes
+            $('#mastercheckbox').click(function() {
+                $('.checkboxGroups').prop('checked', $(this).is(':checked')).change();
+            });
+
+            $('#blogposts-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function(e) {
+                updateMasterCheckbox();
+            });
+        });
+
+        function additionalData() {
+            var data = {
+                SearchBlogTitle: $('#@Html.FieldIdFor(model => model.SearchBlogTitle)').val(),
+                SearchStoreId: $('#SearchStoreId').val()
+            };
+            addAntiForgeryToken(data);
+            return data;
+        }
+
+        function updateMasterCheckbox() {
+            var numChkBoxes = $('#blogposts-grid input[type=checkbox][id!=mastercheckbox]').length;
+            var numChkBoxesChecked = $('#blogposts-grid input[type=checkbox][id!=mastercheckbox]:checked').length;
+            $('#mastercheckbox').prop('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+        }
+
+</script>
+

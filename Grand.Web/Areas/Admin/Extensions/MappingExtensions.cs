@@ -1132,6 +1132,25 @@ namespace Grand.Web.Areas.Admin.Extensions
 
         #endregion
 
+        #region Blog categories
+
+        public static BlogCategoryModel ToModel(this BlogCategory entity)
+        {
+            return entity.MapTo<BlogCategory, BlogCategoryModel>();
+        }
+
+        public static BlogCategory ToEntity(this BlogCategoryModel model)
+        {
+            return model.MapTo<BlogCategoryModel, BlogCategory>();
+        }
+
+        public static BlogCategory ToEntity(this BlogCategoryModel model, BlogCategory destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
+
         #region News
 
         //news items

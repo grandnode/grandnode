@@ -343,6 +343,9 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("BlogByMonth",
                             "blog/month/{month}",
                             new { controller = "Blog", action = "BlogByMonth" });
+            routeBuilder.MapLocalizedRoute("BlogByCategory",
+                            "blog/category/{categoryid}",
+                            new { controller = "Blog", action = "BlogByCategory" });
             //blog RSS
             routeBuilder.MapLocalizedRoute("BlogRSS",
                             "blog/rss/{languageId}",
