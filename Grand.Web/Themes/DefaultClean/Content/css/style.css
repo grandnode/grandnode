@@ -161,7 +161,7 @@ input {
     display: block;
     width: -webkit-fill-available;
     float: right;
-    margin: 5px 15px;
+    margin: 5px 15px 5px 0;
     padding: 0 45px 0 15px;
     font-size: 14px;
     line-height: 1.75;
@@ -865,6 +865,9 @@ ul.ui-autocomplete li img {
 }
 #ModalAddToCart .cross-sell-container .btn-group .btn.btn-primary .fa-shopping-cart {
 	display: block !important;
+}
+.cross-sells .card.gen .card-buttons {
+    display: none;
 }
 /*navbar*/
 

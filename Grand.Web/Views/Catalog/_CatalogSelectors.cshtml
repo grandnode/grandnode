@@ -10,7 +10,7 @@
         {
             <div class="sort-container">
                 <label class="mb-0" for="custom-select">@T("Catalog.OrderBy")</label>
-                <div class="selectdiv">
+                <div class="selectdiv ml-4">
                     @Html.DropDownList("custom-select", Model.AvailableSortOptions, new { @class = "form-control custom-select", onchange = "setLocation(this.value);" })
                 </div>
             </div>
@@ -25,7 +25,7 @@
         {
             <div class="sort-container">
                 <label class="mb-0" for="custom-select">@T("Catalog.PageSize")</label>
-                <div class="selectdiv">
+                <div class="selectdiv ml-4">
                     @Html.DropDownList("products-pagesize", Model.PageSizeOptions, new { @class = "custom-select form-control", onchange = "setLocation(this.value);" })
                 </div>
             </div>
