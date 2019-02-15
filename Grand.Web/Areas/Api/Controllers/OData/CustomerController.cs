@@ -1,5 +1,5 @@
 ﻿using Grand.Api.DTOs.Customers;
-using Grand.Api.Services;
+using Grand.Api.Interfaces;
 using Grand.Core.Domain.Customers;
 using Grand.Services.Customers;
 using Grand.Services.Security;

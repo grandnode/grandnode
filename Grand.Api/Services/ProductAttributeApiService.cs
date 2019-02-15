@@ -1,5 +1,6 @@
 ﻿using Grand.Api.DTOs.Catalog;
 using Grand.Api.Extensions;
+using Grand.Api.Interfaces;
 using Grand.Data;
 using Grand.Services.Catalog;
 using Grand.Services.Localization;

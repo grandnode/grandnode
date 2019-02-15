@@ -1,5 +1,5 @@
 ﻿using Grand.Api.DTOs.Catalog;
-using Grand.Api.Services;
+using Grand.Api.Interfaces;
 using Grand.Services.Security;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Mvc;

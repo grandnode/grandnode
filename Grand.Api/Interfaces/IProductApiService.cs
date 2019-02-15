@@ -1,7 +1,7 @@
 ﻿using Grand.Api.DTOs.Catalog;
 using MongoDB.Driver.Linq;
 
-namespace Grand.Api.Services
+namespace Grand.Api.Interfaces
 {
     public interface IProductApiService
     {

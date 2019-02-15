@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Grand.Api.Services
+namespace Grand.Api.Interfaces
 {
     public partial interface ITokenService
     {

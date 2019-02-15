@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Grand.Api.Interfaces;
 using Grand.Api.Services;
 using Grand.Core.Configuration;
 using Grand.Core.Infrastructure;
