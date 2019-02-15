@@ -527,4 +527,7 @@
   <LocaleResource Name="Blog.SearchPlaceholder">
     <Value>Search in blog...</Value>
   </LocaleResource>
+  <LocaleResource Name="Grand.Knowledgebase.AddArticleComment.Result">
+    <Value>Enter the comment</Value>
+  </LocaleResource>
 </Language>
