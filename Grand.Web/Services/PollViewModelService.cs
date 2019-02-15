@@ -7,6 +7,7 @@ using Grand.Services.Localization;
 using Grand.Services.Polls;
 using Grand.Services.Security;
 using Grand.Web.Infrastructure.Cache;
+using Grand.Web.Interfaces;
 using Grand.Web.Models.Polls;
 using System;
 using System.Collections.Generic;

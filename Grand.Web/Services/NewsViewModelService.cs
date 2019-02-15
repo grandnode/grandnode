@@ -15,6 +15,7 @@ using Grand.Services.Messages;
 using Grand.Services.News;
 using Grand.Services.Seo;
 using Grand.Web.Infrastructure.Cache;
+using Grand.Web.Interfaces;
 using Grand.Web.Models.Media;
 using Grand.Web.Models.News;
 using System;

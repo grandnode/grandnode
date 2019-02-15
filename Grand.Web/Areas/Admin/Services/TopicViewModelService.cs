@@ -5,6 +5,7 @@ using Grand.Services.Seo;
 using Grand.Services.Stores;
 using Grand.Services.Topics;
 using Grand.Web.Areas.Admin.Extensions;
+using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Topics;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;

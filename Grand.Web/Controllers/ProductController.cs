@@ -21,7 +21,7 @@ using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
 using Grand.Web.Models.Catalog;
-using Grand.Web.Services;
+using Grand.Web.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;

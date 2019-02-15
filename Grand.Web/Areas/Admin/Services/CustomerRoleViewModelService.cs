@@ -10,6 +10,7 @@ using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Services.Vendors;
 using Grand.Web.Areas.Admin.Extensions;
+using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Grand.Web.Areas.Admin.Models.Customers;
 using Microsoft.AspNetCore.Mvc.Rendering;

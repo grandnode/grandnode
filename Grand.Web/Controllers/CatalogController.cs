@@ -20,7 +20,7 @@ using Grand.Services.Stores;
 using Grand.Services.Vendors;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Vendors;
-using Grand.Web.Services;
+using Grand.Web.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using System;

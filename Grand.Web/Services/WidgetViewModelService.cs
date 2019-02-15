@@ -3,6 +3,7 @@ using Grand.Core.Caching;
 using Grand.Framework.Themes;
 using Grand.Services.Cms;
 using Grand.Web.Infrastructure.Cache;
+using Grand.Web.Interfaces;
 using Grand.Web.Models.Cms;
 using Microsoft.AspNetCore.Routing;
 using System.Collections.Generic;

@@ -13,7 +13,7 @@ using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
 using Grand.Web.Models.Blogs;
-using Grand.Web.Services;
+using Grand.Web.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;

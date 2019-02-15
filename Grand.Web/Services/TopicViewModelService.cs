@@ -8,6 +8,7 @@ using Grand.Services.Seo;
 using Grand.Services.Stores;
 using Grand.Services.Topics;
 using Grand.Web.Infrastructure.Cache;
+using Grand.Web.Interfaces;
 using Grand.Web.Models.Topics;
 using System;
 using System.Linq;

@@ -29,6 +29,7 @@ using Grand.Services.Stores;
 using Grand.Services.Tax;
 using Grand.Services.Vendors;
 using Grand.Web.Areas.Admin.Extensions;
+using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Grand.Web.Areas.Admin.Models.Common;
 using Grand.Web.Areas.Admin.Models.Customers;

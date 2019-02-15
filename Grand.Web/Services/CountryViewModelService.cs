@@ -3,6 +3,7 @@ using Grand.Core.Caching;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Web.Infrastructure.Cache;
+using Grand.Web.Interfaces;
 using System.Linq;
 
 namespace Grand.Web.Services

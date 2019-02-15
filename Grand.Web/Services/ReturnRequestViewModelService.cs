@@ -11,6 +11,7 @@ using Grand.Services.Orders;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
 using Grand.Web.Infrastructure.Cache;
+using Grand.Web.Interfaces;
 using Grand.Web.Models.Common;
 using Grand.Web.Models.Order;
 using System;

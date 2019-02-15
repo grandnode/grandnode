@@ -6,6 +6,7 @@ using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Seo;
 using Grand.Web.Areas.Admin.Extensions;
+using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Knowledgebase;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;

@@ -1,6 +1,6 @@
 ﻿using Grand.Core.Domain.Catalog;
 using Grand.Framework.Components;
-using Grand.Web.Services;
+using Grand.Web.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;

@@ -5,7 +5,7 @@ using Grand.Services.Localization;
 using Grand.Services.Messages;
 using Grand.Services.Security;
 using Grand.Web.Areas.Admin.Models.Messages;
-using Grand.Web.Areas.Admin.Services;
+using Grand.Web.Areas.Admin.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Grand.Web.Areas.Admin.Controllers

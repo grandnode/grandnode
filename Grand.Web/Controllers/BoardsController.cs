@@ -10,7 +10,7 @@ using Grand.Services.Forums;
 using Grand.Services.Localization;
 using Grand.Services.Seo;
 using Grand.Web.Models.Boards;
-using Grand.Web.Services;
+using Grand.Web.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;

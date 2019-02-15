@@ -7,6 +7,7 @@ using Grand.Core.Domain.Vendors;
 using Grand.Services.Common;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
+using Grand.Web.Interfaces;
 using Grand.Web.Models.Common;
 using Grand.Web.Models.Vendors;
 using Microsoft.AspNetCore.Http;

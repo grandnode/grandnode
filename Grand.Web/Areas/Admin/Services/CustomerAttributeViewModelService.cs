@@ -3,6 +3,7 @@ using Grand.Core.Domain.Customers;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
 using Grand.Web.Areas.Admin.Extensions;
+using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Customers;
 using System;
 using System.Collections.Generic;

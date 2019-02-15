@@ -4,6 +4,7 @@ using Grand.Services.Helpers;
 using Grand.Services.Knowledgebase;
 using Grand.Services.Logging;
 using Grand.Web.Areas.Admin.Extensions;
+using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Logging;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;

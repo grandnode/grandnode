@@ -8,6 +8,7 @@ using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Extensions;
+using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;

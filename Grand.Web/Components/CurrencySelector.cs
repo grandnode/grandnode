@@ -1,5 +1,5 @@
 ﻿using Grand.Framework.Components;
-using Grand.Web.Services;
+using Grand.Web.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 

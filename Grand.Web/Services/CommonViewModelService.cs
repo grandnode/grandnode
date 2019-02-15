@@ -31,6 +31,7 @@ using Grand.Services.Stores;
 using Grand.Services.Topics;
 using Grand.Web.Extensions;
 using Grand.Web.Infrastructure.Cache;
+using Grand.Web.Interfaces;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Common;
 using Grand.Web.Models.Topics;

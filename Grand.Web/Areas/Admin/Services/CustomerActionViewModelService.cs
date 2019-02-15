@@ -1,5 +1,4 @@
-﻿using Grand.Core;
-using Grand.Core.Domain.Catalog;
+﻿using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
 using Grand.Framework.Extensions;
 using Grand.Services.Catalog;
@@ -11,6 +10,7 @@ using Grand.Services.Messages;
 using Grand.Services.Stores;
 using Grand.Services.Vendors;
 using Grand.Web.Areas.Admin.Extensions;
+using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Grand.Web.Areas.Admin.Models.Customers;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -37,7 +37,7 @@ namespace Grand.Web.Areas.Admin.Services
         private readonly IMessageTemplateService _messageTemplateService;
         private readonly IDateTimeHelper _dateTimeHelper;
 
-        
+
         public CustomerActionViewModelService(ICustomerService customerService,
             ICustomerTagService customerTagService,
             ILocalizationService localizationService,

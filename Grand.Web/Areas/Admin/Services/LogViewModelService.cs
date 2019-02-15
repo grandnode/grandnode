@@ -6,6 +6,7 @@ using Grand.Services.Customers;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
+using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Logging;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;

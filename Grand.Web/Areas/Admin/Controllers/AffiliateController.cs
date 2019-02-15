@@ -6,7 +6,7 @@ using Grand.Services.Affiliates;
 using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Web.Areas.Admin.Models.Affiliates;
-using Grand.Web.Areas.Admin.Services;
+using Grand.Web.Areas.Admin.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 

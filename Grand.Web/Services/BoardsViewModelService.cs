@@ -12,6 +12,7 @@ using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Seo;
+using Grand.Web.Interfaces;
 using Grand.Web.Models.Boards;
 using Grand.Web.Models.Common;
 using Microsoft.AspNetCore.Mvc.Rendering;

@@ -7,7 +7,7 @@ using Grand.Services.Orders;
 using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Web.Infrastructure.Cache;
-using Grand.Web.Services;
+using Grand.Web.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 

@@ -5,7 +5,7 @@ using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Security;
 using Grand.Web.Areas.Admin.Models.Logging;
-using Grand.Web.Areas.Admin.Services;
+using Grand.Web.Areas.Admin.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;

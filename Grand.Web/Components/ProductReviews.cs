@@ -2,7 +2,7 @@
 using Grand.Framework.Components;
 using Grand.Services.Catalog;
 using Grand.Web.Models.Catalog;
-using Grand.Web.Services;
+using Grand.Web.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 

@@ -27,6 +27,7 @@ using Grand.Services.Tax;
 using Grand.Services.Vendors;
 using Grand.Web.Extensions;
 using Grand.Web.Infrastructure.Cache;
+using Grand.Web.Interfaces;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Media;
 using Microsoft.AspNetCore.Http;

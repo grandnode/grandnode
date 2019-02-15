@@ -13,7 +13,7 @@ using Grand.Services.Seo;
 using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Catalog;
-using Grand.Web.Areas.Admin.Services;
+using Grand.Web.Areas.Admin.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;

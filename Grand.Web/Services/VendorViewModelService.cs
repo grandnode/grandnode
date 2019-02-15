@@ -12,6 +12,7 @@ using Grand.Services.Messages;
 using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Vendors;
+using Grand.Web.Interfaces;
 using Grand.Web.Models.Vendors;
 using System;
 

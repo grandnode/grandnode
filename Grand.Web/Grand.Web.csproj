@@ -47,6 +47,6 @@
     <Compile Remove="Plugins\**" />
     <EmbeddedResource Remove="Plugins\**" />
     <None Remove="Plugins\**" />
-  </ItemGroup>
-
+  </ItemGroup>  
+ 
 </Project>

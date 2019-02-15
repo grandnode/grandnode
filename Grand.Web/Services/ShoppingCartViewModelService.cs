@@ -23,6 +23,7 @@ using Grand.Services.Seo;
 using Grand.Services.Shipping;
 using Grand.Services.Tax;
 using Grand.Web.Infrastructure.Cache;
+using Grand.Web.Interfaces;
 using Grand.Web.Models.Common;
 using Grand.Web.Models.Media;
 using Grand.Web.Models.ShoppingCart;

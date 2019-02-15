@@ -12,6 +12,7 @@ using Grand.Services.Seo;
 using Grand.Services.Stores;
 using Grand.Services.Vendors;
 using Grand.Web.Areas.Admin.Extensions;
+using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;

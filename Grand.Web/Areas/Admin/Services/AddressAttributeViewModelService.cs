@@ -3,6 +3,7 @@ using Grand.Core.Domain.Common;
 using Grand.Services.Common;
 using Grand.Services.Localization;
 using Grand.Web.Areas.Admin.Extensions;
+using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Common;
 using System.Collections.Generic;
 using System.Linq;

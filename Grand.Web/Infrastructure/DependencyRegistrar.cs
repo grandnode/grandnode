@@ -3,6 +3,7 @@ using Grand.Core.Configuration;
 using Grand.Core.Infrastructure;
 using Grand.Core.Infrastructure.DependencyManagement;
 using Grand.Web.Infrastructure.Installation;
+using Grand.Web.Interfaces;
 using Grand.Web.Services;
 
 namespace Grand.Web.Infrastructure

@@ -2,6 +2,7 @@ using Autofac;
 using Grand.Core.Configuration;
 using Grand.Core.Infrastructure;
 using Grand.Core.Infrastructure.DependencyManagement;
+using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Services;
 
 namespace Grand.Web.Areas.Admin.Infrastructure

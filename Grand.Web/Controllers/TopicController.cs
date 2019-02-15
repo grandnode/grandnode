@@ -2,7 +2,7 @@
 using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Services.Topics;
-using Grand.Web.Services;
+using Grand.Web.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Grand.Web.Controllers

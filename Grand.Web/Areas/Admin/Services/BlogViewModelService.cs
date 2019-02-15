@@ -8,6 +8,7 @@ using Grand.Services.Media;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Extensions;
+using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Blogs;
 using System;
 using System.Collections.Generic;

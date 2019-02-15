@@ -3,6 +3,7 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Messages;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
+using Grand.Web.Interfaces;
 using Grand.Web.Models.Newsletter;
 using System;
 

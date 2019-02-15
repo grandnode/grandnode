@@ -7,7 +7,7 @@ using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Stores;
-using Grand.Web.Areas.Admin.Services;
+using Grand.Web.Areas.Admin.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 

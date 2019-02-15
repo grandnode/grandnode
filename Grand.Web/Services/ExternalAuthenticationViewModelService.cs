@@ -1,5 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Services.Authentication.External;
+using Grand.Web.Interfaces;
 using Grand.Web.Models.Customer;
 using System.Collections.Generic;
 using System.Linq;

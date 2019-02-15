@@ -22,7 +22,7 @@ using Grand.Services.Messages;
 using Grand.Services.Stores;
 using Grand.Services.Vendors;
 using Grand.Web.Models.Common;
-using Grand.Web.Services;
+using Grand.Web.Interfaces;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
