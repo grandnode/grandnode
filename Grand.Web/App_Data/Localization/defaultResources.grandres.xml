@@ -17131,6 +17131,9 @@
   <LocaleResource Name="GiftCardAttribute.From.Virtual">
     <Value><![CDATA[From: {0} <{1}>]]></Value>
   </LocaleResource>
+  <LocaleResource Name="Grand.Knowledgebase.AddArticleComment.Result">
+    <Value>Enter the comment</Value>
+  </LocaleResource>
   <LocaleResource Name="HomePage">
     <Value>Home page</Value>
   </LocaleResource>
