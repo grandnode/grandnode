@@ -866,7 +866,7 @@ ul.ui-autocomplete li img {
 #ModalAddToCart .cross-sell-container .btn-group .btn.btn-primary .fa-shopping-cart {
 	display: block !important;
 }
-.cross-sells .card.gen .card-buttons {
+#ModalAddToCart .cross-sells .card.gen .card-buttons {
     display: none;
 }
 /*navbar*/
@@ -4308,6 +4308,9 @@ footer .socicon-pinterest:hover {
 	}
 }
 @media (max-width: 1024px) {
+    #ModalAddToCart .cross-sell-container {
+        display: none;
+    }
     .featured-product .card-buttons {
         bottom: 0;
     }
