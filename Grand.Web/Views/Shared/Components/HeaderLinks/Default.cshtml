@@ -69,7 +69,16 @@ else
 {
     <li class="nav-item col" id="topcartlink">
         <div class="btn-group dropdown">
-            <a class="nav-link js-offcanvas-trigger" data-offcanvas-trigger="right" href="#right">
+            <a 
+               @if(Model.MiniShoppingCartEnabled)
+               {
+                   <text> class="nav-link js-offcanvas-trigger" data-offcanvas-trigger="right" href="#right"</text>
+               }
+               else
+               {
+                   <text> class="nav-link" href="@Url.RouteUrl("ShoppingCart")"</text>
+               }
+            >
                 <span class="cart-label hl-label">
                     <span class="material-icons mat">
                         shopping_cart

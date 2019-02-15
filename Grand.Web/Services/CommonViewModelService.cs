@@ -83,6 +83,7 @@ namespace Grand.Web.Services
         private readonly VendorSettings _vendorSettings;
         private readonly CommonSettings _commonSettings;
         private readonly CaptchaSettings _captchaSettings;
+        private readonly ShoppingCartSettings _shoppingCartSettings;
 
         public CommonViewModelService(ICacheManager cacheManager, 
             IStoreContext storeContext,
@@ -118,7 +119,8 @@ namespace Grand.Web.Services
             NewsSettings newsSettings,
             VendorSettings vendorSettings,
             CommonSettings commonSettings,
-            CaptchaSettings captchaSettings
+            CaptchaSettings captchaSettings,
+            ShoppingCartSettings shoppingCartSettings
             )
         {
             this._cacheManager = cacheManager;
@@ -157,6 +159,7 @@ namespace Grand.Web.Services
             this._vendorSettings = vendorSettings;
             this._commonSettings = commonSettings;
             this._captchaSettings = captchaSettings;
+            this._shoppingCartSettings = shoppingCartSettings;
         }
         public virtual LogoModel PrepareLogo()
         {
@@ -344,6 +347,7 @@ namespace Grand.Web.Services
                 ShoppingCartEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
                 WishlistEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),
                 AllowPrivateMessages = isRegister && _forumSettings.AllowPrivateMessages,
+                MiniShoppingCartEnabled = _shoppingCartSettings.MiniShoppingCartEnabled
             };
             //performance optimization (use "HasShoppingCartItems" property)
             if (customer.ShoppingCartItems.Any())

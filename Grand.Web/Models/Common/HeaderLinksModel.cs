@@ -6,7 +6,7 @@ namespace Grand.Web.Models.Common
     {
         public bool IsAuthenticated { get; set; }
         public string CustomerEmailUsername { get; set; }
-        
+        public bool MiniShoppingCartEnabled { get; set; }
         public bool ShoppingCartEnabled { get; set; }
         public int ShoppingCartItems { get; set; }
         
