@@ -1,17 +1,15 @@
 ﻿@model CurrencySelectorModel
 @using System.Net;
-@using Microsoft.AspNetCore.Http;
 @inject IWebHelper webHelper
-@inject IHttpContextAccessor httpContextAccessor
 @if (Model.AvailableCurrencies.Count > 1)
 {
-
+    var rawUrl = webHelper.GetRawUrl(Context.Request);
     <div class="currency-selector d-block pr-1">
          @{   var currencies = Model.AvailableCurrencies.Select(x => new
              {
                  Name = x.Name,
                  Text = x.CurrencyCode,
-                 Value = webHelper.ModifyQueryString(Url.RouteUrl("ChangeCurrency", new { customercurrency = x.Id }), "returnurl=" + WebUtility.UrlEncode(webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request)), null),
+                 Value = webHelper.ModifyQueryString(Url.RouteUrl("ChangeCurrency", new { customercurrency = x.Id }), "returnurl=" + WebUtility.UrlEncode(rawUrl), null),
                  Selected = x.Id.Equals(Model.CurrentCurrencyId)
              });
             <div class="btn-group btn-group-sm float-xs-right">

@@ -1,7 +1,4 @@
-﻿@using Microsoft.AspNetCore.Http
-@using Microsoft.Net.Http.Headers
-@using System.Text.Encodings.Web;
-@inject IHttpContextAccessor httpContextAccessor
+﻿@using System.Text.Encodings.Web;
 @{
 
     //success messages
@@ -90,7 +87,7 @@
 <script asp-location="Footer">
     $(document).ready(function () {
         CustomerAction.init('@Url.Action("CustomerActionEventUrl", "Common")', '@Url.Action("GetActivePopup", "Common")', '@Url.Action("RemovePopup", "Common")');
-        CustomerAction.checkActiveUrl('@httpContextAccessor.HttpContext.Request.Path.ToString()', '@httpContextAccessor.HttpContext.Request.Headers[HeaderNames.Referer]');
+        CustomerAction.checkActiveUrl('@Context.Request.Path.ToString()', '@Context.Request.Headers["Referer"]');
     });
 </script>
 

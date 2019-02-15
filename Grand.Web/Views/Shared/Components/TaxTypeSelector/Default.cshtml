@@ -1,10 +1,8 @@
 ﻿@model TaxTypeSelectorModel
-@using Microsoft.AspNetCore.Http
 @using System.Net
 @inject IWebHelper webHelper
-@inject IHttpContextAccessor httpContextAccessor
 @{
-    var rawUrl = webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request);
+    var rawUrl = webHelper.GetRawUrl(Context.Request);
     var taxTypes = new List<SelectListItem>();
     taxTypes.Add(new SelectListItem
     {

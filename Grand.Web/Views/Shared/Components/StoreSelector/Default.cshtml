@@ -1,14 +1,12 @@
 ﻿@model StoreSelectorModel
-@using Microsoft.AspNetCore.Http;
 @inject IWebHelper webHelper
-@inject IHttpContextAccessor httpContextAccessor
 @if (Model != null && Model.AvailableStores.Count > 1)
 {
     var stores = Model.AvailableStores.Select(x => new
     {
         Name = x.Name,
         Selected = x.Id.Equals(Model.CurrentStoreId),
-        Value = webHelper.ModifyQueryString(Url.RouteUrl("ChangeStore", new { store = x.Id }), "returnurl=" + WebUtility.UrlEncode(webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request)), null),
+        Value = webHelper.ModifyQueryString(Url.RouteUrl("ChangeStore", new { store = x.Id }), "returnurl=" + WebUtility.UrlEncode(webHelper.GetRawUrl(Context.Request)), null),
     });
     <div class="store-selector d-block btn-group btn-group-sm float-xs-right pr-1">
         <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">

@@ -1,11 +1,9 @@
 ﻿@model LanguageSelectorModel
-@using Microsoft.AspNetCore.Http
 @using System.Net
 @inject IWebHelper webHelper
-@inject IHttpContextAccessor httpContextAccessor
 @if (Model.AvailableLanguages.Count > 1)
 {
-    var rawUrl = webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request);
+    var rawUrl = webHelper.GetRawUrl(Context.Request);
 
     if (Model.UseImages)
     {
