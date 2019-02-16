@@ -1453,6 +1453,11 @@ namespace Grand.Web.Services
                 searchTerms = "";
             searchTerms = searchTerms.Trim();
 
+            if(model.Box)
+                model.sid = _catalogSettings.SearchByDescription;
+            if (model.sid)
+                model.adv = true;
+
             //sorting
             PrepareSortingOptions(model.PagingFilteringContext, command);
             //view mode

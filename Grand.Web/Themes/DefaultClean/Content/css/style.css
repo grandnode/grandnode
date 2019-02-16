@@ -455,9 +455,12 @@ body:not(.is-ready) .search-box-button {
 .search-box-select {
 	max-width: 120px;
 }
+.advanced-search {
+    display:none;
+}
 .basic-search .col-form-label,
 .advanced-search .col-form-label {
-	font-weight: 400;
+    font-weight: 400;
 }
 /*autocomplete*/
 
