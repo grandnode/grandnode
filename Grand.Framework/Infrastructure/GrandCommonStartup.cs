@@ -53,8 +53,14 @@ namespace Grand.Framework.Infrastructure
         {
             var grandConfig = EngineContext.Current.Resolve<GrandConfig>();
 
+            //default security headers
+            if (grandConfig.UseDefaultSecurityHeaders)
+            {
+                application.UseDefaultSecurityHeaders();
+            }
+
             //use hsts
-            if(grandConfig.UseHsts)
+            if (grandConfig.UseHsts)
             {
                 application.UseHsts();
             }

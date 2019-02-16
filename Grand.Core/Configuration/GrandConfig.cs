@@ -107,6 +107,11 @@ namespace Grand.Core.Configuration
         /// </summary>
         public bool UseResponseCompression { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether use the default security headers for your application
+        /// </summary>
+        public bool UseDefaultSecurityHeaders { get; set; }
+
         public bool UseSessionStateTempDataProvider { get; set; }
         /// <summary>
         /// Gets or sets a value indicating whether we use url rewrite

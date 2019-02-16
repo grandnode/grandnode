@@ -275,6 +275,14 @@ namespace Grand.Framework.Infrastructure.Extensions
             application.UseHealthChecks("/health/live");
         }
 
+        /// <summary>
+        /// Configures the default security headers for your application.
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void UseDefaultSecurityHeaders(this IApplicationBuilder application)
+        {
+            application.UseSecurityHeaders();
+        }
 
         /// <summary>
         /// Configures wethere use or not the Header X-Powered-By and its value.
