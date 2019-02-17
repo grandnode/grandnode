@@ -112,6 +112,11 @@ namespace Grand.Core.Configuration
         /// </summary>
         public bool UseDefaultSecurityHeaders { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to enable html minification
+        /// </summary>
+        public bool UseHtmlMinification { get; set; }
+
         public bool UseSessionStateTempDataProvider { get; set; }
         /// <summary>
         /// Gets or sets a value indicating whether we use url rewrite

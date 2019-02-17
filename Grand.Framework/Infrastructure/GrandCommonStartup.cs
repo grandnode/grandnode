@@ -70,6 +70,12 @@ namespace Grand.Framework.Infrastructure
                 application.UseHttpsRedirection();
             }
 
+            //Add webMarkupMin
+            if(grandConfig.UseHtmlMinification)
+            {
+                application.UseHtmlMinification();
+            }
+
             //compression
             if (grandConfig.UseResponseCompression)
             {

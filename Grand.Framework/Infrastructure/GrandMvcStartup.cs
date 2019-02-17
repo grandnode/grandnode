@@ -24,6 +24,9 @@ namespace Grand.Framework.Infrastructure
             //add miniprofiler
             services.AddGrandMiniProfiler();
 
+            //add WebMarkupMin
+            services.AddHtmlMinification();
+
             //add and configure MVC feature
             services.AddGrandMvc();
 

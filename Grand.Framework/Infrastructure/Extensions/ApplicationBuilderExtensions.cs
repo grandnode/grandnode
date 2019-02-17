@@ -16,9 +16,9 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Net.Http.Headers;
 using System;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using WebMarkupMin.AspNetCore2;
 
 namespace Grand.Framework.Infrastructure.Extensions
 {
@@ -236,7 +236,6 @@ namespace Grand.Framework.Infrastructure.Extensions
 
         }
 
-
         /// <summary>
         /// Create and configure MiniProfiler service
         /// </summary>
@@ -282,6 +281,15 @@ namespace Grand.Framework.Infrastructure.Extensions
         public static void UseDefaultSecurityHeaders(this IApplicationBuilder application)
         {
             application.UseSecurityHeaders();
+        }
+
+        /// <summary>
+        /// Use WebMarkupMin for your application.
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void UseHtmlMinification(this IApplicationBuilder application)
+        {
+            application.UseWebMarkupMin();
         }
 
         /// <summary>

@@ -27,8 +27,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Newtonsoft.Json.Serialization;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using WebMarkupMin.AspNet.Common.UrlMatchers;
+using WebMarkupMin.AspNetCore2;
+using WebMarkupMin.Core;
 
 namespace Grand.Framework.Infrastructure.Extensions
 {
@@ -348,6 +352,29 @@ namespace Grand.Framework.Infrastructure.Extensions
             hcBuilder.AddMongoDb(DataSettingsHelper.ConnectionString(),
                    name: "mongodb-check",
                    tags: new string[] { "mongodb" });
+        }
+
+        public static void AddHtmlMinification(this IServiceCollection services)
+        {
+            // Add WebMarkupMin services.
+            services.AddWebMarkupMin(options =>
+            {
+                options.AllowMinificationInDevelopmentEnvironment = true;
+            })
+            .AddHtmlMinification(options =>
+            {
+                HtmlMinificationSettings settings = options.MinificationSettings;
+                settings.RemoveRedundantAttributes = true;
+                settings.RemoveHttpProtocolFromAttributes = true;
+                settings.RemoveHttpsProtocolFromAttributes = true;
+            })
+            .AddXhtmlMinification(options =>
+            {
+                XhtmlMinificationSettings settings = options.MinificationSettings;
+                settings.RemoveRedundantAttributes = true;
+                settings.RemoveHttpProtocolFromAttributes = true;
+                settings.RemoveHttpsProtocolFromAttributes = true;
+            });
         }
     }
 }
