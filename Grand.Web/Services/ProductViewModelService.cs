@@ -6,6 +6,7 @@ using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Seo;
+using Grand.Core.Domain.Tax;
 using Grand.Core.Domain.Vendors;
 using Grand.Core.Infrastructure;
 using Grand.Framework.Security.Captcha;
@@ -144,19 +145,20 @@ namespace Grand.Web.Services
             var enableWishlist = _permissionService.Authorize(StandardPermissionProvider.EnableWishlist, currentCustomer);
             var currentCurrency = _workContext.WorkingCurrency;
             var currentStoreId = _storeContext.CurrentStore.Id;
-            var currentLanguageId = _workContext.WorkingLanguage;
+            var currentLanguage = _workContext.WorkingLanguage;
             int pictureSize = productThumbPictureSize.HasValue ? productThumbPictureSize.Value : _mediaSettings.ProductThumbPictureSize;
             var connectionSecured = _webHelper.IsCurrentConnectionSecured();
             var showSku = _catalogSettings.ShowSkuOnCatalogPages;
             var taxDisplay = _workContext.TaxDisplayType;
+            bool priceIncludesTax = taxDisplay == TaxDisplayType.IncludingTax;
             var showQty = _catalogSettings.DisplayQuantityOnCatalogPages;
 
             var res = new Dictionary<string, string>
             {
-                { "Products.CallForPrice", _localizationService.GetResource("Products.CallForPrice", currentLanguageId.Id) },
-                { "Products.PriceRangeFrom", _localizationService.GetResource("Products.PriceRangeFrom", currentLanguageId.Id)},
-                { "Media.Product.ImageLinkTitleFormat", _localizationService.GetResource("Media.Product.ImageLinkTitleFormat", currentLanguageId.Id) },
-                { "Media.Product.ImageAlternateTextFormat", _localizationService.GetResource("Media.Product.ImageAlternateTextFormat", currentLanguageId.Id) }
+                { "Products.CallForPrice", _localizationService.GetResource("Products.CallForPrice", currentLanguage.Id) },
+                { "Products.PriceRangeFrom", _localizationService.GetResource("Products.PriceRangeFrom", currentLanguage.Id)},
+                { "Media.Product.ImageLinkTitleFormat", _localizationService.GetResource("Media.Product.ImageLinkTitleFormat", currentLanguage.Id) },
+                { "Media.Product.ImageAlternateTextFormat", _localizationService.GetResource("Media.Product.ImageAlternateTextFormat", currentLanguage.Id) }
             };
 
             var models = new List<ProductOverviewModel>();
@@ -166,10 +168,10 @@ namespace Grand.Web.Services
                 var model = new ProductOverviewModel
                 {
                     Id = product.Id,
-                    Name = product.GetLocalized(x => x.Name, currentLanguageId.Id),
-                    ShortDescription = product.GetLocalized(x => x.ShortDescription, currentLanguageId.Id),
-                    FullDescription = product.GetLocalized(x => x.FullDescription, currentLanguageId.Id),
-                    SeName = product.GetSeName(currentLanguageId.Id),
+                    Name = product.GetLocalized(x => x.Name, currentLanguage.Id),
+                    ShortDescription = product.GetLocalized(x => x.ShortDescription, currentLanguage.Id),
+                    FullDescription = product.GetLocalized(x => x.FullDescription, currentLanguage.Id),
+                    SeName = product.GetSeName(currentLanguage.Id),
                     ProductType = product.ProductType,
                     Sku = product.Sku,
                     Gtin = product.Gtin,
@@ -215,7 +217,7 @@ namespace Grand.Web.Services
                                 if (product.CatalogPrice > 0)
                                 {
                                     decimal catalogPrice = _currencyService.ConvertFromPrimaryStoreCurrency(product.CatalogPrice, currentCurrency);
-                                    priceModel.CatalogPrice = _priceFormatter.FormatPrice(catalogPrice, true, currentCurrency);
+                                    priceModel.CatalogPrice = _priceFormatter.FormatPrice(catalogPrice, true, currentCurrency, currentLanguage, priceIncludesTax);
                                 }
 
                                 switch (associatedProducts.Count)
@@ -257,16 +259,16 @@ namespace Grand.Web.Services
                                                     {
                                                         //calculate prices
                                                         decimal taxRate;
-                                                        decimal finalPriceBase = _taxService.GetProductPrice(minPriceProduct, minPossiblePrice.Value, out taxRate);
+                                                        decimal finalPriceBase = _taxService.GetProductPrice(minPriceProduct, minPossiblePrice.Value, priceIncludesTax, currentCustomer, out taxRate);
                                                         decimal finalPrice = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, currentCurrency);
 
                                                         priceModel.OldPrice = null;
-                                                        priceModel.Price = String.Format(res["Products.PriceRangeFrom"], _priceFormatter.FormatPrice(finalPrice, true, currentCurrency));
+                                                        priceModel.Price = String.Format(res["Products.PriceRangeFrom"], _priceFormatter.FormatPrice(finalPrice, true, currentCurrency, currentLanguage, priceIncludesTax));
                                                         priceModel.PriceValue = finalPrice;
 
                                                         //PAngV baseprice (used in Germany)
-                                                        priceModel.BasePricePAngV = product.FormatBasePrice(finalPrice,
-                                                            _localizationService, _measureService, _currencyService, _workContext, _priceFormatter);
+                                                        if (product.BasepriceEnabled)
+                                                            priceModel.BasePricePAngV = product.FormatBasePrice(finalPrice, _localizationService, _measureService, _currencyService, _workContext, _priceFormatter);
                                                     }
                                                     else
                                                     {
@@ -315,14 +317,14 @@ namespace Grand.Web.Services
                                 if (product.CatalogPrice > 0)
                                 {
                                     decimal catalogPrice = _currencyService.ConvertFromPrimaryStoreCurrency(product.CatalogPrice, currentCurrency);
-                                    priceModel.CatalogPrice = _priceFormatter.FormatPrice(catalogPrice, true, currentCurrency);
+                                    priceModel.CatalogPrice = _priceFormatter.FormatPrice(catalogPrice, true, currentCurrency, currentLanguage, priceIncludesTax);
                                 }
 
                                 //start price for product auction
                                 if (product.StartPrice > 0)
                                 {
                                     decimal startPrice = _currencyService.ConvertFromPrimaryStoreCurrency(product.StartPrice, currentCurrency);
-                                    priceModel.StartPrice = _priceFormatter.FormatPrice(startPrice, true, currentCurrency);
+                                    priceModel.StartPrice = _priceFormatter.FormatPrice(startPrice, true, currentCurrency, currentLanguage, priceIncludesTax);
                                     priceModel.StartPriceValue = startPrice;
                                 }
 
@@ -330,7 +332,7 @@ namespace Grand.Web.Services
                                 if (product.HighestBid > 0)
                                 {
                                     decimal highestBid = _currencyService.ConvertFromPrimaryStoreCurrency(product.HighestBid, currentCurrency);
-                                    priceModel.HighestBid = _priceFormatter.FormatPrice(highestBid, true, currentCurrency);
+                                    priceModel.HighestBid = _priceFormatter.FormatPrice(highestBid, true, currentCurrency, currentLanguage, priceIncludesTax);
                                     priceModel.HighestBidValue = highestBid;
                                 }
 
@@ -354,8 +356,8 @@ namespace Grand.Web.Services
                                                 currentCustomer, decimal.Zero, true, int.MaxValue);
 
                                             decimal taxRate;
-                                            decimal oldPriceBase = _taxService.GetProductPrice(product, product.OldPrice, out taxRate);
-                                            decimal finalPriceBase = _taxService.GetProductPrice(product, minPossiblePrice, out taxRate);
+                                            decimal oldPriceBase = _taxService.GetProductPrice(product, product.OldPrice, priceIncludesTax, currentCustomer, out taxRate);
+                                            decimal finalPriceBase = _taxService.GetProductPrice(product, minPossiblePrice, priceIncludesTax, currentCustomer, out taxRate);
 
                                             decimal oldPrice = _currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase, currentCurrency);
                                             decimal finalPrice = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, currentCurrency);
@@ -376,22 +378,22 @@ namespace Grand.Web.Services
                                             if (displayFromMessage)
                                             {
                                                 priceModel.OldPrice = null;
-                                                priceModel.Price = String.Format(res["Products.PriceRangeFrom"], _priceFormatter.FormatPrice(finalPrice, true, currentCurrency));
+                                                priceModel.Price = String.Format(res["Products.PriceRangeFrom"], _priceFormatter.FormatPrice(finalPrice, true, currentCurrency, currentLanguage, priceIncludesTax));
                                                 priceModel.PriceValue = finalPrice;
                                             }
                                             else
                                             {
                                                 if (finalPriceBase != oldPriceBase && oldPriceBase != decimal.Zero)
                                                 {
-                                                    priceModel.OldPrice = _priceFormatter.FormatPrice(oldPrice, true, currentCurrency);
+                                                    priceModel.OldPrice = _priceFormatter.FormatPrice(oldPrice, true, currentCurrency, currentLanguage, priceIncludesTax);
                                                     priceModel.OldPriceValue = oldPrice;
-                                                    priceModel.Price = _priceFormatter.FormatPrice(finalPrice, true, currentCurrency);
+                                                    priceModel.Price = _priceFormatter.FormatPrice(finalPrice, true, currentCurrency, currentLanguage, priceIncludesTax);
                                                     priceModel.PriceValue = finalPrice;
                                                 }
                                                 else
                                                 {
                                                     priceModel.OldPrice = null;
-                                                    priceModel.Price = _priceFormatter.FormatPrice(finalPrice, true, currentCurrency);
+                                                    priceModel.Price = _priceFormatter.FormatPrice(finalPrice, true, currentCurrency, currentLanguage, priceIncludesTax);
                                                     priceModel.PriceValue = finalPrice;
                                                 }
                                             }
@@ -437,7 +439,7 @@ namespace Grand.Web.Services
                 {
                     #region Prepare product picture
                     //prepare picture model
-                    var defaultProductPictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DEFAULTPICTURE_MODEL_KEY, product.Id, pictureSize, true, currentLanguageId, connectionSecured, currentStoreId);
+                    var defaultProductPictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DEFAULTPICTURE_MODEL_KEY, product.Id, pictureSize, true, currentLanguage, connectionSecured, currentStoreId);
                     model.DefaultPictureModel = _cacheManager.Get(defaultProductPictureCacheKey, () =>
                     {
                         var picture = product.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault();
