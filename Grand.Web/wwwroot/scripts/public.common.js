@@ -159,27 +159,12 @@ function dataCountdown() {
 // discount ribbons engine
 
 function discountEngine() {
-    $(".card.gen, .prod-list").each(function () {
-        if ($(this).find(".old-price").text().length > 0) {
-            var actual_p = $(this).find(".actual-price").text().replace(",", "").replace(/^\D+/g, '');
-            var old_p = $(this).find(".old-price").text().replace(",", "").replace(/^\D+/g, '');
-            var promo = Math.abs(Math.round((1 - actual_p / old_p) * 100));
-            if (isNaN(promo)) {
-                $(this).parent().parent().find(".change-percent").remove();
-            } else {
-                if (parseInt(promo) <= 0) {
-                    $(this).find(".new-product-label").addClass("no-promo");
-                }
-                else {
-                    var promo = "-" + promo + "%";
-                    $(this).parent().find(".change-percent").text(promo).css("opacity", "1");
-                    $(this).find(".new-product-label").addClass("with-promo");
-                }
-            }
-        }
-        else {
-            $(this).find(".change-percent").remove();
-            $(this).find(".new-product-label").addClass("no-promo");
+    $('.change-percent').each(function () {
+        var ap = $(this).find('.ap').text(),
+            op = $(this).find('.op').text();
+        if (op.length) {
+            var promo = '-' + Math.abs(Math.round((1 - ap / op) * 100)) + '%';
+            $(this).text(promo);
         }
     });
 }
