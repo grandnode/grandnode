@@ -32,7 +32,6 @@ using System.IO;
 using System.Linq;
 using WebMarkupMin.AspNet.Common.UrlMatchers;
 using WebMarkupMin.AspNetCore2;
-using WebMarkupMin.Core;
 
 namespace Grand.Framework.Infrastructure.Extensions
 {
@@ -360,34 +359,24 @@ namespace Grand.Framework.Infrastructure.Extensions
             services.AddWebMarkupMin(options =>
             {
                 options.AllowMinificationInDevelopmentEnvironment = true;
-                options.DisablePoweredByHttpHeaders = true;
                 options.AllowCompressionInDevelopmentEnvironment = true;
             })
             .AddHtmlMinification(options =>
             {
-                options.ExcludedPages = new List<IUrlMatcher>
-                    {
-                        new WildcardUrlMatcher("/admin/*"),
-                        new ExactUrlMatcher("/admin")
-                    };
-
-                HtmlMinificationSettings settings = options.MinificationSettings;
-                settings.RemoveRedundantAttributes = true;
-                settings.RemoveHttpProtocolFromAttributes = true;
-                settings.RemoveHttpsProtocolFromAttributes = true;
+                options.ExcludedPages = new List<IUrlMatcher> {
+                    new WildcardUrlMatcher("/admin/*"),
+                    new ExactUrlMatcher("/admin")
+                };
             })
-            .AddXhtmlMinification(options =>
+            .AddXmlMinification(options =>
             {
-                options.ExcludedPages = new List<IUrlMatcher>
-                    {
-                        new WildcardUrlMatcher("/admin/*"),
-                        new ExactUrlMatcher("/admin")
-                    };
-                XhtmlMinificationSettings settings = options.MinificationSettings;
-                settings.RemoveRedundantAttributes = true;
-                settings.RemoveHttpProtocolFromAttributes = true;
-                settings.RemoveHttpsProtocolFromAttributes = true;
-            });
+                options.ExcludedPages = new List<IUrlMatcher> {
+                    new WildcardUrlMatcher("/admin/*"),
+                    new ExactUrlMatcher("/admin")
+                };
+            })
+            .AddHttpCompression();
+
         }
     }
 }
