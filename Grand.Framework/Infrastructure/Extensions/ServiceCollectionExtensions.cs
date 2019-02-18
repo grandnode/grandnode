@@ -360,9 +360,17 @@ namespace Grand.Framework.Infrastructure.Extensions
             services.AddWebMarkupMin(options =>
             {
                 options.AllowMinificationInDevelopmentEnvironment = true;
+                options.DisablePoweredByHttpHeaders = true;
+                options.AllowCompressionInDevelopmentEnvironment = true;
             })
             .AddHtmlMinification(options =>
             {
+                options.ExcludedPages = new List<IUrlMatcher>
+                    {
+                        new WildcardUrlMatcher("/admin/*"),
+                        new ExactUrlMatcher("/admin")
+                    };
+
                 HtmlMinificationSettings settings = options.MinificationSettings;
                 settings.RemoveRedundantAttributes = true;
                 settings.RemoveHttpProtocolFromAttributes = true;
@@ -370,6 +378,11 @@ namespace Grand.Framework.Infrastructure.Extensions
             })
             .AddXhtmlMinification(options =>
             {
+                options.ExcludedPages = new List<IUrlMatcher>
+                    {
+                        new WildcardUrlMatcher("/admin/*"),
+                        new ExactUrlMatcher("/admin")
+                    };
                 XhtmlMinificationSettings settings = options.MinificationSettings;
                 settings.RemoveRedundantAttributes = true;
                 settings.RemoveHttpProtocolFromAttributes = true;
