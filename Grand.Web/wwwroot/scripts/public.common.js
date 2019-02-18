@@ -566,7 +566,8 @@ function deletecartitem(href) {
         type: "POST",
         url: href,
         success: function (data) {
-            $(flyoutcartselector).replaceWith(data.flyoutshoppingcart);
+            var flyoutcart = $(flyoutcartselector, $(data.flyoutshoppingcart));
+            $(flyoutcartselector).replaceWith(flyoutcart);
             $(topcartselector).html(data.totalproducts);
         },
         error: function (xhr, ajaxOptions, thrownError) {

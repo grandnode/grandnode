@@ -114,7 +114,8 @@ var AjaxCart = {
             $(AjaxCart.topwishlistselector).html(response.updatetopwishlistsectionhtml);
         }
         if (response.updateflyoutcartsectionhtml) {
-            $(AjaxCart.flyoutcartselector).replaceWith(response.updateflyoutcartsectionhtml);
+            var flyoutcart = $(AjaxCart.flyoutcartselector, $(response.updateflyoutcartsectionhtml));
+            $(AjaxCart.flyoutcartselector).replaceWith(flyoutcart);
         }
         if (response.comparemessage) {
             if (response.success == true) {

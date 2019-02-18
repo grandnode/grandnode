@@ -47,9 +47,8 @@
 </aside>
 <a class="js-offcanvas-trigger filter-button btn btn-outline-info d-none mb-3" data-offcanvas-trigger="leftSide" href="#leftSide"><span class="material-icons">tune</span><span class="ml-3">@T("catalog.selectors.fiters")</span></a>
 <aside class="js-offcanvas mobile-filters" data-offcanvas-options='{"modifiers":"left,overlay","modal":true,"resize":true}' id="leftSide" role="complementary"></aside>
-<aside class="js-offcanvas flycart-container" data-offcanvas-options='{"modifiers":"right,overlay","modal":true,"resize":true}' id="right" role="complementary">
-    @await Component.InvokeAsync("FlyoutShoppingCart")
-</aside>
+@await Component.InvokeAsync("FlyoutShoppingCart")
+
 
 <!-- Search Modal -->
 <div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-hidden="true">
