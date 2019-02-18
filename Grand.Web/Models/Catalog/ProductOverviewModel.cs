@@ -45,6 +45,7 @@ namespace Grand.Web.Models.Catalog
         public partial class ProductPriceModel : BaseGrandModel
         {
             public string OldPrice { get; set; }
+            public decimal OldPriceValue { get; set; }
             public string CatalogPrice { get; set; }
             public string Price {get;set;}
             public decimal PriceValue { get; set; }

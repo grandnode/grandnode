@@ -384,6 +384,7 @@ namespace Grand.Web.Services
                                                 if (finalPriceBase != oldPriceBase && oldPriceBase != decimal.Zero)
                                                 {
                                                     priceModel.OldPrice = _priceFormatter.FormatPrice(oldPrice, true, currentCurrency);
+                                                    priceModel.OldPriceValue = oldPrice;
                                                     priceModel.Price = _priceFormatter.FormatPrice(finalPrice, true, currentCurrency);
                                                     priceModel.PriceValue = finalPrice;
                                                 }
