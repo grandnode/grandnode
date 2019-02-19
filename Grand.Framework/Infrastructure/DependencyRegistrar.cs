@@ -332,7 +332,6 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<ResourceManager>().As<IResourceManager>().InstancePerLifetimeScope();
 
             builder.RegisterType<EventPublisher>().As<IEventPublisher>().SingleInstance();
-            builder.RegisterType<SubscriptionService>().As<ISubscriptionService>().SingleInstance();
 
             //TASKS
             builder.RegisterType<QueuedMessagesSendScheduleTask>().InstancePerLifetimeScope();
