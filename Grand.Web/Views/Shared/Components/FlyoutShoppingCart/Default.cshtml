@@ -48,7 +48,7 @@
                                             </div>
                                             <div class="ml-auto text-nowrap">
                                                 <button class="btn btn-link text-danger deletecartitem p-0" title="Remove"
-                                                        onclick=deletecartitem('@Url.RouteUrl("DeleteCartItem", new { id=item.Id })')>
+                                                        onclick="deletecartitem('@Url.RouteUrl("DeleteCartItem", new { id=item.Id })')">
                                                     <span class="material-icons mat">
                                                         close
                                                     </span>
@@ -64,7 +64,7 @@
                             <div class="col-lg-6 col-7 text-center buttons d-flex justify-content-center align-items-center">
                                 @if (Model.DisplayShoppingCartButton)
                                 {
-                                    <input type="button" value="@T(" ShoppingCart.Mini.ViewCart")" class="btn btn-info btn-block cart-button mt-1" onclick="setLocation('@(Url.RouteUrl("ShoppingCart"))')" />
+                                    <input type="button" value="@T("ShoppingCart.Mini.ViewCart")" class="btn btn-info btn-block cart-button mt-1" onclick="setLocation('@(Url.RouteUrl("ShoppingCart"))')" />
 
                                 }
                                 @if (Model.DisplayCheckoutButton)
@@ -78,7 +78,7 @@
                                     {
                                         checkoutUrl = Url.RouteUrl("Checkout");
                                     }
-                                    <input type="button" value="@T(" Checkout.Button")" class="btn btn-secondary btn-block checkout-button" onclick="setLocation('@checkoutUrl')" />
+                                    <input type="button" value="@T("Checkout.Button")" class="btn btn-secondary btn-block checkout-button" onclick="setLocation('@checkoutUrl')" />
                                 }
                             </div>
                         </div>
