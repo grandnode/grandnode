@@ -1,0 +1,12 @@
+@model Decimal
+@Html.TextBoxFor(model => model)
+@using System.Globalization
+<script>
+    $(document).ready(function() {
+       $("#@Html.IdForModel()").kendoNumericTextBox({
+           culture: "@CultureInfo.CurrentCulture.Name",
+           format: 'n4',
+           decimals: 4
+        });
+    });
+</script>

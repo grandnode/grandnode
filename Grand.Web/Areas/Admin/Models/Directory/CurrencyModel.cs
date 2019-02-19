@@ -6,6 +6,7 @@ using Grand.Framework.Mvc.Models;
 using Grand.Web.Areas.Admin.Validators.Directory;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Web.Areas.Admin.Models.Directory
 {
@@ -29,6 +30,7 @@ namespace Grand.Web.Areas.Admin.Models.Directory
         
         public string DisplayLocale { get; set; }
 
+        [UIHint("DecimalN4")]
         [GrandResourceDisplayName("Admin.Configuration.Currencies.Fields.Rate")]
         public decimal Rate { get; set; }
 
