@@ -61,7 +61,7 @@
         if (Model.PagingFilteringContext.ViewMode == "grid")
         {
             <div class="manufactureGrid">
-                <div class="row flex-grid px-3">
+                <div class="row flex-grid">
                     @foreach (var product in Model.Products)
                     {
                         <div class="col-lg-4 col-sm-6 col-6 product-container">
@@ -73,8 +73,8 @@
         }
         else
         {
-            <div class="col-12">
-                <div class="row">
+            <div class="row">
+                <div class="col-12">
                     @foreach (var product in Model.Products)
                     {
                         <partial name="_ProductBoxList" model="product" />
@@ -83,7 +83,6 @@
             </div>
         }
     }
-
     @{
         var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
     }
@@ -94,7 +93,6 @@
         </div>
     }
     @await Component.InvokeAsync("Widget", new { widgetZone = "manufacturerdetails_bottom", additionalData = Model.Id })
-
 </div>
 
 

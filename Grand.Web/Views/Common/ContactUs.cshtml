@@ -7,7 +7,7 @@
     Html.AddTitleParts(T("PageTitle.ContactUs").Text);
 }
 <div class="page contact-page">
-        <h1 class="generalTitle">@T("PageTitle.ContactUs")</h1>
+    <h1 class="generalTitle">@T("PageTitle.ContactUs")</h1>
     <div class="generalMarginSupporter text-xs-left">
         @await Component.InvokeAsync("TopicBlock", new { systemName = "ContactUs" })
         @await Component.InvokeAsync("Widget", new { widgetZone = "contactus_top" })
