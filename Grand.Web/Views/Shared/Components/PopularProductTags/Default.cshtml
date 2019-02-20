@@ -1,19 +1,17 @@
 ﻿@model PopularProductTagsModel
-@if (Model.Tags.Any())
-{
-    <div id="block-popular-tags" class="block block-popular-tags">
-            <h2 class="h5 d-block"><strong>@T("Products.Tags.Popular")</strong></h2>
-            <div class="viewBox btn-toolbar">
-                @foreach (var item in Model.Tags)
-                {
-                        <a class="btn btn-sm btn-outline-secondary d-flex align-items-center" href="@Url.RouteUrl("ProductsByTagName", new { SeName = item.SeName })" style="font-size:@(Model.GetFontSize(item))%;">@item.Name</a>
-                }
-                @if (Model.TotalTags > Model.Tags.Count)
-                {
-                    <div class="view-all mt-2">
-                        <a class="btn btn-outline-info" href="@Url.RouteUrl("ProductTagsAll")">@T("Products.Tags.Popular.ViewAll")</a>
-                    </div>
-                }
+
+<div id="block-popular-tags" class="block block-popular-tags">
+    <h2 class="h5 d-block"><strong>@T("Products.Tags.Popular")</strong></h2>
+    <div class="viewBox btn-toolbar">
+        @foreach (var item in Model.Tags)
+        {
+                <a class="btn btn-sm btn-outline-secondary d-flex align-items-center" href="@Url.RouteUrl("ProductsByTagName", new { SeName = item.SeName })" style="font-size:@(Model.GetFontSize(item))%;">@item.Name</a>
+        }
+        @if (Model.TotalTags > Model.Tags.Count)
+        {
+            <div class="view-all mt-2">
+                <a class="btn btn-outline-info" href="@Url.RouteUrl("ProductTagsAll")">@T("Products.Tags.Popular.ViewAll")</a>
             </div>
-        </div>
-}
+        }
+    </div>
+</div>
