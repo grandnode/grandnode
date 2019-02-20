@@ -46,7 +46,7 @@ using System.Text;
 
 namespace Grand.Web.Services
 {
-    public partial class CommonViewModelService: ICommonViewModelService
+    public partial class CommonViewModelService : ICommonViewModelService
     {
         private readonly ICacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
@@ -85,7 +85,7 @@ namespace Grand.Web.Services
         private readonly CaptchaSettings _captchaSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
 
-        public CommonViewModelService(ICacheManager cacheManager, 
+        public CommonViewModelService(ICacheManager cacheManager,
             IStoreContext storeContext,
             IStoreService storeService,
             IThemeContext themeContext,
@@ -276,7 +276,7 @@ namespace Grand.Web.Services
             };
             return model;
         }
-        
+
         public virtual void SetTaxType(int customerTaxType)
         {
             var taxDisplayType = (TaxDisplayType)Enum.ToObject(typeof(TaxDisplayType), customerTaxType);
@@ -446,6 +446,7 @@ namespace Grand.Web.Services
                 RecommendedProductsEnabled = _catalogSettings.RecommendedProductsEnabled,
                 NewProductsEnabled = _catalogSettings.NewProductsEnabled,
                 DisplayTaxShippingInfoFooter = _catalogSettings.DisplayTaxShippingInfoFooter,
+                InclTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax,
                 HidePoweredByGrandNode = _storeInformationSettings.HidePoweredByGrandNode,
                 AllowCustomersToApplyForVendorAccount = _vendorSettings.AllowCustomersToApplyForVendorAccount,
                 Topics = cachedTopicModel
@@ -797,7 +798,7 @@ namespace Grand.Web.Services
 
             model.SuccessfullySent = true;
             model.Result = _localizationService.GetResource("ContactUs.YourEnquiryHasBeenSent");
-            
+
             return model;
         }
         public virtual ContactVendorModel PrepareContactVendor(Vendor vendor)
