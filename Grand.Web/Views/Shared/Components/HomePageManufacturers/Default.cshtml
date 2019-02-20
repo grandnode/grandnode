@@ -1,23 +1,21 @@
 ﻿@model IList<ManufacturerModel>
-@if (Model.Any())
-{
-    <div class="manufacturerGrid">
-        <div class="flex-grid row">
-            @foreach (var item in Model)
-            {
-                <div class="col-lg-4 col-md-6 col-sm-6 col-12 mb-2">
-                    <div class="card pb-0">
+
+<div class="manufacturerGrid">
+    <div class="flex-grid row">
+        @foreach (var item in Model)
+        {
+            <div class="col-lg-4 col-md-6 col-sm-6 col-12 mb-2">
+                <div class="card pb-0">
+                    <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })" title="@item.PictureModel.Title">
+                        <img class="img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
+                    </a>
+                    <h4 class="h6 p-sm-3 p-2 mb-0 card-title">
                         <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })" title="@item.PictureModel.Title">
-                            <img class="img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" />
+                            @item.Name
                         </a>
-                        <h4 class="h6 p-sm-3 p-2 mb-0 card-title">
-                            <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })" title="@item.PictureModel.Title">
-                                @item.Name
-                            </a>
-                        </h4>
-                    </div>
+                    </h4>
                 </div>
-            }
-        </div>
+            </div>
+        }
     </div>
-}
+</div>
