@@ -1,17 +1,15 @@
 ﻿@model IList<ProductOverviewModel>
-@if (Model.Any())
-{
-    <div class="col-12 product-grid recommended-product-grid px-0">
-        <h2 class="h3 generalTitle text-center">
-            @T("HomePage.Recommended.Products")
-        </h2>
-            <div class="row">
-                @foreach (var item in Model)
-                {
-                    <div class="col-lg-4 col-sm-6 col-6 product-container">
-                        <partial name="_ProductBox" model="item" />
-                    </div>
-                }
-            </div>
-    </div>
-}
+
+<div class="col-12 product-grid recommended-product-grid px-0">
+    <h2 class="h3 generalTitle text-center">
+        @T("HomePage.Recommended.Products")
+    </h2>
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-lg-4 col-sm-6 col-6 product-container">
+                    <partial name="_ProductBox" model="item" />
+                </div>
+            }
+        </div>
+</div>
