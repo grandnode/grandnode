@@ -45,8 +45,7 @@
             @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
             {
                 <span class="change-percent bg-success text-white">
-                    <span class="ap d-none">@Model.ProductPrice.PriceValue</span>
-                    <span class="op d-none">@Model.ProductPrice.OldPriceValue</span>
+                    <span>-@(Convert.ToInt32((1 - Model.ProductPrice.PriceValue / Model.ProductPrice.OldPriceValue) * 100))%</span>
                 </span>
             }
             <div class="card-body text-left">

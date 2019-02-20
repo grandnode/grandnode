@@ -156,19 +156,6 @@ function dataCountdown() {
     });
 }
 
-// discount ribbons engine
-
-function discountEngine() {
-    $('.change-percent').each(function () {
-        var ap = $(this).find('.ap').text(),
-            op = $(this).find('.op').text();
-        if (op.length) {
-            var promo = '-' + Math.abs(Math.round((1 - ap / op) * 100)) + '%';
-            $(this).text(promo);
-        }
-    });
-}
-
 // left-side canvas
 
 function LeftSide() {
@@ -187,7 +174,6 @@ $(document).ready(function () {
     itemsStatistics();
     ratingSubFunc();
     IpadMenuFix();
-    discountEngine();
     dataCountdown();
     BackToTop();
 
