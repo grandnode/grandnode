@@ -10,14 +10,7 @@
             <select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" class="search-box-select custom-select input-group-addon"></select>
         }
         @await Component.InvokeAsync("Widget", new { widgetZone = "searchbox_before_search_button" })
-        @if (Model.SearchTermMinimumLength > 0)
-        {
-            <script asp-location="Footer">
-                $(document).ready(function () {
-                    SearchAction.init('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Search.EnterSearchTerms").Text))');
-                });
-            </script>
-        }
+
         <div class="input-group-append">
             <button type="submit" class="btn btn-info search-box-button float-sm-right d-inline-flex">
                 <span class="sr-only">@T("Search.SearchBox.Tooltip")</span>
@@ -57,18 +50,25 @@
             </li>
         </ul>
     </div>
-    @if (Model.AutoCompleteEnabled)
-    {
-        <text>
-            <script asp-location="Footer">
-                $(document).ready(function () {
-                    SearchAction.autocomplete(@(Model.SearchTermMinimumLength.ToString()),
-                        '@(Url.RouteUrl("ProductSearchAutoComplete"))',
-                        '@(Model.ShowProductImagesInSearchAutoComplete)'
-                    );
-                });
-            </script>
-        </text>
-    }
+    <script asp-location="Footer">
+        $(document).ready(function () {
+            @if (Model.AutoCompleteEnabled)
+            {
+                <text>
+                SearchAction.autocomplete(@(Model.SearchTermMinimumLength.ToString()),
+                    '@(Url.RouteUrl("ProductSearchAutoComplete"))',
+                    '@(Model.ShowProductImagesInSearchAutoComplete)'
+                );
+                </text>
+            }
+            @if (Model.SearchTermMinimumLength > 0)
+            {
+                <text>
+                SearchAction.init('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Search.EnterSearchTerms").Text))');
+                </text>
+            }
+        });
+    </script>
+
     @await Component.InvokeAsync("Widget", new { widgetZone = "searchbox" })
 </form>
