@@ -45,7 +45,9 @@ namespace Grand.Framework.Infrastructure
 
             //add theme support
             services.AddThemes();
-            
+
+            //add WebEncoderOptions
+            services.AddWebEncoder();
         }
 
         /// <summary>
