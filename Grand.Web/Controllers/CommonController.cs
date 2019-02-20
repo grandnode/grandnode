@@ -164,11 +164,10 @@ namespace Grand.Web.Controllers
                 permanentRedirect = false;
             }
 
-            if (permanentRedirect)
-                return RedirectPermanent(url);
-
             url = Uri.EscapeUriString(WebUtility.UrlDecode(url));
 
+            if (permanentRedirect)
+                return RedirectPermanent(url);
             return Redirect(url);
         }
 
