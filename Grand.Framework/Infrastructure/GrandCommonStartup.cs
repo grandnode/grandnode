@@ -2,8 +2,11 @@
 using Grand.Core.Infrastructure;
 using Grand.Framework.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace Grand.Framework.Infrastructure
 {
@@ -96,9 +99,24 @@ namespace Grand.Framework.Infrastructure
             //use powered by
             if (!grandConfig.IgnoreUsePoweredByMiddleware)
                 application.UsePoweredBy();
-            
+
             //use request localization
-            application.UseRequestLocalization();
+            if (!grandConfig.UseRequestLocalization)
+                application.UseRequestLocalization();
+            else
+            {
+                var supportedCultures = new List<CultureInfo>();
+                foreach (var culture in grandConfig.SupportedCultures)
+                {
+                    supportedCultures.Add(new CultureInfo(culture));
+                }
+                application.UseRequestLocalization(new RequestLocalizationOptions
+                {
+                    DefaultRequestCulture = new RequestCulture(grandConfig.DefaultRequestCulture),
+                    SupportedCultures = supportedCultures,
+                    SupportedUICultures = supportedCultures
+                });
+            }
         }
 
         /// <summary>
