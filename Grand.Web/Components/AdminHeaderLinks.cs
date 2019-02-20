@@ -20,7 +20,7 @@ namespace Grand.Web.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var model = await Task.Run(() => _commonViewModelService.PrepareAdminHeaderLinks(_workContext.CurrentCustomer));
-            if (!model.DisplayAdminLink)
+            if (!model.DisplayAdminLink && !model.IsCustomerImpersonated)
                 return Content("");
             return View(model);
         }

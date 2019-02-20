@@ -1,41 +1,41 @@
 ﻿@model AdminHeaderLinksModel
 @if (Model.IsCustomerImpersonated || Model.DisplayAdminLink)
 {
-        @if (Model.IsCustomerImpersonated)
-        {
-            <div class="impersonated-container">
-                 <span class="impersonated-text">@string.Format(T("Account.ImpersonatedAs").Text, Model.ImpersonatedCustomerEmailUsername)</span>
-                 <a class="nav-link finish-impersonation" href="@Url.RouteUrl("Logout")" title="@T("Account.ImpersonatedAs.Finish.Hint")">
-                     <span class="material-icons mat pl-2">
-                         close
-                     </span>
-                 </a>
-            </div>
-        }
-        @if (Model.DisplayAdminLink)
-        {
-                <li class="nav-item col d-flex">
-                    <a class="nav-link" href="@Url.Content("~/Admin")">
-                        <span class="hl-label">
-                            <span class="material-icons mat pr-1">
-                                settings
-                            </span>
-                        </span>
-                        <span class="d-lg-none d-block text-muted mobile-desc">@T("admin")</span>
-                    </a>
-                </li>
-        }
-        @if (!string.IsNullOrEmpty(Model.EditPageUrl))
-        {
-                <li class="nav-item col d-sm-flex d-none">
-                    <a target="_blank" class="nav-link edit-page" href="@Model.EditPageUrl">
-                        <span class="hl-label">
-                            <span class="material-icons mat">
-                                build
-                            </span>
-                        </span>
-                        <span class="d-lg-none d-block text-muted mobile-desc">@T("edit")</span>
-                    </a>
-                </li>
-        }
+    @if (Model.IsCustomerImpersonated)
+    {
+        <li class="nav-item col d-flex align-items-center">
+            <span class="impersonated-text">@string.Format(T("Account.ImpersonatedAs").Text, Model.ImpersonatedCustomerEmailUsername)</span>
+            <a class="nav-link finish-impersonation p-0" href="@Url.RouteUrl("Logout")" title="@T("Account.ImpersonatedAs.Finish.Hint")">
+                <span class="material-icons mat pl-2">
+                    close
+                </span>
+            </a>
+        </li>
+    }
+    @if (Model.DisplayAdminLink)
+    {
+        <li class="nav-item col d-flex">
+            <a class="nav-link" href="@Url.Content("~/Admin")">
+                <span class="hl-label">
+                    <span class="material-icons mat pr-1">
+                        settings
+                    </span>
+                </span>
+                <span class="d-lg-none d-block text-muted mobile-desc">@T("admin")</span>
+            </a>
+        </li>
+    }
+    @if (!string.IsNullOrEmpty(Model.EditPageUrl))
+    {
+        <li class="nav-item col d-sm-flex d-none">
+            <a target="_blank" class="nav-link edit-page" href="@Model.EditPageUrl">
+                <span class="hl-label">
+                    <span class="material-icons mat">
+                        build
+                    </span>
+                </span>
+                <span class="d-lg-none d-block text-muted mobile-desc">@T("edit")</span>
+            </a>
+        </li>
+    }
 }
