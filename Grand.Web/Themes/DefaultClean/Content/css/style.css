@@ -2318,7 +2318,7 @@ ul.opc .order-summary-content h5 {
 .prod-list .img-holder {
     position: relative;
     max-width: 200px;
-    width: 250px;
+    width: 200px;
 }
 .prod-list .img-holder .picture {
     display: block;
@@ -4852,6 +4852,10 @@ footer .socicon-pinterest:hover {
 	}
 }
 @media (max-width: 767px) {
+    .prod-list .img-holder {
+        max-width: 180px;
+        width: 180px;
+    }
     .card-buttons .btn-group {
         display: none;
     }
@@ -5208,6 +5212,13 @@ footer .socicon-pinterest:hover {
 	}
 }
 @media (max-width: 575px) {
+    .prod-list .card-body {
+        max-width: 185px;
+    }
+    .prod-list .img-holder {
+        max-width: 100px;
+        width: 100px;
+    }
     .newsletter-title {
         width: 100%;
         text-align: center;

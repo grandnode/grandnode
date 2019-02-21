@@ -21,7 +21,7 @@
     }
 </script>
 
-<div class="col-12">
+
     <h2 class="generalTitle">@T("Search")</h2>
     <div class="search-input">
         <form asp-route="ProductSearch" method="get">
@@ -111,15 +111,12 @@
             </div>
         </form>
     </div>
-</div>
 @await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_before_results" })
 <div class="search-results">
 
     @if (Model.Products.Any())
     {
-        <div class="col">
             <partial name="_CatalogSelectors" model="Model.PagingFilteringContext" />
-        </div>
     }
     @await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_before_results" })
     @if (!String.IsNullOrEmpty(Model.Warning))
@@ -139,24 +136,22 @@
     {
         if (Model.PagingFilteringContext.ViewMode == "grid")
         {
-            <div class="col-12">
-                <div class="row flex-grid">
+            <div class="row flex-grid">
                     @foreach (var product in Model.Products)
                     {
                         <div class="col-lg-4 col-sm-6 col-6 product-container">
                             <partial name="_ProductBox" model="product" />
                         </div>
                     }
-                </div>
             </div>
         }
         else
         {
-            <div class="search-results-box col-12">
-                <div class="row">
+            <div class="search-results-box row">
+                <div class="col-12">
                     @foreach (var product in Model.Products)
                     {
-                        <div class="col-12 Boxlist pb-1">
+                        <div class="Boxlist pb-1">
                             <partial name="_ProductBoxList" model="product" />
                         </div>
                     }

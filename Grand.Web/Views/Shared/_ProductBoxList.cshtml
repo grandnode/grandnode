@@ -34,7 +34,7 @@
     var addtocomparelink = Url.RouteUrl("AddProductToCompare", new { productId = Model.Id });
 }
     <div class="card gen rowHelper col-12 mb-3" data-productid="@Model.Id">
-        <div class="row flex-row prod-list">
+        <div class="row flex-row flex-nowrap prod-list">
             <div class="d-inline-flex img-holder">
                     <a class="picture" href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
                         <img class="img-fluid" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
@@ -51,7 +51,7 @@
                     }
             </div>
             <div class="d-inline-flex">
-                <div class="card-body p-3 text-left">
+                <div class="card-body p-sm-3 px-2 py-1 text-left">
                     <h2 class="h6 card-title">
                         <strong><a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">@Model.Name</a></strong>
                         @if (Model.ShowSku && !string.IsNullOrEmpty(Model.Sku))
@@ -70,12 +70,12 @@
                         ratingPercent = ((Model.ReviewOverviewModel.RatingSum * 100) / Model.ReviewOverviewModel.TotalReviews) / 5;
                     }
                     <div class="product-rating-box list-group" title="@string.Format(T("Reviews.TotalReviews").Text, Model.ReviewOverviewModel.TotalReviews)">
-                        <div class="rating box-progress10 rating_@Model.Id" data-rating="@(ratingPercent)" data-id="rating_@Model.Id">
+                        <div class="rating my-sm-1 my-0 box-progress10 rating_@Model.Id" data-rating="@(ratingPercent)" data-id="rating_@Model.Id">
                         </div>
                     </div>
                 }
                 @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_before", additionalData = Model.Id })
-                <ul class="pl-0 mb-2">
+                <ul class="pl-0 mb-0">
 
                     @if (Model.ProductType != ProductType.Auction)
                     {
@@ -112,7 +112,7 @@
 
                 </ul>
                 @await Component.InvokeAsync("Widget", new { widgetZone = "productbox_addinfo_middle", additionalData = Model.Id })
-                <div class="btn-group list">
+                <div class="btn-group list d-lg-inline-flex d-none">
                     @if (Model.ShowQty)
                     {
                         var qtyId = "addtocart_" + @Model.Id + "_EnteredQuantity";
