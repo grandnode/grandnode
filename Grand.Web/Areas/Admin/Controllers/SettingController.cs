@@ -3115,6 +3115,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.SenderId = settings.SenderId;
             model.StorageBucket = settings.StorageBucket;
             model.PrivateApiKey = settings.PrivateApiKey;
+            model.Enabled = settings.Enabled;
 
             return View(model);
         }
