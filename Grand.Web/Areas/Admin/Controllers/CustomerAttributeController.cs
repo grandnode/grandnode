@@ -5,8 +5,8 @@ using Grand.Framework.Security.Authorization;
 using Grand.Services.Customers;
 using Grand.Services.Localization;
 using Grand.Services.Security;
-using Grand.Web.Areas.Admin.Models.Customers;
 using Grand.Web.Areas.Admin.Interfaces;
+using Grand.Web.Areas.Admin.Models.Customers;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 
@@ -26,7 +26,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public CustomerAttributeController(ICustomerAttributeService customerAttributeService,
             ICustomerAttributeViewModelService customerAttributeViewModelService,
-            ILanguageService languageService, 
+            ILanguageService languageService,
             ILocalizationService localizationService)
         {
             this._customerAttributeService = customerAttributeService;
@@ -36,18 +36,12 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         #endregion
-        
+
         #region Customer attributes
 
-        public IActionResult Index()
-        {
-            return RedirectToAction("List");
-        }
+        public IActionResult Index() => RedirectToAction("List");
 
-        public IActionResult ListBlock()
-        {
-            return PartialView("ListBlock");
-        }
+        public IActionResult ListBlock() => PartialView("ListBlock");
 
         public IActionResult List()
         {
@@ -69,7 +63,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             };
             return Json(gridModel);
         }
-        
+
         //create
         public IActionResult Create()
         {
@@ -127,7 +121,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     //selected tab
                     SaveSelectedTabIndex();
 
-                    return RedirectToAction("Edit", new {id = customerAttribute.Id});
+                    return RedirectToAction("Edit", new { id = customerAttribute.Id });
                 }
                 return RedirectToAction("List");
             }
@@ -184,7 +178,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (customerAttribute == null)
                 //No customer attribute found with the specified id
                 return RedirectToAction("List");
-            
+
             if (ModelState.IsValid)
             {
                 _customerAttributeViewModelService.InsertCustomerAttributeValueModel(model);
@@ -200,7 +194,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult ValueEditPopup(string id, string customerAttributeId)
         {
             var av = _customerAttributeService.GetCustomerAttributeById(customerAttributeId);
-            var cav = av.CustomerAttributeValues.FirstOrDefault(x=>x.Id == id);
+            var cav = av.CustomerAttributeValues.FirstOrDefault(x => x.Id == id);
             if (cav == null)
                 //No customer attribute value found with the specified id
                 return RedirectToAction("List");

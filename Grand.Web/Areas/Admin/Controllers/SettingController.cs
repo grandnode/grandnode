@@ -3050,10 +3050,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return RedirectToAction("GeneralCommon");
         }
         //all settings
-        public IActionResult AllSettings()
-        {
-            return View();
-        }
+        public IActionResult AllSettings() => View();
 
         [HttpPost]
         [AdminAntiForgery(true)]

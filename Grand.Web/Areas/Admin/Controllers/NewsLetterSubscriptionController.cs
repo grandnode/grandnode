@@ -74,12 +74,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
 
-        public IActionResult Index()
-		{
-			return RedirectToAction("List");
-		}
+        public IActionResult Index() => RedirectToAction("List");
 
-		public IActionResult List()
+        public IActionResult List()
         {
             var model = new NewsLetterSubscriptionListModel();
 

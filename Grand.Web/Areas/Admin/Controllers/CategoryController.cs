@@ -67,10 +67,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region List / tree
 
-        public IActionResult Index()
-        {
-            return RedirectToAction("List");
-        }
+        public IActionResult Index() => RedirectToAction("List");
 
         public IActionResult List()
         {
@@ -90,10 +87,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        public IActionResult Tree()
-        {
-            return View();
-        }
+        public IActionResult Tree() => View();
 
         public IActionResult NodeList()
         {

@@ -50,10 +50,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Methods
 
         //list
-        public IActionResult Index()
-        {
-            return RedirectToAction("List");
-        }
+        public IActionResult Index() => RedirectToAction("List");
 
         public IActionResult List()
         {

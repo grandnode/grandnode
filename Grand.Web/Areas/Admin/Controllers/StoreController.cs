@@ -33,10 +33,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._localizationService = localizationService;
         }
 
-        public IActionResult List()
-        {
-            return View();
-        }
+        public IActionResult List() => View();
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command)

@@ -29,10 +29,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return (_encryptionService.EncryptText(password, pk), pk);
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        public IActionResult Index() => View();
 
         [HttpPost]
         public IActionResult List(string email, DataSourceRequest command)

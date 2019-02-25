@@ -42,10 +42,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Category templates
 
-        public IActionResult CategoryTemplates()
-        {
-            return View();
-        }
+        public IActionResult CategoryTemplates() => View();
 
         [HttpPost]
         public IActionResult CategoryTemplates(DataSourceRequest command)
@@ -119,10 +116,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #endregion
 
         #region Manufacturer templates
-        public IActionResult ManufacturerTemplates()
-        {
-            return View();
-        }
+        public IActionResult ManufacturerTemplates() => View();
 
         [HttpPost]
         public IActionResult ManufacturerTemplates(DataSourceRequest command)
@@ -193,10 +187,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Product templates
 
-        public IActionResult ProductTemplates()
-        {
-            return View();
-        }
+        public IActionResult ProductTemplates() => View();
 
         [HttpPost]
         public IActionResult ProductTemplates(DataSourceRequest command)
@@ -266,10 +257,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Topic templates
 
-        public IActionResult TopicTemplates()
-        {
-            return View();
-        }
+        public IActionResult TopicTemplates() => View();
 
         [HttpPost]
         public IActionResult TopicTemplates(DataSourceRequest command)

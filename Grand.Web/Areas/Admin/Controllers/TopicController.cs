@@ -49,10 +49,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region List
 
-        public IActionResult Index()
-        {
-            return RedirectToAction("List");
-        }
+        public IActionResult Index() => RedirectToAction("List");
 
         public IActionResult List()
         {

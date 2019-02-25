@@ -15,29 +15,23 @@ namespace Grand.Web.Areas.Admin.Controllers
 {
     [PermissionAuthorize(PermissionSystemName.Banners)]
     public partial class BannerController : BaseAdminController
-	{
+    {
         private readonly IBannerService _bannerService;
         private readonly ILocalizationService _localizationService;
         private readonly ILanguageService _languageService;
 
         public BannerController(IBannerService bannerService,
-            ILocalizationService localizationService, 
+            ILocalizationService localizationService,
             ILanguageService languageService)
-		{
+        {
             this._bannerService = bannerService;
             this._localizationService = localizationService;
             this._languageService = languageService;
         }
 
-        public IActionResult Index()
-        {
-            return RedirectToAction("List");
-        }
+        public IActionResult Index() => RedirectToAction("List");
 
-		public IActionResult List()
-        {
-            return View();
-		}
+        public IActionResult List() => View();
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command)
@@ -48,7 +42,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 Data = banners.Select(x =>
                 {
                     var model = x.ToModel();
-                    model.Body = "";                    
+                    model.Body = "";
                     return model;
                 }),
                 Total = banners.Count
@@ -80,7 +74,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-		public IActionResult Edit(string id)
+        public IActionResult Edit(string id)
         {
             var banner = _bannerService.GetBannerById(id);
             if (banner == null)
@@ -96,7 +90,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             });
 
             return View(model);
-		}
+        }
 
         [HttpPost]
         [ParameterBasedOnFormName("save-continue", "continueEditing")]
@@ -110,15 +104,15 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 banner = model.ToEntity(banner);
-                _bannerService.UpdateBanner(banner);            
+                _bannerService.UpdateBanner(banner);
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Banners.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = banner.Id }) : RedirectToAction("List");
             }
 
             return View(model);
-		}
+        }
 
-		[HttpPost]
+        [HttpPost]
         public IActionResult Delete(string id)
         {
             var banner = _bannerService.GetBannerById(id);
@@ -133,5 +127,5 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
             return RedirectToAction("Edit", new { id = id });
         }
-	}
+    }
 }

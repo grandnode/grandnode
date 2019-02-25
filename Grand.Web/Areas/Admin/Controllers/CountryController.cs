@@ -65,15 +65,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Countries
 
-        public IActionResult Index()
-        {
-            return RedirectToAction("List");
-        }
+        public IActionResult Index() => RedirectToAction("List");
 
-        public IActionResult List()
-        {
-            return View();
-        }
+        public IActionResult List() => View();
 
         [HttpPost]
         public IActionResult CountryList(DataSourceRequest command)

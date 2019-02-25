@@ -5,8 +5,8 @@ using Grand.Framework.Security.Authorization;
 using Grand.Services.Affiliates;
 using Grand.Services.Localization;
 using Grand.Services.Security;
-using Grand.Web.Areas.Admin.Models.Affiliates;
 using Grand.Web.Areas.Admin.Interfaces;
+using Grand.Web.Areas.Admin.Models.Affiliates;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
@@ -38,10 +38,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Methods
 
         //list
-        public IActionResult Index()
-        {
-            return RedirectToAction("List");
-        }
+        public IActionResult Index() => RedirectToAction("List");
+
 
         public IActionResult List()
         {

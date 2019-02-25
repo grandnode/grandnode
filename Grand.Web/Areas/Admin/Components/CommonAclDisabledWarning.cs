@@ -19,7 +19,7 @@ namespace Grand.Web.Areas.Admin.Components
             this._catalogSettings = catalogSettings;
         }
 
-        public IViewComponentResult Invoke()//original Action name: AclDisabledWarning
+        public IViewComponentResult Invoke()
         {
             //action displaying notification (warning) to a store owner that "ACL rules" feature is ignored
             //default setting

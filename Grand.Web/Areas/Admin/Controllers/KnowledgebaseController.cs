@@ -41,22 +41,15 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._storeService = storeService;
         }
 
-        public IActionResult Index()
-        {
-            return RedirectToAction("List");
-        }
+        public IActionResult Index() => RedirectToAction("List");
 
-        public IActionResult List()
-        {
-            return View();
-        }
+        public IActionResult List() => View();
 
         public IActionResult NodeList()
         {
             var model = _knowledgebaseViewModelService.PrepareTreeNode();
             return Json(model);
         }
-
 
         public IActionResult ArticleList(DataSourceRequest command, string parentCategoryId)
         {

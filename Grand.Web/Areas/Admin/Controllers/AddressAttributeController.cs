@@ -42,15 +42,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         
         #region Address attributes
 
-        public IActionResult Index()
-        {
-            return RedirectToAction("List");
-        }
+        public IActionResult Index() => RedirectToAction("List");
 
-        public IActionResult ListBlock()
-        {
-            return PartialView("ListBlock");
-        }
+        public IActionResult ListBlock() => PartialView("ListBlock");
 
         public IActionResult List()
         {

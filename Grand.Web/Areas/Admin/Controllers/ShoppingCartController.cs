@@ -59,10 +59,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Methods
 
         //shopping carts
-        public IActionResult CurrentCarts()
-        {
-            return View();
-        }
+        public IActionResult CurrentCarts() => View();
 
         [HttpPost]
         public IActionResult CurrentCarts(DataSourceRequest command)

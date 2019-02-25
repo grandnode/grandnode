@@ -37,10 +37,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._settingService = settingService;
         }
 
-        public IActionResult List()
-        {
-            return View();
-        }
+        public IActionResult List() => View();
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command)

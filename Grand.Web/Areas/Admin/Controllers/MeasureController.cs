@@ -45,10 +45,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Weights
 
-        public IActionResult Weights()
-        {
-            return View();
-        }
+        public IActionResult Weights() => View();
 
         [HttpPost]
         public IActionResult Weights(DataSourceRequest command)
@@ -131,10 +128,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Dimensions
 
-        public IActionResult Dimensions()
-        {
-            return View();
-        }
+        public IActionResult Dimensions() => View();
 
         [HttpPost]
         public IActionResult Dimensions(DataSourceRequest command)
@@ -216,11 +210,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Units
 
-
-        public IActionResult Units()
-        {
-            return View();
-        }
+        public IActionResult Units() => View();
 
         [HttpPost]
         public IActionResult Units(DataSourceRequest command)

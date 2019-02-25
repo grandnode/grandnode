@@ -29,8 +29,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Constructors
 
         public SpecificationAttributeController(ISpecificationAttributeService specificationAttributeService,
-            ILanguageService languageService, 
-            ILocalizationService localizationService, 
+            ILanguageService languageService,
+            ILocalizationService localizationService,
             ICustomerActivityService customerActivityService)
         {
             this._specificationAttributeService = specificationAttributeService;
@@ -40,19 +40,13 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         #endregion
-        
+
         #region Specification attributes
 
         //list
-        public IActionResult Index()
-        {
-            return RedirectToAction("List");
-        }
+        public IActionResult Index() => RedirectToAction("List");
 
-        public IActionResult List()
-        {
-            return View();
-        }
+        public IActionResult List() => View();
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command)
@@ -67,7 +61,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             return Json(gridModel);
         }
-        
+
         //create
         public IActionResult Create()
         {
@@ -134,7 +128,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     //selected tab
                     SaveSelectedTabIndex();
 
-                    return RedirectToAction("Edit",  new {id = specificationAttribute.Id});
+                    return RedirectToAction("Edit", new { id = specificationAttribute.Id });
                 }
                 return RedirectToAction("List");
             }
@@ -176,7 +170,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var options = _specificationAttributeService.GetSpecificationAttributeById(specificationAttributeId).SpecificationAttributeOptions;
             var gridModel = new DataSourceResult
             {
-                Data = options.Select(x => 
+                Data = options.Select(x =>
                     {
                         var model = x.ToModel();
                         //in order to save performance to do not check whether a product is deleted, etc
@@ -213,10 +207,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 var sao = model.ToEntity();
                 //clear "Color" values if it's disabled
                 if (!model.EnableColorSquaresRgb)
-                   sao.ColorSquaresRgb = null;
+                    sao.ColorSquaresRgb = null;
 
                 specificationAttribute.SpecificationAttributeOptions.Add(sao);
-                _specificationAttributeService.UpdateSpecificationAttribute(specificationAttribute);                
+                _specificationAttributeService.UpdateSpecificationAttribute(specificationAttribute);
 
                 ViewBag.RefreshPage = true;
                 return View(model);
@@ -229,7 +223,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         //edit
         public IActionResult OptionEditPopup(string id)
         {
-            var sao = _specificationAttributeService.GetSpecificationAttributeByOptionId(id).SpecificationAttributeOptions.Where(x=>x.Id == id).FirstOrDefault();
+            var sao = _specificationAttributeService.GetSpecificationAttributeByOptionId(id).SpecificationAttributeOptions.Where(x => x.Id == id).FirstOrDefault();
             if (sao == null)
                 //No specification attribute option found with the specified id
                 return RedirectToAction("List");
@@ -249,7 +243,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult OptionEditPopup(SpecificationAttributeOptionModel model)
         {
             var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeByOptionId(model.Id);
-            var sao = specificationAttribute.SpecificationAttributeOptions.Where(x=>x.Id == model.Id).FirstOrDefault();
+            var sao = specificationAttribute.SpecificationAttributeOptions.Where(x => x.Id == model.Id).FirstOrDefault();
             if (sao == null)
                 //No specification attribute option found with the specified id
                 return RedirectToAction("List");

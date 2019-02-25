@@ -42,10 +42,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Tax Providers
 
-        public IActionResult Providers()
-        {
-            return View();
-        }
+        public IActionResult Providers() => View();
 
         [HttpPost]
         public IActionResult Providers(DataSourceRequest command)
@@ -89,10 +86,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Tax Categories
 
-        public IActionResult Categories()
-        {
-            return View();
-        }
+        public IActionResult Categories() => View();
 
         [HttpPost]
         public IActionResult Categories(DataSourceRequest command)

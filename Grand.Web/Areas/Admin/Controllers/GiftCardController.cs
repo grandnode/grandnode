@@ -6,8 +6,8 @@ using Grand.Framework.Security.Authorization;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
 using Grand.Services.Security;
-using Grand.Web.Areas.Admin.Models.Orders;
 using Grand.Web.Areas.Admin.Interfaces;
+using Grand.Web.Areas.Admin.Models.Orders;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
@@ -27,8 +27,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         public GiftCardController(
             IGiftCardViewModelService giftCardViewModelService,
-            IGiftCardService giftCardService, 
-            ILocalizationService localizationService) 
+            IGiftCardService giftCardService,
+            ILocalizationService localizationService)
         {
             this._giftCardViewModelService = giftCardViewModelService;
             this._giftCardService = giftCardService;
@@ -40,10 +40,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Methods
 
         //list
-        public IActionResult Index()
-        {
-            return RedirectToAction("List");
-        }
+        public IActionResult Index() => RedirectToAction("List");
 
         public IActionResult List()
         {

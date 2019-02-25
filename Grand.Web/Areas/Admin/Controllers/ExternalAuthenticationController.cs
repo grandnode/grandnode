@@ -42,10 +42,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Methods
 
-        public IActionResult Methods()
-        {
-            return View();
-        }
+        public IActionResult Methods() => View();
 
         [HttpPost]
         public IActionResult Methods(DataSourceRequest command)

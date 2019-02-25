@@ -7,8 +7,8 @@ using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Web.Areas.Admin.Extensions;
-using Grand.Web.Areas.Admin.Models.Localization;
 using Grand.Web.Areas.Admin.Interfaces;
+using Grand.Web.Areas.Admin.Models.Localization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -47,15 +47,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Languages
 
-        public IActionResult Index()
-        {
-            return RedirectToAction("List");
-        }
+        public IActionResult Index() => RedirectToAction("List");
 
-        public IActionResult List()
-        {
-            return View();
-        }
+        public IActionResult List() => View();
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command)

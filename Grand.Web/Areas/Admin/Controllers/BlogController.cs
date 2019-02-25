@@ -47,15 +47,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Blog posts
 
-        public IActionResult Index()
-        {
-            return RedirectToAction("List");
-        }
+        public IActionResult Index() => RedirectToAction("List");
 
-        public IActionResult List()
-        {
-            return View();
-        }
+        public IActionResult List() => View();
 
         [HttpPost]
         public IActionResult List(DataSourceRequest command)
@@ -181,10 +175,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #endregion
 
         #region Categories
-        public IActionResult CategoryList()
-        {
-            return View();
-        }
+        public IActionResult CategoryList() => View();
 
         [HttpPost]
         public IActionResult CategoryList(DataSourceRequest command)

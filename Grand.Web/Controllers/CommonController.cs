@@ -403,10 +403,7 @@ namespace Grand.Web.Controllers
         //store is closed
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
-        public virtual IActionResult StoreClosed()
-        {
-            return View();
-        }
+        public virtual IActionResult StoreClosed() => View();
 
         [HttpPost]
         public virtual IActionResult ContactAttributeChange(IFormCollection form,

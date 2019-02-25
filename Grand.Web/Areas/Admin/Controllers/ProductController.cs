@@ -82,10 +82,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Product list / create / edit / delete
 
         //list products
-        public IActionResult Index()
-        {
-            return RedirectToAction("List");
-        }
+        public IActionResult Index() => RedirectToAction("List");
 
         public IActionResult List()
         {
