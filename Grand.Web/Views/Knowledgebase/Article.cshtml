@@ -45,8 +45,6 @@
 
     @Html.Raw(@Model.Content)
 
-    <div class="col-xs-12" style="height:100px;"></div>
-
     @if (Model.RelatedArticles.Any())
     {
         <h4>@T("Knowledgebase.Article.RelatedArticles")</h4>
@@ -109,8 +107,6 @@
                             {
                                 <h5 class="username card-header">@(comment.CustomerName)</h5>
                             }
-
-
                             <div class="card-body row">
                                 @if (!String.IsNullOrEmpty(comment.CustomerAvatarUrl))
                                 {

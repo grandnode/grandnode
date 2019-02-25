@@ -26,7 +26,7 @@
                     success: function (data) {
                         $('#check-availability-button').removeAttr('disabled');
                         $('#availability-check-progress').hide();
-                        $('#username-availabilty').removeAttr('class').attr('class', ((data.Available) ? 'username-available-status' : 'username-not-available-status'));
+                        $('#username-availabilty').removeAttr('class').attr('class', ((data.Available) ? 'username-available-status text-success d-flex order-2 mt-3' : 'username-not-available-status text-danger d-flex order-2 mt-3'));
                         $('#username-availabilty').text(data.Text);
                     },
                     failure: function () {
@@ -35,12 +35,12 @@
                     }
                 });
             } else {
-                $('#username-availabilty').attr('class', 'username-not-available-status');
+                $('#username-availabilty').attr('class', 'username-not-available-status username-not-available-status text-danger d-flex order-2 mt-3');
                 $('#username-availabilty').text('@T("Account.CheckUsernameAvailability.EnterUsername")');
             }
             return false;
         });
     });
 </script>
-<input type="button" id="check-availability-button" class="btn btn-secondary check-username-availability-button" value="@T("Account.CheckUsernameAvailability.Button")" />
+<input type="button" id="check-availability-button" class="btn btn-outline-info check-username-availability-button mt-3" value="@T("Account.CheckUsernameAvailability.Button")" />
 <span id="availability-check-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>

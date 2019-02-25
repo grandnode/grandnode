@@ -261,10 +261,10 @@
     }
     @if (Model.IsEditable && Model.Items.Any())
     {
-        <div class="col-12 share-info generalMarginSupporter text-center text-md-left">
-            <div class="row">
+        <div class="row">
+            <div class="col-12 share-info generalMarginSupporter text-center text-md-left">
                 <span class="share-label">@T("Wishlist.YourWishlistURL"):</span>
-                <a href="@Url.RouteUrl("Wishlist", new { customerGuid = Model.CustomerGuid })" class="small share-link">@Url.RouteUrl("Wishlist", new { customerGuid = Model.CustomerGuid }, "http")</a>
+                <a href="@Url.RouteUrl("Wishlist", new { customerGuid = Model.CustomerGuid })" class="small ml-2">@Url.RouteUrl("Wishlist", new { customerGuid = Model.CustomerGuid }, "http")</a>
             </div>
         </div>
     }

@@ -19,12 +19,14 @@
         @if (Model.ApplicationVersion != Model.DatabaseVersion)
         {
             <h1 class="h4 generalTitle"> @T("UpgradeSystem.NonActual")</h1>
-            <div class="col-12 px-0">
-                <div class="card text-xs-center">
-                    <div class="card-body">
-                        <h2 class="h4">@T("UpgradeSystem.DatabaseVersion"): @Model.DatabaseVersion</h2>
-                        <h2 class="h4">@T("UpgradeSystem.ApplicationVersion"): @Model.ApplicationVersion</h2>
-                        <h2 class="h6 mt-1 mb-1 text-success">@T("UpgradeSystem.Message1")</h2>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card text-xs-center">
+                        <div class="card-body">
+                            <h2 class="h4">@T("UpgradeSystem.DatabaseVersion"): @Model.DatabaseVersion</h2>
+                            <h2 class="h4">@T("UpgradeSystem.ApplicationVersion"): @Model.ApplicationVersion</h2>
+                            <h2 class="h6 mt-1 mb-1 text-success">@T("UpgradeSystem.Message1")</h2>
+                        </div>
                     </div>
                 </div>
             </div>

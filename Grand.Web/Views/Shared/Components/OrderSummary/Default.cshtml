@@ -365,7 +365,9 @@
             </div>
             @if (Model.IsEditable)
             {
-                @await Component.InvokeAsync("CrossSellProducts")
+                <div class="px-3">
+                    @await Component.InvokeAsync("CrossSellProducts")
+                </div>
             }
         </form>
     }

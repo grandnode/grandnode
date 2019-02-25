@@ -76,8 +76,8 @@
                     <legend class="sr-only">@T("Account.Fields.Gender")</legend>
                     @if (Model.GenderEnabled)
                     {
-                        <div class="col-12">
-                            <div class="row">
+                        <div class="row">
+                            <div class="col-12">
                                 @T("Account.Fields.Gender"):
                             </div>
                         </div>
@@ -97,7 +97,7 @@
                         </div>
                     }
                 </fieldset>
-                <div class="row d-flex">
+                <div class="form-row">
                     <fieldset class="form-group col-sm-6 col-12">
                         <legend class="sr-only">@T("account.fields.firstname")</legend>
                         <label asp-for="FirstName" class="col-form-label">@T("Account.Fields.FirstName"):</label>
@@ -115,8 +115,8 @@
                 {
                     <fieldset class="form-group date-of-birth">
                         <legend class="sr-only">@T("account.fields.dateofbirth")</legend>
-                        <div class="col-12 col-form-label">
-                            <div class="row">
+                        <div class="row">
+                            <div class="col-12 col-form-label px-3">
                                 @T("Account.Fields.DateOfBirth"):
                             </div>
                         </div>
@@ -137,9 +137,9 @@
                         </div>
                     </fieldset>
                 }
-                <fieldset class="form-group col-md-12 mail">
+                <fieldset class="form-group row mail">
                     <legend class="sr-only">@T("account.associatedexternalauth.email")</legend>
-                    <div class="row">
+                    <div class="col-md-12">
                         <label asp-for="Email" class="col-form-label">@T("Account.Fields.Email"):</label>
                         <input asp-for="Email" class="form-control" />
                         <span asp-validation-for="Email"></span>
@@ -149,10 +149,10 @@
                 {
                     if (Model.AllowUsersToChangeUsernames)
                     {
-                        <fieldset class="form-group col-12">
+                        <fieldset class="form-group row mb-0">
                             <legend class="sr-only">@T("account.associatedexternalauth.email")</legend>
-                            <label asp-for="Username" class="col-2 col-form-label">@T("Account.Fields.Username"):</label>
-                            <div class="col-10">
+                            <label asp-for="Username" class="col-form-label px-3">@T("Account.Fields.Username"):</label>
+                            <div class="col-12">
                                 <input asp-for="Username" class="form-control" />
                                 <span asp-validation-for="Username"></span>
                                 @if (Model.CheckUsernameAvailabilityEnabled)
@@ -164,9 +164,9 @@
                     }
                     else
                     {
-                        <fieldset class="form-group col-12">
+                        <fieldset class="form-group row mb-0">
                             <legend class="sr-only">@T("account.fields.username")</legend>
-                            <label asp-for="Username" class="col-2 col-form-label">@T("Account.Fields.Username"):</label>
+                            <label asp-for="Username" class="col-form-label px-3">@T("Account.Fields.Username"):</label>
                             <span class="readonly-username">@Model.Username</span>
                         </fieldset>
                     }

@@ -2,8 +2,8 @@
 @inject CatalogSettings catalogSettings
 @if (Model.ProductType == ProductType.Auction)
 {
-    <div class="col-lg-12 px-0">
-        <div class="form-group">
+    <div class="row">
+        <div class="form-group col-12">
             @if (Model.EndTime.HasValue)
             {
                  <div>

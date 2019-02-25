@@ -61,12 +61,12 @@
             <div class="card-body">
                     @if (Model.GenderEnabled)
                     {
-                        <div class="col-lg-3 col-sm-12">
-                            <div class="d-flex row">
+                        <div class="row">
+                            <div class="col-lg-3 col-sm-12">
                                 <span>@T("Account.Fields.Gender"):</span>
                             </div>
                         </div>
-                        <fieldset class="col-lg-9 col-sm-12 gender">
+                        <fieldset class="gender px-3">
                             <legend class="sr-only">@T("Account.Fields.Gender")</legend>
                             <div class="d-flex row">
                                 <label class="male custom-control custom-radio">
@@ -82,18 +82,20 @@
                             </div>
                         </fieldset>
                     }
-                    <fieldset class="col-12 px-0 form-group">
+                    <div class="form-row">
+                        <fieldset class="col-sm-6 col-12 form-group">
                         <legend class="sr-only">@T("account.fields.firstname")</legend>
                         <label asp-for="FirstName" class="col-form-label">@T("Account.Fields.FirstName"):</label>
                         <input asp-for="FirstName" class="form-control"/>
                         <span asp-validation-for="FirstName"></span>
                     </fieldset>
-                    <fieldset class="col-12 px-0 form-group">
+                    <fieldset class="col-sm-6 col-12 form-group">
                         <legend class="sr-only">@T("account.fields.lastname")</legend>
                         <label asp-for="LastName" class="col-form-label">@T("Account.Fields.LastName"):</label>
                         <input asp-for="LastName" class="form-control"/>
                         <span asp-validation-for="LastName"></span>
                     </fieldset>
+                    </div>
 
                     @if (Model.DateOfBirthEnabled)
                     {
@@ -130,16 +132,18 @@
 
                     @if (Model.UsernamesEnabled)
                     {
-                        <div class="form-group">
-                            <div class="col-lg-3 col-sm-12">
+                        <div class="form-group row">
+                            <div class="col-12">
                                 <label asp-for="Username" class="col-form-label">@T("Account.Fields.Username"):</label>
                             </div>
-                            <input asp-for="Username" class="form-control"/>
-                            <span asp-validation-for="Username"></span>
-                            @if (Model.CheckUsernameAvailabilityEnabled)
-                            {
-                                <partial name="_CheckUsernameAvailability" />
-                            }
+                            <div class="col-12">
+                                <input asp-for="Username" class="form-control"/>
+                                <span asp-validation-for="Username"></span>
+                                @if (Model.CheckUsernameAvailabilityEnabled)
+                                {
+                                    <partial name="_CheckUsernameAvailability" />
+                                }
+                            </div>
                         </div>
                     }
                 </div>
