@@ -687,6 +687,10 @@ namespace Grand.Web.Infrastructure
                 "PushNotifications.PushReceiversList",
                 "Admin/PushNotifications/PushReceiversList",
             new { controller = "PushNotifications", action = "PushReceiversList" });
+
+            //lets encrypt
+            routeBuilder.MapRoute("well-known", ".well-known/acme-challenge/{fileName}", 
+                new { controller = "LetsEncrypt", action = "Index" });
         }
 
         public int Priority

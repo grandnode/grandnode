@@ -306,6 +306,8 @@ namespace Grand.Framework.Infrastructure.Extensions
             {
                 options.IgnoredPaths.Add("/api");
                 options.IgnoredPaths.Add("/odata");
+                options.IgnoredPaths.Add("/health/live");
+                options.IgnoredPaths.Add("/.well-known/acme-challenge");
                 var memoryCache = EngineContext.Current.Resolve<IMemoryCache>();
                 options.Storage = new StackExchange.Profiling.Storage.MemoryCacheStorage(memoryCache, TimeSpan.FromMinutes(60));
                 //determine who can access the MiniProfiler results
