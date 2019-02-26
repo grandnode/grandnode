@@ -1,4 +1,4 @@
-﻿@model string
+@model string
 @using Grand.Core;
 @using Grand.Framework.UI;
 @{
@@ -11,12 +11,13 @@
     var clientId = "picture" + random;
     var pictureService = EngineContext.Current.Resolve<Grand.Services.Media.IPictureService>();
     var picture = pictureService.GetPictureById(Model);
+    var targetPictureSize = 100;
 }
 <div id="@(clientId + "value")">
     <input asp-for="@Model" type="hidden" />
 </div>
 <div id="@(clientId + "image")">
-    <img src="@(pictureService.GetPictureUrl(Model, targetSize: 100, showDefaultPicture: true))" />
+    <img src="@(pictureService.GetPictureUrl(Model, targetSize: targetPictureSize, showDefaultPicture: true))" />
 </div>
 @if (picture != null)
 {
@@ -86,8 +87,9 @@ else
         });
 
         $("#@(clientId + "remove")").click(function(e) {
-            $("#@(clientId + "image")").html("<img src='@pictureService.GetDefaultPictureUrl()'/>");
+            $("#@(clientId + "image")").html("<img src='@pictureService.GetDefaultPictureUrl(targetPictureSize)'/>");
             $("#@(clientId + "value") input").val(0);
+            $(".qq-upload-list").empty();
             $(this).hide();
         });
     });
