@@ -280,7 +280,14 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseDefaultSecurityHeaders(this IApplicationBuilder application)
         {
-            application.UseSecurityHeaders();
+            var policyCollection = new HeaderPolicyCollection()
+                .AddXssProtectionBlock()
+                .AddContentTypeOptionsNoSniff()
+                .AddStrictTransportSecurityMaxAgeIncludeSubDomains(maxAgeInSeconds: 60 * 60 * 24 * 365) // maxage = one year in seconds
+                .AddReferrerPolicyStrictOriginWhenCrossOrigin()
+                .RemoveServerHeader();
+
+            application.UseSecurityHeaders(policyCollection);
         }
 
         /// <summary>
