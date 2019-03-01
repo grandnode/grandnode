@@ -826,16 +826,16 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
             }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.StartDate")]
-            [UIHint("Date")]
-            public DateTime StartDate { get; set; }
+            [UIHint("DateNullable")]
+            public DateTime? StartDate { get; set; }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.StartTime")]
             [UIHint("Time")]
             public DateTime StartTime { get; set; }
 
             [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.EndDate")]
-            [UIHint("Date")]
-            public DateTime EndDate { get; set; }
+            [UIHint("DateNullable")]
+            public DateTime? EndDate { get; set; }
             [UIHint("Time")]
 
             [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Calendar.EndTime")]
