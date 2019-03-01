@@ -5,7 +5,8 @@
 @inject CustomerSettings customerSettings
 @inject LocalizationSettings localizationSettings
 @inject AdminAreaSettings adminAreaSettings
-
+@inject Grand.Core.Configuration.GrandConfig grandConfig
+  
 @using System.Text.Encodings.Web
 @using Grand.Core.Domain.Customers
 @using Grand.Framework.UI;
@@ -140,11 +141,20 @@
                                 @if (canManageMaintenance)
                                 {
                                     <li>
-                                        <a href="@webHelper.ModifyQueryString(Url.Action("ClearCache", "Common", new RouteValueDictionary { { "area", "Admin" } }), "returnurl=" + System.Net.WebUtility.UrlEncode(webHelper.GetRawUrl(this.Context.Request)), null)">
+                                        <a href="@webHelper.ModifyQueryString(Url.Action("ClearCache", "Common", new RouteValueDictionary { { "area", "Admin" } }), "memory=true&returnurl=" + System.Net.WebUtility.UrlEncode(webHelper.GetRawUrl(this.Context.Request)), null)">
                                             <i class="icon-refresh"></i>
-                                            @T("Admin.Header.ClearCache")
+                                            @T("Admin.Header.ClearCacheMemory")
                                         </a>
                                     </li>
+                                    @if (grandConfig.RedisCachingEnabled)
+                                    {
+                                        <li>
+                                            <a href="@webHelper.ModifyQueryString(Url.Action("ClearCache", "Common", new RouteValueDictionary { { "area", "Admin" } }), "memory=false&returnurl=" + System.Net.WebUtility.UrlEncode(webHelper.GetRawUrl(this.Context.Request)), null)">
+                                                <i class="icon-refresh"></i>
+                                                @T("Admin.Header.ClearCacheRedis")
+                                            </a>
+                                        </li>
+                                    }
                                     <li>
                                         <a href="@webHelper.ModifyQueryString(Url.Action("RestartApplication", "Common", new RouteValueDictionary { { "area", "Admin" } }), "returnurl=" + System.Net.WebUtility.UrlEncode(webHelper.GetRawUrl(this.Context.Request)), null)" id="restart-application">
                                             <i class="icon-reload"></i>

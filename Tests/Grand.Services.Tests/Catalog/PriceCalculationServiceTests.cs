@@ -6,11 +6,13 @@ using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Discounts;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Stores;
+using Grand.Core.Tests.Caching;
 using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Discounts;
 using Grand.Services.Stores;
 using Grand.Services.Vendors;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;
@@ -72,7 +74,7 @@ namespace Grand.Services.Catalog.Tests
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
             _currencySettings = new CurrencySettings();
-            _cacheManager = new GrandNullCache();
+            _cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
             _priceCalcService = new PriceCalculationService(
                 _workContext,
                 _storeContext,

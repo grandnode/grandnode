@@ -1,8 +1,10 @@
 ﻿using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Core.Domain.Customers;
+using Grand.Core.Tests.Caching;
 using Grand.Services.Events;
 using Grand.Services.Tests;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -92,7 +94,7 @@ namespace Grand.Services.Customers.Tests
             };
             _customerActionRepository.Insert(customerActions);
             _customerActionService = new CustomerActionService(_customerActionRepository, _customerActionTypeRepository,
-            _customerActionHistoryRepository, _eventPublisher, new GrandNullCache());
+            _customerActionHistoryRepository, _eventPublisher, new TestMemoryCacheManager(new Mock<IMemoryCache>().Object));
 
         }
 

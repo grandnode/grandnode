@@ -5,12 +5,14 @@ using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Orders;
+using Grand.Core.Tests.Caching;
 using Grand.Services.Directory;
 using Grand.Services.Events;
 using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Tax;
 using Grand.Services.Tests;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -132,7 +134,7 @@ namespace Grand.Services.Catalog.Tests
                 _eventPublisher = tempEventPublisher.Object;
             }
 
-            var cacheManager = new GrandNullCache();
+            var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
             _productAttributeRepo = new Mock<IRepository<ProductAttribute>>().Object;
 
             _productAttributeService = new ProductAttributeService(cacheManager,

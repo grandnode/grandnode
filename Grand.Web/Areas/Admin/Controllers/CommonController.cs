@@ -474,11 +474,23 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.DeleteActivityLog = true;
             return View(model);
         }
-        public IActionResult ClearCache(string returnUrl = "")
-        {
-            var cacheManager = EngineContext.Current.Resolve<ICacheManager>();
-            cacheManager.Clear();
 
+        public IActionResult ClearCache(bool memory, string returnUrl = "")
+        {
+            var cacheManagers = EngineContext.Current.ResolveAll<ICacheManager>();
+            foreach (var cacheManager in cacheManagers)
+            {
+                if (memory)
+                {
+                    if (cacheManager is MemoryCacheManager)
+                        cacheManager.Clear();
+                }
+                else
+                {
+                    if (!(cacheManager is MemoryCacheManager))
+                        cacheManager.Clear();
+                }
+            }
             //home page
             if (String.IsNullOrEmpty(returnUrl))
                 return RedirectToAction("Index", "Home", new { area = "Admin" });

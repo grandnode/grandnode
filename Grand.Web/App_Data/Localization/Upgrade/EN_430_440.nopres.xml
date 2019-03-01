@@ -530,4 +530,10 @@
   <LocaleResource Name="Grand.Knowledgebase.AddArticleComment.Result">
     <Value>Enter the comment</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Header.ClearCacheMemory">
+    <Value>Clear memory cache</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Header.ClearCacheRedis">
+    <Value>Clear redis cache</Value>
+  </LocaleResource>
 </Language>

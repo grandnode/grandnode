@@ -41,6 +41,8 @@ namespace Grand.Services.Localization
         /// </summary>
         private const string LOCALSTRINGRESOURCES_PATTERN_KEY = "Grand.lsr.";
 
+        private Dictionary<string, LocaleStringResource> _alllocaleStringResource = null;
+
         #endregion
 
         #region Fields
@@ -115,19 +117,6 @@ namespace Grand.Services.Localization
                 return null;
 
             return _lsrRepository.GetById(localeStringResourceId);
-        }
-
-        /// <summary>
-        /// Gets a locale string resource
-        /// </summary>
-        /// <param name="resourceName">A string representing a resource name</param>
-        /// <returns>Locale string resource</returns>
-        public virtual LocaleStringResource GetLocaleStringResourceByName(string resourceName)
-        {
-            if (_workContext.WorkingLanguage != null)
-                return GetLocaleStringResourceByName(resourceName, _workContext.WorkingLanguage.Id);
-
-            return null;
         }
 
         /// <summary>
@@ -232,25 +221,33 @@ namespace Grand.Services.Localization
             if (_localizationSettings.LoadAllLocaleRecordsOnStartup)
             {
                 //load all records (cached)
-                string key = string.Format(LOCALSTRINGRESOURCES_ALL_KEY, languageId);
-                var resources = _cacheManager.Get(key, () =>
+                if (_alllocaleStringResource != null)
                 {
-                    var dictionary = new Dictionary<string, LocaleStringResource>();
-                    var locales = GetAllResources(languageId);
-                    foreach (var locale in locales)
+                    if (_alllocaleStringResource.ContainsKey(resourceKey.ToLowerInvariant()))
+                        result = _alllocaleStringResource[resourceKey.ToLowerInvariant()].ResourceValue;
+                }
+                else
+                {
+                    string key = string.Format(LOCALSTRINGRESOURCES_ALL_KEY, languageId);
+                    _alllocaleStringResource = _cacheManager.Get(key, () =>
                     {
-                        var resourceName = locale.ResourceName.ToLowerInvariant();
-                        if (!dictionary.ContainsKey(resourceName))
-                            dictionary.Add(resourceName.ToLowerInvariant(), locale);
-                        else
+                        var dictionary = new Dictionary<string, LocaleStringResource>();
+                        var locales = GetAllResources(languageId);
+                        foreach (var locale in locales)
                         {
-                            _lsrRepository.Delete(locale);
+                            var resourceName = locale.ResourceName.ToLowerInvariant();
+                            if (!dictionary.ContainsKey(resourceName))
+                                dictionary.Add(resourceName.ToLowerInvariant(), locale);
+                            else
+                            {
+                                _lsrRepository.Delete(locale);
+                            }
                         }
-                    }
-                    return dictionary;
-                });
-                if (resources.ContainsKey(resourceKey.ToLowerInvariant()))
-                    result = resources[resourceKey.ToLowerInvariant()].ResourceValue;
+                        return dictionary;
+                    });
+                    if (_alllocaleStringResource.ContainsKey(resourceKey.ToLowerInvariant()))
+                        result = _alllocaleStringResource[resourceKey.ToLowerInvariant()].ResourceValue;
+                }
             }
             else
             {

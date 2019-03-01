@@ -5,9 +5,11 @@ using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Tax;
 using Grand.Core.Plugins;
+using Grand.Core.Tests.Caching;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Stores;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MongoDB.Driver;
 using Moq;
@@ -31,7 +33,7 @@ namespace Grand.Services.Catalog.Tests
         [TestInitialize()]
         public void TestInitialize()
         {
-            var cacheManager = new GrandNullCache();
+            var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
             tempWorkContext = new Mock<IWorkContext>();
             {
                 _workContext = tempWorkContext.Object;

@@ -147,6 +147,20 @@ namespace Grand.Core.Caching
         }
 
         /// <summary>
+        /// Gets or sets the value associated with the specified key.
+        /// </summary>
+        /// <param name="key">Key of cached item</param>
+        /// <returns>The cached value associated with the specified key</returns>
+        public virtual (T, bool) TryGetValue<T>(string key)
+        {
+            if(_cache.TryGetValue(key, out T value))
+            {
+                return (value, true);
+            }
+            return (default(T), false);
+        }
+
+        /// <summary>
         /// Adds the specified key and object to the cache
         /// </summary>
         /// <param name="key">Key of cached item</param>

@@ -1,7 +1,9 @@
 ﻿using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Core.Domain.Directory;
+using Grand.Core.Tests.Caching;
 using Grand.Services.Events;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MongoDB.Driver;
 using Moq;
@@ -139,7 +141,7 @@ namespace Grand.Services.Directory.Tests
                 _eventPublisher = tempEventPublisher.Object;
             }
 
-            _measureService = new MeasureService(new GrandNullCache(), _measureDimensionRepository,
+            _measureService = new MeasureService(new TestMemoryCacheManager(new Mock<IMemoryCache>().Object), _measureDimensionRepository,
                 _measureWeightRepository, _measureUnitRepository, _measureSettings, _eventPublisher);
         }
 

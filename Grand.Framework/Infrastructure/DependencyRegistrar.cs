@@ -107,15 +107,12 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<PerRequestCacheManager>().InstancePerLifetimeScope();
 
             //cache manager
+            builder.RegisterType<MemoryCacheManager>().As<ICacheManager>().Named<ICacheManager>("grand_cache_static").SingleInstance();
+
             if (config.RedisCachingEnabled)
             {
-                builder.RegisterType<MemoryCacheManager>().As<ICacheManager>().Named<ICacheManager>("grand_cache_static").SingleInstance();
-                builder.RegisterType<RedisConnectionWrapper>().As<IRedisConnectionWrapper>().SingleInstance();
-                builder.RegisterType<RedisCacheManager>().As<ICacheManager>().InstancePerLifetimeScope();
-            }
-            else
-            {
-                builder.RegisterType<MemoryCacheManager>().As<ICacheManager>().Named<ICacheManager>("grand_cache_static").SingleInstance();
+                builder.RegisterType<DistributedRedisCache>().As<ICacheManager>().SingleInstance();
+                builder.RegisterType<DistributedRedisCacheExtended>().As<IDistributedRedisCacheExtended>().SingleInstance();
             }
 
             if (config.RunOnAzureWebApps)
@@ -191,25 +188,17 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<StoreMappingService>().As<IStoreMappingService>().InstancePerLifetimeScope();
             builder.RegisterType<DiscountService>().As<IDiscountService>().InstancePerLifetimeScope();
 
-            if (config.RedisCachingEnabled)
-            {
-                builder.RegisterType<SettingService>().As<ISettingService>()
-                    .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("grand_cache_static"))
-                    .InstancePerLifetimeScope();
+            builder.RegisterType<SettingService>().As<ISettingService>()
+                .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("grand_cache_static"))
+                .InstancePerLifetimeScope();
 
-                builder.RegisterType<LocalizationService>().As<ILocalizationService>()
-                    .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("grand_cache_static"))
-                    .InstancePerLifetimeScope();
-            }
-            else
-            {
-                builder.RegisterType<SettingService>().As<ISettingService>().InstancePerLifetimeScope();
-                builder.RegisterType<LocalizationService>().As<ILocalizationService>().InstancePerLifetimeScope();
-            }
+            builder.RegisterType<LocalizationService>().As<ILocalizationService>()
+                .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("grand_cache_static"))
+                .InstancePerLifetimeScope();
 
             builder.RegisterType<LanguageService>().As<ILanguageService>().InstancePerLifetimeScope();
             builder.RegisterType<DownloadService>().As<IDownloadService>().InstancePerLifetimeScope();
-            // TODO: Consider replacing service with static entry if EmailSender is the only user/caller
+
             var provider = new FileExtensionContentTypeProvider();
             builder.RegisterType<MimeMappingService>().As<IMimeMappingService>()
                 .WithParameter(new TypedParameter(typeof(FileExtensionContentTypeProvider), provider))

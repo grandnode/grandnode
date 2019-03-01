@@ -32,6 +32,8 @@ using Grand.Services.Tax;
 using Grand.Services.Vendors;
 using Moq;
 using Grand.Services.Stores;
+using Grand.Core.Tests.Caching;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Grand.Services.Orders.Tests
 {
@@ -115,7 +117,7 @@ namespace Grand.Services.Orders.Tests
             _catalogSettings = new CatalogSettings();
             _currencySettings = new CurrencySettings();
 
-            var cacheManager = new GrandNullCache();
+            var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
 
             _productService = new Mock<IProductService>().Object;
 

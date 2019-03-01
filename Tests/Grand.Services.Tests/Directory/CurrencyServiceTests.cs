@@ -2,8 +2,10 @@
 using Grand.Core.Data;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Plugins;
+using Grand.Core.Tests.Caching;
 using Grand.Services.Events;
 using Grand.Services.Stores;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MongoDB.Driver;
 using Moq;
@@ -79,7 +81,8 @@ namespace Grand.Services.Directory.Tests
             }
 
             _storeMappingService = new Mock<IStoreMappingService>().Object;
-            var cacheManager = new GrandNullCache();
+            var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
+
             _currencySettings = new CurrencySettings();
             _currencySettings.PrimaryStoreCurrencyId = currencyUSD.Id;
             _currencySettings.PrimaryExchangeRateCurrencyId = currencyEUR.Id;

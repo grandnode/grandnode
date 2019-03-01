@@ -12063,8 +12063,11 @@
   <LocaleResource Name="Admin.grandnodeNews.ShowAdv">
     <Value>Show advertisements</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Header.ClearCache">
-    <Value>Clear cache</Value>
+  <LocaleResource Name="Admin.Header.ClearCacheMemory">
+    <Value>Clear memory cache</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Header.ClearCacheRedis">
+    <Value>Clear redis cache</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Header.Community">
     <Value>Community</Value>

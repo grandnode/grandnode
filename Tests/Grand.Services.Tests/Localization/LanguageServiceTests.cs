@@ -1,10 +1,12 @@
 ﻿using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Core.Domain.Localization;
+using Grand.Core.Tests.Caching;
 using Grand.Services.Configuration;
 using Grand.Services.Events;
 using Grand.Services.Stores;
 using Grand.Services.Tests;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -53,7 +55,7 @@ namespace Grand.Services.Localization.Tests
             }
             _localizationSettings = new LocalizationSettings();
 
-            _languageService = new LanguageService(new GrandNullCache(), _languageRepo, _storeMappingService,
+            _languageService = new LanguageService(new TestMemoryCacheManager(new Mock<IMemoryCache>().Object), _languageRepo, _storeMappingService,
                 _settingService, _localizationSettings, _eventPublisher);
         }
 

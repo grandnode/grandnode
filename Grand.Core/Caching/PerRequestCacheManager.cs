@@ -41,7 +41,6 @@ namespace Grand.Core.Caching
         #endregion
 
         #region Methods
-
         /// <summary>
         /// Gets or sets the value associated with the specified key.
         /// </summary>
@@ -55,6 +54,21 @@ namespace Grand.Core.Caching
                 return default(T);
 
             return (T)items[key];
+        }
+
+        /// <summary>
+        /// Gets or sets the value associated with the specified key.
+        /// </summary>
+        /// <typeparam name="T">Type of cached item</typeparam>
+        /// <param name="key">Key of cached item</param>
+        /// <returns>The cached value associated with the specified key</returns>
+        public virtual (T, bool) TryGetValue<T>(string key)
+        {
+            var items = GetItems();
+            if (items?[key] == null)
+                return (default(T), false);
+
+            return ((T)items[key], true);
         }
 
         /// <summary>

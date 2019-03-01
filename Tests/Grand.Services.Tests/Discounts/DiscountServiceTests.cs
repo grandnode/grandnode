@@ -6,10 +6,12 @@ using Grand.Core.Domain.Discounts;
 using Grand.Core.Domain.Stores;
 using Grand.Core.Domain.Vendors;
 using Grand.Core.Plugins;
+using Grand.Core.Tests.Caching;
 using Grand.Services.Common;
 using Grand.Services.Events;
 using Grand.Services.Localization;
 using Grand.Services.Tests;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -75,7 +77,7 @@ namespace Grand.Services.Discounts.Tests
             _genericAttributeService = new Mock<IGenericAttributeService>().Object;
             _localizationService = new Mock<ILocalizationService>().Object;
 
-            _discountService = new DiscountService(new GrandNullCache(), _discountRepo, _discountCouponRepo,
+            _discountService = new DiscountService(new TestMemoryCacheManager(new Mock<IMemoryCache>().Object), _discountRepo, _discountCouponRepo,
                 _discountUsageHistoryRepo, _localizationService, _storeContext, _genericAttributeService,
                 new PluginFinder(), _eventPublisher, extraProductRepo, extraCategoryRepo, extraManufacturerRepo, extraVendorRepo, extraStoreRepo, new PerRequestCacheManager(null));
         }

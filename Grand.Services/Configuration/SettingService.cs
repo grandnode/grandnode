@@ -39,6 +39,8 @@ namespace Grand.Services.Configuration
         private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
 
+        private IDictionary<string, IList<SettingForCaching>> _allSettings = null;
+
         #endregion
 
         #region Ctor
@@ -80,9 +82,12 @@ namespace Grand.Services.Configuration
         /// <returns>Settings</returns>
         protected virtual IDictionary<string, IList<SettingForCaching>> GetAllSettingsCached()
         {
+            if (_allSettings != null)
+                return _allSettings;
+
             //cache
             string key = string.Format(SETTINGS_ALL_KEY);
-            return _cacheManager.Get(key, () =>
+            _allSettings = _cacheManager.Get(key, () =>
             {
                 //we use no tracking here for performance optimization
                 //anyway records are loaded only for read-only operations
@@ -118,6 +123,7 @@ namespace Grand.Services.Configuration
                 }
                 return dictionary;
             });
+            return _allSettings;
         }
 
         #endregion

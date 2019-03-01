@@ -5,12 +5,14 @@ using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Stores;
 using Grand.Core.Plugins;
+using Grand.Core.Tests.Caching;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Events;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Services.Orders;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;
@@ -56,7 +58,7 @@ namespace Grand.Services.Shipping.Tests
             _checkoutAttributeParser = new Mock<ICheckoutAttributeParser>().Object;
             _pickupPointRepository = new Mock<IRepository<PickupPoint>>().Object;
 
-            var cacheManager = new GrandNullCache();
+            var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
 
             var pluginFinder = new PluginFinder();
             _productService = new Mock<IProductService>().Object;

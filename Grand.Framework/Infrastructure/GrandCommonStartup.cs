@@ -22,6 +22,9 @@ namespace Grand.Framework.Infrastructure
         /// <param name="configuration">Configuration root of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
+            var config = new GrandConfig();
+            configuration.GetSection("Grand").Bind(config);
+
             //compression
             services.AddResponseCompression();
 
@@ -33,7 +36,16 @@ namespace Grand.Framework.Infrastructure
 
             //add distributed memory cache
             services.AddDistributedMemoryCache();
-                        
+
+            //add distributed Redis cache
+            if (config.RedisCachingEnabled)
+            {
+                services.AddDistributedRedisCache(options =>
+                {
+                    options.Configuration = config.RedisCachingConnectionString;
+                });
+            }
+
             //add HTTP sesion state feature
             services.AddHttpSession();
 

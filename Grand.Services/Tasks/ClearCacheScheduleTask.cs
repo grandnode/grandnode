@@ -18,8 +18,11 @@ namespace Grand.Services.Tasks
         {
             lock (_lock)
             {
-                var cacheManager = EngineContext.Current.Resolve<ICacheManager>();
-                cacheManager.Clear();
+                var cacheManagers = EngineContext.Current.ResolveAll<ICacheManager>();
+                foreach (var cacheManager in cacheManagers)
+                {
+                    cacheManager.Clear();
+                }
             }
         }
     }

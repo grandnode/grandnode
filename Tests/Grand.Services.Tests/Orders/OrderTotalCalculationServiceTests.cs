@@ -10,6 +10,7 @@ using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Stores;
 using Grand.Core.Domain.Tax;
 using Grand.Core.Plugins;
+using Grand.Core.Tests.Caching;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Customers;
@@ -23,6 +24,7 @@ using Grand.Services.Shipping;
 using Grand.Services.Stores;
 using Grand.Services.Tax;
 using Grand.Services.Vendors;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;
@@ -89,7 +91,7 @@ namespace Grand.Services.Orders.Tests
             _productService = new Mock<IProductService>().Object;
 
             var pluginFinder = new PluginFinder();
-            var cacheManager = new GrandNullCache();
+            var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
 
             _discountService = new Mock<IDiscountService>().Object;
             _categoryService = new Mock<ICategoryService>().Object;

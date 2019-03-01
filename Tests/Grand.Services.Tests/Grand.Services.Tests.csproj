@@ -27,6 +27,7 @@
     <ProjectReference Include="..\..\Grand.Core\Grand.Core.csproj" />
     <ProjectReference Include="..\..\Grand.Framework\Grand.Framework.csproj" />
     <ProjectReference Include="..\..\Grand.Services\Grand.Services.csproj" />
+    <ProjectReference Include="..\Grand.Core.Tests\Grand.Core.Tests.csproj" />
   </ItemGroup>
 
 </Project>

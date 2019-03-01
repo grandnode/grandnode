@@ -3,7 +3,9 @@ using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Logging;
+using Grand.Core.Tests.Caching;
 using Grand.Services.Tests;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -60,7 +62,7 @@ namespace Grand.Services.Logging.Tests
                 CustomerId = _customer2.Id,
             };
 
-            _cacheManager = new GrandNullCache();
+            _cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
             _workContext = new Mock<IWorkContext>().Object;
 
             _activityLogRepository = new MongoDBRepositoryTest<ActivityLog>();
