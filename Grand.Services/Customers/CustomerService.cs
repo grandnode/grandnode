@@ -525,7 +525,7 @@ namespace Grand.Services.Customers
             var filter = builder.Eq(x => x.Id, customer.Id);
             var update = Builders<Customer>.Update
                 .Set(x => x.LastActivityDateUtc, customer.LastActivityDateUtc);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
+            _customerRepository.Collection.UpdateOneAsync(filter, update);
 
         }
         /// <summary>
@@ -544,7 +544,7 @@ namespace Grand.Services.Customers
                 .Set(x => x.FailedLoginAttempts, customer.FailedLoginAttempts)
                 .Set(x => x.CannotLoginUntilDateUtc, customer.CannotLoginUntilDateUtc);
 
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
+            _customerRepository.Collection.UpdateOneAsync(filter, update);
 
         }
         /// Updates the customer - last activity date
@@ -577,7 +577,7 @@ namespace Grand.Services.Customers
             var filter = builder.Eq(x => x.Id, customer.Id);
             var update = Builders<Customer>.Update
                 .Set(x => x.LastIpAddress, customer.LastIpAddress);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
+            _customerRepository.Collection.UpdateOneAsync(filter, update);
 
         }
         /// <summary>
@@ -629,7 +629,7 @@ namespace Grand.Services.Customers
             var filter = builder.Eq(x => x.Id, customerId);
             var update = Builders<Customer>.Update
                 .Set(x => x.FreeShipping, freeShipping);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
+            _customerRepository.Collection.UpdateOneAsync(filter, update);
         }
         public virtual void UpdateAffiliate(Customer customer)
         {
@@ -652,7 +652,7 @@ namespace Grand.Services.Customers
             var update = Builders<Customer>.Update
                 .Set(x => x.Active, customer.Active)
                 .Set(x => x.StoreId, customer.StoreId);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
+            _customerRepository.Collection.UpdateOneAsync(filter, update);
         }
 
         public virtual void UpdateContributions(Customer customer)
@@ -663,7 +663,7 @@ namespace Grand.Services.Customers
             var filter = builder.Eq(x => x.Id, customer.Id);
             var update = Builders<Customer>.Update
                 .Set(x => x.HasContributions, true);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
+            _customerRepository.Collection.UpdateOneAsync(filter, update);
         }
 
         public virtual void UpdateCustomerLastPurchaseDate(string customerId, DateTime date)
@@ -672,7 +672,7 @@ namespace Grand.Services.Customers
             var filter = builder.Eq(x => x.Id, customerId);
             var update = Builders<Customer>.Update
                 .Set(x => x.LastPurchaseDateUtc, date);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
+            _customerRepository.Collection.UpdateOneAsync(filter, update);
         }
         public virtual void UpdateCustomerLastUpdateCartDate(string customerId, DateTime? date)
         {
@@ -680,17 +680,16 @@ namespace Grand.Services.Customers
             var filter = builder.Eq(x => x.Id, customerId);
             var update = Builders<Customer>.Update
                 .Set(x => x.LastUpdateCartDateUtc, date);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
-
+            _customerRepository.Collection.UpdateOneAsync(filter, update);
         }
+
         public virtual void UpdateCustomerLastUpdateWishList(string customerId, DateTime date)
         {
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, customerId);
             var update = Builders<Customer>.Update
                 .Set(x => x.LastUpdateWishListDateUtc, date);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
-
+            _customerRepository.Collection.UpdateOneAsync(filter, update);
         }
        
         /// <summary>
