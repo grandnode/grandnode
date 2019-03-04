@@ -80,8 +80,11 @@ a:hover {
 section {
 	overflow: auto;
 }
+.required {
+    color: #F00;
+}
 .generalTitle {
-	font-weight: 500;
+    font-weight: 500;
     margin: 0 0 15px 0;
 }
 .link-rss {
@@ -3491,7 +3494,8 @@ span.product-quantity {
 	margin-right: 5px;
 }
 .generalAdToCart select {
-	max-width: 62px;
+    width: auto;
+	max-width: 75px;
 }
 .enter-price-input {
 	display: block;
