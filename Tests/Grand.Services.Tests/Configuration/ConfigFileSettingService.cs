@@ -17,7 +17,7 @@ namespace Grand.Services.Tests.Configuration
 {
     public class ConfigFileSettingService : SettingService
     {
-        public ConfigFileSettingService(ICacheManager cacheManager,
+        public ConfigFileSettingService(MemoryCacheManager cacheManager,
             IEventPublisher eventPublisher,
             IRepository<Setting> settingRepository) :
             base(cacheManager, eventPublisher, settingRepository)
