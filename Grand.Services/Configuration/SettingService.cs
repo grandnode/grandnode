@@ -37,7 +37,7 @@ namespace Grand.Services.Configuration
 
         private readonly IRepository<Setting> _settingRepository;
         private readonly IEventPublisher _eventPublisher;
-        private readonly ICacheManager _cacheManager;
+        private readonly MemoryCacheManager _cacheManager;
 
         private IDictionary<string, IList<SettingForCaching>> _allSettings = null;
 
@@ -51,7 +51,7 @@ namespace Grand.Services.Configuration
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="settingRepository">Setting repository</param>
-        public SettingService(ICacheManager cacheManager, IEventPublisher eventPublisher,
+        public SettingService(MemoryCacheManager cacheManager, IEventPublisher eventPublisher,
             IRepository<Setting> settingRepository)
         {
             this._cacheManager = cacheManager;

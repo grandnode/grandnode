@@ -46,9 +46,17 @@ namespace Grand.Core.Caching
 
         public virtual (T, bool) TryGetValue<T>(string key)
         {
-            var result = _distributedCache.Get(key);
-            if (result == null)
+            byte[] result;
+            try
+            {
+                result = _distributedCache.Get(key);
+                if (result == null)
+                    return (default(T), false);
+            }
+            catch
+            {
                 return (default(T), false);
+            }
 
             //get serialized item from cache
             var serializedItem = System.Text.Encoding.Default.GetString(result);

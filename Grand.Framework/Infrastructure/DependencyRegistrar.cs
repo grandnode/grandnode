@@ -105,14 +105,17 @@ namespace Grand.Framework.Infrastructure
 
             //cache manager
             builder.RegisterType<PerRequestCacheManager>().InstancePerLifetimeScope();
-
-            //cache manager
-            builder.RegisterType<MemoryCacheManager>().As<ICacheManager>().Named<ICacheManager>("grand_cache_static").SingleInstance();
+            builder.RegisterType<MemoryCacheManager>().SingleInstance();
 
             if (config.RedisCachingEnabled)
             {
                 builder.RegisterType<DistributedRedisCache>().As<ICacheManager>().SingleInstance();
                 builder.RegisterType<DistributedRedisCacheExtended>().As<IDistributedRedisCacheExtended>().SingleInstance();
+
+            }
+            else
+            {
+                builder.RegisterType<MemoryCacheManager>().As<ICacheManager>().SingleInstance();
             }
 
             if (config.RunOnAzureWebApps)
@@ -127,6 +130,9 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<WebWorkContext>().As<IWorkContext>().InstancePerLifetimeScope();
             //store context
             builder.RegisterType<WebStoreContext>().As<IStoreContext>().InstancePerLifetimeScope();
+
+            builder.RegisterType<SettingService>().As<ISettingService>().InstancePerLifetimeScope();
+            builder.RegisterType<LocalizationService>().As<ILocalizationService>().InstancePerLifetimeScope();
 
             //services
             builder.RegisterType<BackInStockSubscriptionService>().As<IBackInStockSubscriptionService>().InstancePerLifetimeScope();
@@ -188,13 +194,6 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<StoreMappingService>().As<IStoreMappingService>().InstancePerLifetimeScope();
             builder.RegisterType<DiscountService>().As<IDiscountService>().InstancePerLifetimeScope();
 
-            builder.RegisterType<SettingService>().As<ISettingService>()
-                .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("grand_cache_static"))
-                .InstancePerLifetimeScope();
-
-            builder.RegisterType<LocalizationService>().As<ILocalizationService>()
-                .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("grand_cache_static"))
-                .InstancePerLifetimeScope();
 
             builder.RegisterType<LanguageService>().As<ILanguageService>().InstancePerLifetimeScope();
             builder.RegisterType<DownloadService>().As<IDownloadService>().InstancePerLifetimeScope();

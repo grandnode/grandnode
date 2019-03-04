@@ -51,7 +51,7 @@ namespace Grand.Services.Localization
         private readonly IWorkContext _workContext;
         private readonly ILogger _logger;
         private readonly ILanguageService _languageService;
-        private readonly ICacheManager _cacheManager;
+        private readonly MemoryCacheManager _cacheManager;
         private readonly LocalizationSettings _localizationSettings;
         private readonly IEventPublisher _eventPublisher;
 
@@ -69,7 +69,7 @@ namespace Grand.Services.Localization
         /// <param name="languageService">Language service</param>
         /// <param name="localizationSettings">Localization settings</param>
         /// <param name="eventPublisher">Event published</param>
-        public LocalizationService(ICacheManager cacheManager,
+        public LocalizationService(MemoryCacheManager cacheManager,
             ILogger logger, IWorkContext workContext,
             IRepository<LocaleStringResource> lsrRepository,
             ILanguageService languageService,
