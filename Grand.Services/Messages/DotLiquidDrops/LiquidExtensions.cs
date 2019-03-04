@@ -1,5 +1,6 @@
 ﻿using DotLiquid;
 using Grand.Core.Domain.Messages;
+using Grand.Services.Stores;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +30,16 @@ namespace Grand.Services.Messages.DotLiquidDrops
             var replaced = template.Render(hash);
 
             return replaced;
+        }
+
+        public static string GetStoreUrl(this IStoreService storeService, string storeId = "")
+        {
+            var store = storeService.GetStoreById(storeId) ?? storeService.GetAllStores().FirstOrDefault();
+
+            if (store == null)
+                throw new Exception("No store could be loaded");
+
+            return store.SslEnabled ? store.SecureUrl : store.Url;
         }
     }
 }

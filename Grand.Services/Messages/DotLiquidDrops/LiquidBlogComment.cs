@@ -39,24 +39,8 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get
             {
                 var blogPost = EngineContext.Current.Resolve<IBlogService>().GetBlogPostById(_blogComment.BlogPostId);
-                return $"{GetStoreUrl(_storeId)}{blogPost.GetSeName()}";
+                return $"{_storeService.GetStoreUrl(_storeId)}{blogPost.GetSeName()}";
             }
-        }
-
-        /// <summary>
-        /// Get store URL
-        /// </summary>
-        /// <param name="storeId">Store identifier; Pass 0 to load URL of the current store</param>
-        /// <param name="useSsl">Use SSL</param>
-        /// <returns></returns>
-        protected virtual string GetStoreUrl(string storeId = "", bool useSsl = false)
-        {
-            var store = _storeService.GetStoreById(storeId) ?? _storeContext.CurrentStore;
-
-            if (store == null)
-                throw new Exception("No store could be loaded");
-
-            return useSsl ? store.SecureUrl : store.Url;
         }
 
         public IDictionary<string, string> AdditionalTokens { get; set; }

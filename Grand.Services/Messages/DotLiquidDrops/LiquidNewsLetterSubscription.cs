@@ -35,7 +35,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get
             {
                 string urlFormat = "{0}newsletter/subscriptionactivation/{1}/{2}";
-                var activationUrl = String.Format(urlFormat, GetStoreUrl(), _subscription.NewsLetterSubscriptionGuid, "true");
+                var activationUrl = String.Format(urlFormat, _storeService.GetStoreUrl(), _subscription.NewsLetterSubscriptionGuid, "true");
                 return activationUrl;
             }
         }
@@ -45,25 +45,9 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get
             {
                 string urlFormat = "{0}newsletter/subscriptionactivation/{1}/{2}";
-                var deActivationUrl = String.Format(urlFormat, GetStoreUrl(), _subscription.NewsLetterSubscriptionGuid, "false");
+                var deActivationUrl = String.Format(urlFormat, _storeService.GetStoreUrl(), _subscription.NewsLetterSubscriptionGuid, "false");
                 return deActivationUrl;
             }
-        }
-
-        /// <summary>
-        /// Get store URL
-        /// </summary>
-        /// <param name="storeId">Store identifier; Pass 0 to load URL of the current store</param>
-        /// <param name="useSsl">Use SSL</param>
-        /// <returns></returns>
-        protected virtual string GetStoreUrl(string storeId = "", bool useSsl = false)
-        {
-            var store = _storeService.GetStoreById(storeId) ?? _storeContext.CurrentStore;
-
-            if (store == null)
-                throw new Exception("No store could be loaded");
-
-            return useSsl ? store.SecureUrl : store.Url;
         }
 
         public IDictionary<string, string> AdditionalTokens { get; set; }

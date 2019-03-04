@@ -103,17 +103,17 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public string PasswordRecoveryURL
         {
-            get { return string.Format("{0}passwordrecovery/confirm?token={1}&email={2}", GetStoreUrl(_customer.StoreId), _customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken), WebUtility.UrlEncode(_customer.Email)); }
+            get { return string.Format("{0}passwordrecovery/confirm?token={1}&email={2}", _storeService.GetStoreUrl(_customer.StoreId), _customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken), WebUtility.UrlEncode(_customer.Email)); }
         }
 
         public string AccountActivationURL
         {
-            get { return string.Format("{0}customer/activation?token={1}&email={2}", GetStoreUrl(_customer.StoreId), _customer.GetAttribute<string>(SystemCustomerAttributeNames.AccountActivationToken), WebUtility.UrlEncode(_customer.Email)); ; }
+            get { return string.Format("{0}customer/activation?token={1}&email={2}", _storeService.GetStoreUrl(_customer.StoreId), _customer.GetAttribute<string>(SystemCustomerAttributeNames.AccountActivationToken), WebUtility.UrlEncode(_customer.Email)); ; }
         }
 
         public string WishlistURLForCustomer
         {
-            get { return string.Format("{0}wishlist/{1}", GetStoreUrl(_customer.StoreId), _customer.CustomerGuid); }
+            get { return string.Format("{0}wishlist/{1}", _storeService.GetStoreUrl(_customer.StoreId), _customer.CustomerGuid); }
         }
 
         public string NewNoteText
@@ -128,7 +128,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public string CustomerNoteAttachmentUrl
         {
-            get { return string.Format("{0}download/customernotefile/{1}", GetStoreUrl(_customer.StoreId), _customerNote.Id); }
+            get { return string.Format("{0}download/customernotefile/{1}", _storeService.GetStoreUrl(_customer.StoreId), _customerNote.Id); }
         }
 
         public string RecommendedProducts
@@ -151,20 +151,6 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get { return RecentlyViewedProductsListToHtmlTable(_customer, _languageId, true); }
         }
 
-        /// <summary>
-        /// Get store URL
-        /// </summary>
-        /// <param name="storeId">Store identifier; Pass 0 to load URL of the current store</param>
-        /// <returns></returns>
-        protected virtual string GetStoreUrl(string storeId = "")
-        {
-            var store = _storeService.GetStoreById(storeId) ?? _storeService.GetAllStores().FirstOrDefault();
-
-            if (store == null)
-                throw new Exception("No store could be loaded");
-
-            return store.SslEnabled ? store.SecureUrl : store.Url;
-        }
 
         protected virtual string RecommendedProductsListToHtmlTable(Customer customer, string languageId, bool withPicture)
         {

@@ -86,7 +86,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
         {
             get
             {
-                var wishlistUrl = string.Format("{0}wishlist/{1}", GetStoreUrl(), _customer.CustomerGuid);
+                var wishlistUrl = string.Format("{0}wishlist/{1}", _storeService.GetStoreUrl(), _customer.CustomerGuid);
                 return wishlistUrl;
             }
         }
@@ -146,16 +146,6 @@ namespace Grand.Services.Messages.DotLiquidDrops
             sb.AppendLine("</table>");
             result = sb.ToString();
             return result;
-        }
-
-        protected virtual string GetStoreUrl(string storeId = "", bool useSsl = false)
-        {
-            var store = _storeService.GetStoreById(storeId) ?? _storeContext.CurrentStore;
-
-            if (store == null)
-                throw new Exception("No store could be loaded");
-
-            return useSsl ? store.SecureUrl : store.Url;
         }
 
         public IDictionary<string, string> AdditionalTokens { get; set; }

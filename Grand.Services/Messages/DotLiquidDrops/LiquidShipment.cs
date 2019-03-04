@@ -100,24 +100,8 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get
             {
                 var order = EngineContext.Current.Resolve<IOrderService>().GetOrderById(_shipment.OrderId);
-                return string.Format("{0}orderdetails/shipment/{1}", GetStoreUrl(order.StoreId), _shipment.Id);
+                return string.Format("{0}orderdetails/shipment/{1}", _storeService.GetStoreUrl(order.StoreId), _shipment.Id);
             }
-        }
-
-        /// <summary>
-        /// Get store URL
-        /// </summary>
-        /// <param name="storeId">Store identifier; Pass 0 to load URL of the current store</param>
-        /// <param name="useSsl">Use SSL</param>
-        /// <returns></returns>
-        protected virtual string GetStoreUrl(string storeId = "", bool useSsl = false)
-        {
-            var store = _storeService.GetStoreById(storeId) ?? _storeContext.CurrentStore;
-
-            if (store == null)
-                throw new Exception("No store could be loaded");
-
-            return useSsl ? store.SecureUrl : store.Url;
         }
 
         public IDictionary<string, string> AdditionalTokens { get; set; }

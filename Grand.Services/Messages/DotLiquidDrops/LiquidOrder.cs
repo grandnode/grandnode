@@ -434,7 +434,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public string OrderURLForCustomer
         {
-            get { return string.Format("{0}orderdetails/{1}", GetStoreUrl(_order.StoreId), _order.Id); }
+            get { return string.Format("{0}orderdetails/{1}", _storeService.GetStoreUrl(_order.StoreId), _order.Id); }
         }
 
         public string AmountRefunded
@@ -458,7 +458,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get
             {
                 var order = EngineContext.Current.Resolve<IOrderService>().GetOrderById(_orderNote.OrderId);
-                return string.Format("{0}download/ordernotefile/{1}", GetStoreUrl(order.StoreId), _orderNote.Id);
+                return string.Format("{0}download/ordernotefile/{1}", _storeService.GetStoreUrl(order.StoreId), _orderNote.Id);
             }
         }
 
@@ -641,16 +641,6 @@ namespace Grand.Services.Messages.DotLiquidDrops
                 return _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(_order.RedeemedRewardPointsEntry.UsedAmount, _order.CurrencyRate)),
                     true, _order.CustomerCurrencyCode, false, _language);
             }
-        }
-
-        protected virtual string GetStoreUrl(string storeId = "", bool useSsl = false)
-        {
-            var store = _storeService.GetStoreById(storeId) ?? _storeService.GetAllStores().FirstOrDefault();
-
-            if (store == null)
-                throw new Exception("No store could be loaded");
-
-            return useSsl ? store.SecureUrl : store.Url;
         }
 
         public IDictionary<string, string> AdditionalTokens { get; set; }

@@ -144,7 +144,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get
             {
                 var storeId = _order?.StoreId;
-                string downloadUrl = string.Format("{0}download/getdownload/{1}", GetStoreUrl(storeId), _orderItem.OrderItemGuid);
+                string downloadUrl = string.Format("{0}download/getdownload/{1}", _storeService.GetStoreUrl(storeId), _orderItem.OrderItemGuid);
                 return downloadUrl;
             }
         }
@@ -154,7 +154,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get
             {
                 var storeId = _order?.StoreId;
-                string licenseUrl = string.Format("{0}download/getlicense/{1}", GetStoreUrl(storeId), _orderItem.OrderItemGuid);
+                string licenseUrl = string.Format("{0}download/getlicense/{1}", _storeService.GetStoreUrl(storeId), _orderItem.OrderItemGuid);
                 return licenseUrl;
             }
         }
@@ -406,16 +406,6 @@ namespace Grand.Services.Messages.DotLiquidDrops
             {
                 return _orderItem.CreatedOnUtc;
             }
-        }
-
-        protected virtual string GetStoreUrl(string storeId = "", bool useSsl = false)
-        {
-            var store = _storeService.GetStoreById(storeId) ?? _storeService.GetAllStores().FirstOrDefault();
-
-            if (store == null)
-                throw new Exception("No store could be loaded");
-
-            return useSsl ? store.SecureUrl : store.Url;
         }
 
         public IDictionary<string, string> AdditionalTokens { get; set; }
