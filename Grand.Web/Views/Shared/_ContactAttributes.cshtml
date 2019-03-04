@@ -10,17 +10,16 @@
     {
         string controlId = string.Format("contact_attribute_{0}", attribute.Id);
         string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
-        <span class="col-form-label text-prompt">
-            @textPrompt
-            @if (attribute.IsRequired)
-            {
-                <span class="text-prompt">
-                    <text>*</text>
-                </span>
-            }
-        </span>
         <div id="@string.Format("contact_attribute_label_{0}", attribute.Id)" class="col-12 px-0">
-
+            <span class="col-form-label text-prompt">
+                @textPrompt
+                @if (attribute.IsRequired)
+                {
+                    <span class="required">
+                        <text>*</text>
+                    </span>
+                }
+            </span>
             
             @switch (attribute.AttributeControlType)
             {

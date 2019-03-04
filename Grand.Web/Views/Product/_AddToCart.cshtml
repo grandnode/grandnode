@@ -29,6 +29,12 @@
         if (Model.AllowedQuantities.Any())
         {
             <select asp-for="EnteredQuantity" asp-items="Model.AllowedQuantities" class="custom-select form-control qty-dropdown mr-2"></select>
+            if (!String.IsNullOrEmpty(Model.MeasureUnit))
+            {
+                <span class="qty-unit d-flex align-items-center mr-2">
+                    @Model.MeasureUnit
+                </span>
+            }
         }
         else
         {
@@ -38,7 +44,7 @@
             <input asp-for="EnteredQuantity" class="form-control qty-input text-center" />
             if (!String.IsNullOrEmpty(Model.MeasureUnit))
             {
-                <span class="qty-unit mr-2">
+                <span class="qty-unit d-flex align-items-center mr-2">
                     @Model.MeasureUnit
                 </span>
             }
