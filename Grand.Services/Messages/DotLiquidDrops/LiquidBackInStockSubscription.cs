@@ -34,7 +34,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get { return _product.Name; }
         }
 
-        public string ProductURL
+        public string ProductUrl
         {
             get { return string.Format("{0}{1}", GetStoreUrl(_backInStockSubscription.StoreId), _product.GetSeName()); }
         }
