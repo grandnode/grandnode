@@ -492,15 +492,16 @@ namespace Grand.Services.Catalog
                 //initial price
                 decimal price = product.Price;
 
-                //customer product price
-                var customerPrice = _customerService.GetPriceByCustomerProduct(customer.Id, product.Id);
-                if (customerPrice.HasValue && customerPrice.Value < price)
-                    price = customerPrice.Value;
-
+               
                 //tier prices
                 var tierPrice = product.GetPreferredTierPrice(customer, _storeContext.CurrentStore.Id, quantity);
                 if (tierPrice != null)
                     price = tierPrice.Price;
+
+                //customer product price
+                var customerPrice = _customerService.GetPriceByCustomerProduct(customer.Id, product.Id);
+                if (customerPrice.HasValue && customerPrice.Value < price)
+                    price = customerPrice.Value;
 
                 //additional charge
                 price = price + additionalCharge;
