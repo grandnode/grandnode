@@ -18,6 +18,9 @@ namespace Grand.Framework.Infrastructure
         /// <param name="configuration">Configuration root of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
+            //add settings
+            services.AddSettings();
+
             //add healthChecks
             services.AddGrandHealthChecks();
 
@@ -29,9 +32,6 @@ namespace Grand.Framework.Infrastructure
 
             //add and configure MVC feature
             services.AddGrandMvc();
-
-            //add settings
-            services.AddSettings();
 
             //add custom redirect result executor
             services.AddGrandRedirectResultExecutor();
