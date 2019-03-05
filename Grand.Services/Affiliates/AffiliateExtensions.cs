@@ -53,9 +53,9 @@ namespace Grand.Services.Affiliates
             var storeUrl = webHelper.GetStoreLocation(false);
             var url = !String.IsNullOrEmpty(affiliate.FriendlyUrlName) ?
                 //use friendly URL
-                webHelper.ModifyQueryString(storeUrl, "affiliate=" + affiliate.FriendlyUrlName, null):
+                webHelper.ModifyQueryString(storeUrl, "affiliate", affiliate.FriendlyUrlName):
                 //use ID
-                webHelper.ModifyQueryString(storeUrl, "affiliateid=" + affiliate.Id, null);
+                webHelper.ModifyQueryString(storeUrl, "affiliateid", affiliate.Id);
 
             return url;
         }

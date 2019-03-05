@@ -141,7 +141,7 @@
                                 @if (canManageMaintenance)
                                 {
                                     <li>
-                                        <a href="@webHelper.ModifyQueryString(Url.Action("ClearCache", "Common", new RouteValueDictionary { { "area", "Admin" } }), "memory=true&returnurl=" + System.Net.WebUtility.UrlEncode(webHelper.GetRawUrl(this.Context.Request)), null)">
+                                        <a href="@Url.Action("ClearCache", "Common", new { memory = true, returnurl = webHelper.GetRawUrl(this.Context.Request)})">
                                             <i class="icon-refresh"></i>
                                             @T("Admin.Header.ClearCacheMemory")
                                         </a>
@@ -149,14 +149,14 @@
                                     @if (grandConfig.RedisCachingEnabled)
                                     {
                                         <li>
-                                            <a href="@webHelper.ModifyQueryString(Url.Action("ClearCache", "Common", new RouteValueDictionary { { "area", "Admin" } }), "memory=false&returnurl=" + System.Net.WebUtility.UrlEncode(webHelper.GetRawUrl(this.Context.Request)), null)">
+                                            <a href="@Url.Action("ClearCache", "Common",  new { memory = false, returnurl = webHelper.GetRawUrl(this.Context.Request)})">
                                                 <i class="icon-refresh"></i>
                                                 @T("Admin.Header.ClearCacheRedis")
                                             </a>
                                         </li>
                                     }
                                     <li>
-                                        <a href="@webHelper.ModifyQueryString(Url.Action("RestartApplication", "Common", new RouteValueDictionary { { "area", "Admin" } }), "returnurl=" + System.Net.WebUtility.UrlEncode(webHelper.GetRawUrl(this.Context.Request)), null)" id="restart-application">
+                                        <a href="@Url.Action("RestartApplication", "Common", new { returnurl = webHelper.GetRawUrl(this.Context.Request) })" id="restart-application">
                                             <i class="icon-reload"></i>
                                             @T("Admin.Header.RestartApplication")
                                         </a>

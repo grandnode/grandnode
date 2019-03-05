@@ -73,29 +73,14 @@ namespace Grand.Core
         bool IsStaticResource();
 
         /// <summary>
-        /// Request has user agent header
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        bool HasUserAgent(HttpRequest request);
-
-        /// <summary>
         /// Modifies query string
         /// </summary>
         /// <param name="url">Url to modify</param>
-        /// <param name="queryStringModification">Query string modification</param>
-        /// <param name="anchor">Anchor</param>
+        /// <param name="key">Query parameter key to add/remove</param>
+        /// <param name="value">Query parameter values to add</param>
         /// <returns>New url</returns>
-        string ModifyQueryString(string url, string queryStringModification, string anchor);
+        string ModifyQueryString(string url, string key, string value);
 
-        /// <summary>
-        /// Remove query string from url
-        /// </summary>
-        /// <param name="url">Url to modify</param>
-        /// <param name="queryString">Query string to remove</param>
-        /// <returns>New url</returns>
-        string RemoveQueryString(string url, string queryString);
-        
         /// <summary>
         /// Gets query string value by name
         /// </summary>

@@ -8,11 +8,7 @@
     Html.AddTitleParts(T("PageTitle.Login").Text);
 
     //register URL with return URL (if specified)
-    var registerUrl = Url.RouteUrl("Register");
-    if (!String.IsNullOrEmpty(this.Context.Request.Query["returnUrl"]))
-    {
-        registerUrl = webHelper.ModifyQueryString(registerUrl, "returnurl=" + WebUtility.UrlEncode(this.Context.Request.Query["returnUrl"]), null);
-    }
+    var registerUrl = Url.RouteUrl("Register", new { returnUrl = this.Context.Request.Query["returnUrl"] });
 }
 <div class="page login-page">
     <h2 class="generalTitle">@T("Account.Login.Welcome")</h2>

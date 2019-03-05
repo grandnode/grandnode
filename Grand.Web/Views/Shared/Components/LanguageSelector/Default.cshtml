@@ -1,9 +1,8 @@
 ﻿@model LanguageSelectorModel
-@using System.Net
 @inject IWebHelper webHelper
 @if (Model.AvailableLanguages.Count > 1)
 {
-    var rawUrl = webHelper.GetRawUrl(Context.Request);
+    var returnurl = webHelper.GetRawUrl(Context.Request);
 
     if (Model.UseImages)
     {
@@ -12,7 +11,7 @@
                 @foreach (var lang in Model.AvailableLanguages)
                 {
                     <li class="list-inline-item">
-                        <a  href="@webHelper.ModifyQueryString(Url.RouteUrl("ChangeLanguage", new {langid = lang.Id}), "returnurl=" + WebUtility.UrlEncode(rawUrl), null)" title="@lang.Name">
+                        <a  href="@Url.RouteUrl("ChangeLanguage", new {langid = lang.Id, returnurl})" title="@lang.Name">
                             <img title='@lang.Name' alt='@lang.Name' @(lang.Id == Model.CurrentLanguageId ? " class=selected" : null)
                                  src="@Url.Content("~/content/images/flags/" + @lang.FlagImageFileName) " />
                         </a>
@@ -26,7 +25,7 @@
         var languages = Model.AvailableLanguages.Select(lang => new SelectListItem
         {
             Text = lang.Name,
-            Value = webHelper.ModifyQueryString(Url.RouteUrl("ChangeLanguage", new { langid = lang.Id }), "returnurl=" + WebUtility.UrlEncode(rawUrl), null),
+            Value = Url.RouteUrl("ChangeLanguage", new { langid = lang.Id, returnurl }),
             Selected = lang.Id.Equals(Model.CurrentLanguageId)
         });
 

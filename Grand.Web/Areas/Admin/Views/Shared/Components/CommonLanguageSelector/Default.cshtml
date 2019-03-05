@@ -1,12 +1,7 @@
 ﻿@model LanguageSelectorModel
-@using Grand.Core;
-@using System.Net
-@using Microsoft.AspNetCore.Http
-@inject IHttpContextAccessor httpContextAccessor
-
+@inject IWebHelper webHelper
 @if (Model.AvailableLanguages.Count > 1)
 {
-    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
     <li class="dropdown dropdown-extended dropdown-notification">
         <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
             <i class="fa fa-language"></i><span class="username username-hide-on-mobile">
@@ -17,7 +12,7 @@
             @foreach (var lang in Model.AvailableLanguages)
             {
                 <li>
-                    <a href="@webHelper.ModifyQueryString(Url.Action("SetLanguage", "Home", new { langid = lang.Id , area = "Admin"}), "returnurl=" + System.Net.WebUtility.UrlEncode(webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request)), null)">
+                    <a href="@Url.Action("SetLanguage", "Home", new { langid = lang.Id, returnUrl = webHelper.GetRawUrl(Context.Request) })">
                         <img src="/content/images/flags/@(lang.FlagImageFileName)" alt="@lang.Name">
                         @lang.Name
                     </a>

@@ -1,12 +1,11 @@
 ﻿@model StoreThemeSelectorModel
-@using System.Net
 @inject IWebHelper webHelper
 @if (Model.AvailableStoreThemes.Count > 1)
 {
     var themes = Model.AvailableStoreThemes.Select(x => new SelectListItem
     {
         Text = x.Title,
-        Value = webHelper.ModifyQueryString(Url.Action("SetStoreTheme", "Common", new { themename = x.Name }), "returnurl=" + WebUtility.UrlEncode(webHelper.GetRawUrl(Context.Request)), null),
+        Value = Url.Action("SetStoreTheme", "Common", new { themename = x.Name, returnUrl = webHelper.GetRawUrl(Context.Request)}),
         Selected = x.Name.Equals(Model.CurrentStoreTheme.Name, StringComparison.OrdinalIgnoreCase)
     });
     <div class="theme-selector col-12 col-md-4">

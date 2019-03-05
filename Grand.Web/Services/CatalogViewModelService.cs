@@ -26,7 +26,6 @@ using Grand.Web.Interfaces;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Media;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -167,7 +166,7 @@ namespace Grand.Web.Services
                 foreach (var option in activeOptions)
                 {
                     var currentPageUrl = _webHelper.GetThisPageUrl(true);
-                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "orderby=" + (option.Key).ToString(), null);
+                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "orderby", (option.Key).ToString());
 
                     var sortValue = ((ProductSortingEnum)option.Key).GetLocalizedEnum(_localizationService, _workContext);
                     pagingFilteringModel.AvailableSortOptions.Add(new SelectListItem
@@ -200,14 +199,14 @@ namespace Grand.Web.Services
                 pagingFilteringModel.AvailableViewModes.Add(new SelectListItem
                 {
                     Text = _localizationService.GetResource("Catalog.ViewMode.Grid"),
-                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=grid", null),
+                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode", "grid"),
                     Selected = viewMode == "grid"
                 });
                 //list
                 pagingFilteringModel.AvailableViewModes.Add(new SelectListItem
                 {
                     Text = _localizationService.GetResource("Catalog.ViewMode.List"),
-                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=list", null),
+                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode", "list"),
                     Selected = viewMode == "list"
                 });
             }
@@ -247,9 +246,7 @@ namespace Grand.Web.Services
                     }
 
                     var currentPageUrl = _webHelper.GetThisPageUrl(true);
-                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "pagesize={0}", null);
-                    sortUrl = _webHelper.RemoveQueryString(sortUrl, "pagenumber");
-
+                    var pageUrl = _webHelper.ModifyQueryString(currentPageUrl, "pagenumber", null);
                     foreach (var pageSize in pageSizes)
                     {
                         int temp;
@@ -265,7 +262,7 @@ namespace Grand.Web.Services
                         pagingFilteringModel.PageSizeOptions.Add(new SelectListItem
                         {
                             Text = pageSize,
-                            Value = String.Format(sortUrl, pageSize),
+                            Value = _webHelper.ModifyQueryString(pageUrl, "pagesize", pageSize),
                             Selected = pageSize.Equals(command.PageSize.ToString(), StringComparison.OrdinalIgnoreCase)
                         });
                     }
@@ -1453,7 +1450,7 @@ namespace Grand.Web.Services
                 searchTerms = "";
             searchTerms = searchTerms.Trim();
 
-            if(model.Box)
+            if (model.Box)
                 model.sid = _catalogSettings.SearchByDescription;
             if (model.sid)
                 model.adv = true;

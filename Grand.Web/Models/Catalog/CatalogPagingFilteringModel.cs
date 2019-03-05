@@ -123,7 +123,7 @@ namespace Grand.Web.Models.Catalog
                 const string excludedQueryStringParams = "pagenumber";
                 var excludedQueryStringParamsSplitted = excludedQueryStringParams.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string exclude in excludedQueryStringParamsSplitted)
-                    url = webHelper.RemoveQueryString(url, exclude);
+                    url = webHelper.ModifyQueryString(url, exclude, null);
                 return url;
             }
 
@@ -187,7 +187,7 @@ namespace Grand.Web.Models.Catalog
                             item.Selected = true;
 
                         //filter URL
-                        string url = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true), QUERYSTRINGPARAM + "=" + fromQuery + "-" + toQuery, null);
+                        string url = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true), QUERYSTRINGPARAM, $"{fromQuery}-{toQuery}");
                         url = ExcludeQueryStringParams(url, webHelper);
                         item.FilterUrl = url;
 
@@ -198,7 +198,7 @@ namespace Grand.Web.Models.Catalog
                     if (selectedPriceRange != null)
                     {
                         //remove filter URL
-                        string url = webHelper.RemoveQueryString(webHelper.GetThisPageUrl(true), QUERYSTRINGPARAM);
+                        string url = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true), QUERYSTRINGPARAM, null);
                         url = ExcludeQueryStringParams(url, webHelper);
                         this.RemoveFilterUrl = url;
                     }
@@ -253,7 +253,7 @@ namespace Grand.Web.Models.Catalog
                 const string excludedQueryStringParams = "pagenumber";
                 var excludedQueryStringParamsSplitted = excludedQueryStringParams.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string exclude in excludedQueryStringParamsSplitted)
-                    url = webHelper.RemoveQueryString(url, exclude);
+                    url = webHelper.ModifyQueryString(url, exclude, null);
                 return url;
             }
 
@@ -329,15 +329,14 @@ namespace Grand.Web.Models.Catalog
 
                 //prepare the model properties
                 Enabled = true;
-                var removeFilterUrl = webHelper.RemoveQueryString(webHelper.GetThisPageUrl(true), QUERYSTRINGPARAM);
+                var removeFilterUrl = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true), QUERYSTRINGPARAM, null);
                 RemoveFilterUrl = ExcludeQueryStringParams(removeFilterUrl, webHelper);
 
                 //get already filtered specification options
                 var alreadyFilteredOptions = allFilters.Where(x => alreadyFilteredSpecOptionIds.Contains(x.SpecificationAttributeOptionId));
                 AlreadyFilteredItems = alreadyFilteredOptions.Select(x =>
                 {
-                    var queryString = string.Format("{0}={1}", QUERYSTRINGPARAM, GenerateFilteredSpecQueryParam(alreadyFilteredOptions.Where(y => y.SpecificationAttributeOptionId != x.SpecificationAttributeOptionId).Select(z => z.SpecificationAttributeOptionId).ToList()));
-                    var filterUrl = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true), queryString, null);
+                    var filterUrl = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true), QUERYSTRINGPARAM, GenerateFilteredSpecQueryParam(alreadyFilteredOptions.Where(y => y.SpecificationAttributeOptionId != x.SpecificationAttributeOptionId).Select(z => z.SpecificationAttributeOptionId).ToList()));
                     return new SpecificationFilterItem
                     {
                         SpecificationAttributeName = x.SpecificationAttributeName,
@@ -352,9 +351,7 @@ namespace Grand.Web.Models.Catalog
                 {
                     //filter URL
                     var alreadyFiltered = alreadyFilteredSpecOptionIds.Concat(new List<string> { x.SpecificationAttributeOptionId });
-                    var queryString = string.Format("{0}={1}", QUERYSTRINGPARAM, GenerateFilteredSpecQueryParam(alreadyFiltered.ToList()));
-                    var filterUrl = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true), queryString, null);
-
+                    var filterUrl = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true), QUERYSTRINGPARAM, GenerateFilteredSpecQueryParam(alreadyFiltered.ToList()));
                     return new SpecificationFilterItem()
                     {
                         SpecificationAttributeName = x.SpecificationAttributeName,

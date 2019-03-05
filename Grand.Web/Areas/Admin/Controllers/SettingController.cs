@@ -81,7 +81,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IRepository<Product> _productRepository;
         private readonly IReturnRequestService _returnRequestService;
         private readonly ILanguageService _languageService;
-        private readonly ICacheManager _cacheManager;
+        private readonly MemoryCacheManager _cacheManager;
 
         #endregion
 
@@ -107,7 +107,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             IRepository<Product> productRepository,
             IReturnRequestService returnRequestService,
             ILanguageService languageService,
-            ICacheManager cacheManager)
+            MemoryCacheManager cacheManager)
         {
             this._settingService = settingService;
             this._countryService = countryService;

@@ -598,11 +598,11 @@ namespace Grand.Web.Controllers
                                 //send customer welcome message
                                 _workflowMessageService.SendCustomerWelcomeMessage(customer, _workContext.WorkingLanguage.Id);
 
-                                var redirectUrl = Url.RouteUrl("RegisterResult", new { resultId = (int)UserRegistrationType.Standard });
+                                var redirectUrl = Url.RouteUrl("RegisterResult", new { resultId = (int)UserRegistrationType.Standard }, HttpContext.Request.Scheme);
                                 if (!String.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                                 {
                                     var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-                                    redirectUrl = webHelper.ModifyQueryString(redirectUrl, "returnurl=" + WebUtility.UrlEncode(returnUrl), null);
+                                    redirectUrl = webHelper.ModifyQueryString(redirectUrl, "returnurl", returnUrl);
                                 }
                                 return Redirect(redirectUrl);
                             }
