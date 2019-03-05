@@ -330,12 +330,9 @@ namespace Grand.Framework.Infrastructure.Extensions
 
         public static void AddSettings(this IServiceCollection services)
         {
-
             var typeFinder = new WebAppTypeFinder();
             var settings = typeFinder.FindClassesOfType<ISettings>();
-
             var instances = settings.Select(x => (ISettings)Activator.CreateInstance(x));
-
             foreach (var item in instances)
             {
                 services.AddScoped(item.GetType(), (x) =>
@@ -346,7 +343,6 @@ namespace Grand.Framework.Infrastructure.Extensions
                     return settingService.LoadSetting(type, currentStoreId);
                 });
             }
-
         }
 
         public static void AddGrandHealthChecks(this IServiceCollection services)

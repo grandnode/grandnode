@@ -35,7 +35,6 @@ namespace Grand.Framework
         #region Fields
 
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly CurrencySettings _currencySettings;
         private readonly IGrandAuthenticationService _authenticationService;
         private readonly IApiAuthenticationService _apiauthenticationService;
         private readonly ICurrencyService _currencyService;
@@ -61,7 +60,6 @@ namespace Grand.Framework
         #region Ctor
 
         public WebWorkContext(IHttpContextAccessor httpContextAccessor, 
-            CurrencySettings currencySettings,
             IGrandAuthenticationService authenticationService,
             IApiAuthenticationService apiauthenticationService,
             ICurrencyService currencyService,
@@ -76,7 +74,6 @@ namespace Grand.Framework
             TaxSettings taxSettings)
         {
             this._httpContextAccessor = httpContextAccessor;
-            this._currencySettings = currencySettings;
             this._authenticationService = authenticationService;
             this._apiauthenticationService = apiauthenticationService;
             this._currencyService = currencyService;
@@ -433,7 +430,8 @@ namespace Grand.Framework
                 var adminAreaUrl = _httpContextAccessor.HttpContext.Request.Path.StartsWithSegments(new PathString("/Admin"));
                 if(adminAreaUrl)
                 {
-                    var primaryStoreCurrency =  _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+                    var currencySettings = Grand.Core.Infrastructure.EngineContext.Current.Resolve<CurrencySettings>();
+                    var primaryStoreCurrency =  _currencyService.GetCurrencyById(currencySettings.PrimaryStoreCurrencyId);
                     if (primaryStoreCurrency != null)
                     {
                         _cachedCurrency = primaryStoreCurrency;
