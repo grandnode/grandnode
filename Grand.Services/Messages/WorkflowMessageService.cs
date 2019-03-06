@@ -1048,7 +1048,7 @@ namespace Grand.Services.Messages
             LiquidObject liquidObject = new LiquidObject();
             _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
             _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
-            _messageTokenProvider.AddProductTokens(liquidObject, product, languageId);
+            _messageTokenProvider.AddProductTokens(liquidObject, product, languageId, store.Id);
             liquidObject.EmailAFriend = new LiquidEmailAFriend(personalMessage, customerEmail);
 
             //event notification
@@ -1134,7 +1134,7 @@ namespace Grand.Services.Messages
             LiquidObject liquidObject = new LiquidObject();
             _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
             _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
-            _messageTokenProvider.AddProductTokens(liquidObject, product, languageId);
+            _messageTokenProvider.AddProductTokens(liquidObject, product, languageId, store.Id);
             liquidObject.AskQuestion = new LiquidAskQuestion(message, customerEmail, fullName, phone);
 
             //event notification
@@ -1654,7 +1654,7 @@ namespace Grand.Services.Messages
 
             LiquidObject liquidObject = new LiquidObject();
             _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddProductTokens(liquidObject, product, languageId);
+            _messageTokenProvider.AddProductTokens(liquidObject, product, languageId, store.Id);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
@@ -1691,7 +1691,7 @@ namespace Grand.Services.Messages
 
             LiquidObject liquidObject = new LiquidObject();
             _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
-            _messageTokenProvider.AddProductTokens(liquidObject, product, languageId);
+            _messageTokenProvider.AddProductTokens(liquidObject, product, languageId, store.Id);
             _messageTokenProvider.AddAttributeCombinationTokens(liquidObject, combination, languageId);
 
             //event notification
@@ -2207,7 +2207,7 @@ namespace Grand.Services.Messages
             LiquidObject liquidObject = new LiquidObject();
             _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
             var product = EngineContext.Current.Resolve<IProductService>().GetProductById(cartItem.ProductId);
-            _messageTokenProvider.AddProductTokens(liquidObject, product, languageId);
+            _messageTokenProvider.AddProductTokens(liquidObject, product, languageId, store.Id);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, liquidObject);
@@ -2348,7 +2348,7 @@ namespace Grand.Services.Messages
                 LiquidObject liquidObject = new LiquidObject();
                 _messageTokenProvider.AddAuctionTokens(liquidObject, product, bid);
                 _messageTokenProvider.AddCustomerTokens(liquidObject, customer);
-                _messageTokenProvider.AddProductTokens(liquidObject, product, languageId);
+                _messageTokenProvider.AddProductTokens(liquidObject, product, languageId, storeId);
                 _messageTokenProvider.AddStoreTokens(liquidObject, _storeService.GetStoreById(storeId), emailAccount);
 
                 //event notification
@@ -2386,7 +2386,7 @@ namespace Grand.Services.Messages
 
                 LiquidObject liquidObject = new LiquidObject();
                 _messageTokenProvider.AddAuctionTokens(liquidObject, product, bid);
-                _messageTokenProvider.AddProductTokens(liquidObject, product, languageId);
+                _messageTokenProvider.AddProductTokens(liquidObject, product, languageId, storeId);
                 _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
 
                 var customerService = EngineContext.Current.Resolve<ICustomerService>();
@@ -2433,7 +2433,7 @@ namespace Grand.Services.Messages
             var store = _storeService.GetStoreById(storeId);
 
             LiquidObject liquidObject = new LiquidObject();
-            _messageTokenProvider.AddProductTokens(liquidObject, product, languageId);
+            _messageTokenProvider.AddProductTokens(liquidObject, product, languageId, storeId);
             _messageTokenProvider.AddStoreTokens(liquidObject, store, emailAccount);
 
             var customerService = EngineContext.Current.Resolve<ICustomerService>();
@@ -2505,7 +2505,7 @@ namespace Grand.Services.Messages
                     return 0;
 
                 emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
-                _messageTokenProvider.AddProductTokens(liquidObject, product, "");
+                _messageTokenProvider.AddProductTokens(liquidObject, product, "", "");
             }
 
             //event notification

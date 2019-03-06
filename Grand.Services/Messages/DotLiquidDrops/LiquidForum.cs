@@ -20,7 +20,6 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private string _appendedPostIdentifierAnchor;
 
         private readonly IStoreService _storeService;
-        private readonly IStoreContext _storeContext;
 
         public LiquidForums(Forum forum,
             ForumTopic forumTopic,
@@ -29,7 +28,6 @@ namespace Grand.Services.Messages.DotLiquidDrops
             string appendedPostIdentifierAnchor = "")
         {
             this._storeService = EngineContext.Current.Resolve<IStoreService>();
-            this._storeContext = EngineContext.Current.Resolve<IStoreContext>();
 
             this._forumTopic = forumTopic;
             this._forumPost = forumPost;

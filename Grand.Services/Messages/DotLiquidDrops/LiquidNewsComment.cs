@@ -16,14 +16,11 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private NewsItem _newsItem;
         private string _storeId;
 
-        private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
 
         public LiquidNewsComment(NewsComment newsComment, string storeId)
         {
-            this._storeContext = EngineContext.Current.Resolve<IStoreContext>();
             this._storeService = EngineContext.Current.Resolve<IStoreService>();
-
             this._newsComment = newsComment;
             this._newsItem = EngineContext.Current.Resolve<INewsService>().GetNewsById(newsComment.NewsItemId);
             this._storeId = storeId;

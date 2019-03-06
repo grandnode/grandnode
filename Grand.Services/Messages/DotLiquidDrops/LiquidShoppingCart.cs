@@ -25,7 +25,6 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         private readonly ILocalizationService _localizationService;
         private readonly ILanguageService _languageService;
-        private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly MessageTemplatesSettings _templatesSettings;
 
@@ -34,7 +33,6 @@ namespace Grand.Services.Messages.DotLiquidDrops
             this._localizationService = EngineContext.Current.Resolve<ILocalizationService>();
             this._languageService = EngineContext.Current.Resolve<ILanguageService>();
             this._templatesSettings = EngineContext.Current.Resolve<MessageTemplatesSettings>();
-            this._storeContext = EngineContext.Current.Resolve<IStoreContext>();
             this._storeService = EngineContext.Current.Resolve<IStoreService>();
 
             this._customer = customer;
@@ -86,7 +84,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
         {
             get
             {
-                var wishlistUrl = string.Format("{0}wishlist/{1}", _storeService.GetStoreUrl(), _customer.CustomerGuid);
+                var wishlistUrl = string.Format("{0}wishlist/{1}", _storeService.GetStoreUrl(_customer.StoreId), _customer.CustomerGuid);
                 return wishlistUrl;
             }
         }

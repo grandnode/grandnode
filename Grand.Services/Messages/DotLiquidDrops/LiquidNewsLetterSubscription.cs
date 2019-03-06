@@ -35,7 +35,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get
             {
                 string urlFormat = "{0}newsletter/subscriptionactivation/{1}/{2}";
-                var activationUrl = String.Format(urlFormat, _storeService.GetStoreUrl(), _subscription.NewsLetterSubscriptionGuid, "true");
+                var activationUrl = String.Format(urlFormat, _storeService.GetStoreUrl(_subscription.StoreId), _subscription.NewsLetterSubscriptionGuid, "true");
                 return activationUrl;
             }
         }
@@ -45,7 +45,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
             get
             {
                 string urlFormat = "{0}newsletter/subscriptionactivation/{1}/{2}";
-                var deActivationUrl = String.Format(urlFormat, _storeService.GetStoreUrl(), _subscription.NewsLetterSubscriptionGuid, "false");
+                var deActivationUrl = String.Format(urlFormat, _storeService.GetStoreUrl(_subscription.StoreId), _subscription.NewsLetterSubscriptionGuid, "false");
                 return deActivationUrl;
             }
         }

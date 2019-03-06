@@ -1,11 +1,9 @@
 ﻿using DotLiquid;
-using Grand.Core;
 using Grand.Core.Domain.Blogs;
 using Grand.Core.Infrastructure;
 using Grand.Services.Blogs;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
-using System;
 using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops
@@ -14,18 +12,14 @@ namespace Grand.Services.Messages.DotLiquidDrops
     {
         private BlogComment _blogComment;
         private string _storeId;
-
-        private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
 
         public LiquidBlogComment(BlogComment blogComment, string storeId)
         {
-            this._storeContext = EngineContext.Current.Resolve<IStoreContext>();
             this._storeService = EngineContext.Current.Resolve<IStoreService>();
-
             this._blogComment = blogComment;
             this._storeId = storeId;
-                       
+
             AdditionalTokens = new Dictionary<string, string>();
         }
 
