@@ -1760,7 +1760,15 @@ list settings .list__item,
     justify-content: center;
     align-items: center;
 }
-.order-progress .inactive-step a {
+.order-progress .active-step a.btn-info:hover {
+    color: #fff;
+}
+.order-progress .active-step a.btn-secondary:hover,
+.order-progress .inactive-step a.btn-secondary:hover {
+    color: #1d1f20;
+}
+.order-progress .inactive-step a.disabled,
+.order-progress .active-step a.disabled {
     color: #fff;
 }
 .progress-bar {
