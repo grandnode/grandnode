@@ -99,10 +99,10 @@
                                         @if (Model.DisplayAddToCart)
                                         {
                                             <td class="remove-from-cart add-to-cart">
-                                                <input type="checkbox" id="@T("account.shoppingcart")-@(item.Id)" name="addtocart" class="d-none checkbox-u" value="@(item.Id)">
-                                                <label for="@T("account.shoppingcart")-@(item.Id)"></label>
+                                                <input type="checkbox" id="account.shoppingcart-@(item.Id)" name="addtocart" class="d-none checkbox-u" value="@(item.Id)">
+                                                <label for="account.shoppingcart-@(item.Id)"></label>
 
-                                                <p class="remove">addToCart</p>
+                                                <p class="remove">@T("addToCart")</p>
                                             </td>
                                         }
                                     }

@@ -1143,6 +1143,9 @@
   <LocaleResource Name="Address.SelectState">
     <Value>Select state</Value>
   </LocaleResource>
+  <LocaleResource Name="addToCart">
+    <Value>AddToCart</Value>
+  </LocaleResource>
   <LocaleResource Name="AddToCart.Attributes">
     <Value>Attributes:</Value>
   </LocaleResource>
@@ -15708,6 +15711,9 @@
   </LocaleResource>
   <LocaleResource Name="Api.Customers.Customer.Fields.Guid.Exists">
     <Value>Guid exists</Value>
+  </LocaleResource>
+  <LocaleResource Name="api.customers.customer.fields.storeid.notexists">
+    <Value>Store ID doesn't exist</Value>
   </LocaleResource>
   <LocaleResource Name="BackInStockSubscriptions.AlreadySubscribed">
     <Value>You're already subscribed for this product back in stock notification</Value>

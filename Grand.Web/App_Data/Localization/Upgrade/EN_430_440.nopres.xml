@@ -536,4 +536,10 @@
   <LocaleResource Name="Admin.Header.ClearCacheRedis">
     <Value>Clear redis cache</Value>
   </LocaleResource>
+  <LocaleResource Name="addToCart">
+    <Value>AddToCart</Value>
+  </LocaleResource>
+  <LocaleResource Name="api.customers.customer.fields.storeid.notexists">
+    <Value>Store ID doesn't exist</Value>
+  </LocaleResource>
 </Language>
