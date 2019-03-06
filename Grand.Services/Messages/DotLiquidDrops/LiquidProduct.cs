@@ -8,7 +8,6 @@ using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
-using System;
 using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops
@@ -17,16 +16,14 @@ namespace Grand.Services.Messages.DotLiquidDrops
     {
         private Product _product;
         private string _languageId;
-
+        private string _storeId;
         private readonly ICurrencyService _currencyService;
         private readonly IPriceFormatter _priceFormatter;
-        private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly CurrencySettings _currencySettings;
 
-        public LiquidProduct(Product product, string languageId)
+        public LiquidProduct(Product product, string languageId, string storeId)
         {
-            this._storeContext = EngineContext.Current.Resolve<IStoreContext>();
             this._storeService = EngineContext.Current.Resolve<IStoreService>();
             this._currencySettings = EngineContext.Current.Resolve<CurrencySettings>();
             this._currencyService = EngineContext.Current.Resolve<ICurrencyService>();
@@ -34,6 +31,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
             this._product = product;
             this._languageId = languageId;
+            this._storeId = storeId;
 
             AdditionalTokens = new Dictionary<string, string>();
         }
@@ -74,7 +72,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public string ProductURLForCustomer
         {
-            get { return string.Format("{0}{1}", _storeService.GetStoreUrl(), _product.GetSeName()); }
+            get { return string.Format("{0}{1}", _storeService.GetStoreUrl(_storeId), _product.GetSeName()); }
         }
 
         public IDictionary<string, string> AdditionalTokens { get; set; }

@@ -30,7 +30,7 @@ namespace Grand.Services.Messages
         void AddBlogCommentTokens(string storeId, LiquidObject liquidObject, BlogComment blogComment);
         void AddArticleCommentTokens(string storeId, LiquidObject liquidObject, KnowledgebaseArticleComment articleComment);
         void AddNewsCommentTokens(string storeId, LiquidObject liquidObject, NewsComment newsComment);
-        void AddProductTokens(LiquidObject liquidObject, Product product, string languageId);
+        void AddProductTokens(LiquidObject liquidObject, Product product, string languageId, string storeId);
         void AddAttributeCombinationTokens(LiquidObject liquidObject, ProductAttributeCombination combination, string languageId);
         void AddForumTokens(LiquidObject liquidObject, Forum forum, ForumTopic forumTopic = null, ForumPost forumPost = null,
             int? friendlyForumTopicPageIndex = null, string appendedPostIdentifierAnchor = "");

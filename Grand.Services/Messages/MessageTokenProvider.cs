@@ -303,9 +303,9 @@ namespace Grand.Services.Messages
             _eventPublisher.EntityTokensAdded(newsComment, liquidNewsComment, liquidObject);
         }
 
-        public void AddProductTokens(LiquidObject liquidObject, Product product, string languageId)
+        public void AddProductTokens(LiquidObject liquidObject, Product product, string languageId, string storeId)
         {
-            var liquidProduct = new LiquidProduct(product, languageId);
+            var liquidProduct = new LiquidProduct(product, languageId, storeId);
             liquidObject.Product = liquidProduct;
 
             _eventPublisher.EntityTokensAdded(product, liquidProduct, liquidObject);

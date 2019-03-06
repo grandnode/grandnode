@@ -1,11 +1,9 @@
 ﻿using DotLiquid;
-using Grand.Core;
 using Grand.Core.Domain.Knowledgebase;
 using Grand.Core.Infrastructure;
 using Grand.Services.Knowledgebase;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
-using System;
 using System.Collections.Generic;
 
 namespace Grand.Services.Messages.DotLiquidDrops
@@ -15,14 +13,11 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private KnowledgebaseArticleComment _articleComment;
         private string _storeId;
 
-        private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
 
         public LiquidKnowledgebase(KnowledgebaseArticleComment articleComment, string storeId)
         {
-            this._storeContext = EngineContext.Current.Resolve<IStoreContext>();
             this._storeService = EngineContext.Current.Resolve<IStoreService>();
-
             this._articleComment = articleComment;
             this._storeId = storeId;
 

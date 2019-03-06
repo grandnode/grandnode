@@ -22,7 +22,6 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         private readonly ILocalizationService _localizationService;
         private readonly IOrderService _orderService;
-        private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ShippingSettings _shippingSettings;
@@ -33,7 +32,6 @@ namespace Grand.Services.Messages.DotLiquidDrops
         {
             this._localizationService = EngineContext.Current.Resolve<ILocalizationService>();
             this._orderService = EngineContext.Current.Resolve<IOrderService>();
-            this._storeContext = EngineContext.Current.Resolve<IStoreContext>();
             this._storeService = EngineContext.Current.Resolve<IStoreService>();
             this._productAttributeParser = EngineContext.Current.Resolve<IProductAttributeParser>();
             this._shippingSettings = EngineContext.Current.Resolve<ShippingSettings>();

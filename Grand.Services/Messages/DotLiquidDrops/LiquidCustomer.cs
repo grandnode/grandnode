@@ -27,7 +27,6 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         private readonly ICustomerAttributeFormatter _customerAttributeFormatter;
         private readonly IStoreService _storeService;
-        private readonly IStoreContext _storeContext;
         private readonly ILocalizationService _localizationService;
         private readonly ILanguageService _languageService;
         private readonly MessageTemplatesSettings _templatesSettings;
@@ -37,7 +36,6 @@ namespace Grand.Services.Messages.DotLiquidDrops
         {
             this._customerAttributeFormatter = EngineContext.Current.Resolve<ICustomerAttributeFormatter>();
             this._storeService = EngineContext.Current.Resolve<IStoreService>();
-            this._storeContext = EngineContext.Current.Resolve<IStoreContext>();
             this._localizationService = EngineContext.Current.Resolve<ILocalizationService>();
             this._languageService = EngineContext.Current.Resolve<ILanguageService>();
             this._templatesSettings = EngineContext.Current.Resolve<MessageTemplatesSettings>();
