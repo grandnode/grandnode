@@ -40,7 +40,7 @@ namespace Grand.Framework.Infrastructure
             //add distributed Redis cache
             if (config.RedisCachingEnabled)
             {
-                services.AddDistributedRedisCache(options =>
+                services.AddStackExchangeRedisCache(options =>
                 {
                     options.Configuration = config.RedisCachingConnectionString;
                 });

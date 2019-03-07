@@ -7,13 +7,10 @@ namespace Grand.Core.Caching
     public partial class DistributedRedisCache : ICacheManager
     {
         private readonly IDistributedCache _distributedCache;
-        private readonly IDistributedRedisCacheExtended _distributedRedisCacheExtended;
 
-        public DistributedRedisCache(IDistributedCache distributedCache
-            , IDistributedRedisCacheExtended distributedRedisCacheExtended)
+        public DistributedRedisCache(IDistributedCache distributedCache)
         {
             this._distributedCache = distributedCache;
-            this._distributedRedisCacheExtended = distributedRedisCacheExtended;
         }
 
         /// <summary>
@@ -78,7 +75,7 @@ namespace Grand.Core.Caching
 
         public virtual void RemoveByPattern(string pattern)
         {
-            _distributedRedisCacheExtended.RemoveByPatternAsync(pattern);
+            Infrastructure.EngineContext.Current.Resolve<IDistributedRedisCacheExtended>().RemoveByPatternAsync(pattern);
         }
 
         public virtual void Set(string key, object data, int cacheTime)
@@ -100,7 +97,7 @@ namespace Grand.Core.Caching
 
         public virtual void Clear()
         {
-            _distributedRedisCacheExtended.ClearAsync();
+            Infrastructure.EngineContext.Current.Resolve<IDistributedRedisCacheExtended>().ClearAsync();
         }
 
 
