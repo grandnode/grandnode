@@ -12,13 +12,14 @@
     <div class="vendor-reviews-overview d-inline-flex align-items-center flex-wrap" @if (Model.TotalReviews > 0) { <text> itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" </text>  }>
         <div class="vendor-review-box">
             <div class="rating">
+                <div class="rating-ghost">
+                    &#x2606;&#x2606;&#x2606;&#x2606;&#x2606;
+                </div>
+                <div class="rating-real" style="width: @(ratingPercent)%">
+                    &#9733;&#9733;&#9733;&#9733;&#9733;
+                </div>
             </div>
         </div>
-        <script asp-location="Footer">
-            $(document).ready(function () {
-                productStarProgress10('@(ratingPercent)', 'rating');
-            });
-        </script>
         @if (Model.TotalReviews > 0)
         {
             <div class="vendor-review-links">
