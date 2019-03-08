@@ -17,6 +17,10 @@
                 <form asp-route="Product" asp-route-sename="@Model.SeName" method="post" id="product-details-form">
                     <div itemscope itemtype="http://schema.org/Product" data-productid="@Model.Id">
                         <div class="item-container col d-md-inline-flex d-md-flex px-0">
+                            @if (!string.IsNullOrEmpty(Model.Flag))
+                            {
+                                <span class="new-product-label bg-info text-white">@Model.Flag</span>
+                            }
                             @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_before_pictures", additionalData = Model.Id })
                             <!--product pictures-->
                             <partial name="_ProductDetailsPictures" model="Model" />
@@ -203,30 +207,6 @@
                 }, 300, 'linear');
             });
         }
-
-        $(".product-quickview .card.gen").each(function () {
-            if ($(this).find(".old-price").text().length > 0) {
-                var actual_p = $(this).find(".actual-price").text().replace(",", "").replace(/^\D+/g, '');
-                var old_p = $(this).find(".old-price").text().replace(",", "").replace(/^\D+/g, '');
-                var promo = Math.abs(Math.round((1 - actual_p / old_p) * 100));
-                if (isNaN(promo)) {
-                    $(this).parent().parent().find(".change-percent").remove();
-                } else {
-                    if (parseInt(promo) <= 0) {
-                        $(this).find(".new-product-label").addClass("no-promo");
-                    }
-                    else {
-                        var promo = "-" + promo + "%";
-                        $(this).parent().find(".change-percent").text(promo).css("opacity", "1");
-                        $(this).find(".new-product-label").addClass("with-promo");
-                    }
-                }
-            }
-            else {
-                $(this).find(".change-percent").remove();
-                $(this).find(".new-product-label").addClass("no-promo");
-            }
-        });
     });
 </script>
 <resources asp-type="ScriptFooter" />

@@ -38,15 +38,22 @@
             <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
                 <img class="img-fluid" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
             </a>
-            @if (!string.IsNullOrEmpty(Model.Flag))
-            {
-                <span class="new-product-label bg-info text-white">@Model.Flag</span>
-            }
             @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
             {
-                <span class="change-percent bg-success text-white">
+                 @if (!string.IsNullOrEmpty(Model.Flag))
+                 {
+                     <span class="new-product-label with-promo bg-info text-white">@Model.Flag</span>
+                 }
+                 <span class="change-percent bg-success text-white">
                     <span>-@(Convert.ToInt32((1 - Model.ProductPrice.PriceValue / Model.ProductPrice.OldPriceValue) * 100))%</span>
-                </span>
+                 </span>
+            }
+            else
+            {
+                 @if (!string.IsNullOrEmpty(Model.Flag))
+                 {
+                     <span class="new-product-label bg-info text-white">@Model.Flag</span>
+                 }
             }
             <div class="card-body text-left">
                 <h5 class="card-title mt-0">

@@ -51,6 +51,10 @@
             <div itemscope itemtype="http://schema.org/Product" data-productid="@Model.Id">
                 <div class="product-essential">
                     <div class="col d-md-inline-flex d-md-flex px-0 item-container">
+                        @if (!string.IsNullOrEmpty(Model.Flag))
+                        {
+                            <span class="new-product-label bg-info text-white">@Model.Flag</span>
+                        }
                         @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_before_pictures", additionalData = Model.Id })
                         <!--product pictures-->
                         <partial name="_ProductDetailsPictures" model="Model" />

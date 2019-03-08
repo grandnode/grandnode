@@ -36,19 +36,26 @@
     <div class="card gen rowHelper col-12 mb-3" data-productid="@Model.Id">
         <div class="row flex-row flex-nowrap prod-list">
             <div class="d-inline-flex img-holder">
-                    <a class="picture" href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
-                        <img class="img-fluid" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
-                    </a>
+                <a class="picture" href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
+                    <img class="img-fluid" alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
+                </a>
+                @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
+                {
+                    @if (!string.IsNullOrEmpty(Model.Flag))
+                    {
+                        <span class="new-product-label with-promo bg-info text-white">@Model.Flag</span>
+                    }
+                    <span class="change-percent bg-success text-white">
+                        <span>-@(Convert.ToInt32((1 - Model.ProductPrice.PriceValue / Model.ProductPrice.OldPriceValue) * 100))%</span>
+                    </span>
+                }
+                else
+                {
                     @if (!string.IsNullOrEmpty(Model.Flag))
                     {
                         <span class="new-product-label bg-info text-white">@Model.Flag</span>
                     }
-                    @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
-                    {
-                        <span class="change-percent bg-success text-white">
-                            <span>-@(Convert.ToInt32((1 - Model.ProductPrice.PriceValue / Model.ProductPrice.OldPriceValue)* 100 ))%</span>
-                        </span>
-                    }
+                }
             </div>
             <div class="d-inline-flex">
                 <div class="card-body p-sm-3 px-2 py-1 text-left">
