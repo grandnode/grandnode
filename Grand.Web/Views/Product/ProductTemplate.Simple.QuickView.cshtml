@@ -203,14 +203,6 @@
                 }, 300, 'linear');
             });
         }
-        var rating_percent = $('.progress10').attr("data-rating");
-        productStarProgress10(rating_percent, 'progress10');
-
-        $('.box-progress10').each(function () {
-            var rating_id = $(this).attr("data-id");
-            var rating_percent = $(this).attr("data-rating");
-            productStarProgress10(rating_percent, rating_id);
-        });
 
         $(".product-quickview .card.gen").each(function () {
             if ($(this).find(".old-price").text().length > 0) {

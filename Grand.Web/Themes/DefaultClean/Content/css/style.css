@@ -2553,6 +2553,11 @@ ul.opc .order-summary-content h5 {
     overflow: hidden;
     white-space: nowrap;
 }
+.vendor-review-list .rating,
+.product-review-list .rating {
+    top: 25px;
+    left: calc(100% - 83px);
+}
 .rating-options {
 	padding-top: 7px;
 }
@@ -5234,6 +5239,11 @@ footer .socicon-pinterest:hover {
 	}
 }
 @media (max-width: 575px) {
+    .vendor-review-list .rating,
+    .product-review-list .rating {
+        top: 0;
+        left: 0;
+    }
     .prod-list .card-body {
         max-width: 185px;
     }
