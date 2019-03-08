@@ -135,13 +135,6 @@ function IpadMenuFix() {
     }
 }
 
-function ratingSubFunc() {
-    $('.progress10, .box-progress10').each(function () {
-        var rating_id = $(this).attr("data-id");
-        var rating_percent = $(this).attr("data-rating");
-        productStarProgress10(rating_percent, rating_id);
-    });
-}
 function dataCountdown() {
     $('[data-countdown]').each(function () {
         var $this = $(this), finalDate = $(this).data('countdown');
@@ -172,7 +165,6 @@ $(document).ready(function () {
     mainMenuReplace();
     LeftSide();
     itemsStatistics();
-    ratingSubFunc();
     IpadMenuFix();
     dataCountdown();
     BackToTop();
@@ -424,57 +416,6 @@ function addAntiForgeryToken(data) {
         data.__RequestVerificationToken = tokenInput.val();
     }
     return data;
-};
-
-function productStarProgress5(procent, elem) {
-    if (procent) {
-        if (procent == 0) { productRatingStarFinal(0, 0, 5, elem); }
-        else if (procent > 0 && procent <= 20) { productRatingStarFinal(1, 0, 4, elem); }
-        else if (procent > 20 && procent <= 40) { productRatingStarFinal(2, 0, 3, elem); }
-        else if (procent > 40 && procent <= 60) { productRatingStarFinal(3, 0, 2, elem); }
-        else if (procent > 60 && procent <= 80) { productRatingStarFinal(4, 0, 1, elem); }
-        else if (procent > 80 && procent <= 100) { productRatingStarFinal(5, 0, 0, elem); }
-        else { productRatingStarFinal(5, 0, 0, elem); }
-    } else {
-        productRatingStarFinal(0, 0, 0);
-    };
-};
-function productStarProgress10(procent, elem) {
-    if (procent) {
-        if (procent == 0) { productRatingStarFinal(0, 0, 5, elem); }
-        else if (procent > 0 && procent < 10) { productRatingStarFinal(0, 1, 4, elem); }
-        else if (procent >= 10 && procent <= 20) { productRatingStarFinal(1, 0, 4, elem); }
-        else if (procent > 20 && procent <= 30) { productRatingStarFinal(1, 1, 3, elem); }
-        else if (procent > 30 && procent <= 40) { productRatingStarFinal(2, 0, 3, elem); }
-        else if (procent > 40 && procent <= 50) { productRatingStarFinal(2, 1, 2, elem); }
-        else if (procent > 50 && procent <= 60) { productRatingStarFinal(3, 0, 2, elem); }
-        else if (procent > 60 && procent <= 70) { productRatingStarFinal(3, 1, 1, elem); }
-        else if (procent > 70 && procent <= 80) { productRatingStarFinal(4, 0, 1, elem); }
-        else if (procent > 80 && procent < 100) { productRatingStarFinal(4, 1, 0, elem); }
-        else { productRatingStarFinal(5, 0, 0, elem); }
-    } else {
-        productRatingStarFinal(0, 0, 0, elem);
-    };
-};
-
-
-function productRatingStarFinal(whole, half, empty, elem) {
-    var stars = [],
-        fullStarr = "<span class=\"material-icons mat pr-1\">star</span>",
-        halfStarr = "<span class=\"material-icons mat pr-1\">star_half</span>",
-        emptyStarr = "<span class=\"material-icons mat pr-1\">star_border</span>",
-        id = "";
-
-    if (whole == 0 && half == 0 && empty == 0) {
-        stars = "";
-    } else {
-        for (var i = 0; i < whole; i++) { stars.push(fullStarr); };
-        for (var i = 0; i < half; i++) { stars.push(halfStarr); };
-        for (var i = 0; i < empty; i++) { stars.push(emptyStarr); };
-        stars = stars.join("");
-    };
-    $("." + elem + "").html(stars);
-
 };
 
 function sendcontactusform(urladd) {
