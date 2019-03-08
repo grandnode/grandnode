@@ -82,6 +82,9 @@ namespace Grand.Web.Areas.Admin.Services
             if (!store.Url.EndsWith("/"))
                 store.Url += "/";
 
+            if (!string.IsNullOrEmpty(store.SecureUrl) && !store.SecureUrl.EndsWith("/"))
+                store.SecureUrl += "/";
+
             _storeService.InsertStore(store);
             return store;
         }
@@ -91,6 +94,8 @@ namespace Grand.Web.Areas.Admin.Services
             //ensure we have "/" at the end
             if (!store.Url.EndsWith("/"))
                 store.Url += "/";
+            if (!string.IsNullOrEmpty(store.SecureUrl) && !store.SecureUrl.EndsWith("/"))
+                store.SecureUrl += "/";
 
             _storeService.UpdateStore(store);
             return store;

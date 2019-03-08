@@ -187,7 +187,7 @@ namespace Grand.Services.Common
             if (order == null)
                 throw new ArgumentNullException("order");
 
-            string fileName = string.Format("order_{0}_{1}.pdf", order.OrderGuid, CommonHelper.GenerateRandomDigitCode(4));
+            string fileName = string.Format("order_{0}_{1}", order.OrderGuid, CommonHelper.GenerateRandomDigitCode(4));
             string downloadId = string.Empty;
             using (MemoryStream ms = new MemoryStream())
             {
