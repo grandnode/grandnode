@@ -33,30 +33,30 @@
                                     <span asp-validation-for="AddProductReview.ReviewText"></span>
                                 <div class="form-group review-rating d-flex">
                                     <label asp-for="AddProductReview.Rating" class="col-form-label d-inline-flex align-items-center">@T("Reviews.Fields.Rating"):</label>
-                                    <div class="d-inline-flex justify-content-center rating-options text-center ml-3">
+                                    <div class="d-inline-flex justify-content-center rating-options text-center pt-0 ml-3">
                                             <label class="custom-control pl-0 custom-radio d-flex full-star">
                                                 <input asp-for="AddProductReview.Rating" value="1" type="radio" id="addproductrating_1" class="custom-control-input"/>
-                                                <span class="custom-control-label material-icons">star</span>
+                                                <span class="custom-control-label">&#9733;</span>
                                                 <span class="custom-control-description"></span>
                                             </label>
                                             <label class="custom-control pl-0 custom-radio d-flex full-star">
                                                 <input asp-for="AddProductReview.Rating" value="2" type="radio" id="addproductrating_2" class="custom-control-input" />
-                                                <span class="custom-control-label material-icons">star</span>
+                                                <span class="custom-control-label">&#9733;</span>
                                                 <span class="custom-control-description"></span>
                                             </label>
                                             <label class="custom-control pl-0 custom-radio d-flex full-star">
                                                 <input asp-for="AddProductReview.Rating" value="3" type="radio" id="addproductrating_3" class="custom-control-input" />
-                                                <span class="custom-control-label material-icons">star</span>
+                                                <span class="custom-control-label">&#9733;</span>
                                                 <span class="custom-control-description"></span>
                                             </label>
                                             <label class="custom-control pl-0 custom-radio d-flex full-star">
                                                 <input asp-for="AddProductReview.Rating" value="4" type="radio" id="addproductrating_4" class="custom-control-input" />
-                                                <span class="custom-control-label material-icons">star</span>
+                                                <span class="custom-control-label">&#9733;</span>
                                                 <span class="custom-control-description"></span>
                                             </label>
                                             <label class="custom-control pl-0 custom-radio d-flex full-star">
                                                 <input asp-for="AddProductReview.Rating" value="5" type="radio" id="addproductrating_5" class="custom-control-input" />
-                                                <span class="custom-control-label material-icons">star</span>
+                                                <span class="custom-control-label">&#9733;</span>
                                                 <span class="custom-control-description"></span>
                                             </label>
                                         </div>             
@@ -82,15 +82,16 @@
                 @foreach (var review in Model.Items)
                 {
                     int ratingPercent = review.Rating * 20;
-                    <div class="card comment product-review-item pb-3">
+                    <div class="card comment product-review-item mb-3">
                         <div class="card-header review-item-head">
-                            <div class="rating rating_@review.Id float-right">
+                            <div class="rating">
+                                <div class="rating-ghost">
+                                    &#x2606;&#x2606;&#x2606;&#x2606;&#x2606;
+                                </div>
+                                <div class="rating-real" style="width: @(ratingPercent)%">
+                                    &#9733;&#9733;&#9733;&#9733;&#9733;
+                                </div>
                             </div>
-                            <script asp-location="Footer">
-                                $(document).ready(function () {
-                                    productStarProgress5('@(ratingPercent)', 'rating_@review.Id');
-                                });
-                            </script>
                             <div class="review-info">
                                 <span class="user">
                                     <span>@T("Reviews.From"):</span>
@@ -142,10 +143,13 @@
 
 <script asp-location="Footer">
     $(document).ready(function () {
-        $(".rating-options .custom-radio").click(function () {
-            $(this).find(".material-icons").text("star");
-            $(this).prevAll('.custom-radio').find(".material-icons").text("star");
-            $(this).nextAll('.custom-radio').find(".material-icons").text("star_border");
-        });
+        $('.rating-options .custom-radio').hover(function () {
+            if (!$(this).find('input').is(':checked')) {
+                $(this).find('.custom-control-label').html('&#9733;');
+                $(this).prevAll('.custom-radio').find('.custom-control-label').html('&#9733;');
+                $(this).nextAll('.custom-radio').find('.custom-control-label').html('&#x2606;');
+            }
+            $(this).find('input').click();
+        });
     });
 </script>

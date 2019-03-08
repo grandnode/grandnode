@@ -2524,31 +2524,41 @@ ul.opc .order-summary-content h5 {
 }
 /*rating*/
 
-.product-review-list .rating {
-	margin: 0;
-}
 .rating {
-	width: auto;
-	height: auto;
-	margin: 5px 0px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 83px;
+    height: 19px;
     line-height: 1;
+    font-size: 20px;
+    margin: 5px 0;
 }
-.rating div {
-	height: 14px;
+.rating .rating-ghost {
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 19px;
+    white-space: nowrap;
+    color: #f0ad4e;
+}
+.rating .rating-real {
+    z-index: 2;
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #f0ad4e;
+    overflow: hidden;
+    white-space: nowrap;
 }
 .rating-options {
 	padding-top: 7px;
 }
-.rating .mat {
-	color: #f0ad4e;
-	margin-top: 0;
-	font-size: 18px;
-}
-.rating {
-	position: relative;
-}
 .rating-options .custom-control-label {
 	color: #f0ad4e;
+    font-size: 30px;
 	cursor: pointer;
 }
 .rating-options .custom-control-label::after {
