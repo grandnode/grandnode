@@ -212,13 +212,21 @@ namespace Grand.Services.Catalog
             filter = filter & filters.Eq(x => x.EntityName, "Product");
             _urlRecordRepository.Collection.DeleteManyAsync(filter);
 
+            //delete product tags
+            var existingProductTags = _productTagRepository.Table.Where(x => product.ProductTags.ToList().Contains(x.Name)).ToList();
+            foreach (var tag in existingProductTags)
+            {
+                tag.ProductId = product.Id;
+                DeleteProductTag(tag);
+            }
+
+            //deleted product
+            _productRepository.Delete(product);
+
             //insert to deleted products
             var productDeleted = JsonConvert.DeserializeObject<ProductDeleted>(JsonConvert.SerializeObject(product));
             productDeleted.DeletedOnUtc = DateTime.UtcNow;
             _productDeletedRepository.Insert(productDeleted);
-
-            //deleted product
-            _productRepository.Delete(product);
 
             //cache
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
