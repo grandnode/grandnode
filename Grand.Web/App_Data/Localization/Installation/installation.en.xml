@@ -104,6 +104,12 @@
   <LocaleResource Name="MongoDBServerNameRequired">
     <Value>MongoDB Server name is required</Value>
   </LocaleResource>
+  <LocaleResource Name="MongoDBUsername">
+    <Value>MongoDB Server Username</Value>
+  </LocaleResource>
+  <LocaleResource Name="MongoDBPassword">
+    <Value>MongoDB Server Password</Value>
+  </LocaleResource>
   <LocaleResource Name="MongoDBServerPassword">
     <Value>MongoDB Password</Value>
   </LocaleResource>
