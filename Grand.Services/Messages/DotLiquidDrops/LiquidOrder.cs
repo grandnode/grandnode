@@ -61,7 +61,6 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private readonly MessageTemplatesSettings _templatesSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly TaxSettings _taxSettings;
-        private readonly CurrencySettings _currencySettings;
 
         public LiquidOrder(Order order, string languageId = "", OrderNote orderNote = null, string vendorId = "", decimal refundedAmount = 0)
         {
@@ -78,7 +77,6 @@ namespace Grand.Services.Messages.DotLiquidDrops
             this._templatesSettings = EngineContext.Current.Resolve<MessageTemplatesSettings>();
             this._catalogSettings = EngineContext.Current.Resolve<CatalogSettings>();
             this._taxSettings = EngineContext.Current.Resolve<TaxSettings>();
-            this._currencySettings = EngineContext.Current.Resolve<CurrencySettings>();
 
             this._order = order;
             this._languageId = languageId;
@@ -441,7 +439,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
         {
             get
             {
-                var primaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+                var primaryStoreCurrencyCode = _currencyService.GetPrimaryStoreCurrency().CurrencyCode;
                 var language = _languageService.GetLanguageById(_languageId);
                 var refundedAmountStr = _priceFormatter.FormatPrice(_refundedAmount, true, primaryStoreCurrencyCode, false, language);
                 return refundedAmountStr;

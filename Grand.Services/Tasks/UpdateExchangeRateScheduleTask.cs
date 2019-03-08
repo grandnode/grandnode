@@ -29,7 +29,7 @@ namespace Grand.Services.Tasks
                 if (!_currencySettings.AutoUpdateEnabled)
                     return;
 
-                var primaryCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId).CurrencyCode;
+                var primaryCurrencyCode = _currencyService.GetPrimaryExchangeRateCurrency().CurrencyCode;
                 var exchangeRates = _currencyService.GetCurrencyLiveRates(primaryCurrencyCode);
 
                 foreach (var exchageRate in exchangeRates)

@@ -2,7 +2,6 @@ using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Discounts;
 using Grand.Core.Domain.Orders;
 using Grand.Services.Catalog.Cache;
@@ -39,7 +38,7 @@ namespace Grand.Services.Catalog
         private readonly ICurrencyService _currencyService;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly CatalogSettings _catalogSettings;
-        private readonly CurrencySettings _currencySettings;
+
         #endregion
 
         #region Ctor
@@ -57,8 +56,7 @@ namespace Grand.Services.Catalog
             IStoreService storeService,
             ICurrencyService currencyService,
             ShoppingCartSettings shoppingCartSettings,
-            CatalogSettings catalogSettings,
-            CurrencySettings currencySettings)
+            CatalogSettings catalogSettings)
         {
             this._workContext = workContext;
             this._storeContext = storeContext;
@@ -74,7 +72,6 @@ namespace Grand.Services.Catalog
             this._currencyService = currencyService;
             this._shoppingCartSettings = shoppingCartSettings;
             this._catalogSettings = catalogSettings;
-            this._currencySettings = currencySettings;
         }
 
         #endregion
@@ -118,7 +115,8 @@ namespace Grand.Services.Catalog
                         var validDiscount = _discountService.ValidateDiscount(discount, customer);
                         if (validDiscount.IsValid &&
                             discount.DiscountType == DiscountType.AssignedToSkus)
-                            allowedDiscounts.Add(new AppliedDiscount() {
+                            allowedDiscounts.Add(new AppliedDiscount()
+                            {
                                 CouponCode = validDiscount.CouponCode,
                                 DiscountId = discount.Id,
                                 IsCumulative = discount.IsCumulative
@@ -140,7 +138,8 @@ namespace Grand.Services.Catalog
             {
                 var validDiscount = _discountService.ValidateDiscount(discount, customer);
                 if (validDiscount.IsValid)
-                    allowedDiscounts.Add(new AppliedDiscount() {
+                    allowedDiscounts.Add(new AppliedDiscount()
+                    {
                         CouponCode = validDiscount.CouponCode,
                         DiscountId = discount.Id,
                         IsCumulative = discount.IsCumulative
@@ -165,7 +164,7 @@ namespace Grand.Services.Catalog
             foreach (var productCategory in product.ProductCategories)
             {
                 var category = _categoryService.GetCategoryById(productCategory.CategoryId);
-                if (category!=null && category.AppliedDiscounts.Any())
+                if (category != null && category.AppliedDiscounts.Any())
                 {
                     foreach (var appliedDiscount in category.AppliedDiscounts)
                     {
@@ -174,7 +173,8 @@ namespace Grand.Services.Catalog
                         {
                             var validDiscount = _discountService.ValidateDiscount(discount, customer);
                             if (validDiscount.IsValid && discount.DiscountType == DiscountType.AssignedToCategories)
-                                allowedDiscounts.Add(new AppliedDiscount() {
+                                allowedDiscounts.Add(new AppliedDiscount()
+                                {
                                     CouponCode = validDiscount.CouponCode,
                                     DiscountId = discount.Id,
                                     IsCumulative = discount.IsCumulative
@@ -201,7 +201,7 @@ namespace Grand.Services.Catalog
             foreach (var productManufacturer in product.ProductManufacturers)
             {
                 var manufacturer = _manufacturerService.GetManufacturerById(productManufacturer.ManufacturerId);
-                if (manufacturer !=null && manufacturer.AppliedDiscounts.Any())
+                if (manufacturer != null && manufacturer.AppliedDiscounts.Any())
                 {
                     foreach (var appliedDiscount in manufacturer.AppliedDiscounts)
                     {
@@ -289,7 +289,7 @@ namespace Grand.Services.Catalog
                     if (!(string.IsNullOrEmpty(storeID)))
                     {
                         var store = _storeService.GetStoreById(storeID);
-                        if (store!=null && store.AppliedDiscounts.Any())
+                        if (store != null && store.AppliedDiscounts.Any())
                         {
                             foreach (var appliedDiscount in store.AppliedDiscounts)
                             {
@@ -299,7 +299,8 @@ namespace Grand.Services.Catalog
                                     var validDiscount = _discountService.ValidateDiscount(discount, customer);
                                     if (validDiscount.IsValid &&
                                              discount.DiscountType == DiscountType.AssignedToStores)
-                                        allowedDiscounts.Add(new AppliedDiscount() {
+                                        allowedDiscounts.Add(new AppliedDiscount()
+                                        {
                                             CouponCode = validDiscount.CouponCode,
                                             DiscountId = discount.Id,
                                             IsCumulative = discount.IsCumulative
@@ -327,7 +328,7 @@ namespace Grand.Services.Catalog
 
             //discounts applied to products
             foreach (var discount in GetAllowedDiscountsAppliedToProduct(product, customer))
-                if(!allowedDiscounts.Where(x=>x.DiscountId == discount.DiscountId).Any())
+                if (!allowedDiscounts.Where(x => x.DiscountId == discount.DiscountId).Any())
                     allowedDiscounts.Add(discount);
 
             //discounts applied to all products
@@ -486,13 +487,14 @@ namespace Grand.Services.Catalog
             if (product.ProductType == ProductType.Reservation)
                 cacheTime = 0;
 
-            ProductPriceForCaching PrepareModel() {
+            ProductPriceForCaching PrepareModel()
+            {
                 var result = new ProductPriceForCaching();
 
                 //initial price
                 decimal price = product.Price;
 
-               
+
                 //tier prices
                 var tierPrice = product.GetPreferredTierPrice(customer, _storeContext.CurrentStore.Id, quantity);
                 if (tierPrice != null)
@@ -542,7 +544,7 @@ namespace Grand.Services.Catalog
                 //rounding
                 if (_shoppingCartSettings.RoundPricesDuringCalculation)
                 {
-                    var primaryCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
+                    var primaryCurrency = _currencyService.GetPrimaryExchangeRateCurrency();
                     result.Price = RoundingHelper.RoundPrice(price, primaryCurrency);
                 }
                 else
@@ -673,7 +675,7 @@ namespace Grand.Services.Catalog
                     }
                 }
             }
-            if(!finalPrice.HasValue)
+            if (!finalPrice.HasValue)
             {
                 //summarize price of all attributes
                 decimal attributesTotalPrice = decimal.Zero;
@@ -728,7 +730,7 @@ namespace Grand.Services.Catalog
             //rounding
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
             {
-                var primaryCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
+                var primaryCurrency = _currencyService.GetPrimaryExchangeRateCurrency();
                 finalPrice = RoundingHelper.RoundPrice(finalPrice.Value, primaryCurrency);
             }
             return finalPrice.Value;

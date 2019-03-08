@@ -2,7 +2,6 @@ using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Discounts;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
@@ -45,7 +44,6 @@ namespace Grand.Services.Orders
         private readonly ShippingSettings _shippingSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly CatalogSettings _catalogSettings;
-        private readonly CurrencySettings _currencySettings;
 
         #endregion
 
@@ -71,7 +69,6 @@ namespace Grand.Services.Orders
         /// <param name="shippingSettings">Shipping settings</param>
         /// <param name="shoppingCartSettings">Shopping cart settings</param>
         /// <param name="catalogSettings">Catalog settings</param>
-        /// <param name="currencySettings">Currency settings</param>
         public OrderTotalCalculationService(IWorkContext workContext,
             IStoreContext storeContext,
             IPriceCalculationService priceCalculationService,
@@ -89,8 +86,7 @@ namespace Grand.Services.Orders
             RewardPointsSettings rewardPointsSettings,
             ShippingSettings shippingSettings,
             ShoppingCartSettings shoppingCartSettings,
-            CatalogSettings catalogSettings,
-            CurrencySettings currencySettings)
+            CatalogSettings catalogSettings)
         {
             this._workContext = workContext;
             this._storeContext = storeContext;
@@ -110,7 +106,6 @@ namespace Grand.Services.Orders
             this._shippingSettings = shippingSettings;
             this._shoppingCartSettings = shoppingCartSettings;
             this._catalogSettings = catalogSettings;
-            this._currencySettings = currencySettings;
         }
 
         #endregion
@@ -198,7 +193,7 @@ namespace Grand.Services.Orders
 
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
             {
-                var currency = _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
+                var currency = _currencyService.GetPrimaryExchangeRateCurrency();
                 shippingDiscountAmount = RoundingHelper.RoundPrice(shippingDiscountAmount, currency);
             }
             return shippingDiscountAmount;
@@ -243,7 +238,7 @@ namespace Grand.Services.Orders
 
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
             {
-                var primaryCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
+                var primaryCurrency = _currencyService.GetPrimaryExchangeRateCurrency();
                 discountAmount = RoundingHelper.RoundPrice(discountAmount, primaryCurrency);
             }
             return discountAmount;
@@ -299,7 +294,7 @@ namespace Grand.Services.Orders
 
             //get the customer 
             Customer customer = _workContext.CurrentCustomer;
-            var currency = _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
+            var currency = _currencyService.GetPrimaryExchangeRateCurrency();
             //sub totals
             decimal subTotalExclTaxWithoutDiscount = decimal.Zero;
             decimal subTotalInclTaxWithoutDiscount = decimal.Zero;
@@ -538,7 +533,7 @@ namespace Grand.Services.Orders
 
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
             {
-                var primaryCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
+                var primaryCurrency = _currencyService.GetPrimaryExchangeRateCurrency();
                 adjustedRate = RoundingHelper.RoundPrice(adjustedRate, primaryCurrency);
             }
             return adjustedRate;
@@ -597,7 +592,7 @@ namespace Grand.Services.Orders
             taxRate = decimal.Zero;
 
             var customer = _workContext.CurrentCustomer;
-            var currency = _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
+            var currency = _currencyService.GetPrimaryExchangeRateCurrency();
 
             bool isFreeShipping = IsFreeShipping(cart);
             if (isFreeShipping)
@@ -803,7 +798,7 @@ namespace Grand.Services.Orders
             //round tax
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
             {
-                var currency = _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
+                var currency = _currencyService.GetPrimaryExchangeRateCurrency();
                 taxTotal = RoundingHelper.RoundPrice(taxTotal, currency);
             }
             return taxTotal;
@@ -851,7 +846,7 @@ namespace Grand.Services.Orders
             redeemedRewardPointsAmount = decimal.Zero;
 
             var customer = _workContext.CurrentCustomer;
-            var currency = _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
+            var currency = _currencyService.GetPrimaryExchangeRateCurrency();
 
             string paymentMethodSystemName = "";
             if (customer != null)
@@ -1010,7 +1005,7 @@ namespace Grand.Services.Orders
             var result = rewardPoints * _rewardPointsSettings.ExchangeRate;
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
             {
-                var currency = _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
+                var currency = _currencyService.GetPrimaryExchangeRateCurrency();
                 result = RoundingHelper.RoundPrice(result, currency);
             }
             return result;

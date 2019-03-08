@@ -2,7 +2,6 @@ using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Discounts;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Logging;
@@ -84,7 +83,6 @@ namespace Grand.Services.Orders
         private readonly OrderSettings _orderSettings;
         private readonly TaxSettings _taxSettings;
         private readonly LocalizationSettings _localizationSettings;
-        private readonly CurrencySettings _currencySettings;
 
         #endregion
 
@@ -130,8 +128,7 @@ namespace Grand.Services.Orders
             RewardPointsSettings rewardPointsSettings,
             OrderSettings orderSettings,
             TaxSettings taxSettings,
-            LocalizationSettings localizationSettings,
-            CurrencySettings currencySettings)
+            LocalizationSettings localizationSettings)
         {
             this._orderService = orderService;
             this._webHelper = webHelper;
@@ -174,7 +171,6 @@ namespace Grand.Services.Orders
             this._orderSettings = orderSettings;
             this._taxSettings = taxSettings;
             this._localizationSettings = localizationSettings;
-            this._currencySettings = currencySettings;
         }
 
         #endregion
@@ -216,7 +212,7 @@ namespace Grand.Services.Orders
                 var currencyTmp = _currencyService.GetCurrencyById(details.Customer.GetAttribute<string>(SystemCustomerAttributeNames.CurrencyId, processPaymentRequest.StoreId));
                 var customerCurrency = (currencyTmp != null && currencyTmp.Published) ? currencyTmp : _workContext.WorkingCurrency;
                 details.CustomerCurrencyCode = customerCurrency.CurrencyCode;
-                var primaryStoreCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+                var primaryStoreCurrency = _currencyService.GetPrimaryStoreCurrency();
                 details.CustomerCurrencyRate = customerCurrency.Rate / primaryStoreCurrency.Rate;
 
                 //customer language
@@ -229,7 +225,7 @@ namespace Grand.Services.Orders
                 details.CustomerCurrencyRate = details.InitialOrder.CurrencyRate;
                 details.CustomerLanguage = _languageService.GetLanguageById(details.InitialOrder.CustomerLanguageId);
             }
-            
+
             if (details.CustomerLanguage == null || !details.CustomerLanguage.Published)
                 details.CustomerLanguage = _workContext.WorkingLanguage;
 
@@ -374,7 +370,7 @@ namespace Grand.Services.Orders
                 details.OrderSubTotalDiscountInclTax = orderSubTotalDiscountAmount;
 
                 foreach (var disc in orderSubTotalAppliedDiscounts)
-                    if(!details.AppliedDiscounts.Where(x=>x.DiscountId == disc.DiscountId).Any())
+                    if (!details.AppliedDiscounts.Where(x => x.DiscountId == disc.DiscountId).Any())
                         details.AppliedDiscounts.Add(disc);
 
                 //sub total (excl tax)
@@ -825,7 +821,7 @@ namespace Grand.Services.Orders
                 //remove this "if" statement if you want to send it in this case
 
                 var orderPaidAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderPaidEmail && !_orderSettings.AttachPdfInvoiceToBinary ?
-                    _pdfService.PrintOrderToPdf(order, "") 
+                    _pdfService.PrintOrderToPdf(order, "")
                     : null;
                 var orderPaidAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderPaidEmail && !_orderSettings.AttachPdfInvoiceToBinary ?
                     "order.pdf" : null;
@@ -1225,14 +1221,14 @@ namespace Grand.Services.Orders
 
                             foreach (var disc in scDiscounts)
                             {
-                                if(!details.AppliedDiscounts.Where(x=>x.DiscountId == disc.DiscountId).Any())
+                                if (!details.AppliedDiscounts.Where(x => x.DiscountId == disc.DiscountId).Any())
                                     details.AppliedDiscounts.Add(disc);
                             }
 
                             //attributes
                             string attributeDescription = _productAttributeFormatter.FormatAttributes(product, sc.AttributesXml, details.Customer);
 
-                            if(string.IsNullOrEmpty(attributeDescription) && sc.ShoppingCartType == ShoppingCartType.Auctions)
+                            if (string.IsNullOrEmpty(attributeDescription) && sc.ShoppingCartType == ShoppingCartType.Auctions)
                                 attributeDescription = _localizationService.GetResource("ShoppingCart.auctionwonon") + " " + product.AvailableEndDateTimeUtc;
 
                             var itemWeight = _shippingService.GetShoppingCartItemWeight(sc);
@@ -1436,8 +1432,16 @@ namespace Grand.Services.Orders
                                 _auctionService.UpdateAuctionEnded(product, true, true);
                                 _auctionService.UpdateHighestBid(product, product.Price, order.CustomerId);
                                 _workflowMessageService.SendAuctionEndedCustomerNotificationBin(product, order.CustomerId, order.CustomerLanguageId, order.StoreId);
-                                _auctionService.InsertBid(new Bid() { CustomerId = order.CustomerId, OrderId = order.Id, Amount = product.Price, Date = DateTime.UtcNow, ProductId = product.Id,
-                                    StoreId = order.StoreId, Win = true, Bin = true,
+                                _auctionService.InsertBid(new Bid()
+                                {
+                                    CustomerId = order.CustomerId,
+                                    OrderId = order.Id,
+                                    Amount = product.Price,
+                                    Date = DateTime.UtcNow,
+                                    ProductId = product.Id,
+                                    StoreId = order.StoreId,
+                                    Win = true,
+                                    Bin = true,
                                 });
                             }
                             if (product.ProductType == ProductType.Auction && _orderSettings.UnpublishAuctionProduct)
@@ -3152,7 +3156,7 @@ namespace Grand.Services.Orders
 
                 foreach (var rr in returnRequests)
                 {
-                    foreach(var rrItem in rr.ReturnRequestItems)
+                    foreach (var rrItem in rr.ReturnRequestItems)
                     {
                         qtyReturn += rrItem.Quantity;
                     }

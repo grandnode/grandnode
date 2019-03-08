@@ -52,7 +52,6 @@ namespace Grand.Services.Common
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IDownloadService _downloadService;
         private readonly CatalogSettings _catalogSettings;
-        private readonly CurrencySettings _currencySettings;
         private readonly MeasureSettings _measureSettings;
         private readonly PdfSettings _pdfSettings;
         private readonly TaxSettings _taxSettings;
@@ -80,7 +79,6 @@ namespace Grand.Services.Common
             IAddressAttributeFormatter addressAttributeFormatter,
             IDownloadService downloadService,
             CatalogSettings catalogSettings,
-            CurrencySettings currencySettings,
             MeasureSettings measureSettings,
             PdfSettings pdfSettings,
             TaxSettings taxSettings,
@@ -103,7 +101,6 @@ namespace Grand.Services.Common
             this._downloadService = downloadService;
             this._settingContext = settingContext;
             this._addressAttributeFormatter = addressAttributeFormatter;
-            this._currencySettings = currencySettings;
             this._catalogSettings = catalogSettings;
             this._measureSettings = measureSettings;
             this._pdfSettings = pdfSettings;
@@ -1255,7 +1252,7 @@ namespace Grand.Services.Common
                 {
                     //simple product
                     //render its properties such as price, weight, etc
-                    var priceStr = string.Format("{0} {1}", product.Price.ToString("0.00"), _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode);
+                    var priceStr = string.Format("{0} {1}", product.Price.ToString("0.00"), _currencyService.GetPrimaryStoreCurrency().CurrencyCode);
                     if (product.ProductType == ProductType.Reservation)
                         priceStr = _priceFormatter.FormatReservationProductPeriod(product, priceStr);
                     productTable.AddCell(new Paragraph(String.Format("{0}: {1}", _localizationService.GetResource("PDFProductCatalog.Price", lang.Id), priceStr), font));
@@ -1317,7 +1314,7 @@ namespace Grand.Services.Common
                         productTable.AddCell(new Paragraph(String.Format("{0}-{1}. {2}", productNumber, pvNum, associatedProduct.GetLocalized(x => x.Name, lang.Id)), font));
                         productTable.AddCell(new Paragraph(" "));
 
-                        productTable.AddCell(new Paragraph(String.Format("{0}: {1} {2}", _localizationService.GetResource("PDFProductCatalog.Price", lang.Id), associatedProduct.Price.ToString("0.00"), _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode), font));
+                        productTable.AddCell(new Paragraph(String.Format("{0}: {1} {2}", _localizationService.GetResource("PDFProductCatalog.Price", lang.Id), associatedProduct.Price.ToString("0.00"), _currencyService.GetPrimaryStoreCurrency().CurrencyCode), font));
                         productTable.AddCell(new Paragraph(String.Format("{0}: {1}", _localizationService.GetResource("PDFProductCatalog.SKU", lang.Id), associatedProduct.Sku), font));
 
                         if (associatedProduct.IsShipEnabled && associatedProduct.Weight > Decimal.Zero)

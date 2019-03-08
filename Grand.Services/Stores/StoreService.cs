@@ -41,6 +41,8 @@ namespace Grand.Services.Stores
         private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
 
+        private List<Store> _allStores;
+
         #endregion
 
         #region Ctor
@@ -92,11 +94,15 @@ namespace Grand.Services.Stores
         /// <returns>Stores</returns>
         public virtual IList<Store> GetAllStores()
         {
-            string key = STORES_ALL_KEY;
-            return _cacheManager.Get(key, () =>
+            if (_allStores == null)
             {
-                return _storeRepository.Collection.Find(new BsonDocument()).SortBy(x => x.DisplayOrder).ToList();
-            });
+                string key = STORES_ALL_KEY;
+                _allStores = _cacheManager.Get(key, () =>
+                {
+                    return _storeRepository.Collection.Find(new BsonDocument()).SortBy(x => x.DisplayOrder).ToList();
+                });
+            }
+            return _allStores;
         }
 
         /// <summary>

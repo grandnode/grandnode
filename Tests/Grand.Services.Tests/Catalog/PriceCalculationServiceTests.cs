@@ -89,8 +89,7 @@ namespace Grand.Services.Catalog.Tests
                 _storeService,
                 _currencyService,
                 _shoppingCartSettings,
-                _catalogSettings,
-                _currencySettings);
+                _catalogSettings);
         }
 
         [TestMethod()]

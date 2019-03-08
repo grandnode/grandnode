@@ -1,7 +1,5 @@
 ﻿using DotLiquid;
-using Grand.Core;
 using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Directory;
 using Grand.Core.Infrastructure;
 using Grand.Services.Catalog;
 using Grand.Services.Directory;
@@ -20,12 +18,10 @@ namespace Grand.Services.Messages.DotLiquidDrops
         private readonly ICurrencyService _currencyService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IStoreService _storeService;
-        private readonly CurrencySettings _currencySettings;
 
         public LiquidProduct(Product product, string languageId, string storeId)
         {
             this._storeService = EngineContext.Current.Resolve<IStoreService>();
-            this._currencySettings = EngineContext.Current.Resolve<CurrencySettings>();
             this._currencyService = EngineContext.Current.Resolve<ICurrencyService>();
             this._priceFormatter = EngineContext.Current.Resolve<IPriceFormatter>();
 
@@ -65,7 +61,7 @@ namespace Grand.Services.Messages.DotLiquidDrops
         {
             get
             {
-                var defaultCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+                var defaultCurrency = _currencyService.GetPrimaryStoreCurrency();
                 return _priceFormatter.FormatPrice(_product.Price, true, defaultCurrency);
             }
         }

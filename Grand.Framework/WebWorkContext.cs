@@ -430,8 +430,7 @@ namespace Grand.Framework
                 var adminAreaUrl = _httpContextAccessor.HttpContext.Request.Path.StartsWithSegments(new PathString("/Admin"));
                 if(adminAreaUrl)
                 {
-                    var currencySettings = Grand.Core.Infrastructure.EngineContext.Current.Resolve<CurrencySettings>();
-                    var primaryStoreCurrency =  _currencyService.GetCurrencyById(currencySettings.PrimaryStoreCurrencyId);
+                    var primaryStoreCurrency =  _currencyService.GetPrimaryStoreCurrency();
                     if (primaryStoreCurrency != null)
                     {
                         _cachedCurrency = primaryStoreCurrency;

@@ -4,7 +4,6 @@ using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Infrastructure;
@@ -106,6 +105,7 @@ namespace Grand.Services.Shipping
         /// <param name="eventPublisher">Event published</param>
         /// <param name="shoppingCartSettings">Shopping cart settings</param>
         /// <param name="cacheManager">Cache manager</param>
+        /// <param name="productRepository">Product repository</param>
         public ShippingService(IRepository<ShippingMethod> shippingMethodRepository,
             IRepository<DeliveryDate> deliveryDateRepository,
             IRepository<Warehouse> warehouseRepository,
@@ -146,7 +146,7 @@ namespace Grand.Services.Shipping
         }
 
         #endregion
-        
+
         #region Methods
 
         #region Shipping rate computation methods
@@ -220,7 +220,7 @@ namespace Grand.Services.Shipping
         {
             return _shippingMethodRepository.GetById(shippingMethodId);
         }
-        
+
         /// <summary>
         /// Gets all shipping methods
         /// </summary>
@@ -242,9 +242,9 @@ namespace Grand.Services.Shipping
             {
                 shippingMethods = shippingMethods.Where(x => !x.CountryRestrictionExists(filterByCountryId)).ToList();
             }
-            if(customer !=null)
+            if (customer != null)
             {
-                shippingMethods = shippingMethods.Where(x => !x.CustomerRoleRestrictionExists(customer.CustomerRoles.Select(y=>y.Id).ToList())).ToList();
+                shippingMethods = shippingMethods.Where(x => !x.CustomerRoleRestrictionExists(customer.CustomerRoles.Select(y => y.Id).ToList())).ToList();
             }
 
             return shippingMethods;
@@ -582,20 +582,20 @@ namespace Grand.Services.Shipping
                     switch (attributeValue.AttributeValueType)
                     {
                         case AttributeValueType.Simple:
-                        {
-                            //simple attribute
-                            attributesTotalWeight += attributeValue.WeightAdjustment;
-                        }
+                            {
+                                //simple attribute
+                                attributesTotalWeight += attributeValue.WeightAdjustment;
+                            }
                             break;
                         case AttributeValueType.AssociatedToProduct:
-                        {
-                            //bundled product
-                            var associatedProduct = _productService.GetProductById(attributeValue.AssociatedProductId);
-                            if (associatedProduct != null && associatedProduct.IsShipEnabled)
                             {
-                                attributesTotalWeight += associatedProduct.Weight * attributeValue.Quantity;
+                                //bundled product
+                                var associatedProduct = _productService.GetProductById(attributeValue.AssociatedProductId);
+                                if (associatedProduct != null && associatedProduct.IsShipEnabled)
+                                {
+                                    attributesTotalWeight += associatedProduct.Weight * attributeValue.Quantity;
+                                }
                             }
-                        }
                             break;
                     }
                 }
@@ -665,9 +665,9 @@ namespace Grand.Services.Shipping
                 var associatedProduct = _productService.GetProductById(attributeValue.AssociatedProductId);
                 if (associatedProduct != null && associatedProduct.IsShipEnabled)
                 {
-                    width += associatedProduct.Width*attributeValue.Quantity;
+                    width += associatedProduct.Width * attributeValue.Quantity;
                     length += associatedProduct.Length * attributeValue.Quantity;
-                    height += associatedProduct.Height*attributeValue.Quantity;
+                    height += associatedProduct.Height * attributeValue.Quantity;
                 }
             }
         }
@@ -750,9 +750,9 @@ namespace Grand.Services.Shipping
                     var shoppingCartItem = packageItem.ShoppingCartItem;
                     var product = _productService.GetProductById(shoppingCartItem.ProductId);
                     var qty = packageItem.GetQuantity();
-                    width += product.Width*qty;
-                    length += product.Length*qty;
-                    height += product.Height*qty;
+                    width += product.Width * qty;
+                    length += product.Length * qty;
+                    height += product.Height * qty;
 
                     //associated products
                     decimal associatedProductsWidth;
@@ -946,14 +946,14 @@ namespace Grand.Services.Shipping
         /// <param name="storeId">Load records allowed only in a specified store; pass "" to load all records</param>
         /// <returns>Shipping options</returns>
         public virtual GetShippingOptionResponse GetShippingOptions(Customer customer, IList<ShoppingCartItem> cart,
-            Address shippingAddress, string allowedShippingRateComputationMethodSystemName = "", 
+            Address shippingAddress, string allowedShippingRateComputationMethodSystemName = "",
             string storeId = "")
         {
             if (cart == null)
                 throw new ArgumentNullException("cart");
 
             var result = new GetShippingOptionResponse();
-            
+
             //create a package
             bool shippingFromMultipleLocations;
             var shippingOptionRequests = CreateShippingOptionRequests(customer, cart, shippingAddress, storeId, out shippingFromMultipleLocations);
@@ -1030,7 +1030,7 @@ namespace Grand.Services.Shipping
                             so.ShippingRateComputationMethodSystemName = srcm.PluginDescriptor.SystemName;
                         if (_shoppingCartSettings.RoundPricesDuringCalculation)
                         {
-                            var currency = EngineContext.Current.Resolve<ICurrencyService>().GetCurrencyById(EngineContext.Current.Resolve<CurrencySettings>().PrimaryExchangeRateCurrencyId);
+                            var currency = EngineContext.Current.Resolve<ICurrencyService>().GetPrimaryExchangeRateCurrency();
                             so.Rate = RoundingHelper.RoundPrice(so.Rate, currency);
                         }
                         result.ShippingOptions.Add(so);
@@ -1044,11 +1044,11 @@ namespace Grand.Services.Shipping
                 if (!result.ShippingOptions.Any() && !result.Errors.Any())
                     result.Errors.Clear();
             }
-            
+
             //no shipping options loaded
             if (result.ShippingOptions.Count == 0 && result.Errors.Count == 0)
                 result.Errors.Add(_localizationService.GetResource("Checkout.ShippingOptionCouldNotBeLoaded"));
-            
+
             return result;
         }
 

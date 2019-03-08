@@ -48,6 +48,9 @@ namespace Grand.Services.Directory
         private readonly IPluginFinder _pluginFinder;
         private readonly IEventPublisher _eventPublisher;
 
+        private Currency _primaryCurrency;
+        private Currency _primaryExchangeRateCurrency;
+
         #endregion
 
         #region Ctor
@@ -119,6 +122,30 @@ namespace Grand.Services.Directory
         {
             string key = string.Format(CURRENCIES_BY_ID_KEY, currencyId);
             return _cacheManager.Get(key, () => _currencyRepository.GetById(currencyId));
+        }
+
+        /// <summary>
+        /// Gets primary store currency
+        /// </summary>
+        /// <returns>Currency</returns>
+        public Currency GetPrimaryStoreCurrency()
+        {
+            if (_primaryCurrency == null)
+                _primaryCurrency = GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+
+            return _primaryCurrency;
+        }
+
+        /// <summary>
+        /// Gets primary exchange currency
+        /// </summary>
+        /// <returns>Currency</returns>
+        public Currency GetPrimaryExchangeRateCurrency()
+        {
+            if (_primaryExchangeRateCurrency == null)
+                _primaryExchangeRateCurrency = GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
+
+            return _primaryExchangeRateCurrency;
         }
 
         /// <summary>
@@ -248,7 +275,7 @@ namespace Grand.Services.Directory
             if (sourceCurrencyCode == null)
                 throw new ArgumentNullException("sourceCurrencyCode");
 
-            var primaryExchangeRateCurrency = GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
+            var primaryExchangeRateCurrency = GetPrimaryExchangeRateCurrency();
             if (primaryExchangeRateCurrency == null)
                 throw new Exception("Primary exchange rate currency cannot be loaded");
 
@@ -274,7 +301,7 @@ namespace Grand.Services.Directory
             if (targetCurrencyCode == null)
                 throw new ArgumentNullException("targetCurrencyCode");
 
-            var primaryExchangeRateCurrency = GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
+            var primaryExchangeRateCurrency = GetPrimaryExchangeRateCurrency();
             if (primaryExchangeRateCurrency == null)
                 throw new Exception("Primary exchange rate currency cannot be loaded");
 
@@ -300,7 +327,7 @@ namespace Grand.Services.Directory
             if (sourceCurrencyCode == null)
                 throw new ArgumentNullException("sourceCurrencyCode");
 
-            var primaryStoreCurrency = GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+            var primaryStoreCurrency = GetPrimaryStoreCurrency();
             var result = ConvertCurrency(amount, sourceCurrencyCode, primaryStoreCurrency);
             
             return result;
@@ -314,8 +341,7 @@ namespace Grand.Services.Directory
         /// <returns>Converted value</returns>
         public virtual decimal ConvertFromPrimaryStoreCurrency(decimal amount, Currency targetCurrencyCode)
         {
-            var primaryStoreCurrency = GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
-            var result = ConvertCurrency(amount, primaryStoreCurrency, targetCurrencyCode);
+            var result = ConvertCurrency(amount, GetPrimaryStoreCurrency(), targetCurrencyCode);
             return result;
         }
        

@@ -29,6 +29,18 @@ namespace Grand.Services.Directory
         Currency GetCurrencyById(string currencyId);
 
         /// <summary>
+        /// Gets primary store currency
+        /// </summary>
+        /// <returns>Currency</returns>
+        Currency GetPrimaryStoreCurrency();
+
+        /// <summary>
+        /// Gets primary exchange currency
+        /// </summary>
+        /// <returns>Currency</returns>
+        Currency GetPrimaryExchangeRateCurrency();
+
+        /// <summary>
         /// Gets a currency by code
         /// </summary>
         /// <param name="currencyCode">Currency code</param>

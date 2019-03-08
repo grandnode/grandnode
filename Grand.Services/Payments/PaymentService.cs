@@ -1,6 +1,5 @@
 using Grand.Core;
 using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Payments;
 using Grand.Core.Domain.Shipping;
@@ -38,7 +37,7 @@ namespace Grand.Services.Payments
         /// <param name="pluginFinder">Plugin finder</param>
         /// <param name="settingService">Setting service</param>
         /// <param name="shoppingCartSettings">Shopping cart settings</param>
-        public PaymentService(PaymentSettings paymentSettings, 
+        public PaymentService(PaymentSettings paymentSettings,
             IPluginFinder pluginFinder,
             ISettingService settingService,
             ShoppingCartSettings shoppingCartSettings)
@@ -66,7 +65,7 @@ namespace Grand.Services.Payments
                    .Where(provider => _paymentSettings.ActivePaymentMethodSystemNames.Contains(provider.PluginDescriptor.SystemName, StringComparer.OrdinalIgnoreCase))
                    .ToList();
 
-            if(filterByCustomer!=null)
+            if (filterByCustomer != null)
             {
 
                 var selectedShippingOption = filterByCustomer.GetAttribute<ShippingOption>(
@@ -327,7 +326,7 @@ namespace Grand.Services.Payments
                 result = decimal.Zero;
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
             {
-                var currency = EngineContext.Current.Resolve<ICurrencyService>().GetCurrencyById(EngineContext.Current.Resolve<CurrencySettings>().PrimaryExchangeRateCurrencyId);
+                var currency = EngineContext.Current.Resolve<ICurrencyService>().GetPrimaryExchangeRateCurrency();
                 result = RoundingHelper.RoundPrice(result, currency);
             }
             return result;
@@ -401,7 +400,7 @@ namespace Grand.Services.Payments
                 throw new GrandException("Payment method couldn't be loaded");
             return paymentMethod.Refund(refundPaymentRequest);
         }
-        
+
 
 
         /// <summary>
@@ -519,7 +518,7 @@ namespace Grand.Services.Payments
             }
             return maskedChars + last4;
         }
-        
+
         #endregion
     }
 }

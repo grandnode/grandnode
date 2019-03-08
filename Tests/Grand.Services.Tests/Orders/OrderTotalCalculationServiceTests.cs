@@ -110,7 +110,7 @@ namespace Grand.Services.Orders.Tests
                 _discountService, _categoryService,
                 _manufacturerService, _productAttributeParser, _productService, _customerService,
                 cacheManager, _vendorService, _storeService, _currencyService,
-                _shoppingCartSettings, _catalogSettings, _currencySettings);
+                _shoppingCartSettings, _catalogSettings);
 
             var tempEventPublisher = new Mock<IEventPublisher>();
             {
@@ -182,7 +182,7 @@ namespace Grand.Services.Orders.Tests
                 _priceCalcService, _taxService, _shippingService, _paymentService,
                 _checkoutAttributeParser, _discountService, _giftCardService, _genericAttributeService,
                 null, _productService, _currencyService, _taxSettings, _rewardPointsSettings,
-                _shippingSettings, _shoppingCartSettings, _catalogSettings, _currencySettings);
+                _shippingSettings, _shoppingCartSettings, _catalogSettings);
         }
 
 
