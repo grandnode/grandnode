@@ -1,5 +1,8 @@
 ﻿@model Grand.Web.Areas.Admin.Models.PushNotifications.ConfigurationModel
-
+@{
+    //page title
+    ViewBag.Title = T("PushNotifications.PushNotications").Text;
+}
 <form asp-controller="Setting" asp-action="PushNotifications" method="post">
     <antiforgery-token />
     <div class="row">
