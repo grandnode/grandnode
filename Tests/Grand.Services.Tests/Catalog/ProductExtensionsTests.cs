@@ -1,6 +1,8 @@
 ﻿using Grand.Core.Domain.Catalog;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using Grand.Services.Localization;
+using NSubstitute;
 
 namespace Grand.Services.Catalog.Tests
 {
@@ -100,6 +102,60 @@ namespace Grand.Services.Catalog.Tests
             //-1 = 1500-1501
             Assert.AreEqual(-1, product.GetTotalStockQuantity(true, "654"));
         }
+        
+        [TestMethod]
+        public void GenerateInStockWithQuantityMessage_LocalizationServiceIsNull_ThrowsException()
+        {
+            var quantity = 1;
+            var product = new Product();
 
+            Assert.ThrowsException<ArgumentNullException>(() => 
+                product.GenerateInStockWithQuantityMessage(null, quantity));
+        }
+
+        [TestMethod]
+        public void GenerateInStockWithQuantityMessage_QuantityEqualsZero_ThrowsException()
+        {
+            var quantity = 0;
+            var product = new Product();
+
+            var localizationService = Substitute.For<ILocalizationService>();
+
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => 
+                product.GenerateInStockWithQuantityMessage(localizationService, quantity));
+        }
+        
+        [TestMethod]
+        public void GenerateInStockWithQuantityMessage_QuantityLessThanZero_ThrowsException()
+        {
+            var quantity = -1;
+            var product = new Product();
+
+            var localizationService = Substitute.For<ILocalizationService>();
+
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => 
+                product.GenerateInStockWithQuantityMessage(localizationService, quantity));
+        }
+        
+        [TestMethod]
+        public void GenerateInStockWithQuantityMessage_DisplayStockQuantityIsTrue_ProductTypeIsAuction_DoesNotContainsQuantity()
+        {
+            var quantity = 1080;
+            var product = new Product()
+            {
+                DisplayStockQuantity = true,
+                ProductType = ProductType.Auction
+            };
+
+            var localizationService = Substitute.For<ILocalizationService>();
+            localizationService.GetResource("Products.Availability.InStockWithQuantity")
+                .Returns("Products.Availability.InStockWithQuantity");
+            localizationService.GetResource("Products.Availability.InStock")
+                .Returns("Products.Availability.InStock");
+
+            var result = product.GenerateInStockWithQuantityMessage(localizationService, quantity);
+            
+            Assert.IsTrue(result.Equals("Products.Availability.InStock"));
+        }
     }
 }

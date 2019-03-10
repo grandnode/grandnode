@@ -3312,6 +3312,9 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.DisplayStockQuantity.Hint">
     <Value>Check to display stock quantity. When enabled, customers will see stock quantity.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catelog.Product.Fields.DisplayStockQuantity.NotAllowed">
+    <Value>DisplayStockQuantity is not allowed.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Download">
     <Value>Download file</Value>
   </LocaleResource>
