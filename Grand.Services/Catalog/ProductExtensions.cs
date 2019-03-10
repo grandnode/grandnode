@@ -74,11 +74,7 @@ namespace Grand.Services.Catalog
                         var stockQuantity = product.GetTotalStockQuantity(warehouseId: storeContext.CurrentStore.DefaultWarehouseId);
                         if (stockQuantity > 0)
                         {
-                            stockMessage = product.DisplayStockQuantity ?
-                                //display "in stock" with stock quantity
-                                string.Format(localizationService.GetResource("Products.Availability.InStockWithQuantity"), stockQuantity) :
-                                //display "in stock" without stock quantity
-                                localizationService.GetResource("Products.Availability.InStock");
+                            stockMessage = product.GenerateInStockWithQuantityMessage(localizationService, stockQuantity);
                         }
                         else
                         {
@@ -116,11 +112,7 @@ namespace Grand.Services.Catalog
                             var stockQuantity = product.GetTotalStockQuantityForCombination(combination, warehouseId: storeContext.CurrentStore.DefaultWarehouseId);
                             if (stockQuantity > 0)
                             {
-                                stockMessage = product.DisplayStockQuantity ?
-                                    //display "in stock" with stock quantity
-                                    string.Format(localizationService.GetResource("Products.Availability.InStockWithQuantity"), stockQuantity) :
-                                    //display "in stock" without stock quantity
-                                    localizationService.GetResource("Products.Availability.InStock");
+                                stockMessage = product.GenerateInStockWithQuantityMessage(localizationService, stockQuantity);
                             }
                             else if (combination.AllowOutOfStockOrders)
                             {
@@ -154,6 +146,40 @@ namespace Grand.Services.Catalog
                     return stockMessage;
             }
             return stockMessage;
+        }
+
+        /// <summary>
+        /// Generate stock message for In Stocke with quantity(quantity > 0)
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="localizationService">Localization service</param>
+        /// <param name="stockQuantity">stock quantity</param>
+        /// <returns></returns>
+        public static string GenerateInStockWithQuantityMessage(this Product product,
+            ILocalizationService localizationService, int stockQuantity)
+        {
+            #region Arguments check
+
+            if (localizationService == null)
+            {
+                throw new ArgumentNullException("localizationService");
+            }
+
+            if (stockQuantity <= 0)
+            {
+                throw new ArgumentOutOfRangeException("stockQuantity must be bigger than 0.");
+            }
+
+            #endregion
+
+            return (product.DisplayStockQuantity && product.ProductType != ProductType.Auction)
+                ?
+                //display "in stock" with stock quantity
+                string.Format(localizationService.GetResource("Products.Availability.InStockWithQuantity"),
+                    stockQuantity)
+                :
+                //display "in stock" without stock quantity
+                localizationService.GetResource("Products.Availability.InStock");
         }
 
         /// <summary>
