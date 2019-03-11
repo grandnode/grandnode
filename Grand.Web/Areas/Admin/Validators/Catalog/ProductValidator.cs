@@ -20,7 +20,7 @@ namespace Grand.Web.Areas.Admin.Validators.Catalog
             RuleFor(x => x.ProductTypeId == (int) ProductType.Auction && x.DisplayStockQuantity).Equal(false)
                 .WithMessage(
                     localizationService.GetResource(
-                        "Admin.Catelog.Product.Fields.DisplayStockQuantity.NotAllowed"));
+                        "Admin.Catalog.Product.Fields.DisplayStockQuantity.NotAllowed"));
         }
     }
 }
