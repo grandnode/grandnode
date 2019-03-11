@@ -101,7 +101,7 @@ namespace Grand.Web.Services
                     var description = post.GetLocalized(x => x.BodyOverview);
                     item.SeName = post.GetSeName();
                     item.Title = post.GetLocalized(x => x.Title);
-                    item.Short = description.Length > _blogSettings.MaxTextSizeHomePage ? description.Substring(0, _blogSettings.MaxTextSizeHomePage): description;
+                    item.Short = description?.Length > _blogSettings.MaxTextSizeHomePage ? description.Substring(0, _blogSettings.MaxTextSizeHomePage): description;
                     item.CreatedOn = _dateTimeHelper.ConvertToUserTime(post.StartDateUtc ?? post.CreatedOnUtc, DateTimeKind.Utc);
 
                     //prepare picture model
