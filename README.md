@@ -32,10 +32,10 @@ Forums: [http://www.grandnode.com/boards/](http://www.grandnode.com/boards/)
 
 ## Development status ## 
 
-The latest stable version is 4.30
-Active development version: 4.40 (branch [develop](https://github.com/grandnode/grandnode/projects/2))
+The latest stable version is 4.40
+Active development version: 4.50 (branch [develop](https://github.com/grandnode/grandnode/tree/develop))
 
-[Roadmap for 4.40](https://github.com/grandnode/grandnode/projects/2)
+[Roadmap for 4.40](https://github.com/grandnode/grandnode/projects/3)
 
 [Tickets linked to 4.40](https://github.com/grandnode/grandnode/issues)
 
@@ -69,7 +69,7 @@ And that's all, you are GrandNode official contributor!
 ##### Frontend:
 [http://demo.grandnode.com/](http://demo.grandnode.com/)
 
-[![ScreenShot](https://grandnode.com/content/images/uploaded/storepublic.gif)](http://demo.grandnode.com/)
+[![ScreenShot](http://grandnode.com/content/images/uploaded/demograndnodefront.gif)](http://demo.grandnode.com/)
 
 ##### Backend:
 [http://demo.grandnode.com/login?ReturnUrl=%2fadmin](http://demo.grandnode.com/login?ReturnUrl=%2fadmin)
