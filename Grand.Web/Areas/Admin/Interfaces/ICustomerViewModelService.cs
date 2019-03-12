@@ -29,6 +29,7 @@ namespace Grand.Web.Areas.Admin.Interfaces
         Address InsertAddressModel(Customer customer, CustomerAddressModel model, string customAttributes);
         Address UpdateAddressModel(Customer customer, Address address, CustomerAddressModel model, string customAttributes);
         (IEnumerable<CustomerModel.OrderModel> orderModels, int totalCount) PrepareOrderModel(string customerId, int pageIndex, int pageSize);
+        (IEnumerable<CustomerModel.ReviewModel> orderModels, int totalCount) PrepareReviewModel(string customerId, int pageIndex, int pageSize);
         CustomerReportsModel PrepareCustomerReportsModel();
         IList<RegisteredCustomerReportLineModel> GetReportRegisteredCustomersModel();
         (IEnumerable<BestCustomerReportLineModel> bestCustomerReportLineModels, int totalCount) PrepareBestCustomerReportLineModel(BestCustomersReportModel model, int orderBy, int pageIndex, int pageSize);

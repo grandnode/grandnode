@@ -311,6 +311,23 @@ namespace Grand.Web.Areas.Admin.Models.Customers
             public DateTime CreatedOn { get; set; }
         }
 
+        public class ReviewModel : BaseGrandEntityModel
+        {
+            public override string Id { get; set; }
+
+            public string ProductId { get; set; }
+
+            public string ProductName { get; set; }
+
+            public string Title { get; set; }
+
+            public string Review { get; set; }
+
+            public int Rating { get; set; }
+
+            public DateTime CreatedOn { get; set; }
+        }
+
         public partial class ActivityLogModel : BaseGrandEntityModel
         {
             [GrandResourceDisplayName("Admin.Customers.Customers.ActivityLog.ActivityLogType")]

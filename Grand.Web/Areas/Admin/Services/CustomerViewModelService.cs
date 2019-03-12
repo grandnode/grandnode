@@ -1198,7 +1198,7 @@ namespace Grand.Web.Areas.Admin.Services
 
         public virtual (IEnumerable<CustomerModel.OrderModel> orderModels, int totalCount) PrepareOrderModel(string customerId, int pageIndex, int pageSize)
         {
-            var orders = _orderService.SearchOrders(customerId: customerId, pageIndex: pageIndex - 1, pageSize: pageIndex);
+            var orders = _orderService.SearchOrders(customerId: customerId, pageIndex: pageIndex - 1, pageSize: pageSize);
             return (orders.Select(order =>
             {
                 var store = _storeService.GetStoreById(order.StoreId);
@@ -1217,6 +1217,26 @@ namespace Grand.Web.Areas.Admin.Services
             }), orders.TotalCount);
 
         }
+
+        public virtual (IEnumerable<CustomerModel.ReviewModel> orderModels, int totalCount) PrepareReviewModel(string customerId, int pageIndex, int pageSize)
+        {
+            var reviews = _productService.GetAllProductReviews(customerId: customerId, pageIndex: pageIndex - 1, pageSize: pageSize);
+            return (reviews.Select(review =>
+            {
+                var product = _productService.GetProductById(review.ProductId);
+                return new CustomerModel.ReviewModel
+                {
+                    Id = review.Id,
+                    ProductId = review.ProductId,
+                    ProductName = product.Name,
+                    Title = review.Title,
+                    Review = review.ReviewText,
+                    Rating = review.Rating,
+                    CreatedOn = _dateTimeHelper.ConvertToUserTime(review.CreatedOnUtc, DateTimeKind.Utc)
+                };
+            }), reviews.TotalCount);
+        }
+
         public virtual CustomerReportsModel PrepareCustomerReportsModel()
         {
             var model = new CustomerReportsModel();

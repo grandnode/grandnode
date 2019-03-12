@@ -542,4 +542,19 @@
   <LocaleResource Name="api.customers.customer.fields.storeid.notexists">
     <Value>Store ID doesn't exist</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Reviews">
+    <Value>Reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Reviews.Product">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Reviews.Title">
+    <Value>Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Reviews.Review">
+    <Value>Review</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Reviews.Rating">
+    <Value>Rating</Value>
+  </LocaleResource>
 </Language>

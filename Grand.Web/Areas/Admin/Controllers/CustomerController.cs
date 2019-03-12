@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Grand.Services.Catalog;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -33,6 +34,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Fields
 
         private readonly ICustomerService _customerService;
+        private readonly IProductService _productService;
         private readonly ICustomerViewModelService _customerViewModelService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICustomerRegistrationService _customerRegistrationService;
@@ -53,6 +55,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Constructors
 
         public CustomerController(ICustomerService customerService,
+            IProductService productService,
             ICustomerViewModelService customerViewModelService,
             IGenericAttributeService genericAttributeService,
             ICustomerRegistrationService customerRegistrationService,
@@ -69,6 +72,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             IDownloadService downloadService)
         {
             this._customerService = customerService;
+            this._productService = productService;
             this._customerViewModelService = customerViewModelService;
             this._genericAttributeService = genericAttributeService;
             this._customerRegistrationService = customerRegistrationService;
@@ -722,6 +726,33 @@ namespace Grand.Web.Areas.Admin.Controllers
                 Total = orders.totalCount
             };
             return Json(gridModel);
+        }
+
+        #endregion
+
+        #region Reviews
+
+        [HttpPost]
+        public IActionResult ReviewList(string customerId, DataSourceRequest command)
+        {
+            var reviews = _customerViewModelService.PrepareReviewModel(customerId, command.Page, command.PageSize);
+            var gridModel = new DataSourceResult
+            {
+                Data = reviews.orderModels.ToList(),
+                Total = reviews.totalCount
+            };
+            return Json(gridModel);
+        }
+
+        [HttpPost]
+        public IActionResult ReviewDelete(string id)
+        {
+            var productReview = _productService.GetProductReviewById(id);
+            if (productReview == null)
+                throw new ArgumentException("No review found with the specified id", "id");
+
+            _productService.DeleteProductReview(productReview);
+            return new NullJsonResult();
         }
 
         #endregion

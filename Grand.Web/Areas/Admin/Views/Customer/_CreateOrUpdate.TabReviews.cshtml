@@ -1,0 +1,128 @@
+﻿@model CustomerModel
+@inject AdminAreaSettings adminAreaSettings
+@{
+<div class="panel panel-default">
+    <vc:admin-widget widget-zone="customer_details_reviews_top" additional-data="Model" />
+    <div class="panel-body">
+        <div id="review-grid"></div>
+    </div>
+    <vc:admin-widget widget-zone="customer_details_reviews_bottom" additional-data="Model" />
+</div>
+    <style>
+        .rating {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 83px;
+            height: 19px;
+            line-height: 1;
+            font-size: 20px;
+            margin: 5px 0;
+        }
+
+        .rating .rating-ghost {
+            z-index: 1;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 19px;
+            white-space: nowrap;
+            color: #f0ad4e;
+        }
+
+        .rating .rating-real {
+            z-index: 2;
+            position: absolute;
+            top: 0;
+            left: 0;
+            color: #f0ad4e;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            $("#review-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("ReviewList", "Customer", new { customerId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        destroy: {
+                            url: "@Html.Raw(Url.Action("ReviewDelete", "Customer"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(adminAreaSettings.DefaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(adminAreaSettings.GridPageSizes)]
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "ProductName",
+                    title: "Product",
+                    width: 90,
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#=ProductName#</a>'
+                }, {
+                    field: "Title",
+                    title: "Title",
+                    width: 120
+                }, {
+                    field: "Review",
+                    title: "Review",
+                    width: 200
+                }, {
+                    field: "Rating",
+                    title: "Rating",
+                    width: 100,
+                    encoded: false,
+                    template: "#=ratingCellTemplate(Rating)#"
+                }, {
+                    field: "CreatedOn",
+                    title: "@T("Admin.System.Log.Fields.CreatedOn")",
+                    width: 100,
+                    type: "date",
+                    format: "{0:G}"
+                }, {
+                    field: "Id",
+                    title: "@T("Admin.Common.Edit")",
+                    width: 100,
+                    template: '<a class="k-link" href="@Url.Content("~/ProductReviews/")#=Id#">@T("Admin.Common.Edit")</a>'
+                }, {
+                    command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                    title: "@T("Admin.Common.Delete")",
+                    width: 100
+                }]
+            });
+        });
+
+        function ratingCellTemplate(rating) {
+            return '<div class="rating"><div class="rating-ghost">&#x2606;&#x2606;&#x2606;&#x2606;&#x2606;</div><div class="rating-real" style="width: ' + rating * 20 + '%">&#9733;&#9733;&#9733;&#9733;&#9733;</div></div>'
+        }
+    </script>
+}
