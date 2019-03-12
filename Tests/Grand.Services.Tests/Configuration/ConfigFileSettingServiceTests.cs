@@ -1,6 +1,11 @@
-﻿using Grand.Services.Configuration;
+﻿using Grand.Core.Caching;
+using Grand.Core.Tests.Caching;
+using Grand.Services.Configuration;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System;
+using System.Collections.Generic;
 
 namespace Grand.Services.Tests.Configuration
 {
@@ -16,7 +21,8 @@ namespace Grand.Services.Tests.Configuration
         [TestInitialize()]
         public void TestInitialize()
         {
-            config = new ConfigFileSettingService(null, null, null);
+            var cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object);
+            config = new ConfigFileSettingService(new List<ICacheManager> { cacheManager }, null, null);
         }
 
         [TestMethod()]
