@@ -105,7 +105,7 @@ namespace Grand.Framework.Infrastructure
 
             //cache manager
             builder.RegisterType<PerRequestCacheManager>().InstancePerLifetimeScope();
-            builder.RegisterType<MemoryCacheManager>().SingleInstance();
+            builder.RegisterType<MemoryCacheManager>().As<ICacheManager>().SingleInstance();
 
             if (config.RedisCachingEnabled)
             {
