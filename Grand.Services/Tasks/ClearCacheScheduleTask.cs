@@ -23,6 +23,7 @@ namespace Grand.Services.Tasks
                 {
                     cacheManager.Clear();
                 }
+                EngineContext.Current.Resolve<MemoryCacheManager>().Clear();
             }
         }
     }

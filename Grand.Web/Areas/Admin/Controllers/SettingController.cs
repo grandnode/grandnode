@@ -82,7 +82,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IReturnRequestService _returnRequestService;
         private readonly ILanguageService _languageService;
         private readonly MemoryCacheManager _cacheManager;
-
+        private readonly ICacheManager _staticcacheManager;
         #endregion
 
         #region Constructors
@@ -107,7 +107,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             IRepository<Product> productRepository,
             IReturnRequestService returnRequestService,
             ILanguageService languageService,
-            MemoryCacheManager cacheManager)
+            MemoryCacheManager cacheManager,
+            ICacheManager staticcacheManager)
         {
             this._settingService = settingService;
             this._countryService = countryService;
@@ -130,6 +131,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._returnRequestService = returnRequestService;
             this._languageService = languageService;
             this._cacheManager = cacheManager;
+            this._staticcacheManager = staticcacheManager;
         }
 
         #endregion
@@ -240,6 +242,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.DeleteSetting(blogSettings, x => x.MaxTextSizeHomePage, storeScope);
 
             //now clear cache
+            _staticcacheManager.Clear();
             _cacheManager.Clear();
 
             //activity log
@@ -388,6 +391,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _settingService.SaveSetting(vendorSettings);
 
             //now clear cache
+            _staticcacheManager.Clear();
             _cacheManager.Clear();
 
             //activity log
@@ -562,6 +566,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.DeleteSetting(forumSettings, x => x.MaxVotesPerDay, storeScope);
 
             //now clear cache
+            _staticcacheManager.Clear();
             _cacheManager.Clear();
 
             //activity log
@@ -637,6 +642,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.DeleteSetting(newsSettings, x => x.ShowHeaderRssUrl, storeScope);
 
             //now clear cache
+            _staticcacheManager.Clear();
             _cacheManager.Clear();
 
 
@@ -788,10 +794,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(shippingSettings, x => x.ShippingOriginAddressId, storeScope);
 
-
             //now clear cache
+            _staticcacheManager.Clear();
             _cacheManager.Clear();
-
 
             //activity log
             _customerActivityService.InsertActivity("EditSettings", "", _localizationService.GetResource("ActivityLog.EditSettings"));
@@ -1025,6 +1030,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.DeleteSetting(taxSettings, x => x.EuVatEmailAdminWhenNewVatSubmitted, storeScope);
 
             //now clear cache
+            _staticcacheManager.Clear();
             _cacheManager.Clear();
 
             //activity log
@@ -1449,6 +1455,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.DeleteSetting(catalogSettings, x => x.ShowProductReviewsPerStore, storeScope);
 
             //now clear cache
+            _staticcacheManager.Clear();
             _cacheManager.Clear();
 
             //activity log
@@ -1503,6 +1510,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             _settingService.SaveSetting(catalogSettings, x => x.ProductSortingEnumDisabled, storeScope, false);
             _settingService.SaveSetting(catalogSettings, x => x.ProductSortingEnumDisplayOrder, storeScope, false);
+
+            _staticcacheManager.Clear();
             _cacheManager.Clear();
 
             return new NullJsonResult();
@@ -1597,6 +1606,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(rewardPointsSettings, x => x.PointsAccumulatedForAllStores, "", false);
 
                 //now clear cache
+                _staticcacheManager.Clear();
                 _cacheManager.Clear();
 
                 //activity log
@@ -1779,6 +1789,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.SaveSetting(orderSettings, x => x.GiftCards_Deactivated_OrderStatusId, "", false);
 
                 //now clear cache
+                _staticcacheManager.Clear();
                 _cacheManager.Clear();
 
                 //order ident
@@ -1945,6 +1956,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.DeleteSetting(shoppingCartSettings, x => x.CartsSharedBetweenStores, storeScope);
 
             //now clear cache
+            _staticcacheManager.Clear();
             _cacheManager.Clear();
 
 
@@ -2256,8 +2268,8 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.DeleteSetting(mediaSettings, x => x.DefaultImageQuality, storeScope);
 
             //now clear cache
-            var cacheManager = Grand.Core.Infrastructure.EngineContext.Current.Resolve<Grand.Core.Caching.ICacheManager>();
-            cacheManager.Clear();
+            _staticcacheManager.Clear();
+            _cacheManager.Clear();
 
             //clear old Thumbs
             _pictureService.ClearThumbs();
@@ -2923,6 +2935,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _settingService.DeleteSetting(knowledgebaseSettings, x => x.NotifyAboutNewArticleComments, storeScope);
 
             //now clear cache
+            _staticcacheManager.Clear();
             _cacheManager.Clear();
 
             //activity log
@@ -3284,6 +3297,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _customerActivityService.InsertActivity("EditSettings", "", _localizationService.GetResource("ActivityLog.EditSettings"));
 
             //now clear cache
+            _staticcacheManager.Clear();
             _cacheManager.Clear();
 
             return new NullJsonResult();
@@ -3313,6 +3327,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _customerActivityService.InsertActivity("AddNewSetting", "", _localizationService.GetResource("ActivityLog.AddNewSetting"), model.Name);
 
             //now clear cache
+            _staticcacheManager.Clear();
             _cacheManager.Clear();
 
             return new NullJsonResult();
@@ -3330,6 +3345,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _customerActivityService.InsertActivity("DeleteSetting", "", _localizationService.GetResource("ActivityLog.DeleteSetting"), setting.Name);
 
             //now clear cache
+            _staticcacheManager.Clear();
             _cacheManager.Clear();
 
             return new NullJsonResult();
