@@ -557,4 +557,10 @@
   <LocaleResource Name="Admin.Customers.Customers.Reviews.Rating">
     <Value>Rating</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Reviews.EditReview">
+    <Value>Edit review</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Reviews.Updated">
+    <Value>The review has been updated successfully.</Value>
+  </LocaleResource>
 </Language>

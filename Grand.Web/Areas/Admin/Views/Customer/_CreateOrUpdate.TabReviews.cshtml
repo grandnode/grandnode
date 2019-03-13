@@ -86,20 +86,20 @@
                 scrollable: false,
                 columns: [{
                     field: "ProductName",
-                    title: "Product",
+                    title: "@T("Admin.Customers.Customers.Reviews.Product")",
                     width: 90,
                     template: '<a class="k-link" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#=ProductName#</a>'
                 }, {
                     field: "Title",
-                    title: "Title",
+                    title: "@T("Admin.Customers.Customers.Reviews.Title")",
                     width: 120
                 }, {
                     field: "Review",
-                    title: "Review",
+                    title: "@T("Admin.Customers.Customers.Reviews.Review")",
                     width: 200
                 }, {
                     field: "Rating",
-                    title: "Rating",
+                    title: "@T("Admin.Customers.Customers.Reviews.Rating")",
                     width: 100,
                     encoded: false,
                     template: "#=ratingCellTemplate(Rating)#"
@@ -113,7 +113,7 @@
                     field: "Id",
                     title: "@T("Admin.Common.Edit")",
                     width: 100,
-                    template: '<a class="k-link" href="@Url.Content("~/ProductReviews/")#=Id#">@T("Admin.Common.Edit")</a>'
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/ReviewEdit?customerId=")@Model.Id&reviewId=#=Id#">@T("Admin.Common.Edit")</a>'
                 }, {
                     command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                     title: "@T("Admin.Common.Delete")",

@@ -1,0 +1,32 @@
+﻿@model CustomerReviewModel
+@{
+    //page title
+    ViewBag.Title = T("Admin.Customers.Customers.Addresses.EditAddress").Text;
+}
+<form asp-controller="Customer" asp-action="ReviewEdit" method="post">
+    <antiforgery-token />
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-user-plus"></i>
+                        @T("Admin.Customers.Customers.Reviews.EditReview")
+                        <small>@Html.ActionLink("(" + T("Admin.Customers.Customers.Addresses.BackToCustomer") + ")", "Edit", new { id = Model.CustomerId })</small>
+                    </div>
+                    <div class="actions">
+                        <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                        <vc:admin-widget widget-zone="customer_address_details_buttons" additional-data="Model" />
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div asp-validation-summary="All"></div>
+                    <input type="hidden" asp-for="CustomerId" />
+                    <vc:admin-widget widget-zone="customer_address_details_top" additional-data="Model" />
+                    <admin-input asp-for="Review" asp-template="Review" />
+                    <vc:admin-widget widget-zone="customer_address_details_bottom" additional-data="Model" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

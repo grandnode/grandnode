@@ -744,6 +744,37 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
+        [HttpGet]
+        public IActionResult ReviewEdit(string customerId, string reviewId)
+        {
+            var productReview = _productService.GetProductReviewById(reviewId);
+            if (productReview == null)
+                //No review found with the specified id
+                return RedirectToAction("Edit", new { id = customerId });
+
+            return View(_customerViewModelService.PrepareReviewModel(productReview));
+        }
+
+        [HttpPost]
+
+        public IActionResult ReviewEdit(CustomerReviewModel model, IFormCollection form)
+        {
+            var productReview = _productService.GetProductReviewById(model.Review.Id);
+            if (productReview == null)
+                //No review found with the specified id
+                return RedirectToAction("Edit", new { id = model.CustomerId });
+
+            if (ModelState.IsValid)
+            {
+                productReview = _customerViewModelService.UpdateReviewModel(productReview, model);
+                SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Reviews.Updated"));
+                return RedirectToAction("ReviewEdit", new { reviewId = model.Review.Id, customerId = model.CustomerId });
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(_customerViewModelService.PrepareReviewModel(productReview));
+        }
+
         [HttpPost]
         public IActionResult ReviewDelete(string id)
         {

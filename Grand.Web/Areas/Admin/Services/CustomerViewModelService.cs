@@ -1130,6 +1130,23 @@ namespace Grand.Web.Areas.Admin.Services
             return address;
 
         }
+
+        public virtual CustomerReviewModel PrepareReviewModel(ProductReview productReview)
+        {
+            if (productReview == null) throw new ArgumentNullException(nameof(productReview));
+
+            return new CustomerReviewModel
+            {
+                CustomerId = productReview.CustomerId,
+                Review = new ReviewModel
+                {
+                    Id = productReview.Id,
+                    Title = productReview.Title,
+                    ReviewText = productReview.ReviewText
+                }
+            };
+        }
+
         public virtual void PrepareAddressModel(CustomerAddressModel model, Address address, Customer customer, bool excludeProperties)
         {
             if (customer == null)
@@ -1194,6 +1211,14 @@ namespace Grand.Web.Areas.Admin.Services
             address.CustomAttributes = customAttributes;
             _customerService.UpdateCustomerinAdminPanel(customer);
             return address;
+        }
+
+        public virtual ProductReview UpdateReviewModel(ProductReview productReview, CustomerReviewModel model)
+        {
+            productReview.Title = model.Review.Title;
+            productReview.ReviewText = model.Review.ReviewText;
+            _productService.UpdateProductReview(productReview);
+            return productReview;
         }
 
         public virtual (IEnumerable<CustomerModel.OrderModel> orderModels, int totalCount) PrepareOrderModel(string customerId, int pageIndex, int pageSize)
