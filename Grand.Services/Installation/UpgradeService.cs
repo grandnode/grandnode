@@ -55,6 +55,7 @@ namespace Grand.Services.Installation
         private const string version_420 = "4.20";
         private const string version_430 = "4.30";
         private const string version_440 = "4.40";
+        private const string version_450 = "4.50";
 
         #endregion
 
@@ -113,6 +114,11 @@ namespace Grand.Services.Installation
             {
                 From430To440();
                 fromversion = version_440;
+            }
+            if (fromversion == version_440)
+            {
+                From440To450();
+                fromversion = version_450;
             }
             if (fromversion == toversion)
             {
@@ -1268,6 +1274,13 @@ namespace Grand.Services.Installation
             EngineContext.Current.Resolve<IRepository<MessageTemplate>>().Insert(messageTemplates);
             #endregion
 
+        }
+
+        private void From440To450()
+        {
+            #region Install String resources
+            InstallStringResources("440_450.nopres.xml");
+            #endregion
         }
 
         private void InstallStringResources(string filenames)
