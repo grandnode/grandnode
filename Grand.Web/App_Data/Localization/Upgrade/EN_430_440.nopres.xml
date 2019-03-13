@@ -563,4 +563,10 @@
   <LocaleResource Name="Admin.Customers.Customers.Reviews.Updated">
     <Value>The review has been updated successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Review.Fields.Title.Required">
+    <Value>Review title is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Review.Fields.ReviewText.Required">
+    <Value>Review text is required</Value>
+  </LocaleResource>
 </Language>
