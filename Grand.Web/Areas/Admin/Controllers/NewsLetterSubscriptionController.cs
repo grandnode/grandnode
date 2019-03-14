@@ -127,7 +127,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 					var m = x.ToModel();
 				    var store = _storeService.GetStoreById(x.StoreId);
 				    m.StoreName = store != null ? store.Name : "Unknown store";
-					m.CreatedOn = x.CreatedOnUtc.Date.Month + "/" + x.CreatedOnUtc.Date.Day + "/" + x.CreatedOnUtc.Date.Year + " " + _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToLongTimeString();
+					m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToLongTimeString();
                     m.Categories = GetCategoryNames(x.Categories.ToList());
                     return m;
 				}),
