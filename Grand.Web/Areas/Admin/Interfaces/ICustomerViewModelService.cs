@@ -25,14 +25,11 @@ namespace Grand.Web.Areas.Admin.Interfaces
         IEnumerable<CustomerModel.RewardPointsHistoryModel> PrepareRewardPointsHistoryModel(string customerId);
         RewardPointsHistory InsertRewardPointsHistory(string customerId, string storeId, int addRewardPointsValue, string addRewardPointsMessage);
         IEnumerable<AddressModel> PrepareAddressModel(Customer customer);
-        CustomerReviewModel PrepareReviewModel(ProductReview review);
         void DeleteAddress(Customer customer, Address address);
         void PrepareAddressModel(CustomerAddressModel model, Address address, Customer customer, bool excludeProperties);
         Address InsertAddressModel(Customer customer, CustomerAddressModel model, string customAttributes);
         Address UpdateAddressModel(Customer customer, Address address, CustomerAddressModel model, string customAttributes);
-        ProductReview UpdateReviewModel(ProductReview productReview, CustomerReviewModel model);
         (IEnumerable<CustomerModel.OrderModel> orderModels, int totalCount) PrepareOrderModel(string customerId, int pageIndex, int pageSize);
-        (IEnumerable<CustomerModel.ReviewModel> orderModels, int totalCount) PrepareReviewModel(string customerId, int pageIndex, int pageSize);
         CustomerReportsModel PrepareCustomerReportsModel();
         IList<RegisteredCustomerReportLineModel> GetReportRegisteredCustomersModel();
         (IEnumerable<BestCustomerReportLineModel> bestCustomerReportLineModels, int totalCount) PrepareBestCustomerReportLineModel(BestCustomersReportModel model, int orderBy, int pageIndex, int pageSize);

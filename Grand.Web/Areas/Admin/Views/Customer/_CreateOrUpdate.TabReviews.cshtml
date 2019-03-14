@@ -60,7 +60,15 @@
                         }
                     },
                     schema: {
-                        model: { id: "Id" },
+                        model: {
+                            id: "Id",
+                            fields: {
+                                //do not implicitly specify all fields
+                                //we do it only for fields which implicitly require it
+                                //otherwise, they'll be formatted wrong way
+                                CreatedOn: { type: "date" }
+                            }
+                        },
                         data: "Data",
                         total: "Total",
                         errors: "Errors"
@@ -92,11 +100,8 @@
                 }, {
                     field: "Title",
                     title: "@T("Admin.Customers.Customers.Reviews.Title")",
+                    template: '<a class="k-link" href="@Url.Content("~/Admin/ProductReview/Edit/")#=Id#">#:Title#</a>',
                     width: 120
-                }, {
-                    field: "Review",
-                    title: "@T("Admin.Customers.Customers.Reviews.Review")",
-                    width: 200
                 }, {
                     field: "Rating",
                     title: "@T("Admin.Customers.Customers.Reviews.Rating")",
@@ -105,15 +110,11 @@
                     template: "#=ratingCellTemplate(Rating)#"
                 }, {
                     field: "CreatedOn",
-                    title: "@T("Admin.System.Log.Fields.CreatedOn")",
-                    width: 100,
+                    title: "@T("Admin.Catalog.ProductReviews.Fields.CreatedOn")",
+                    width: 150,
                     type: "date",
-                    format: "{0:G}"
-                }, {
-                    field: "Id",
-                    title: "@T("Admin.Common.Edit")",
-                    width: 100,
-                    template: '<a class="k-link" href="@Url.Content("~/Admin/Customer/ReviewEdit?customerId=")@Model.Id&reviewId=#=Id#">@T("Admin.Common.Edit")</a>'
+                    format: "{0:G}",
+                    minScreenWidth: 500,
                 }, {
                     command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                     title: "@T("Admin.Common.Delete")",
