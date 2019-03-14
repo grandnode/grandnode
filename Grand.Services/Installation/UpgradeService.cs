@@ -1279,7 +1279,7 @@ namespace Grand.Services.Installation
         private void From440To450()
         {
             #region Install String resources
-            InstallStringResources("440_450.nopres.xml");
+            InstallStringResources("EN_440_450.nopres.xml");
             #endregion
         }
 
