@@ -491,9 +491,9 @@ namespace Grand.Services.Catalog
         /// <param name="storeId">Store identifier; "" to load all records</param>
         /// <param name="productId">Product identifier; "" to load all records</param>
         /// <returns>Reviews</returns>
-        IList<ProductReview> GetAllProductReviews(string customerId, bool? approved,
+        IPagedList<ProductReview> GetAllProductReviews(string customerId, bool? approved = null,
             DateTime? fromUtc = null, DateTime? toUtc = null,
-            string message = null, string storeId = "", string productId = "", int size = 0);
+            string message = null, string storeId = "", string productId = "", int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Get rating sum for product

@@ -2426,9 +2426,9 @@ namespace Grand.Services.Catalog
         /// <param name="toUtc">Item item creation to; null to load all records</param>
         /// <param name="message">Search title or review text; null to load all records</param>
         /// <returns>Reviews</returns>
-        public virtual IList<ProductReview> GetAllProductReviews(string customerId, bool? approved,
+        public virtual IPagedList<ProductReview> GetAllProductReviews(string customerId, bool? approved,
             DateTime? fromUtc = null, DateTime? toUtc = null,
-            string message = null, string storeId = "", string productId = "", int size = 0)
+            string message = null, string storeId = "", string productId = "", int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = from p in _productReviewRepository.Table
                         select p;
@@ -2450,14 +2450,8 @@ namespace Grand.Services.Catalog
 
             query = query.OrderByDescending(c => c.CreatedOnUtc);
 
-            if (size != 0)
-                query = query.Take(size);
-
-            var content = query.ToList();
-            return content;
+            return new PagedList<ProductReview>(query, pageIndex, pageSize);
         }
-
-
 
         public virtual int RatingSumProduct(string productId, string storeId)
         {

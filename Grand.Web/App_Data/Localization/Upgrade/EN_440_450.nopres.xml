@@ -1,0 +1,29 @@
+<Language>
+  <LocaleResource Name="Admin.Customers.Customers.Reviews">
+    <Value>Reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Reviews.Product">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Reviews.Title">
+    <Value>Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Reviews.Review">
+    <Value>Review</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Reviews.Rating">
+    <Value>Rating</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Reviews.EditReview">
+    <Value>Edit review</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Reviews.Updated">
+    <Value>The review has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Review.Fields.Title.Required">
+    <Value>Review title is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Review.Fields.ReviewText.Required">
+    <Value>Review text is required</Value>
+  </LocaleResource>
+</Language>

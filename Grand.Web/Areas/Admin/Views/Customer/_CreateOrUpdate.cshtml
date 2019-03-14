@@ -56,27 +56,30 @@
                 @T("Admin.Customers.Customers.Orders")
             </li>
             <li tab-index="3">
-                @T("Admin.Customers.Customers.Addresses")
+                @T("Admin.Customers.Customers.Reviews")
             </li>
             <li tab-index="4">
-                @T("Admin.Customers.Customers.ShoppingCartWishlist")
+                @T("Admin.Customers.Customers.Addresses")
             </li>
             <li tab-index="5">
-                @T("Admin.Customers.Customers.PersonalizedProduct")
+                @T("Admin.Customers.Customers.ShoppingCartWishlist")
             </li>
             <li tab-index="6">
-                @T("Admin.Customers.Customers.ProductPrice")
+                @T("Admin.Customers.Customers.PersonalizedProduct")
             </li>
             <li tab-index="7">
-                @T("Admin.Customers.Customers.CustomerNotes")
+                @T("Admin.Customers.Customers.ProductPrice")
             </li>
             <li tab-index="8">
-                @T("Admin.Customers.Customers.ActivityLog")
+                @T("Admin.Customers.Customers.CustomerNotes")
             </li>
             <li tab-index="9">
-                @T("Admin.Customers.Customers.Impersonate")
+                @T("Admin.Customers.Customers.ActivityLog")
             </li>
             <li tab-index="10">
+                @T("Admin.Customers.Customers.Impersonate")
+            </li>
+            <li tab-index="11">
                 @T("Admin.Customers.Customers.BackInStockSubscriptions")
             </li>
         }
@@ -88,46 +91,49 @@
         }
     </ul>
     <div>
-       <partial name="_CreateOrUpdate.TabInfo" model="Model" />
+        <partial name="_CreateOrUpdate.TabInfo" model="Model" />
     </div>
     <div>
-       <partial name="_CreateOrUpdate.TabCustomerRoles" model="Model" />
+        <partial name="_CreateOrUpdate.TabCustomerRoles" model="Model" />
     </div>
     @if (!String.IsNullOrEmpty(Model.Id))
     {
         <div>
-           <partial name="_CreateOrUpdate.TabOrders" model="Model" />
+            <partial name="_CreateOrUpdate.TabOrders" model="Model" />
         </div>
         <div>
-           <partial name="_CreateOrUpdate.TabAddresses" model="Model" />
+            <partial name="_CreateOrUpdate.TabReviews" model="Model" />
         </div>
         <div>
-           <partial name="_CreateOrUpdate.TabCurrentShoppingCart" model="Model" />
-           <partial name="_CreateOrUpdate.TabCurrentWishlist" model="Model" />
+            <partial name="_CreateOrUpdate.TabAddresses" model="Model" />
         </div>
         <div>
-           <partial name="_CreateOrUpdate.TabProduct" model="Model" />
+            <partial name="_CreateOrUpdate.TabCurrentShoppingCart" model="Model" />
+            <partial name="_CreateOrUpdate.TabCurrentWishlist" model="Model" />
         </div>
         <div>
-           <partial name="_CreateOrUpdate.TabProductPrice" model="Model" />
+            <partial name="_CreateOrUpdate.TabProduct" model="Model" />
         </div>
         <div>
-           <partial name="_CreateOrUpdate.TabNotes" model="Model" />
+            <partial name="_CreateOrUpdate.TabProductPrice" model="Model" />
         </div>
         <div>
-           <partial name="_CreateOrUpdate.TabActivityLog" model="Model" />
+            <partial name="_CreateOrUpdate.TabNotes" model="Model" />
         </div>
         <div>
-           <partial name="_CreateOrUpdate.TabImpersonate" model="Model" />
+            <partial name="_CreateOrUpdate.TabActivityLog" model="Model" />
         </div>
         <div>
-           <partial name="_CreateOrUpdate.TabBackInStockSubscriptions" model="Model" />
+            <partial name="_CreateOrUpdate.TabImpersonate" model="Model" />
+        </div>
+        <div>
+            <partial name="_CreateOrUpdate.TabBackInStockSubscriptions" model="Model" />
         </div>
     }
     @if (Model.DisplayRewardPointsHistory)
     {
         <div>
-           <partial name="_CreateOrUpdate.TabRewardPoints" model="Model" />
+            <partial name="_CreateOrUpdate.TabRewardPoints" model="Model" />
         </div>
     }
 </div>
