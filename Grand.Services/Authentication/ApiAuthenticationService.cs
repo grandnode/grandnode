@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Authentication
 {
@@ -34,40 +35,40 @@ namespace Grand.Services.Authentication
         /// Valid
         /// </summary>
         /// <param name="customer">Customer</param>
-        public virtual bool Valid(TokenValidatedContext context)
+        public virtual Task<bool> Valid(TokenValidatedContext context)
         {
             _email = context.Principal.Claims.ToList().FirstOrDefault(x => x.Type == "Email")?.Value;
 
             if (string.IsNullOrEmpty(_email))
             {
                 _errorMessage = "Email not exists in the context";
-                return false;
+                return Task.FromResult(false);
             }
             var customer = _customerService.GetCustomerByEmail(_email);
             if (customer == null || !customer.Active || customer.Deleted)
             {
                 _errorMessage = "Email not exists/or not active in the customer table";
-                return false;
+                return Task.FromResult(false);
             }
             var userapi = _userApiService.GetUserByEmail(_email);
             if (userapi == null || !userapi.IsActive)
             {
                 _errorMessage = "User api not exists/or not active in the user api table";
-                return false;
+                return Task.FromResult(false);
             }
-            return true;
+            return Task.FromResult(true);
         }
 
-        public virtual void SignIn()
+        public virtual async Task SignIn()
         {
-            SignIn(_email);
+            await SignIn(_email);
         }
 
         /// <summary>
         /// Sign in
         /// </summary>
         ///<param name="email">Email</param>
-        public virtual void SignIn(string email)
+        public virtual async Task SignIn(string email)
         {
             if (string.IsNullOrEmpty(_email))
                 throw new ArgumentNullException(nameof(email));
@@ -82,20 +83,20 @@ namespace Grand.Services.Authentication
         /// Get error message
         /// </summary>
         /// <returns></returns>
-        public virtual string ErrorMessage()
+        public virtual Task<string> ErrorMessage()
         {
-            return _errorMessage;
+            return Task.FromResult(_errorMessage);
         }
 
         /// <summary>
         /// Get authenticated customer
         /// </summary>
         /// <returns>Customer</returns>
-        public virtual Customer GetAuthenticatedCustomer()
+        public virtual Task<Customer> GetAuthenticatedCustomer()
         {
             //whether there is a cached customer
             if (_cachedCustomer != null)
-                return _cachedCustomer;
+                return Task.FromResult(_cachedCustomer);
 
             //try to get authenticated user identity
             var authenticateResult = _httpContextAccessor.HttpContext.AuthenticateAsync(JwtBearerDefaults.AuthenticationScheme).Result;
@@ -117,7 +118,7 @@ namespace Grand.Services.Authentication
             //cache authenticated customer
             _cachedCustomer = customer;
 
-            return _cachedCustomer;
+            return Task.FromResult(_cachedCustomer);
 
         }
 

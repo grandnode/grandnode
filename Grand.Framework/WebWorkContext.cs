@@ -212,7 +212,7 @@ namespace Grand.Framework
                 if (customer == null)
                 {
                     //try to get api user
-                    customer = _apiauthenticationService.GetAuthenticatedCustomer();
+                    customer = _apiauthenticationService.GetAuthenticatedCustomer().Result;
                     //if customer comes from api, doesn't need to create cookies
                     if (customer != null)
                     {

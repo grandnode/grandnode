@@ -46,21 +46,20 @@ namespace Grand.Api.Infrastructure
                         context.HandleResponse();
                         return Task.CompletedTask;
                     },
-                    OnTokenValidated = context =>
+                    OnTokenValidated = async context =>
                     {
                         try
                         {
                             var apiAuthenticationService = EngineContext.Current.Resolve<IApiAuthenticationService>();
-                            if (apiAuthenticationService.Valid(context))
-                                apiAuthenticationService.SignIn();
+                            if (await apiAuthenticationService.Valid(context))
+                                await apiAuthenticationService.SignIn();
                             else
-                                throw new Exception(apiAuthenticationService.ErrorMessage());
+                                throw new Exception(await apiAuthenticationService.ErrorMessage());
                         }
                         catch (Exception ex)
                         {
                             throw new Exception(ex.Message);
                         }
-                        return Task.CompletedTask;
                     },
                 };
             });
