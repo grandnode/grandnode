@@ -4526,6 +4526,9 @@ footer .socicon-pinterest:hover {
         padding: 0;
         transition: all .5s ease;
     }
+    .mobile-menu .nav-item.dropdown > .dropdown-menu.next-level {
+        top: 0 !important;
+    }
     .mobile-menu .nav-item.dropdown > .dropdown-menu.show {
         transform: translate(0,0) !important;
         -webkit-transform: translate(0,0) !important;
