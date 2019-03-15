@@ -7,6 +7,7 @@ using Grand.Web.Areas.Admin.Models.Customers;
 using Grand.Web.Areas.Admin.Models.Messages;
 using Grand.Web.Areas.Admin.Models.ShoppingCart;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Interfaces
 {
@@ -15,7 +16,7 @@ namespace Grand.Web.Areas.Admin.Interfaces
         CustomerListModel PrepareCustomerListModel();
         (IEnumerable<CustomerModel> customerModelList, int totalCount) PrepareCustomerList(CustomerListModel model,
             string[] searchCustomerRoleIds, string[] searchCustomerTagIds, int pageIndex, int pageSize);
-        void PrepareCustomerModel(CustomerModel model, Customer customer, bool excludeProperties);
+        Task PrepareCustomerModel(CustomerModel model, Customer customer, bool excludeProperties);
         string ValidateCustomerRoles(IList<CustomerRole> customerRoles);
         Customer InsertCustomerModel(CustomerModel model);
         Customer UpdateCustomerModel(Customer customer, CustomerModel model);

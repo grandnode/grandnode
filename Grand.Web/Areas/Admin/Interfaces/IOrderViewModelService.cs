@@ -4,6 +4,7 @@ using Grand.Web.Areas.Admin.Models.Orders;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Interfaces
 {
@@ -11,7 +12,7 @@ namespace Grand.Web.Areas.Admin.Interfaces
     {
         OrderListModel PrepareOrderListModel(int? orderStatusId = null, int? paymentStatusId = null, int? shippingStatusId = null, DateTime? startDate = null);
         (IEnumerable<OrderModel> orderModels, OrderAggreratorModel aggreratorModel, int totalCount) PrepareOrderModel(OrderListModel model, int pageIndex, int pageSize);
-        void PrepareOrderDetailsModel(OrderModel model, Order order);
+        Task PrepareOrderDetailsModel(OrderModel model, Order order);
         OrderModel.AddOrderProductModel PrepareAddOrderProductModel(Order order);
         OrderModel.AddOrderProductModel.ProductDetailsModel PrepareAddProductToOrderModel(string orderId, string productId);
         OrderAddressModel PrepareOrderAddressModel(Order order, Address address);

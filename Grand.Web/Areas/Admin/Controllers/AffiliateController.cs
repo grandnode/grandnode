@@ -9,6 +9,7 @@ using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Affiliates;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -48,9 +49,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult List(DataSourceRequest command, AffiliateListModel model)
+        public async Task<IActionResult> List(DataSourceRequest command, AffiliateListModel model)
         {
-            var affiliatesModel = _affiliateViewModelService.PrepareAffiliateModelList(model, command.Page, command.PageSize);
+            var affiliatesModel = await _affiliateViewModelService.PrepareAffiliateModelList(model, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
                 Data = affiliatesModel.affiliateModels,
@@ -86,9 +87,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
 
         //edit
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
-            var affiliate = _affiliateService.GetAffiliateById(id);
+            var affiliate = await _affiliateService.GetAffiliateById(id);
             if (affiliate == null || affiliate.Deleted)
                 //No affiliate found with the specified id
                 return RedirectToAction("List");
@@ -99,16 +100,16 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Edit(AffiliateModel model, bool continueEditing)
+        public async Task<IActionResult> Edit(AffiliateModel model, bool continueEditing)
         {
-            var affiliate = _affiliateService.GetAffiliateById(model.Id);
+            var affiliate = await _affiliateService.GetAffiliateById(model.Id);
             if (affiliate == null || affiliate.Deleted)
                 //No affiliate found with the specified id
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
-                affiliate = _affiliateViewModelService.UpdateAffiliateModel(model, affiliate);
+                affiliate = await _affiliateViewModelService.UpdateAffiliateModel(model, affiliate);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Affiliates.Updated"));
                 if (continueEditing)
@@ -128,15 +129,15 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         //delete
         [HttpPost]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var affiliate = _affiliateService.GetAffiliateById(id);
+            var affiliate = await _affiliateService.GetAffiliateById(id);
             if (affiliate == null)
                 //No affiliate found with the specified id
                 return RedirectToAction("List");
             if (ModelState.IsValid)
             {
-                _affiliateService.DeleteAffiliate(affiliate);
+                await _affiliateService.DeleteAffiliate(affiliate);
                 SuccessNotification(_localizationService.GetResource("Admin.Affiliates.Deleted"));
                 return RedirectToAction("List");
             }
@@ -145,9 +146,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult AffiliatedOrderList(DataSourceRequest command, AffiliatedOrderListModel model)
+        public async Task<IActionResult> AffiliatedOrderList(DataSourceRequest command, AffiliatedOrderListModel model)
         {
-            var affiliate = _affiliateService.GetAffiliateById(model.AffliateId);
+            var affiliate = await _affiliateService.GetAffiliateById(model.AffliateId);
             if (affiliate == null)
                 throw new ArgumentException("No affiliate found with the specified id");
 
@@ -164,9 +165,9 @@ namespace Grand.Web.Areas.Admin.Controllers
 
 
         [HttpPost]
-        public IActionResult AffiliatedCustomerList(string affiliateId, DataSourceRequest command)
+        public async Task<IActionResult> AffiliatedCustomerList(string affiliateId, DataSourceRequest command)
         {
-            var affiliate = _affiliateService.GetAffiliateById(affiliateId);
+            var affiliate = await _affiliateService.GetAffiliateById(affiliateId);
             if (affiliate == null)
                 throw new ArgumentException("No affiliate found with the specified id");
 

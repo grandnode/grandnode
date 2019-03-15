@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Controllers
 {
@@ -848,7 +849,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
         [HttpPost, ActionName("Confirm")]
-        public virtual IActionResult ConfirmOrder([FromServices] IOrderProcessingService orderProcessingService)
+        public virtual async Task<IActionResult> ConfirmOrder([FromServices] IOrderProcessingService orderProcessingService)
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -889,7 +890,7 @@ namespace Grand.Web.Controllers
                 processPaymentRequest.PaymentMethodSystemName = _workContext.CurrentCustomer.GetAttribute<string>(
                     SystemCustomerAttributeNames.SelectedPaymentMethod,
                     _storeContext.CurrentStore.Id);
-                var placeOrderResult = orderProcessingService.PlaceOrder(processPaymentRequest);
+                var placeOrderResult = await orderProcessingService.PlaceOrder(processPaymentRequest);
                 if (placeOrderResult.Success)
                 {
                     this.HttpContext.Session.Set<ProcessPaymentRequest>("OrderPaymentInfo", null);
@@ -1611,7 +1612,7 @@ namespace Grand.Web.Controllers
             }
         }
 
-        public virtual IActionResult OpcConfirmOrder([FromServices] IOrderProcessingService orderProcessingService)
+        public virtual async Task<IActionResult> OpcConfirmOrder([FromServices] IOrderProcessingService orderProcessingService)
         {
             try
             {
@@ -1651,7 +1652,7 @@ namespace Grand.Web.Controllers
                 processPaymentRequest.PaymentMethodSystemName = _workContext.CurrentCustomer.GetAttribute<string>(
                     SystemCustomerAttributeNames.SelectedPaymentMethod,
                     _storeContext.CurrentStore.Id);
-                var placeOrderResult = orderProcessingService.PlaceOrder(processPaymentRequest);
+                var placeOrderResult = await orderProcessingService.PlaceOrder(processPaymentRequest);
                 if (placeOrderResult.Success)
                 {
                     this.HttpContext.Session.Set<ProcessPaymentRequest>("OrderPaymentInfo", null);

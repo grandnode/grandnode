@@ -41,6 +41,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Services
 {
@@ -456,7 +457,7 @@ namespace Grand.Web.Areas.Admin.Services
                     customers.TotalCount);
         }
 
-        public virtual void PrepareCustomerModel(CustomerModel model, Customer customer, bool excludeProperties)
+        public virtual async Task PrepareCustomerModel(CustomerModel model, Customer customer, bool excludeProperties)
         {
             var allStores = _storeService.GetAllStores();
             if (customer != null)
@@ -480,7 +481,7 @@ namespace Grand.Web.Areas.Admin.Services
                         result.Append(", ");
                     }
                     model.CustomerTags = result.ToString();
-                    var affiliate = _affiliateService.GetAffiliateById(customer.AffiliateId);
+                    var affiliate = await _affiliateService.GetAffiliateById(customer.AffiliateId);
                     if (affiliate != null)
                     {
                         model.AffiliateId = affiliate.Id;

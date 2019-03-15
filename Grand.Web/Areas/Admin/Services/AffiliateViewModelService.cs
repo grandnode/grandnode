@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Services
 {
@@ -108,9 +109,9 @@ namespace Grand.Web.Areas.Admin.Services
             }
         }
 
-        public virtual (IEnumerable<AffiliateModel> affiliateModels, int totalCount) PrepareAffiliateModelList(AffiliateListModel model, int pageIndex, int pageSize)
+        public virtual async Task<(IEnumerable<AffiliateModel> affiliateModels, int totalCount)> PrepareAffiliateModelList(AffiliateListModel model, int pageIndex, int pageSize)
         {
-            var affiliates = _affiliateService.GetAllAffiliates(model.SearchFriendlyUrlName,
+            var affiliates = await _affiliateService.GetAllAffiliates(model.SearchFriendlyUrlName,
                model.SearchFirstName, model.SearchLastName,
                model.LoadOnlyWithOrders, model.OrdersCreatedFromUtc, model.OrdersCreatedToUtc,
                pageIndex - 1, pageSize, true);
@@ -122,29 +123,29 @@ namespace Grand.Web.Areas.Admin.Services
                     return m;
                 }), affiliates.TotalCount);
         }
-        public virtual Affiliate InsertAffiliateModel(AffiliateModel model)
+        public virtual async Task<Affiliate> InsertAffiliateModel(AffiliateModel model)
         {
             var affiliate = new Affiliate();
             affiliate.Active = model.Active;
             affiliate.AdminComment = model.AdminComment;
             //validate friendly URL name
-            var friendlyUrlName = affiliate.ValidateFriendlyUrlName(model.FriendlyUrlName);
+            var friendlyUrlName = await affiliate.ValidateFriendlyUrlName(model.FriendlyUrlName);
             affiliate.FriendlyUrlName = friendlyUrlName;
             affiliate.Address = model.Address.ToEntity();
             affiliate.Address.CreatedOnUtc = DateTime.UtcNow;
             //some validation
-            _affiliateService.InsertAffiliate(affiliate);
+            await _affiliateService.InsertAffiliate(affiliate);
             return affiliate;
         }
-        public virtual Affiliate UpdateAffiliateModel(AffiliateModel model, Affiliate affiliate)
+        public virtual async Task<Affiliate> UpdateAffiliateModel(AffiliateModel model, Affiliate affiliate)
         {
             affiliate.Active = model.Active;
             affiliate.AdminComment = model.AdminComment;
             //validate friendly URL name
-            var friendlyUrlName = affiliate.ValidateFriendlyUrlName(model.FriendlyUrlName);
+            var friendlyUrlName = await affiliate.ValidateFriendlyUrlName(model.FriendlyUrlName);
             affiliate.FriendlyUrlName = friendlyUrlName;
             affiliate.Address = model.Address.ToEntity(affiliate.Address);
-            _affiliateService.UpdateAffiliate(affiliate);
+            await _affiliateService.UpdateAffiliate(affiliate);
             return affiliate;
         }
         public virtual (IEnumerable<AffiliateModel.AffiliatedOrderModel> affiliateOrderModels, int totalCount) PrepareAffiliatedOrderList(Affiliate affiliate, AffiliatedOrderListModel model, int pageIndex, int pageSize)

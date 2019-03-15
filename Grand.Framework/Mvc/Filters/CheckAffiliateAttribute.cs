@@ -83,7 +83,7 @@ namespace Grand.Framework.Mvc.Filters
             /// Called before the action executes, after model binding is complete
             /// </summary>
             /// <param name="context">A context for action filters</param>
-            public void OnActionExecuting(ActionExecutingContext context)
+            public async void OnActionExecuting(ActionExecutingContext context)
             {
                 if (context == null || context.HttpContext == null || context.HttpContext.Request == null)
                     return;
@@ -102,7 +102,7 @@ namespace Grand.Framework.Mvc.Filters
                 {
                     string affiliateId = affiliateIds.FirstOrDefault();
                     if(!string.IsNullOrEmpty(affiliateId))
-                        SetCustomerAffiliateId(_affiliateService.GetAffiliateById(affiliateId));
+                        SetCustomerAffiliateId(await _affiliateService.GetAffiliateById(affiliateId));
                     return;
                 }
 
@@ -112,7 +112,7 @@ namespace Grand.Framework.Mvc.Filters
                 {
                     var affiliateName = affiliateNames.FirstOrDefault();
                     if (!string.IsNullOrEmpty(affiliateName))
-                        SetCustomerAffiliateId(_affiliateService.GetAffiliateByFriendlyUrlName(affiliateName));
+                        SetCustomerAffiliateId(await _affiliateService.GetAffiliateByFriendlyUrlName(affiliateName));
                 }
             }
 

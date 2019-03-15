@@ -32,6 +32,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Orders
 {
@@ -182,7 +183,7 @@ namespace Grand.Services.Orders
         /// </summary>
         /// <param name="processPaymentRequest">Process payment request</param>
         /// <returns>Details</returns>
-        protected virtual PlaceOrderContainter PreparePlaceOrderDetails(ProcessPaymentRequest processPaymentRequest)
+        protected virtual async Task<PlaceOrderContainter> PreparePlaceOrderDetails(ProcessPaymentRequest processPaymentRequest)
         {
             var details = new PlaceOrderContainter();
 
@@ -202,7 +203,7 @@ namespace Grand.Services.Orders
                 throw new ArgumentException("Customer is not set");
 
             //affiliate
-            var affiliate = _affiliateService.GetAffiliateById(details.Customer.AffiliateId);
+            var affiliate = await _affiliateService.GetAffiliateById(details.Customer.AffiliateId);
             if (affiliate != null && affiliate.Active && !affiliate.Deleted)
                 details.AffiliateId = affiliate.Id;
 
@@ -1009,7 +1010,7 @@ namespace Grand.Services.Orders
         /// </summary>
         /// <param name="processPaymentRequest">Process payment request</param>
         /// <returns>Place order result</returns>
-        public virtual PlaceOrderResult PlaceOrder(ProcessPaymentRequest processPaymentRequest)
+        public virtual async Task<PlaceOrderResult> PlaceOrder(ProcessPaymentRequest processPaymentRequest)
         {
             //think about moving functionality of processing recurring orders (after the initial order was placed) to ProcessNextRecurringPayment() method
             if (processPaymentRequest == null)
@@ -1022,7 +1023,7 @@ namespace Grand.Services.Orders
                     processPaymentRequest.OrderGuid = Guid.NewGuid();
 
                 //prepare order details
-                var details = PreparePlaceOrderDetails(processPaymentRequest);
+                var details = await PreparePlaceOrderDetails(processPaymentRequest);
 
                 // event notification
                 _eventPublisher.PlaceOrderDetailsEvent(result, details);
@@ -1879,7 +1880,7 @@ namespace Grand.Services.Orders
         /// Process next recurring psayment
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
-        public virtual void ProcessNextRecurringPayment(RecurringPayment recurringPayment)
+        public virtual async Task ProcessNextRecurringPayment(RecurringPayment recurringPayment)
         {
             if (recurringPayment == null)
                 throw new ArgumentNullException("recurringPayment");
@@ -1914,7 +1915,7 @@ namespace Grand.Services.Orders
                 };
 
                 //place a new order
-                var result = this.PlaceOrder(paymentInfo);
+                var result = await PlaceOrder(paymentInfo);
                 if (result.Success)
                 {
                     if (result.PlacedOrder == null)

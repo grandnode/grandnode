@@ -3,6 +3,7 @@ using Grand.Core.Domain.Affiliates;
 using Grand.Core.Infrastructure;
 using Grand.Services.Seo;
 using System;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Affiliates
 {
@@ -66,7 +67,7 @@ namespace Grand.Services.Affiliates
         /// <param name="affiliate">Affiliate</param>
         /// <param name="friendlyUrlName">Friendly URL name</param>
         /// <returns>Valid friendly name</returns>
-        public static string ValidateFriendlyUrlName(this Affiliate affiliate, string friendlyUrlName)
+        public static async Task<string> ValidateFriendlyUrlName(this Affiliate affiliate, string friendlyUrlName)
         {
             if (affiliate == null)
                 throw new ArgumentNullException("affiliate");
@@ -92,7 +93,7 @@ namespace Grand.Services.Affiliates
             while (true)
             {
                 var affiliateService = EngineContext.Current.Resolve<IAffiliateService>();
-                var affiliateByFriendlyUrlName = affiliateService.GetAffiliateByFriendlyUrlName(tempName);
+                var affiliateByFriendlyUrlName = await affiliateService.GetAffiliateByFriendlyUrlName(tempName);
 
                 bool reserved = affiliateByFriendlyUrlName != null && affiliateByFriendlyUrlName.Id != affiliate.Id;
                 if (!reserved)
@@ -103,8 +104,7 @@ namespace Grand.Services.Affiliates
             }
             friendlyUrlName = tempName;
 
-
-            return friendlyUrlName;
+            return  friendlyUrlName;
         }
     }
 }

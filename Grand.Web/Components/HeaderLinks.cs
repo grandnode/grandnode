@@ -19,7 +19,7 @@ namespace Grand.Web.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = await Task.Run(() => _commonViewModelService.PrepareHeaderLinks(_workContext.CurrentCustomer));
+            var model = await _commonViewModelService.PrepareHeaderLinks(_workContext.CurrentCustomer);
             return View(model);
         }
     }

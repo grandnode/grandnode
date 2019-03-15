@@ -43,6 +43,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Services
 {
@@ -161,6 +162,55 @@ namespace Grand.Web.Services
             this._captchaSettings = captchaSettings;
             this._shoppingCartSettings = shoppingCartSettings;
         }
+
+        protected HeaderLinksModel prepareHeaderLinks(Customer customer)
+        {
+            var isRegister = customer.IsRegistered();
+            var model = new HeaderLinksModel
+            {
+                IsAuthenticated = isRegister,
+                CustomerEmailUsername = isRegister ? (_customerSettings.UsernamesEnabled ? customer.Username : customer.Email) : "",
+                ShoppingCartEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
+                WishlistEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),
+                AllowPrivateMessages = isRegister && _forumSettings.AllowPrivateMessages,
+                MiniShoppingCartEnabled = _shoppingCartSettings.MiniShoppingCartEnabled,
+
+                //performance optimization (use "HasShoppingCartItems" property)
+                ShoppingCartItems = customer.ShoppingCartItems.Any() ? customer.ShoppingCartItems
+                        .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
+                        .LimitPerStore(_storeContext.CurrentStore.Id)
+                        .Sum(x => x.Quantity) : 0,
+
+                WishlistItems = customer.ShoppingCartItems.Any() ? customer.ShoppingCartItems
+                        .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
+                        .LimitPerStore(_storeContext.CurrentStore.Id)
+                        .Sum(x => x.Quantity) : 0
+            };
+
+            if (_forumSettings.AllowPrivateMessages)
+            {
+                var unreadMessageCount = GetUnreadPrivateMessages();
+                var unreadMessage = string.Empty;
+                var alertMessage = string.Empty;
+                if (unreadMessageCount > 0)
+                {
+                    unreadMessage = string.Format(_localizationService.GetResource("PrivateMessages.TotalUnread"), unreadMessageCount);
+
+                    //notifications here
+                    if (_forumSettings.ShowAlertForPM &&
+                        !customer.GetAttribute<bool>(SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, _storeContext.CurrentStore.Id))
+                    {
+                        EngineContext.Current.Resolve<IGenericAttributeService>().SaveAttribute(customer, SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, true, _storeContext.CurrentStore.Id);
+                        alertMessage = string.Format(_localizationService.GetResource("PrivateMessages.YouHaveUnreadPM"), unreadMessageCount);
+                    }
+                }
+                model.UnreadPrivateMessages = unreadMessage;
+                model.AlertMessage = alertMessage;
+            }
+            return model;
+        }
+
+
         public virtual LogoModel PrepareLogo()
         {
             var model = new LogoModel
@@ -336,64 +386,20 @@ namespace Grand.Web.Services
             return result;
 
         }
-
-        public virtual HeaderLinksModel PrepareHeaderLinks(Customer customer)
+        public virtual Task<HeaderLinksModel> PrepareHeaderLinks(Customer customer)
         {
-            var isRegister = customer.IsRegistered();
-            var model = new HeaderLinksModel
-            {
-                IsAuthenticated = isRegister,
-                CustomerEmailUsername = isRegister ? (_customerSettings.UsernamesEnabled ? customer.Username : customer.Email) : "",
-                ShoppingCartEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
-                WishlistEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),
-                AllowPrivateMessages = isRegister && _forumSettings.AllowPrivateMessages,
-                MiniShoppingCartEnabled = _shoppingCartSettings.MiniShoppingCartEnabled
-            };
-            //performance optimization (use "HasShoppingCartItems" property)
-            if (customer.ShoppingCartItems.Any())
-            {
-                model.ShoppingCartItems = customer.ShoppingCartItems
-                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart || sci.ShoppingCartType == ShoppingCartType.Auctions)
-                    .LimitPerStore(_storeContext.CurrentStore.Id)
-                    .Sum(x => x.Quantity);
-
-                model.WishlistItems = customer.ShoppingCartItems
-                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                    .LimitPerStore(_storeContext.CurrentStore.Id)
-                    .Sum(x => x.Quantity);
-
-            }
-            if (_forumSettings.AllowPrivateMessages)
-            {
-                var unreadMessageCount = GetUnreadPrivateMessages();
-                var unreadMessage = string.Empty;
-                var alertMessage = string.Empty;
-                if (unreadMessageCount > 0)
-                {
-                    unreadMessage = string.Format(_localizationService.GetResource("PrivateMessages.TotalUnread"), unreadMessageCount);
-
-                    //notifications here
-                    if (_forumSettings.ShowAlertForPM &&
-                        !customer.GetAttribute<bool>(SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, _storeContext.CurrentStore.Id))
-                    {
-                        EngineContext.Current.Resolve<IGenericAttributeService>().SaveAttribute(customer, SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, true, _storeContext.CurrentStore.Id);
-                        alertMessage = string.Format(_localizationService.GetResource("PrivateMessages.YouHaveUnreadPM"), unreadMessageCount);
-                    }
-                }
-                model.UnreadPrivateMessages = unreadMessage;
-                model.AlertMessage = alertMessage;
-            }
-            return model;
+            return Task.FromResult(prepareHeaderLinks(customer));
         }
-        public virtual AdminHeaderLinksModel PrepareAdminHeaderLinks(Customer customer)
+
+        public virtual Task<AdminHeaderLinksModel> PrepareAdminHeaderLinks(Customer customer)
         {
-            var model = new AdminHeaderLinksModel
+            var model = Task.FromResult(new AdminHeaderLinksModel
             {
                 ImpersonatedCustomerEmailUsername = customer.IsRegistered() ? (_customerSettings.UsernamesEnabled ? customer.Username : customer.Email) : "",
                 IsCustomerImpersonated = _workContext.OriginalCustomerIfImpersonated != null,
                 DisplayAdminLink = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel),
                 EditPageUrl = _pageHeadBuilder.GetEditPageUrl()
-            };
+            });
             return model;
         }
         public virtual FooterModel PrepareFooter()

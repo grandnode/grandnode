@@ -35,6 +35,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Services
 {
@@ -331,7 +332,7 @@ namespace Grand.Web.Areas.Admin.Services
         }
 
        
-        public virtual void PrepareOrderDetailsModel(OrderModel model, Order order)
+        public virtual async Task PrepareOrderDetailsModel(OrderModel model, Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -357,7 +358,7 @@ namespace Grand.Web.Areas.Admin.Services
             model.AllowCustomersToSelectTaxDisplayType = _taxSettings.AllowCustomersToSelectTaxDisplayType;
             model.TaxDisplayType = _taxSettings.TaxDisplayType;
 
-            var affiliate = _affiliateService.GetAffiliateById(order.AffiliateId);
+            var affiliate = await _affiliateService.GetAffiliateById(order.AffiliateId);
             if (affiliate != null)
             {
                 model.AffiliateId = affiliate.Id;

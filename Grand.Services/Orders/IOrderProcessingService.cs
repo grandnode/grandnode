@@ -3,6 +3,7 @@ using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
 using Grand.Services.Payments;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Orders
 {
@@ -23,7 +24,7 @@ namespace Grand.Services.Orders
         /// </summary>
         /// <param name="processPaymentRequest">Process payment request</param>
         /// <returns>Place order result</returns>
-        PlaceOrderResult PlaceOrder(ProcessPaymentRequest processPaymentRequest);
+        Task<PlaceOrderResult> PlaceOrder(ProcessPaymentRequest processPaymentRequest);
 
         /// <summary>
         /// Deletes an order
@@ -36,7 +37,7 @@ namespace Grand.Services.Orders
         /// Process next recurring psayment
         /// </summary>
         /// <param name="recurringPayment">Recurring payment</param>
-        void ProcessNextRecurringPayment(RecurringPayment recurringPayment);
+        Task ProcessNextRecurringPayment(RecurringPayment recurringPayment);
 
         /// <summary>
         /// Cancels a recurring payment
