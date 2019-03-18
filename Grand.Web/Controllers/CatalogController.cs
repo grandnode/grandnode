@@ -25,6 +25,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Controllers
 {
@@ -420,12 +421,12 @@ namespace Grand.Web.Controllers
             return View(searchmodel);
         }
 
-        public virtual IActionResult SearchTermAutoComplete(string term, string categoryId, [FromServices] CatalogSettings catalogSettings)
+        public virtual async Task<IActionResult> SearchTermAutoComplete(string term, string categoryId, [FromServices] CatalogSettings catalogSettings)
         {
             if (String.IsNullOrWhiteSpace(term) || term.Length < catalogSettings.ProductSearchTermMinimumLength)
                 return Content("");
 
-            var result = _catalogViewModelService.PrepareSearchAutoComplete(term, categoryId);
+            var result = await _catalogViewModelService.PrepareSearchAutoComplete(term, categoryId);
             
             return Json(result);
         }

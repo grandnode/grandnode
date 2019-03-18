@@ -2,6 +2,7 @@
 using Grand.Core.Domain.Vendors;
 using Grand.Web.Models.Catalog;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Interfaces
 {
@@ -52,7 +53,7 @@ namespace Grand.Web.Interfaces
 
         PopularProductTagsModel PrepareProductTagsAll();
 
-        IList<SearchAutoCompleteModel> PrepareSearchAutoComplete(string term, string categoryId);
+        Task<IList<SearchAutoCompleteModel>> PrepareSearchAutoComplete(string term, string categoryId);
 
         SearchBoxModel PrepareSearchBox();
 

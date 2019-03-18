@@ -1248,7 +1248,7 @@ namespace Grand.Web.Services
 
         #region Search
 
-        public virtual IList<SearchAutoCompleteModel> PrepareSearchAutoComplete(string term, string categoryId)
+        public virtual async Task<IList<SearchAutoCompleteModel>> PrepareSearchAutoComplete(string term, string categoryId)
         {
             var model = new List<SearchAutoCompleteModel>();
             var productNumber = _catalogSettings.ProductSearchAutoCompleteNumberOfProducts > 0 ?
@@ -1366,7 +1366,7 @@ namespace Grand.Web.Services
 
             if (_catalogSettings.ShowBlogPostsInSearchAutoComplete)
             {
-                var posts = _blogService.GetAllBlogPosts(storeId: storeId, pageSize: productNumber, blogPostName: term);
+                var posts = await _blogService.GetAllBlogPosts(storeId: storeId, pageSize: productNumber, blogPostName: term);
                 foreach (var item in posts)
                 {
                     model.Add(new SearchAutoCompleteModel()
@@ -1382,25 +1382,23 @@ namespace Grand.Web.Services
             //search term statistics
             if (!String.IsNullOrEmpty(term) && _catalogSettings.SaveSearchAutoComplete)
             {
-                Task.Run(() =>
+                var searchTerm = _searchTermService.GetSearchTermByKeyword(term, _storeContext.CurrentStore.Id);
+                if (searchTerm != null)
                 {
-                    var searchTerm = _searchTermService.GetSearchTermByKeyword(term, _storeContext.CurrentStore.Id);
-                    if (searchTerm != null)
+                    searchTerm.Count++;
+                    _searchTermService.UpdateSearchTerm(searchTerm);
+                }
+                else
+                {
+                    searchTerm = new SearchTerm
                     {
-                        searchTerm.Count++;
-                        _searchTermService.UpdateSearchTerm(searchTerm);
-                    }
-                    else
-                    {
-                        searchTerm = new SearchTerm
-                        {
-                            Keyword = term,
-                            StoreId = storeId,
-                            Count = 1
-                        };
-                        _searchTermService.InsertSearchTerm(searchTerm);
-                    }
-                });
+                        Keyword = term,
+                        StoreId = storeId,
+                        Count = 1
+                    };
+                    _searchTermService.InsertSearchTerm(searchTerm);
+                }
+
             }
             return model;
         }

@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -48,7 +49,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Search(string searchTerm, FoundMenuItem[] foundMenuItems)
+        public async Task<IActionResult> Search(string searchTerm, FoundMenuItem[] foundMenuItems)
         {
             if (string.IsNullOrEmpty(searchTerm))
                 return Json("error");
@@ -135,7 +136,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
                 if (result.Count() < _adminSearchSettings.MaxSearchResultsCount && _adminSearchSettings.SearchInBlogs)
                 {
-                    var blogPosts = _blogService.GetAllBlogPosts(blogPostName: searchTerm, pageSize: _adminSearchSettings.MaxSearchResultsCount - result.Count(), showHidden: true);
+                    var blogPosts = await _blogService.GetAllBlogPosts(blogPostName: searchTerm, pageSize: _adminSearchSettings.MaxSearchResultsCount - result.Count(), showHidden: true);
                     foreach (var blogPost in blogPosts)
                     {
                         result.Add(new Tuple<object, int>(new

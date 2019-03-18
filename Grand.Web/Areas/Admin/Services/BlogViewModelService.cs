@@ -13,6 +13,7 @@ using Grand.Web.Areas.Admin.Models.Blogs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Services
 {
@@ -40,9 +41,9 @@ namespace Grand.Web.Areas.Admin.Services
             _localizationService = localizationService;
         }
 
-        public virtual (IEnumerable<BlogPostModel> blogPosts, int totalCount) PrepareBlogPostsModel(int pageIndex, int pageSize)
+        public virtual async Task<(IEnumerable<BlogPostModel> blogPosts, int totalCount)> PrepareBlogPostsModel(int pageIndex, int pageSize)
         {
-            var blogPosts = _blogService.GetAllBlogPosts("", null, null, pageIndex - 1, pageSize, true);
+            var blogPosts = await _blogService.GetAllBlogPosts("", null, null, pageIndex - 1, pageSize, true);
             return (blogPosts.Select(x =>
                 {
                     var m = x.ToModel();
@@ -132,19 +133,19 @@ namespace Grand.Web.Areas.Admin.Services
 
             return blogPost;
         }
-        public virtual (IEnumerable<BlogCommentModel> blogComments, int totalCount) PrepareBlogPostCommentsModel(string filterByBlogPostId, int pageIndex, int pageSize)
+        public virtual async Task<(IEnumerable<BlogCommentModel> blogComments, int totalCount)> PrepareBlogPostCommentsModel(string filterByBlogPostId, int pageIndex, int pageSize)
         {
             IList<BlogComment> comments;
             if (!String.IsNullOrEmpty(filterByBlogPostId))
             {
                 //filter comments by blog
-                var blogPost = _blogService.GetBlogPostById(filterByBlogPostId);
-                comments = _blogService.GetBlogCommentsByBlogPostId(blogPost.Id);
+                var blogPost = await _blogService.GetBlogPostById(filterByBlogPostId);
+                comments = await _blogService.GetBlogCommentsByBlogPostId(blogPost.Id);
             }
             else
             {
                 //load all blog comments
-                comments = _blogService.GetAllComments("");
+                comments = await _blogService.GetAllComments("");
             }
 
             return (comments.Skip((pageIndex - 1) * pageSize).Take(pageSize).Select(blogComment =>

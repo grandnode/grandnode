@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -52,9 +53,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult List() => View();
 
         [HttpPost]
-        public IActionResult List(DataSourceRequest command)
+        public async Task<IActionResult> List(DataSourceRequest command)
         {
-            var blogPosts = _blogViewModelService.PrepareBlogPostsModel(command.Page, command.PageSize);
+            var blogPosts = await _blogViewModelService.PrepareBlogPostsModel(command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
                 Data = blogPosts.blogPosts,
@@ -89,9 +90,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
-            var blogPost = _blogService.GetBlogPostById(id);
+            var blogPost = await _blogService.GetBlogPostById(id);
             if (blogPost == null)
                 //No blog post found with the specified id
                 return RedirectToAction("List");
@@ -113,9 +114,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult Edit(BlogPostModel model, bool continueEditing)
+        public async Task<IActionResult> Edit(BlogPostModel model, bool continueEditing)
         {
-            var blogPost = _blogService.GetBlogPostById(model.Id);
+            var blogPost = await _blogService.GetBlogPostById(model.Id);
             if (blogPost == null)
                 //No blog post found with the specified id
                 return RedirectToAction("List");
@@ -154,16 +155,16 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var blogPost = _blogService.GetBlogPostById(id);
+            var blogPost = await _blogService.GetBlogPostById(id);
             if (blogPost == null)
                 //No blog post found with the specified id
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
-                _blogService.DeleteBlogPost(blogPost);
+                await _blogService.DeleteBlogPost(blogPost);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Deleted"));
                 return RedirectToAction("List");
@@ -178,9 +179,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         public IActionResult CategoryList() => View();
 
         [HttpPost]
-        public IActionResult CategoryList(DataSourceRequest command)
+        public async Task<IActionResult> CategoryList(DataSourceRequest command)
         {
-            var categories = _blogService.GetAllBlogCategories();
+            var categories = await _blogService.GetAllBlogCategories();
             var gridModel = new DataSourceResult
             {
                 Data = categories,
@@ -222,9 +223,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        public IActionResult CategoryEdit(string id)
+        public async Task<IActionResult> CategoryEdit(string id)
         {
-            var blogCategory = _blogService.GetBlogCategoryById(id);
+            var blogCategory = await _blogService.GetBlogCategoryById(id);
             if (blogCategory == null)
                 //No blog post found with the specified id
                 return RedirectToAction("CategoryList");
@@ -242,9 +243,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public IActionResult CategoryEdit(BlogCategoryModel model, bool continueEditing)
+        public async Task<IActionResult> CategoryEdit(BlogCategoryModel model, bool continueEditing)
         {
-            var blogCategory = _blogService.GetBlogCategoryById(model.Id);
+            var blogCategory = await _blogService.GetBlogCategoryById(model.Id);
             if (blogCategory == null)
                 //No blog post found with the specified id
                 return RedirectToAction("CategoryList");
@@ -252,7 +253,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 blogCategory = model.ToEntity(blogCategory);
-                _blogService.UpdateBlogCategory(blogCategory);
+                await _blogService.UpdateBlogCategory(blogCategory);
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogCategory.Updated"));
                 if (continueEditing)
                 {
@@ -279,16 +280,16 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult CategoryDelete(string id)
+        public async Task<IActionResult> CategoryDelete(string id)
         {
-            var blogcategory = _blogService.GetBlogCategoryById(id);
+            var blogcategory = await _blogService.GetBlogCategoryById(id);
             if (blogcategory == null)
                 //No blog post found with the specified id
                 return RedirectToAction("CategoryList");
 
             if (ModelState.IsValid)
             {
-                _blogService.DeleteBlogCategory(blogcategory);
+                await _blogService.DeleteBlogCategory(blogcategory);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogCategory.Deleted"));
                 return RedirectToAction("CategoryList");
@@ -298,23 +299,23 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult CategoryPostList(string categoryId)
+        public async Task<IActionResult> CategoryPostList(string categoryId)
         {
-            var blogCategory = _blogService.GetBlogCategoryById(categoryId);
+            var blogCategory = await _blogService.GetBlogCategoryById(categoryId);
             if (blogCategory == null)
                 return ErrorForKendoGridJson("blogCategory no exists");
 
             var gridModel = new DataSourceResult
             {
-                Data =  blogCategory.BlogPosts.Select(x => new { Id = x.Id, BlogPostId = x.BlogPostId, Name = _blogService.GetBlogPostById(x.BlogPostId)?.Title }),
+                Data =  blogCategory.BlogPosts.Select(x => new { Id = x.Id, BlogPostId = x.BlogPostId, Name = _blogService.GetBlogPostById(x.BlogPostId).Result?.Title }),
                 Total = blogCategory.BlogPosts.Count
             };
             return Json(gridModel);
         }
 
-        public IActionResult CategoryPostDelete(string categoryId, string id)
+        public async Task<IActionResult> CategoryPostDelete(string categoryId, string id)
         {
-            var blogCategory = _blogService.GetBlogCategoryById(categoryId);
+            var blogCategory = await _blogService.GetBlogCategoryById(categoryId);
             if (blogCategory == null)
                 return ErrorForKendoGridJson("blogCategory no exists");
             if (ModelState.IsValid)
@@ -323,7 +324,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 if (post != null)
                 {
                     blogCategory.BlogPosts.Remove(post);
-                    _blogService.UpdateBlogCategory(blogCategory);
+                    await _blogService.UpdateBlogCategory(blogCategory);
                 }
                 return new NullJsonResult();
             }
@@ -342,10 +343,10 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult BlogPostAddPopupList(DataSourceRequest command, AddBlogPostCategoryModel model)
+        public async Task<IActionResult> BlogPostAddPopupList(DataSourceRequest command, AddBlogPostCategoryModel model)
         {
             var gridModel = new DataSourceResult();
-            var posts = _blogService.GetAllBlogPosts(storeId: model.SearchStoreId, blogPostName: model.SearchBlogTitle, pageIndex: command.Page - 1, pageSize: command.PageSize);
+            var posts = await _blogService.GetAllBlogPosts(storeId: model.SearchStoreId, blogPostName: model.SearchBlogTitle, pageIndex: command.Page - 1, pageSize: command.PageSize);
             gridModel.Data = posts.Select(x => new { Id = x.Id, Name = x.Title });
             gridModel.Total = posts.TotalCount;
 
@@ -354,11 +355,11 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public IActionResult BlogPostAddPopup(AddBlogPostCategoryModel model)
+        public async Task<IActionResult> BlogPostAddPopup(AddBlogPostCategoryModel model)
         {
             if (model.SelectedBlogPostIds != null)
             {
-                var blogCategory = _blogService.GetBlogCategoryById(model.CategoryId);
+                var blogCategory = await _blogService.GetBlogCategoryById(model.CategoryId);
                 if (blogCategory != null)
                     foreach (string id in model.SelectedBlogPostIds)
                     {
@@ -368,7 +369,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                             if (blogCategory.BlogPosts.Where(x => x.BlogPostId == id).Count() == 0)
                             {
                                 blogCategory.BlogPosts.Add(new Core.Domain.Blogs.BlogCategoryPost() { BlogPostId = id });
-                                _blogService.UpdateBlogCategory(blogCategory);
+                                await _blogService.UpdateBlogCategory(blogCategory);
                             }
                         }
                     }
@@ -388,9 +389,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Comments(string filterByBlogPostId, DataSourceRequest command)
+        public async Task<IActionResult> Comments(string filterByBlogPostId, DataSourceRequest command)
         {
-            var model = _blogViewModelService.PrepareBlogPostCommentsModel(filterByBlogPostId, command.Page, command.PageSize);
+            var model = await _blogViewModelService.PrepareBlogPostCommentsModel(filterByBlogPostId, command.Page, command.PageSize);
             var gridModel = new DataSourceResult
             {
                 Data = model.blogComments,
@@ -399,19 +400,20 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
 
-        public IActionResult CommentDelete(string id)
+        public async Task<IActionResult> CommentDelete(string id)
         {
-            var comment = _blogService.GetBlogCommentById(id);
+            var comment = await _blogService.GetBlogCommentById(id);
             if (comment == null)
                 throw new ArgumentException("No comment found with the specified id");
 
-            var blogPost = _blogService.GetBlogPostById(comment.BlogPostId);
+            var blogPost = await _blogService.GetBlogPostById(comment.BlogPostId);
             if (ModelState.IsValid)
             {
-                _blogService.DeleteBlogComment(comment);
+                await _blogService.DeleteBlogComment(comment);
                 //update totals
-                blogPost.CommentCount = _blogService.GetBlogCommentsByBlogPostId(blogPost.Id).Count;
-                _blogService.UpdateBlogPost(blogPost);
+                var comments = await _blogService.GetBlogCommentsByBlogPostId(blogPost.Id);
+                blogPost.CommentCount = comments.Count;
+                await _blogService.UpdateBlogPost(blogPost);
                 return new NullJsonResult();
             }
             return ErrorForKendoGridJson(ModelState);

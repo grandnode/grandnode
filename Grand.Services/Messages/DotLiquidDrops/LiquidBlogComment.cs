@@ -25,14 +25,14 @@ namespace Grand.Services.Messages.DotLiquidDrops
 
         public string BlogPostTitle
         {
-            get { return EngineContext.Current.Resolve<IBlogService>().GetBlogPostById(_blogComment.BlogPostId).Title; }
+            get { return EngineContext.Current.Resolve<IBlogService>().GetBlogPostById(_blogComment.BlogPostId).Result.Title; }
         }
 
         public string BlogPostURL
         {
             get
             {
-                var blogPost = EngineContext.Current.Resolve<IBlogService>().GetBlogPostById(_blogComment.BlogPostId);
+                var blogPost = EngineContext.Current.Resolve<IBlogService>().GetBlogPostById(_blogComment.BlogPostId).Result;
                 return $"{_storeService.GetStoreUrl(_storeId)}{blogPost.GetSeName()}";
             }
         }

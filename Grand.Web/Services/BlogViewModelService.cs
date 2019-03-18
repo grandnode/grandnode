@@ -24,6 +24,7 @@ using Grand.Web.Models.Media;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Services
 {
@@ -85,14 +86,14 @@ namespace Grand.Web.Services
             this._captchaSettings = captchaSettings;
         }
 
-        public HomePageBlogItemsModel PrepareHomePageBlogItems()
+        public async Task<HomePageBlogItemsModel> PrepareHomePageBlogItems()
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_HOMEPAGE_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-            var cachedModel = _cacheManager.Get(cacheKey, () =>
+            var cachedModel = await _cacheManager.Get(cacheKey, async () =>
             {
                 var model = new HomePageBlogItemsModel();
 
-                var blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id,
+                var blogPosts = await _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id,
                         null, null, 0, _blogSettings.HomePageBlogCount);
 
                 foreach (var post in blogPosts)
@@ -154,7 +155,7 @@ namespace Grand.Web.Services
             return model;
         }
 
-        public BlogPostListModel PrepareBlogPostListModel(BlogPagingFilteringModel command)
+        public async Task<BlogPostListModel> PrepareBlogPostListModel(BlogPagingFilteringModel command)
         {
             if (command == null)
                 throw new ArgumentNullException("command");
@@ -177,18 +178,18 @@ namespace Grand.Web.Services
             {
                 if (String.IsNullOrEmpty(command.Tag))
                 {
-                    blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id,
+                    blogPosts = await _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id,
                         dateFrom, dateTo, command.PageNumber - 1, command.PageSize, blogPostName: model.SearchKeyword);
                 }
                 else
                 {
-                    blogPosts = _blogService.GetAllBlogPostsByTag(_storeContext.CurrentStore.Id,
+                    blogPosts = await _blogService.GetAllBlogPostsByTag(_storeContext.CurrentStore.Id,
                         command.Tag, command.PageNumber - 1, command.PageSize);
                 }
             }
             else
             {
-                blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id,
+                blogPosts = await _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id,
                         dateFrom, dateTo, command.PageNumber - 1, command.PageSize, categoryId: command.CategoryId, blogPostName: model.SearchKeyword);
             }
             model.PagingFilteringContext.LoadPagedList(blogPosts);
@@ -197,7 +198,7 @@ namespace Grand.Web.Services
                 .Select(x =>
                 {
                     var blogPostModel = new BlogPostModel();
-                    PrepareBlogPostModel(blogPostModel, x, false);
+                    PrepareBlogPostModel(blogPostModel, x, false).Wait();
                     return blogPostModel;
                 })
                 .ToList();
@@ -205,7 +206,7 @@ namespace Grand.Web.Services
             return model;
         }
 
-        public void PrepareBlogPostModel(BlogPostModel model, BlogPost blogPost, bool prepareComments)
+        public async Task PrepareBlogPostModel(BlogPostModel model, BlogPost blogPost, bool prepareComments)
         {
             if (blogPost == null)
                 throw new ArgumentNullException("blogPost");
@@ -228,7 +229,7 @@ namespace Grand.Web.Services
             model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnBlogCommentPage;
             if (prepareComments)
             {
-                var blogComments = _blogService.GetBlogCommentsByBlogPostId(blogPost.Id);
+                var blogComments = await _blogService.GetBlogCommentsByBlogPostId(blogPost.Id);
                 foreach (var bc in blogComments)
                 {
                     var commentModel = PrepareBlogPostCommentModel(bc);
@@ -257,16 +258,16 @@ namespace Grand.Web.Services
 
         }
 
-        public BlogPostTagListModel PrepareBlogPostTagListModel()
+        public async Task<BlogPostTagListModel> PrepareBlogPostTagListModel()
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_TAGS_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-            var cachedModel = _cacheManager.Get(cacheKey, () =>
+            var cachedModel = await _cacheManager.Get(cacheKey, async () =>
             {
                 var model = new BlogPostTagListModel();
 
                 //get tags
-                var tags = _blogService.GetAllBlogPostTags(_storeContext.CurrentStore.Id)
-                    .OrderByDescending(x => x.BlogPostCount)
+                var tags = await _blogService.GetAllBlogPostTags(_storeContext.CurrentStore.Id);
+                tags = tags.OrderByDescending(x => x.BlogPostCount)
                     .Take(_blogSettings.NumberOfTags)
                     .ToList();
                 //sorting
@@ -283,14 +284,14 @@ namespace Grand.Web.Services
             return cachedModel;
         }
 
-        public List<BlogPostYearModel> PrepareBlogPostYearModel()
+        public async Task<List<BlogPostYearModel>> PrepareBlogPostYearModel()
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_MONTHS_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-            var cachedModel = _cacheManager.Get(cacheKey, () =>
+            var cachedModel = await _cacheManager.Get(cacheKey, async () =>
             {
                 var model = new List<BlogPostYearModel>();
 
-                var blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id);
+                var blogPosts = await _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id);
                 if (blogPosts.Any())
                 {
                     var months = new SortedDictionary<DateTime, int>();
@@ -341,13 +342,13 @@ namespace Grand.Web.Services
             return cachedModel;
         }
 
-        public List<BlogPostCategoryModel> PrepareBlogPostCategoryModel()
+        public async Task<List<BlogPostCategoryModel>> PrepareBlogPostCategoryModel()
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_CATEGORY_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-            var cachedModel = _cacheManager.Get(cacheKey, () =>
+            var cachedModel = await _cacheManager.Get(cacheKey, async () =>
             {
                 var model = new List<BlogPostCategoryModel>();
-                var categories = _blogService.GetAllBlogCategories(_storeContext.CurrentStore.Id);
+                var categories = await _blogService.GetAllBlogCategories(_storeContext.CurrentStore.Id);
                 foreach (var item in categories)
                 {
                     model.Add(new BlogPostCategoryModel()
@@ -362,7 +363,7 @@ namespace Grand.Web.Services
             return cachedModel;
         }
 
-        public BlogComment InsertBlogComment(BlogPostModel model, BlogPost blogPost)
+        public async Task<BlogComment> InsertBlogComment(BlogPostModel model, BlogPost blogPost)
         {
             var customer = _workContext.CurrentCustomer;
             var comment = new BlogComment
@@ -373,11 +374,12 @@ namespace Grand.Web.Services
                 CreatedOnUtc = DateTime.UtcNow,
                 BlogPostTitle = blogPost.Title,
             };
-            _blogService.InsertBlogComment(comment);
+            await _blogService.InsertBlogComment(comment);
 
             //update totals
-            blogPost.CommentCount = _blogService.GetBlogCommentsByBlogPostId(blogPost.Id).Count;
-            _blogService.UpdateBlogPost(blogPost);
+            var comments = await _blogService.GetBlogCommentsByBlogPostId(blogPost.Id);
+            blogPost.CommentCount = comments.Count;
+            await _blogService.UpdateBlogPost(blogPost);
             if (!customer.HasContributions)
             {
                 EngineContext.Current.Resolve<ICustomerService>().UpdateContributions(customer);

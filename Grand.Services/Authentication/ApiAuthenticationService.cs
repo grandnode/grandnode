@@ -92,11 +92,11 @@ namespace Grand.Services.Authentication
         /// Get authenticated customer
         /// </summary>
         /// <returns>Customer</returns>
-        public virtual Task<Customer> GetAuthenticatedCustomer()
+        public virtual async Task<Customer> GetAuthenticatedCustomer()
         {
             //whether there is a cached customer
             if (_cachedCustomer != null)
-                return Task.FromResult(_cachedCustomer);
+                return _cachedCustomer;
 
             //try to get authenticated user identity
             var authenticateResult = _httpContextAccessor.HttpContext.AuthenticateAsync(JwtBearerDefaults.AuthenticationScheme).Result;
@@ -118,7 +118,7 @@ namespace Grand.Services.Authentication
             //cache authenticated customer
             _cachedCustomer = customer;
 
-            return Task.FromResult(_cachedCustomer);
+            return _cachedCustomer;
 
         }
 
