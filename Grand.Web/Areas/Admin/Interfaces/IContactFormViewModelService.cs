@@ -1,15 +1,14 @@
 ﻿using Grand.Core.Domain.Messages;
 using Grand.Web.Areas.Admin.Models.Messages;
-using System;
 using System.Collections.Generic;
-
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Interfaces
 {
     public interface IContactFormViewModelService
     {
-        ContactFormListModel PrepareContactFormListModel();
-        ContactFormModel PrepareContactFormModel(ContactUs contactUs);
-        (IEnumerable<ContactFormModel> contactFormModel, int totalCount) PrepareContactFormListModel(ContactFormListModel model, int pageIndex, int pageSize);
+        Task<ContactFormListModel> PrepareContactFormListModel();
+        Task<ContactFormModel> PrepareContactFormModel(ContactUs contactUs);
+        Task<(IEnumerable<ContactFormModel> contactFormModel, int totalCount)> PrepareContactFormListModel(ContactFormListModel model, int pageIndex, int pageSize);
     }
 }
