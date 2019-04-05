@@ -30,6 +30,7 @@ namespace Grand.Web.Controllers
         private readonly IStoreContext _storeContext;
         private readonly ILocalizationService _localizationService;
         private readonly IWebHelper _webHelper;
+        private readonly IWorkContext _workContext;
         private readonly BlogSettings _blogSettings;
         private readonly CaptchaSettings _captchaSettings;
 
@@ -42,6 +43,7 @@ namespace Grand.Web.Controllers
             IStoreContext storeContext,
             ILocalizationService localizationService,
             IWebHelper webHelper,
+            IWorkContext workContext,
             BlogSettings blogSettings,
             CaptchaSettings captchaSettings)
         {
@@ -52,6 +54,7 @@ namespace Grand.Web.Controllers
             this._webHelper = webHelper;
             this._blogSettings = blogSettings;
             this._captchaSettings = captchaSettings;
+            this._workContext = workContext;
         }
 
 		#endregion
@@ -101,7 +104,7 @@ namespace Grand.Web.Controllers
         public virtual async Task<IActionResult> ListRss(string languageId)
         {
             var feed = new RssFeed(
-                string.Format("{0}: Blog", _storeContext.CurrentStore.GetLocalized(x => x.Name)),
+                string.Format("{0}: Blog", _storeContext.CurrentStore.GetLocalized(x => x.Name, _workContext.WorkingLanguage.Id)),
                 "Blog",
                 new Uri(_webHelper.GetStoreLocation()),
                 DateTime.UtcNow);
@@ -113,7 +116,7 @@ namespace Grand.Web.Controllers
             var blogPosts = await _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id);
             foreach (var blogPost in blogPosts)
             {
-                string blogPostUrl = Url.RouteUrl("BlogPost", new { SeName = blogPost.GetSeName() }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
+                string blogPostUrl = Url.RouteUrl("BlogPost", new { SeName = blogPost.GetSeName(_workContext.WorkingLanguage.Id) }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
                 items.Add(new RssItem(blogPost.Title, blogPost.Body, new Uri(blogPostUrl), String.Format("urn:store:{0}:blog:post:{1}", _storeContext.CurrentStore.Id, blogPost.Id), blogPost.CreatedOnUtc));
             }
             feed.Items = items;
@@ -143,7 +146,6 @@ namespace Grand.Web.Controllers
             //display "edit" (manage) link
             if (permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 DisplayEditLink(Url.Action("Edit", "Blog", new { id = blogPost.Id, area = "Admin" }));
-
 
             return View(model);
         }
@@ -179,7 +181,7 @@ namespace Grand.Web.Controllers
                 //The text boxes should be cleared after a comment has been posted
                 //That' why we reload the page
                 TempData["Grand.blog.addcomment.result"] = _localizationService.GetResource("Blog.Comments.SuccessfullyAdded");
-                return RedirectToRoute("BlogPost", new { SeName = blogPost.GetSeName() });
+                return RedirectToRoute("BlogPost", new { SeName = blogPost.GetSeName(_workContext.WorkingLanguage.Id) });
             }
 
             //If we got this far, something failed, redisplay form
