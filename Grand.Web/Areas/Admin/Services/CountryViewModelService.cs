@@ -4,6 +4,7 @@ using Grand.Services.Localization;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Models.Directory;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Services
 {
@@ -32,17 +33,17 @@ namespace Grand.Web.Areas.Admin.Services
             return model;
         }
 
-        public virtual Country InsertCountryModel(CountryModel model)
+        public virtual async Task<Country> InsertCountryModel(CountryModel model)
         {
             var country = model.ToEntity();
-            _countryService.InsertCountry(country);
+            await _countryService.InsertCountry(country);
             return country;
         }
 
-        public virtual Country UpdateCountryModel(Country country, CountryModel model)
+        public virtual async Task<Country> UpdateCountryModel(Country country, CountryModel model)
         {
             country = model.ToEntity(country);
-            _countryService.UpdateCountry(country);
+            await _countryService.UpdateCountry(country);
             return country;
         }
 
@@ -55,16 +56,16 @@ namespace Grand.Web.Areas.Admin.Services
             return model;
         }
 
-        public virtual StateProvince InsertStateProvinceModel(StateProvinceModel model)
+        public virtual async Task<StateProvince> InsertStateProvinceModel(StateProvinceModel model)
         {
             var sp = model.ToEntity();
-            _stateProvinceService.InsertStateProvince(sp);
+            await _stateProvinceService.InsertStateProvince(sp);
             return sp;
         }
-        public virtual StateProvince UpdateStateProvinceModel(StateProvince sp, StateProvinceModel model)
+        public virtual async Task<StateProvince> UpdateStateProvinceModel(StateProvince sp, StateProvinceModel model)
         {
             sp = model.ToEntity(sp);
-            _stateProvinceService.UpdateStateProvince(sp);
+            await _stateProvinceService.UpdateStateProvince(sp);
             return sp;
         }
     }
