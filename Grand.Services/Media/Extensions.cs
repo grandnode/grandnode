@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Media
 {
@@ -48,8 +49,8 @@ namespace Grand.Services.Media
         /// <param name="pictureService">Picture service</param>
         /// <param name="productAttributeParser">Product attribute service</param>
         /// <returns>Picture</returns>
-        public static Picture GetProductPicture(this Product product, string attributesXml,
-            IPictureService pictureService,
+        public static async Task<Picture> GetProductPicture(this Product product, string attributesXml,
+            IProductService productService, IPictureService pictureService,
             IProductAttributeParser productAttributeParser)
         {
             if (product == null)
@@ -70,7 +71,7 @@ namespace Grand.Services.Media
                 {
                     if(!string.IsNullOrEmpty(comb.PictureId))
                     {
-                        var combPicture = pictureService.GetPictureById(comb.PictureId);
+                        var combPicture = await pictureService.GetPictureById(comb.PictureId);
                         if (combPicture != null)
                         {
                             picture = combPicture;
@@ -82,7 +83,7 @@ namespace Grand.Services.Media
                     var attributeValues = productAttributeParser.ParseProductAttributeValues(product, attributesXml);
                     foreach (var attributeValue in attributeValues)
                     {
-                        var attributePicture = pictureService.GetPictureById(attributeValue.PictureId);
+                        var attributePicture = await pictureService.GetPictureById(attributeValue.PictureId);
                         if (attributePicture != null)
                         {
                             picture = attributePicture;
@@ -96,17 +97,17 @@ namespace Grand.Services.Media
             {
                 var pp = product.ProductPictures.FirstOrDefault();
                 if (pp != null)
-                    picture = pictureService.GetPictureById(pp.PictureId);
+                    picture = await pictureService.GetPictureById(pp.PictureId);
             }
 
             //let's check whether this product has some parent "grouped" product
             if (picture == null && !product.VisibleIndividually && !String.IsNullOrEmpty(product.ParentGroupedProductId))
             {
-                var parentProduct = EngineContext.Current.Resolve<IProductService>().GetProductById(product.ParentGroupedProductId);
+                var parentProduct = await productService.GetProductById(product.ParentGroupedProductId);
                 if(parentProduct!=null)
                     if(parentProduct.ProductPictures.Any())
                     {
-                        picture = pictureService.GetPictureById(parentProduct.ProductPictures.FirstOrDefault().PictureId);
+                        picture = await pictureService.GetPictureById(parentProduct.ProductPictures.FirstOrDefault().PictureId);
 
                     }
             }
