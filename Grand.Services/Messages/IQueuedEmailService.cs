@@ -2,6 +2,7 @@
 using Grand.Core.Domain.Messages;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Grand.Services.Messages
 {
@@ -11,39 +12,39 @@ namespace Grand.Services.Messages
         /// Inserts a queued email
         /// </summary>
         /// <param name="queuedEmail">Queued email</param>
-        void InsertQueuedEmail(QueuedEmail queuedEmail);
+        Task InsertQueuedEmail(QueuedEmail queuedEmail);
 
         /// <summary>
         /// Updates a queued email
         /// </summary>
         /// <param name="queuedEmail">Queued email</param>
-        void UpdateQueuedEmail(QueuedEmail queuedEmail);
+        Task UpdateQueuedEmail(QueuedEmail queuedEmail);
 
         /// <summary>
         /// Deleted a queued email
         /// </summary>
         /// <param name="queuedEmail">Queued email</param>
-        void DeleteQueuedEmail(QueuedEmail queuedEmail);
+        Task DeleteQueuedEmail(QueuedEmail queuedEmail);
 
         /// <summary>
         /// Deleted a customer emails
         /// </summary>
         /// <param name="email">email</param>
-        void DeleteCustomerEmail(string email);
+        Task DeleteCustomerEmail(string email);
 
         /// <summary>
         /// Gets a queued email by identifier
         /// </summary>
         /// <param name="queuedEmailId">Queued email identifier</param>
         /// <returns>Queued email</returns>
-        QueuedEmail GetQueuedEmailById(string queuedEmailId);
+        Task<QueuedEmail> GetQueuedEmailById(string queuedEmailId);
 
         /// <summary>
         /// Get queued emails by identifiers
         /// </summary>
         /// <param name="queuedEmailIds">queued email identifiers</param>
         /// <returns>Queued emails</returns>
-        IList<QueuedEmail> GetQueuedEmailsByIds(string[] queuedEmailIds);
+        Task<IList<QueuedEmail>> GetQueuedEmailsByIds(string[] queuedEmailIds);
 
         /// <summary>
         /// Search queued emails
@@ -58,7 +59,7 @@ namespace Grand.Services.Messages
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Queued emails</returns>
-        IPagedList<QueuedEmail> SearchEmails(string fromEmail,
+        Task<IPagedList<QueuedEmail>> SearchEmails(string fromEmail,
             string toEmail, DateTime? createdFromUtc, DateTime? createdToUtc, 
             bool loadNotSentItemsOnly, bool loadOnlyItemsToBeSent, int maxSendTries,
             bool loadNewest, int pageIndex = 0, int pageSize = int.MaxValue);
@@ -66,6 +67,6 @@ namespace Grand.Services.Messages
         /// <summary>
         /// Delete all queued emails
         /// </summary>
-        void DeleteAllEmails();
+        Task DeleteAllEmails();
     }
 }
