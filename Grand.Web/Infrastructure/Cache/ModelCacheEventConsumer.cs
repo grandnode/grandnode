@@ -15,6 +15,8 @@ using Grand.Core.Domain.Vendors;
 using Grand.Core.Events;
 using Grand.Core.Infrastructure;
 using Grand.Services.Events;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace Grand.Web.Infrastructure.Cache
 {
@@ -800,10 +802,10 @@ namespace Grand.Web.Infrastructure.Cache
 
         private readonly ICacheManager _cacheManager;
 
-        public ModelCacheEventConsumer()
+        public ModelCacheEventConsumer(IServiceProvider serviceProvider)
         {
             //TODO inject static cache manager using constructor
-            this._cacheManager = EngineContext.Current.Resolve<ICacheManager>();
+            this._cacheManager = serviceProvider.GetRequiredService<ICacheManager>();
         }
 
         //languages
