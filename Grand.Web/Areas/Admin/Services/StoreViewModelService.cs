@@ -9,6 +9,7 @@ using Grand.Web.Areas.Admin.Models.Stores;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Grand.Web.Areas.Admin.Services
 {
@@ -27,7 +28,7 @@ namespace Grand.Web.Areas.Admin.Services
             _settingService = settingService;
         }
 
-        public virtual void PrepareLanguagesModel(StoreModel model)
+        public virtual async Task PrepareLanguagesModel(StoreModel model)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -38,7 +39,7 @@ namespace Grand.Web.Areas.Admin.Services
                 Text = "---",
                 Value = ""
             });
-            var languages = _languageService.GetAllLanguages(true);
+            var languages = await _languageService.GetAllLanguages(true);
             foreach (var language in languages)
             {
                 model.AvailableLanguages.Add(new SelectListItem
@@ -49,7 +50,7 @@ namespace Grand.Web.Areas.Admin.Services
             }
         }
 
-        public virtual void PrepareWarehouseModel(StoreModel model)
+        public virtual async Task PrepareWarehouseModel(StoreModel model)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -60,7 +61,7 @@ namespace Grand.Web.Areas.Admin.Services
                 Text = "---",
                 Value = ""
             });
-            var warehouses = _shippingService.GetAllWarehouses();
+            var warehouses = await _shippingService.GetAllWarehouses();
             foreach (var warehouse in warehouses)
             {
                 model.AvailableWarehouses.Add(new SelectListItem
@@ -75,7 +76,7 @@ namespace Grand.Web.Areas.Admin.Services
             var model = new StoreModel();
             return model;
         }
-        public virtual Store InsertStoreModel(StoreModel model)
+        public virtual async Task<Store> InsertStoreModel(StoreModel model)
         {
             var store = model.ToEntity();
             //ensure we have "/" at the end
@@ -85,10 +86,10 @@ namespace Grand.Web.Areas.Admin.Services
             if (!string.IsNullOrEmpty(store.SecureUrl) && !store.SecureUrl.EndsWith("/"))
                 store.SecureUrl += "/";
 
-            _storeService.InsertStore(store);
+            await _storeService.InsertStore(store);
             return store;
         }
-        public virtual Store UpdateStoreModel(Store store, StoreModel model)
+        public virtual async Task<Store> UpdateStoreModel(Store store, StoreModel model)
         {
             store = model.ToEntity(store);
             //ensure we have "/" at the end
@@ -97,12 +98,12 @@ namespace Grand.Web.Areas.Admin.Services
             if (!string.IsNullOrEmpty(store.SecureUrl) && !store.SecureUrl.EndsWith("/"))
                 store.SecureUrl += "/";
 
-            _storeService.UpdateStore(store);
+            await _storeService.UpdateStore(store);
             return store;
         }
-        public virtual void DeleteStore(Store store)
+        public virtual async Task DeleteStore(Store store)
         {
-            _storeService.DeleteStore(store);
+            await _storeService.DeleteStore(store);
 
             //when we delete a store we should also ensure that all "per store" settings will also be deleted
             var settingsToDelete = _settingService
@@ -110,9 +111,9 @@ namespace Grand.Web.Areas.Admin.Services
                 .Where(s => s.StoreId == store.Id)
                 .ToList();
             foreach (var setting in settingsToDelete)
-                _settingService.DeleteSetting(setting);
+                await _settingService.DeleteSetting(setting);
             //when we had two stores and now have only one store, we also should delete all "per store" settings
-            var allStores = _storeService.GetAllStores();
+            var allStores = await _storeService.GetAllStores();
             if (allStores.Count == 1)
             {
                 settingsToDelete = _settingService
@@ -120,7 +121,7 @@ namespace Grand.Web.Areas.Admin.Services
                     .Where(s => s.StoreId == allStores[0].Id)
                     .ToList();
                 foreach (var setting in settingsToDelete)
-                    _settingService.DeleteSetting(setting);
+                    await _settingService.DeleteSetting(setting);
             }
         }
     }
