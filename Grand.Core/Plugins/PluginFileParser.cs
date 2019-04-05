@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Grand.Core.Plugins
 {
@@ -35,13 +36,14 @@ namespace Grand.Core.Plugins
             return lines;
         }
 
-        public static void SaveInstalledPluginsFile(IList<String> pluginSystemNames, string filePath)
+        public static async Task SaveInstalledPluginsFile(IList<String> pluginSystemNames, string filePath)
         {
             string result = "";
             foreach (var sn in pluginSystemNames)
                 result += string.Format("{0}{1}", sn, Environment.NewLine);
 
-            File.WriteAllText(filePath, result);
+            await File.WriteAllTextAsync(filePath, result);
+            await Task.CompletedTask;
         }
 
         public static PluginDescriptor ParsePluginDescriptionFile(string filePath)

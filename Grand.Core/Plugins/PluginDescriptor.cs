@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Grand.Core.Plugins
 {
@@ -88,12 +89,12 @@ namespace Grand.Core.Plugins
         /// </summary>
         public virtual bool Installed { get; set; }
 
-        public virtual T Instance<T>() where T : class, IPlugin
+        public virtual T Instance<T>(IServiceProvider serviceProvider) where T : class, IPlugin
         {
             object instance = null;
             try
             {
-                instance = EngineContext.Current.Resolve(PluginType);
+                instance = serviceProvider.GetRequiredService(PluginType);
             }
             catch
             {
@@ -110,9 +111,9 @@ namespace Grand.Core.Plugins
             return typedInstance;
         }
 
-        public IPlugin Instance()
+        public IPlugin Instance(IServiceProvider serviceProvider)
         {
-            return Instance<IPlugin>();
+            return Instance<IPlugin>(serviceProvider);
         }
 
         public int CompareTo(PluginDescriptor other)

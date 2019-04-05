@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,8 +14,14 @@ namespace Grand.Core.Plugins
 
         private IList<PluginDescriptor> _plugins;
         private bool _arePluginsLoaded;
+        private readonly IServiceProvider _serviceProvider;
 
         #endregion
+
+        public PluginFinder(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
 
         #region Utilities
 
@@ -120,7 +127,7 @@ namespace Grand.Core.Plugins
         public virtual IEnumerable<T> GetPlugins<T>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly, 
             string storeId = "", string group = null) where T : class, IPlugin
         {
-            return GetPluginDescriptors<T>(loadMode, storeId, group).Select(p => p.Instance<T>());
+            return GetPluginDescriptors<T>(loadMode, storeId, group).Select(p => p.Instance<T>(_serviceProvider));
         }
 
         /// <summary>
