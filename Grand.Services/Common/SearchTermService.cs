@@ -4,6 +4,9 @@ using Grand.Core.Domain.Common;
 using Grand.Services.Events;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace Grand.Services.Common
 {
@@ -36,12 +39,12 @@ namespace Grand.Services.Common
         /// Deletes a search term record
         /// </summary>
         /// <param name="searchTerm">Search term</param>
-        public virtual void DeleteSearchTerm(SearchTerm searchTerm)
+        public virtual async Task DeleteSearchTerm(SearchTerm searchTerm)
         {
             if (searchTerm == null)
                 throw new ArgumentNullException("searchTerm");
 
-            _searchTermRepository.Delete(searchTerm);
+            await _searchTermRepository.DeleteAsync(searchTerm);
 
             //event notification
             _eventPublisher.EntityDeleted(searchTerm);
@@ -52,9 +55,9 @@ namespace Grand.Services.Common
         /// </summary>
         /// <param name="searchTermId">Search term identifier</param>
         /// <returns>Search term</returns>
-        public virtual SearchTerm GetSearchTermById(string searchTermId)
+        public virtual Task<SearchTerm> GetSearchTermById(string searchTermId)
         {
-            return _searchTermRepository.GetById(searchTermId);
+            return _searchTermRepository.GetByIdAsync(searchTermId);
         }
 
         /// <summary>
@@ -63,7 +66,7 @@ namespace Grand.Services.Common
         /// <param name="keyword">Search term keyword</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Search term</returns>
-        public virtual SearchTerm GetSearchTermByKeyword(string keyword, string storeId)
+        public virtual async Task<SearchTerm> GetSearchTermByKeyword(string keyword, string storeId)
         {
             if (String.IsNullOrEmpty(keyword))
                 return null;
@@ -72,8 +75,7 @@ namespace Grand.Services.Common
                         where st.Keyword == keyword && st.StoreId == storeId
                         orderby st.Id
                         select st;
-            var searchTerm = query.FirstOrDefault();
-            return searchTerm;
+            return await query.FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -82,7 +84,7 @@ namespace Grand.Services.Common
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>A list search term report lines</returns>
-        public virtual IPagedList<SearchTermReportLine> GetStats(int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual async Task<IPagedList<SearchTermReportLine>> GetStats(int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = (from st in _searchTermRepository.Table
                         group st by st.Keyword into groupedResult
@@ -98,20 +100,19 @@ namespace Grand.Services.Common
                             Count = r.Count
                         });
 
-            var result = new PagedList<SearchTermReportLine>(query, pageIndex, pageSize);
-            return result;
+            return await Task.FromResult(new PagedList<SearchTermReportLine>(query, pageIndex, pageSize));
         }
 
         /// <summary>
         /// Inserts a search term record
         /// </summary>
         /// <param name="searchTerm">Search term</param>
-        public virtual void InsertSearchTerm(SearchTerm searchTerm)
+        public virtual async Task InsertSearchTerm(SearchTerm searchTerm)
         {
             if (searchTerm == null)
                 throw new ArgumentNullException("searchTerm");
 
-            _searchTermRepository.Insert(searchTerm);
+            await _searchTermRepository.InsertAsync(searchTerm);
 
             //event notification
             _eventPublisher.EntityInserted(searchTerm);
@@ -121,12 +122,12 @@ namespace Grand.Services.Common
         /// Updates the search term record
         /// </summary>
         /// <param name="searchTerm">Search term</param>
-        public virtual void UpdateSearchTerm(SearchTerm searchTerm)
+        public virtual async Task UpdateSearchTerm(SearchTerm searchTerm)
         {
             if (searchTerm == null)
                 throw new ArgumentNullException("searchTerm");
 
-            _searchTermRepository.Update(searchTerm);
+            await _searchTermRepository.UpdateAsync(searchTerm);
 
             //event notification
             _eventPublisher.EntityUpdated(searchTerm);
