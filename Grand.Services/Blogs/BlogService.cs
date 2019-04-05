@@ -317,7 +317,7 @@ namespace Grand.Services.Blogs
         /// </summary>
         /// <param name="blogCategoryId">Blog category id</param>
         /// <returns></returns>
-        public Task<BlogCategory> GetBlogCategoryById(string blogCategoryId)
+        public virtual Task<BlogCategory> GetBlogCategoryById(string blogCategoryId)
         {
             return _blogCategoryRepository.GetByIdAsync(blogCategoryId);
         }
